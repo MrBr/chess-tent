@@ -1,11 +1,13 @@
-import React, {Component, ReactChildren, ReactNode} from 'react';
+import React, { Component, ReactChildren, ReactNode } from 'react';
 import styled from '@emotion/styled';
 import Button from 'react-bootstrap/Button';
 
 import ChessboardService from './js/chessboard-0.3.0';
 import './css/chessboard-0.3.0.css';
 
+// prettier-ignore
 export type SquareKey =
+  /* eslint-disable */
     'a1' | 'b1' | 'c1' | 'd1' | 'e1' | 'f1' | 'g1' | 'h1' |
     'a2' | 'b2' | 'c2' | 'd2' | 'e2' | 'f2' | 'g2' | 'h2' |
     'a3' | 'b3' | 'c3' | 'd3' | 'e3' | 'f3' | 'g3' | 'h3' |
@@ -14,6 +16,7 @@ export type SquareKey =
     'a6' | 'b6' | 'c6' | 'd6' | 'e6' | 'f6' | 'g6' | 'h6' |
     'a7' | 'b7' | 'c7' | 'd7' | 'e7' | 'f7' | 'g7' | 'h7' |
     'a8' | 'b8' | 'c8' | 'd8' | 'e8' | 'f8' | 'g8' | 'h8';
+/* eslint-enable */
 
 export type PositionObject = Record<SquareKey, string>;
 
@@ -21,21 +24,26 @@ const BoardHeader = styled.div({
   display: 'flex',
   height: 50,
   justifyContent: 'space-between',
-  alignItems: 'center'
+  alignItems: 'center',
 });
 const BoardHeaderActions = styled.div({
   flex: 0,
 });
 
 const Board = styled.div({
-  width: 450, height: 450
+  width: 450,
+  height: 450,
 });
 
 export interface ChessboardProps {
   draggable?: boolean;
   position?: string;
   tip?: string;
-  onChange?: (position: string, oldPosition: PositionObject, newPosition: PositionObject) => void;
+  onChange?: (
+    position: string,
+    oldPosition: PositionObject,
+    newPosition: PositionObject,
+  ) => void;
   onDrop?: Function;
   onReset?: Function;
   onMouseDown?: Function;
@@ -104,13 +112,20 @@ class Chessboard extends Component<ChessboardProps> {
   };
 
   onDrop = (...args: []) => {
-    const shouldDropPiece = this.props.validateDrop ? this.props.validateDrop(...args) : true;
+    const shouldDropPiece = this.props.validateDrop
+      ? this.props.validateDrop(...args)
+      : true;
     shouldDropPiece && this.props.onDrop && this.props.onDrop(...args);
     return !shouldDropPiece ? 'snapback' : undefined;
   };
 
   onChange = (oldPosition: PositionObject, newPosition: PositionObject) => {
-    this.props.onChange && this.props.onChange(ChessboardService.objToFen(newPosition), oldPosition, newPosition);
+    this.props.onChange &&
+      this.props.onChange(
+        ChessboardService.objToFen(newPosition),
+        oldPosition,
+        newPosition,
+      );
   };
 
   renderSquare = (children: ReactChildren, square: ReactNode) => {
@@ -125,10 +140,12 @@ class Chessboard extends Component<ChessboardProps> {
         <BoardHeader>
           {tip}
           <BoardHeaderActions>
-            <Button variant="secondary" onClick={this.resetBoard}>Reset</Button>
+            <Button variant="secondary" onClick={this.resetBoard}>
+              Reset
+            </Button>
           </BoardHeaderActions>
         </BoardHeader>
-        <Board id="board"/>
+        <Board id="board" />
       </>
     );
   }
@@ -140,13 +157,8 @@ const Squares = Cols.reduce<SquareKey[]>((result, col: string) => {
   Rows.forEach((row: string) => result.push((col + row) as SquareKey));
   return result;
 }, []);
-const getSquare = (elem: HTMLElement): SquareKey => elem.getAttribute('data-square') as SquareKey;
-export {
-  Board,
-  Cols,
-  Rows,
-  Squares,
-  getSquare
-};
+const getSquare = (elem: HTMLElement): SquareKey =>
+  elem.getAttribute('data-square') as SquareKey;
+export { Board, Cols, Rows, Squares, getSquare };
 
 export default Chessboard;

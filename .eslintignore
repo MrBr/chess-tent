@@ -1,0 +1,10 @@
+# node_modules ignored by default
+
+# Ignore generated Typescript declarations
+**/*.d.ts
+
+# Ignore build directories
+**/dist
+**/build
+**/node_modules
+packages/types

@@ -1,15 +1,17 @@
-import React, {FunctionComponent, useCallback, useRef} from 'react';
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Form from "react-bootstrap/Form";
-import FormGroup from "react-bootstrap/FormGroup";
-import {Chess} from 'chess.js';
+import React, { FunctionComponent, useCallback, useRef } from 'react';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form';
+import FormGroup from 'react-bootstrap/FormGroup';
+import { Chess } from 'chess.js';
 import _ from 'lodash';
 
-import AdvancedChessboard, {AdvancedChessboardState} from './advanced-chessboard';
-import {StepComponent} from "../app/types";
-import {SquareKey} from "../chessboardjs";
+import AdvancedChessboard, {
+  AdvancedChessboardState,
+} from './advanced-chessboard';
+import { StepComponent } from '../app/types';
+import { SquareKey } from '../chessboardjs';
 
 interface SelectPiecesStepState {
   question: string;
@@ -18,40 +20,58 @@ interface SelectPiecesStepState {
   squares: AdvancedChessboardState['squares'];
 }
 
-const Editor: StepComponent<SelectPiecesStepState> = ({ setState, state: { question, squares } }) => {
+const Editor: StepComponent<SelectPiecesStepState> = ({
+  setState,
+  state: { question, squares },
+}) => {
   const advancedBoard = useRef<AdvancedChessboard>(null);
-  const updatePosition = useCallback((position, oldPosition, newPosition) => {
-    setState({
-      position
-    });
-    (Object.keys(oldPosition) as SquareKey[]).forEach((square) => {
-      if (
-        !(squares && squares[square] && squares[square].selected) ||
-        oldPosition[square] === newPosition[square]
-      ) {
-        return;
-      }
+  const updatePosition = useCallback(
+    (position, oldPosition, newPosition) => {
+      setState({
+        position,
+      });
+      (Object.keys(oldPosition) as SquareKey[]).forEach(square => {
+        if (
+          !(squares && squares[square] && squares[square].selected) ||
+          oldPosition[square] === newPosition[square]
+        ) {
+          return;
+        }
 
-      advancedBoard && advancedBoard.current && advancedBoard.current.updateSquare(square, { selected: false });
-    });
-  }, [setState]);
+        advancedBoard &&
+          advancedBoard.current &&
+          advancedBoard.current.updateSquare(square, { selected: false });
+      });
+    },
+    [setState],
+  );
 
-  const updateSquares = useCallback((squares) => {
-    setState({
-      squares
-    })
-  }, [setState]);
+  const updateSquares = useCallback(
+    squares => {
+      setState({
+        squares,
+      });
+    },
+    [setState],
+  );
 
-  const updateQuestionDebounced = useCallback(_.debounce((question: string) => {
-    setState({ question });
-  }, 500), []);
+  const updateQuestionDebounced = useCallback(
+    _.debounce((question: string) => {
+      setState({ question });
+    }, 500),
+    [],
+  );
 
-  const updateQuestion = useCallback((e) => {
-    updateQuestionDebounced(e.target.value)
+  const updateQuestion = useCallback(e => {
+    updateQuestionDebounced(e.target.value);
   }, []);
 
-  const validateSelect = useCallback((square) => {
-    if (!advancedBoard.current || !advancedBoard || !advancedBoard.current.board.current) {
+  const validateSelect = useCallback(square => {
+    if (
+      !advancedBoard.current ||
+      !advancedBoard ||
+      !advancedBoard.current.board.current
+    ) {
       return false;
     }
     const fen = `${advancedBoard.current.board.current.fen()} w KQkq - 0 1`;
@@ -75,13 +95,15 @@ const Editor: StepComponent<SelectPiecesStepState> = ({ setState, state: { quest
           </FormGroup>
           <FormGroup>
             <Form.Label>Selected squares:</Form.Label>
-            {!_.isEmpty(squares) ?
-              Object
-                .keys(squares)
+            {!_.isEmpty(squares) ? (
+              Object.keys(squares)
                 .filter(square => squares[square].selected)
-                .map(square => <h6>{square}</h6>) :
-              <p className="text-muted">No pieces selected, use right click on the board.</p>
-            }
+                .map(square => <h6>{square}</h6>)
+            ) : (
+              <p className="text-muted">
+                No pieces selected, use right click on the board.
+              </p>
+            )}
           </FormGroup>
         </Col>
         <Col>
@@ -112,10 +134,4 @@ const Exercise: StepComponent<SelectPiecesStepState> = ({ state }) => {
 
 const type = 'select-pieces';
 
-export {
-  Editor,
-  Picker,
-  Playground,
-  Exercise,
-  type,
-}
+export { Editor, Picker, Playground, Exercise, type };

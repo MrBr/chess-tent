@@ -1,0 +1,42 @@
+{
+  "extends": [
+    "react-app",
+    "plugin:prettier/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier",
+    "prettier/@typescript-eslint"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["react-hooks"],
+  "overrides": [
+    {
+      "files": ["*.json"],
+      "rules": {
+        "no-unused-expressions": "off"
+      }
+    }
+  ],
+  "rules": {
+    "react/prop-types": 0,
+    "no-underscore-dangle": 0,
+    "import/imports-first": ["error", "absolute-first"],
+    "import/newline-after-import": "error",
+    "@typescript-eslint/explicit-member-accessibility": "off",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "@typescript-eslint/explicit-function-return-type": [
+      "off",
+      {
+        "allowExpressions": true,
+        "allowTypedFunctionExpressions": true
+      }
+    ],
+    "@typescript-eslint/no-empty-function": "off",
+    "@typescript-eslint/ban-ts-ignore": "off"
+  },
+  "globals": {
+    "window": true,
+    "nameof": true,
+    "messageIds": true
+  }
+}

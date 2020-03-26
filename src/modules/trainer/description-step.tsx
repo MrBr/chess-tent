@@ -1,13 +1,15 @@
-import React, {FunctionComponent, useCallback} from 'react';
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Form from "react-bootstrap/Form";
-import FormGroup from "react-bootstrap/FormGroup";
+import React, { FunctionComponent, useCallback } from 'react';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form';
+import FormGroup from 'react-bootstrap/FormGroup';
 import _ from 'lodash';
 
-import AdvancedChessboard, {AdvancedChessboardState} from './advanced-chessboard';
-import { StepComponent } from "../app/types";
+import AdvancedChessboard, {
+  AdvancedChessboardState,
+} from './advanced-chessboard';
+import { StepComponent } from '../app/types';
 
 interface DescriptionStepState {
   position: string;
@@ -17,25 +19,34 @@ interface DescriptionStepState {
 }
 
 const Editor: StepComponent<DescriptionStepState> = ({ setState, state }) => {
-  const updatePosition = useCallback((position) => {
-    setState({
-      position
-    })
-  }, [setState]);
+  const updatePosition = useCallback(
+    position => {
+      setState({
+        position,
+      });
+    },
+    [setState],
+  );
 
-  const updateSquares = useCallback((squares) => {
-    setState({
-      squares
-    })
-  }, [setState]);
+  const updateSquares = useCallback(
+    squares => {
+      setState({
+        squares,
+      });
+    },
+    [setState],
+  );
 
-  const updateDescriptionDebounced = useCallback(_.debounce((description: string) => {
-    setState({ description });
-  }, 500), []);
+  const updateDescriptionDebounced = useCallback(
+    _.debounce((description: string) => {
+      setState({ description });
+    }, 500),
+    [],
+  );
 
-  const updateDescription = useCallback((e) => {
-    updateDescriptionDebounced(e.target.value)
-  },[]);
+  const updateDescription = useCallback(e => {
+    updateDescriptionDebounced(e.target.value);
+  }, []);
 
   return (
     <Container>
@@ -78,10 +89,4 @@ const Exercise: StepComponent<DescriptionStepState> = ({ state }) => {
 
 const type = 'description';
 
-export {
-  Editor,
-  Picker,
-  Playground,
-  Exercise,
-  type,
-}
+export { Editor, Picker, Playground, Exercise, type };

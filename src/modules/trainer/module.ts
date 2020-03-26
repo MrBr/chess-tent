@@ -1,4 +1,4 @@
-import { registerStep, registerReducer } from "../app";
+import { registerStep, registerReducer } from '../app';
 
 import * as Description from './description-step';
 import * as SelectSquares from './select-squares-step';

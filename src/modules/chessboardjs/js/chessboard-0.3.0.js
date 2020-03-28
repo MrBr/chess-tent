@@ -1670,6 +1670,10 @@ widget.highlight = function() {
         beginDraggingPiece(square, CURRENT_POSITION[square], e.pageX, e.pageY);
       }
 
+      function mouseupSquare(e) {
+        cfg.onMouseUp && cfg.onMouseUp(e);
+      }
+
       function touchstartSquare(e) {
         // do nothing if we're not draggable
         if (cfg.draggable !== true) return;
@@ -1835,6 +1839,7 @@ widget.highlight = function() {
 
         // mouse drag pieces
         boardEl.on('mousedown', '.' + CSS.square, mousedownSquare);
+        boardEl.on('mouseup', '.' + CSS.square, mouseupSquare);
         containerEl.on(
           'mousedown',
           '.' + CSS.sparePieces + ' .' + CSS.piece,

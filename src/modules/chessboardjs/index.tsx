@@ -47,6 +47,7 @@ export interface ChessboardProps {
   onDrop?: Function;
   onReset?: Function;
   onMouseDown?: Function;
+  onMouseUp?: Function;
   validateDrop?: Function;
   renderSquare?: Function;
 }
@@ -71,6 +72,7 @@ class Chessboard extends Component<ChessboardProps> {
       onDrop: this.onDrop,
       onChange: this.onChange,
       onMouseDown: this.onMouseDown,
+      onMouseUp: this.onMouseUp,
       sparePieces: true,
       draggable,
       position,
@@ -109,6 +111,11 @@ class Chessboard extends Component<ChessboardProps> {
   onMouseDown = (...args: [any]) => {
     const { onMouseDown } = this.props;
     onMouseDown && onMouseDown(...args);
+  };
+
+  onMouseUp = (...args: [any]) => {
+    const { onMouseUp } = this.props;
+    onMouseUp && onMouseUp(...args);
   };
 
   onDrop = (...args: []) => {

@@ -49,10 +49,10 @@ class AdvancedChessboard extends Component<
     this.state = { ...INITIAL_STATE };
   }
 
-  onMouseDown = (...args: [MouseEvent]) => {
+  onMouseUp = (...args: [MouseEvent]) => {
     rightMouse(this.rightMouseDown)(...args);
-    const { onMouseDown } = this.props;
-    onMouseDown && onMouseDown(...args);
+    const { onMouseUp } = this.props;
+    onMouseUp && onMouseUp(...args);
   };
 
   onReset = (...args: []) => {
@@ -165,7 +165,7 @@ class AdvancedChessboard extends Component<
         {...chessboardProps}
         ref={this.board}
         renderSquare={this.renderSquare}
-        onMouseDown={this.onMouseDown}
+        onMouseUp={this.onMouseUp}
         onReset={this.onReset}
       />
     );

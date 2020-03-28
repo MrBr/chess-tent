@@ -1,12 +1,13 @@
 import styled from '@emotion/styled';
 import React, { Component, ReactChildren, RefObject } from 'react';
 import { rightMouse } from '../addons';
+import _ from 'lodash';
+
 import Chessboard, {
   ChessboardProps,
   getSquare,
   SquareKey,
 } from '../chessboardjs';
-import _ from 'lodash';
 
 const SelectableSquare = styled.div<{ selected: boolean }>(
   {
@@ -29,6 +30,7 @@ interface AdvancedChessboardProps extends ChessboardProps {
   onSquaresUpdate?: Function;
   validateSelect?: Function;
   onSquareSelected?: Function;
+  onSquareDeselected?: Function;
 }
 
 export interface AdvancedChessboardState {
@@ -78,6 +80,12 @@ class AdvancedChessboard extends Component<
     onSquareSelected && onSquareSelected(square, state);
   };
 
+  onSquareDeselected = (square: SquareKey) => {
+    const { onSquareDeselected } = this.props;
+    const state = this.getSquare(square);
+    onSquareDeselected && onSquareDeselected(square, state);
+  };
+
   updateState(state: AdvancedChessboardState, cb: Function) {
     this.setState(state, () => {
       cb && cb();
@@ -124,9 +132,13 @@ class AdvancedChessboard extends Component<
   }
 
   deselectSquare(square: SquareKey) {
-    this.updateSquare(square, {
-      selected: false,
-    });
+    this.updateSquare(
+      square,
+      {
+        selected: false,
+      },
+      this.onSquareDeselected,
+    );
   }
 
   toggleSquareState(square: SquareKey) {

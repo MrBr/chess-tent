@@ -32,17 +32,23 @@ const Editor: StepComponent<AttackStepState> = ({
     [setState],
   );
 
-  const updateSquare = useCallback(
+  const updateAttackSquare = useCallback(
     (newSquare: SquareKey, state: AdvancedChessboardState['squares']) => {
       setState({
         square: newSquare,
         squareState: state,
       });
+    },
+    [setState],
+  );
+  const onSquareSelected = useCallback(
+    (newSquare: SquareKey, state: AdvancedChessboardState['squares']) => {
+      updateAttackSquare(newSquare, state);
       square &&
         advancedBoard.current &&
         advancedBoard.current.deselectSquare(square);
     },
-    [setState, square],
+    [updateAttackSquare, square],
   );
 
   const updateQuestionDebounced = useCallback(
@@ -92,7 +98,8 @@ const Editor: StepComponent<AttackStepState> = ({
             ref={advancedBoard}
             tip="Setup position and select square for the attack"
             onChange={updatePosition}
-            onSquareSelected={updateSquare}
+            onSquareSelected={onSquareSelected}
+            onSquareDeselected={updateAttackSquare}
           />
         </Col>
       </Row>

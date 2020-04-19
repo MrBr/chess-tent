@@ -5,17 +5,14 @@ import Col from 'react-bootstrap/Col';
 import _ from 'lodash';
 
 import { FormGroup, Form } from '../ui/Form';
-import AdvancedChessboard, {
-  AdvancedChessboardState,
-} from './advanced-chessboard';
-import { SquareKey } from '../chessboardjs';
+import Chessboard, { SquareKey, State } from '../chessboard';
 import { StepComponent } from '../app/types';
 
 interface AttackStepState {
   question: string;
   square: SquareKey;
   position: string;
-  squareState: AdvancedChessboardState['squares'];
+  shapes: State['drawable']['shapes'];
   title: string;
 }
 
@@ -23,7 +20,7 @@ const Editor: StepComponent<AttackStepState> = ({
   setState,
   state: { question, square },
 }) => {
-  const advancedBoard = useRef<AdvancedChessboard>(null);
+  const advancedBoard = useRef<Chessboard>(null);
 
   const updatePosition = useCallback(
     (position: string) => {
@@ -33,20 +30,17 @@ const Editor: StepComponent<AttackStepState> = ({
   );
 
   const updateAttackSquare = useCallback(
-    (newSquare: SquareKey, state: AdvancedChessboardState['squares']) => {
+    (newSquare: SquareKey, state: State['drawable']['shapes']) => {
       setState({
         square: newSquare,
-        squareState: state,
+        shapes: state,
       });
     },
     [setState],
   );
   const onSquareSelected = useCallback(
-    (newSquare: SquareKey, state: AdvancedChessboardState['squares']) => {
+    (newSquare: SquareKey, state: State['drawable']['shapes']) => {
       updateAttackSquare(newSquare, state);
-      square &&
-        advancedBoard.current &&
-        advancedBoard.current.deselectSquare(square);
     },
     [updateAttackSquare, square],
   );
@@ -94,12 +88,10 @@ const Editor: StepComponent<AttackStepState> = ({
           </FormGroup>
         </Col>
         <Col>
-          <AdvancedChessboard
+          <Chessboard
             ref={advancedBoard}
             tip="Setup position and select square for the attack"
             onChange={updatePosition}
-            onSquareSelected={onSquareSelected}
-            onSquareDeselected={updateAttackSquare}
           />
         </Col>
       </Row>

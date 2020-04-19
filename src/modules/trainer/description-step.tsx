@@ -6,16 +6,14 @@ import Form from 'react-bootstrap/Form';
 import FormGroup from 'react-bootstrap/FormGroup';
 import _ from 'lodash';
 
-import AdvancedChessboard, {
-  AdvancedChessboardState,
-} from './advanced-chessboard';
 import { StepComponent } from '../app/types';
+import Chessboard, { State } from '../chessboard';
 
 interface DescriptionStepState {
   position: string;
   description: string;
   title: string;
-  squares: AdvancedChessboardState['squares'];
+  shapes: State['drawable']['shapes'];
 }
 
 const Editor: StepComponent<DescriptionStepState> = ({ setState, state }) => {
@@ -28,10 +26,10 @@ const Editor: StepComponent<DescriptionStepState> = ({ setState, state }) => {
     [setState],
   );
 
-  const updateSquares = useCallback(
-    squares => {
+  const updateShapes = useCallback(
+    shapes => {
       setState({
-        squares,
+        shapes,
       });
     },
     [setState],
@@ -64,10 +62,10 @@ const Editor: StepComponent<DescriptionStepState> = ({ setState, state }) => {
           </FormGroup>
         </Col>
         <Col>
-          <AdvancedChessboard
+          <Chessboard
             tip="Setup position for the description"
             onChange={updatePosition}
-            onSquaresUpdate={updateSquares}
+            onShapesChange={updateShapes}
           />
         </Col>
       </Row>

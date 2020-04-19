@@ -6,21 +6,20 @@ import Form from 'react-bootstrap/Form';
 import FormGroup from 'react-bootstrap/FormGroup';
 import _ from 'lodash';
 
-import AdvancedChessboard, {
-  AdvancedChessboardState,
-} from './advanced-chessboard';
+import Chessboard, { State } from '../chessboard';
 import { StepComponent } from '../app/types';
+import Chess from '../chess';
 
 interface SelectSquaresStepState {
   question: string;
   title: string;
   position: string;
-  squares: AdvancedChessboardState['squares'];
+  shapes: State['drawable']['shapes'];
 }
 
 const Editor: StepComponent<SelectSquaresStepState> = ({
   setState,
-  state: { question, squares },
+  state: { question, shapes },
 }) => {
   const updatePosition = useCallback(
     position => {
@@ -31,10 +30,10 @@ const Editor: StepComponent<SelectSquaresStepState> = ({
     [setState],
   );
 
-  const updateSquares = useCallback(
-    squares => {
+  const updateShapes = useCallback(
+    shapes => {
       setState({
-        squares,
+        shapes,
       });
     },
     [setState],
@@ -50,6 +49,8 @@ const Editor: StepComponent<SelectSquaresStepState> = ({
   const updateQuestion = useCallback(e => {
     updateQuestionDebounced(e.target.value);
   }, []);
+
+  const validateSelect = useCallback(shapes => !shapes.dest, []);
 
   return (
     <Container>
@@ -67,10 +68,8 @@ const Editor: StepComponent<SelectSquaresStepState> = ({
           </FormGroup>
           <FormGroup>
             <Form.Label>Selected squares:</Form.Label>
-            {!_.isEmpty(squares) ? (
-              Object.keys(squares)
-                .filter(square => squares[square].selected)
-                .map(square => <h6>{square}</h6>)
+            {!_.isEmpty(shapes) ? (
+              shapes.map(shape => <h6>{shape.orig}</h6>)
             ) : (
               <p className="text-muted">
                 No square selected, use right click on the board.
@@ -79,10 +78,11 @@ const Editor: StepComponent<SelectSquaresStepState> = ({
           </FormGroup>
         </Col>
         <Col>
-          <AdvancedChessboard
+          <Chessboard
             tip="Setup position and select squares for the task"
             onChange={updatePosition}
-            onSquaresUpdate={updateSquares}
+            onShapesChange={updateShapes}
+            validateDrawable={validateSelect}
           />
         </Col>
       </Row>

@@ -4,52 +4,46 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import FormGroup from 'react-bootstrap/FormGroup';
-import { Chess } from 'chess.js';
 import _ from 'lodash';
 
-import AdvancedChessboard, {
-  AdvancedChessboardState,
-} from './advanced-chessboard';
+import Chessboard, { State } from '../chessboard';
+import Chess from '../chess';
 import { StepComponent } from '../app/types';
-import { SquareKey } from '../chessboardjs';
+import { SquareKey } from '../chessboard';
 
 interface SelectPiecesStepState {
   question: string;
   title: string;
   position: string;
-  squares: AdvancedChessboardState['squares'];
+  shapes: State['drawable']['shapes'];
 }
 
 const Editor: StepComponent<SelectPiecesStepState> = ({
   setState,
-  state: { question, squares },
+  state: { question, shapes },
 }) => {
-  const advancedBoard = useRef<AdvancedChessboard>(null);
+  const chessboard = useRef<Chessboard>(null);
   const updatePosition = useCallback(
-    (position, oldPosition, newPosition) => {
+    (position, lastMove) => {
       setState({
         position,
       });
-      (Object.keys(oldPosition) as SquareKey[]).forEach(square => {
-        if (
-          !(squares && squares[square] && squares[square].selected) ||
-          oldPosition[square] === newPosition[square]
-        ) {
-          return;
-        }
-
-        advancedBoard &&
-          advancedBoard.current &&
-          advancedBoard.current.updateSquare(square, { selected: false });
-      });
+      if (!chessboard.current) {
+        return;
+      }
+      const state = chessboard.current.getState();
+      const shape = state.drawable.shapes.find(
+        shape => shape.orig === lastMove[0],
+      );
+      shape && chessboard.current.removeShape(shape);
     },
     [setState],
   );
 
-  const updateSquares = useCallback(
-    squares => {
+  const updateShapes = useCallback(
+    shapes => {
       setState({
-        squares,
+        shapes,
       });
     },
     [setState],
@@ -66,15 +60,12 @@ const Editor: StepComponent<SelectPiecesStepState> = ({
     updateQuestionDebounced(e.target.value);
   }, []);
 
-  const validateSelect = useCallback(square => {
-    if (
-      !advancedBoard.current ||
-      !advancedBoard ||
-      !advancedBoard.current.board.current
-    ) {
+  const validateSelect = useCallback(shapes => {
+    if (!chessboard.current || shapes.dest) {
       return false;
     }
-    const fen = `${advancedBoard.current.board.current.fen()} w KQkq - 0 1`;
+    const square = shapes.orig;
+    const fen = `${chessboard.current.fen()} w KQkq - 0 1`;
     const chess = new Chess(fen);
     return !!chess.get(square);
   }, []);
@@ -94,11 +85,9 @@ const Editor: StepComponent<SelectPiecesStepState> = ({
             />
           </FormGroup>
           <FormGroup>
-            <Form.Label>Selected squares:</Form.Label>
-            {!_.isEmpty(squares) ? (
-              Object.keys(squares)
-                .filter(square => squares[square].selected)
-                .map(square => <h6>{square}</h6>)
+            <Form.Label>Selected pieces:</Form.Label>
+            {!_.isEmpty(shapes) ? (
+              shapes.map(shape => <h6>{shape.orig}</h6>)
             ) : (
               <p className="text-muted">
                 No pieces selected, use right click on the board.
@@ -107,12 +96,12 @@ const Editor: StepComponent<SelectPiecesStepState> = ({
           </FormGroup>
         </Col>
         <Col>
-          <AdvancedChessboard
-            validateSelect={validateSelect}
-            ref={advancedBoard}
+          <Chessboard
+            validateDrawable={validateSelect}
+            ref={chessboard}
             tip="Setup position and select pieces for the task"
             onChange={updatePosition}
-            onSquaresUpdate={updateSquares}
+            onShapesChange={updateShapes}
           />
         </Col>
       </Row>

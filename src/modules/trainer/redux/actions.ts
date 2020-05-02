@@ -2,10 +2,8 @@ import {
   Action,
   Exercise,
   ExercisesState,
-  Move,
   Section,
   SectionsState,
-  Shape,
   StepInstance,
   StepsState,
 } from '../../app/types';
@@ -21,11 +19,8 @@ export const REMOVE_SECTION_STEP = 'REMOVE_SECTION_STEP';
 export const REMOVE_SECTION_SECTION = 'REMOVE_SECTION_SECTION';
 
 export const SET_STEPS = 'STEP_STEPS';
-export const ADD_STEP_MOVE = 'ADD_STEP_MOVE';
-export const ADD_STEP_SHAPE = 'ADD_STEP_SHAPE';
-export const REMOVE_STEP_MOVE = 'REMOVE_STEP_MOVE';
-export const REMOVE_STEP_SHAPE = 'REMOVE_STEP_SHAPE';
 export const UPDATE_STEP = 'UPDATE_STEP';
+export const UPDATE_STEP_STATE = 'UPDATE_STEP_STATE';
 
 /**
  * Exercise actions
@@ -156,84 +151,26 @@ export const removeSectionStep = (
  */
 type UpdatableStepProps = Omit<{}, 'moves' | 'scheme' | 'shapes' | 'id'>;
 type SetStepsAction = Action<typeof SET_STEPS, { [key: string]: StepInstance }>;
-type AddStepMoveAction = Action<
-  typeof ADD_STEP_MOVE,
-  Move,
-  { id: StepInstance['id'] }
->;
-type AddStepShapeAction = Action<
-  typeof ADD_STEP_SHAPE,
-  Shape,
-  { id: StepInstance['id'] }
->;
-type RemoveStepMoveAction = Action<
-  typeof REMOVE_STEP_MOVE,
-  Move,
-  { id: StepInstance['id'] }
->;
-type RemoveStepShapeAction = Action<
-  typeof REMOVE_STEP_SHAPE,
-  Shape,
-  { id: StepInstance['id'] }
->;
 type UpdateStepAction = Action<
   typeof UPDATE_STEP,
   UpdatableStepProps,
   { id: StepInstance['id'] }
 >;
+type UpdateStepStateAction = Action<
+  typeof UPDATE_STEP_STATE,
+  {},
+  { id: StepInstance['id'] }
+>;
 
 export type StepAction =
   | SetStepsAction
-  | AddStepMoveAction
-  | AddStepShapeAction
-  | RemoveStepMoveAction
-  | RemoveStepShapeAction
-  | UpdateStepAction;
+  | UpdateStepAction
+  | UpdateStepStateAction;
 
 export const setStepsAction = (steps: StepsState): SetStepsAction => ({
   type: SET_STEPS,
   payload: steps,
   meta: {},
-});
-export const addStepMoveAction = (
-  step: StepInstance,
-  move: Move,
-): AddStepMoveAction => ({
-  type: ADD_STEP_MOVE,
-  payload: move,
-  meta: {
-    id: step.id,
-  },
-});
-export const addStepShapeAction = (
-  step: StepInstance,
-  shape: Shape,
-): AddStepShapeAction => ({
-  type: ADD_STEP_SHAPE,
-  payload: shape,
-  meta: {
-    id: step.id,
-  },
-});
-export const removeStepMoveAction = (
-  step: StepInstance,
-  move: Move,
-): RemoveStepMoveAction => ({
-  type: REMOVE_STEP_MOVE,
-  payload: move,
-  meta: {
-    id: step.id,
-  },
-});
-export const removeStepShapeAction = (
-  step: StepInstance,
-  shape: Shape,
-): RemoveStepShapeAction => ({
-  type: REMOVE_STEP_SHAPE,
-  payload: shape,
-  meta: {
-    id: step.id,
-  },
 });
 export const updateStepAction = (
   step: StepInstance,
@@ -241,6 +178,16 @@ export const updateStepAction = (
 ): UpdateStepAction => ({
   type: UPDATE_STEP,
   payload: patch,
+  meta: {
+    id: step.id,
+  },
+});
+export const updateStepStateAction = (
+  step: StepInstance,
+  statePatch: {},
+): UpdateStepStateAction => ({
+  type: UPDATE_STEP_STATE,
+  payload: statePatch,
   meta: {
     id: step.id,
   },

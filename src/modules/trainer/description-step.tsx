@@ -8,28 +8,44 @@ import _ from 'lodash';
 import { DrawShape } from 'chessground/draw';
 import { FEN } from 'chessground/types';
 
-import { BasicStep, Move, StepComponent } from '../app/types';
+import { Move, StepComponent, StepInstance } from '../app/types';
 import Chessboard from '../chessboard';
 import { Action } from './step';
-import { addStepMoveAction, updateStepAction } from './redux';
+import { updateStepStateAction } from './redux';
 import { Button } from '../ui/Button';
 import { useDispatchBatched } from '../app/hooks';
 
-const Editor: StepComponent<BasicStep> = ({ step, addSection, addStep }) => {
+type DescriptionStep = StepInstance<{
+  moves: Move[];
+  shapes: DrawShape[];
+  position: FEN;
+  description: string;
+}>;
+
+const Editor: StepComponent<DescriptionStep> = ({
+  step,
+  addSection,
+  addStep,
+}) => {
   const dispatch = useDispatchBatched();
-  const updateShapes = useCallback((shapes: DrawShape[]) => {
-    // dispatch(addStepShape(step, shapes);
-  }, []);
+  const updateShapes = useCallback(
+    (shapes: DrawShape[]) => dispatch(updateStepStateAction(step, { shapes })),
+    [dispatch, step],
+  );
   const updateMoves = useCallback(
-    (position: FEN, move: Move | undefined) => {
-      move && dispatch(addStepMoveAction(step, move));
-    },
+    (position: FEN, move: Move | undefined) =>
+      move &&
+      dispatch(
+        updateStepStateAction(step, {
+          moves: [...step.state.moves, move],
+        }),
+      ),
     [dispatch, step],
   );
 
   const updateDescriptionDebounced = useCallback(
     _.debounce((description: string) => {
-      dispatch(updateStepAction(step, { description }));
+      dispatch(updateStepStateAction(step, { description }));
     }, 500),
     [dispatch],
   );
@@ -58,7 +74,7 @@ const Editor: StepComponent<BasicStep> = ({ step, addSection, addStep }) => {
               rows="3"
               placeholder="Describe next few steps"
               onChange={updateDescription}
-              defaultValue={step.description}
+              defaultValue={step.state.description}
             />
           </FormGroup>
         </Col>
@@ -78,23 +94,23 @@ const Picker: FunctionComponent = () => {
   return <>Description</>;
 };
 
-const Playground: StepComponent<BasicStep> = ({ step }) => {
+const Playground: StepComponent<DescriptionStep> = ({ step }) => {
   return <>{'Basic step playground'}</>;
 };
 
-const Exercise: StepComponent<BasicStep> = ({ step }) => {
+const Exercise: StepComponent<DescriptionStep> = ({ step }) => {
   return <>{'Description'}</>;
 };
 
-const ActionsComponent: StepComponent<BasicStep> = ({ step }) => {
+const ActionsComponent: StepComponent<DescriptionStep> = ({ step }) => {
   return (
     <>
       Actions
       <div>
-        {step.moves.map(move => (
+        {step.state.moves.map(move => (
           <Action>{move}</Action>
         ))}
-        {step.shapes.map(shape => (
+        {step.state.shapes.map(shape => (
           <Action>{shape.brush}</Action>
         ))}
       </div>
@@ -104,11 +120,20 @@ const ActionsComponent: StepComponent<BasicStep> = ({ step }) => {
 
 const type = 'description';
 
+const getInitialState = () => {
+  return {
+    moves: [],
+    shapes: [],
+    position: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR',
+  };
+};
+
 export {
   Editor,
   Picker,
   Playground,
   Exercise,
   ActionsComponent as Actions,
+  getInitialState,
   type,
 };

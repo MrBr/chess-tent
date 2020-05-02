@@ -30,19 +30,14 @@ export type StepModule = {
   Exercise: StepComponent<any>;
   Actions: StepComponent<any>;
   type: StepType;
+  getInitialState: () => {};
 };
 
-export interface StepInstance {
+export interface StepInstance<T extends {} = {}> {
   id: string;
   type: StepType;
-  moves: Move[];
-  shapes: DrawShape[];
+  state: T;
   schema: 'steps';
-  position?: string;
-}
-
-export interface BasicStep extends StepInstance {
-  description: string;
 }
 
 export type EntityState<T> = { [key: string]: T };
@@ -52,13 +47,6 @@ export interface AppState {
     sections: EntityState<Section>;
     steps: EntityState<StepInstance>;
   };
-}
-
-export enum ExerciseActionTypes {
-  SET_EXERCISE_STATE = 'SET_EXERCISE_STATE',
-  SET_SECTION_STATE = 'SET_SECTION_STATE',
-  SET_STEP_STATE = 'SET_STEP_STATE',
-  SET_ACTION_STATE = 'SET_ACTION_STATE',
 }
 
 export interface Section {
@@ -72,17 +60,6 @@ export interface Exercise {
   section: Section;
   activeStep: StepInstance;
   schema: 'exercises';
-}
-
-export interface SetExerciseStateAction {
-  type: ExerciseActionTypes.SET_EXERCISE_STATE;
-  payload: Partial<Exercise>;
-}
-
-export interface SetStepAction {
-  type: ExerciseActionTypes.SET_STEP_STATE;
-  payload: Partial<StepInstance>;
-  meta: { id?: StepInstance['id'] };
 }
 
 export type Move = [Key, Key];

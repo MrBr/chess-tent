@@ -44,13 +44,12 @@ const Exercise = () => {
   const dispatchNormalize = useDispatchNormalizeBatched();
 
   useEffect(() => {
+    const state = getStep('description').getInitialState();
     const defaultStep: StepInstance = {
       id: '1',
       type: 'description',
-      moves: [],
-      shapes: [],
       schema: 'steps',
-      position: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR',
+      state,
     };
     const defaultExercise = {
       id: '1',
@@ -75,12 +74,12 @@ const Exercise = () => {
 
   const addSection = useCallback(() => {
     const activeSection = getActiveStepSection(exercise);
+    const state = getStep('description').getInitialState();
     const newStep: StepInstance = {
       id: uuid(),
-      moves: [],
-      shapes: [],
       type: 'description',
       schema: 'steps',
+      state,
     };
     const newSection: Section = {
       id: uuid(),
@@ -95,12 +94,12 @@ const Exercise = () => {
 
   const addStep = useCallback(() => {
     const activeSection = getActiveStepSection(exercise);
+    const state = getStep('description').getInitialState();
     const newStep: StepInstance = {
       id: uuid(),
-      moves: [],
-      shapes: [],
       type: 'description',
       schema: 'steps',
+      state,
     };
     dispatch(
       addSectionStep(activeSection, newStep),

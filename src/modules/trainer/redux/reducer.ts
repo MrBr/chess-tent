@@ -2,27 +2,24 @@ import { combineReducers } from 'redux';
 
 import {
   exerciseSchema,
+  ExercisesState,
   sectionSchema,
+  SectionsState,
   stepSchema,
   StepsState,
-  ExercisesState,
-  SectionsState,
 } from '../../app/types';
 import { isSection, isStep } from '../service';
 import {
   ADD_SECTION_SECTION,
   ADD_SECTION_STEP,
-  ADD_STEP_MOVE,
-  ADD_STEP_SHAPE,
   ExerciseAction,
   REMOVE_SECTION_SECTION,
   REMOVE_SECTION_STEP,
-  REMOVE_STEP_MOVE,
-  REMOVE_STEP_SHAPE,
   SectionAction,
   SET_EXERCISE_ACTIVE_STEP,
   SET_EXERCISES,
   SET_SECTIONS,
+  UPDATE_STEP_STATE,
   SET_STEPS,
   StepAction,
   UPDATE_EXERCISE,
@@ -148,55 +145,18 @@ const sectionsReducer = (state: SectionsState = {}, action: SectionAction) => {
 };
 const stepsReducer = (state: StepsState = {}, action: StepAction) => {
   switch (action.type) {
-    case ADD_STEP_MOVE: {
+    case UPDATE_STEP_STATE: {
       const stepId = action.meta.id;
-      const move = action.payload;
+      const statePatch = action.payload;
       const step = state[stepId];
       return {
         ...state,
         [stepId]: {
           ...step,
-          moves: [...step.moves, move],
-        },
-      };
-    }
-    case ADD_STEP_SHAPE: {
-      const stepId = action.meta.id;
-      const shape = action.payload;
-      const step = state[stepId];
-      return {
-        ...state,
-        [stepId]: {
-          ...step,
-          shapes: [...step.shapes, shape],
-        },
-      };
-    }
-    case REMOVE_STEP_MOVE: {
-      const stepId = action.meta.id;
-      const move = action.payload;
-      const step = state[stepId];
-      const moveIndex = step.moves.findIndex(item => item === move);
-      const moves = step.moves.slice(0, moveIndex - 1);
-      return {
-        ...state,
-        [stepId]: {
-          ...step,
-          moves: moves,
-        },
-      };
-    }
-    case REMOVE_STEP_SHAPE: {
-      const stepId = action.meta.id;
-      const shape = action.payload;
-      const step = state[stepId];
-      const shapeIndex = step.shapes.findIndex(item => item === shape);
-      const shapes = step.shapes.filter((shape, index) => index === shapeIndex);
-      return {
-        ...state,
-        [stepId]: {
-          ...step,
-          shapes,
+          state: {
+            ...step.state,
+            ...statePatch,
+          },
         },
       };
     }

@@ -5,47 +5,48 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import FormGroup from 'react-bootstrap/FormGroup';
 import _ from 'lodash';
+import { DrawShape } from 'chessground/draw';
+import { FEN } from 'chessground/types';
 
-import { StepComponent } from '../app/types';
-import Chessboard, { State } from '../chessboard';
+import { BasicStep, Move, StepComponent } from '../app/types';
+import Chessboard from '../chessboard';
+import { Action } from './step';
+import { addStepMoveAction, updateStepAction } from './redux';
+import { Button } from '../ui/Button';
+import { useDispatchBatched } from '../app/hooks';
 
-interface DescriptionStepState {
-  position: string;
-  description: string;
-  title: string;
-  shapes: State['drawable']['shapes'];
-}
-
-const Editor: StepComponent<DescriptionStepState> = ({ setState, state }) => {
-  const updatePosition = useCallback(
-    position => {
-      setState({
-        position,
-      });
+const Editor: StepComponent<BasicStep> = ({ step, addSection, addStep }) => {
+  const dispatch = useDispatchBatched();
+  const updateShapes = useCallback((shapes: DrawShape[]) => {
+    // dispatch(addStepShape(step, shapes);
+  }, []);
+  const updateMoves = useCallback(
+    (position: FEN, move: Move | undefined) => {
+      move && dispatch(addStepMoveAction(step, move));
     },
-    [setState],
-  );
-
-  const updateShapes = useCallback(
-    shapes => {
-      setState({
-        shapes,
-      });
-    },
-    [setState],
+    [dispatch, step],
   );
 
   const updateDescriptionDebounced = useCallback(
     _.debounce((description: string) => {
-      setState({ description });
+      dispatch(updateStepAction(step, { description }));
     }, 500),
-    [],
+    [dispatch],
   );
 
-  const updateDescription = useCallback(e => {
-    updateDescriptionDebounced(e.target.value);
-  }, []);
+  const updateDescription = useCallback(
+    e => {
+      updateDescriptionDebounced(e.target.value);
+    },
+    [updateDescriptionDebounced],
+  );
 
+  const BoardHeader = () => (
+    <div>
+      <Button onClick={addSection}>Add section</Button>
+      <Button onClick={addStep}>Add step</Button>
+    </div>
+  );
   return (
     <Container>
       <Row>
@@ -57,14 +58,14 @@ const Editor: StepComponent<DescriptionStepState> = ({ setState, state }) => {
               rows="3"
               placeholder="Describe next few steps"
               onChange={updateDescription}
-              defaultValue={state.description}
+              defaultValue={step.description}
             />
           </FormGroup>
         </Col>
         <Col>
           <Chessboard
-            tip="Setup position for the description"
-            onChange={updatePosition}
+            header={<BoardHeader />}
+            onChange={updateMoves}
             onShapesChange={updateShapes}
           />
         </Col>
@@ -77,14 +78,37 @@ const Picker: FunctionComponent = () => {
   return <>Description</>;
 };
 
-const Playground: StepComponent<DescriptionStepState> = ({ state }) => {
-  return <>{state.title}</>;
+const Playground: StepComponent<BasicStep> = ({ step }) => {
+  return <>{'Basic step playground'}</>;
 };
 
-const Exercise: StepComponent<DescriptionStepState> = ({ state }) => {
-  return <>{state.title || 'Description'}</>;
+const Exercise: StepComponent<BasicStep> = ({ step }) => {
+  return <>{'Description'}</>;
+};
+
+const ActionsComponent: StepComponent<BasicStep> = ({ step }) => {
+  return (
+    <>
+      Actions
+      <div>
+        {step.moves.map(move => (
+          <Action>{move}</Action>
+        ))}
+        {step.shapes.map(shape => (
+          <Action>{shape.brush}</Action>
+        ))}
+      </div>
+    </>
+  );
 };
 
 const type = 'description';
 
-export { Editor, Picker, Playground, Exercise, type };
+export {
+  Editor,
+  Picker,
+  Playground,
+  Exercise,
+  ActionsComponent as Actions,
+  type,
+};

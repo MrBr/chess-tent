@@ -1,8 +1,12 @@
 import { ComponentType, FunctionComponent } from 'react';
+import { DrawShape } from 'chessground/draw';
+import { Key } from 'chessground/types';
+import { schema } from 'normalizr';
 
 export type StepProps<S, P = {}> = {
-  setState: (state: Partial<S>) => void;
-  state: S;
+  step: S;
+  addSection: () => void;
+  addStep: () => void;
 } & P;
 
 export type StepComponent<S> = ComponentType<StepProps<S>>;
@@ -16,6 +20,7 @@ export type StepModuleComponentKey =
   | 'Editor'
   | 'Picker'
   | 'Playground'
+  | 'Actions'
   | 'Exercise';
 
 export type StepModule = {
@@ -23,32 +28,55 @@ export type StepModule = {
   Editor: StepComponent<any>;
   Playground: StepComponent<any>;
   Exercise: StepComponent<any>;
+  Actions: StepComponent<any>;
   type: StepType;
 };
 
-export type StepInstance = {
+export interface StepInstance {
   id: string;
   type: StepType;
-  state: any;
-};
+  moves: Move[];
+  shapes: DrawShape[];
+  schema: 'steps';
+  position?: string;
+}
 
+export interface BasicStep extends StepInstance {
+  description: string;
+}
+
+export type EntityState<T> = { [key: string]: T };
 export interface AppState {
-  trainer: ExerciseState;
+  trainer: {
+    exercises: EntityState<Exercise>;
+    sections: EntityState<Section>;
+    steps: EntityState<StepInstance>;
+  };
 }
 
 export enum ExerciseActionTypes {
   SET_EXERCISE_STATE = 'SET_EXERCISE_STATE',
+  SET_SECTION_STATE = 'SET_SECTION_STATE',
   SET_STEP_STATE = 'SET_STEP_STATE',
+  SET_ACTION_STATE = 'SET_ACTION_STATE',
 }
 
-export interface ExerciseState {
-  steps: StepInstance[];
-  activeStepId: StepInstance['id'] | null;
+export interface Section {
+  id: string;
+  children: (StepInstance | Section)[];
+  schema: 'sections';
+}
+
+export interface Exercise {
+  id: string;
+  section: Section;
+  activeStep: StepInstance;
+  schema: 'exercises';
 }
 
 export interface SetExerciseStateAction {
   type: ExerciseActionTypes.SET_EXERCISE_STATE;
-  payload: Partial<ExerciseState>;
+  payload: Partial<Exercise>;
 }
 
 export interface SetStepAction {
@@ -57,4 +85,39 @@ export interface SetStepAction {
   meta: { id?: StepInstance['id'] };
 }
 
-export type ExerciseAction = SetExerciseStateAction | SetStepAction;
+export type Move = [Key, Key];
+
+export type Shape = DrawShape;
+
+export interface Actions {
+  shapes: DrawShape[];
+  moves: Move[];
+}
+
+export type ActionPayload = DrawShape[] | Move;
+
+export type ExercisesState = { [key: string]: Exercise };
+export type SectionsState = { [key: string]: Section };
+export type StepsState = { [key: string]: StepInstance };
+
+export const stepSchema = new schema.Entity('steps');
+
+export const sectionSchema = new schema.Entity('sections');
+export const sectionChildrenSchema = new schema.Array(
+  {
+    sections: sectionSchema,
+    steps: stepSchema,
+  },
+  value => value.schema,
+);
+sectionSchema.define({ children: sectionChildrenSchema });
+
+export const exerciseSchema = new schema.Entity('exercises', {
+  section: sectionSchema,
+  activeStep: stepSchema,
+});
+export type Action<T, P, M = {}> = {
+  type: T;
+  payload: P;
+  meta: M;
+};

@@ -7,8 +7,8 @@ const registerStep = (step: StepModule) => {
   Steps.push(step);
 };
 
-const getStep = (type: StepType): StepModule | undefined => {
-  return Steps.find(step => step.type === type);
+const getStep = (type: StepType): StepModule => {
+  return Steps.find(step => step.type === type) as StepModule;
 };
 
 const getStepComponent = (

@@ -1,12 +1,12 @@
-import React, { Component, ReactChildren, ReactNode, RefObject } from 'react';
+import React, { Component, ReactNode, RefObject } from 'react';
 import styled from '@emotion/styled';
-import Button from 'react-bootstrap/Button';
 import { Chessground } from 'chessground';
 
 import { Api } from 'chessground/api';
 import { FEN, Key } from 'chessground/types';
 import { State as CGState } from 'chessground/state';
 import { DrawCurrent, DrawShape } from 'chessground/src/draw';
+import { Move } from '../app/types';
 
 export type State = CGState;
 
@@ -31,19 +31,16 @@ const BoardHeader = styled.div({
   justifyContent: 'space-between',
   alignItems: 'center',
 });
-const BoardHeaderActions = styled.div({
-  flex: 0,
-});
 
 const Board = styled.div({});
 
 export interface ChessboardProps {
-  tip?: string;
+  header?: ReactNode;
   onReset?: Function;
   // Chessground proxy props
   viewOnly?: boolean;
-  position?: FEN;
-  onChange?: (position: FEN, lastMove?: Key[]) => void;
+  fen?: FEN;
+  onChange?: (position: FEN, lastMove?: Move) => void;
   onShapesChange?: (shapes: DrawShape[]) => void;
   validateMove?: (orig: Key, dest: Key) => boolean;
   validateDrawable?: (
@@ -58,14 +55,14 @@ class Chessboard extends Component<ChessboardProps> {
   api: Api = new Proxy({}, {}) as Api;
   static defaultProps = {
     viewOnly: false,
-    position: 'start',
+    fen: 'start',
     eraseDrawableOnClick: false,
     onChange: () => {},
     validateMove: () => true,
   };
 
   componentDidMount() {
-    const { position, viewOnly } = this.props;
+    const { fen, viewOnly, eraseDrawableOnClick } = this.props;
 
     if (!this.boardHost.current) {
       return;
@@ -73,14 +70,14 @@ class Chessboard extends Component<ChessboardProps> {
 
     this.api = Chessground(this.boardHost.current, {
       viewOnly,
-      fen: position,
+      fen,
       movable: {
-        validate: this.props.validateMove,
+        validate: this.validateMove,
       },
       drawable: {
-        validate: this.props.validateDrawable,
-        onChange: this.props.onShapesChange,
-        eraseOnClick: this.props.eraseDrawableOnClick,
+        validate: this.validateDrawable,
+        onChange: this.onShapesChange,
+        eraseOnClick: eraseDrawableOnClick,
       },
       events: {
         change: this.onChange,
@@ -89,10 +86,17 @@ class Chessboard extends Component<ChessboardProps> {
   }
 
   componentDidUpdate(prevProps: ChessboardProps) {
-    const { viewOnly } = this.props;
+    const { viewOnly, eraseDrawableOnClick } = this.props;
     if (viewOnly !== prevProps.viewOnly) {
       this.api.set({
         viewOnly: viewOnly,
+      });
+    }
+    if (eraseDrawableOnClick !== prevProps.eraseDrawableOnClick) {
+      this.api.set({
+        drawable: {
+          eraseOnClick: eraseDrawableOnClick,
+        },
       });
     }
   }
@@ -112,7 +116,7 @@ class Chessboard extends Component<ChessboardProps> {
 
   resetBoard = () => {
     this.api.set({
-      fen: this.props.position,
+      fen: this.props.fen,
     });
     this.onReset();
   };
@@ -130,24 +134,38 @@ class Chessboard extends Component<ChessboardProps> {
     onReset && onReset();
   };
 
+  validateMove: ChessboardProps['validateMove'] = (...args) => {
+    if (!this.props.validateMove) {
+      return true;
+    }
+    return this.props.validateMove(...args);
+  };
+
+  validateDrawable: ChessboardProps['validateDrawable'] = (...args) => {
+    if (!this.props.validateDrawable) {
+      return true;
+    }
+    return this.props.validateDrawable(...args);
+  };
+
+  onShapesChange: ChessboardProps['onShapesChange'] = (...args) => {
+    if (!this.props.onShapesChange) {
+      return;
+    }
+    return this.props.onShapesChange(...args);
+  };
+
   onChange = () => {
     const fen = this.api.getFen();
-    const lastMove = this.api.state.lastMove;
+    const lastMove = this.api.state.lastMove as Move;
     this.props.onChange && this.props.onChange(fen, lastMove);
   };
 
   render() {
-    const { tip } = this.props;
+    const { header } = this.props;
     return (
       <>
-        <BoardHeader>
-          {tip}
-          <BoardHeaderActions>
-            <Button variant="secondary" onClick={this.resetBoard}>
-              Reset
-            </Button>
-          </BoardHeaderActions>
-        </BoardHeader>
+        <BoardHeader>{header}</BoardHeader>
         <Board id="board" ref={this.boardHost} />
       </>
     );

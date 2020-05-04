@@ -1,4 +1,12 @@
-import { Exercise, Section, StepInstance } from '../app/types';
+import { Schema } from 'normalizr';
+import {
+  Exercise,
+  exerciseSchema,
+  Section,
+  sectionSchema,
+  StepInstance,
+  stepSchema,
+} from '../app/types';
 
 // Step
 const isStep = (entity: unknown): entity is StepInstance => {
@@ -7,7 +15,6 @@ const isStep = (entity: unknown): entity is StepInstance => {
   }
   return false;
 };
-//  && !!entity && entity.hasOwnProperty('scheme');
 
 // Section
 const isSection = (entity: unknown): entity is Section => {
@@ -26,9 +33,12 @@ const findStepSection = (
   if (!!section.children.find(child => child === step)) {
     return section;
   }
-  return section.children.find(child =>
-    isSection(child) ? findStepSection(child, step) : undefined,
-  ) as Section | undefined; // ts doesn't get type guard
+  for (const child of section.children) {
+    const childSection = isSection(child) && findStepSection(child, step);
+    if (childSection) {
+      return childSection;
+    }
+  }
 };
 
 const addChild = (section: Section, child: Section | StepInstance): Section => {
@@ -52,6 +62,16 @@ const removeChild = (
 };
 
 // Exercise
+const isExercise = (entity: unknown) => {
+  if (typeof entity === 'object') {
+    return (
+      Object.getOwnPropertyDescriptor(entity, 'schema')?.value ===
+      exerciseSchema.key
+    );
+  }
+  return false;
+};
+
 const getActiveStepSection = (exercise: Exercise): Section => {
   return findStepSection(exercise.section, exercise.activeStep) as Section;
 };
@@ -63,7 +83,21 @@ const setActiveStep = (exercise: Exercise, step: StepInstance): Exercise => {
   };
 };
 
+// Utils
+const getEntitySchema = (entity: unknown): Schema => {
+  if (isStep(entity)) {
+    return stepSchema;
+  } else if (isSection(entity)) {
+    return sectionSchema;
+  } else if (isExercise(entity)) {
+    return exerciseSchema;
+  }
+  throw Error(`Unknown entity: ${entity}.`);
+};
+
 export {
+  isExercise,
+  getEntitySchema,
   isSection,
   isStep,
   findStepSection,

@@ -70,6 +70,10 @@ const Stepper = styled<ComponentType<StepperProps>>(
     );
   },
 )({
+  '& > &': {
+    width: 'calc(100% - 50px)',
+    left: 50,
+  },
   '.line': {
     position: 'absolute',
     left: 25,

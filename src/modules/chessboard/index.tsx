@@ -1,12 +1,13 @@
 import React, { Component, ReactNode, RefObject } from 'react';
 import styled from '@emotion/styled';
 import { Chessground } from 'chessground';
+import _ from 'lodash';
 
 import { Api } from 'chessground/api';
 import { FEN, Key } from 'chessground/types';
 import { State as CGState } from 'chessground/state';
 import { DrawCurrent, DrawShape } from 'chessground/src/draw';
-import { Move } from '../app/types';
+import { Move, Shape } from '../app/types';
 
 export type State = CGState;
 
@@ -24,6 +25,26 @@ export type SquareKey =
 /* eslint-enable */
 
 export type PositionObject = Record<SquareKey, string>;
+
+type ChessgroundMappedPropsType = Record<
+  keyof Omit<
+    ChessboardProps,
+    | 'header'
+    | 'onReset'
+    | 'onChange'
+    | 'onShapesChange'
+    | 'validateMove'
+    | 'validateDrawable'
+    | 'ereaseDrawableOnClick'
+  >,
+  string
+>;
+const ChessgroundMappedProps: ChessgroundMappedPropsType = {
+  viewOnly: 'viewOnly',
+  fen: 'fen',
+  shapes: 'drawable.shapes',
+  eraseDrawableOnClick: 'drawable.eraseOnClick',
+};
 
 const BoardHeader = styled.div({
   display: 'flex',
@@ -48,6 +69,7 @@ export interface ChessboardProps {
     curDrawShape: DrawCurrent,
   ) => boolean;
   eraseDrawableOnClick?: boolean;
+  shapes?: Shape[];
 }
 
 class Chessboard extends Component<ChessboardProps> {
@@ -62,7 +84,7 @@ class Chessboard extends Component<ChessboardProps> {
   };
 
   componentDidMount() {
-    const { fen, viewOnly, eraseDrawableOnClick } = this.props;
+    const { fen, viewOnly, shapes, eraseDrawableOnClick } = this.props;
 
     if (!this.boardHost.current) {
       return;
@@ -78,6 +100,7 @@ class Chessboard extends Component<ChessboardProps> {
         validate: this.validateDrawable,
         onChange: this.onShapesChange,
         eraseOnClick: eraseDrawableOnClick,
+        shapes,
       },
       events: {
         change: this.onChange,
@@ -86,19 +109,27 @@ class Chessboard extends Component<ChessboardProps> {
   }
 
   componentDidUpdate(prevProps: ChessboardProps) {
-    const { viewOnly, eraseDrawableOnClick } = this.props;
-    if (viewOnly !== prevProps.viewOnly) {
-      this.api.set({
-        viewOnly: viewOnly,
-      });
-    }
-    if (eraseDrawableOnClick !== prevProps.eraseDrawableOnClick) {
-      this.api.set({
-        drawable: {
-          eraseOnClick: eraseDrawableOnClick,
-        },
-      });
-    }
+    this.syncChessgroundState(prevProps);
+  }
+
+  syncChessgroundState(prevProps: ChessboardProps) {
+    const patch = Object.entries(ChessgroundMappedProps).reduce<{}>(
+      (update, entry) => {
+        const [propName, chessGroundStatePropPath] = entry as [
+          keyof ChessgroundMappedPropsType,
+          string,
+        ];
+        if (
+          ChessgroundMappedProps[propName] &&
+          prevProps[propName] !== this.props[propName]
+        ) {
+          _.set(update, chessGroundStatePropPath, this.props[propName]);
+        }
+        return update;
+      },
+      {},
+    );
+    Object.keys(patch).length > 0 && this.api.set(patch);
   }
 
   getState() {

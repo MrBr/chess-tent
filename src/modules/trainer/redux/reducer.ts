@@ -10,20 +10,16 @@ import {
 } from '../../app/types';
 import { isSection, isStep } from '../service';
 import {
-  ADD_SECTION_SECTION,
-  ADD_SECTION_STEP,
+  ADD_SECTION_CHILD,
   ExerciseAction,
-  REMOVE_SECTION_SECTION,
-  REMOVE_SECTION_STEP,
+  REMOVE_SECTION_CHILD,
   SectionAction,
   SET_EXERCISE_ACTIVE_STEP,
-  SET_EXERCISES,
-  SET_SECTIONS,
-  UPDATE_STEP_STATE,
-  SET_STEPS,
   StepAction,
+  UPDATE_ENTITIES,
   UPDATE_EXERCISE,
   UPDATE_STEP,
+  UPDATE_STEP_STATE,
 } from './actions';
 
 const exercisesReducer = (
@@ -55,11 +51,13 @@ const exercisesReducer = (
         },
       };
     }
-    case SET_EXERCISES: {
-      return {
-        ...state,
-        ...action.payload,
-      };
+    case UPDATE_ENTITIES: {
+      return action.payload.exercises
+        ? {
+            ...state,
+            ...action.payload.exercises,
+          }
+        : state;
     }
     default: {
       return state;
@@ -68,42 +66,26 @@ const exercisesReducer = (
 };
 const sectionsReducer = (state: SectionsState = {}, action: SectionAction) => {
   switch (action.type) {
-    case ADD_SECTION_STEP: {
+    case ADD_SECTION_CHILD: {
       const sectionId = action.meta.id;
-      const childId = action.payload;
       const section = state[sectionId];
       return {
         ...state,
         [sectionId]: {
           ...section,
-          children: [
-            ...section.children,
-            { id: childId, scheme: stepSchema.key },
-          ],
+          children: [...section.children, action.payload],
         },
       };
     }
-    case ADD_SECTION_SECTION: {
+    case REMOVE_SECTION_CHILD: {
       const sectionId = action.meta.id;
-      const childId = action.payload;
-      const section = state[sectionId];
-      return {
-        ...state,
-        [sectionId]: {
-          ...section,
-          children: [
-            ...section.children,
-            { id: childId, scheme: sectionSchema.key },
-          ],
-        },
-      };
-    }
-    case REMOVE_SECTION_STEP: {
-      const sectionId = action.meta.id;
-      const childId = action.payload;
+      const child = action.payload;
       const section = state[sectionId];
       const childIndex = section.children.findIndex(
-        item => isStep(item) && item.id === childId,
+        item =>
+          ((isStep(item) && isStep(child)) ||
+            (isSection(item) && isSection(child))) &&
+          item.id === child.id,
       );
       // Removes all the children affected by removed child - all that are afterward
       const children = section.children.slice(0, childIndex - 1);
@@ -115,28 +97,13 @@ const sectionsReducer = (state: SectionsState = {}, action: SectionAction) => {
         },
       };
     }
-    case REMOVE_SECTION_SECTION: {
-      const sectionId = action.meta.id;
-      const childId = action.payload;
-      const section = state[sectionId];
-      const childIndex = section.children.findIndex(
-        item => isSection(item) && item.id === childId,
-      );
-      // Removes all the children affected by removed child - all that are afterward
-      const children = section.children.slice(0, childIndex - 1);
-      return {
-        ...state,
-        [sectionId]: {
-          ...section,
-          children,
-        },
-      };
-    }
-    case SET_SECTIONS: {
-      return {
-        ...state,
-        ...action.payload,
-      };
+    case UPDATE_ENTITIES: {
+      return action.payload.sections
+        ? {
+            ...state,
+            ...action.payload.sections,
+          }
+        : state;
     }
     default: {
       return state;
@@ -172,11 +139,13 @@ const stepsReducer = (state: StepsState = {}, action: StepAction) => {
         },
       };
     }
-    case SET_STEPS: {
-      return {
-        ...state,
-        ...action.payload,
-      };
+    case UPDATE_ENTITIES: {
+      return action.payload.steps
+        ? {
+            ...state,
+            ...action.payload.steps,
+          }
+        : state;
     }
     default: {
       return state;

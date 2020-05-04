@@ -1,34 +1,38 @@
-import {
-  Action,
-  Exercise,
-  ExercisesState,
-  Section,
-  SectionsState,
-  StepInstance,
-  StepsState,
-} from '../../app/types';
+import { normalize } from 'normalizr';
+import { Action, Exercise, Section, StepInstance } from '../../app/types';
+import { getEntitySchema } from '../service';
+
+export const UPDATE_ENTITIES = 'UPDATE_ENTITIES';
 
 export const SET_EXERCISE_ACTIVE_STEP = 'SET_EXERCISE_ACTIVE_STEP';
-export const SET_EXERCISES = 'SET_EXERCISES';
 export const UPDATE_EXERCISE = 'UPDATE_EXERCISE';
 
-export const SET_SECTIONS = 'SET_SECTIONS';
-export const ADD_SECTION_STEP = 'ADD_SECTION_STEP';
-export const ADD_SECTION_SECTION = 'ADD_SECTION_SECTION';
-export const REMOVE_SECTION_STEP = 'REMOVE_SECTION_STEP';
-export const REMOVE_SECTION_SECTION = 'REMOVE_SECTION_SECTION';
+export const ADD_SECTION_CHILD = 'ADD_SECTION_CHILD';
+export const REMOVE_SECTION_CHILD = 'REMOVE_SECTION_CHILD';
 
-export const SET_STEPS = 'STEP_STEPS';
 export const UPDATE_STEP = 'UPDATE_STEP';
 export const UPDATE_STEP_STATE = 'UPDATE_STEP_STATE';
+
+type UpdateEntitiesAction = Action<
+  typeof UPDATE_ENTITIES,
+  {
+    exercises?: Exercise[];
+    sections?: Section[];
+    steps?: StepInstance[];
+  }
+>;
+
+export const updateEntitiesAction = (
+  root: Exercise | Section | StepInstance,
+): UpdateEntitiesAction => ({
+  type: UPDATE_ENTITIES,
+  payload: normalize(root, getEntitySchema(root)).entities,
+  meta: {},
+});
 
 /**
  * Exercise actions
  */
-type SetExercisesAction = Action<
-  typeof SET_EXERCISES,
-  { [key: string]: Exercise }
->;
 type SetExerciseActiveStepAction = Action<
   typeof SET_EXERCISE_ACTIVE_STEP,
   StepInstance['id'],
@@ -36,22 +40,14 @@ type SetExerciseActiveStepAction = Action<
 >;
 type UpdateExerciseAction = Action<
   typeof UPDATE_EXERCISE,
-  Omit<Exercise, 'section' | 'scheme' | 'id'>,
+  Omit<Exercise, 'schema' | 'id'>,
   { id: Exercise['id'] }
 >;
 
 export type ExerciseAction =
-  | SetExercisesAction
+  | UpdateEntitiesAction
   | SetExerciseActiveStepAction
   | UpdateExerciseAction;
-
-export const setExercisesAction = (
-  exercises: ExercisesState,
-): SetExercisesAction => ({
-  type: SET_EXERCISES,
-  payload: exercises,
-  meta: {},
-});
 
 export const setExerciseActiveStepAction = (
   exercise: Exercise,
@@ -67,81 +63,46 @@ export const setExerciseActiveStepAction = (
 /**
  * Section actions
  */
-type SetSectionsAction = Action<
-  typeof SET_SECTIONS,
-  { [key: string]: Section }
->;
-type AddSectionSectionAction = Action<
-  typeof ADD_SECTION_SECTION,
-  Section['id'],
+type AddSectionChildAction = Action<
+  typeof ADD_SECTION_CHILD,
+  | { id: Section['id']; schema: Section['schema'] }
+  | { id: StepInstance['id']; schema: StepInstance['schema'] },
   { id: Section['id'] }
 >;
-type AddSectionStepAction = Action<
-  typeof ADD_SECTION_STEP,
-  StepInstance['id'],
-  { id: Section['id'] }
->;
-type RemoveSectionSectionAction = Action<
-  typeof REMOVE_SECTION_SECTION,
-  Section['id'],
-  { id: Section['id'] }
->;
-type RemoveSectionStepAction = Action<
-  typeof REMOVE_SECTION_STEP,
-  StepInstance['id'],
+type RemoveSectionChildAction = Action<
+  typeof REMOVE_SECTION_CHILD,
+  | { id: Section['id']; schema: Section['schema'] }
+  | { id: StepInstance['id']; schema: StepInstance['schema'] },
   { id: Section['id'] }
 >;
 
 export type SectionAction =
-  | SetSectionsAction
-  | AddSectionSectionAction
-  | AddSectionStepAction
-  | RemoveSectionSectionAction
-  | RemoveSectionStepAction;
+  | UpdateEntitiesAction
+  | AddSectionChildAction
+  | RemoveSectionChildAction;
 
-export const setSectionsAction = (
-  sections: SectionsState,
-): SetSectionsAction => ({
-  type: SET_SECTIONS,
-  payload: sections,
-  meta: {},
-});
-export const addSectionSection = (
+export const addSectionChildAction = (
   section: Section,
-  childSection: Section,
-): AddSectionSectionAction => ({
-  type: ADD_SECTION_SECTION,
-  payload: childSection.id,
+  childSection: Section | StepInstance,
+): AddSectionChildAction => ({
+  type: ADD_SECTION_CHILD,
+  payload: {
+    id: childSection.id,
+    schema: childSection.schema,
+  },
   meta: {
     id: section.id,
   },
 });
-export const addSectionStep = (
+export const removeSectionChildAction = (
   section: Section,
-  step: StepInstance,
-): AddSectionStepAction => ({
-  type: ADD_SECTION_STEP,
-  payload: step.id,
-  meta: {
-    id: section.id,
+  child: Section | StepInstance,
+): RemoveSectionChildAction => ({
+  type: REMOVE_SECTION_CHILD,
+  payload: {
+    id: child.id,
+    schema: child.schema,
   },
-});
-export const removeSectionSection = (
-  section: Section,
-  childSection: Section,
-): RemoveSectionSectionAction => ({
-  type: REMOVE_SECTION_SECTION,
-  payload: childSection.id,
-  meta: {
-    id: section.id,
-  },
-});
-export const removeSectionStep = (
-  section: Section,
-  step: StepInstance,
-): RemoveSectionStepAction => ({
-  type: REMOVE_SECTION_STEP,
-  payload: step.id,
   meta: {
     id: section.id,
   },
@@ -149,8 +110,7 @@ export const removeSectionStep = (
 /**
  * Step actions
  */
-type UpdatableStepProps = Omit<{}, 'moves' | 'scheme' | 'shapes' | 'id'>;
-type SetStepsAction = Action<typeof SET_STEPS, { [key: string]: StepInstance }>;
+type UpdatableStepProps = Omit<{}, 'moves' | 'schema' | 'shapes' | 'id'>;
 type UpdateStepAction = Action<
   typeof UPDATE_STEP,
   UpdatableStepProps,
@@ -163,15 +123,10 @@ type UpdateStepStateAction = Action<
 >;
 
 export type StepAction =
-  | SetStepsAction
+  | UpdateEntitiesAction
   | UpdateStepAction
   | UpdateStepStateAction;
 
-export const setStepsAction = (steps: StepsState): SetStepsAction => ({
-  type: SET_STEPS,
-  payload: steps,
-  meta: {},
-});
 export const updateStepAction = (
   step: StepInstance,
   patch: UpdatableStepProps,

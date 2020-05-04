@@ -7,20 +7,20 @@ import Col from 'react-bootstrap/Col';
 
 import { getStep, getStepComponent } from '../app';
 import {
-  exerciseSchema,
+  Exercise,
   Section,
   StepInstance,
   StepModuleComponentKey,
 } from '../app/types';
 import {
-  addSectionSection,
-  addSectionStep,
+  addSectionChildAction,
   exerciseSelector,
   setExerciseActiveStepAction,
+  updateEntitiesAction,
 } from './redux';
 import { Stepper } from './step';
 import { getActiveStepSection } from './service';
-import { useDispatchBatched, useDispatchNormalizeBatched } from '../app/hooks';
+import { useDispatchBatched } from '../app/hooks';
 
 interface StepProps {
   step: StepInstance;
@@ -39,9 +39,8 @@ const Step: FunctionComponent<StepProps> = ({
   return <Component step={step} {...stepProps} />;
 };
 
-const Exercise = () => {
+const ExerciseComponent = () => {
   const dispatch = useDispatchBatched();
-  const dispatchNormalize = useDispatchNormalizeBatched();
 
   useEffect(() => {
     const state = getStep('description').getInitialState();
@@ -51,7 +50,7 @@ const Exercise = () => {
       schema: 'steps',
       state,
     };
-    const defaultExercise = {
+    const defaultExercise: Exercise = {
       id: '1',
       schema: 'exercises',
       section: {
@@ -67,8 +66,8 @@ const Exercise = () => {
       },
       activeStep: defaultStep,
     };
-    dispatchNormalize(defaultExercise, exerciseSchema);
-  }, [dispatchNormalize]);
+    dispatch(updateEntitiesAction(defaultExercise));
+  }, [dispatch]);
   const exercise = useSelector<any, any>(exerciseSelector('1'));
   const { section, activeStep } = exercise || {};
 
@@ -87,7 +86,8 @@ const Exercise = () => {
       schema: 'sections',
     };
     dispatch(
-      addSectionSection(activeSection, newSection),
+      updateEntitiesAction(newSection),
+      addSectionChildAction(activeSection, newSection),
       setExerciseActiveStepAction(exercise, newStep),
     );
   }, [dispatch, exercise]);
@@ -102,7 +102,8 @@ const Exercise = () => {
       state,
     };
     dispatch(
-      addSectionStep(activeSection, newStep),
+      updateEntitiesAction(newStep),
+      addSectionChildAction(activeSection, newStep),
       setExerciseActiveStepAction(exercise, newStep),
     );
   }, [dispatch, exercise]);
@@ -111,7 +112,7 @@ const Exercise = () => {
     <>
       <Container style={{ height: '100%' }}>
         <Row noGutters style={{ height: '100%' }}>
-          <Col sm={2} style={{ background: '#CCC', height: '100%' }}>
+          <Col sm={3} style={{ background: '#CCC', height: '100%' }}>
             <h1>Exercise</h1>
             <Stepper section={section} />
           </Col>
@@ -131,4 +132,4 @@ const Exercise = () => {
   );
 };
 
-export default Exercise;
+export default ExerciseComponent;

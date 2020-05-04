@@ -7,6 +7,7 @@ export type StepProps<S, P = {}> = {
   step: S;
   addSection: () => void;
   addStep: () => void;
+  position: () => void;
 } & P;
 
 export type StepComponent<S> = ComponentType<StepProps<S>>;

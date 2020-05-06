@@ -8,12 +8,13 @@ import _ from 'lodash';
 import { DrawShape } from 'chessground/draw';
 import { FEN } from 'chessground/types';
 
-import { Move, StepComponent, StepInstance } from '../app/types';
+import { Move, StepComponent, StepInstance, StepModule } from '../app/types';
 import Chessboard from '../chessboard';
 import { Action } from './step';
 import { updateStepStateAction } from './redux';
 import { Button } from '../ui/Button';
 import { useDispatchBatched } from '../app/hooks';
+import * as Service from './service';
 
 type DescriptionStep = StepInstance<{
   moves: Move[];
@@ -83,6 +84,7 @@ const Editor: StepComponent<DescriptionStep> = ({
             header={<BoardHeader />}
             onChange={updateMoves}
             onShapesChange={updateShapes}
+            shapes={step.state.shapes}
           />
         </Col>
       </Row>
@@ -103,6 +105,7 @@ const Exercise: StepComponent<DescriptionStep> = ({ step }) => {
 };
 
 const ActionsComponent: StepComponent<DescriptionStep> = ({ step }) => {
+  const dispatch = useDispatchBatched();
   return (
     <>
       Actions
@@ -120,13 +123,13 @@ const ActionsComponent: StepComponent<DescriptionStep> = ({ step }) => {
 
 const type = 'description';
 
-const getInitialState = () => {
-  return {
+const createStep: StepModule['createStep'] = (id: string, initialState = {}) =>
+  Service.createStep(id, type, {
     moves: [],
     shapes: [],
     position: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR',
-  };
-};
+    ...initialState,
+  });
 
 export {
   Editor,
@@ -134,6 +137,6 @@ export {
   Playground,
   Exercise,
   ActionsComponent as Actions,
-  getInitialState,
+  createStep,
   type,
 };

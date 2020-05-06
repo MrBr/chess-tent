@@ -19,7 +19,12 @@ import {
   updateEntitiesAction,
 } from './redux';
 import { Stepper } from './step';
-import { getActiveStepSection } from './service';
+import {
+  createExercise,
+  createSection,
+  getActiveStepSection,
+  getExercisePreviousStep,
+} from './service';
 import { useDispatchBatched } from '../app/hooks';
 
 interface StepProps {
@@ -43,29 +48,13 @@ const ExerciseComponent = () => {
   const dispatch = useDispatchBatched();
 
   useEffect(() => {
-    const state = getStep('description').getInitialState();
-    const defaultStep: StepInstance = {
-      id: '1',
-      type: 'description',
-      schema: 'steps',
-      state,
-    };
-    const defaultExercise: Exercise = {
-      id: '1',
-      schema: 'exercises',
-      section: {
-        id: '1',
-        schema: 'sections',
-        children: [
-          {
-            id: '2',
-            schema: 'sections',
-            children: [defaultStep],
-          },
-        ],
-      },
-      activeStep: defaultStep,
-    };
+    const defaultStep: StepInstance = getStep('description').createStep(uuid());
+    const defaultSection = createSection(uuid(), [defaultStep]);
+    const defaultExercise: Exercise = createExercise(
+      '1',
+      defaultSection,
+      defaultStep,
+    );
     dispatch(updateEntitiesAction(defaultExercise));
   }, [dispatch]);
   const exercise = useSelector<any, any>(exerciseSelector('1'));
@@ -73,13 +62,7 @@ const ExerciseComponent = () => {
 
   const addSection = useCallback(() => {
     const activeSection = getActiveStepSection(exercise);
-    const state = getStep('description').getInitialState();
-    const newStep: StepInstance = {
-      id: uuid(),
-      type: 'description',
-      schema: 'steps',
-      state,
-    };
+    const newStep: StepInstance = getStep('description').createStep(uuid());
     const newSection: Section = {
       id: uuid(),
       children: [newStep],
@@ -94,13 +77,7 @@ const ExerciseComponent = () => {
 
   const addStep = useCallback(() => {
     const activeSection = getActiveStepSection(exercise);
-    const state = getStep('description').getInitialState();
-    const newStep: StepInstance = {
-      id: uuid(),
-      type: 'description',
-      schema: 'steps',
-      state,
-    };
+    const newStep: StepInstance = getStep('description').createStep(uuid());
     dispatch(
       updateEntitiesAction(newStep),
       addSectionChildAction(activeSection, newStep),

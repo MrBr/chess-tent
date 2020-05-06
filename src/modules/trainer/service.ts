@@ -3,9 +3,11 @@ import {
   Exercise,
   exerciseSchema,
   Section,
+  SectionChild,
   sectionSchema,
   StepInstance,
   stepSchema,
+  StepType,
 } from '../app/types';
 
 // Step
@@ -15,6 +17,12 @@ const isStep = (entity: unknown): entity is StepInstance => {
   }
   return false;
 };
+const createStep = (id: string, type: StepType, state: {}): StepInstance => ({
+  id,
+  type,
+  schema: 'steps',
+  state,
+});
 
 // Section
 const isSection = (entity: unknown): entity is Section => {
@@ -26,32 +34,56 @@ const isSection = (entity: unknown): entity is Section => {
   return false;
 };
 
-const findStepSection = (
+const getItemSection = (
   section: Section,
-  step: StepInstance,
+  item: SectionChild,
 ): Section | undefined => {
-  if (!!section.children.find(child => child === step)) {
+  if (!!section.children.find(child => child === item)) {
     return section;
   }
   for (const child of section.children) {
-    const childSection = isSection(child) && findStepSection(child, step);
+    const childSection = isSection(child) && getItemSection(child, item);
     if (childSection) {
       return childSection;
     }
   }
 };
 
-const addChild = (section: Section, child: Section | StepInstance): Section => {
+const getSectionPreviousStep = (
+  section: Section,
+  step: StepInstance,
+): StepInstance | undefined | null => {
+  let lastStep = null;
+  for (const child of section.children) {
+    if (child === step) {
+      // Found searched step, returning previous.
+      // If the first or the only returning null otherwise returning previous step.
+      return lastStep;
+    }
+    if (isStep(child)) {
+      lastStep = child;
+    } else if (isSection(child)) {
+      const prevStep = getSectionPreviousStep(child, step);
+      if (prevStep) {
+        // Searched step has previous step in its section.
+        return prevStep;
+      } else if (prevStep === null) {
+        // Searched step is the first or the only step in the section
+        // Returning previous step
+        return lastStep;
+      }
+    }
+  }
+};
+
+const addChild = (section: Section, child: SectionChild): Section => {
   return {
     ...section,
     children: [...section.children, child],
   };
 };
 
-const removeChild = (
-  section: Section,
-  child: Section | StepInstance,
-): Section => {
+const removeChild = (section: Section, child: SectionChild): Section => {
   const childIndex = section.children.findIndex(item => item === child);
   // Removes all the children affected by removed child - all that are afterward
   const children = section.children.slice(0, childIndex - 1);
@@ -60,6 +92,12 @@ const removeChild = (
     children,
   };
 };
+
+const createSection = (id: string, children: SectionChild[]): Section => ({
+  id,
+  children,
+  schema: 'sections',
+});
 
 // Exercise
 const isExercise = (entity: unknown) => {
@@ -73,7 +111,11 @@ const isExercise = (entity: unknown) => {
 };
 
 const getActiveStepSection = (exercise: Exercise): Section => {
-  return findStepSection(exercise.section, exercise.activeStep) as Section;
+  return getItemSection(exercise.section, exercise.activeStep) as Section;
+};
+
+const getExercisePreviousStep = (exercise: Exercise, step: StepInstance) => {
+  return getSectionPreviousStep(exercise.section, step);
 };
 
 const setActiveStep = (exercise: Exercise, step: StepInstance): Exercise => {
@@ -83,6 +125,16 @@ const setActiveStep = (exercise: Exercise, step: StepInstance): Exercise => {
   };
 };
 
+const createExercise = (
+  id: string,
+  section: Section,
+  activeStep: StepInstance,
+): Exercise => ({
+  id,
+  schema: 'exercises',
+  section: section,
+  activeStep,
+});
 // Utils
 const getEntitySchema = (entity: unknown): Schema => {
   if (isStep(entity)) {
@@ -96,13 +148,21 @@ const getEntitySchema = (entity: unknown): Schema => {
 };
 
 export {
+  // Exercise
   isExercise,
   getEntitySchema,
+  getExercisePreviousStep,
+  createExercise,
+  // Section
   isSection,
-  isStep,
-  findStepSection,
+  getItemSection,
+  getSectionPreviousStep,
   getActiveStepSection,
   addChild,
   removeChild,
   setActiveStep,
+  createSection,
+  // Step
+  isStep,
+  createStep,
 };

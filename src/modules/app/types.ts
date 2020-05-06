@@ -31,7 +31,7 @@ export type StepModule = {
   Exercise: StepComponent<any>;
   Actions: StepComponent<any>;
   type: StepType;
-  getInitialState: () => {};
+  createStep: (id: string, initialState?: {}) => StepInstance;
 };
 
 export interface StepInstance<T extends {} = {}> {
@@ -50,9 +50,10 @@ export interface AppState {
   };
 }
 
+export type SectionChild = StepInstance | Section;
 export interface Section {
   id: string;
-  children: (StepInstance | Section)[];
+  children: SectionChild[];
   schema: 'sections';
 }
 

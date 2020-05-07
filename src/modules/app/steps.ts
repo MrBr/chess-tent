@@ -1,5 +1,5 @@
-import { StepModule, StepModuleComponentKey, StepType } from './types';
 import { ComponentType } from 'react';
+import { StepModule, StepModuleComponentKey, StepType } from './types';
 
 const Steps: StepModule[] = [];
 

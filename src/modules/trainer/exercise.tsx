@@ -1,4 +1,9 @@
-import React, { FunctionComponent, useCallback, useEffect } from 'react';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useEffect,
+  useMemo,
+} from 'react';
 import uuid from 'uuid/v1';
 import { useSelector } from 'react-redux';
 import Container from 'react-bootstrap/Container';
@@ -11,6 +16,7 @@ import {
   Section,
   StepInstance,
   StepModuleComponentKey,
+  StepProps,
 } from '../app/types';
 import {
   addSectionChildAction,
@@ -26,29 +32,27 @@ import {
   getExercisePreviousStep,
 } from './service';
 import { useDispatchBatched } from '../app/hooks';
+import { START_FEN } from '../chessboard';
 
-interface StepProps {
-  step: StepInstance;
-  component: StepModuleComponentKey;
-  addSection: () => void;
-  addStep: () => void;
-}
-
-const Step: FunctionComponent<StepProps> = ({
-  component,
-  step,
-  ...stepProps
-}) => {
+const Step: FunctionComponent<StepProps<
+  any,
+  {
+    component: StepModuleComponentKey;
+  }
+>> = ({ component, step, ...stepProps }) => {
   const Step = getStep(step.type);
   const Component = getStepComponent(Step, component);
-  return <Component step={step} {...stepProps} />;
+  return <Component key={step.id} step={step} {...stepProps} />;
 };
 
 const ExerciseComponent = () => {
   const dispatch = useDispatchBatched();
 
   useEffect(() => {
-    const defaultStep: StepInstance = getStep('description').createStep(uuid());
+    const defaultStep: StepInstance = getStep('description').createStep(
+      uuid(),
+      START_FEN,
+    );
     const defaultSection = createSection(uuid(), [defaultStep]);
     const defaultExercise: Exercise = createExercise(
       '1',
@@ -60,9 +64,23 @@ const ExerciseComponent = () => {
   const exercise = useSelector<any, any>(exerciseSelector('1'));
   const { section, activeStep } = exercise || {};
 
+  const prevStep = exercise && getExercisePreviousStep(exercise, activeStep);
+  const prevPosition = useMemo(
+    () =>
+      prevStep
+        ? getStep(prevStep.type).getEndSetup(prevStep).position
+        : START_FEN,
+    [prevStep],
+  );
+
   const addSection = useCallback(() => {
     const activeSection = getActiveStepSection(exercise);
-    const newStep: StepInstance = getStep('description').createStep(uuid());
+    const activeStepPosition = getStep(activeStep.type).getEndSetup(activeStep)
+      .position;
+    const newStep: StepInstance = getStep('description').createStep(
+      uuid(),
+      activeStepPosition,
+    );
     const newSection: Section = {
       id: uuid(),
       children: [newStep],
@@ -73,17 +91,22 @@ const ExerciseComponent = () => {
       addSectionChildAction(activeSection, newSection),
       setExerciseActiveStepAction(exercise, newStep),
     );
-  }, [dispatch, exercise]);
+  }, [dispatch, exercise, activeStep]);
 
   const addStep = useCallback(() => {
     const activeSection = getActiveStepSection(exercise);
-    const newStep: StepInstance = getStep('description').createStep(uuid());
+    const activeStepPosition = getStep(activeStep.type).getEndSetup(activeStep)
+      .position;
+    const newStep: StepInstance = getStep('description').createStep(
+      uuid(),
+      activeStepPosition,
+    );
     dispatch(
       updateEntitiesAction(newStep),
       addSectionChildAction(activeSection, newStep),
       setExerciseActiveStepAction(exercise, newStep),
     );
-  }, [dispatch, exercise]);
+  }, [dispatch, exercise, activeStep]);
 
   return (
     <>
@@ -100,6 +123,7 @@ const ExerciseComponent = () => {
                 component="Editor"
                 addSection={addSection}
                 addStep={addStep}
+                prevPosition={prevPosition}
               />
             )}
           </Col>

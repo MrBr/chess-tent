@@ -17,7 +17,12 @@ const isStep = (entity: unknown): entity is StepInstance => {
   }
   return false;
 };
-const createStep = (id: string, type: StepType, state: {}): StepInstance => ({
+
+const createStep = <T>(
+  id: string,
+  type: StepType,
+  state: T extends StepInstance<infer U> ? U : never,
+): StepInstance<T extends StepInstance<infer U> ? U : never> => ({
   id,
   type,
   schema: 'steps',

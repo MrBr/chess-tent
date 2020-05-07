@@ -1,13 +1,15 @@
 import { ComponentType, FunctionComponent } from 'react';
 import { DrawShape } from 'chessground/draw';
-import { Key } from 'chessground/types';
+import { FEN as CG_FEN, Key } from 'chessground/types';
 import { schema } from 'normalizr';
+
+export type FEN = CG_FEN;
 
 export type StepProps<S, P = {}> = {
   step: S;
   addSection: () => void;
   addStep: () => void;
-  position: () => void;
+  prevPosition: FEN;
 } & P;
 
 export type StepComponent<S> = ComponentType<StepProps<S>>;
@@ -24,17 +26,24 @@ export type StepModuleComponentKey =
   | 'Actions'
   | 'Exercise';
 
-export type StepModule = {
+export type StepModule<T = any> = {
   Picker: FunctionComponent;
-  Editor: StepComponent<any>;
-  Playground: StepComponent<any>;
-  Exercise: StepComponent<any>;
-  Actions: StepComponent<any>;
+  Editor: StepComponent<T>;
+  Playground: StepComponent<T>;
+  Exercise: StepComponent<T>;
+  Actions: StepComponent<T>;
   type: StepType;
-  createStep: (id: string, initialState?: {}) => StepInstance;
+  createStep: (
+    id: string,
+    prevPosition: FEN,
+    initialState?: Partial<T>,
+  ) => StepInstance<T>;
+  getEndSetup: (
+    step: StepInstance<T>,
+  ) => { position: FEN; shapes: DrawShape[] };
 };
 
-export interface StepInstance<T extends {} = {}> {
+export interface StepInstance<T extends any = any> {
   id: string;
   type: StepType;
   state: T;

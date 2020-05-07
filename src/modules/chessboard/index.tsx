@@ -35,15 +35,18 @@ type ChessgroundMappedPropsType = Record<
     | 'onShapesChange'
     | 'validateMove'
     | 'validateDrawable'
-    | 'ereaseDrawableOnClick'
   >,
   string
 >;
+
+const START_FEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR';
+
 const ChessgroundMappedProps: ChessgroundMappedPropsType = {
   viewOnly: 'viewOnly',
   fen: 'fen',
   shapes: 'drawable.shapes',
   eraseDrawableOnClick: 'drawable.eraseOnClick',
+  animation: 'animation.enabled',
 };
 
 const BoardHeader = styled.div({
@@ -61,6 +64,7 @@ export interface ChessboardProps {
   // Chessground proxy props
   viewOnly?: boolean;
   fen?: FEN;
+  animation: boolean;
   onChange?: (position: FEN, lastMove?: Move) => void;
   onShapesChange?: (shapes: DrawShape[]) => void;
   validateMove?: (orig: Key, dest: Key) => boolean;
@@ -78,13 +82,20 @@ class Chessboard extends Component<ChessboardProps> {
   static defaultProps = {
     viewOnly: false,
     fen: 'start',
+    animation: false,
     eraseDrawableOnClick: false,
     onChange: () => {},
     validateMove: () => true,
   };
 
   componentDidMount() {
-    const { fen, viewOnly, shapes, eraseDrawableOnClick } = this.props;
+    const {
+      animation,
+      fen,
+      viewOnly,
+      shapes,
+      eraseDrawableOnClick,
+    } = this.props;
 
     if (!this.boardHost.current) {
       return;
@@ -93,6 +104,10 @@ class Chessboard extends Component<ChessboardProps> {
     this.api = Chessground(this.boardHost.current, {
       viewOnly,
       fen,
+      animation: {
+        enabled: animation,
+        duration: 0,
+      },
       movable: {
         validate: this.validateMove,
       },
@@ -203,6 +218,6 @@ class Chessboard extends Component<ChessboardProps> {
   }
 }
 
-export { Board };
+export { Board, START_FEN };
 
 export default Chessboard;

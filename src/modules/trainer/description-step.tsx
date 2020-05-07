@@ -1,4 +1,9 @@
-import React, { FunctionComponent, useCallback } from 'react';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -6,42 +11,87 @@ import Form from 'react-bootstrap/Form';
 import FormGroup from 'react-bootstrap/FormGroup';
 import _ from 'lodash';
 import { DrawShape } from 'chessground/draw';
-import { FEN } from 'chessground/types';
 
-import { Move, StepComponent, StepInstance, StepModule } from '../app/types';
+import {
+  FEN,
+  Move,
+  StepComponent,
+  StepInstance,
+  StepModule,
+} from '../app/types';
 import Chessboard from '../chessboard';
 import { Action } from './step';
 import { updateStepStateAction } from './redux';
 import { Button } from '../ui/Button';
 import { useDispatchBatched } from '../app/hooks';
 import * as Service from './service';
+import { createFen } from '../chess';
 
-type DescriptionStep = StepInstance<{
+type DescriptionStepState = {
   moves: Move[];
   shapes: DrawShape[];
-  position: FEN;
-  description: string;
-}>;
+  position: FEN; // Step end position - position once step is finished
+  description?: string;
+  hoverShape?: DrawShape;
+  activeMove?: Move;
+};
+type DescriptionStep = StepInstance<DescriptionStepState>;
+
+const getMovesToMove = (step: DescriptionStep, move: Move) => {
+  const moveIndex = step.state.moves.findIndex(stepMove => stepMove === move);
+  return step.state.moves.slice(0, moveIndex + 1);
+};
 
 const Editor: StepComponent<DescriptionStep> = ({
   step,
   addSection,
   addStep,
+  prevPosition,
 }) => {
+  const {
+    state: { moves, activeMove, position, shapes, description },
+  } = step;
+  const [livePosition, setLivePosition] = useState<FEN>(position);
   const dispatch = useDispatchBatched();
+
+  // Live position synchronization
+  useEffect(() => {
+    let activePosition = position;
+    if (activeMove) {
+      const activeMoves = activeMove ? getMovesToMove(step, activeMove) : moves;
+      activePosition = createFen(prevPosition, activeMoves);
+    }
+    if (activePosition !== livePosition) {
+      // Don't update state if nothing changed
+      setLivePosition(activePosition);
+    }
+  }, [
+    prevPosition,
+    activeMove,
+    moves,
+    setLivePosition,
+    position,
+    step,
+    livePosition,
+  ]);
+
   const updateShapes = useCallback(
     (shapes: DrawShape[]) => dispatch(updateStepStateAction(step, { shapes })),
     [dispatch, step],
   );
+
   const updateMoves = useCallback(
-    (position: FEN, move: Move | undefined) =>
-      move &&
-      dispatch(
-        updateStepStateAction(step, {
-          moves: [...step.state.moves, move],
-        }),
-      ),
-    [dispatch, step],
+    (position: FEN, move: Move | undefined) => {
+      if (move) {
+        dispatch(
+          updateStepStateAction(step, {
+            position: position,
+            moves: [...moves, move],
+          }),
+        );
+      }
+    },
+    [dispatch, moves, step],
   );
 
   const updateDescriptionDebounced = useCallback(
@@ -75,16 +125,17 @@ const Editor: StepComponent<DescriptionStep> = ({
               rows="3"
               placeholder="Describe next few steps"
               onChange={updateDescription}
-              defaultValue={step.state.description}
+              defaultValue={description}
             />
           </FormGroup>
         </Col>
         <Col>
           <Chessboard
+            fen={livePosition}
             header={<BoardHeader />}
             onChange={updateMoves}
             onShapesChange={updateShapes}
-            shapes={step.state.shapes}
+            shapes={shapes}
           />
         </Col>
       </Row>
@@ -106,12 +157,22 @@ const Exercise: StepComponent<DescriptionStep> = ({ step }) => {
 
 const ActionsComponent: StepComponent<DescriptionStep> = ({ step }) => {
   const dispatch = useDispatchBatched();
+  const setActiveMove = useCallback(
+    (activeMove: Move) =>
+      dispatch(
+        updateStepStateAction(step, {
+          activeMove:
+            activeMove === _.last(step.state.moves) ? undefined : activeMove,
+        }),
+      ),
+    [dispatch, step],
+  );
   return (
     <>
       Actions
       <div>
         {step.state.moves.map(move => (
-          <Action>{move}</Action>
+          <Action onClick={() => setActiveMove(move)}>{move}</Action>
         ))}
         {step.state.shapes.map(shape => (
           <Action>{shape.brush}</Action>
@@ -123,13 +184,24 @@ const ActionsComponent: StepComponent<DescriptionStep> = ({ step }) => {
 
 const type = 'description';
 
-const createStep: StepModule['createStep'] = (id: string, initialState = {}) =>
-  Service.createStep(id, type, {
+const createStep: StepModule<DescriptionStepState>['createStep'] = (
+  id,
+  prevPosition,
+  initialState,
+) =>
+  Service.createStep<DescriptionStep>(id, type, {
     moves: [],
     shapes: [],
-    position: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR',
+    position: prevPosition,
     ...initialState,
   });
+
+const getEndSetup: StepModule<DescriptionStepState>['getEndSetup'] = ({
+  state,
+}: DescriptionStep) => ({
+  position: state.position,
+  shapes: state.shapes,
+});
 
 export {
   Editor,
@@ -138,5 +210,6 @@ export {
   Exercise,
   ActionsComponent as Actions,
   createStep,
+  getEndSetup,
   type,
 };

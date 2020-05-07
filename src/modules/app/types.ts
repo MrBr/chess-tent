@@ -2,23 +2,22 @@ import { ComponentType, FunctionComponent } from 'react';
 import { DrawShape } from 'chessground/draw';
 import { FEN as CG_FEN, Key } from 'chessground/types';
 import { schema } from 'normalizr';
+import { StepModuleType } from './modules';
 
 export type FEN = CG_FEN;
 
-export type StepProps<S, P = {}> = {
-  step: S;
+export type StepSystemProps = {
   addSection: () => void;
   addStep: () => void;
   prevPosition: FEN;
-} & P;
+};
+export type StepProps<S, P = {}> = {
+  step: S;
+} & StepSystemProps &
+  P;
 
 export type StepComponent<S> = ComponentType<StepProps<S>>;
 
-export type StepType =
-  | 'attack'
-  | 'description'
-  | 'select-pieces'
-  | 'select-squares';
 export type StepModuleComponentKey =
   | 'Editor'
   | 'Picker'
@@ -26,40 +25,32 @@ export type StepModuleComponentKey =
   | 'Actions'
   | 'Exercise';
 
-export type StepModule<T = any> = {
+export type GetStep<T> = T extends StepModule<infer U, infer K> ? U : never;
+export type Steps = GetStep<StepModuleType>;
+export type GetStepModule<A, T> = A extends { type: T } ? A : never;
+export type GetStepFromSteps<A, T> = A extends { type: T } ? A : never;
+
+export type StepModule<T, K> = {
   Picker: FunctionComponent;
   Editor: StepComponent<T>;
   Playground: StepComponent<T>;
   Exercise: StepComponent<T>;
   Actions: StepComponent<T>;
-  type: StepType;
-  createStep: (
-    id: string,
-    prevPosition: FEN,
-    initialState?: Partial<T>,
-  ) => StepInstance<T>;
-  getEndSetup: (
-    step: StepInstance<T>,
-  ) => { position: FEN; shapes: DrawShape[] };
+  type: K;
+  createStep: (id: string, prevPosition: FEN, initialState?: Partial<T>) => T;
+  getEndSetup: (step: T) => { position: FEN; shapes: DrawShape[] };
 };
 
-export interface StepInstance<T extends any = any> {
-  id: string;
-  type: StepType;
-  state: T;
-  schema: 'steps';
-}
-
 export type EntityState<T> = { [key: string]: T };
-export interface AppState {
-  trainer: {
-    exercises: EntityState<Exercise>;
-    sections: EntityState<Section>;
-    steps: EntityState<StepInstance>;
-  };
+
+export interface Step<T, K> {
+  schema: 'steps';
+  id: string;
+  type: K;
+  state: T;
 }
 
-export type SectionChild = StepInstance | Section;
+export type SectionChild = Steps | Section;
 export interface Section {
   id: string;
   children: SectionChild[];
@@ -69,7 +60,7 @@ export interface Section {
 export interface Exercise {
   id: string;
   section: Section;
-  activeStep: StepInstance;
+  activeStep: Steps;
   schema: 'exercises';
 }
 
@@ -77,16 +68,16 @@ export type Move = [Key, Key];
 
 export type Shape = DrawShape;
 
-export interface Actions {
-  shapes: DrawShape[];
-  moves: Move[];
-}
-
-export type ActionPayload = DrawShape[] | Move;
-
 export type ExercisesState = { [key: string]: Exercise };
 export type SectionsState = { [key: string]: Section };
-export type StepsState = { [key: string]: StepInstance };
+export type StepsState = { [key: string]: Steps };
+export interface AppState {
+  trainer: {
+    exercises: ExercisesState;
+    sections: SectionsState;
+    steps: StepsState;
+  };
+}
 
 export const stepSchema = new schema.Entity('steps');
 

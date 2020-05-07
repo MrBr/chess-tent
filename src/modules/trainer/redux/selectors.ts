@@ -3,7 +3,7 @@ import {
   AppState,
   Exercise,
   exerciseSchema,
-  StepInstance,
+  Steps,
   stepSchema,
 } from '../../app/types';
 
@@ -11,7 +11,7 @@ const exerciseSelector = (exerciseId: Exercise['id']) => (
   state: AppState,
 ): Exercise => denormalize(exerciseId, exerciseSchema, state.trainer);
 
-const stepSelector = (stepId: StepInstance['id']) => (state: AppState) =>
+const stepSelector = (stepId: Steps['id']) => (state: AppState) =>
   denormalize(stepId, stepSchema, state.trainer);
 
 export { stepSelector, exerciseSelector };

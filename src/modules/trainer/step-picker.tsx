@@ -4,13 +4,13 @@ import Container from 'react-bootstrap/Container';
 import _ from 'lodash';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { StepModule } from '../app/types';
+import { StepModuleType } from '../app';
 
 interface StepPickerProps {
-  steps: StepModule[];
+  steps: StepModuleType[];
   show: boolean;
   close: () => void;
-  onSelect: (Step: StepModule) => void;
+  onSelect: (Step: StepModuleType) => void;
 }
 
 export const StepPicker: FunctionComponent<StepPickerProps> = ({

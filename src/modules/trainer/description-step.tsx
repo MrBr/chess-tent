@@ -12,13 +12,7 @@ import FormGroup from 'react-bootstrap/FormGroup';
 import _ from 'lodash';
 import { DrawShape } from 'chessground/draw';
 
-import {
-  FEN,
-  Move,
-  StepComponent,
-  StepInstance,
-  StepModule,
-} from '../app/types';
+import { Step, FEN, Move, StepComponent, StepModule } from '../app/types';
 import Chessboard from '../chessboard';
 import { Action } from './step';
 import { updateStepStateAction } from './redux';
@@ -26,6 +20,8 @@ import { Button } from '../ui/Button';
 import { useDispatchBatched } from '../app/hooks';
 import * as Service from './service';
 import { createFen } from '../chess';
+
+const type = 'description';
 
 type DescriptionStepState = {
   moves: Move[];
@@ -35,7 +31,9 @@ type DescriptionStepState = {
   hoverShape?: DrawShape;
   activeMove?: Move;
 };
-type DescriptionStep = StepInstance<DescriptionStepState>;
+type DescriptionStep = Step<DescriptionStepState, typeof type>;
+
+type DescriptionModule = StepModule<DescriptionStep, typeof type>;
 
 const getMovesToMove = (step: DescriptionStep, move: Move) => {
   const moveIndex = step.state.moves.findIndex(stepMove => stepMove === move);
@@ -182,9 +180,7 @@ const ActionsComponent: StepComponent<DescriptionStep> = ({ step }) => {
   );
 };
 
-const type = 'description';
-
-const createStep: StepModule<DescriptionStepState>['createStep'] = (
+const createStep: DescriptionModule['createStep'] = (
   id,
   prevPosition,
   initialState,
@@ -196,20 +192,22 @@ const createStep: StepModule<DescriptionStepState>['createStep'] = (
     ...initialState,
   });
 
-const getEndSetup: StepModule<DescriptionStepState>['getEndSetup'] = ({
+const getEndSetup: DescriptionModule['getEndSetup'] = ({
   state,
 }: DescriptionStep) => ({
   position: state.position,
   shapes: state.shapes,
 });
 
-export {
+const Module: DescriptionModule = {
   Editor,
   Picker,
   Playground,
   Exercise,
-  ActionsComponent as Actions,
+  Actions: ActionsComponent,
   createStep,
   getEndSetup,
   type,
 };
+
+export default Module;

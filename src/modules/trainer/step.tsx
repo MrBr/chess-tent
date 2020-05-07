@@ -1,30 +1,34 @@
 import styled from '@emotion/styled';
 import React, { ComponentType } from 'react';
 
-import { Section, StepInstance } from '../app/types';
-import { getStep, getStepComponent } from '../app';
+import { Section, Steps, StepSystemProps } from '../app/types';
+import { StepComponentRenderer } from '../app';
 import { isSection } from './service';
 
-interface StepProps {
-  step: StepInstance;
+type StepProps = {
+  step: Steps;
   className?: string;
-}
+} & StepSystemProps;
 
-interface StepperProps {
+type StepperProps = {
   section: Section;
-  current?: StepInstance;
+  current?: Steps;
   className?: string;
-}
+} & StepSystemProps;
 
-const Step = styled<ComponentType<StepProps>>(({ step, className }) => {
-  const stepModule = getStep(step.type);
-  const Actions = getStepComponent(stepModule, 'Actions');
-  return (
-    <div className={className}>
-      <Actions step={step} />
-    </div>
-  );
-})({
+const Step = styled<ComponentType<StepProps>>(
+  ({ step, className, ...systemProps }) => {
+    return (
+      <div className={className}>
+        <StepComponentRenderer
+          component="Actions"
+          step={step}
+          {...systemProps}
+        />
+      </div>
+    );
+  },
+)({
   flex: 1,
 });
 
@@ -48,7 +52,7 @@ const StepMark = styled(({ step, className }) => {
 );
 
 const Stepper = styled<ComponentType<StepperProps>>(
-  ({ section, current, className }) => {
+  ({ section, current, className, ...systemProps }) => {
     if (!section) {
       return null;
     }
@@ -57,12 +61,18 @@ const Stepper = styled<ComponentType<StepperProps>>(
         <div className="line"></div>
         {section.children.map(child => {
           if (isSection(child)) {
-            return <Stepper section={child} key={`${child.id}-section`} />;
+            return (
+              <Stepper
+                section={child}
+                key={`${child.id}-section`}
+                {...systemProps}
+              />
+            );
           }
           return (
             <div className="step-container" key={`${child.id}-step`}>
               <StepMark step={child} current={child === current} />
-              <Step step={child} />
+              <Step step={child} {...systemProps} />
             </div>
           );
         })}

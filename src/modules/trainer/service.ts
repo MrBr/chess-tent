@@ -5,13 +5,13 @@ import {
   Section,
   SectionChild,
   sectionSchema,
-  StepInstance,
+  Step,
+  Steps,
   stepSchema,
-  StepType,
 } from '../app/types';
 
 // Step
-const isStep = (entity: unknown): entity is StepInstance => {
+const isStep = (entity: unknown): entity is Steps => {
   if (typeof entity === 'object') {
     return Object.getOwnPropertyDescriptor(entity, 'schema')?.value === 'steps';
   }
@@ -20,9 +20,9 @@ const isStep = (entity: unknown): entity is StepInstance => {
 
 const createStep = <T>(
   id: string,
-  type: StepType,
-  state: T extends StepInstance<infer U> ? U : never,
-): StepInstance<T extends StepInstance<infer U> ? U : never> => ({
+  type: T extends Step<infer U, infer K> ? K : never,
+  state: T extends Step<infer U, infer K> ? U : never,
+): Step<typeof state, typeof type> => ({
   id,
   type,
   schema: 'steps',
@@ -56,8 +56,8 @@ const getItemSection = (
 
 const getSectionPreviousStep = (
   section: Section,
-  step: StepInstance,
-): StepInstance | undefined | null => {
+  step: Steps,
+): Steps | undefined | null => {
   let lastStep = null;
   for (const child of section.children) {
     if (child === step) {
@@ -119,11 +119,11 @@ const getActiveStepSection = (exercise: Exercise): Section => {
   return getItemSection(exercise.section, exercise.activeStep) as Section;
 };
 
-const getExercisePreviousStep = (exercise: Exercise, step: StepInstance) => {
+const getExercisePreviousStep = (exercise: Exercise, step: Steps) => {
   return getSectionPreviousStep(exercise.section, step);
 };
 
-const setActiveStep = (exercise: Exercise, step: StepInstance): Exercise => {
+const setActiveStep = (exercise: Exercise, step: Steps): Exercise => {
   return {
     ...exercise,
     activeStep: step,
@@ -133,7 +133,7 @@ const setActiveStep = (exercise: Exercise, step: StepInstance): Exercise => {
 const createExercise = (
   id: string,
   section: Section,
-  activeStep: StepInstance,
+  activeStep: Steps,
 ): Exercise => ({
   id,
   schema: 'exercises',

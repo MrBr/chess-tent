@@ -1,5 +1,5 @@
 import { normalize } from 'normalizr';
-import { Action, Exercise, Section, StepInstance } from '../../app/types';
+import { Action, Exercise, Section, Steps } from '../../app/types';
 import { getEntitySchema } from '../service';
 
 export const UPDATE_ENTITIES = 'UPDATE_ENTITIES';
@@ -18,12 +18,12 @@ type UpdateEntitiesAction = Action<
   {
     exercises?: Exercise[];
     sections?: Section[];
-    steps?: StepInstance[];
+    steps?: Steps[];
   }
 >;
 
 export const updateEntitiesAction = (
-  root: Exercise | Section | StepInstance,
+  root: Exercise | Section | Steps,
 ): UpdateEntitiesAction => ({
   type: UPDATE_ENTITIES,
   payload: normalize(root, getEntitySchema(root)).entities,
@@ -35,7 +35,7 @@ export const updateEntitiesAction = (
  */
 type SetExerciseActiveStepAction = Action<
   typeof SET_EXERCISE_ACTIVE_STEP,
-  StepInstance['id'],
+  Steps['id'],
   { id: Exercise['id'] }
 >;
 type UpdateExerciseAction = Action<
@@ -51,7 +51,7 @@ export type ExerciseAction =
 
 export const setExerciseActiveStepAction = (
   exercise: Exercise,
-  step: StepInstance,
+  step: Steps,
 ): SetExerciseActiveStepAction => ({
   type: SET_EXERCISE_ACTIVE_STEP,
   payload: step.id,
@@ -66,13 +66,13 @@ export const setExerciseActiveStepAction = (
 type AddSectionChildAction = Action<
   typeof ADD_SECTION_CHILD,
   | { id: Section['id']; schema: Section['schema'] }
-  | { id: StepInstance['id']; schema: StepInstance['schema'] },
+  | { id: Steps['id']; schema: Steps['schema'] },
   { id: Section['id'] }
 >;
 type RemoveSectionChildAction = Action<
   typeof REMOVE_SECTION_CHILD,
   | { id: Section['id']; schema: Section['schema'] }
-  | { id: StepInstance['id']; schema: StepInstance['schema'] },
+  | { id: Steps['id']; schema: Steps['schema'] },
   { id: Section['id'] }
 >;
 
@@ -83,7 +83,7 @@ export type SectionAction =
 
 export const addSectionChildAction = (
   section: Section,
-  childSection: Section | StepInstance,
+  childSection: Section | Steps,
 ): AddSectionChildAction => ({
   type: ADD_SECTION_CHILD,
   payload: {
@@ -96,7 +96,7 @@ export const addSectionChildAction = (
 });
 export const removeSectionChildAction = (
   section: Section,
-  child: Section | StepInstance,
+  child: Section | Steps,
 ): RemoveSectionChildAction => ({
   type: REMOVE_SECTION_CHILD,
   payload: {
@@ -114,12 +114,12 @@ type UpdatableStepProps = Omit<{}, 'moves' | 'schema' | 'shapes' | 'id'>;
 type UpdateStepAction = Action<
   typeof UPDATE_STEP,
   UpdatableStepProps,
-  { id: StepInstance['id'] }
+  { id: Steps['id'] }
 >;
 type UpdateStepStateAction = Action<
   typeof UPDATE_STEP_STATE,
   {},
-  { id: StepInstance['id'] }
+  { id: Steps['id'] }
 >;
 
 export type StepAction =
@@ -128,7 +128,7 @@ export type StepAction =
   | UpdateStepStateAction;
 
 export const updateStepAction = (
-  step: StepInstance,
+  step: Steps,
   patch: UpdatableStepProps,
 ): UpdateStepAction => ({
   type: UPDATE_STEP,
@@ -138,7 +138,7 @@ export const updateStepAction = (
   },
 });
 export const updateStepStateAction = (
-  step: StepInstance,
+  step: Steps,
   statePatch: {},
 ): UpdateStepStateAction => ({
   type: UPDATE_STEP_STATE,

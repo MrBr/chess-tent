@@ -4,7 +4,7 @@ import { FEN, Move } from '../app/types';
 const Chess = require('chess.js');
 
 export const createFen = (position: FEN, moves: Move[]) => {
-  const chess = new Chess(position + ' w - - 0 1');
+  const chess = new Chess(position);
   moves.forEach(([from, to]) => {
     const piece = chess.get(from);
     chess.remove(from);

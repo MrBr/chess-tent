@@ -1,4 +1,4 @@
-import React, { Component, ReactNode, RefObject } from 'react';
+import React, { Component, ReactElement, ReactNode, RefObject } from 'react';
 import styled from '@emotion/styled';
 import { Chessground } from 'chessground';
 import _ from 'lodash';
@@ -8,6 +8,7 @@ import { FEN, Key } from 'chessground/types';
 import { State as CGState } from 'chessground/state';
 import { DrawCurrent, DrawShape } from 'chessground/src/draw';
 import { Move, Shape } from '../app/types';
+import { Modal } from '../ui/Modal';
 
 export type State = CGState;
 
@@ -39,7 +40,7 @@ type ChessgroundMappedPropsType = Record<
   string
 >;
 
-const START_FEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR';
+const START_FEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - - 0 1';
 
 const ChessgroundMappedProps: ChessgroundMappedPropsType = {
   viewOnly: 'viewOnly',
@@ -76,9 +77,16 @@ export interface ChessboardProps {
   shapes?: Shape[];
 }
 
-class Chessboard extends Component<ChessboardProps> {
+export interface ChessboardState {
+  renderPrompt?: (close: () => void) => ReactElement;
+}
+
+class Chessboard extends Component<ChessboardProps, ChessboardState> {
   boardHost: RefObject<HTMLDivElement> = React.createRef();
   api: Api = new Proxy({}, {}) as Api;
+  state: ChessboardState = {
+    renderPrompt: undefined,
+  };
   static defaultProps = {
     viewOnly: false,
     fen: 'start',
@@ -122,6 +130,16 @@ class Chessboard extends Component<ChessboardProps> {
       },
     });
   }
+
+  prompt(renderPrompt: ChessboardState['renderPrompt']) {
+    this.setState({
+      renderPrompt,
+    });
+  }
+
+  closePrompt = () => {
+    this.setState({ renderPrompt: undefined });
+  };
 
   componentDidUpdate(prevProps: ChessboardProps) {
     this.syncChessgroundState(prevProps);
@@ -168,7 +186,7 @@ class Chessboard extends Component<ChessboardProps> {
   };
 
   fen = () => {
-    return this.api.getFen();
+    return this.api.getFen() + ' w - - 0 1';
   };
 
   move(from: Key, to: Key) {
@@ -209,10 +227,19 @@ class Chessboard extends Component<ChessboardProps> {
 
   render() {
     const { header } = this.props;
+    const { renderPrompt } = this.state;
     return (
       <>
         <BoardHeader>{header}</BoardHeader>
         <Board id="board" ref={this.boardHost} />
+        <Modal
+          container={this.boardHost}
+          show={!!renderPrompt}
+          style={{ position: 'absolute' }}
+          backdrop={false}
+        >
+          {renderPrompt && renderPrompt(this.closePrompt)}
+        </Modal>
       </>
     );
   }

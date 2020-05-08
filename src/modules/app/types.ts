@@ -7,7 +7,7 @@ import { StepModuleType } from './modules';
 export type FEN = CG_FEN;
 
 export type StepSystemProps = {
-  addSection: () => void;
+  addSection: (children?: Section['children']) => void;
   addStep: () => void;
   prevPosition: FEN;
 };
@@ -37,7 +37,11 @@ export type StepModule<T, K> = {
   Exercise: StepComponent<T>;
   Actions: StepComponent<T>;
   type: K;
-  createStep: (id: string, prevPosition: FEN, initialState?: Partial<T>) => T;
+  createStep: (
+    id: string,
+    prevPosition: FEN,
+    initialState?: Partial<T extends Step<infer S, K> ? S : never>,
+  ) => T;
   getEndSetup: (step: T) => { position: FEN; shapes: DrawShape[] };
 };
 

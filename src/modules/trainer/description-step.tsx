@@ -2,6 +2,7 @@ import React, {
   FunctionComponent,
   useCallback,
   useEffect,
+  useRef,
   useState,
 } from 'react';
 import Container from 'react-bootstrap/Container';
@@ -11,6 +12,7 @@ import Form from 'react-bootstrap/Form';
 import FormGroup from 'react-bootstrap/FormGroup';
 import _ from 'lodash';
 import { DrawShape } from 'chessground/draw';
+import uuid from 'uuid/v1';
 
 import { Step, FEN, Move, StepComponent, StepModule } from '../app/types';
 import Chessboard from '../chessboard';
@@ -20,6 +22,7 @@ import { Button } from '../ui/Button';
 import { useDispatchBatched } from '../app/hooks';
 import * as Service from './service';
 import { createFen } from '../chess';
+import { Confirm } from '../ui/Modal';
 
 const type = 'description';
 
@@ -40,6 +43,25 @@ const getMovesToMove = (step: DescriptionStep, move: Move) => {
   return step.state.moves.slice(0, moveIndex + 1);
 };
 
+const createStep: DescriptionModule['createStep'] = (
+  id,
+  prevPosition,
+  initialState,
+) =>
+  Service.createStep<DescriptionStep>(id, type, {
+    moves: [],
+    shapes: [],
+    position: prevPosition,
+    ...initialState,
+  });
+
+const getEndSetup: DescriptionModule['getEndSetup'] = ({
+  state,
+}: DescriptionStep) => ({
+  position: state.position,
+  shapes: state.shapes,
+});
+
 const Editor: StepComponent<DescriptionStep> = ({
   step,
   addSection,
@@ -51,6 +73,7 @@ const Editor: StepComponent<DescriptionStep> = ({
   } = step;
   const [livePosition, setLivePosition] = useState<FEN>(position);
   const dispatch = useDispatchBatched();
+  const boardRef = useRef<Chessboard>(null);
 
   // Live position synchronization
   useEffect(() => {
@@ -80,16 +103,75 @@ const Editor: StepComponent<DescriptionStep> = ({
 
   const updateMoves = useCallback(
     (position: FEN, move: Move | undefined) => {
-      if (move) {
-        dispatch(
-          updateStepStateAction(step, {
-            position: position,
-            moves: [...moves, move],
-          }),
-        );
+      if (!move) {
+        return;
       }
+      dispatch(
+        updateStepStateAction(step, {
+          position: position,
+          moves: [...moves, move],
+        }),
+      );
     },
     [dispatch, moves, step],
+  );
+
+  const alterMoves = useCallback(
+    (newMove: Move) => {
+      const moves = getMovesToMove(step, step.state.activeMove as Move);
+      const newMoves = [...moves, newMove];
+      const newPosition = createFen(prevPosition, newMoves);
+      dispatch(
+        updateStepStateAction(step, {
+          position: newPosition,
+          moves: newMoves,
+          activeMove: null,
+        }),
+      );
+    },
+    [dispatch, prevPosition, step],
+  );
+
+  const addNewSection = useCallback(
+    (move: Move) => {
+      const moves = getMovesToMove(step, step.state.activeMove as Move);
+      const livePosition = createFen(prevPosition, moves);
+      const newPosition = createFen(livePosition, [move]);
+      addSection([
+        createStep(uuid(), livePosition, {
+          moves: [move],
+          position: newPosition,
+        }),
+      ]);
+    },
+    [addSection, prevPosition, step],
+  );
+
+  const validateMove = useCallback(
+    (orig, dest) => {
+      if (!activeMove) {
+        return true;
+      }
+      boardRef.current &&
+        boardRef.current.prompt(close => (
+          <Confirm
+            title="Altering live position"
+            message="Changing variation in the middle is not possible. Either alter current step or create new section (variation)."
+            onOk={() => {
+              close();
+              addNewSection([orig, dest]);
+            }}
+            okText="Create new section"
+            onCancel={() => {
+              close();
+              alterMoves([orig, dest]);
+            }}
+            cancelText="Alter current step"
+          ></Confirm>
+        ));
+      return false;
+    },
+    [activeMove, addNewSection, alterMoves],
   );
 
   const updateDescriptionDebounced = useCallback(
@@ -108,10 +190,11 @@ const Editor: StepComponent<DescriptionStep> = ({
 
   const BoardHeader = () => (
     <div>
-      <Button onClick={addSection}>Add section</Button>
+      <Button onClick={() => addSection()}>Add section</Button>
       <Button onClick={addStep}>Add step</Button>
     </div>
   );
+
   return (
     <Container>
       <Row>
@@ -129,6 +212,8 @@ const Editor: StepComponent<DescriptionStep> = ({
         </Col>
         <Col>
           <Chessboard
+            ref={boardRef}
+            validateMove={validateMove}
             fen={livePosition}
             header={<BoardHeader />}
             onChange={updateMoves}
@@ -179,25 +264,6 @@ const ActionsComponent: StepComponent<DescriptionStep> = ({ step }) => {
     </>
   );
 };
-
-const createStep: DescriptionModule['createStep'] = (
-  id,
-  prevPosition,
-  initialState,
-) =>
-  Service.createStep<DescriptionStep>(id, type, {
-    moves: [],
-    shapes: [],
-    position: prevPosition,
-    ...initialState,
-  });
-
-const getEndSetup: DescriptionModule['getEndSetup'] = ({
-  state,
-}: DescriptionStep) => ({
-  position: state.position,
-  shapes: state.shapes,
-});
 
 const Module: DescriptionModule = {
   Editor,

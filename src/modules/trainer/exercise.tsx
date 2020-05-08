@@ -19,6 +19,7 @@ import {
   createSection,
   getActiveStepSection,
   getExercisePreviousStep,
+  getSectionLastStep,
 } from './service';
 import { useDispatchBatched } from '../app/hooks';
 import { START_FEN } from '../chessboard';
@@ -46,25 +47,28 @@ const ExerciseComponent = () => {
     [prevStep],
   );
 
-  const addSection = useCallback(() => {
-    const activeSection = getActiveStepSection(exercise);
-    const activeStepPosition = getStepEndSetup(activeStep).position;
-    const newStep: Steps = createStep(
-      'description',
-      uuid(),
-      activeStepPosition,
-    );
-    const newSection: Section = {
-      id: uuid(),
-      children: [newStep],
-      schema: 'sections',
-    };
-    dispatch(
-      updateEntitiesAction(newSection),
-      addSectionChildAction(activeSection, newSection),
-      setExerciseActiveStepAction(exercise, newStep),
-    );
-  }, [dispatch, exercise, activeStep]);
+  const addSection = useCallback(
+    (children: Section['children'] = []) => {
+      const activeSection = getActiveStepSection(exercise);
+      const activeStepPosition = getStepEndSetup(activeStep).position;
+      const newSection: Section = {
+        id: uuid(),
+        children: children,
+        schema: 'sections',
+      };
+      let newActiveStep: Steps | undefined = getSectionLastStep(newSection);
+      if (!newActiveStep) {
+        newActiveStep = createStep('description', uuid(), activeStepPosition);
+        newSection.children.push(newActiveStep);
+      }
+      dispatch(
+        updateEntitiesAction(newSection),
+        addSectionChildAction(activeSection, newSection),
+        setExerciseActiveStepAction(exercise, newActiveStep),
+      );
+    },
+    [dispatch, exercise, activeStep],
+  );
 
   const addStep = useCallback(() => {
     const activeSection = getActiveStepSection(exercise);

@@ -1,4 +1,5 @@
 import { Schema } from 'normalizr';
+import _ from 'lodash';
 import {
   Exercise,
   exerciseSchema,
@@ -52,6 +53,22 @@ const getItemSection = (
       return childSection;
     }
   }
+};
+
+const getSectionLastStep = (section: Section): Steps | undefined => {
+  let lastStep;
+  _.forEachRight(section.children, (child: SectionChild) => {
+    if (isStep(child)) {
+      lastStep = child;
+      return false;
+    }
+    const childSectionLastStep = getSectionLastStep(child);
+    if (childSectionLastStep) {
+      lastStep = childSectionLastStep;
+      return false;
+    }
+  });
+  return lastStep;
 };
 
 const getSectionPreviousStep = (
@@ -140,6 +157,7 @@ const createExercise = (
   section: section,
   activeStep,
 });
+
 // Utils
 const getEntitySchema = (entity: unknown): Schema => {
   if (isStep(entity)) {
@@ -160,6 +178,7 @@ export {
   createExercise,
   // Section
   isSection,
+  getSectionLastStep,
   getItemSection,
   getSectionPreviousStep,
   getActiveStepSection,

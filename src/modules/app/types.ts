@@ -1,6 +1,6 @@
 import { ComponentType, FunctionComponent } from 'react';
 import { DrawShape } from 'chessground/draw';
-import { FEN as CG_FEN, Key } from 'chessground/types';
+import { FEN as CG_FEN, Key as CG_KEY } from 'chessground/types';
 import { schema } from 'normalizr';
 import { StepModuleType } from './modules';
 
@@ -68,6 +68,7 @@ export interface Exercise {
   schema: 'exercises';
 }
 
+export type Key = CG_KEY;
 export type Move = [Key, Key];
 
 export type Shape = DrawShape;

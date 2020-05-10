@@ -9,6 +9,7 @@ import { State as CGState } from 'chessground/state';
 import { DrawCurrent, DrawShape } from 'chessground/src/draw';
 import { Move, Shape } from '../app/types';
 import { Modal } from '../ui/Modal';
+import { Evaluator } from '../addons';
 
 export type State = CGState;
 
@@ -36,11 +37,12 @@ type ChessgroundMappedPropsType = Record<
     | 'onShapesChange'
     | 'validateMove'
     | 'validateDrawable'
+    | 'evaluate'
   >,
   string
 >;
 
-const START_FEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - - 0 1';
+const START_FEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
 
 const ChessgroundMappedProps: ChessgroundMappedPropsType = {
   viewOnly: 'viewOnly',
@@ -57,14 +59,22 @@ const BoardHeader = styled.div({
   alignItems: 'center',
 });
 
+const BoardOptions = styled.div({
+  display: 'flex',
+  height: 400,
+  justifyContent: 'space-between',
+  alignItems: 'center',
+});
+
 const Board = styled.div({});
 
 export interface ChessboardProps {
   header?: ReactNode;
   onReset?: Function;
+  evaluate?: boolean;
   // Chessground proxy props
   viewOnly?: boolean;
-  fen?: FEN;
+  fen: FEN;
   animation: boolean;
   onChange?: (position: FEN, lastMove?: Move) => void;
   onShapesChange?: (shapes: DrawShape[]) => void;
@@ -88,8 +98,9 @@ class Chessboard extends Component<ChessboardProps, ChessboardState> {
     renderPrompt: undefined,
   };
   static defaultProps = {
+    evaluate: false,
     viewOnly: false,
-    fen: 'start',
+    fen: START_FEN,
     animation: false,
     eraseDrawableOnClick: false,
     onChange: () => {},
@@ -186,7 +197,7 @@ class Chessboard extends Component<ChessboardProps, ChessboardState> {
   };
 
   fen = () => {
-    return this.api.getFen() + ' w - - 0 1';
+    return this.api.getFen() + ' b - - 0 1';
   };
 
   move(from: Key, to: Key) {
@@ -220,18 +231,25 @@ class Chessboard extends Component<ChessboardProps, ChessboardState> {
   };
 
   onChange = () => {
-    const fen = this.api.getFen();
+    const fen = this.fen();
     const lastMove = this.api.state.lastMove as Move;
     this.props.onChange && this.props.onChange(fen, lastMove);
   };
 
   render() {
-    const { header } = this.props;
+    const { header, fen, evaluate } = this.props;
     const { renderPrompt } = this.state;
     return (
       <>
+        <Evaluator
+          evaluate={evaluate}
+          position={fen}
+          onBestMoveChange={console.log}
+          onEvaluationChange={console.log}
+        />
         <BoardHeader>{header}</BoardHeader>
         <Board id="board" ref={this.boardHost} />
+        <BoardOptions></BoardOptions>
         <Modal
           container={this.boardHost}
           show={!!renderPrompt}

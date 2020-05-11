@@ -254,11 +254,13 @@ const ActionsComponent: StepComponent<DescriptionStep> = ({ step }) => {
     <>
       Actions
       <div>
-        {step.state.moves.map(move => (
-          <Action onClick={() => setActiveMove(move)}>{move}</Action>
+        {step.state.moves.map((move, index) => (
+          <Action key={index} onClick={() => setActiveMove(move)}>
+            {move}
+          </Action>
         ))}
-        {step.state.shapes.map(shape => (
-          <Action>{shape.brush}</Action>
+        {step.state.shapes.map((shape, index) => (
+          <Action key={index}>{shape.brush}</Action>
         ))}
       </div>
     </>

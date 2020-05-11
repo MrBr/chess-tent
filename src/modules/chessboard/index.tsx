@@ -4,12 +4,13 @@ import { Chessground } from 'chessground';
 import _ from 'lodash';
 
 import { Api } from 'chessground/api';
-import { FEN, Key } from 'chessground/types';
+import { FEN, Key, MouchEvent } from 'chessground/types';
 import { State as CGState } from 'chessground/state';
 import { DrawCurrent, DrawShape } from 'chessground/src/draw';
-import { Move, Shape } from '../app/types';
+import { Move, Piece, Shape } from '../app/types';
 import { Modal } from '../ui/Modal';
 import { Evaluator } from '../addons';
+import SparePieces from './spare-pieces';
 
 export type State = CGState;
 
@@ -204,11 +205,6 @@ class Chessboard extends Component<ChessboardProps, ChessboardState> {
     this.api.move(from, to);
   }
 
-  onReset = () => {
-    const { onReset } = this.props;
-    onReset && onReset();
-  };
-
   validateMove: ChessboardProps['validateMove'] = (...args) => {
     if (!this.props.validateMove) {
       return true;
@@ -221,6 +217,11 @@ class Chessboard extends Component<ChessboardProps, ChessboardState> {
       return true;
     }
     return this.props.validateDrawable(...args);
+  };
+
+  onReset = () => {
+    const { onReset } = this.props;
+    onReset && onReset();
   };
 
   onShapesChange: ChessboardProps['onShapesChange'] = (...args) => {
@@ -236,6 +237,10 @@ class Chessboard extends Component<ChessboardProps, ChessboardState> {
     this.props.onChange && this.props.onChange(fen, lastMove);
   };
 
+  onSparePieceDrag = (piece: Piece, event: MouchEvent) => {
+    this.api.dragNewPiece(piece, event);
+  };
+
   render() {
     const { header, fen, evaluate } = this.props;
     const { renderPrompt } = this.state;
@@ -249,6 +254,7 @@ class Chessboard extends Component<ChessboardProps, ChessboardState> {
         />
         <BoardHeader>{header}</BoardHeader>
         <Board id="board" ref={this.boardHost} />
+        <SparePieces onDragStart={this.onSparePieceDrag}></SparePieces>
         <BoardOptions></BoardOptions>
         <Modal
           container={this.boardHost}

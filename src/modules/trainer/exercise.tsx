@@ -85,6 +85,13 @@ const ExerciseComponent = () => {
     );
   }, [dispatch, exercise, activeStep]);
 
+  const updateActiveStep = useCallback(
+    (step: Steps) => {
+      dispatch(setExerciseActiveStepAction(exercise, step));
+    },
+    [dispatch, exercise],
+  );
+
   return (
     <>
       <Container style={{ height: '100%' }}>
@@ -96,6 +103,8 @@ const ExerciseComponent = () => {
               addSection={addSection}
               addStep={addStep}
               prevPosition={prevPosition}
+              current={activeStep}
+              onStepClick={updateActiveStep}
             />
           </Col>
           <Col>

@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import React, { ComponentType } from 'react';
+import React, { ComponentType, useCallback } from 'react';
 
 import { Section, Steps, StepSystemProps } from '../app/types';
 import { StepComponentRenderer } from '../app';
@@ -8,18 +8,23 @@ import { isSection } from './service';
 type StepProps = {
   step: Steps;
   className?: string;
+  onStepClick?: (step: Steps) => void;
 } & StepSystemProps;
 
 type StepperProps = {
   section: Section;
   current?: Steps;
   className?: string;
+  onStepClick?: (step: Steps) => void;
 } & StepSystemProps;
 
 const Step = styled<ComponentType<StepProps>>(
-  ({ step, className, ...systemProps }) => {
+  ({ step, className, onStepClick, ...systemProps }) => {
+    const onClick = useCallback(() => {
+      onStepClick && onStepClick(step);
+    }, [step, onStepClick]);
     return (
-      <div className={className}>
+      <div className={className} onClick={onClick}>
         <StepComponentRenderer
           component="Actions"
           step={step}
@@ -40,14 +45,14 @@ const StepMark = styled(({ step, className }) => {
     height: 20,
     marginLeft: 15,
     borderRadius: '50%',
-    background: '#000',
+    background: '#5d5d5d',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
   },
   ({ current }) =>
     current && {
-      background: 'red',
+      background: '#000',
     },
 );
 
@@ -65,6 +70,7 @@ const Stepper = styled<ComponentType<StepperProps>>(
               <Stepper
                 section={child}
                 key={`${child.id}-section`}
+                current={current}
                 {...systemProps}
               />
             );

@@ -36,6 +36,8 @@ type ChessgroundMappedPropsType = Record<
     | 'onReset'
     | 'onChange'
     | 'onShapesChange'
+    | 'onShapeAdd'
+    | 'onShapeRemove'
     | 'validateMove'
     | 'validateDrawable'
     | 'evaluate'
@@ -79,6 +81,8 @@ export interface ChessboardProps {
   animation: boolean;
   onChange?: (position: FEN, lastMove?: Move) => void;
   onShapesChange?: (shapes: DrawShape[]) => void;
+  onShapeAdd?: (shape: DrawShape[]) => void;
+  onShapeRemove?: (shape: DrawShape[]) => void;
   validateMove?: (orig: Key, dest: Key) => boolean;
   validateDrawable?: (
     newDrawShape: DrawCurrent,
@@ -135,6 +139,8 @@ class Chessboard extends Component<ChessboardProps, ChessboardState> {
         validate: this.validateDrawable,
         onChange: this.onShapesChange,
         eraseOnClick: eraseDrawableOnClick,
+        onAdd: this.onShapeAdd,
+        onRemove: this.onShapeRemove,
         shapes,
       },
       events: {
@@ -223,6 +229,10 @@ class Chessboard extends Component<ChessboardProps, ChessboardState> {
     const { onReset } = this.props;
     onReset && onReset();
   };
+
+  onShapeAdd = (shape: DrawShape) => {};
+
+  onShapeRemove = (shape: DrawShape) => {};
 
   onShapesChange: ChessboardProps['onShapesChange'] = (...args) => {
     if (!this.props.onShapesChange) {

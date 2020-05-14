@@ -43,6 +43,8 @@ const getMovesToMove = (step: DescriptionStep, move: Move) => {
   return step.state.moves.slice(0, moveIndex + 1);
 };
 
+
+
 const createStep: DescriptionModule['createStep'] = (
   id,
   prevPosition,
@@ -167,7 +169,7 @@ const Editor: StepComponent<DescriptionStep> = ({
               alterMoves([orig, dest]);
             }}
             cancelText="Alter current step"
-          ></Confirm>
+          />
         ));
       return false;
     },
@@ -203,7 +205,7 @@ const Editor: StepComponent<DescriptionStep> = ({
             <Form.Label>Description:</Form.Label>
             <Form.Control
               as="textarea"
-              rows="3"
+              rows={3}
               placeholder="Describe next few steps"
               onChange={updateDescription}
               defaultValue={description}
@@ -230,11 +232,11 @@ const Picker: FunctionComponent = () => {
   return <>Description</>;
 };
 
-const Playground: StepComponent<DescriptionStep> = ({ step }) => {
+const Playground: StepComponent<DescriptionStep> = () => {
   return <>{'Basic step playground'}</>;
 };
 
-const Exercise: StepComponent<DescriptionStep> = ({ step }) => {
+const Exercise: StepComponent<DescriptionStep> = () => {
   return <>{'Description'}</>;
 };
 

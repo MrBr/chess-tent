@@ -1,12 +1,11 @@
-import { isSection, isStep, NormalizedSection } from '@chess-tent/models';
+import { isSection, isStep } from '@chess-tent/models';
 import {
+  UPDATE_ENTITIES,
   ADD_SECTION_CHILD,
   REMOVE_SECTION_CHILD,
   SectionAction,
-} from './actions';
-import { UPDATE_ENTITIES } from '../../state';
-
-export type SectionsState = { [key: string]: NormalizedSection };
+  SectionsState,
+} from '@types';
 
 export const reducer = (state: SectionsState = {}, action: SectionAction) => {
   switch (action.type) {

@@ -13,14 +13,17 @@ import FormGroup from 'react-bootstrap/FormGroup';
 import _ from 'lodash';
 import { DrawShape } from 'chessground/draw';
 import uuid from 'uuid/v1';
-
 import { Step, createStep as coreCreateStep } from '@chess-tent/models';
-import { Action } from '../exercise-basic/step';
-import { createFen, FEN, Move } from '../chess';
-import { Confirm, Button } from '../ui';
-import { useDispatchBatched } from '../state';
-import { Chessboard } from '../chessboard';
-import { updateStepStateAction, StepComponent, StepModule } from '../step';
+import { FEN, Move, StepComponent, StepModule } from '@types';
+import { services, ui, hooks, components, state } from '@application';
+
+const { recreateFenWithMoves } = services;
+const { useDispatchBatched } = hooks;
+const { Chessboard, Action } = components;
+const { Confirm, Button } = ui;
+const {
+  actions: { updateStepState },
+} = state;
 
 const type = 'description';
 
@@ -71,14 +74,14 @@ const Editor: StepComponent<DescriptionStep> = ({
   } = step;
   const [livePosition, setLivePosition] = useState<FEN>(position);
   const dispatch = useDispatchBatched();
-  const boardRef = useRef<Chessboard>(null);
+  const boardRef = useRef<typeof Chessboard>(null);
 
   // Live position synchronization
   useEffect(() => {
     let activePosition = position;
     if (activeMove) {
       const activeMoves = activeMove ? getMovesToMove(step, activeMove) : moves;
-      activePosition = createFen(prevPosition, activeMoves);
+      activePosition = recreateFenWithMoves(prevPosition, activeMoves);
     }
     if (activePosition !== livePosition) {
       // Don't update state if nothing changed
@@ -95,7 +98,7 @@ const Editor: StepComponent<DescriptionStep> = ({
   ]);
 
   const updateShapes = useCallback(
-    (shapes: DrawShape[]) => dispatch(updateStepStateAction(step, { shapes })),
+    (shapes: DrawShape[]) => dispatch(updateStepState(step, { shapes })),
     [dispatch, step],
   );
 
@@ -105,7 +108,7 @@ const Editor: StepComponent<DescriptionStep> = ({
         return;
       }
       dispatch(
-        updateStepStateAction(step, {
+        updateStepState(step, {
           position: position,
           moves: [...moves, move],
         }),
@@ -118,9 +121,9 @@ const Editor: StepComponent<DescriptionStep> = ({
     (newMove: Move) => {
       const moves = getMovesToMove(step, step.state.activeMove as Move);
       const newMoves = [...moves, newMove];
-      const newPosition = createFen(prevPosition, newMoves);
+      const newPosition = recreateFenWithMoves(prevPosition, newMoves);
       dispatch(
-        updateStepStateAction(step, {
+        updateStepState(step, {
           position: newPosition,
           moves: newMoves,
           activeMove: null,
@@ -133,8 +136,8 @@ const Editor: StepComponent<DescriptionStep> = ({
   const addNewSection = useCallback(
     (move: Move) => {
       const moves = getMovesToMove(step, step.state.activeMove as Move);
-      const livePosition = createFen(prevPosition, moves);
-      const newPosition = createFen(livePosition, [move]);
+      const livePosition = recreateFenWithMoves(prevPosition, moves);
+      const newPosition = recreateFenWithMoves(livePosition, [move]);
       addSection([
         createStep(uuid(), livePosition, {
           moves: [move],
@@ -151,7 +154,7 @@ const Editor: StepComponent<DescriptionStep> = ({
         return true;
       }
       boardRef.current &&
-        boardRef.current.prompt(close => (
+        boardRef.current.prompt((close: Function) => (
           <Confirm
             title="Altering live position"
             message="Changing variation in the middle is not possible. Either alter current step or create new section (variation)."
@@ -174,7 +177,7 @@ const Editor: StepComponent<DescriptionStep> = ({
 
   const updateDescriptionDebounced = useCallback(
     _.debounce((description: string) => {
-      dispatch(updateStepStateAction(step, { description }));
+      dispatch(updateStepState(step, { description }));
     }, 500),
     [dispatch],
   );
@@ -241,7 +244,7 @@ const ActionsComponent: StepComponent<DescriptionStep> = ({ step }) => {
   const setActiveMove = useCallback(
     (activeMove: Move) =>
       dispatch(
-        updateStepStateAction(step, {
+        updateStepState(step, {
           activeMove:
             activeMove === _.last(step.state.moves) ? undefined : activeMove,
         }),

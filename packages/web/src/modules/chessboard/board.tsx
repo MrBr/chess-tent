@@ -1,3 +1,6 @@
+import { ui, components, constants } from '@application';
+import { Move, Piece, Shape } from '@types';
+
 import React, { Component, ReactElement, ReactNode, RefObject } from 'react';
 import styled from '@emotion/styled';
 import { Chessground } from 'chessground';
@@ -7,10 +10,11 @@ import { FEN, Key, MouchEvent } from 'chessground/types';
 import { State as CGState } from 'chessground/state';
 import { DrawCurrent, DrawShape } from 'chessground/src/draw';
 
-import { Move, Piece, Shape } from '../chess';
-import { Modal } from '../ui';
-import { Evaluator } from '../evaluator';
 import { SparePieces } from './spare-pieces';
+
+const { Evaluator } = components;
+const { START_FEN } = constants;
+const { Modal } = ui;
 
 export type State = CGState;
 
@@ -44,8 +48,6 @@ type ChessgroundMappedPropsType = Record<
   >,
   string
 >;
-
-const START_FEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
 
 const ChessgroundMappedProps: ChessgroundMappedPropsType = {
   viewOnly: 'viewOnly',
@@ -279,4 +281,4 @@ class Chessboard extends Component<ChessboardProps, ChessboardState> {
   }
 }
 
-export { Board, START_FEN, Chessboard };
+export default Chessboard;

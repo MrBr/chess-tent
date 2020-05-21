@@ -1,8 +1,10 @@
-import { NormalizedStep } from '@chess-tent/models';
-import { StepAction, UPDATE_STEP, UPDATE_STEP_STATE } from './actions';
-import { UPDATE_ENTITIES } from '../../state';
-
-export type StepsState = { [key: string]: NormalizedStep };
+import {
+  UPDATE_ENTITIES,
+  StepAction,
+  UPDATE_STEP,
+  UPDATE_STEP_STATE,
+  StepsState,
+} from '@types';
 
 export const reducer = (state: StepsState = {}, action: StepAction) => {
   switch (action.type) {

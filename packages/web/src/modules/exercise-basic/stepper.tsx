@@ -1,8 +1,11 @@
 import styled from '@emotion/styled';
 import React, { ComponentType, useCallback } from 'react';
+import { components } from '@application';
+import { StepSystemProps } from '@types';
 
 import { Section, Step, isSection } from '@chess-tent/models';
-import { StepComponentRenderer, StepSystemProps } from '../step';
+
+const { StepRenderer } = components;
 
 type StepProps = {
   step: Step;
@@ -24,11 +27,7 @@ const StepperStep = styled<ComponentType<StepProps>>(
     }, [step, onStepClick]);
     return (
       <div className={className} onClick={onClick}>
-        <StepComponentRenderer
-          component="Actions"
-          step={step}
-          {...systemProps}
-        />
+        <StepRenderer component="Actions" step={step} {...systemProps} />
       </div>
     );
   },
@@ -116,4 +115,4 @@ const Action = styled.span({
   padding: '0 10px',
 });
 
-export { StepperStep, StepMark, Stepper, Action };
+export { Stepper, Action };

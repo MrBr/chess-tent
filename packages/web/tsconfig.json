@@ -1,5 +1,5 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "./tsconfig.paths.json",
   "compilerOptions": {
     "lib": [
       "dom",
@@ -9,7 +9,8 @@
     "noEmit": true,
     "jsx": "react",
     "module": "esnext",
-    "isolatedModules": true
+    "isolatedModules": true,
+    "baseUrl": "./src"
   },
   "include": [
     "./src"

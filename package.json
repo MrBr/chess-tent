@@ -9,6 +9,7 @@
     "packages/*"
   ],
   "dependencies": {
-    "@chess-tent/models": "1.0.0"
+    "@chess-tent/models": "1.0.0",
+    "core-module": "file:///Users/lukabracanovic/Development/js/core-module"
   }
 }

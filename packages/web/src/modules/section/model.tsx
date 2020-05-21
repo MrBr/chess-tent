@@ -1,12 +1,12 @@
 import { schema } from 'normalizr';
 
-import { stepSchema } from '../step';
+import { model } from '@application';
 
 export const sectionSchema = new schema.Entity('sections');
 export const sectionChildrenSchema = new schema.Array(
   {
     sections: sectionSchema,
-    steps: stepSchema,
+    steps: model.stepSchema,
   },
   value => value.schema,
 );

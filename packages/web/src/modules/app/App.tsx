@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
-import { applyMiddleware, combineReducers, createStore } from 'redux';
+import { applyMiddleware, createStore } from 'redux';
 import { Provider } from 'react-redux';
 import logger from 'redux-logger';
 import { batchDispatchMiddleware } from 'redux-batched-actions';
+import { state, components } from '@application';
 
-import { appReducer } from '../state';
-import { ExerciseComponent } from '../exercise';
+const { getRootReducer } = state;
+const { Exercise } = components;
 
 const store = createStore(
-  combineReducers(appReducer),
+  getRootReducer(),
   applyMiddleware(batchDispatchMiddleware, logger),
 );
 
@@ -16,7 +17,7 @@ class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        <ExerciseComponent />
+        <Exercise />
       </Provider>
     );
   }

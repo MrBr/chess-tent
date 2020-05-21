@@ -1,29 +1,10 @@
 import { Section, Step } from '@chess-tent/models';
-import { Action, UpdateEntitiesAction } from '../../state';
-
-export const ADD_SECTION_CHILD = 'ADD_SECTION_CHILD';
-export const REMOVE_SECTION_CHILD = 'REMOVE_SECTION_CHILD';
-
-/**
- * Section actions
- */
-type AddSectionChildAction = Action<
-  typeof ADD_SECTION_CHILD,
-  | { id: Section['id']; schema: Section['schema'] }
-  | { id: Step['id']; schema: Step['schema'] },
-  { id: Section['id'] }
->;
-type RemoveSectionChildAction = Action<
-  typeof REMOVE_SECTION_CHILD,
-  | { id: Section['id']; schema: Section['schema'] }
-  | { id: Step['id']; schema: Step['schema'] },
-  { id: Section['id'] }
->;
-
-export type SectionAction =
-  | UpdateEntitiesAction
-  | AddSectionChildAction
-  | RemoveSectionChildAction;
+import {
+  ADD_SECTION_CHILD,
+  AddSectionChildAction,
+  REMOVE_SECTION_CHILD,
+  RemoveSectionChildAction,
+} from '@types';
 
 export const addSectionChildAction = (
   section: Section,

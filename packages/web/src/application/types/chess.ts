@@ -1,11 +1,11 @@
-import { DrawShape } from "chessground/draw";
 import {
+  Color as CG_COLOR,
   FEN as CG_FEN,
   Key as CG_KEY,
   Piece as CG_PIECE,
-  Color as CG_COLOR,
-  Role as CG_ROLE
-} from "chessground/types";
+  Role as CG_ROLE,
+} from 'chessground/types';
+import { DrawShape } from 'chessground/draw';
 
 export type FEN = CG_FEN;
 export type Piece = CG_PIECE;

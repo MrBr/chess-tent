@@ -1,25 +1,11 @@
 import { Step } from '@chess-tent/models';
-import { Action, UpdateEntitiesAction } from '../../state';
-
-export const UPDATE_STEP = 'UPDATE_STEP';
-export const UPDATE_STEP_STATE = 'UPDATE_STEP_STATE';
-
-type UpdatableStepProps = Omit<{}, 'moves' | 'schema' | 'shapes' | 'id'>;
-type UpdateStepAction = Action<
-  typeof UPDATE_STEP,
+import {
   UpdatableStepProps,
-  { id: Step['id'] }
->;
-type UpdateStepStateAction = Action<
-  typeof UPDATE_STEP_STATE,
-  {},
-  { id: Step['id'] }
->;
-
-export type StepAction =
-  | UpdateEntitiesAction
-  | UpdateStepAction
-  | UpdateStepStateAction;
+  UPDATE_STEP,
+  UPDATE_STEP_STATE,
+  UpdateStepAction,
+  UpdateStepStateAction,
+} from '@types';
 
 export const updateStepAction = (
   step: Step,
@@ -31,6 +17,7 @@ export const updateStepAction = (
     id: step.id,
   },
 });
+
 export const updateStepStateAction = (
   step: Step,
   statePatch: {},

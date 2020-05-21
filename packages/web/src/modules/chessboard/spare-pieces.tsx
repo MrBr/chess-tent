@@ -5,8 +5,7 @@ import React, {
   useMemo,
 } from 'react';
 import { MouchEvent } from 'chessground/types';
-
-import { Piece, PieceColor, PieceRole } from '../chess';
+import { Piece, PieceColor, PieceRole } from '@types';
 
 interface SparePiecesProps {
   onDragStart: (piece: Piece, event: MouchEvent) => void;

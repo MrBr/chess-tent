@@ -1,13 +1,10 @@
-import { NormalizedExercise } from '@chess-tent/models';
-import { UPDATE_ENTITIES } from '../../state';
-
 import {
   ExerciseAction,
+  ExercisesState,
   SET_EXERCISE_ACTIVE_STEP,
+  UPDATE_ENTITIES,
   UPDATE_EXERCISE,
-} from './actions';
-
-export type ExercisesState = { [key: string]: NormalizedExercise };
+} from '@types';
 
 export const reducer = (state: ExercisesState = {}, action: ExerciseAction) => {
   switch (action.type) {

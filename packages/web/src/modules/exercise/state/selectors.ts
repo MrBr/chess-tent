@@ -1,10 +1,10 @@
 import { denormalize } from 'normalizr';
 import { Exercise } from '@chess-tent/models';
-import { AppState } from '../../state';
-import { exerciseSchema } from '../';
+import { AppState } from '@types';
+import { model } from '@application';
 
 const exerciseSelector = (exerciseId: Exercise['id']) => (
   state: AppState,
-): Exercise => denormalize(exerciseId, exerciseSchema, state.trainer);
+): Exercise => denormalize(exerciseId, model.exerciseSchema, state.entities);
 
 export { exerciseSelector };

@@ -1,0 +1,23 @@
+{
+  "name": "@chess-tent/server",
+  "version": "1.0.0",
+  "description": "Chess tent server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Luka Bracanovic",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/mongoose": "^5.7.20",
+    "dotenv": "^8.2.0",
+    "ts-node": "^8.10.1",
+    "typescript": "^3.9.2"
+  },
+  "dependencies": {
+    "@types/mongodb": "^3.5.17",
+    "mongodb": "^3.5.7",
+    "mongoose": "^5.9.14",
+    "ws": "^7.3.0"
+  }
+}

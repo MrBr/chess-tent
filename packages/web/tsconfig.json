@@ -6,8 +6,10 @@
       "dom.iterable",
       "esnext"
     ],
+    "noEmit": true,
     "jsx": "react",
-    "module": "esnext"
+    "module": "esnext",
+    "isolatedModules": true
   },
   "include": [
     "./src"

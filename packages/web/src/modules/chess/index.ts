@@ -1,7 +1,9 @@
-import { FEN, Move } from '../app/types';
+import { FEN, Move } from './types';
+
+export * from './types';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const Chess = require('chess.js');
+export const Chess = require('chess.js');
 
 export const createFen = (position: FEN, moves: Move[]) => {
   const chess = new Chess(position);
@@ -14,5 +16,3 @@ export const createFen = (position: FEN, moves: Move[]) => {
   });
   return chess.fen();
 };
-
-export default Chess;

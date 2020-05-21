@@ -6,7 +6,7 @@ import React, {
 } from 'react';
 import { MouchEvent } from 'chessground/types';
 
-import { Piece, PieceColor, PieceRole } from '../app/types';
+import { Piece, PieceColor, PieceRole } from '../chess';
 
 interface SparePiecesProps {
   onDragStart: (piece: Piece, event: MouchEvent) => void;
@@ -75,4 +75,4 @@ const SparePieces: FunctionComponent<SparePiecesProps> = ({
   );
 };
 
-export default SparePieces;
+export { SparePieces };

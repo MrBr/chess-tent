@@ -4,13 +4,8 @@ import { Provider } from 'react-redux';
 import logger from 'redux-logger';
 import { batchDispatchMiddleware } from 'redux-batched-actions';
 
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './style.css';
-import './theme.css';
-
-import { appReducer } from './redux';
-
-import { Exercise } from '../trainer';
+import { appReducer } from '../state';
+import { ExerciseComponent } from '../exercise';
 
 const store = createStore(
   combineReducers(appReducer),
@@ -21,7 +16,7 @@ class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        <Exercise />
+        <ExerciseComponent />
       </Provider>
     );
   }

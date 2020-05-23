@@ -1,16 +1,8 @@
-import React, { FunctionComponent, ReactNode } from 'react';
+import React, { FunctionComponent } from 'react';
 import { default as BModal } from 'react-bootstrap/Modal';
 import styled from '@emotion/styled';
+import { ConfirmProps } from '@types';
 import { Button } from './Button';
-
-interface ConfirmProps {
-  title: ReactNode;
-  message?: ReactNode;
-  okText: string;
-  cancelText: string;
-  onOk: () => void;
-  onCancel: () => void;
-}
 
 export const Modal = BModal;
 

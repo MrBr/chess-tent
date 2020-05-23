@@ -1,5 +1,4 @@
 import application from '@application';
+import Evaluator from './evaluator';
 
-application.register(() => {
-  application.components.Evaluator = require('./evaluator').default;
-});
+application.components.Evaluator = Evaluator;

@@ -1,3 +1,4 @@
+import './app';
 import './chess';
 import './chessboard';
 import './evaluator';

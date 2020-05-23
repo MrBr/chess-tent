@@ -18,6 +18,7 @@
     "chess.js": "^0.10.2",
     "chessground": "/Users/lukabracanovic/Development/js/chessground",
     "chroma-js": "^2.0.3",
+    "core-module": "file:../../js/core-module",
     "lodash": "^4.17.11",
     "normalizr": "^3.6.0",
     "react": "^16.13.1",

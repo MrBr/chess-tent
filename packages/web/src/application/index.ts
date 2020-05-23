@@ -1,5 +1,4 @@
-import { register, resolveDeferredRegister } from 'core-module';
-
+import { register, init, createNamespace } from 'core-module';
 import {
   Application,
   Components,
@@ -10,24 +9,25 @@ import {
   Utils,
   Model,
   StepModules,
+  UI,
 } from '@types';
 
-const services = {} as Services;
-const components = {} as Components;
-const ui = {} as any;
-const hooks = {} as Hooks;
-const state = {
-  actions: {},
-  selectors: {},
-} as State;
-const utils = {} as Utils;
-const model = {} as Model;
-const stepModules = {} as StepModules;
-const constants = {
+const services = createNamespace({}) as Services;
+const components = createNamespace({}) as Components;
+const ui = createNamespace({}) as UI;
+const hooks = createNamespace({}) as Hooks;
+const state = createNamespace({
+  actions: createNamespace({}),
+  selectors: createNamespace({}),
+}) as State;
+const utils = createNamespace({}) as Utils;
+const model = createNamespace({}) as Model;
+const stepModules = createNamespace({}) as StepModules;
+const constants = createNamespace({
   START_FEN: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-} as Constants;
+}) as Constants;
 
-const application: Application = {
+const application: Application = createNamespace({
   services,
   ui,
   components,
@@ -37,9 +37,9 @@ const application: Application = {
   hooks,
   utils,
   model,
-  register: register as Application['register'],
-  resolveDeferredRegister: resolveDeferredRegister as Function,
-};
+  register: register,
+  init: init,
+}) as Application;
 
 export {
   application as default,

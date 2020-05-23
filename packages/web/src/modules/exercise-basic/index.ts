@@ -1,34 +1,15 @@
-import application, {
-  stepModules,
-  state,
-  hooks,
-  constants,
-  components,
-} from '@application';
+import application from '@application';
 
 application.register(
-  () => [components.StepRenderer],
-  () => {
-    application.components.Stepper = require('./stepper').Stepper;
-    console.log('App Stepper:', application.components.Stepper);
-    application.components.Action = require('./stepper').Action;
+  () => import('./stepper'),
+  module => {
+    application.components.Stepper = module.Stepper;
+    application.components.Action = module.Action;
   },
 );
-
 application.register(
-  () => [
-    stepModules.createStep,
-    stepModules.getStepEndSetup,
-    components.Stepper,
-    components.StepRenderer,
-    state.selectors?.exerciseSelector,
-    state.actions?.setExerciseActiveStep,
-    state.actions?.updateEntities,
-    state.actions?.addSectionChild,
-    hooks.useDispatchBatched,
-    constants.START_FEN,
-  ],
-  () => {
-    application.components.Exercise = require('./exercise').default;
+  () => import('./exercise'),
+  module => {
+    application.components.Exercise = module.default;
   },
 );

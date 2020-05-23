@@ -1,14 +1,20 @@
 import { ui, components, constants } from '@application';
-import { Move, Piece, Shape } from '@types';
+import {
+  ChessboardProps,
+  ChessboardState,
+  Move,
+  Piece,
+  ChessboardInterface,
+} from '@types';
 
-import React, { Component, ReactElement, ReactNode, RefObject } from 'react';
+import React, { Component, RefObject } from 'react';
 import styled from '@emotion/styled';
 import { Chessground } from 'chessground';
 import _ from 'lodash';
 import { Api } from 'chessground/api';
-import { FEN, Key, MouchEvent } from 'chessground/types';
+import { Key, MouchEvent } from 'chessground/types';
 import { State as CGState } from 'chessground/state';
-import { DrawCurrent, DrawShape } from 'chessground/src/draw';
+import { DrawShape } from 'chessground/src/draw';
 
 import { SparePieces } from './spare-pieces';
 
@@ -73,32 +79,8 @@ const BoardOptions = styled.div({
 
 const Board = styled.div({});
 
-export interface ChessboardProps {
-  header?: ReactNode;
-  onReset?: Function;
-  evaluate?: boolean;
-  // Chessground proxy props
-  viewOnly?: boolean;
-  fen: FEN;
-  animation: boolean;
-  onChange?: (position: FEN, lastMove?: Move) => void;
-  onShapesChange?: (shapes: DrawShape[]) => void;
-  onShapeAdd?: (shape: DrawShape[]) => void;
-  onShapeRemove?: (shape: DrawShape[]) => void;
-  validateMove?: (orig: Key, dest: Key) => boolean;
-  validateDrawable?: (
-    newDrawShape: DrawCurrent,
-    curDrawShape: DrawCurrent,
-  ) => boolean;
-  eraseDrawableOnClick?: boolean;
-  shapes?: Shape[];
-}
-
-export interface ChessboardState {
-  renderPrompt?: (close: () => void) => ReactElement;
-}
-
-class Chessboard extends Component<ChessboardProps, ChessboardState> {
+class Chessboard extends Component<ChessboardProps, ChessboardState>
+  implements ChessboardInterface {
   boardHost: RefObject<HTMLDivElement> = React.createRef();
   api: Api = new Proxy({}, {}) as Api;
   state: ChessboardState = {
@@ -280,5 +262,4 @@ class Chessboard extends Component<ChessboardProps, ChessboardState> {
     );
   }
 }
-
 export default Chessboard;

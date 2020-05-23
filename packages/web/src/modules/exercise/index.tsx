@@ -1,24 +1,20 @@
-import application, { state, model } from '@application';
-import { SCHEMA_EXERCISE } from '@chess-tent/models';
-
-import { reducer } from './state/reducer';
+import application from '@application';
 import { setExerciseActiveStepAction } from './state/actions';
 
+application.register(() => import('./register'));
+
+application.state.actions.setExerciseActiveStep = setExerciseActiveStepAction;
+
 application.register(
-  () => [state.registerEntityReducer],
-  () => {
-    application.state.registerEntityReducer(SCHEMA_EXERCISE, reducer);
+  () => import('./model'),
+  module => {
+    application.model.exerciseSchema = module.exerciseSchema;
   },
 );
 
-application.register(() => {
-  application.state.actions.setExerciseActiveStep = setExerciseActiveStepAction;
-});
-
 application.register(
-  () => [model.sectionSchema, model.stepSchema],
-  () => {
-    application.model.exerciseSchema = require('./model').exerciseSchema;
-    application.state.selectors.exerciseSelector = require('./state/selectors').exerciseSelector;
+  () => import('./state/selectors'),
+  module => {
+    application.state.selectors.exerciseSelector = module.exerciseSelector;
   },
 );

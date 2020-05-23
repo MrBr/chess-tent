@@ -1,21 +1,13 @@
 import styled from '@emotion/styled';
 import React, { ComponentType, useCallback } from 'react';
 import { components } from '@application';
-import { StepSystemProps } from '@types';
-
-import { Section, Step, isSection } from '@chess-tent/models';
+import { Step, isSection } from '@chess-tent/models';
+import { ActionProps, StepperProps, StepSystemProps } from '@types';
 
 const { StepRenderer } = components;
 
 type StepProps = {
   step: Step;
-  className?: string;
-  onStepClick?: (step: Step) => void;
-} & StepSystemProps;
-
-type StepperProps = {
-  section: Section;
-  current?: Step;
   className?: string;
   onStepClick?: (step: Step) => void;
 } & StepSystemProps;
@@ -110,7 +102,7 @@ const Stepper = styled<ComponentType<StepperProps>>(
   maxHeight: '100%',
 });
 
-const Action = styled.span({
+const Action = styled.span<ActionProps>({
   display: 'inline-block',
   padding: '0 10px',
 });

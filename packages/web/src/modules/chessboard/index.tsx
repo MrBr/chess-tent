@@ -1,11 +1,11 @@
-import application, { ui, components, constants } from '@application';
+import application from '@application';
 
 import './style.css';
 import './theme.css';
 
 application.register(
-  () => [ui, components.Evaluator, constants.START_FEN],
-  () => {
-    application.components.Chessboard = require('./board').default;
+  () => import('./board'),
+  module => {
+    application.components.Chessboard = module.default;
   },
 );

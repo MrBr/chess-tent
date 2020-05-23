@@ -6,10 +6,8 @@ import { Button } from './Button';
 import { Form, FormGroup } from './Form';
 import { Modal, Confirm } from './Modal';
 
-application.register(() => {
-  application.ui.Button = Button;
-  application.ui.Form = Form;
-  application.ui.FormGroup = FormGroup;
-  application.ui.Modal = Modal;
-  application.ui.Confirm = Confirm;
-});
+application.ui.Button = Button;
+application.ui.Form = Form;
+application.ui.FormGroup = FormGroup;
+application.ui.Modal = Modal;
+application.ui.Confirm = Confirm;

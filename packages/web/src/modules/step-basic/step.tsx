@@ -14,7 +14,13 @@ import _ from 'lodash';
 import { DrawShape } from 'chessground/draw';
 import uuid from 'uuid/v1';
 import { Step, createStep as coreCreateStep } from '@chess-tent/models';
-import { FEN, Move, StepComponent, StepModule } from '@types';
+import {
+  ChessboardInterface,
+  FEN,
+  Move,
+  StepComponent,
+  StepModule,
+} from '@types';
 import { services, ui, hooks, components, state } from '@application';
 
 const { recreateFenWithMoves } = services;
@@ -74,7 +80,7 @@ const Editor: StepComponent<DescriptionStep> = ({
   } = step;
   const [livePosition, setLivePosition] = useState<FEN>(position);
   const dispatch = useDispatchBatched();
-  const boardRef = useRef<typeof Chessboard>(null);
+  const boardRef = useRef<ChessboardInterface>(null);
 
   // Live position synchronization
   useEffect(() => {

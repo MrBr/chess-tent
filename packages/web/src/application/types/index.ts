@@ -1,7 +1,8 @@
-import { ComponentType } from 'react';
+import { ComponentType, FunctionComponent } from 'react';
 import { Reducer, Action as ReduxAction } from 'redux';
 import { BatchAction } from 'redux-batched-actions';
 import { Schema } from 'normalizr';
+import { register } from 'core-module';
 import { Exercise, Section, SectionChild, Step } from '@chess-tent/models';
 import {
   AddSectionChildAction,
@@ -20,10 +21,15 @@ import {
   StepModuleComponentKey,
   StepProps,
 } from './step';
+import { ActionProps, ChessboardInterface, StepperProps } from './components';
+import { ClassComponent } from './_helpers';
+import { UI } from './ui';
 
 export * from './state';
 export * from './chess';
 export * from './step';
+export * from './components';
+export * from './ui';
 
 // Hooks
 export type Hooks = {
@@ -91,9 +97,10 @@ export type Services = {
 };
 
 export type Components = {
-  Chessboard: any; // TODO
-  Stepper: any; // TODO
-  Action: any; // TODO
+  App: ComponentType;
+  Chessboard: ClassComponent<ChessboardInterface>;
+  Stepper: FunctionComponent<StepperProps>;
+  Action: FunctionComponent<ActionProps>;
   StepRenderer: ComponentType<
     StepProps<
       Step,
@@ -120,19 +127,16 @@ export type Components = {
   Exercise: ComponentType;
 };
 
-export type UI = any;
-
 export type Constants = {
   START_FEN: FEN;
 };
 
 export type Application = {
   services: Services;
-  register: (
-    checkDependencies: () => any[] | void,
-    cb?: Function,
-  ) => void | number;
-  resolveDeferredRegister: Function;
+  test: () => string;
+  register: typeof register;
+  init: () => Promise<any>;
+  start: () => void;
   ui: UI;
   components: Components;
   constants: Constants;

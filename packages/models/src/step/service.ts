@@ -4,7 +4,7 @@ import { SCHEMA_STEP, Step } from "./types";
 const isStep = (entity: unknown): entity is Step => {
   if (typeof entity === "object") {
     return (
-      Object.getOwnPropertyDescriptor(entity, "schema")?.value === SCHEMA_STEP
+      Object.getOwnPropertyDescriptor(entity, "type")?.value === SCHEMA_STEP
     );
   }
   return false;
@@ -12,12 +12,12 @@ const isStep = (entity: unknown): entity is Step => {
 
 const createStep = <T>(
   id: string,
-  type: T extends Step<infer U, infer K> ? K : never,
+  stepType: T extends Step<infer U, infer K> ? K : never,
   state: T extends Step<infer U, infer K> ? U : never
-): Step<typeof state, typeof type> => ({
+): Step<typeof state, typeof stepType> => ({
   id,
-  type,
-  schema: SCHEMA_STEP,
+  stepType,
+  type: SCHEMA_STEP,
   state
 });
 

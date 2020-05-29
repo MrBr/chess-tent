@@ -10,12 +10,12 @@ export type StepSystemProps = {
   addStep: () => void;
   prevPosition: FEN;
 };
-export type StepProps<S, P = {}> = {
+export type StepProps<S extends Step, P = {}> = {
   step: S;
 } & StepSystemProps &
   P;
 
-export type StepComponent<S> = ComponentType<StepProps<S>>;
+export type StepComponent<S extends Step> = ComponentType<StepProps<S>>;
 
 export type StepModuleComponentKey =
   | 'Editor'
@@ -24,13 +24,13 @@ export type StepModuleComponentKey =
   | 'Actions'
   | 'Exercise';
 
-export type StepModule<T = any, K extends StepType = StepType> = {
+export type StepModule<T extends Step = any, K extends StepType = StepType> = {
   Picker: FunctionComponent;
   Editor: StepComponent<T>;
   Playground: StepComponent<T>;
   Exercise: StepComponent<T>;
   Actions: StepComponent<T>;
-  type: K;
+  stepType: K;
   createStep: (
     id: string,
     prevPosition: FEN,

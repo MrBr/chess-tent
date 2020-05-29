@@ -2,17 +2,17 @@ import { model, Schema } from "mongoose";
 
 const sectionOrStepSchema = new Schema({
   _id: Schema.Types.ObjectId,
-  _schema: String
+  type: String
 });
 
 const sectionsSchema = new Schema({
   children: [
     {
       type: sectionOrStepSchema,
-      ref: (item: any) => item._schema
+      ref: (item: any) => item.type
     }
   ],
-  _schema: { type: String, default: "sections" }
+  type: { type: String, default: "sections" }
 });
 
 const SectionModel = model("sections", sectionsSchema);

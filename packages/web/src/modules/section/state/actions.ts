@@ -13,7 +13,7 @@ export const addSectionChildAction = (
   type: ADD_SECTION_CHILD,
   payload: {
     id: childSection.id,
-    schema: childSection.schema,
+    type: childSection.type,
   },
   meta: {
     id: section.id,
@@ -26,7 +26,7 @@ export const removeSectionChildAction = (
   type: REMOVE_SECTION_CHILD,
   payload: {
     id: child.id,
-    schema: child.schema,
+    type: child.type,
   },
   meta: {
     id: section.id,

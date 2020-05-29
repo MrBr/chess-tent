@@ -5,8 +5,7 @@ import { isStep, Step } from "../step";
 const isSection = (entity: unknown): entity is Section => {
   if (typeof entity === "object") {
     return (
-      Object.getOwnPropertyDescriptor(entity, "schema")?.value ===
-      SCHEMA_SECTION
+      Object.getOwnPropertyDescriptor(entity, "type")?.value === SCHEMA_SECTION
     );
   }
   return false;
@@ -90,7 +89,7 @@ const removeChild = (section: Section, child: SectionChild): Section => {
 const createSection = (id: string, children: SectionChild[]): Section => ({
   id,
   children,
-  schema: SCHEMA_SECTION
+  type: SCHEMA_SECTION
 });
 
 export {

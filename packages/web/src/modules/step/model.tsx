@@ -14,7 +14,7 @@ const StepsMap = {} as StepMap;
 const registerStep = <K, T extends keyof StepMap>(
   stepModule: K extends StepMap[T] ? K : never,
 ) => {
-  StepsMap[stepModule.type as T] = stepModule;
+  StepsMap[stepModule.stepType as T] = stepModule;
 };
 
 const getStepModule = <T extends keyof StepMap>(
@@ -31,7 +31,7 @@ const createStepModuleStep = (
 };
 
 const getStepModuleStepEndSetup = (step: Step): StepEndSetup => {
-  return getStepModule(step.type)['getEndSetup'](step);
+  return getStepModule(step.stepType)['getEndSetup'](step);
 };
 
 const StepComponentRenderer: FunctionComponent<StepProps<
@@ -40,7 +40,7 @@ const StepComponentRenderer: FunctionComponent<StepProps<
     component: StepModuleComponentKey;
   }
 >> = ({ component, step, ...stepProps }) => {
-  const Component = getStepModule(step.type)[component];
+  const Component = getStepModule(step.stepType)[component];
   return <Component key={step.id} step={step} {...stepProps} />;
 };
 

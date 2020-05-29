@@ -1,4 +1,4 @@
-import { isSection, isStep } from '@chess-tent/models';
+import { isSection, isStep, SectionChild } from '@chess-tent/models';
 import {
   UPDATE_ENTITIES,
   ADD_SECTION_CHILD,
@@ -6,6 +6,16 @@ import {
   SectionAction,
   SectionsState,
 } from '@types';
+
+const transformToNormalizrShape = (item: Partial<SectionChild>) => ({
+  id: item.id,
+  schema: item.type,
+});
+
+const transformFromNormalizrShape = (item: { id: string; schema: string }) => ({
+  id: item.id,
+  type: item.schema,
+});
 
 export const reducer = (state: SectionsState = {}, action: SectionAction) => {
   switch (action.type) {
@@ -16,7 +26,10 @@ export const reducer = (state: SectionsState = {}, action: SectionAction) => {
         ...state,
         [sectionId]: {
           ...section,
-          children: [...section.children, action.payload],
+          children: [
+            ...section.children,
+            transformToNormalizrShape(action.payload),
+          ],
         },
       };
     }
@@ -24,12 +37,14 @@ export const reducer = (state: SectionsState = {}, action: SectionAction) => {
       const sectionId = action.meta.id;
       const child = action.payload;
       const section = state[sectionId];
-      const childIndex = section.children.findIndex(
-        item =>
-          ((isStep(item) && isStep(child)) ||
-            (isSection(item) && isSection(child))) &&
-          item.id === child.id,
-      );
+      const childIndex = section.children
+        .map(transformFromNormalizrShape)
+        .findIndex(
+          item =>
+            ((isStep(item) && isStep(child)) ||
+              (isSection(item) && isSection(child))) &&
+            item.id === child.id,
+        );
       // Removes all the children affected by removed child - all that are afterward
       const children = section.children.slice(0, childIndex - 1);
       return {

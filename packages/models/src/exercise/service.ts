@@ -6,8 +6,7 @@ import { Step } from "../step";
 const isExercise = (entity: unknown) => {
   if (typeof entity === "object") {
     return (
-      Object.getOwnPropertyDescriptor(entity, "schema")?.value ===
-      SCHEMA_EXERCISE
+      Object.getOwnPropertyDescriptor(entity, "type")?.value === SCHEMA_EXERCISE
     );
   }
   return false;
@@ -34,7 +33,7 @@ const createExercise = (
   activeStep: Step
 ): Exercise => ({
   id,
-  schema: SCHEMA_EXERCISE,
+  type: SCHEMA_EXERCISE,
   section: section,
   activeStep
 });

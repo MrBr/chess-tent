@@ -7,12 +7,12 @@ export interface Exercise {
   id: string;
   section: Section;
   activeStep: Step;
-  schema: typeof SCHEMA_EXERCISE;
+  type: typeof SCHEMA_EXERCISE;
 }
 
 export interface NormalizedExercise {
   id: Exercise["id"];
-  schema: Exercise["schema"];
+  type: Exercise["type"];
   activeStep: Step["id"];
   section: Section["id"];
 }

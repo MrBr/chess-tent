@@ -31,7 +31,7 @@ const {
   actions: { updateStepState },
 } = state;
 
-const type = 'description';
+const stepType = 'description';
 
 type DescriptionStepState = {
   moves: Move[];
@@ -41,9 +41,9 @@ type DescriptionStepState = {
   hoverShape?: DrawShape;
   activeMove?: Move;
 };
-type DescriptionStep = Step<DescriptionStepState, typeof type>;
+type DescriptionStep = Step<DescriptionStepState, typeof stepType>;
 
-type DescriptionModule = StepModule<DescriptionStep, typeof type>;
+type DescriptionModule = StepModule<DescriptionStep, typeof stepType>;
 
 const getMovesToMove = (step: DescriptionStep, move: Move) => {
   const moveIndex = step.state.moves.findIndex(stepMove => stepMove === move);
@@ -55,7 +55,7 @@ const createStep: DescriptionModule['createStep'] = (
   prevPosition,
   initialState,
 ) =>
-  coreCreateStep<DescriptionStep>(id, type, {
+  coreCreateStep<DescriptionStep>(id, stepType, {
     moves: [],
     shapes: [],
     position: prevPosition,
@@ -282,7 +282,7 @@ const Module: DescriptionModule = {
   Actions: ActionsComponent,
   createStep,
   getEndSetup,
-  type,
+  stepType,
 };
 
 export default Module;

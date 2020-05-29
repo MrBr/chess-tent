@@ -54,11 +54,7 @@ const ExerciseComponent = () => {
     (children: Section['children'] = []) => {
       const activeSection = getActiveStepSection(exercise);
       const activeStepPosition = getStepEndSetup(activeStep).position;
-      const newSection: Section = {
-        id: uuid(),
-        children: children,
-        schema: 'sections',
-      };
+      const newSection: Section = createSection(uuid(), children);
       let newActiveStep: Step | undefined = getSectionLastStep(newSection);
       if (!newActiveStep) {
         newActiveStep = createStep('description', uuid(), activeStepPosition);

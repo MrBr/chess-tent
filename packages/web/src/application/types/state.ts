@@ -48,7 +48,7 @@ export type SetExerciseActiveStepAction = Action<
 >;
 export type UpdateExerciseAction = Action<
   typeof UPDATE_EXERCISE,
-  Omit<NormalizedExercise, 'schema' | 'id'>,
+  Omit<NormalizedExercise, 'type' | 'id'>,
   { id: Exercise['id'] }
 >;
 
@@ -64,14 +64,14 @@ export type SectionsState = { [key: string]: NormalizedSection };
 
 export type AddSectionChildAction = Action<
   typeof ADD_SECTION_CHILD,
-  | { id: Section['id']; schema: Section['schema'] }
-  | { id: Step['id']; schema: Step['schema'] },
+  | { id: Section['id']; type: Section['type'] }
+  | { id: Step['id']; type: Step['type'] },
   { id: Section['id'] }
 >;
 export type RemoveSectionChildAction = Action<
   typeof REMOVE_SECTION_CHILD,
-  | { id: Section['id']; schema: Section['schema'] }
-  | { id: Step['id']; schema: Step['schema'] },
+  | { id: Section['id']; type: Section['type'] }
+  | { id: Step['id']; type: Step['type'] },
   { id: Section['id'] }
 >;
 
@@ -85,7 +85,7 @@ export type SectionAction =
  */
 export type StepsState = { [key: string]: NormalizedStep };
 
-export type UpdatableStepProps = Omit<{}, 'moves' | 'schema' | 'shapes' | 'id'>;
+export type UpdatableStepProps = Omit<{}, 'moves' | 'type' | 'shapes' | 'id'>;
 export type UpdateStepAction = Action<
   typeof UPDATE_STEP,
   UpdatableStepProps,

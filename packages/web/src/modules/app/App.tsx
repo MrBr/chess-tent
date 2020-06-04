@@ -6,7 +6,7 @@ import { batchDispatchMiddleware } from 'redux-batched-actions';
 import { state, components } from '@application';
 
 const { getRootReducer } = state;
-const { Exercise } = components;
+const { Lesson } = components;
 
 const store = createStore(
   getRootReducer(),
@@ -17,7 +17,7 @@ class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        <Exercise />
+        <Lesson />
       </Provider>
     );
   }

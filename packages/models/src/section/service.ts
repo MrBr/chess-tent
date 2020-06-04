@@ -1,15 +1,9 @@
 import _ from "lodash";
-import { SCHEMA_SECTION, Section, SectionChild } from "./types";
+import { Section, SectionChild, TYPE_SECTION } from "./types";
 import { isStep, Step } from "../step";
 
-const isSection = (entity: unknown): entity is Section => {
-  if (typeof entity === "object") {
-    return (
-      Object.getOwnPropertyDescriptor(entity, "type")?.value === SCHEMA_SECTION
-    );
-  }
-  return false;
-};
+const isSection = (entity: unknown): entity is Section =>
+  Object.getOwnPropertyDescriptor(entity, "type")?.value === TYPE_SECTION;
 
 const getItemSection = (
   section: Section,
@@ -89,7 +83,7 @@ const removeChild = (section: Section, child: SectionChild): Section => {
 const createSection = (id: string, children: SectionChild[]): Section => ({
   id,
   children,
-  type: SCHEMA_SECTION
+  type: TYPE_SECTION
 });
 
 export {

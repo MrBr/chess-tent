@@ -1,3 +1,5 @@
+export * from "./subject";
+export * from "./activity";
 export * from "./step";
 export * from "./section";
-export * from "./exercise";
+export * from "./lesson";

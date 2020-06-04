@@ -1,14 +1,8 @@
-import { SCHEMA_STEP, Step } from "./types";
+import { Step, TYPE_STEP } from "./types";
 
 // Step
-const isStep = (entity: unknown): entity is Step => {
-  if (typeof entity === "object") {
-    return (
-      Object.getOwnPropertyDescriptor(entity, "type")?.value === SCHEMA_STEP
-    );
-  }
-  return false;
-};
+const isStep = (entity: unknown): entity is Step =>
+  Object.getOwnPropertyDescriptor(entity, "type")?.value === TYPE_STEP;
 
 const createStep = <T>(
   id: string,
@@ -17,7 +11,7 @@ const createStep = <T>(
 ): Step<typeof state, typeof stepType> => ({
   id,
   stepType,
-  type: SCHEMA_STEP,
+  type: TYPE_STEP,
   state
 });
 

@@ -3,12 +3,12 @@ import { Reducer, Action as ReduxAction } from 'redux';
 import { BatchAction } from 'redux-batched-actions';
 import { Schema } from 'normalizr';
 import { register } from 'core-module';
-import { Exercise, Section, SectionChild, Step } from '@chess-tent/models';
+import { Lesson, Section, SectionChild, Step } from '@chess-tent/models';
 import {
   AddSectionChildAction,
   AppState,
   RemoveSectionChildAction,
-  SetExerciseActiveStepAction,
+  SetLessonActiveStepAction,
   UpdateEntitiesAction,
   UpdateStepAction,
   UpdateStepStateAction,
@@ -49,7 +49,7 @@ export type StepModules = {
 };
 
 export type Model = {
-  exerciseSchema: Schema;
+  lessonSchema: Schema;
   sectionSchema: Schema;
   stepSchema: Schema;
 };
@@ -61,11 +61,11 @@ export type State = {
   ) => void;
   getRootReducer: () => Reducer;
   actions: {
-    updateEntities: (entity: Exercise | Section | Step) => UpdateEntitiesAction;
-    setExerciseActiveStep: (
-      exercise: Exercise,
+    updateEntities: (entity: Lesson | Section | Step) => UpdateEntitiesAction;
+    setLessonActiveStep: (
+      lesson: Lesson,
       step: Step,
-    ) => SetExerciseActiveStepAction;
+    ) => SetLessonActiveStepAction;
     updateStep: (step: Step, patch: Partial<Step>) => UpdateStepAction;
     updateStepState: (step: Step, state: any) => UpdateStepStateAction;
     addSectionChild: (
@@ -78,9 +78,7 @@ export type State = {
     ) => RemoveSectionChildAction;
   };
   selectors: {
-    exerciseSelector: (
-      exerciseId: Exercise['id'],
-    ) => (state: AppState) => Exercise;
+    lessonSelector: (lessonId: Lesson['id']) => (state: AppState) => Lesson;
     stepSelector: (stepId: Step['id']) => (state: AppState) => Step;
   };
 };
@@ -124,7 +122,7 @@ export type Components = {
     // after position changed it can still provide best move for the previous position
     onBestMoveChange?: (bestMove: Move, ponder?: Move) => void;
   }>;
-  Exercise: ComponentType;
+  Lesson: ComponentType;
 };
 
 export type Constants = {

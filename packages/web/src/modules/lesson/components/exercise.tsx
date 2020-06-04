@@ -6,13 +6,13 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
 import {
-  Exercise,
+  Lesson,
   Section,
   Step,
-  createExercise,
+  createLesson,
   createSection,
   getActiveStepSection,
-  getExercisePreviousStep,
+  getLessonPreviousStep,
   getSectionLastStep,
 } from '@chess-tent/models';
 import { AppState } from '@types';
@@ -21,29 +21,29 @@ import { state, hooks, constants, components, stepModules } from '@application';
 const { Stepper, StepRenderer } = components;
 const { createStep, getStepEndSetup } = stepModules;
 const {
-  selectors: { exerciseSelector },
-  actions: { setExerciseActiveStep, updateEntities, addSectionChild },
+  selectors: { lessonSelector },
+  actions: { setLessonActiveStep, updateEntities, addSectionChild },
 } = state;
 const { useDispatchBatched } = hooks;
 const { START_FEN } = constants;
 
-const ExerciseComponent = () => {
+const LessonComponent = () => {
   const dispatch = useDispatchBatched();
 
   useEffect(() => {
     const defaultStep: Step = createStep('description', uuid(), START_FEN);
     const defaultSection = createSection(uuid(), [defaultStep]);
-    const defaultExercise: Exercise = createExercise(
+    const defaultLesson: Lesson = createLesson(
       '1',
       defaultSection,
       defaultStep,
     );
-    dispatch(updateEntities(defaultExercise));
+    dispatch(updateEntities(defaultLesson));
   }, [dispatch]);
-  const exercise = useSelector<AppState, Exercise>(exerciseSelector('1'));
-  const { section, activeStep } = exercise || {};
+  const lesson = useSelector<AppState, Lesson>(lessonSelector('1'));
+  const { section, activeStep } = lesson?.state || {};
 
-  const prevStep = exercise && getExercisePreviousStep(exercise, activeStep);
+  const prevStep = lesson && getLessonPreviousStep(lesson, activeStep);
 
   const prevPosition = useMemo(
     () => (prevStep ? getStepEndSetup(prevStep).position : START_FEN),
@@ -52,7 +52,7 @@ const ExerciseComponent = () => {
 
   const addSection = useCallback(
     (children: Section['children'] = []) => {
-      const activeSection = getActiveStepSection(exercise);
+      const activeSection = getActiveStepSection(lesson);
       const activeStepPosition = getStepEndSetup(activeStep).position;
       const newSection: Section = createSection(uuid(), children);
       let newActiveStep: Step | undefined = getSectionLastStep(newSection);
@@ -63,28 +63,28 @@ const ExerciseComponent = () => {
       dispatch(
         updateEntities(newSection),
         addSectionChild(activeSection, newSection),
-        setExerciseActiveStep(exercise, newActiveStep),
+        setLessonActiveStep(lesson, newActiveStep),
       );
     },
-    [dispatch, exercise, activeStep],
+    [dispatch, lesson, activeStep],
   );
 
   const addStep = useCallback(() => {
-    const activeSection = getActiveStepSection(exercise);
+    const activeSection = getActiveStepSection(lesson);
     const activeStepPosition = getStepEndSetup(activeStep).position;
     const newStep: Step = createStep('description', uuid(), activeStepPosition);
     dispatch(
       updateEntities(newStep),
       addSectionChild(activeSection, newStep),
-      setExerciseActiveStep(exercise, newStep),
+      setLessonActiveStep(lesson, newStep),
     );
-  }, [dispatch, exercise, activeStep]);
+  }, [dispatch, lesson, activeStep]);
 
   const updateActiveStep = useCallback(
     (step: Step) => {
-      dispatch(setExerciseActiveStep(exercise, step));
+      dispatch(setLessonActiveStep(lesson, step));
     },
-    [dispatch, exercise],
+    [dispatch, lesson],
   );
 
   return (
@@ -92,7 +92,7 @@ const ExerciseComponent = () => {
       <Container style={{ height: '100%' }}>
         <Row noGutters style={{ height: '100%' }}>
           <Col sm={3} style={{ background: '#CCC', height: '100%' }}>
-            <h1>Exercise</h1>
+            <h1>Lesson</h1>
             <Stepper
               section={section}
               addSection={addSection}
@@ -119,4 +119,4 @@ const ExerciseComponent = () => {
   );
 };
 
-export default ExerciseComponent;
+export default LessonComponent;

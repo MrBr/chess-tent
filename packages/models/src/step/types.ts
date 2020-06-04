@@ -1,10 +1,10 @@
 export type StepType = "description" | "test";
 
-export const SCHEMA_STEP = "steps";
+export const TYPE_STEP = "steps";
 
 export interface Step<T = any, K extends StepType = StepType> {
   id: string;
-  type: typeof SCHEMA_STEP;
+  type: typeof TYPE_STEP;
   stepType: K;
   state: T;
 }

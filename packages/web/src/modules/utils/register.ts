@@ -1,6 +1,6 @@
 import application from '@application';
 import { Schema } from 'normalizr';
-import { isExercise, isSection, isStep } from '@chess-tent/models';
+import { isLesson, isSection, isStep } from '@chess-tent/models';
 import { model } from '@application';
 
 application.utils.getEntitySchema = (entity: unknown): Schema => {
@@ -8,8 +8,8 @@ application.utils.getEntitySchema = (entity: unknown): Schema => {
     return model.stepSchema;
   } else if (isSection(entity)) {
     return model.sectionSchema;
-  } else if (isExercise(entity)) {
-    return model.exerciseSchema;
+  } else if (isLesson(entity)) {
+    return model.lessonSchema;
   }
   throw Error(`Unknown entity: ${entity}.`);
 };

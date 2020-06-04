@@ -1,13 +1,13 @@
 import { Step } from "../step";
 
-export const SCHEMA_SECTION = "sections";
+export const TYPE_SECTION = "sections";
 
 export type SectionChild = Step | Section;
 
 export interface Section {
   id: string;
   children: SectionChild[];
-  type: typeof SCHEMA_SECTION;
+  type: typeof TYPE_SECTION;
 }
 
 export interface NormalizedSection {

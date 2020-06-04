@@ -1,6 +1,6 @@
 import {
-  Exercise,
-  NormalizedExercise,
+  Lesson,
+  NormalizedLesson,
   NormalizedSection,
   NormalizedStep,
   Section,
@@ -9,8 +9,8 @@ import {
 
 export const UPDATE_ENTITIES = 'UPDATE_ENTITIES';
 
-export const SET_EXERCISE_ACTIVE_STEP = 'SET_EXERCISE_ACTIVE_STEP';
-export const UPDATE_EXERCISE = 'UPDATE_EXERCISE';
+export const SET_LESSON_ACTIVE_STEP = 'SET_LESSON_ACTIVE_STEP';
+export const UPDATE_LESSON = 'UPDATE_LESSON';
 
 export const ADD_SECTION_CHILD = 'ADD_SECTION_CHILD';
 export const REMOVE_SECTION_CHILD = 'REMOVE_SECTION_CHILD';
@@ -39,23 +39,23 @@ export type UpdateEntitiesAction = Action<
 /**
  * Exercise
  */
-export type ExercisesState = { [key: string]: NormalizedExercise };
+export type LessonState = { [key: string]: NormalizedLesson };
 
-export type SetExerciseActiveStepAction = Action<
-  typeof SET_EXERCISE_ACTIVE_STEP,
+export type SetLessonActiveStepAction = Action<
+  typeof SET_LESSON_ACTIVE_STEP,
   Step['id'],
-  { id: Exercise['id'] }
+  { id: Lesson['id'] }
 >;
-export type UpdateExerciseAction = Action<
-  typeof UPDATE_EXERCISE,
-  Omit<NormalizedExercise, 'type' | 'id'>,
-  { id: Exercise['id'] }
+export type UpdateLessonAction = Action<
+  typeof UPDATE_LESSON,
+  Omit<NormalizedLesson, 'type' | 'id'>,
+  { id: Lesson['id'] }
 >;
 
-export type ExerciseAction =
+export type LessonAction =
   | UpdateEntitiesAction
-  | SetExerciseActiveStepAction
-  | UpdateExerciseAction;
+  | SetLessonActiveStepAction
+  | UpdateLessonAction;
 
 /**
  * Section

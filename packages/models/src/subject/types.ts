@@ -1,3 +1,5 @@
+export const TYPE_SUBJECT = "subjects";
+
 export interface Subject {
   id: string;
   state: {};

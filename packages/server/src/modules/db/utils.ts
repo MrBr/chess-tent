@@ -1,6 +1,7 @@
-import { Schema, SchemaOptions } from "mongoose";
+import { Schema } from "mongoose";
+import { DB } from "@types";
 
-export const setVirtualId = (schema: Schema) => {
+const setVirtualId = (schema: Schema) => {
   schema
     .virtual("id")
     .get(function() {
@@ -15,14 +16,14 @@ export const setVirtualId = (schema: Schema) => {
   return schema;
 };
 
-export const transformRemove_id = (doc: { _id: any }) => {
+const transformRemove_id = <T>(doc: T extends { _id: any } ? T : never) => {
   delete doc._id;
   return doc;
 };
 
-export const createStandardSchema = (
-  definition: {},
-  options: SchemaOptions = {}
+export const createStandardSchema: DB["createStandardSchema"] = (
+  definition,
+  options = {}
 ) => {
   const schema = new Schema(definition, {
     ...options,

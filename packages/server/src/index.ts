@@ -1,6 +1,8 @@
 require("dotenv").config();
 
-import "./db";
-import "./models";
+require("./modules");
+const application = require("./application").default;
+
+application.init().then(() => application.start());
 
 export {};

@@ -1,16 +1,15 @@
-import { model, Schema } from "mongoose";
-import { TYPE_SUBJECT } from "@chess-tent/models";
+import { model, Schema, Document } from "mongoose";
+import { Subject, TYPE_SUBJECT } from "@chess-tent/models";
 import { db } from "@application";
 
-const subjectSchema = db.createStandardSchema(
-  {
-    _id: Schema.Types.ObjectId,
-    state: { type: Schema.Types.Mixed, required: true },
-    type: { type: String, default: TYPE_SUBJECT }
-  },
-  { _id: false, id: true }
-);
+const subjectSchema = db.createStandardSchema<Subject>({
+  state: { type: Schema.Types.Mixed, required: true },
+  type: ({
+    type: String,
+    default: TYPE_SUBJECT
+  } as unknown) as typeof TYPE_SUBJECT
+});
 
-const SubjectModel = model(TYPE_SUBJECT, subjectSchema);
+const SubjectModel = model<Subject & Document>(TYPE_SUBJECT, subjectSchema);
 
 export { subjectSchema, SubjectModel };

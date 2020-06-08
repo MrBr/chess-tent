@@ -1,10 +1,12 @@
 import { Subject } from "../subject";
 
+export const TYPE_ACTIVITY = "activities";
+
 export interface Activity {
   id: string;
   state: {};
   subject: Subject;
-  type: string;
+  type: typeof TYPE_ACTIVITY;
 }
 
 export interface NormalizedActivity {

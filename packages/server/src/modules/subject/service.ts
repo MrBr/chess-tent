@@ -8,7 +8,7 @@ export const saveSubject: Service["saveSubject"] = subject =>
       subject,
       { upsert: true },
       (err, result) => {
-        err ? reject(err) : resolve(result);
+        err ? reject(err) : resolve(result.toObject() as typeof subject);
       }
     );
   });

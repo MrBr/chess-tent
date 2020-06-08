@@ -225,6 +225,7 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
     return this.props.onShapesChange(...args);
   };
 
+  // TODO - use move event?
   onChange = () => {
     const fen = this.fen();
     const lastMove = this.api.state.lastMove as Move;

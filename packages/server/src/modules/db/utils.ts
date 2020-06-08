@@ -1,5 +1,6 @@
 import { Schema } from "mongoose";
 import { DB } from "@types";
+import { Subject } from "@chess-tent/models";
 
 const setVirtualId = (schema: Schema) => {
   schema
@@ -25,18 +26,26 @@ export const createStandardSchema: DB["createStandardSchema"] = (
   definition,
   options = {}
 ) => {
-  const schema = new Schema(definition, {
-    ...options,
-    toJSON: {
-      virtuals: true,
-      transform: transformRemove_id,
-      ...(options.toJSON || {})
+  const schema = new Schema<typeof definition>(
+    {
+      _id: (Schema.Types.ObjectId as unknown) as string,
+      ...definition
     },
-    toObject: {
-      virtuals: true,
-      ...(options.toObject || {})
+    {
+      _id: false,
+      id: true,
+      ...options,
+      toJSON: {
+        virtuals: true,
+        transform: transformRemove_id,
+        ...(options.toJSON || {})
+      },
+      toObject: {
+        virtuals: true,
+        ...(options.toObject || {})
+      }
     }
-  });
+  );
   setVirtualId(schema);
   return schema;
 };

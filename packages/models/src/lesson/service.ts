@@ -2,6 +2,7 @@ import { Lesson, TYPE_LESSON } from "./types";
 import { getItemSection, getSectionPreviousStep, Section } from "../section";
 import { Step } from "../step";
 import { updateSubjectState } from "../subject";
+import { User } from "../user";
 
 // Lesson
 const isLesson = (entity: unknown) =>
@@ -21,14 +22,16 @@ const setActiveStep = (lesson: Lesson, step: Step): Lesson =>
 const createLesson = (
   id: string,
   section: Section,
-  activeStep: Step
+  activeStep: Step,
+  owner: User
 ): Lesson => ({
   id,
   type: TYPE_LESSON,
   state: {
     section: section,
     activeStep
-  }
+  },
+  owner
 });
 
 export {

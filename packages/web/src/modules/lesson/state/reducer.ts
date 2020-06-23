@@ -5,7 +5,6 @@ import {
   UPDATE_LESSON,
   SET_LESSON_ACTIVE_STEP,
 } from '@types';
-import { updateSubjectState } from '@chess-tent/models';
 
 export const reducer = (state: LessonState = {}, action: LessonAction) => {
   switch (action.type) {
@@ -15,9 +14,13 @@ export const reducer = (state: LessonState = {}, action: LessonAction) => {
       const lesson = state[lessonId];
       return {
         ...state,
-        [lessonId]: updateSubjectState(lesson, {
-          activeStep: newActiveStepId,
-        }),
+        [lessonId]: {
+          ...lesson,
+          state: {
+            ...lesson.state,
+            activeStep: newActiveStepId,
+          },
+        },
       };
     }
     case UPDATE_LESSON: {

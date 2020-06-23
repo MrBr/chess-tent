@@ -23,7 +23,7 @@ application.register(
   },
 );
 application.register(
-  () => import('./components/exercise'),
+  () => import('./components/lesson'),
   module => {
     application.components.Lesson = module.default;
   },

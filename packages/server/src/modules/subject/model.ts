@@ -1,8 +1,8 @@
 import { model, Schema, Document } from "mongoose";
-import { Subject, TYPE_SUBJECT } from "@chess-tent/models";
+import { NormalizedSubject, Subject, TYPE_SUBJECT } from "@chess-tent/models";
 import { db } from "@application";
 
-const subjectSchema = db.createStandardSchema<Subject>({
+const subjectSchema = db.createStandardSchema<NormalizedSubject>({
   state: { type: Schema.Types.Mixed, required: true },
   type: ({
     type: String,

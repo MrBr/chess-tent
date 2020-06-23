@@ -1,7 +1,7 @@
 import { register } from "core-module";
 import { RequestHandler } from "express";
 import { Schema, SchemaOptions } from "mongoose";
-import { Subject, User } from "@chess-tent/models";
+import { NormalizedUser, Subject, User } from "@chess-tent/models";
 
 export type DB = {
   connect: () => void;
@@ -11,8 +11,16 @@ export type DB = {
   ) => Schema;
 };
 
+export type Auth = {
+  tokenPayload: {
+    user: NormalizedUser["id"];
+  };
+};
+
 export type Service = {
   saveSubject: <T extends Subject>(subject: T) => Promise<T>;
+  getSubject: <T extends Subject>(subjectId: T["id"]) => Promise<T>;
+  findSubjects: <T extends Subject>(subject: Partial<T>) => Promise<T[]>;
 
   registerGetRoute: (
     path: string,
@@ -23,17 +31,17 @@ export type Service = {
     ...cb: ((...args: Parameters<RequestHandler>) => void)[]
   ) => void;
 
-  generateToken: <T extends {}>(payload: T) => string;
-  verifyToken: <T extends {}>(token: string) => T;
+  generateToken: (payload: Auth["tokenPayload"]) => string;
+  verifyToken: (token: string) => Auth["tokenPayload"];
 
-  generateUserToken: (user: User) => string;
-  identifyUser: (token: string) => Promise<User>;
   getUser: (user: Partial<User>) => Promise<User>;
 };
 
 export type Middleware = {
   identify: (...args: Parameters<RequestHandler>) => void;
 };
+
+export type MiddlewareFunction = (...args: Parameters<RequestHandler>) => void;
 
 export type Application = {
   db: DB;

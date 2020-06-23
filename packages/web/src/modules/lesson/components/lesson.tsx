@@ -14,6 +14,7 @@ import {
   getActiveStepSection,
   getLessonPreviousStep,
   getSectionLastStep,
+  User,
 } from '@chess-tent/models';
 import { AppState } from '@types';
 import { state, hooks, constants, components, stepModules } from '@application';
@@ -37,6 +38,7 @@ const LessonComponent = () => {
       '1',
       defaultSection,
       defaultStep,
+      { id: '1' } as User,
     );
     dispatch(updateEntities(defaultLesson));
   }, [dispatch]);

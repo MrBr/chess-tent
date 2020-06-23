@@ -13,4 +13,4 @@ const application = createNamespace({
   middleware
 }) as Application;
 
-export { application as default, db, service };
+export { application as default, db, service, middleware };

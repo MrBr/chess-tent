@@ -29,9 +29,9 @@ const createLesson = (
   type: TYPE_LESSON,
   state: {
     section: section,
-    activeStep
-  },
-  owner
+    activeStep,
+    owner
+  }
 });
 
 export {

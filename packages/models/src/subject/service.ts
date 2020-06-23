@@ -1,12 +1,12 @@
 import { Subject } from "./types";
 
 export const updateSubjectState = <T extends Subject>(
-  lesson: T,
+  subject: T,
   patch: Partial<T["state"]>
 ): T => ({
-  ...lesson,
+  ...subject,
   state: {
-    ...lesson.state,
+    ...subject.state,
     ...patch
   }
 });

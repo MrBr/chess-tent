@@ -10,9 +10,9 @@ export interface Lesson extends Subject {
   state: {
     section: Section;
     activeStep: Step;
+    owner: User;
   };
   type: typeof TYPE_LESSON;
-  owner: User;
 }
 
 export interface NormalizedLesson {
@@ -21,6 +21,6 @@ export interface NormalizedLesson {
   state: {
     activeStep: Step["id"];
     section: Section["id"];
+    owner: User["id"];
   };
-  owner: User["id"];
 }

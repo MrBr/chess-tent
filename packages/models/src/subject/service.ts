@@ -2,7 +2,7 @@ import { Subject } from "./types";
 
 export const updateSubjectState = <T extends Subject>(
   subject: T,
-  patch: Partial<T["state"]>
+  patch: T extends { state: infer U } ? Partial<U> : never
 ): T => ({
   ...subject,
   state: {

@@ -27,10 +27,10 @@ const createLesson = (
 ): Lesson => ({
   id,
   type: TYPE_LESSON,
+  owner,
   state: {
-    section: section,
     activeStep,
-    owner
+    section: section
   }
 });
 

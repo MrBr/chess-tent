@@ -6,7 +6,10 @@ import {
   SET_LESSON_ACTIVE_STEP,
 } from '@types';
 
-export const reducer = (state: LessonState = {}, action: LessonAction) => {
+export const reducer = (
+  state: LessonState = {},
+  action: LessonAction,
+): LessonState => {
   switch (action.type) {
     case SET_LESSON_ACTIVE_STEP: {
       const lessonId = action.meta.id;

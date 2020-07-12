@@ -1,13 +1,13 @@
 import { MiddlewareFunction } from "@types";
 import { Lesson } from "@chess-tent/models";
-import { service } from "@application";
 import { UnauthorizedLessonEditError } from "./errors";
+import * as service from "./service";
 
 export const saveLesson: MiddlewareFunction = (req, res, next) => {
   service
-    .saveSubject(req.body as Lesson)
-    .then(subject => {
-      res.locals.subject = subject;
+    .saveLesson(req.body as Lesson)
+    .then(lesson => {
+      res.locals.lesson = lesson;
       next();
     })
     .catch(next);
@@ -15,9 +15,9 @@ export const saveLesson: MiddlewareFunction = (req, res, next) => {
 
 export const canEditLesson: MiddlewareFunction = (req, res, next) => {
   service
-    .getSubject<Lesson>(res.locals.lesson.id)
-    .then(subject => {
-      if (subject.state.owner.id === res.locals.user.id) {
+    .getLesson(res.locals.lesson.id)
+    .then(lesson => {
+      if (lesson.owner.id === res.locals.user.id) {
         next();
         return;
       }
@@ -27,5 +27,5 @@ export const canEditLesson: MiddlewareFunction = (req, res, next) => {
 };
 
 export const sendLesson: MiddlewareFunction = (req, res) => {
-  res.send(res.locals.subject);
+  res.send(res.locals.lesson);
 };

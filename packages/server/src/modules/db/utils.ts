@@ -1,6 +1,5 @@
 import { Schema } from "mongoose";
 import { DB } from "@types";
-import { Subject } from "@chess-tent/models";
 
 const setVirtualId = (schema: Schema) => {
   schema

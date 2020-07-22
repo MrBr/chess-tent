@@ -1,23 +1,14 @@
 import React, { Component } from 'react';
-import { applyMiddleware, createStore } from 'redux';
 import { Provider } from 'react-redux';
-import logger from 'redux-logger';
-import { batchDispatchMiddleware } from 'redux-batched-actions';
 import { state, components } from '@application';
 
-const { getRootReducer } = state;
-const { Lesson } = components;
-
-const store = createStore(
-  getRootReducer(),
-  applyMiddleware(batchDispatchMiddleware, logger),
-);
+const { Router } = components;
 
 class App extends Component {
   render() {
     return (
-      <Provider store={store}>
-        <Lesson />
+      <Provider store={state.store}>
+        <Router />
       </Provider>
     );
   }

@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import { Step } from '@chess-tent/models';
+import { Step, TYPE_STEP } from '@chess-tent/models';
 import { schema } from 'normalizr';
 import {
   StepEndSetup,
@@ -44,7 +44,7 @@ const StepComponentRenderer: FunctionComponent<StepProps<
   return <Component key={step.id} step={step} {...stepProps} />;
 };
 
-export const stepSchema = new schema.Entity('steps');
+export const stepSchema = new schema.Entity(TYPE_STEP);
 
 export {
   registerStep,

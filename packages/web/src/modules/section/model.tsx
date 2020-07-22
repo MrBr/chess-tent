@@ -1,9 +1,9 @@
 import { schema } from 'normalizr';
 
 import { model } from '@application';
-import { SectionChild } from '@chess-tent/models';
+import { SectionChild, TYPE_SECTION } from '@chess-tent/models';
 
-export const sectionSchema = new schema.Entity('sections');
+export const sectionSchema = new schema.Entity(TYPE_SECTION);
 export const sectionChildrenSchema = new schema.Array(
   {
     sections: sectionSchema,

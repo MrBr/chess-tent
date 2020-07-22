@@ -3,7 +3,9 @@ import { Reducer, Action as ReduxAction } from 'redux';
 import { BatchAction } from 'redux-batched-actions';
 import { Schema } from 'normalizr';
 import { register } from 'core-module';
-import { Lesson, Section, SectionChild, Step } from '@chess-tent/models';
+import { Lesson, Section, SectionChild, Step, User } from '@chess-tent/models';
+import { RouteProps } from 'react-router-dom';
+import { Store } from 'redux';
 import {
   AddSectionChildAction,
   AppState,
@@ -21,7 +23,12 @@ import {
   StepModuleComponentKey,
   StepProps,
 } from './step';
-import { ActionProps, ChessboardInterface, StepperProps } from './components';
+import {
+  ActionProps,
+  AuthorizedProps,
+  ChessboardInterface,
+  StepperProps,
+} from './components';
 import { ClassComponent } from './_helpers';
 import { UI } from './ui';
 
@@ -34,6 +41,8 @@ export * from './ui';
 // Hooks
 export type Hooks = {
   useDispatchBatched: () => (...args: ReduxAction[]) => BatchAction;
+  useUser: (userId: User['id']) => User;
+  useActiveUser: () => User | null;
 };
 
 // Application Components
@@ -52,9 +61,15 @@ export type Model = {
   lessonSchema: Schema;
   sectionSchema: Schema;
   stepSchema: Schema;
+  userSchema: Schema;
 };
 
 export type State = {
+  store: Store;
+  registerReducer: <T, U extends ReduxAction>(
+    path: string,
+    reducer: Reducer<T, U>,
+  ) => void;
   registerEntityReducer: <T, U extends ReduxAction>(
     path: string,
     reducer: Reducer<T, U>,
@@ -82,6 +97,7 @@ export type State = {
     stepSelector: (stepId: Step['id']) => (state: AppState) => Step;
   };
 };
+
 export type Utils = {
   getEntitySchema: (entity: unknown) => Schema;
   rightMouse: (f: Function) => (e: MouseEvent) => void;
@@ -92,6 +108,14 @@ export type Services = {
     new (fen?: string): {};
   };
   recreateFenWithMoves: (fen: FEN, moves: Move[]) => FEN;
+  addRoute: (route: ComponentType) => void;
+};
+
+export type Pages = {
+  Landing: ComponentType;
+  Dashboard: ComponentType;
+  Register: ComponentType;
+  Home: ComponentType;
 };
 
 export type Components = {
@@ -99,6 +123,9 @@ export type Components = {
   Chessboard: ClassComponent<ChessboardInterface>;
   Stepper: FunctionComponent<StepperProps>;
   Action: FunctionComponent<ActionProps>;
+  Router: ComponentType;
+  Route: ComponentType<RouteProps>;
+  Authorized: ComponentType<AuthorizedProps>;
   StepRenderer: ComponentType<
     StepProps<
       Step,
@@ -136,6 +163,7 @@ export type Application = {
   init: () => Promise<any>;
   start: () => void;
   ui: UI;
+  pages: Pages;
   components: Components;
   constants: Constants;
   hooks: Hooks;

@@ -54,3 +54,7 @@ export type StepperProps = {
 export interface ActionProps {
   onClick?: () => void;
 }
+
+export interface AuthorizedProps {
+  children: ReactElement | ((authorized: boolean) => ReactElement);
+}

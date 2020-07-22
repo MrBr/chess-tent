@@ -3,8 +3,10 @@ import {
   NormalizedLesson,
   NormalizedSection,
   NormalizedStep,
+  NormalizedUser,
   Section,
   Step,
+  User,
 } from '@chess-tent/models';
 
 export const UPDATE_ENTITIES = 'UPDATE_ENTITIES';
@@ -18,10 +20,14 @@ export const REMOVE_SECTION_CHILD = 'REMOVE_SECTION_CHILD';
 export const UPDATE_STEP = 'UPDATE_STEP';
 export const UPDATE_STEP_STATE = 'UPDATE_STEP_STATE';
 
+export const UPDATE_USER = 'UPDATE_USER';
+export const USER_LOGGED_IN = 'USER_LOGGED_IN';
+export const USER_LOGGED_OUT = 'USER_LOGGED_OUT';
+
 export type EntityState<T> = { [key: string]: T };
 
 export interface AppState {
-  [key: string]: {};
+  activeUser: ActiveUserState;
   entities: { [key: string]: EntityState<any> };
 }
 
@@ -101,3 +107,27 @@ export type StepAction =
   | UpdateEntitiesAction
   | UpdateStepAction
   | UpdateStepStateAction;
+
+/**
+ * User
+ */
+export type UserState = { [key: string]: NormalizedUser };
+
+export type UpdateUserAction = Action<
+  typeof UPDATE_USER,
+  Partial<User>,
+  { id: User['id'] }
+>;
+
+export type UserAction = UpdateEntitiesAction | UpdateUserAction;
+
+/**
+ * Active User
+ */
+export type ActiveUserState = User['id'] | null;
+
+export type UserLoggedInAction = Action<typeof USER_LOGGED_IN, User>;
+
+export type UserLoggedOutAction = Action<typeof USER_LOGGED_OUT, {}>;
+
+export type ActiveUserAction = UserLoggedInAction | UserLoggedOutAction;

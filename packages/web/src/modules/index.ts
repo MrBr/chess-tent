@@ -1,4 +1,5 @@
 import './app';
+import './auth';
 import './chess';
 import './chessboard';
 import './evaluator';
@@ -9,3 +10,5 @@ import './step';
 import './step-basic';
 import './ui';
 import './utils';
+import './router';
+import './user';

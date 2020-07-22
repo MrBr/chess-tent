@@ -10,10 +10,12 @@ import {
   Model,
   StepModules,
   UI,
+  Pages,
 } from '@types';
 
 const services = createNamespace({}) as Services;
 const components = createNamespace({}) as Components;
+const pages = createNamespace({}) as Pages;
 const ui = createNamespace({}) as UI;
 const hooks = createNamespace({}) as Hooks;
 const state = createNamespace({
@@ -39,6 +41,7 @@ const application: Application = createNamespace({
   model,
   register: register,
   init: init,
+  pages,
 }) as Application;
 
 export {
@@ -52,4 +55,5 @@ export {
   utils,
   model,
   stepModules,
+  pages,
 };

@@ -1,6 +1,7 @@
 import { MiddlewareFunction } from "@types";
 import { User } from "@chess-tent/models";
 import * as service from "./service";
+import { PasswordEncryptionError } from "./errors";
 
 export const saveUser: MiddlewareFunction = (req, res, next) => {
   service
@@ -22,4 +23,16 @@ export const validateUser: MiddlewareFunction = (req, res, next) => {
 
 export const sendUser: MiddlewareFunction = (req, res) => {
   res.send(res.locals.user);
+};
+
+export const hashPassword: MiddlewareFunction = (req, res, next) => {
+  service
+    .hashPassword(req.body.password)
+    .then(passwordHash => {
+      req.body.password = passwordHash;
+      next();
+    })
+    .catch(() => {
+      throw new PasswordEncryptionError();
+    });
 };

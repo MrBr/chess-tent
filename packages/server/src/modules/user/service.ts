@@ -1,6 +1,7 @@
 import { Service } from "@types";
 import { UserModel } from "./model";
 import { User } from "@chess-tent/models";
+import { hash } from "bcrypt";
 
 export const saveUser = (user: User) =>
   new Promise((resolve, reject) => {
@@ -18,4 +19,8 @@ export const getUser: Service["getUser"] = user =>
 
 export const validateUser = (user: unknown) => {
   return new UserModel(user).validateSync();
+};
+
+export const hashPassword = (password: string) => {
+  return hash(password, parseInt(process.env.SALT_ROUNDS as string));
 };

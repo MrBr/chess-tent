@@ -1,4 +1,5 @@
 import './app';
+import './api';
 import './auth';
 import './chess';
 import './chessboard';

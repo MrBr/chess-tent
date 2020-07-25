@@ -1,5 +1,5 @@
 import { register } from "core-module";
-import { RequestHandler } from "express";
+import { ErrorRequestHandler, RequestHandler } from "express";
 import { Schema, SchemaOptions } from "mongoose";
 import { NormalizedUser, User } from "@chess-tent/models";
 
@@ -35,11 +35,14 @@ export type Service = {
 
 export type Middleware = {
   identify: (...args: Parameters<RequestHandler>) => void;
+  indexEntity: (...args: Parameters<RequestHandler>) => void;
+  errorHandler: ErrorRequestHandler;
 };
 
 export type MiddlewareFunction = (...args: Parameters<RequestHandler>) => void;
 
 export type Application = {
+  middleware: Middleware;
   db: DB;
   service: Service;
   register: typeof register;

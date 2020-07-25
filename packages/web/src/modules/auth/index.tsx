@@ -1,12 +1,7 @@
-import React from 'react';
-import application, { hooks } from '@application';
-import { Components } from '@types';
-
-const Authorized: Components['Authorized'] = ({ children }) => {
-  const authorized = !!hooks.useActiveUser();
-  return (
-    <>{typeof children === 'function' ? children(authorized) : children}</>
-  );
-};
+import application from '@application';
+import { Authorized } from './components/authorized';
+import { getToken, setToken } from './services';
 
 application.components.Authorized = Authorized;
+application.services.saveToken = setToken;
+application.services.getToken = getToken;

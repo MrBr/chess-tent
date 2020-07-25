@@ -11,11 +11,13 @@ import {
   StepModules,
   UI,
   Pages,
+  Requests,
 } from '@types';
 
 const services = createNamespace({}) as Services;
 const components = createNamespace({}) as Components;
 const pages = createNamespace({}) as Pages;
+const requests = createNamespace({}) as Requests;
 const ui = createNamespace({}) as UI;
 const hooks = createNamespace({}) as Hooks;
 const state = createNamespace({
@@ -49,6 +51,7 @@ export {
   services,
   components,
   ui,
+  requests,
   constants,
   hooks,
   state,

@@ -4,7 +4,7 @@ import { BatchAction } from 'redux-batched-actions';
 import { Schema } from 'normalizr';
 import { register } from 'core-module';
 import { Lesson, Section, SectionChild, Step, User } from '@chess-tent/models';
-import { RouteProps } from 'react-router-dom';
+import { RouteProps, RedirectProps } from 'react-router-dom';
 import { Store } from 'redux';
 import {
   AddSectionChildAction,
@@ -43,6 +43,14 @@ export type Hooks = {
   useDispatchBatched: () => (...args: ReduxAction[]) => BatchAction;
   useUser: (userId: User['id']) => User;
   useActiveUser: () => User | null;
+  useApi: <T, K>(
+    request: (data?: T) => Promise<K>,
+  ) => {
+    fetch: (data?: T) => void;
+    response: K | null;
+    loading: boolean;
+    error: null | string | {};
+  };
 };
 
 // Application Components
@@ -103,12 +111,41 @@ export type Utils = {
   rightMouse: (f: Function) => (e: MouseEvent) => void;
 };
 
+export type StatusResponse = { error: string | null };
+
+export type ApiMethods = 'GET' | 'POST';
+export interface API {
+  basePath: string;
+  createRequest: <T, U>(
+    request: { url: string; method: ApiMethods; data?: T },
+    token?: string,
+  ) => Promise<U>;
+}
+
 export type Services = {
   Chess: {
     new (fen?: string): {};
   };
   recreateFenWithMoves: (fen: FEN, moves: Move[]) => FEN;
   addRoute: (route: ComponentType) => void;
+  api: API;
+  createRequest: <K, U>(
+    url: string,
+    method: ApiMethods,
+  ) => (data?: K) => Promise<U>;
+  saveToken: (token: string) => void;
+  getToken: () => string;
+};
+
+export interface Request<T> {
+  url: string;
+  method: ApiMethods;
+  data?: T;
+}
+export type RequestFetch<T, U> = (data?: T) => Promise<U>;
+
+export type Requests = {
+  register: RequestFetch<Partial<User>, StatusResponse>;
 };
 
 export type Pages = {
@@ -124,6 +161,7 @@ export type Components = {
   Stepper: FunctionComponent<StepperProps>;
   Action: FunctionComponent<ActionProps>;
   Router: ComponentType;
+  Redirect: ComponentType<RedirectProps>;
   Route: ComponentType<RouteProps>;
   Authorized: ComponentType<AuthorizedProps>;
   StepRenderer: ComponentType<
@@ -165,6 +203,7 @@ export type Application = {
   ui: UI;
   pages: Pages;
   components: Components;
+  requests: Requests;
   constants: Constants;
   hooks: Hooks;
   state: State;

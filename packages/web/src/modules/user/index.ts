@@ -3,6 +3,7 @@ import { userSchema } from './model';
 
 import './register';
 import './routes';
+import './requests';
 
 import Register from './pages/register';
 import { useActiveUser, useUser } from './hooks';

@@ -1,12 +1,11 @@
 import React, { ComponentType } from 'react';
 import application from '@application';
 import { Components, Services } from '@types';
-import { Switch, BrowserRouter, Route } from 'react-router-dom';
+import { Switch, BrowserRouter, Route, Redirect } from 'react-router-dom';
 
 const routes: ComponentType[] = [];
 
 const Router: Components['Router'] = () => {
-  console.log(routes);
   return (
     <BrowserRouter>
       <Switch>
@@ -26,4 +25,5 @@ const addRoute: Services['addRoute'] = Route => {
 
 application.components.Router = Router;
 application.components.Route = Route;
+application.components.Redirect = Redirect;
 application.services.addRoute = addRoute;

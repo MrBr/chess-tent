@@ -10,16 +10,16 @@ export const saveLesson = (lesson: Lesson) =>
 
 export const getLesson = (lessonId: Lesson["id"]): Promise<Lesson | null> =>
   new Promise((resolve, reject) => {
-    LessonModel.findOne({ _id: lessonId })
+    LessonModel.findById(lessonId)
       .populate("owner")
       .exec((err, result) => {
         err ? reject(err) : resolve(result ? result.toObject() : null);
       });
   });
 
-export const findLessons = (subject: Partial<Lesson>): Promise<Lesson[]> =>
+export const findLessons = (lesson: Partial<Lesson>): Promise<Lesson[]> =>
   new Promise((resolve, reject) => {
-    LessonModel.find({ ...subject })
+    LessonModel.find(LessonModel.translateAliases(lesson))
       .populate("owner")
       .exec((err, result) => {
         err ? reject(err) : resolve(result.map(item => item.toObject()));

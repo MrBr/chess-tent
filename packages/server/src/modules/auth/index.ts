@@ -1,7 +1,7 @@
 import { middleware, service } from "@application";
-import { generateToken, verifyToken } from "./service";
+import { generateApiToken, verifyToken } from "./service";
 import { identify } from "./middleware";
 
 service.verifyToken = verifyToken;
-service.generateToken = generateToken;
+service.generateApiToken = generateApiToken;
 middleware.identify = identify;

@@ -10,11 +10,15 @@ export const saveUser = (user: User) =>
     });
   });
 
-export const getUser: Service["getUser"] = user =>
+export const getUser: Service["getUser"] = (user, projection = "-password") =>
   new Promise((resolve, reject) => {
-    UserModel.findOne(user, (err, user) => {
-      err ? reject(err) : resolve(user ? user.toObject() : null);
-    });
+    UserModel.findOne(
+      UserModel.translateAliases(user),
+      projection,
+      (err, user) => {
+        err ? reject(err) : resolve(user ? user.toObject() : null);
+      }
+    );
   });
 
 export const validateUser = (user: unknown) => {

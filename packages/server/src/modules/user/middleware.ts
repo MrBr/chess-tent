@@ -15,6 +15,16 @@ export const saveUser: MiddlewareFunction = (req, res, next) => {
     .catch(next);
 };
 
+export const getActiveUser: MiddlewareFunction = (req, res, next) => {
+  service
+    .getUser(res.locals.user as User)
+    .then(user => {
+      res.locals.user = user;
+      next();
+    })
+    .catch(next);
+};
+
 export const validateUser: MiddlewareFunction = (req, res, next) => {
   const error = service.validateUser(req.body);
   if (error) {
@@ -24,7 +34,7 @@ export const validateUser: MiddlewareFunction = (req, res, next) => {
 };
 
 export const loginUser: MiddlewareFunction = async (req, res, next) => {
-  const user = await service.getUser({ email: res.locals.user.email });
+  const user = await service.getUser({ email: res.locals.user.email }, "");
 
   const authorized = user
     ? await validateUserPassword(res.locals.user, user.password)
@@ -34,7 +44,7 @@ export const loginUser: MiddlewareFunction = async (req, res, next) => {
     next(new LoginFailedError());
   }
 
-  const token = application.service.generateToken(res.locals.user);
+  const token = application.service.generateApiToken(user as User);
   res.locals.token = token;
   next();
 };

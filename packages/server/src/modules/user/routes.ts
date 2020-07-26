@@ -4,10 +4,12 @@ import {
   saveUser,
   validateUser,
   loginUser,
-  hashPassword
+  hashPassword,
+  getActiveUser
 } from "./middleware";
+import { getUser } from "./service";
 
-const { sendData, indexEntity } = middleware;
+const { sendData, indexEntity, identify } = middleware;
 
 application.service.registerPostRoute(
   "/register",
@@ -24,4 +26,11 @@ application.service.registerPostRoute(
   prepareUser,
   loginUser,
   sendData("token")
+);
+
+application.service.registerGetRoute(
+  "/me",
+  identify,
+  getActiveUser,
+  sendData("user")
 );

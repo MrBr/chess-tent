@@ -12,7 +12,7 @@ export type DB = {
 };
 
 export type Auth = {
-  tokenPayload: {
+  apiTokenPayload: {
     user: NormalizedUser["id"];
   };
 };
@@ -20,17 +20,17 @@ export type Auth = {
 export type Service = {
   registerGetRoute: (
     path: string,
-    cb: (...args: Parameters<RequestHandler>) => void
+    ...cb: ((...args: Parameters<RequestHandler>) => void)[]
   ) => void;
   registerPostRoute: (
     path: string,
     ...cb: ((...args: Parameters<RequestHandler>) => void)[]
   ) => void;
 
-  generateToken: (payload: Auth["tokenPayload"]) => string;
-  verifyToken: (token: string) => Auth["tokenPayload"];
+  generateApiToken: (user: User) => string;
+  verifyToken: (token: string) => Auth["apiTokenPayload"];
 
-  getUser: (user: Partial<User>) => Promise<User | null>;
+  getUser: (userId: Partial<User>, projection?: string) => Promise<User | null>;
 };
 
 export type Middleware = {

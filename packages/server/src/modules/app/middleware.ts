@@ -8,8 +8,7 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
 
 export const sendData: Middleware["sendData"] = (localProp: string) => (
   req,
-  res,
-  next
+  res
 ) => {
   res.send({ data: res.locals[localProp] });
 };

@@ -1,7 +1,7 @@
 import application, { middleware } from "@application";
-import { canEditLesson, saveLesson, sendLesson } from "./middleware";
+import { canEditLesson, saveLesson } from "./middleware";
 
-const { identify } = middleware;
+const { identify, sendData } = middleware;
 
 application.service.registerGetRoute("/lesson/all", (req, res) => {
   res.send("All lessons!");
@@ -12,5 +12,5 @@ application.service.registerPostRoute(
   identify,
   canEditLesson,
   saveLesson,
-  sendLesson
+  sendData("lesson")
 );

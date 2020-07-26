@@ -1,7 +1,7 @@
 import { Service } from "@types";
 import { UserModel } from "./model";
 import { User } from "@chess-tent/models";
-import { hash } from "bcrypt";
+import { compare, hash } from "bcrypt";
 
 export const saveUser = (user: User) =>
   new Promise((resolve, reject) => {
@@ -13,7 +13,7 @@ export const saveUser = (user: User) =>
 export const getUser: Service["getUser"] = user =>
   new Promise((resolve, reject) => {
     UserModel.findOne(user, (err, user) => {
-      err ? reject(err) : user ? resolve(user.toObject()) : reject(null);
+      err ? reject(err) : resolve(user ? user.toObject() : null);
     });
   });
 
@@ -23,4 +23,8 @@ export const validateUser = (user: unknown) => {
 
 export const hashPassword = (password: string) => {
   return hash(password, parseInt(process.env.SALT_ROUNDS as string));
+};
+
+export const validateUserPassword = (user: User, passwordHash: string) => {
+  return compare(user.password, passwordHash);
 };

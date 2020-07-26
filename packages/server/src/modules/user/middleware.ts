@@ -1,11 +1,13 @@
+import application from "@application";
 import { MiddlewareFunction } from "@types";
 import { User } from "@chess-tent/models";
 import * as service from "./service";
-import { PasswordEncryptionError } from "./errors";
+import { LoginFailedError, PasswordEncryptionError } from "./errors";
+import { validateUserPassword } from "./service";
 
 export const saveUser: MiddlewareFunction = (req, res, next) => {
   service
-    .saveUser(req.body as User)
+    .saveUser(res.locals.user as User)
     .then(user => {
       res.locals.user = user;
       next();
@@ -21,15 +23,32 @@ export const validateUser: MiddlewareFunction = (req, res, next) => {
   next();
 };
 
-export const sendUser: MiddlewareFunction = (req, res) => {
-  res.send(res.locals.user);
+export const loginUser: MiddlewareFunction = async (req, res, next) => {
+  const user = await service.getUser({ email: res.locals.user.email });
+
+  const authorized = user
+    ? await validateUserPassword(res.locals.user, user.password)
+    : false;
+
+  if (!authorized) {
+    next(new LoginFailedError());
+  }
+
+  const token = application.service.generateToken(res.locals.user);
+  res.locals.token = token;
+  next();
+};
+
+export const prepareUser: MiddlewareFunction = (req, res, next) => {
+  res.locals.user = req.body;
+  next();
 };
 
 export const hashPassword: MiddlewareFunction = (req, res, next) => {
   service
     .hashPassword(req.body.password)
     .then(passwordHash => {
-      req.body.password = passwordHash;
+      res.locals.user.password = passwordHash;
       next();
     })
     .catch(() => {

@@ -1,11 +1,27 @@
-import application from "@application";
-import { hashPassword, saveUser, sendUser, validateUser } from "./middleware";
+import application, { middleware } from "@application";
+import {
+  prepareUser,
+  saveUser,
+  validateUser,
+  loginUser,
+  hashPassword
+} from "./middleware";
+
+const { sendData, indexEntity } = middleware;
 
 application.service.registerPostRoute(
   "/register",
   validateUser,
-  application.middleware.indexEntity,
+  indexEntity,
+  prepareUser,
   hashPassword,
   saveUser,
-  sendUser
+  sendData("user")
+);
+
+application.service.registerPostRoute(
+  "/login",
+  prepareUser,
+  loginUser,
+  sendData("token")
 );

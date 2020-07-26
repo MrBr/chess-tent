@@ -8,12 +8,12 @@ export const saveLesson = (lesson: Lesson) =>
     });
   });
 
-export const getLesson = (lessonId: Lesson["id"]): Promise<Lesson> =>
+export const getLesson = (lessonId: Lesson["id"]): Promise<Lesson | null> =>
   new Promise((resolve, reject) => {
     LessonModel.findOne({ _id: lessonId })
       .populate("owner")
       .exec((err, result) => {
-        err ? reject(err) : resolve(result ? result.toObject() : undefined);
+        err ? reject(err) : resolve(result ? result.toObject() : null);
       });
   });
 

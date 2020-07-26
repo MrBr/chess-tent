@@ -2,7 +2,7 @@ import application, { db } from "@application";
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
-import { errorHandler } from "./middleware";
+import { errorHandler, sendData } from "./middleware";
 
 const { connect } = db;
 
@@ -14,6 +14,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 application.middleware.errorHandler = errorHandler;
+application.middleware.sendData = sendData;
 application.service.registerGetRoute = (path, ...middlware) =>
   app.get(path, ...middlware);
 application.service.registerPostRoute = (path, ...middlware) =>

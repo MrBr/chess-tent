@@ -30,13 +30,14 @@ export type Service = {
   generateToken: (payload: Auth["tokenPayload"]) => string;
   verifyToken: (token: string) => Auth["tokenPayload"];
 
-  getUser: (user: Partial<User>) => Promise<User>;
+  getUser: (user: Partial<User>) => Promise<User | null>;
 };
 
 export type Middleware = {
   identify: (...args: Parameters<RequestHandler>) => void;
   indexEntity: (...args: Parameters<RequestHandler>) => void;
   errorHandler: ErrorRequestHandler;
+  sendData: (localProp: string) => MiddlewareFunction;
 };
 
 export type MiddlewareFunction = (...args: Parameters<RequestHandler>) => void;

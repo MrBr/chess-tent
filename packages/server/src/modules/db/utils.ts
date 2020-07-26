@@ -1,24 +1,12 @@
 import { Schema } from "mongoose";
 import { DB } from "@types";
 
-const setVirtualId = (schema: Schema) => {
-  schema
-    .virtual("id")
-    .get(function() {
-      // @ts-ignore
-      return this._id;
-    })
-    // @ts-ignore
-    .set(function(value) {
-      // @ts-ignore
-      this._id = value;
-    });
-  return schema;
-};
-
-const transformRemove_id = <T>(doc: T extends { _id: any } ? T : never) => {
-  delete doc._id;
-  return doc;
+const transformRemove_id = <T>(
+  doc: unknown,
+  ret: T extends { _id: any } ? T : never
+) => {
+  delete ret._id;
+  return ret;
 };
 
 export const createStandardSchema: DB["createStandardSchema"] = (
@@ -27,7 +15,7 @@ export const createStandardSchema: DB["createStandardSchema"] = (
 ) => {
   const schema = new Schema<typeof definition>(
     {
-      _id: (Schema.Types.ObjectId as unknown) as string,
+      _id: ({ type: Schema.Types.ObjectId, alias: "id" } as unknown) as string,
       ...definition
     },
     {
@@ -41,10 +29,10 @@ export const createStandardSchema: DB["createStandardSchema"] = (
       },
       toObject: {
         virtuals: true,
+        transform: transformRemove_id,
         ...(options.toObject || {})
       }
     }
   );
-  setVirtualId(schema);
   return schema;
 };

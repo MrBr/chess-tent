@@ -2,12 +2,14 @@ import React, { FunctionComponent } from 'react';
 import { Step, TYPE_STEP } from '@chess-tent/models';
 import { schema } from 'normalizr';
 import {
+  FEN,
   StepEndSetup,
   StepMap,
   StepModule,
   StepModuleComponentKey,
   StepProps,
 } from '@types';
+import { utils } from '@application';
 
 const StepsMap = {} as StepMap;
 
@@ -17,17 +19,22 @@ const registerStep = <K, T extends keyof StepMap>(
   StepsMap[stepModule.stepType as T] = stepModule;
 };
 
-const getStepModule = <T extends keyof StepMap>(
+export const getStepModule = <T extends keyof StepMap>(
   type: T,
 ): StepModule<Step, T> => {
   return StepsMap[type] as StepModule<Step, T>;
 };
 
-const createStepModuleStep = (
+const createStepModuleStep = <T extends Step>(
   stepType: keyof StepMap,
-  ...args: Parameters<StepModule<Step, typeof stepType>['createStep']>
+  initialPosition: FEN,
+  initialState?: T extends Step<infer U, infer K> ? U : never,
 ): Step => {
-  return getStepModule(stepType)['createStep'](...args);
+  return getStepModule(stepType)['createStep'](
+    utils.generateIndex(),
+    initialPosition,
+    initialState,
+  );
 };
 
 const getStepModuleStepEndSetup = (step: Step): StepEndSetup => {
@@ -45,6 +52,11 @@ const StepComponentRenderer: FunctionComponent<StepProps<
 };
 
 export const stepSchema = new schema.Entity(TYPE_STEP);
+stepSchema.define({
+  state: {
+    steps: [stepSchema],
+  },
+});
 
 export {
   registerStep,

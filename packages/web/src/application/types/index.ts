@@ -3,19 +3,17 @@ import { Reducer, Action as ReduxAction } from 'redux';
 import { BatchAction } from 'redux-batched-actions';
 import { Schema } from 'normalizr';
 import { register } from 'core-module';
-import { Lesson, Section, SectionChild, Step, User } from '@chess-tent/models';
+import { Lesson, Step, User } from '@chess-tent/models';
 import { RouteProps, RedirectProps } from 'react-router-dom';
 import { Store } from 'redux';
 import {
-  AddSectionChildAction,
   AppState,
-  RemoveSectionChildAction,
   SetLessonActiveStepAction,
   UpdateEntitiesAction,
   UpdateStepAction,
   UpdateStepStateAction,
 } from './state';
-import { FEN, Move } from './chess';
+import { FEN, Move, Piece } from './chess';
 import {
   StepEndSetup,
   StepMap,
@@ -58,9 +56,10 @@ export type Hooks = {
 export type StepModules = {
   registerStep: (stepModule: StepModule) => void;
   getStepModule: <T extends keyof StepMap>(type: T) => StepModule<Step, T>;
-  createStep: (
+  createStep: <T extends Step>(
     stepType: keyof StepMap,
-    ...args: Parameters<StepModule<Step, keyof StepMap>['createStep']>
+    initialPosition: FEN,
+    initialState?: T extends Step<infer U, infer K> ? U : never,
   ) => Step;
   getStepEndSetup: (step: Step) => StepEndSetup;
 };
@@ -84,21 +83,13 @@ export type State = {
   ) => void;
   getRootReducer: () => Reducer;
   actions: {
-    updateEntities: (entity: Lesson | Section | Step) => UpdateEntitiesAction;
+    updateEntities: (entity: Lesson | Step) => UpdateEntitiesAction;
     setLessonActiveStep: (
       lesson: Lesson,
       step: Step,
     ) => SetLessonActiveStepAction;
     updateStep: (step: Step, patch: Partial<Step>) => UpdateStepAction;
     updateStepState: (step: Step, state: any) => UpdateStepStateAction;
-    addSectionChild: (
-      section: Section,
-      child: SectionChild,
-    ) => AddSectionChildAction;
-    removeSectionChild: (
-      section: Section,
-      child: SectionChild,
-    ) => RemoveSectionChildAction;
   };
   selectors: {
     lessonSelector: (lessonId: Lesson['id']) => (state: AppState) => Lesson;
@@ -109,6 +100,7 @@ export type State = {
 export type Utils = {
   getEntitySchema: (entity: unknown) => Schema;
   rightMouse: (f: Function) => (e: MouseEvent) => void;
+  generateIndex: () => string;
 };
 
 export type StatusResponse = { error: string | null };
@@ -127,6 +119,8 @@ export type Services = {
     new (fen?: string): {};
   };
   recreateFenWithMoves: (fen: FEN, moves: Move[]) => FEN;
+  getPiece: (position: FEN, square: string) => Piece | null;
+
   addRoute: (route: ComponentType) => void;
   api: API;
   createRequest: <K, U>(

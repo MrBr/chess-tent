@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import React, { ComponentType, useCallback } from 'react';
 import { components } from '@application';
-import { Step, isSection } from '@chess-tent/models';
+import { Step } from '@chess-tent/models';
 import { ActionProps, StepperProps, StepSystemProps } from '@types';
 
 const { StepRenderer } = components;
@@ -47,28 +47,21 @@ const StepMark = styled(({ step, className }) => {
 );
 
 const Stepper = styled<ComponentType<StepperProps>>(
-  ({ section, current, className, ...systemProps }) => {
-    if (!section) {
+  ({ steps, activeStep, className, ...systemProps }) => {
+    if (!steps) {
       return null;
     }
     return (
       <div className={className}>
-        <div className="line"></div>
-        {section.children.map(child => {
-          if (isSection(child)) {
-            return (
-              <Stepper
-                section={child}
-                key={`${child.id}-section`}
-                current={current}
-                {...systemProps}
-              />
-            );
-          }
+        {steps.map(child => {
           return (
             <div className="step-container" key={`${child.id}-step`}>
-              <StepMark step={child} current={child === current} />
-              <StepperStep step={child} {...systemProps} />
+              <StepMark step={child} current={child === activeStep} />
+              <StepperStep
+                step={child}
+                {...systemProps}
+                activeStep={activeStep}
+              />
             </div>
           );
         })}
@@ -79,15 +72,6 @@ const Stepper = styled<ComponentType<StepperProps>>(
   '& > &': {
     width: 'calc(100% - 50px)',
     left: 50,
-  },
-  '.line': {
-    position: 'absolute',
-    left: 25,
-    zIndex: 0,
-    top: 0,
-    width: 1,
-    background: '#000',
-    height: '100%',
   },
   '.step-container': {
     display: 'flex',

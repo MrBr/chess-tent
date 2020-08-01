@@ -4,7 +4,7 @@ import { TYPE_LESSON } from '@chess-tent/models';
 
 export const lessonSchema = new schema.Entity(TYPE_LESSON, {
   state: {
-    section: model.sectionSchema,
+    steps: [model.stepSchema],
     activeStep: model.stepSchema,
   },
 });

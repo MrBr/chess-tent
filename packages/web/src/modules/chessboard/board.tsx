@@ -43,6 +43,7 @@ type ChessgroundMappedPropsType = Record<
   keyof Omit<
     ChessboardProps,
     | 'header'
+    | 'footer'
     | 'onReset'
     | 'onChange'
     | 'onShapesChange'
@@ -229,7 +230,8 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
   onChange = () => {
     const fen = this.fen();
     const lastMove = this.api.state.lastMove as Move;
-    this.props.onChange && this.props.onChange(fen, lastMove);
+    const piece = this.api.state.pieces[lastMove[1]];
+    this.props.onChange && this.props.onChange(fen, lastMove, piece);
   };
 
   onSparePieceDrag = (piece: Piece, event: MouchEvent) => {
@@ -237,7 +239,7 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
   };
 
   render() {
-    const { header, fen, evaluate } = this.props;
+    const { header, fen, evaluate, footer } = this.props;
     const { renderPrompt } = this.state;
     return (
       <>
@@ -249,8 +251,8 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
         />
         <BoardHeader>{header}</BoardHeader>
         <Board id="board" ref={this.boardHost} />
+        <BoardOptions>{footer}</BoardOptions>
         <SparePieces onDragStart={this.onSparePieceDrag}></SparePieces>
-        <BoardOptions></BoardOptions>
         <Modal
           container={this.boardHost}
           show={!!renderPrompt}

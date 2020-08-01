@@ -8,6 +8,7 @@ import {
   getStepModuleStepEndSetup,
   StepComponentRenderer,
   stepSchema,
+  getStepModule,
 } from './model';
 
 application.register(() => import('./register'));
@@ -17,6 +18,7 @@ application.model.stepSchema = stepSchema;
 application.state.actions.updateStepState = updateStepStateAction;
 application.state.selectors.stepSelector = stepSelector;
 application.stepModules.registerStep = registerStep;
+application.stepModules.getStepModule = getStepModule;
 application.stepModules.getStepEndSetup = getStepModuleStepEndSetup;
 application.stepModules.createStep = createStepModuleStep;
 application.stepModules.registerStep = registerStep;

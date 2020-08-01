@@ -1,4 +1,5 @@
-import { FEN, Move } from '@types';
+import { FEN, Move, Services } from '@types';
+import { transformColorKey, transformPieceTypeToRole } from './helpers';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 export const Chess = require('chess.js');
@@ -13,4 +14,18 @@ export const createFen = (position: FEN, moves: Move[]) => {
     }
   });
   return chess.fen();
+};
+
+export const getPiece: Services['getPiece'] = (position, square) => {
+  const chess = new Chess(position);
+  const piece = chess.get(square);
+
+  if (!piece) {
+    return null;
+  }
+
+  return {
+    role: transformPieceTypeToRole(piece.type),
+    color: transformColorKey(piece.color),
+  };
 };

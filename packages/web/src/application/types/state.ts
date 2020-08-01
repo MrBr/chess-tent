@@ -1,10 +1,8 @@
 import {
   Lesson,
   NormalizedLesson,
-  NormalizedSection,
   NormalizedStep,
   NormalizedUser,
-  Section,
   Step,
   User,
 } from '@chess-tent/models';
@@ -13,9 +11,6 @@ export const UPDATE_ENTITIES = 'UPDATE_ENTITIES';
 
 export const SET_LESSON_ACTIVE_STEP = 'SET_LESSON_ACTIVE_STEP';
 export const UPDATE_LESSON = 'UPDATE_LESSON';
-
-export const ADD_SECTION_CHILD = 'ADD_SECTION_CHILD';
-export const REMOVE_SECTION_CHILD = 'REMOVE_SECTION_CHILD';
 
 export const UPDATE_STEP = 'UPDATE_STEP';
 export const UPDATE_STEP_STATE = 'UPDATE_STEP_STATE';
@@ -62,29 +57,6 @@ export type LessonAction =
   | UpdateEntitiesAction
   | SetLessonActiveStepAction
   | UpdateLessonAction;
-
-/**
- * Section
- */
-export type SectionsState = { [key: string]: NormalizedSection };
-
-export type AddSectionChildAction = Action<
-  typeof ADD_SECTION_CHILD,
-  | { id: Section['id']; type: Section['type'] }
-  | { id: Step['id']; type: Step['type'] },
-  { id: Section['id'] }
->;
-export type RemoveSectionChildAction = Action<
-  typeof REMOVE_SECTION_CHILD,
-  | { id: Section['id']; type: Section['type'] }
-  | { id: Step['id']; type: Step['type'] },
-  { id: Section['id'] }
->;
-
-export type SectionAction =
-  | UpdateEntitiesAction
-  | AddSectionChildAction
-  | RemoveSectionChildAction;
 
 /**
  * Step

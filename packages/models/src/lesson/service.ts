@@ -1,18 +1,47 @@
 import { Lesson, TYPE_LESSON } from "./types";
-import { getItemSection, getSectionPreviousStep, Section } from "../section";
-import { Step } from "../step";
+import {
+  getLastStep,
+  getParentStep,
+  getPreviousStep,
+  isStep,
+  Step
+} from "../step";
 import { updateSubjectState } from "../subject";
 import { User } from "../user";
 
 // Lesson
 const isLesson = (entity: unknown) =>
   Object.getOwnPropertyDescriptor(entity, "type")?.value === TYPE_LESSON;
+for (const [i, value] of []) {
+  console.log("%d: %s", i, value);
+}
 
-const getActiveStepSection = (lesson: Lesson): Section =>
-  getItemSection(lesson.state.section, lesson.state.activeStep) as Section;
+const getLessonParentStep = (lesson: Lesson, step: Step) => {
+  for (const rootStep of lesson.state.steps) {
+    if (rootStep === step) {
+      return null;
+    }
+    const parentStep = getParentStep(rootStep, step);
+    if (parentStep) {
+      return parentStep;
+    }
+  }
+};
 
-const getLessonPreviousStep = (lesson: Lesson, step: Step) =>
-  getSectionPreviousStep(lesson.state.section, step);
+const getLessonPreviousStep = (lesson: Lesson, step: Step) => {
+  let index = 0;
+  for (const rootStep of lesson.state.steps) {
+    const rootStep = lesson.state.steps[index];
+    if (rootStep === step) {
+      return index > 0 ? getLastStep(lesson.state.steps[index - 1]) : null;
+    }
+    const previousStep = getPreviousStep(rootStep, step);
+    if (previousStep) {
+      return previousStep;
+    }
+    index++;
+  }
+};
 
 const setActiveStep = (lesson: Lesson, step: Step): Lesson =>
   updateSubjectState(lesson, {
@@ -21,7 +50,7 @@ const setActiveStep = (lesson: Lesson, step: Step): Lesson =>
 
 const createLesson = (
   id: string,
-  section: Section,
+  steps: Step[],
   activeStep: Step,
   owner: User
 ): Lesson => ({
@@ -30,14 +59,14 @@ const createLesson = (
   owner,
   state: {
     activeStep,
-    section: section
+    steps: steps
   }
 });
 
 export {
   isLesson,
+  getLessonParentStep,
   getLessonPreviousStep,
   createLesson,
-  getActiveStepSection,
   setActiveStep
 };

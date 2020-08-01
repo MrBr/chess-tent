@@ -4,7 +4,7 @@ import * as yup from 'yup';
 
 const { useApi } = hooks;
 const { Redirect } = components;
-const { Form, Input, Button, FormGroup, Label } = ui;
+const { Form, Button, FormGroup, Label } = ui;
 
 const SignupSchema = yup.object().shape({
   name: yup
@@ -54,23 +54,23 @@ export default () => {
     >
       <FormGroup>
         <Label>Name</Label>
-        <Input type="text" name="name" />
+        <Form.Input type="text" name="name" />
       </FormGroup>
       <FormGroup>
         <Label>Nickname</Label>
-        <Input type="text" name="nickname" />
+        <Form.Input type="text" name="nickname" />
       </FormGroup>
       <FormGroup>
         <Label>Email</Label>
-        <Input type="email" name="email" />
+        <Form.Input type="email" name="email" />
       </FormGroup>
       <FormGroup>
         <Label>Password</Label>
-        <Input type="password" name="password" />
+        <Form.Input type="password" name="password" />
       </FormGroup>
       <FormGroup>
         <Label>Repeat password</Label>
-        <Input type="password" name="passwordConfirmation" />
+        <Form.Input type="password" name="passwordConfirmation" />
       </FormGroup>
       <FormGroup>
         <Button type="submit" disabled={loading}>

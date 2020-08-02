@@ -6,6 +6,7 @@ import {
   getLessonParentStep,
   isLastStep,
   addStep,
+  getLastStep,
 } from '@chess-tent/models';
 import { FEN, Move, Piece, StepComponent, StepModule } from '@types';
 import {
@@ -56,6 +57,65 @@ const getEndSetup: MoveModule['getEndSetup'] = ({ state }: MoveStep) => ({
   shapes: state.shapes,
 });
 
+const changeReactor: MoveModule['changeReactor'] = (lesson, step) => (
+  newPosition: FEN,
+  newMove?: Move,
+  movedPiece?: Piece,
+) => {
+  const {
+    state: { move, position },
+  } = step;
+  if (!newMove || !movedPiece) {
+    return [];
+  }
+  if (!move) {
+    return [
+      updateStepState(step, {
+        position: newPosition,
+        move: newMove,
+      }),
+    ];
+  }
+
+  const parentStep = getLessonParentStep(lesson, step) as MoveStep;
+  const previousPiece = getPiece(position, move[1]) as Piece;
+
+  if (movedPiece.color === previousPiece.color) {
+    // New example
+    const newVariationStep = stepModules.createStep('variation', newPosition, {
+      editing: true,
+    });
+    return [
+      updateEntities(addStep(step, newVariationStep)),
+      setLessonActiveStep(lesson, newVariationStep),
+    ];
+  }
+
+  if (!isLastStep(parentStep, step)) {
+    // New variation
+    const newVariationStep = stepModules.createStep('variation', newPosition, {
+      move: newMove,
+    });
+    return [
+      updateEntities(addStep(step, newVariationStep)),
+      setLessonActiveStep(lesson, newVariationStep),
+    ];
+  }
+
+  // Continuing the current variation
+  const newMoveStep = stepModules.createStep('move', newPosition, {
+    move: newMove,
+  });
+  return [
+    updateEntities(addStep(parentStep, newMoveStep)),
+    setLessonActiveStep(lesson, newMoveStep),
+  ];
+};
+
+const shapesReactor: MoveModule['shapesReactor'] = (lesson, step) => shapes => [
+  updateStepState(step, { shapes }),
+];
+
 const Editor: StepComponent<MoveStep> = ({ step, lesson }) => {
   const {
     state: { move, position, shapes },
@@ -63,69 +123,15 @@ const Editor: StepComponent<MoveStep> = ({ step, lesson }) => {
   const dispatch = useDispatchBatched();
 
   const updateShapes = useCallback(
-    (shapes: DrawShape[]) => dispatch(updateStepState(step, { shapes })),
-    [dispatch, step],
+    (shapes: DrawShape[]) => dispatch(...shapesReactor(lesson, step)(shapes)),
+    [dispatch, step, lesson],
   );
 
   const onChangeHandle = useCallback(
-    (newPosition: FEN, newMove?: Move, movedPiece?: Piece) => {
-      if (!newMove || !movedPiece) {
-        return;
-      }
-      if (!move) {
-        dispatch(
-          updateStepState(step, {
-            position: newPosition,
-            move: newMove,
-          }),
-        );
-        return;
-      }
-
-      const parentStep = getLessonParentStep(lesson, step) as MoveStep;
-      const previousPiece = getPiece(position, move[1]) as Piece;
-
-      if (movedPiece.color === previousPiece.color) {
-        // New example
-        const newVariationStep = stepModules.createStep(
-          'variation',
-          newPosition,
-          {
-            editing: true,
-          },
-        );
-        dispatch(
-          updateEntities(addStep(step, newVariationStep)),
-          setLessonActiveStep(lesson, newVariationStep),
-        );
-        return;
-      }
-
-      if (!isLastStep(parentStep, step)) {
-        // New variation
-        const newVariationStep = stepModules.createStep(
-          'variation',
-          newPosition,
-          {
-            move: newMove,
-          },
-        );
-        dispatch(
-          updateEntities(addStep(step, newVariationStep)),
-          setLessonActiveStep(lesson, newVariationStep),
-        );
-        return;
-      }
-
-      // Continuing the current variation
-      const newMoveStep = stepModules.createStep('move', newPosition, {
-        move: newMove,
-      });
+    (newPosition: FEN, newMove?: Move, movedPiece?: Piece) =>
       dispatch(
-        updateEntities(addStep(parentStep, newMoveStep)),
-        setLessonActiveStep(lesson, newMoveStep),
-      );
-    },
+        ...changeReactor(lesson, step)(newPosition, newMove, movedPiece),
+      ),
     [dispatch, move, position, step, lesson],
   );
 
@@ -199,6 +205,8 @@ const Module: MoveModule = {
   createStep,
   getEndSetup,
   stepType,
+  changeReactor,
+  shapesReactor,
 };
 
 export default Module;

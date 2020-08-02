@@ -1,6 +1,8 @@
 import { ComponentType, FunctionComponent } from 'react';
 import { Lesson, Step, StepType } from '@chess-tent/models';
-import { FEN, Shape } from './chess';
+import { FEN, Move, Piece, Shape } from './chess';
+import { Action } from 'redux';
+import { DrawShape } from 'chessground/src/draw';
 
 export type StepMap = Record<StepType, StepModule>;
 export type StepEndSetup = { position: FEN; shapes: Shape[] };
@@ -38,4 +40,9 @@ export type StepModule<T extends Step = any, K extends StepType = StepType> = {
     initialState?: Partial<T extends Step<infer S, K> ? S : never>,
   ) => T;
   getEndSetup: (step: T) => StepEndSetup;
+  changeReactor: (
+    lesson: Lesson,
+    step: T,
+  ) => (newPosition: FEN, move?: Move, movedPiece?: Piece) => Action[];
+  shapesReactor: (lesson: Lesson, step: T) => (shapes: DrawShape[]) => Action[];
 };

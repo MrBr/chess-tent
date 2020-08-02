@@ -5,8 +5,12 @@ import {
   createStep as coreCreateStep,
   getLessonParentStep,
 } from '@chess-tent/models';
-import { FEN, StepComponent, StepModule } from '@types';
-import { stepModules } from '@application';
+import { FEN, Move, Piece, StepComponent, StepModule } from '@types';
+import { state, stepModules } from '@application';
+
+const {
+  actions: { updateStepState },
+} = state;
 
 const stepType = 'description';
 
@@ -32,6 +36,21 @@ const createStep = (
     ...(initialState || {}),
   });
 
+const changeReactor: DescriptionModule['changeReactor'] = (lesson, step) => (
+  newPosition: FEN,
+  newMove?: Move,
+  movedPiece?: Piece,
+) => {
+  const parentStep = getLessonParentStep(lesson, step) as Step;
+  return stepModules
+    .getStepModule(parentStep.stepType)
+    .changeReactor(lesson, parentStep)(newPosition, newMove, movedPiece);
+};
+
+const shapesReactor: DescriptionModule['shapesReactor'] = (
+  lesson,
+  step,
+) => shapes => [updateStepState(step, { shapes })];
 const getEndSetup: DescriptionModule['getEndSetup'] = ({
   state,
 }: DescriptionStep) => ({
@@ -87,6 +106,8 @@ const Module: DescriptionModule = {
   createStep,
   getEndSetup,
   stepType,
+  changeReactor,
+  shapesReactor,
 };
 
 export default Module;

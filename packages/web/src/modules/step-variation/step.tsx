@@ -48,6 +48,51 @@ const getEndSetup: VariationModule['getEndSetup'] = ({
   shapes: state.shapes,
 });
 
+const changeReactor: VariationModule['changeReactor'] = (lesson, step) => (
+  newPosition: FEN,
+  newMove?: Move,
+  movedPiece?: Piece,
+) => {
+  const {
+    state: { editing },
+  } = step;
+  if (editing || !newMove || !movedPiece) {
+    return [
+      updateStepState(step, {
+        position: newPosition,
+        editing: true,
+        steps: [],
+      }),
+    ];
+  }
+
+  const newMoveStep = stepModules.createStep('move', newPosition, {
+    move: newMove,
+  });
+
+  const lastVariationStep = getLastStep(step);
+  if (lastVariationStep?.stepType === 'move') {
+    const newVariationStep = stepModules.createStep('variation', newPosition, {
+      steps: [newMoveStep],
+    });
+
+    return [
+      updateEntities(addStep(step, newVariationStep)),
+      setLessonActiveStep(lesson, newMoveStep),
+    ];
+  }
+
+  return [
+    updateEntities(addStep(step, newMoveStep)),
+    setLessonActiveStep(lesson, newMoveStep),
+  ];
+};
+
+const shapesReactor: VariationModule['shapesReactor'] = (
+  lesson,
+  step,
+) => shapes => [updateStepState(step, { shapes })];
+
 const Editor: StepComponent<VariationStep> = ({ step, lesson }) => {
   const {
     state: { position, shapes, editing },
@@ -60,37 +105,16 @@ const Editor: StepComponent<VariationStep> = ({ step, lesson }) => {
   );
 
   const updateShapes = useCallback(
-    (shapes: DrawShape[]) => dispatch(updateStepState(step, { shapes })),
-    [dispatch, step],
+    (shapes: DrawShape[]) => dispatch(...shapesReactor(lesson, step)(shapes)),
+    [dispatch, step, lesson],
   );
 
   const onChangeHandle = useCallback(
-    (newPosition: FEN, newMove?: Move, movedPiece?: Piece) => {
-      if (editing || !newMove || !movedPiece) {
-        dispatch(
-          updateStepState(step, {
-            position: newPosition,
-            editing: true,
-            steps: [],
-          }),
-        );
-        return;
-      }
-
-      const newMoveStep = stepModules.createStep('move', newPosition, {
-        move: newMove,
-      });
-
-      const lastVariationStep = getLastStep(step);
-      if (lastVariationStep?.stepType === 'move') {
-      }
-
+    (newPosition: FEN, newMove?: Move, movedPiece?: Piece) =>
       dispatch(
-        updateEntities(addStep(step, newMoveStep)),
-        setLessonActiveStep(lesson, newMoveStep),
-      );
-    },
-    [dispatch, step, editing, lesson],
+        ...changeReactor(lesson, step)(newPosition, newMove, movedPiece),
+      ),
+    [dispatch, step, lesson],
   );
 
   const footer = (
@@ -177,6 +201,8 @@ const Module: VariationModule = {
   createStep,
   getEndSetup,
   stepType,
+  changeReactor,
+  shapesReactor,
 };
 
 export default Module;

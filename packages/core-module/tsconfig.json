@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "outDir": "dist",
+    "moduleResolution": "node",
+    "target": "es5",
+    "declaration": true,
+    "declarationDir": "./dist"
+  }
+}

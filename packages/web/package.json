@@ -38,6 +38,7 @@
   },
   "scripts": {
     "start": "craco start --no-cache",
+    "build:dev": "echo no build",
     "build": "craco build",
     "test": "craco test"
   },

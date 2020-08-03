@@ -6,7 +6,6 @@ import {
   getLessonParentStep,
   isLastStep,
   addStep,
-  getLastStep,
 } from '@chess-tent/models';
 import { FEN, Move, Piece, StepComponent, StepModule } from '@types';
 import {
@@ -118,7 +117,7 @@ const shapesReactor: MoveModule['shapesReactor'] = (lesson, step) => shapes => [
 
 const Editor: StepComponent<MoveStep> = ({ step, lesson }) => {
   const {
-    state: { move, position, shapes },
+    state: { position, shapes },
   } = step;
   const dispatch = useDispatchBatched();
 
@@ -132,7 +131,7 @@ const Editor: StepComponent<MoveStep> = ({ step, lesson }) => {
       dispatch(
         ...changeReactor(lesson, step)(newPosition, newMove, movedPiece),
       ),
-    [dispatch, move, position, step, lesson],
+    [dispatch, step, lesson],
   );
 
   return (

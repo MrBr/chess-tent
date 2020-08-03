@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "ts-node -r tsconfig-paths/register ./src/index.ts",
+    "build:dev": "echo no build",
+    "build": "echo no build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Luka Bracanovic",

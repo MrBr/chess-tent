@@ -73,7 +73,6 @@ const BoardHeader = styled.div({
 
 const BoardOptions = styled.div({
   display: 'flex',
-  height: 400,
   justifyContent: 'space-between',
   alignItems: 'center',
 });

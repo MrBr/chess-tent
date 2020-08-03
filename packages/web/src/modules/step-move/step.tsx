@@ -78,6 +78,9 @@ const changeReactor: MoveModule['changeReactor'] = (lesson, step) => (
 
   const parentStep = getLessonParentStep(lesson, step) as MoveStep;
   const previousPiece = getPiece(position, move[1]) as Piece;
+  const newMoveStep = stepModules.createStep('move', newPosition, {
+    move: newMove,
+  });
 
   if (movedPiece.color === previousPiece.color) {
     // New example
@@ -93,18 +96,15 @@ const changeReactor: MoveModule['changeReactor'] = (lesson, step) => (
   if (!isLastStep(parentStep, step)) {
     // New variation
     const newVariationStep = stepModules.createStep('variation', newPosition, {
-      move: newMove,
+      steps: [newMoveStep],
     });
     return [
       updateEntities(addStep(step, newVariationStep)),
-      setLessonActiveStep(lesson, newVariationStep),
+      setLessonActiveStep(lesson, newMoveStep),
     ];
   }
 
   // Continuing the current variation
-  const newMoveStep = stepModules.createStep('move', newPosition, {
-    move: newMove,
-  });
   return [
     updateEntities(addStep(parentStep, newMoveStep)),
     setLessonActiveStep(lesson, newMoveStep),

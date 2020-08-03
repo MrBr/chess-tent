@@ -10,6 +10,6 @@
   ],
   "dependencies": {
     "@chess-tent/models": "1.0.0",
-    "core-module": "file:../../js/core-module"
+    "core-module": "2.0.0"
   }
 }

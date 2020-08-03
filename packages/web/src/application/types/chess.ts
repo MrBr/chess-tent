@@ -4,8 +4,8 @@ import {
   Key as CG_KEY,
   Piece as CG_PIECE,
   Role as CG_ROLE,
-} from 'chessground/types';
-import { DrawShape } from 'chessground/draw';
+} from '@chess-tent/chessground/dist/types';
+import { DrawShape } from '@chess-tent/chessground/dist/draw';
 
 export type FEN = CG_FEN;
 export type Piece = CG_PIECE;

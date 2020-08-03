@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useCallback } from 'react';
-import { DrawShape } from 'chessground/draw';
+import { DrawShape } from '@chess-tent/chessground/dist/draw';
 import {
   Step,
   createStep as coreCreateStep,

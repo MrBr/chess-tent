@@ -4,7 +4,7 @@ import React, {
   useCallback,
   useMemo,
 } from 'react';
-import { MouchEvent } from 'chessground/types';
+import { MouchEvent } from '@chess-tent/chessground/dist/types';
 import { Piece, PieceColor, PieceRole } from '@types';
 
 interface SparePiecesProps {

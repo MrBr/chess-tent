@@ -9,12 +9,12 @@ import {
 
 import React, { Component, RefObject } from 'react';
 import styled from '@emotion/styled';
-import { Chessground } from 'chessground';
+import { Chessground } from '@chess-tent/chessground';
 import _ from 'lodash';
-import { Api } from 'chessground/api';
-import { Key, MouchEvent } from 'chessground/types';
-import { State as CGState } from 'chessground/state';
-import { DrawShape } from 'chessground/src/draw';
+import { Api } from '@chess-tent/chessground/dist/api';
+import { Key, MouchEvent } from '@chess-tent/chessground/dist/types';
+import { State as CGState } from '@chess-tent/chessground/dist/state';
+import { DrawShape } from '@chess-tent/chessground/dist/draw';
 
 import { SparePieces } from './spare-pieces';
 

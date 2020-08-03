@@ -1,7 +1,7 @@
 import { Component, ReactElement, ReactNode, RefObject } from 'react';
-import { FEN, Key, Piece } from 'chessground/types';
-import { DrawCurrent, DrawShape } from 'chessground/src/draw';
-import { Api } from 'chessground/api';
+import { FEN, Key, Piece } from '@chess-tent/chessground/dist/types';
+import { DrawCurrent, DrawShape } from '@chess-tent/chessground/dist/draw';
+import { Api } from '@chess-tent/chessground/dist/api';
 import { Step } from '@chess-tent/models';
 import { Move, Shape } from './chess';
 import { StepSystemProps } from './step';

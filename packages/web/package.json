@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@chess-tent/chessground": "1.0.0",
     "@chess-tent/models": "1.0.0",
     "@emotion/core": "^10.0.10",
     "@emotion/styled": "^10.0.10",
@@ -16,9 +17,8 @@
     "array-move": "^2.2.1",
     "bootstrap": "^4.4.1",
     "chess.js": "^0.10.2",
-    "chessground": "/Users/lukabracanovic/Development/js/chessground",
     "chroma-js": "^2.0.3",
-    "core-module": "/Users/lukabracanovic/Development/js/core-module",
+    "core-module": "2.0.0",
     "formik": "^2.1.5",
     "lodash": "^4.17.11",
     "normalizr": "^3.6.0",

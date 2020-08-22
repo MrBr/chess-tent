@@ -35,7 +35,6 @@ export type Service = {
 
 export type Middleware = {
   identify: (...args: Parameters<RequestHandler>) => void;
-  indexEntity: (...args: Parameters<RequestHandler>) => void;
   errorHandler: ErrorRequestHandler;
   sendData: (localProp: string) => MiddlewareFunction;
   webLogin: (...args: Parameters<RequestHandler>) => void;

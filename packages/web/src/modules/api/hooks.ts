@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { Hooks, RequestFetch } from '@types';
+import { GenericArguments, Hooks, RequestFetch } from '@types';
 
 export const useApi: Hooks['useApi'] = <T, U>(request: RequestFetch<T, U>) => {
   const [apiRequestState, setApiRequestState] = useState<{
@@ -13,9 +13,9 @@ export const useApi: Hooks['useApi'] = <T, U>(request: RequestFetch<T, U>) => {
   });
 
   const fetch = useCallback(
-    (data?: T) => {
+    (...args: GenericArguments<T>) => {
       setApiRequestState({ response: null, error: null, loading: true });
-      request(data)
+      request(...args)
         .then(response => {
           setApiRequestState({ error: null, loading: false, response });
         })

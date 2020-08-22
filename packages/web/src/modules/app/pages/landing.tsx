@@ -1,7 +1,10 @@
 import React from 'react';
+import { components } from '@application';
+
+const { Link } = components;
 
 export default () => (
   <>
-    <a href="/login">Login</a>
+    <Link to="/login">Login</Link>
   </>
 );

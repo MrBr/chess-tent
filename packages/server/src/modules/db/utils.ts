@@ -1,6 +1,6 @@
 import { Schema } from "mongoose";
 import { DB } from "@types";
-
+import { v4 as uuid } from "uuid";
 const transformRemove_id = <T>(
   doc: unknown,
   ret: T extends { _id: any } ? T : never
@@ -15,7 +15,7 @@ export const createStandardSchema: DB["createStandardSchema"] = (
 ) => {
   const schema = new Schema<typeof definition>(
     {
-      _id: ({ type: Schema.Types.ObjectId, alias: "id" } as unknown) as string,
+      _id: ({ type: String, default: uuid, alias: "id" } as unknown) as string,
       ...definition
     },
     {

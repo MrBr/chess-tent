@@ -4,6 +4,8 @@ import { setLessonActiveStepAction } from './state/actions';
 import { lessonSelector } from './state/selectors';
 
 application.register(() => import('./register'));
+application.register(() => import('./routes'));
+application.register(() => import('./requests'));
 
 application.state.actions.setLessonActiveStep = setLessonActiveStepAction;
 application.state.selectors.lessonSelector = lessonSelector;
@@ -23,8 +25,8 @@ application.register(
   },
 );
 application.register(
-  () => import('./components/lesson'),
+  () => import('./components/editor'),
   module => {
-    application.components.Lesson = module.default;
+    application.components.Editor = module.default;
   },
 );

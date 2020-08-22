@@ -1,9 +1,24 @@
 import { services } from '@application';
-import { ApiMethods, Request, API } from '@types';
+import { ApiMethods, Request, API, GenericArguments } from '@types';
 
-export const createRequest = <T, K>(url: string, method: ApiMethods) => (
-  data: T,
-): Promise<K> => services.api.createRequest<T, K>({ url, method, data });
+export const createRequest = <T, K>(
+  method: ApiMethods,
+  urlOrCustomizer:
+    | string
+    | ((...args: GenericArguments<T>) => { url: string; data?: any }),
+) => (...args: GenericArguments<T>): Promise<K> => {
+  let url;
+  let data;
+  if (typeof urlOrCustomizer === 'function') {
+    const params = urlOrCustomizer(...args);
+    url = params.url;
+    data = params.data;
+  } else {
+    url = urlOrCustomizer;
+    data = args.length > 0 ? args[0] : undefined;
+  }
+  return services.api.makeRequest<T, K>({ url, method, data });
+};
 
 export class Api implements API {
   basePath: string;
@@ -14,7 +29,7 @@ export class Api implements API {
     this.basePath = basePath;
   }
 
-  createRequest<T, K>(request: Request<T>) {
+  makeRequest<T, K>(request: Request<T>) {
     const { url, data, method } = request;
 
     const headers: { [key: string]: string } = {

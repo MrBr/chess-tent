@@ -8,8 +8,15 @@ import { BatchAction } from 'redux-batched-actions';
 import { Schema } from 'normalizr';
 import { register } from 'core-module';
 import { Lesson, Step, User } from '@chess-tent/models';
-import { RouteProps, RedirectProps } from 'react-router-dom';
+import {
+  RouteProps,
+  RedirectProps,
+  LinkProps,
+  useParams,
+} from 'react-router-dom';
 import { Store } from 'redux';
+import { History } from 'history';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   AppState,
   SetLessonActiveStepAction,
@@ -40,15 +47,21 @@ export * from './step';
 export * from './components';
 export * from './ui';
 
+export type GenericArguments<T> = T extends [] ? T : T extends void ? [] : [T];
+
 // Hooks
 export type Hooks = {
   useDispatchBatched: () => (...args: ReduxAction[]) => BatchAction;
+  useDispatch: typeof useDispatch;
+  useSelector: typeof useSelector;
   useUser: (userId: User['id']) => User;
   useActiveUser: () => User | null;
+  useHistory: () => History;
+  useParams: typeof useParams;
   useApi: <T, K>(
-    request: (data?: T) => Promise<K>,
+    request: RequestFetch<T, K>,
   ) => {
-    fetch: (data?: T) => void;
+    fetch: (...args: GenericArguments<T>) => void;
     response: K | null;
     loading: boolean;
     error: null | string | {};
@@ -90,7 +103,7 @@ export type State = {
   registerMiddleware: (middleware: Middleware) => void;
   getRootReducer: () => Reducer;
   actions: {
-    updateEntities: (entity: Lesson | Step) => UpdateEntitiesAction;
+    updateEntities: (entity: Lesson | Step | User) => UpdateEntitiesAction;
     setLessonActiveStep: (
       lesson: Lesson,
       step: Step,
@@ -113,14 +126,16 @@ export type Utils = {
 export type StatusResponse = { error: string | null };
 export type DataResponse<T> = { data: T } & StatusResponse;
 export type UserResponse = DataResponse<User>;
+export type LessonResponse = DataResponse<Lesson>;
 
 export type ApiMethods = 'GET' | 'POST';
 export interface API {
   basePath: string;
-  createRequest: <T, U>(
-    request: { url: string; method: ApiMethods; data?: T },
-    token?: string,
-  ) => Promise<U>;
+  makeRequest: <T, U>(request: {
+    url: string;
+    method: ApiMethods;
+    data?: T;
+  }) => Promise<U>;
 }
 
 export type Services = {
@@ -136,9 +151,11 @@ export type Services = {
   addRoute: (route: ComponentType) => void;
   api: API;
   createRequest: <K, U>(
-    url: string,
     method: ApiMethods,
-  ) => (data?: K) => Promise<U>;
+    urlOrCustomizer:
+      | string
+      | ((...args: GenericArguments<K>) => { url: string; data?: any }),
+  ) => (...args: GenericArguments<K>) => Promise<U>;
 };
 
 export interface Request<T> {
@@ -146,12 +163,13 @@ export interface Request<T> {
   method: ApiMethods;
   data?: T;
 }
-export type RequestFetch<T, U> = (data?: T) => Promise<U>;
+export type RequestFetch<T, U> = (...args: GenericArguments<T>) => Promise<U>;
 
 export type Requests = {
   register: RequestFetch<Partial<User>, StatusResponse>;
   login: RequestFetch<Pick<User, 'email' | 'password'>, UserResponse>;
-  me: RequestFetch<User, UserResponse>;
+  me: RequestFetch<undefined, UserResponse>;
+  lesson: RequestFetch<[string], LessonResponse>;
 };
 
 export type Pages = {
@@ -163,12 +181,14 @@ export type Pages = {
 
 export type Components = {
   App: ComponentType;
+  Header: ComponentType;
   Chessboard: ClassComponent<ChessboardInterface>;
   Stepper: FunctionComponent<StepperProps>;
   Action: FunctionComponent<ActionProps>;
   Router: ComponentType;
   Redirect: ComponentType<RedirectProps>;
   Route: ComponentType<RouteProps>;
+  Link: ComponentType<LinkProps>;
   Authorized: ComponentType<AuthorizedProps>;
   Provider: ComponentType;
   StateProvider: ComponentType;
@@ -195,7 +215,7 @@ export type Components = {
     // after position changed it can still provide best move for the previous position
     onBestMoveChange?: (bestMove: Move, ponder?: Move) => void;
   }>;
-  Lesson: ComponentType;
+  Editor: ComponentType<{ lesson: Lesson }>;
 };
 
 export type Constants = {

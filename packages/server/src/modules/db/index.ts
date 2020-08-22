@@ -2,7 +2,6 @@ import mongoose, { Schema } from "mongoose";
 import application from "@application";
 
 import { createStandardSchema } from "./utils";
-import { indexEntity } from "./middleware";
 
 // Connection URL
 const url = process.env.DB_URL;
@@ -26,6 +25,5 @@ application.db.connect = () => {
 };
 
 application.db.createStandardSchema = createStandardSchema;
-application.middleware.indexEntity = indexEntity;
 
 export {};

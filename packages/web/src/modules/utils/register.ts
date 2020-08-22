@@ -2,7 +2,7 @@ import application from '@application';
 import { Schema } from 'normalizr';
 import { isLesson, isStep, isUser } from '@chess-tent/models';
 import { model } from '@application';
-import uuid from 'uuid/v1';
+import { v4 as uuid } from 'uuid';
 
 application.utils.getEntitySchema = (entity: unknown): Schema => {
   if (isStep(entity)) {

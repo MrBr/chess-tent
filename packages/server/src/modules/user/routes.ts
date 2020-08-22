@@ -8,12 +8,11 @@ import {
   getActiveUser
 } from "./middleware";
 
-const { sendData, indexEntity, identify, webLogin } = middleware;
+const { sendData, identify, webLogin } = middleware;
 
 application.service.registerPostRoute(
   "/register",
   validateUser,
-  indexEntity,
   prepareUser,
   hashPassword,
   saveUser,

@@ -1,13 +1,6 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
-import { useSelector } from 'react-redux';
-import {
-  Lesson,
-  Step,
-  createLesson,
-  getLessonPreviousStep,
-  User,
-} from '@chess-tent/models';
-import { AppState } from '@types';
+import React, { useCallback, useMemo } from 'react';
+import { Step, getLessonPreviousStep } from '@chess-tent/models';
+import { Components } from '@types';
 import {
   state,
   hooks,
@@ -19,29 +12,16 @@ import {
 
 const { Container, Row, Col } = ui;
 const { Stepper, StepRenderer } = components;
-const { createStep, getStepEndSetup } = stepModules;
+const { getStepEndSetup } = stepModules;
 const {
-  selectors: { lessonSelector },
-  actions: { setLessonActiveStep, updateEntities },
+  actions: { setLessonActiveStep },
 } = state;
 const { useDispatchBatched } = hooks;
 const { START_FEN } = constants;
 
-const LessonComponent = () => {
+const Editor: Components['Editor'] = ({ lesson }) => {
   const dispatch = useDispatchBatched();
-
-  useEffect(() => {
-    const defaultStep: Step = createStep('variation', START_FEN);
-    const defaultLesson: Lesson = createLesson(
-      '1',
-      [defaultStep],
-      defaultStep,
-      { id: '1' } as User,
-    );
-    dispatch(updateEntities(defaultLesson));
-  }, [dispatch]);
-  const lesson = useSelector<AppState, Lesson>(lessonSelector('1'));
-  const { steps, activeStep } = lesson?.state || {};
+  const { steps, activeStep } = lesson.state;
 
   const prevStep = lesson && getLessonPreviousStep(lesson, activeStep);
 
@@ -89,4 +69,4 @@ const LessonComponent = () => {
   );
 };
 
-export default LessonComponent;
+export default Editor;

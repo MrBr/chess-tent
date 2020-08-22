@@ -1,5 +1,6 @@
 import application from '@application';
 
+application.register(() => import('./components'));
 application.register(() => import('./provider'));
 application.register(() => import('./routes'));
 application.register(

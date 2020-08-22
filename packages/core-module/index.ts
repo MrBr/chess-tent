@@ -1,5 +1,4 @@
 // @ts-nocheck
-const registers = [];
 const deferredModules = [];
 
 // Used to track deferred modules and detect situations when no new dependencies are getting resolved.
@@ -101,33 +100,17 @@ export const register = <T>(
   loadModule: () => T extends Promise<infer K> ? T : never,
   cb?: (module: T extends Promise<infer K> ? K : never) => void
 ) => {
-  const promise = new Promise(resolve => {
-    resolveModule(loadModule, cb)
-      .then(resolve)
-      .catch(e => {
-        deferredModules.push([loadModule, cb]);
-        resolve();
-      });
-  });
-  registers.push(promise);
+  deferredModules.push([loadModule, cb]);
 };
 
 export const init = () => {
   return new Promise((resolve, reject) => {
-    Promise.all(registers)
-      .finally(() => {
-        resolveDeferredModules()
-          .then(resolve)
-          .catch(e => {
-            // Module couldn't be resolved, showing error stack.
-            console.error(e);
-            reject(e);
-          });
-      })
-      .catch(() => {
-        // Noop catch to prevent application crash.
-        // Probably some registers will fail in the first register cycle,
-        // but as those are deferred there is no need to handle the error here.
+    resolveDeferredModules()
+      .then(resolve)
+      .catch(e => {
+        // Module couldn't be resolved, showing error stack.
+        console.error(e);
+        reject(e);
       });
   });
 };

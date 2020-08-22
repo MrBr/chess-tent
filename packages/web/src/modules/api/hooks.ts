@@ -14,16 +14,16 @@ export const useApi: Hooks['useApi'] = <T, U>(request: RequestFetch<T, U>) => {
 
   const fetch = useCallback(
     (data?: T) => {
-      setApiRequestState({ ...apiRequestState, loading: true });
+      setApiRequestState({ response: null, error: null, loading: true });
       request(data)
         .then(response => {
-          setApiRequestState({ ...apiRequestState, loading: false, response });
+          setApiRequestState({ error: null, loading: false, response });
         })
         .catch(error => {
-          setApiRequestState({ ...apiRequestState, loading: false, error });
+          setApiRequestState({ response: null, loading: false, error });
         });
     },
-    [request, setApiRequestState, apiRequestState],
+    [request, setApiRequestState],
   );
 
   return { fetch, ...apiRequestState };

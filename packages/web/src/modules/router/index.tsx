@@ -1,11 +1,11 @@
 import React, { ComponentType } from 'react';
 import application from '@application';
-import { Components, Services } from '@types';
+import { Services } from '@types';
 import { Switch, BrowserRouter, Route, Redirect } from 'react-router-dom';
 
 const routes: ComponentType[] = [];
 
-const Router: Components['Router'] = () => {
+const Router: ComponentType = () => {
   return (
     <BrowserRouter>
       <Switch>

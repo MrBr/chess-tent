@@ -33,20 +33,18 @@ export const validateUser: MiddlewareFunction = (req, res, next) => {
   next();
 };
 
-export const loginUser: MiddlewareFunction = async (req, res, next) => {
+export const verifyUser: MiddlewareFunction = async (req, res, next) => {
+  // Clearing projection to get password for verification
   const user = await service.getUser({ email: res.locals.user.email }, "");
 
   const authorized = user
     ? await validateUserPassword(res.locals.user, user.password)
     : false;
 
-  if (!authorized) {
-    next(new LoginFailedError());
-  }
+  res.locals.user = user;
+  delete res.locals.user.password;
 
-  const token = application.service.generateApiToken(user as User);
-  res.locals.token = token;
-  next();
+  authorized ? next() : next(new LoginFailedError());
 };
 
 export const prepareUser: MiddlewareFunction = (req, res, next) => {

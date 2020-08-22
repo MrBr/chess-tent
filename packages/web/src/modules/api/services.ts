@@ -22,13 +22,9 @@ export class Api implements API {
       'Content-Type': 'application/json',
     };
 
-    const token = services.getToken();
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
-    }
-
     return fetch(this.basePath + url, {
       headers,
+      credentials: 'include',
       method: method,
       body: data ? JSON.stringify(data) : undefined,
     }).then(response => {

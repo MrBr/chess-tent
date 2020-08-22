@@ -3,13 +3,12 @@ import {
   prepareUser,
   saveUser,
   validateUser,
-  loginUser,
+  verifyUser,
   hashPassword,
   getActiveUser
 } from "./middleware";
-import { getUser } from "./service";
 
-const { sendData, indexEntity, identify } = middleware;
+const { sendData, indexEntity, identify, webLogin } = middleware;
 
 application.service.registerPostRoute(
   "/register",
@@ -24,8 +23,9 @@ application.service.registerPostRoute(
 application.service.registerPostRoute(
   "/login",
   prepareUser,
-  loginUser,
-  sendData("token")
+  verifyUser,
+  webLogin,
+  sendData("user")
 );
 
 application.service.registerGetRoute(

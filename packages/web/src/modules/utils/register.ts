@@ -1,6 +1,6 @@
 import application from '@application';
 import { Schema } from 'normalizr';
-import { isLesson, isStep } from '@chess-tent/models';
+import { isLesson, isStep, isUser } from '@chess-tent/models';
 import { model } from '@application';
 import uuid from 'uuid/v1';
 
@@ -9,6 +9,8 @@ application.utils.getEntitySchema = (entity: unknown): Schema => {
     return model.stepSchema;
   } else if (isLesson(entity)) {
     return model.lessonSchema;
+  } else if (isUser(entity)) {
+    return model.userSchema;
   }
   throw Error(`Unknown entity: ${entity}.`);
 };

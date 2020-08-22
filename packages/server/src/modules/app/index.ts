@@ -3,6 +3,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import { errorHandler, sendData } from "./middleware";
+import cookieParser from "cookie-parser";
 
 const { connect } = db;
 
@@ -11,7 +12,8 @@ const app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cors({ origin: process.env.APP_DOMAIN, credentials: true }));
+app.use(cookieParser(process.env.COOKIE_SECRET));
 
 application.middleware.errorHandler = errorHandler;
 application.middleware.sendData = sendData;

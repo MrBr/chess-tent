@@ -38,6 +38,7 @@ export type Middleware = {
   indexEntity: (...args: Parameters<RequestHandler>) => void;
   errorHandler: ErrorRequestHandler;
   sendData: (localProp: string) => MiddlewareFunction;
+  webLogin: (...args: Parameters<RequestHandler>) => void;
 };
 
 export type MiddlewareFunction = (...args: Parameters<RequestHandler>) => void;

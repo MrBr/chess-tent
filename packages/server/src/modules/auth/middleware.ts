@@ -1,10 +1,12 @@
 import { verifyToken } from "./service";
 import { Middleware } from "@types";
 import { UnauthorizedError } from "./errors";
+import application from "@application";
+
+const COOKIE_TOKEN_KEY = "token";
 
 export const identify: Middleware["identify"] = (req, res, next) => {
-  const token =
-    req.headers.authorization && req.headers.authorization.split(" ")[1];
+  const token = req.cookies[COOKIE_TOKEN_KEY];
   const tokenPayload = token ? verifyToken(token) : undefined;
 
   if (!tokenPayload) {
@@ -12,5 +14,11 @@ export const identify: Middleware["identify"] = (req, res, next) => {
   }
 
   res.locals.user = tokenPayload.user;
+  next();
+};
+
+export const webLogin: Middleware["identify"] = (req, res, next) => {
+  const token = application.service.generateApiToken(res.locals.user);
+  res.cookie(COOKIE_TOKEN_KEY, token, { httpOnly: true });
   next();
 };

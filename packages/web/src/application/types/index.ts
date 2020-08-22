@@ -1,5 +1,9 @@
 import { ComponentType, FunctionComponent } from 'react';
-import { Reducer, Action as ReduxAction } from 'redux';
+import {
+  Reducer,
+  Action as ReduxAction,
+  Middleware as ReduxMiddleware,
+} from 'redux';
 import { BatchAction } from 'redux-batched-actions';
 import { Schema } from 'normalizr';
 import { register } from 'core-module';
@@ -70,9 +74,11 @@ export type Model = {
   stepSchema: Schema;
   userSchema: Schema;
 };
+export type Middleware = ReduxMiddleware;
 
 export type State = {
   store: Store;
+  middleware: Middleware[];
   registerReducer: <T, U extends ReduxAction>(
     path: string,
     reducer: Reducer<T, U>,
@@ -81,6 +87,7 @@ export type State = {
     path: string,
     reducer: Reducer<T, U>,
   ) => void;
+  registerMiddleware: (middleware: Middleware) => void;
   getRootReducer: () => Reducer;
   actions: {
     updateEntities: (entity: Lesson | Step) => UpdateEntitiesAction;
@@ -104,6 +111,8 @@ export type Utils = {
 };
 
 export type StatusResponse = { error: string | null };
+export type DataResponse<T> = { data: T } & StatusResponse;
+export type UserResponse = DataResponse<User>;
 
 export type ApiMethods = 'GET' | 'POST';
 export interface API {
@@ -121,14 +130,15 @@ export type Services = {
   recreateFenWithMoves: (fen: FEN, moves: Move[]) => FEN;
   getPiece: (position: FEN, square: string) => Piece | null;
 
+  // Add non infrastructural providers
+  // Allow modules to inject their own non dependant Providers
+  addProvider: (provider: ComponentType) => void;
   addRoute: (route: ComponentType) => void;
   api: API;
   createRequest: <K, U>(
     url: string,
     method: ApiMethods,
   ) => (data?: K) => Promise<U>;
-  saveToken: (token: string) => void;
-  getToken: () => string;
 };
 
 export interface Request<T> {
@@ -140,6 +150,8 @@ export type RequestFetch<T, U> = (data?: T) => Promise<U>;
 
 export type Requests = {
   register: RequestFetch<Partial<User>, StatusResponse>;
+  login: RequestFetch<Pick<User, 'email' | 'password'>, UserResponse>;
+  me: RequestFetch<User, UserResponse>;
 };
 
 export type Pages = {
@@ -158,6 +170,8 @@ export type Components = {
   Redirect: ComponentType<RedirectProps>;
   Route: ComponentType<RouteProps>;
   Authorized: ComponentType<AuthorizedProps>;
+  Provider: ComponentType;
+  StateProvider: ComponentType;
   StepRenderer: ComponentType<
     StepProps<
       Step,

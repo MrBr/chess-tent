@@ -50,6 +50,7 @@ export default () => {
         passwordConfirmation: '',
       }}
       validationSchema={SignupSchema}
+      // Omitting passwordConfirmation
       onSubmit={({ passwordConfirmation, ...user }) => fetch(user)}
     >
       <FormGroup>

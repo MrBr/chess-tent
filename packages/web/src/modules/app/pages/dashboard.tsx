@@ -1,3 +1,11 @@
 import React from 'react';
+import { components } from '@application';
 
-export default () => <>Dashboard</>;
+const { Header, Link } = components;
+
+export default () => (
+  <>
+    <Header />
+    <Link to="/me">My profile</Link>
+  </>
+);

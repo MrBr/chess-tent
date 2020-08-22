@@ -1,20 +1,17 @@
-import React, { useEffect } from 'react';
-import { components, hooks, requests, ui } from '@application';
+import React from 'react';
+import { components, hooks, ui } from '@application';
+import { User } from '@chess-tent/models';
 
-const { useApi } = hooks;
+const { useActiveUser } = hooks;
 const { Header } = components;
 const { Container } = ui;
 
 export default () => {
-  const { fetch, loading, response } = useApi(requests.me);
-  useEffect(() => {
-    fetch();
-  }, [fetch]);
-
+  const user = useActiveUser() as User;
   return (
     <Container>
       <Header />
-      {loading ? 'Loading' : JSON.stringify(response)}
+      {JSON.stringify(user)}
     </Container>
   );
 };

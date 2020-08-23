@@ -1,27 +1,26 @@
 import application, { middleware } from "@application";
 import {
-  prepareUser,
-  saveUser,
+  addUser,
   validateUser,
   verifyUser,
   hashPassword,
   getActiveUser
 } from "./middleware";
 
-const { sendData, identify, webLogin } = middleware;
+const { sendData, identify, webLogin, toLocals } = middleware;
 
 application.service.registerPostRoute(
   "/register",
+  toLocals("user", req => req.body),
   validateUser,
-  prepareUser,
   hashPassword,
-  saveUser,
+  addUser,
   sendData("user")
 );
 
 application.service.registerPostRoute(
   "/login",
-  prepareUser,
+  toLocals("user", req => req.body),
   verifyUser,
   webLogin,
   sendData("user")

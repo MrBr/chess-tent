@@ -1,6 +1,7 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { Step, getLessonPreviousStep } from '@chess-tent/models';
 import { Components } from '@types';
+import { debounce } from 'lodash';
 import {
   state,
   hooks,
@@ -8,6 +9,7 @@ import {
   components,
   stepModules,
   ui,
+  requests,
 } from '@application';
 
 const { Container, Row, Col } = ui;
@@ -16,14 +18,22 @@ const { getStepEndSetup } = stepModules;
 const {
   actions: { setLessonActiveStep },
 } = state;
-const { useDispatchBatched } = hooks;
+const { useDispatchBatched, useApi, useComponentStateSilent } = hooks;
 const { START_FEN } = constants;
 
 const Editor: Components['Editor'] = ({ lesson }) => {
+  const componentState = useComponentStateSilent();
   const dispatch = useDispatchBatched();
   const { steps, activeStep } = lesson.state;
-
+  const { fetch: lessonSave, error: lessonSaveError } = useApi(
+    requests.lessonSave,
+  );
   const prevStep = lesson && getLessonPreviousStep(lesson, activeStep);
+  const lessonSaveThrottle = useCallback(debounce(lessonSave, 1000), [fetch]);
+
+  useEffect(() => {
+    componentState.mounted && lessonSaveThrottle(lesson);
+  }, [lesson, lessonSaveThrottle, componentState]);
 
   const prevPosition = useMemo(
     () => (prevStep ? getStepEndSetup(prevStep).position : START_FEN),
@@ -36,6 +46,12 @@ const Editor: Components['Editor'] = ({ lesson }) => {
     },
     [dispatch, lesson],
   );
+
+  useEffect(() => {
+    if (lessonSaveError) {
+      alert('Lesson not saved!');
+    }
+  }, [lessonSaveError]);
 
   return (
     <>

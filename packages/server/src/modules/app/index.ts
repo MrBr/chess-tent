@@ -2,7 +2,7 @@ import application, { db } from "@application";
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
-import { errorHandler, sendData } from "./middleware";
+import { errorHandler, sendData, sendStatusOk, toLocals } from "./middleware";
 import cookieParser from "cookie-parser";
 
 const { connect } = db;
@@ -17,6 +17,8 @@ app.use(cookieParser(process.env.COOKIE_SECRET));
 
 application.middleware.errorHandler = errorHandler;
 application.middleware.sendData = sendData;
+application.middleware.sendStatusOk = sendStatusOk;
+application.middleware.toLocals = toLocals;
 application.service.registerGetRoute = (path, ...middlware) =>
   app.get(path, ...middlware);
 application.service.registerPostRoute = (path, ...middlware) =>

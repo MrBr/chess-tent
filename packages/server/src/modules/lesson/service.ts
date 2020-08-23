@@ -1,10 +1,15 @@
-import { LessonModel } from "./model";
+import { LessonModel, depopulate } from "./model";
 import { Lesson } from "@chess-tent/models";
 
 export const saveLesson = (lesson: Lesson) =>
   new Promise((resolve, reject) => {
-    new LessonModel(lesson).depopulate().save((err, result) => {
-      err ? reject(err) : resolve(result.toObject() as typeof lesson);
+    LessonModel.updateOne({ _id: lesson.id }, depopulate(lesson), {
+      upsert: true
+    }).exec((err, result) => {
+      if (err) {
+        throw err;
+      }
+      resolve();
     });
   });
 
@@ -13,7 +18,10 @@ export const getLesson = (lessonId: Lesson["id"]): Promise<Lesson | null> =>
     LessonModel.findById(lessonId)
       .populate("owner")
       .exec((err, result) => {
-        err ? reject(err) : resolve(result ? result.toObject() : null);
+        if (err) {
+          throw err;
+        }
+        resolve(result ? result.toObject() : null);
       });
   });
 
@@ -22,6 +30,9 @@ export const findLessons = (lesson: Partial<Lesson>): Promise<Lesson[]> =>
     LessonModel.find(LessonModel.translateAliases(lesson))
       .populate("owner")
       .exec((err, result) => {
-        err ? reject(err) : resolve(result.map(item => item.toObject()));
+        if (err) {
+          throw err;
+        }
+        resolve(result.map(item => item.toObject()));
       });
   });

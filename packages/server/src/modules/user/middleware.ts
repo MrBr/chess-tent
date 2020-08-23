@@ -5,9 +5,9 @@ import * as service from "./service";
 import { LoginFailedError, PasswordEncryptionError } from "./errors";
 import { validateUserPassword } from "./service";
 
-export const saveUser: MiddlewareFunction = (req, res, next) => {
+export const addUser: MiddlewareFunction = (req, res, next) => {
   service
-    .saveUser(res.locals.user as User)
+    .addUser(res.locals.user as User)
     .then(user => {
       res.locals.user = user;
       next();
@@ -26,7 +26,7 @@ export const getActiveUser: MiddlewareFunction = (req, res, next) => {
 };
 
 export const validateUser: MiddlewareFunction = (req, res, next) => {
-  const error = service.validateUser(req.body);
+  const error = service.validateUser(res.locals.user);
   if (error) {
     throw error;
   }
@@ -47,14 +47,9 @@ export const verifyUser: MiddlewareFunction = async (req, res, next) => {
   authorized ? next() : next(new LoginFailedError());
 };
 
-export const prepareUser: MiddlewareFunction = (req, res, next) => {
-  res.locals.user = req.body;
-  next();
-};
-
 export const hashPassword: MiddlewareFunction = (req, res, next) => {
   service
-    .hashPassword(req.body.password)
+    .hashPassword(res.locals.user.password)
     .then(passwordHash => {
       res.locals.user.password = passwordHash;
       next();

@@ -34,9 +34,6 @@ export const reducer = (
         ...state,
         [lessonId]: {
           ...lesson,
-          state: {
-            ...lesson.state,
-          },
           ...patch,
         },
       };

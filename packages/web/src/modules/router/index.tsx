@@ -3,19 +3,21 @@ import application from '@application';
 import { Services } from '@types';
 import {
   Switch,
-  BrowserRouter,
   Route,
   Redirect,
   Link,
   useHistory,
   useParams,
+  Router as BaseRouter,
 } from 'react-router-dom';
+import { createBrowserHistory } from 'history';
 
 const routes: ComponentType[] = [];
+const history = createBrowserHistory();
 
 const Router: ComponentType = () => {
   return (
-    <BrowserRouter>
+    <BaseRouter history={history}>
       <Switch>
         <>
           {routes.map((Page, index) => (
@@ -23,7 +25,7 @@ const Router: ComponentType = () => {
           ))}
         </>
       </Switch>
-    </BrowserRouter>
+    </BaseRouter>
   );
 };
 

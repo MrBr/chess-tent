@@ -45,13 +45,13 @@ export default () => {
       return;
     }
     fetch(lessonId);
-  }, []);
+  }, [fetch, lesson, lessonId]);
 
   useEffect(() => {
     if (lessonResponse) {
       dispatch(updateEntities(lessonResponse.data));
     }
-  }, [lessonResponse]);
+  }, [lessonResponse, dispatch]);
 
   useEffect(() => {
     // Create new lesson
@@ -68,7 +68,7 @@ export default () => {
     );
     dispatch(updateEntities(defaultLesson));
     history.push(`/lesson/${newLessonId}`);
-  }, [lessonId, user, dispatch]);
+  }, [lessonId, user, dispatch, history]);
 
   if (lessonResponseError) {
     return <>Couldn't load lesson</>;

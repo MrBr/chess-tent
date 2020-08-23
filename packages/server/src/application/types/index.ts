@@ -38,8 +38,12 @@ export type Middleware = {
   errorHandler: ErrorRequestHandler;
   sendData: (localProp: string) => MiddlewareFunction;
   webLogin: (...args: Parameters<RequestHandler>) => void;
+  sendStatusOk: (...args: Parameters<RequestHandler>) => void;
+  toLocals: (
+    localsKey: string,
+    func: (...args: Parameters<RequestHandler>) => void
+  ) => (...args: Parameters<RequestHandler>) => void;
 };
-
 export type MiddlewareFunction = (...args: Parameters<RequestHandler>) => void;
 
 export type Application = {

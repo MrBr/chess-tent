@@ -2,13 +2,14 @@ import React, { ComponentType, ReactElement, useEffect } from 'react';
 import { hooks, requests, services } from '@application';
 import { userLoggedInAction } from './state/actions';
 
-const { useApi, useDispatch } = hooks;
+const { useApi, useDispatch, useActiveUser } = hooks;
 
 const { addProvider } = services;
 
 const Provider: ComponentType = ({ children }) => {
-  const { fetch, response } = useApi(requests.me);
+  const { fetch, response, error } = useApi(requests.me);
   const dispatch = useDispatch();
+  const user = useActiveUser();
 
   useEffect(() => {
     fetch();
@@ -17,9 +18,9 @@ const Provider: ComponentType = ({ children }) => {
     if (response) {
       dispatch(userLoggedInAction(response.data));
     }
-  }, [response]);
+  }, [dispatch, response]);
 
-  if (!response) {
+  if (!response || (!error && !user)) {
     return <>Loading</>;
   }
 

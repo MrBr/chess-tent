@@ -7,21 +7,34 @@ import {
 } from "@chess-tent/models";
 import { db } from "@application";
 
-const lessonSchema = db.createStandardSchema<NormalizedLesson>({
+export interface DepupulatedLesson {
+  id: Lesson["id"];
+  type: Lesson["type"];
+  owner: Lesson["owner"]["id"];
+  state: Lesson["state"];
+}
+
+export type LessonDocument = DepupulatedLesson & Document;
+
+const lessonSchema = db.createStandardSchema<DepupulatedLesson>({
   owner: ({
-    type: Schema.Types.ObjectId,
+    type: String,
     ref: TYPE_USER
-  } as unknown) as NormalizedLesson["owner"],
+  } as unknown) as DepupulatedLesson["owner"],
   state: ({
     type: Schema.Types.Mixed,
     required: true
-  } as unknown) as NormalizedLesson["state"],
+  } as unknown) as DepupulatedLesson["state"],
   type: ({
     type: String,
     default: TYPE_LESSON
   } as unknown) as typeof TYPE_LESSON
 });
 
-const LessonModel = model<Lesson & Document>(TYPE_LESSON, lessonSchema);
+const LessonModel = model<LessonDocument>(TYPE_LESSON, lessonSchema);
 
-export { lessonSchema, LessonModel };
+const depopulate = (lesson: Lesson): DepupulatedLesson => {
+  return { ...lesson, owner: lesson.owner.id };
+};
+
+export { lessonSchema, LessonModel, depopulate };

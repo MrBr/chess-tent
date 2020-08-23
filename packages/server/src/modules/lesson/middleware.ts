@@ -5,8 +5,18 @@ import * as service from "./service";
 
 export const saveLesson: MiddlewareFunction = (req, res, next) => {
   service
-    .saveLesson(req.body as Lesson)
+    .saveLesson(res.locals.lesson as Lesson)
+    .then(next)
+    .catch(next);
+};
+
+export const getLesson: MiddlewareFunction = (req, res, next) => {
+  service
+    .getLesson(res.locals.lesson.id as Lesson["id"])
     .then(lesson => {
+      if (!lesson) {
+        throw new LessonNotFoundError();
+      }
       res.locals.lesson = lesson;
       next();
     })
@@ -17,7 +27,7 @@ export const canEditLesson: MiddlewareFunction = (req, res, next) => {
   service
     .getLesson(res.locals.lesson.id)
     .then(lesson => {
-      if (lesson && lesson.owner.id === res.locals.user.id) {
+      if (!lesson || lesson.owner.id === res.locals.user.id) {
         next();
         return;
       }

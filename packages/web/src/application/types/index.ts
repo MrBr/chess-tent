@@ -38,19 +38,21 @@ import {
   ChessboardInterface,
   StepperProps,
 } from './components';
-import { ClassComponent } from './_helpers';
+import { ClassComponent, GenericArguments } from './_helpers';
 import { UI } from './ui';
+import { API, RequestFetch, ApiMethods, Requests } from './api';
 
 export * from './state';
 export * from './chess';
 export * from './step';
 export * from './components';
 export * from './ui';
-
-export type GenericArguments<T> = T extends [] ? T : T extends void ? [] : [T];
+export * from './api';
+export * from './_helpers';
 
 // Hooks
 export type Hooks = {
+  useComponentStateSilent: () => { mounted: boolean };
   useDispatchBatched: () => (...args: ReduxAction[]) => BatchAction;
   useDispatch: typeof useDispatch;
   useSelector: typeof useSelector;
@@ -123,21 +125,6 @@ export type Utils = {
   generateIndex: () => string;
 };
 
-export type StatusResponse = { error: string | null };
-export type DataResponse<T> = { data: T } & StatusResponse;
-export type UserResponse = DataResponse<User>;
-export type LessonResponse = DataResponse<Lesson>;
-
-export type ApiMethods = 'GET' | 'POST';
-export interface API {
-  basePath: string;
-  makeRequest: <T, U>(request: {
-    url: string;
-    method: ApiMethods;
-    data?: T;
-  }) => Promise<U>;
-}
-
 export type Services = {
   Chess: {
     new (fen?: string): {};
@@ -156,20 +143,6 @@ export type Services = {
       | string
       | ((...args: GenericArguments<K>) => { url: string; data?: any }),
   ) => (...args: GenericArguments<K>) => Promise<U>;
-};
-
-export interface Request<T> {
-  url: string;
-  method: ApiMethods;
-  data?: T;
-}
-export type RequestFetch<T, U> = (...args: GenericArguments<T>) => Promise<U>;
-
-export type Requests = {
-  register: RequestFetch<Partial<User>, StatusResponse>;
-  login: RequestFetch<Pick<User, 'email' | 'password'>, UserResponse>;
-  me: RequestFetch<undefined, UserResponse>;
-  lesson: RequestFetch<[string], LessonResponse>;
 };
 
 export type Pages = {

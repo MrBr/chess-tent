@@ -3,10 +3,13 @@ import { UserModel } from "./model";
 import { User } from "@chess-tent/models";
 import { compare, hash } from "bcrypt";
 
-export const saveUser = (user: User) =>
+export const addUser = (user: User) =>
   new Promise((resolve, reject) => {
-    new UserModel(user).depopulate().save((err, result) => {
-      err ? reject(err) : resolve(result.toObject() as typeof user);
+    new UserModel(user).save((err, result) => {
+      if (err) {
+        throw err;
+      }
+      resolve(result.toObject() as typeof user);
     });
   });
 
@@ -16,7 +19,10 @@ export const getUser: Service["getUser"] = (user, projection = "-password") =>
       UserModel.translateAliases(user),
       projection,
       (err, user) => {
-        err ? reject(err) : resolve(user ? user.toObject() : null);
+        if (err) {
+          throw err;
+        }
+        resolve(user ? user.toObject() : null);
       }
     );
   });

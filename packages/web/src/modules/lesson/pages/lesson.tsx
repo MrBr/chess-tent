@@ -13,7 +13,7 @@ import { createLesson, Lesson, Step, User } from '@chess-tent/models';
 const {
   useParams,
   useDispatchBatched,
-  useActiveUser,
+  useActiveUserRecord,
   useSelector,
   useHistory,
   useApi,
@@ -35,7 +35,7 @@ export default () => {
     error: lessonResponseError,
   } = useApi(requests.lesson);
   const dispatch = useDispatchBatched();
-  const user = useActiveUser() as User;
+  const [user] = useActiveUserRecord() as [User, unknown, unknown];
   const lesson = useSelector(lessonSelector(lessonId));
   const history = useHistory();
 

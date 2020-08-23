@@ -1,4 +1,5 @@
 import {
+  Entity,
   Lesson,
   NormalizedLesson,
   NormalizedStep,
@@ -19,28 +20,50 @@ export const UPDATE_USER = 'UPDATE_USER';
 export const USER_LOGGED_IN = 'USER_LOGGED_IN';
 export const USER_LOGGED_OUT = 'USER_LOGGED_OUT';
 
-export type EntityState<T> = { [key: string]: T };
-
-export interface AppState {
-  activeUser: ActiveUserState;
-  entities: { [key: string]: EntityState<any> };
-}
+export const RECORD_UPDATE_ACTION = 'RECORD_UPDATE_ACTION';
+export const RECORD_DELETE_ACTION = 'RECORD_DELETE_ACTION';
 
 export type Action<T, P, M = {}> = {
   type: T;
   payload: P;
   meta: M;
 };
+export type EntityState<T> = { [key: string]: T };
+export type EntitiesState = {
+  users: UserState;
+  lessons: LessonState;
+  steps: StepsState;
+};
+/**
+ * Records are used to store single entity reference
+ * or a collection which have domain meaning.
+ * Records represent complex data model which holds
+ * both data and metadata about the record.
+ */
+export type RecordValue = Entity | Entity[];
+export type RecordMeta = { type?: string };
+export type RecordType = {
+  value: string | string[];
+  meta: RecordMeta;
+};
+export type RecordState = Record<string, RecordType>;
+export type LessonState = EntityState<NormalizedLesson>;
+export type StepsState = EntityState<NormalizedStep>;
+export type UserState = EntityState<NormalizedUser>;
+
+export interface AppState {
+  entities: EntitiesState;
+  records: RecordState;
+}
 
 export type UpdateEntitiesAction = Action<
   typeof UPDATE_ENTITIES,
-  { [key: string]: any }
+  EntitiesState
 >;
 
 /**
  * Exercise
  */
-export type LessonState = { [key: string]: NormalizedLesson };
 
 export type SetLessonActiveStepAction = Action<
   typeof SET_LESSON_ACTIVE_STEP,
@@ -61,7 +84,6 @@ export type LessonAction =
 /**
  * Step
  */
-export type StepsState = { [key: string]: NormalizedStep };
 
 export type UpdatableStepProps = Omit<{}, 'moves' | 'type' | 'shapes' | 'id'>;
 export type UpdateStepAction = Action<
@@ -83,7 +105,6 @@ export type StepAction =
 /**
  * User
  */
-export type UserState = { [key: string]: NormalizedUser };
 
 export type UpdateUserAction = Action<
   typeof UPDATE_USER,
@@ -94,12 +115,18 @@ export type UpdateUserAction = Action<
 export type UserAction = UpdateEntitiesAction | UpdateUserAction;
 
 /**
- * Active User
+ * Records
  */
-export type ActiveUserState = User['id'] | null;
+export type RecordUpdateAction = Action<
+  typeof RECORD_UPDATE_ACTION,
+  { value: RecordValue; meta: RecordMeta },
+  { key: string }
+>;
 
-export type UserLoggedInAction = Action<typeof USER_LOGGED_IN, User>;
+export type RecordDeleteAction = Action<
+  typeof RECORD_DELETE_ACTION,
+  void,
+  { key: string }
+>;
 
-export type UserLoggedOutAction = Action<typeof USER_LOGGED_OUT, {}>;
-
-export type ActiveUserAction = UserLoggedInAction | UserLoggedOutAction;
+export type RecordAction = RecordUpdateAction | RecordDeleteAction;

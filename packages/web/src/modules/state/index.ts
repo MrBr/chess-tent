@@ -7,7 +7,7 @@ import {
   getRootReducer,
   registerReducer,
 } from './reducer';
-import { useDispatchBatched } from './hooks';
+import { useDenormalize, useDispatchBatched } from './hooks';
 import { middleware, registerMiddleware } from './middleware';
 
 application.state.getRootReducer = getRootReducer;
@@ -18,6 +18,7 @@ application.state.middleware = middleware;
 application.hooks.useDispatchBatched = useDispatchBatched;
 application.hooks.useDispatch = useDispatch;
 application.hooks.useSelector = useSelector;
+application.hooks.useDenormalize = useDenormalize;
 
 application.register(
   () => import('./actions'),

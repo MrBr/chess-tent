@@ -7,7 +7,7 @@ import {
 import { BatchAction } from 'redux-batched-actions';
 import { Schema } from 'normalizr';
 import { register } from 'core-module';
-import { Lesson, Step, User } from '@chess-tent/models';
+import { Entity, Lesson, Step, User } from '@chess-tent/models';
 import {
   RouteProps,
   RedirectProps,
@@ -23,6 +23,7 @@ import {
   UpdateEntitiesAction,
   UpdateStepAction,
   UpdateStepStateAction,
+  RecordValue,
 } from './state';
 import { FEN, Move, Piece } from './chess';
 import {
@@ -51,13 +52,18 @@ export * from './api';
 export * from './_helpers';
 
 // Hooks
+export type RecordHookReturn<T extends RecordValue> = [
+  T | null,
+  (value: T, meta?: {}) => void,
+  () => void,
+];
 export type Hooks = {
   useComponentStateSilent: () => { mounted: boolean };
   useDispatchBatched: () => (...args: ReduxAction[]) => BatchAction;
   useDispatch: typeof useDispatch;
   useSelector: typeof useSelector;
   useUser: (userId: User['id']) => User;
-  useActiveUser: () => User | null;
+  useActiveUserRecord: () => RecordHookReturn<User>;
   useHistory: () => History;
   useParams: typeof useParams;
   useApi: <T, K>(
@@ -68,6 +74,11 @@ export type Hooks = {
     loading: boolean;
     error: null | string | {};
   };
+  useRecord: <T extends RecordValue>(recordKey: string) => RecordHookReturn<T>;
+  useDenormalize: <T extends RecordValue>(
+    descriptor: string[] | string | null,
+    type?: string,
+  ) => T | null;
 };
 
 // Application Components
@@ -105,7 +116,7 @@ export type State = {
   registerMiddleware: (middleware: Middleware) => void;
   getRootReducer: () => Reducer;
   actions: {
-    updateEntities: (entity: Lesson | Step | User) => UpdateEntitiesAction;
+    updateEntities: (entity: Entity) => UpdateEntitiesAction;
     setLessonActiveStep: (
       lesson: Lesson,
       step: Step,
@@ -121,6 +132,7 @@ export type State = {
 
 export type Utils = {
   getEntitySchema: (entity: unknown) => Schema;
+  getTypeSchema: (type: string) => Schema;
   rightMouse: (f: Function) => (e: MouseEvent) => void;
   generateIndex: () => string;
 };
@@ -143,6 +155,9 @@ export type Services = {
       | string
       | ((...args: GenericArguments<K>) => { url: string; data?: any }),
   ) => (...args: GenericArguments<K>) => Promise<U>;
+  createRecordHook: <T extends Entity>(
+    recordKey: string,
+  ) => () => RecordHookReturn<T>;
 };
 
 export type Pages = {

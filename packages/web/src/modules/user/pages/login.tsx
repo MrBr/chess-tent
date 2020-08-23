@@ -1,8 +1,6 @@
 import React, { useEffect } from 'react';
 import { ui, hooks, requests, components } from '@application';
 import * as yup from 'yup';
-import { useDispatch } from 'react-redux';
-import { userLoggedInAction } from '../state/actions';
 
 const { useApi } = hooks;
 const { Redirect } = components;
@@ -18,8 +16,7 @@ const LoginSchema = yup.object().shape({
 
 export default () => {
   const { fetch, loading, response } = useApi(requests.login);
-  const user = hooks.useActiveUser();
-  const dispatch = useDispatch();
+  const [user, updateUser] = hooks.useActiveUserRecord();
 
   useEffect(() => {
     if (response?.error) {
@@ -27,9 +24,9 @@ export default () => {
       return;
     }
     if (response?.data) {
-      dispatch(userLoggedInAction(response.data));
+      updateUser(response.data);
     }
-  }, [response, fetch, dispatch]);
+  }, [response, updateUser]);
 
   if (user) {
     return <Redirect to="/me" />;

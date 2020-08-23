@@ -1,12 +1,5 @@
 import { User } from '@chess-tent/models';
-import {
-  UPDATE_USER,
-  UpdateUserAction,
-  USER_LOGGED_IN,
-  USER_LOGGED_OUT,
-  UserLoggedInAction,
-  UserLoggedOutAction,
-} from '@types';
+import { UPDATE_USER, UpdateUserAction } from '@types';
 
 export const updateUserAction = (user: User): UpdateUserAction => ({
   type: UPDATE_USER,
@@ -14,16 +7,4 @@ export const updateUserAction = (user: User): UpdateUserAction => ({
   meta: {
     id: user.id,
   },
-});
-
-export const userLoggedInAction = (user: User): UserLoggedInAction => ({
-  type: USER_LOGGED_IN,
-  payload: user,
-  meta: {},
-});
-
-export const userLoggedOutAction = (): UserLoggedOutAction => ({
-  type: USER_LOGGED_OUT,
-  payload: {},
-  meta: {},
 });

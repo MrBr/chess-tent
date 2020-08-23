@@ -1,13 +1,12 @@
 import React from 'react';
 import { components, hooks, ui } from '@application';
-import { User } from '@chess-tent/models';
 
-const { useActiveUser } = hooks;
+const { useActiveUserRecord } = hooks;
 const { Header } = components;
 const { Container } = ui;
 
 export default () => {
-  const user = useActiveUser() as User;
+  const [user] = useActiveUserRecord();
   return (
     <Container>
       <Header />

@@ -1,24 +1,23 @@
 import React, { ComponentType, ReactElement, useEffect } from 'react';
 import { hooks, requests, services } from '@application';
-import { userLoggedInAction } from './state/actions';
 
-const { useApi, useDispatch, useActiveUser } = hooks;
+const { useApi, useDispatch, useActiveUserRecord } = hooks;
 
 const { addProvider } = services;
 
 const Provider: ComponentType = ({ children }) => {
   const { fetch, response, error } = useApi(requests.me);
   const dispatch = useDispatch();
-  const user = useActiveUser();
+  const [user, updateActiveUser] = useActiveUserRecord();
 
   useEffect(() => {
     fetch();
   }, [fetch]);
   useEffect(() => {
     if (response) {
-      dispatch(userLoggedInAction(response.data));
+      updateActiveUser(response.data);
     }
-  }, [dispatch, response]);
+  }, [dispatch, response, updateActiveUser]);
 
   if (!response || (!error && !user)) {
     return <>Loading</>;

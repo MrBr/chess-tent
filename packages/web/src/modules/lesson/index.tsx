@@ -30,3 +30,9 @@ application.register(
     application.components.Editor = module.default;
   },
 );
+application.register(
+  () => import('./components/lessons'),
+  module => {
+    application.components.Lessons = module.default;
+  },
+);

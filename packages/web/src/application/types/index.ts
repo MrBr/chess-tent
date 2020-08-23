@@ -116,7 +116,7 @@ export type State = {
   registerMiddleware: (middleware: Middleware) => void;
   getRootReducer: () => Reducer;
   actions: {
-    updateEntities: (entity: Entity) => UpdateEntitiesAction;
+    updateEntities: (entity: Entity | Entity[]) => UpdateEntitiesAction;
     setLessonActiveStep: (
       lesson: Lesson,
       step: Step,
@@ -204,6 +204,7 @@ export type Components = {
     onBestMoveChange?: (bestMove: Move, ponder?: Move) => void;
   }>;
   Editor: ComponentType<{ lesson: Lesson }>;
+  Lessons: ComponentType<{ owner: User }>;
 };
 
 export type Constants = {

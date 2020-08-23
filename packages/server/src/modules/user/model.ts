@@ -15,7 +15,11 @@ const userSchema = db.createStandardSchema<NormalizedUser>({
     required: true,
     unique: true
   } as unknown) as string,
-  password: ({ type: String, required: true } as unknown) as string
+  password: ({
+    type: String,
+    required: true,
+    select: false
+  } as unknown) as string
 });
 
 const UserModel = model<NormalizedUser & Document>(TYPE_USER, userSchema);

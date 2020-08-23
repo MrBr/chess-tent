@@ -22,9 +22,10 @@ export const useDenormalize = <T extends RecordValue>(
   if (!descriptor || !type) {
     return null;
   }
+  const entitySchema = utils.getTypeSchema(type);
   return denormalize(
     descriptor,
-    utils.getTypeSchema(type),
+    Array.isArray(descriptor) ? [entitySchema] : entitySchema,
     state.entities,
   ) as T;
 };

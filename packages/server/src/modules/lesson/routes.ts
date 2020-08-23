@@ -1,5 +1,10 @@
 import application, { middleware } from "@application";
-import { canEditLesson, getLesson, saveLesson } from "./middleware";
+import {
+  canEditLesson,
+  getLesson,
+  saveLesson,
+  findLessons
+} from "./middleware";
 
 const { identify, sendData, sendStatusOk, toLocals } = middleware;
 
@@ -14,6 +19,14 @@ application.service.registerPostRoute(
   canEditLesson,
   saveLesson,
   sendStatusOk
+);
+
+application.service.registerPostRoute(
+  "/lessons",
+  identify,
+  toLocals("filters", req => ({ owner: req.body.owner })),
+  findLessons,
+  sendData("lessons")
 );
 
 application.service.registerGetRoute(

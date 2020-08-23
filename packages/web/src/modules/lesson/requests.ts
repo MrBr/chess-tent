@@ -1,6 +1,6 @@
 import { services, requests } from '@application';
-import { LessonResponse } from '@types';
-import { Lesson } from '@chess-tent/models';
+import { LessonResponse, LessonsResponse } from '@types';
+import { Lesson, User } from '@chess-tent/models';
 
 const lesson = services.createRequest<[string], LessonResponse>(
   'GET',
@@ -12,5 +12,11 @@ const lessonSave = services.createRequest<Lesson, LessonResponse>(
   '/lesson/save',
 );
 
+const lessons = services.createRequest<{ owner: User['id'] }, LessonsResponse>(
+  'POST',
+  '/lessons',
+);
+
 requests.lesson = lesson;
 requests.lessonSave = lessonSave;
+requests.lessons = lessons;

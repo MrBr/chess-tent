@@ -23,6 +23,19 @@ export const getLesson: MiddlewareFunction = (req, res, next) => {
     .catch(next);
 };
 
+export const findLessons: MiddlewareFunction = (req, res, next) => {
+  service
+    .findLessons(res.locals.filters)
+    .then(lessons => {
+      if (!lessons) {
+        throw new LessonNotFoundError();
+      }
+      res.locals.lessons = lessons;
+      next();
+    })
+    .catch(next);
+};
+
 export const canEditLesson: MiddlewareFunction = (req, res, next) => {
   service
     .getLesson(res.locals.lesson.id)

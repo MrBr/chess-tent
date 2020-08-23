@@ -13,7 +13,7 @@ export const addUser = (user: User) =>
     });
   });
 
-export const getUser: Service["getUser"] = (user, projection = "-password") =>
+export const getUser: Service["getUser"] = (user, projection = "") =>
   new Promise((resolve, reject) => {
     UserModel.findOne(
       UserModel.translateAliases(user),

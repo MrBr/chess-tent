@@ -14,7 +14,6 @@ export const useRecord = <T extends RecordValue>(
   };
   const recordValue = hooks.useDenormalize<T>(record.value, record.meta.type);
   const dispatch = useDispatch();
-
   const update = useCallback(
     (entity: T, meta?: {}) => {
       dispatch(updateRecordAction(recordKey, entity, meta || {}));

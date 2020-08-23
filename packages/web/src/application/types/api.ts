@@ -5,6 +5,7 @@ export type StatusResponse = { error: string | null };
 export type DataResponse<T> = { data: T } & StatusResponse;
 export type UserResponse = DataResponse<User>;
 export type LessonResponse = DataResponse<Lesson>;
+export type LessonsResponse = DataResponse<Lesson[]>;
 
 export type ApiMethods = 'GET' | 'POST';
 export interface API {
@@ -29,4 +30,5 @@ export type Requests = {
   me: RequestFetch<undefined, UserResponse>;
   lesson: RequestFetch<[string], LessonResponse>;
   lessonSave: RequestFetch<Lesson, StatusResponse>;
+  lessons: RequestFetch<{ owner: User['id'] }, LessonsResponse>;
 };

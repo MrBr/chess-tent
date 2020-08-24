@@ -5,5 +5,5 @@ export const formatEntityValue = (value: RecordValue) => {
 };
 
 export const getEntityType = (value: RecordValue) => {
-  return Array.isArray(value) ? value[0].type : value.type;
+  return Array.isArray(value) ? value[0]?.type : value.type;
 };

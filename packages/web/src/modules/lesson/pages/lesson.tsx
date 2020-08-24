@@ -7,8 +7,15 @@ import {
   stepModules,
   utils,
   requests,
+  ui,
 } from '@application';
-import { createLesson, Lesson, Step, User } from '@chess-tent/models';
+import {
+  createLesson,
+  Lesson,
+  Step,
+  User,
+  createActivity,
+} from '@chess-tent/models';
 
 const {
   useParams,
@@ -18,6 +25,7 @@ const {
   useHistory,
   useApi,
 } = hooks;
+const { Container, Button } = ui;
 const { Editor } = components;
 const { createStep } = stepModules;
 const { START_FEN } = constants;
@@ -34,6 +42,7 @@ export default () => {
     response: lessonResponse,
     error: lessonResponseError,
   } = useApi(requests.lesson);
+  const { fetch: saveActivity } = useApi(requests.activitySave);
   const dispatch = useDispatchBatched();
   const [user] = useActiveUserRecord() as [User, unknown, unknown];
   const lesson = useSelector(lessonSelector(lessonId));
@@ -78,5 +87,20 @@ export default () => {
     return null;
   }
 
-  return <Editor lesson={lesson} />;
+  return (
+    <>
+      <Container>
+        <Button
+          onClick={() => {
+            const activityId = generateIndex();
+            const activity = createActivity(activityId, lesson, user, {});
+            saveActivity(activity);
+          }}
+        >
+          Assign to self
+        </Button>
+      </Container>
+      <Editor lesson={lesson} />
+    </>
+  );
 };

@@ -3,7 +3,7 @@ import { components, hooks, ui } from '@application';
 import { User } from '@chess-tent/models';
 
 const { useActiveUserRecord } = hooks;
-const { Header, Lessons } = components;
+const { Header, Lessons, Activities } = components;
 const { Container } = ui;
 
 export default () => {
@@ -13,6 +13,7 @@ export default () => {
       <Header />
       {JSON.stringify(user)}
       <Lessons owner={user} />
+      <Activities owner={user} />
     </Container>
   );
 };

@@ -15,7 +15,7 @@ const Lessons: Components['Lessons'] = ({ owner }) => {
     if (!lessons) {
       fetch({ owner: owner.id });
     }
-  }, [fetch, lessons]);
+  }, [fetch, lessons, owner.id]);
 
   useEffect(() => {
     if (response) {
@@ -25,6 +25,7 @@ const Lessons: Components['Lessons'] = ({ owner }) => {
 
   return (
     <>
+      <h2>Lessons</h2>
       {lessons?.map(lesson => (
         <Container key={lesson.id}>
           <Link to={`/lesson/${lesson.id}`}>{lesson.id}</Link>

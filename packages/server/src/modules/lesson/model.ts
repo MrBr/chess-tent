@@ -1,10 +1,5 @@
 import { model, Schema, Document } from "mongoose";
-import {
-  Lesson,
-  NormalizedLesson,
-  TYPE_LESSON,
-  TYPE_USER
-} from "@chess-tent/models";
+import { Lesson, TYPE_LESSON, TYPE_USER } from "@chess-tent/models";
 import { db } from "@application";
 
 export interface DepupulatedLesson {

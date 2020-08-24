@@ -8,7 +8,6 @@ export type StepEndSetup = { position: FEN; shapes: Shape[] };
 
 export type StepSystemProps = {
   setActiveStep: (step: Step) => void;
-  prevPosition: FEN;
   activeStep: Step;
   lesson: Lesson;
 };
@@ -17,7 +16,9 @@ export type StepProps<S extends Step, P = {}> = {
 } & StepSystemProps &
   P;
 
-export type StepComponent<S extends Step> = ComponentType<StepProps<S>>;
+export type StepComponent<S extends Step, P extends {} = {}> = ComponentType<
+  StepProps<S, P>
+>;
 
 export type StepModuleComponentKey =
   | 'Editor'
@@ -29,7 +30,7 @@ export type StepModuleComponentKey =
 export type StepModule<T extends Step = any, K extends StepType = StepType> = {
   Picker: FunctionComponent;
   Editor: StepComponent<T>;
-  Playground: StepComponent<T>;
+  Playground: StepComponent<T, { nextStep: () => void; prevStep: () => void }>;
   Exercise: StepComponent<T>;
   Actions: StepComponent<T>;
   stepType: K;

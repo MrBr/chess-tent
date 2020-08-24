@@ -1,10 +1,13 @@
 import {
+  Activity,
   Entity,
   Lesson,
+  NormalizedActivity,
   NormalizedLesson,
   NormalizedStep,
   NormalizedUser,
   Step,
+  Subject,
   User,
 } from '@chess-tent/models';
 
@@ -16,12 +19,13 @@ export const UPDATE_LESSON = 'UPDATE_LESSON';
 export const UPDATE_STEP = 'UPDATE_STEP';
 export const UPDATE_STEP_STATE = 'UPDATE_STEP_STATE';
 
-export const UPDATE_USER = 'UPDATE_USER';
-export const USER_LOGGED_IN = 'USER_LOGGED_IN';
-export const USER_LOGGED_OUT = 'USER_LOGGED_OUT';
+export const UPDATE_ACTIVITY = 'UPDATE_ACTIVITY';
+export const UPDATE_ACTIVITY_STATE = 'UPDATE_ACTIVITY_STATE';
 
-export const RECORD_UPDATE_ACTION = 'RECORD_UPDATE_ACTION';
-export const RECORD_DELETE_ACTION = 'RECORD_DELETE_ACTION';
+export const UPDATE_USER = 'UPDATE_USER';
+
+export const UPDATE_RECORD = 'UPDATE_RECORD';
+export const DELETE_RECORD = 'DELETE_RECORD';
 
 export type Action<T, P, M = {}> = {
   type: T;
@@ -33,6 +37,7 @@ export type EntitiesState = {
   users: UserState;
   lessons: LessonState;
   steps: StepsState;
+  activities: ActivityState;
 };
 /**
  * Records are used to store single entity reference
@@ -49,6 +54,7 @@ export type RecordType = {
 export type RecordState = Record<string, RecordType>;
 export type LessonState = EntityState<NormalizedLesson>;
 export type StepsState = EntityState<NormalizedStep>;
+export type ActivityState = EntityState<NormalizedActivity<Subject>>;
 export type UserState = EntityState<NormalizedUser>;
 
 export interface AppState {
@@ -64,7 +70,6 @@ export type UpdateEntitiesAction = Action<
 /**
  * Exercise
  */
-
 export type SetLessonActiveStepAction = Action<
   typeof SET_LESSON_ACTIVE_STEP,
   Step['id'],
@@ -84,7 +89,6 @@ export type LessonAction =
 /**
  * Step
  */
-
 export type UpdatableStepProps = Omit<{}, 'moves' | 'type' | 'shapes' | 'id'>;
 export type UpdateStepAction = Action<
   typeof UPDATE_STEP,
@@ -103,9 +107,27 @@ export type StepAction =
   | UpdateStepStateAction;
 
 /**
+ * Activity
+ */
+export type UpdateActivityAction<T extends Subject> = Action<
+  typeof UPDATE_ACTIVITY,
+  Partial<NormalizedActivity<T>>,
+  { id: Activity<never>['id'] }
+>;
+export type UpdateActivityStateAction = Action<
+  typeof UPDATE_ACTIVITY_STATE,
+  {},
+  { id: Activity<never>['id'] }
+>;
+
+export type ActivityAction<T extends Subject> =
+  | UpdateEntitiesAction
+  | UpdateActivityAction<T>
+  | UpdateActivityStateAction;
+
+/**
  * User
  */
-
 export type UpdateUserAction = Action<
   typeof UPDATE_USER,
   Partial<User>,
@@ -118,13 +140,13 @@ export type UserAction = UpdateEntitiesAction | UpdateUserAction;
  * Records
  */
 export type RecordUpdateAction = Action<
-  typeof RECORD_UPDATE_ACTION,
+  typeof UPDATE_RECORD,
   { value: RecordValue; meta: RecordMeta },
   { key: string }
 >;
 
 export type RecordDeleteAction = Action<
-  typeof RECORD_DELETE_ACTION,
+  typeof DELETE_RECORD,
   void,
   { key: string }
 >;

@@ -17,3 +17,4 @@ application.register(() => import('./utils'));
 application.register(() => import('./router'));
 application.register(() => import('./user'));
 application.register(() => import('./records'));
+application.register(() => import('./activity'));

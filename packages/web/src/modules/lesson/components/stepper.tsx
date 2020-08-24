@@ -19,7 +19,11 @@ const StepperStep = styled<ComponentType<StepProps>>(
     }, [step, onStepClick]);
     return (
       <div className={className} onClick={onClick}>
-        <StepRenderer component="Actions" step={step} {...systemProps} />
+        <StepRenderer<'Actions'>
+          component="Actions"
+          step={step}
+          {...systemProps}
+        />
       </div>
     );
   },

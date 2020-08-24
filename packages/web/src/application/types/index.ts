@@ -1,4 +1,4 @@
-import { ComponentType, FunctionComponent } from 'react';
+import { ComponentType, FunctionComponent, ReactElement } from 'react';
 import {
   Reducer,
   Action as ReduxAction,
@@ -7,7 +7,14 @@ import {
 import { BatchAction } from 'redux-batched-actions';
 import { Schema } from 'normalizr';
 import { register } from 'core-module';
-import { Entity, Lesson, Step, User } from '@chess-tent/models';
+import {
+  Activity,
+  Entity,
+  Lesson,
+  Step,
+  Subject,
+  User,
+} from '@chess-tent/models';
 import {
   RouteProps,
   RedirectProps,
@@ -24,6 +31,8 @@ import {
   UpdateStepAction,
   UpdateStepStateAction,
   RecordValue,
+  UpdateActivityStateAction,
+  UpdateActivityAction,
 } from './state';
 import { FEN, Move, Piece } from './chess';
 import {
@@ -31,7 +40,6 @@ import {
   StepMap,
   StepModule,
   StepModuleComponentKey,
-  StepProps,
 } from './step';
 import {
   ActionProps,
@@ -43,6 +51,7 @@ import { ClassComponent, GenericArguments } from './_helpers';
 import { UI } from './ui';
 import { API, RequestFetch, ApiMethods, Requests } from './api';
 
+export * from './activity';
 export * from './state';
 export * from './chess';
 export * from './step';
@@ -96,6 +105,7 @@ export type StepModules = {
 
 export type Model = {
   lessonSchema: Schema;
+  activitySchema: Schema;
   sectionSchema: Schema;
   stepSchema: Schema;
   userSchema: Schema;
@@ -123,10 +133,21 @@ export type State = {
     ) => SetLessonActiveStepAction;
     updateStep: (step: Step, patch: Partial<Step>) => UpdateStepAction;
     updateStepState: (step: Step, state: any) => UpdateStepStateAction;
+    updateActivityState: (
+      activity: Activity<Subject>,
+      state: {},
+    ) => UpdateActivityStateAction;
+    updateActivity: <T extends Subject>(
+      activity: Activity<T>,
+      ppatch: Partial<Activity<T>>,
+    ) => UpdateActivityAction<T>;
   };
   selectors: {
     lessonSelector: (lessonId: Lesson['id']) => (state: AppState) => Lesson;
     stepSelector: (stepId: Step['id']) => (state: AppState) => Step;
+    activitySelector: <T extends Subject>(
+      activityId: Activity<T>['id'],
+    ) => (state: AppState) => Activity<T>;
   };
 };
 
@@ -167,6 +188,10 @@ export type Pages = {
   Home: ComponentType;
 };
 
+export type ActivityComponent<T> = ComponentType<
+  T extends Activity<infer U, infer K> ? { activity: T } : never
+>;
+
 export type Components = {
   App: ComponentType;
   Header: ComponentType;
@@ -180,14 +205,11 @@ export type Components = {
   Authorized: ComponentType<AuthorizedProps>;
   Provider: ComponentType;
   StateProvider: ComponentType;
-  StepRenderer: ComponentType<
-    StepProps<
-      Step,
-      {
-        component: StepModuleComponentKey;
-      }
-    >
-  >;
+  StepRenderer: <T extends StepModuleComponentKey>(
+    props: StepModule[T] extends ComponentType<infer P>
+      ? P & { component: StepModuleComponentKey; step: Step }
+      : never,
+  ) => ReactElement;
   Evaluator: ComponentType<{
     position: FEN;
     evaluate?: boolean;
@@ -205,6 +227,7 @@ export type Components = {
   }>;
   Editor: ComponentType<{ lesson: Lesson }>;
   Lessons: ComponentType<{ owner: User }>;
+  Activities: ComponentType<{ owner: User }>;
 };
 
 export type Constants = {

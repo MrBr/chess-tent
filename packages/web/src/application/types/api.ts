@@ -1,4 +1,4 @@
-import { Lesson, User } from '@chess-tent/models';
+import { Activity, Lesson, User } from '@chess-tent/models';
 import { GenericArguments } from './_helpers';
 
 export type StatusResponse = { error: string | null };
@@ -6,6 +6,8 @@ export type DataResponse<T> = { data: T } & StatusResponse;
 export type UserResponse = DataResponse<User>;
 export type LessonResponse = DataResponse<Lesson>;
 export type LessonsResponse = DataResponse<Lesson[]>;
+export type ActivityResponse = DataResponse<Activity>;
+export type ActivitiesResponse = DataResponse<Activity[]>;
 
 export type ApiMethods = 'GET' | 'POST';
 export interface API {
@@ -31,4 +33,7 @@ export type Requests = {
   lesson: RequestFetch<[string], LessonResponse>;
   lessonSave: RequestFetch<Lesson, StatusResponse>;
   lessons: RequestFetch<{ owner: User['id'] }, LessonsResponse>;
+  activity: RequestFetch<[string], ActivityResponse>;
+  activitySave: RequestFetch<Activity, StatusResponse>;
+  activities: RequestFetch<{ owner: User['id'] }, ActivitiesResponse>;
 };

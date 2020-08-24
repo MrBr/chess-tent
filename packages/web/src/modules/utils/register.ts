@@ -1,9 +1,11 @@
 import application from '@application';
 import { Schema } from 'normalizr';
 import {
+  isActivity,
   isLesson,
   isStep,
   isUser,
+  TYPE_ACTIVITY,
   TYPE_LESSON,
   TYPE_STEP,
   TYPE_USER,
@@ -19,6 +21,8 @@ application.utils.getEntitySchema = (entity: unknown): Schema => {
     return model.lessonSchema;
   } else if (isUser(entity)) {
     return model.userSchema;
+  } else if (isActivity(entity)) {
+    return model.activitySchema;
   }
   throw Error(`Unknown entity: ${entity}.`);
 };
@@ -30,6 +34,8 @@ application.utils.getTypeSchema = (type: string): Schema => {
     return model.lessonSchema;
   } else if (type === TYPE_USER) {
     return model.userSchema;
+  } else if (type === TYPE_ACTIVITY) {
+    return model.activitySchema;
   }
   throw Error(`Unknown type: ${type}.`);
 };

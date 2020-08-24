@@ -1,35 +1,35 @@
 import application, { middleware } from "@application";
 import {
-  canEditLesson,
-  getLesson,
-  saveLesson,
-  findLessons
+  canEditActivity,
+  getActivity,
+  saveActivity,
+  findActivities
 } from "./middleware";
 
 const { identify, sendData, sendStatusOk, toLocals } = middleware;
 
 application.service.registerPostRoute(
-  "/lesson/save",
+  "/activity/save",
   identify,
-  toLocals("lesson", req => req.body),
-  canEditLesson,
-  saveLesson,
+  toLocals("activity", req => req.body),
+  canEditActivity,
+  saveActivity,
   sendStatusOk
 );
 
 application.service.registerPostRoute(
-  "/lessons",
+  "/activities",
   identify,
   toLocals("filters", req => ({ owner: req.body.owner })),
-  findLessons,
-  sendData("lessons")
+  findActivities,
+  sendData("activities")
 );
 
 application.service.registerGetRoute(
-  "/lesson/:lessonId",
+  "/activity/:activityId",
   identify,
-  toLocals("lesson.id", req => req.params.lessonId),
-  getLesson,
-  canEditLesson,
-  sendData("lesson")
+  toLocals("activity.id", req => req.params.activityId),
+  getActivity,
+  canEditActivity,
+  sendData("activity")
 );

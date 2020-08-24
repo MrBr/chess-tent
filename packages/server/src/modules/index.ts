@@ -5,3 +5,4 @@ application.register(() => import("./lesson"));
 application.register(() => import("./db"));
 application.register(() => import("./user"));
 application.register(() => import("./auth"));
+application.register(() => import("./activity"));

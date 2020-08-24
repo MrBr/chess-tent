@@ -1,14 +1,14 @@
 import {
-  RECORD_DELETE_ACTION,
-  RECORD_UPDATE_ACTION,
+  DELETE_RECORD,
   RecordAction,
   RecordState,
+  UPDATE_RECORD,
 } from '@types';
 import { formatEntityValue, getEntityType } from './_helpers';
 
 export const records = (state: RecordState = {}, action: RecordAction) => {
   switch (action.type) {
-    case RECORD_UPDATE_ACTION: {
+    case UPDATE_RECORD: {
       return {
         ...state,
         [action.meta.key]: {
@@ -21,7 +21,7 @@ export const records = (state: RecordState = {}, action: RecordAction) => {
         },
       };
     }
-    case RECORD_DELETE_ACTION: {
+    case DELETE_RECORD: {
       const newState = { ...state };
       delete newState[action.meta.key];
       return newState;

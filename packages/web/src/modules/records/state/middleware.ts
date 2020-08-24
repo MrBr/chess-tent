@@ -1,8 +1,8 @@
-import { Middleware, RECORD_UPDATE_ACTION } from '@types';
+import { Middleware, UPDATE_RECORD } from '@types';
 import { updateEntitiesAction } from '../../state/actions';
 
 export const updateRecordEntitiesMiddleware: Middleware = store => next => action => {
-  if (action.type === RECORD_UPDATE_ACTION) {
+  if (action.type === UPDATE_RECORD) {
     store.dispatch(updateEntitiesAction(action.payload.value));
   }
   next(action);

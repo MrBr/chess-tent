@@ -1,10 +1,10 @@
 import {
-  RECORD_DELETE_ACTION,
-  RECORD_UPDATE_ACTION,
+  DELETE_RECORD,
   RecordDeleteAction,
   RecordMeta,
   RecordUpdateAction,
   RecordValue,
+  UPDATE_RECORD,
 } from '@types';
 
 export const updateRecordAction = <T extends RecordValue>(
@@ -12,7 +12,7 @@ export const updateRecordAction = <T extends RecordValue>(
   entity: RecordValue,
   meta: RecordMeta,
 ): RecordUpdateAction => ({
-  type: RECORD_UPDATE_ACTION,
+  type: UPDATE_RECORD,
   payload: {
     value: entity,
     meta,
@@ -23,7 +23,7 @@ export const updateRecordAction = <T extends RecordValue>(
 });
 
 export const deleteRecordAction = (recordKey: string): RecordDeleteAction => ({
-  type: RECORD_DELETE_ACTION,
+  type: DELETE_RECORD,
   payload: undefined,
   meta: { key: recordKey },
 });

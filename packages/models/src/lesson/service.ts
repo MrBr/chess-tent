@@ -12,9 +12,6 @@ import { User } from "../user";
 // Lesson
 const isLesson = (entity: unknown) =>
   Object.getOwnPropertyDescriptor(entity, "type")?.value === TYPE_LESSON;
-for (const [i, value] of []) {
-  console.log("%d: %s", i, value);
-}
 
 const getLessonParentStep = (lesson: Lesson, step: Step) => {
   for (const rootStep of lesson.state.steps) {

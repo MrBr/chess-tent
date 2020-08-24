@@ -1,14 +1,7 @@
-import React, { FunctionComponent } from 'react';
+import React, { ComponentType } from 'react';
 import { Step, TYPE_STEP } from '@chess-tent/models';
 import { schema } from 'normalizr';
-import {
-  FEN,
-  StepEndSetup,
-  StepMap,
-  StepModule,
-  StepModuleComponentKey,
-  StepProps,
-} from '@types';
+import { Components, FEN, StepEndSetup, StepMap, StepModule } from '@types';
 import { utils } from '@application';
 
 const StepsMap = {} as StepMap;
@@ -41,13 +34,17 @@ const getStepModuleStepEndSetup = (step: Step): StepEndSetup => {
   return getStepModule(step.stepType)['getEndSetup'](step);
 };
 
-const StepComponentRenderer: FunctionComponent<StepProps<
-  Step,
-  {
-    component: StepModuleComponentKey;
-  }
->> = ({ component, step, ...stepProps }) => {
+const StepComponentRenderer: Components['StepRenderer'] = ({
+  component,
+  step,
+  ...otherProps
+}) => {
   const Component = getStepModule(step.stepType)[component];
+  const stepProps = otherProps as typeof Component extends ComponentType<
+    infer P
+  >
+    ? P
+    : never;
   return <Component key={step.id} step={step} {...stepProps} />;
 };
 

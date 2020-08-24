@@ -9,4 +9,4 @@ export * from "./step";
 export * from "./lesson";
 export * from "./user";
 
-export type Entity = User | Lesson | Step | Activity<Lesson>;
+export type Entity = User | Lesson | Step | Activity;

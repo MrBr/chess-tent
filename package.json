@@ -13,6 +13,7 @@
   ],
   "dependencies": {
     "@chess-tent/models": "1.0.0",
+    "@chess-tent/normalization": "1.0.0",
     "core-module": "2.0.0"
   }
 }

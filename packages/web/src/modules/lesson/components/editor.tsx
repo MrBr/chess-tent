@@ -24,7 +24,7 @@ const Editor: Components['Editor'] = ({ lesson }) => {
     componentState.mounted && lessonSaveThrottle(lesson);
   }, [lesson, lessonSaveThrottle, componentState]);
 
-  const setActiveStep = useCallback(
+  const setActiveStepHandler = useCallback(
     (step: Step) => {
       dispatch(setLessonActiveStep(lesson, step));
     },
@@ -46,7 +46,7 @@ const Editor: Components['Editor'] = ({ lesson }) => {
               step={activeStep}
               component="Editor"
               activeStep={activeStep}
-              setActiveStep={setActiveStep}
+              setActiveStep={setActiveStepHandler}
               lesson={lesson}
             />
           </Col>
@@ -56,7 +56,7 @@ const Editor: Components['Editor'] = ({ lesson }) => {
               lesson={lesson}
               steps={steps}
               activeStep={activeStep}
-              setActiveStep={setActiveStep}
+              setActiveStep={setActiveStepHandler}
             />
           </Col>
         </Row>

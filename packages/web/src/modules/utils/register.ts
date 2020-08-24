@@ -1,5 +1,4 @@
 import application from '@application';
-import { Schema } from 'normalizr';
 import {
   isActivity,
   isLesson,
@@ -13,6 +12,7 @@ import {
 import { model } from '@application';
 import { v4 as uuid } from 'uuid';
 import { useComponentStateSilent } from './hooks';
+import { Schema } from '@types';
 
 application.utils.getEntitySchema = (entity: unknown): Schema => {
   if (isStep(entity)) {

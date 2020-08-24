@@ -5,6 +5,7 @@
   "dependencies": {
     "@chess-tent/chessground": "1.0.0",
     "@chess-tent/models": "1.0.0",
+    "@chess-tent/normalization": "1.0.0",
     "@emotion/core": "^10.0.10",
     "@emotion/styled": "^10.0.10",
     "@testing-library/jest-dom": "^4.2.4",
@@ -21,7 +22,6 @@
     "core-module": "2.0.0",
     "formik": "^2.1.5",
     "lodash": "^4.17.11",
-    "normalizr": "^3.6.0",
     "react": "^16.13.1",
     "react-bootstrap": "^1.0.0-beta.17",
     "react-dom": "^16.13.1",

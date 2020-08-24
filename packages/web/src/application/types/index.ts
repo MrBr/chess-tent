@@ -5,7 +5,6 @@ import {
   Middleware as ReduxMiddleware,
 } from 'redux';
 import { BatchAction } from 'redux-batched-actions';
-import { Schema } from 'normalizr';
 import { register } from 'core-module';
 import {
   Activity,
@@ -103,10 +102,15 @@ export type StepModules = {
   getStepEndSetup: (step: Step) => StepEndSetup;
 };
 
+export interface Schema {
+  type: string;
+  relationships: {
+    [key: string]: string | {};
+  };
+}
 export type Model = {
   lessonSchema: Schema;
   activitySchema: Schema;
-  sectionSchema: Schema;
   stepSchema: Schema;
   userSchema: Schema;
 };
@@ -156,6 +160,8 @@ export type Utils = {
   getTypeSchema: (type: string) => Schema;
   rightMouse: (f: Function) => (e: MouseEvent) => void;
   generateIndex: () => string;
+  denormalize: (id: string, type: string, entities: {}) => any;
+  normalize: (entity: any) => any;
 };
 
 export type Services = {

@@ -1,9 +1,8 @@
-import { denormalize } from 'normalizr';
-import { Step } from '@chess-tent/models';
+import { Step, TYPE_ACTIVITY } from '@chess-tent/models';
+import { utils } from '@application';
 import { AppState } from '@types';
-import { activitySchema } from '../model';
 
 const activitySelector = (stepId: Step['id']) => (state: AppState) =>
-  denormalize(stepId, activitySchema, state.entities);
+  utils.denormalize(stepId, TYPE_ACTIVITY, state.entities);
 
 export { activitySelector };

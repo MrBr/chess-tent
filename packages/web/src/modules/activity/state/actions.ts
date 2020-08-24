@@ -5,15 +5,14 @@ import {
   UpdateActivityAction,
   UpdateActivityStateAction,
 } from '@types';
-import { normalize } from 'normalizr';
-import { activitySchema } from '../model';
+import { utils } from '@application';
 
 export const updateActivityAction = <T extends Subject>(
   activity: Activity<T>,
   patch: Partial<Activity<T>>,
 ): UpdateActivityAction<T> => ({
   type: UPDATE_ACTIVITY,
-  payload: normalize({ ...activity, ...patch }, activitySchema).result,
+  payload: utils.normalize({ ...activity, ...patch }).result,
   meta: {
     id: activity.id,
   },

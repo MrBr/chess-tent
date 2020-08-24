@@ -22,10 +22,7 @@ const getPreviousStep = (rootStep: Step, step: Step): Step | null => {
 };
 
 const getLastStep = (rootStep: Step): Step | null => {
-  if (rootStep.state.steps.length <= 0) {
-    return rootStep;
-  }
-  return getLastStep(rootStep.state.steps[rootStep.state.steps.length - 1]);
+  return rootStep.state.steps[rootStep.state.steps.length - 1] || null;
 };
 
 const isLastStep = (rootStep: Step, step: Step) => {

@@ -1,6 +1,5 @@
 import React, { ComponentType } from 'react';
-import { Step, TYPE_STEP } from '@chess-tent/models';
-import { schema } from 'normalizr';
+import { Step } from '@chess-tent/models';
 import { Components, FEN, StepEndSetup, StepMap, StepModule } from '@types';
 import { utils } from '@application';
 
@@ -48,12 +47,14 @@ const StepComponentRenderer: Components['StepRenderer'] = ({
   return <Component key={step.id} step={step} {...stepProps} />;
 };
 
-export const stepSchema = new schema.Entity(TYPE_STEP);
-stepSchema.define({
-  state: {
-    steps: [stepSchema],
+export const stepSchema = {
+  type: 'steps',
+  relationships: {
+    state: {
+      steps: 'steps',
+    },
   },
-});
+};
 
 export {
   registerStep,

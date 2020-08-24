@@ -1,7 +1,6 @@
 import { Action } from 'redux';
 import { AppState, RecordValue } from '@types';
 import { utils } from '@application';
-import { denormalize } from 'normalizr';
 import { useDispatch, useSelector } from 'react-redux';
 import { useCallback } from 'react';
 import { batchActions } from 'redux-batched-actions';
@@ -22,10 +21,17 @@ export const useDenormalize = <T extends RecordValue>(
   if (!descriptor || !type) {
     return null;
   }
-  const entitySchema = utils.getTypeSchema(type);
-  return denormalize(
-    descriptor,
-    Array.isArray(descriptor) ? [entitySchema] : entitySchema,
-    state.entities,
-  ) as T;
+  // TODO - optimimze denormalize collection
+  let denormalized;
+  console.time(type);
+  if (Array.isArray(descriptor)) {
+    denormalized = [];
+    for (let i = 0; i < descriptor.length; i++) {
+      denormalized.push(utils.denormalize(descriptor[i], type, state.entities));
+    }
+  } else {
+    denormalized = utils.denormalize(descriptor, type, state.entities);
+  }
+  console.timeEnd(type);
+  return denormalized as T;
 };

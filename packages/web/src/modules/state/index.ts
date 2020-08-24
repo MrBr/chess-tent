@@ -1,7 +1,8 @@
-import application from '@application';
+import application, { model } from '@application';
 import logger from 'redux-logger';
 import { useDispatch, useSelector } from 'react-redux';
 import { batchDispatchMiddleware } from 'redux-batched-actions';
+import initNormalizer from '@chess-tent/normalization';
 import {
   registerEntityReducer,
   getRootReducer,
@@ -19,7 +20,14 @@ application.hooks.useDispatchBatched = useDispatchBatched;
 application.hooks.useDispatch = useDispatch;
 application.hooks.useSelector = useSelector;
 application.hooks.useDenormalize = useDenormalize;
-
+const { normalize, denormalize } = initNormalizer({
+  users: model.userSchema,
+  lessons: model.lessonSchema,
+  activities: model.activitySchema,
+  steps: model.stepSchema,
+});
+application.utils.normalize = normalize;
+application.utils.denormalize = denormalize;
 application.register(
   () => import('./actions'),
   module => {

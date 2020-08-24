@@ -57,10 +57,10 @@ export default () => {
   }, [fetch, lesson, lessonId]);
 
   useEffect(() => {
-    if (lessonResponse) {
+    if (lessonResponse && !lessonResponseError) {
       dispatch(updateEntities(lessonResponse.data));
     }
-  }, [lessonResponse, dispatch]);
+  }, [lessonResponse, dispatch, lessonResponseError]);
 
   useEffect(() => {
     // Create new lesson

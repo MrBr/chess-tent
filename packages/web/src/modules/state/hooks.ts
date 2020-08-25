@@ -23,7 +23,6 @@ export const useDenormalize = <T extends RecordValue>(
   }
   // TODO - optimimze denormalize collection
   let denormalized;
-  console.time(type);
   if (Array.isArray(descriptor)) {
     denormalized = [];
     for (let i = 0; i < descriptor.length; i++) {
@@ -32,6 +31,5 @@ export const useDenormalize = <T extends RecordValue>(
   } else {
     denormalized = utils.denormalize(descriptor, type, state.entities);
   }
-  console.timeEnd(type);
   return denormalized as T;
 };

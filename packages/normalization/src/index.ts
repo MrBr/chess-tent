@@ -25,8 +25,9 @@ const entitiesEmptyMap = (schemaMap: Record<string, {}>) => {
   }, {});
 };
 
-const initNormalizer = (schemaMap: { [key: string]: Schema }) => {
+const initService = (schemaMap: { [key: string]: Schema }) => {
   const cache: { [key: string]: any } = entitiesEmptyMap(schemaMap);
+  const cacheEntities: { [key: string]: any } = entitiesEmptyMap(schemaMap);
   const prevEntities: { [key: string]: any } = entitiesEmptyMap(schemaMap);
 
   const normalizeRelationships = (
@@ -40,6 +41,7 @@ const initNormalizer = (schemaMap: { [key: string]: Schema }) => {
       let normalizedRelationshipValue;
       const relationshipValue = entityState[attribute];
       if (typeof relationshipType === "object") {
+        // Nested relationships normalization
         normalizedRelationshipValue = normalizeRelationships(
           entityState[attribute],
           relationshipType,
@@ -80,7 +82,7 @@ const initNormalizer = (schemaMap: { [key: string]: Schema }) => {
     return { result: normalizedEntity, entities };
   };
 
-  const denormalizeRelationships = (
+  const denormalizeState = (
     entityState: { [key: string]: any },
     cachedEntityState: { [key: string]: any },
     prevEntityState: { [key: string]: any },
@@ -95,7 +97,8 @@ const initNormalizer = (schemaMap: { [key: string]: Schema }) => {
       const relationshipValue = entityState[attribute];
       let freshValue;
       if (typeof type === "object") {
-        freshValue = denormalizeRelationships(
+        // Nested relationships denormalization
+        freshValue = denormalizeState(
           entityState[attribute],
           cachedEntityState[attribute],
           prevEntityState?.[attribute],
@@ -149,8 +152,11 @@ const initNormalizer = (schemaMap: { [key: string]: Schema }) => {
       return;
     }
     const prevEntity = prevEntities?.[type][id];
-    const cachedEntity = cache?.[type][id] || {};
-    const freshEntity = denormalizeRelationships(
+    const cachedEntity = cache[type][id] || {};
+    if (cacheEntities[type][id] === entities) {
+      return cachedEntity;
+    }
+    const freshEntity = denormalizeState(
       entity,
       cachedEntity,
       prevEntity,
@@ -159,6 +165,7 @@ const initNormalizer = (schemaMap: { [key: string]: Schema }) => {
     );
     if (freshEntity !== cachedEntity) {
       cache[type][id] = freshEntity;
+      cacheEntities[type][id] = entities;
       prevEntities[type][id] = entity;
     }
     return freshEntity;
@@ -166,4 +173,4 @@ const initNormalizer = (schemaMap: { [key: string]: Schema }) => {
   return { normalize, denormalize };
 };
 
-export default initNormalizer;
+export default initService;

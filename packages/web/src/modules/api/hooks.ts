@@ -1,7 +1,9 @@
 import { useCallback, useState } from 'react';
-import { GenericArguments, Hooks, RequestFetch } from '@types';
+import { GenericArguments, Hooks, RequestFetch, StatusResponse } from '@types';
 
-export const useApi: Hooks['useApi'] = <T, U>(request: RequestFetch<T, U>) => {
+export const useApi: Hooks['useApi'] = <T, U extends StatusResponse>(
+  request: RequestFetch<T, U>,
+) => {
   const [apiRequestState, setApiRequestState] = useState<{
     loading: boolean;
     error: null | string | {};
@@ -17,6 +19,9 @@ export const useApi: Hooks['useApi'] = <T, U>(request: RequestFetch<T, U>) => {
       setApiRequestState({ response: null, error: null, loading: true });
       request(...args)
         .then(response => {
+          if (response.error) {
+            throw new Error(response.error);
+          }
           setApiRequestState({ error: null, loading: false, response });
         })
         .catch(error => {

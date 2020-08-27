@@ -2,7 +2,7 @@ export type StepType = "description" | "variation" | "move" | "exercise";
 
 export const TYPE_STEP = "steps";
 
-export interface Step<T extends {} = any, K extends StepType = StepType> {
+export interface Step<T extends {} = {}, K extends StepType = StepType> {
   id: string;
   type: typeof TYPE_STEP;
   stepType: K;

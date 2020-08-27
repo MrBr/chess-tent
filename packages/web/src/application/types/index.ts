@@ -48,7 +48,7 @@ import {
 } from './components';
 import { ClassComponent, GenericArguments } from './_helpers';
 import { UI } from './ui';
-import { API, RequestFetch, ApiMethods, Requests } from './api';
+import { API, RequestFetch, ApiMethods, Requests, StatusResponse } from './api';
 
 export * from './activity';
 export * from './state';
@@ -74,7 +74,7 @@ export type Hooks = {
   useActiveUserRecord: () => RecordHookReturn<User>;
   useHistory: () => History;
   useParams: typeof useParams;
-  useApi: <T, K>(
+  useApi: <T, K extends StatusResponse>(
     request: RequestFetch<T, K>,
   ) => {
     fetch: (...args: GenericArguments<T>) => void;

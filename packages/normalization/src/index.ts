@@ -27,6 +27,8 @@ const entitiesEmptyMap = (schemaMap: Record<string, {}>) => {
 
 const initService = (schemaMap: { [key: string]: Schema }) => {
   const cache: { [key: string]: any } = entitiesEmptyMap(schemaMap);
+  // TODO - cacheEntities must be cleared after every entity state update.
+  //  Garbage collector wont clear old entities because of the references.
   const cacheEntities: { [key: string]: any } = entitiesEmptyMap(schemaMap);
   const prevEntities: { [key: string]: any } = entitiesEmptyMap(schemaMap);
 

@@ -242,12 +242,14 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
     const { renderPrompt } = this.state;
     return (
       <>
-        <Evaluator
-          evaluate={evaluate}
-          position={fen}
-          onBestMoveChange={console.log}
-          onEvaluationChange={console.log}
-        />
+        {false && (
+          <Evaluator
+            evaluate={evaluate}
+            position={fen}
+            onBestMoveChange={console.log}
+            onEvaluationChange={console.log}
+          />
+        )}{' '}
         <BoardHeader>{header}</BoardHeader>
         <Board id="board" ref={this.boardHost} />
         <BoardOptions>{footer}</BoardOptions>

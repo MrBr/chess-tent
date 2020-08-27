@@ -1,16 +1,18 @@
-import React, { FunctionComponent } from 'react';
+import React from 'react';
 import { DrawShape } from '@chess-tent/chessground/dist/draw';
 import {
   Step,
   createStep as coreCreateStep,
   getLessonParentStep,
 } from '@chess-tent/models';
-import { FEN, Move, Piece, StepComponent, StepModule } from '@types';
-import { state, stepModules } from '@application';
+import { FEN, Move, Piece, StepModule } from '@types';
+import { components, state, stepModules, ui } from '@application';
 
 const {
   actions: { updateStepState },
 } = state;
+const { Container, Col, Row } = ui;
+const { Chessboard } = components;
 
 const stepType = 'description';
 
@@ -58,25 +60,36 @@ const getEndSetup: DescriptionModule['getEndSetup'] = ({
   shapes: state.shapes,
 });
 
-const Editor: StepComponent<DescriptionStep> = ({ step, lesson, ...props }) => {
+const Editor: DescriptionModule['Editor'] = ({ step, lesson, ...props }) => {
   const parentStep = getLessonParentStep(lesson, step) as Step;
   const ParentEditor = stepModules.getStepModule(parentStep.stepType).Editor;
   return <ParentEditor {...props} lesson={lesson} step={parentStep} />;
 };
 
-const Picker: FunctionComponent = () => {
+const Picker: DescriptionModule['Picker'] = () => {
   return <>Description</>;
 };
 
-const Playground: StepComponent<DescriptionStep> = () => {
-  return <>{'Basic step playground'}</>;
+const Playground: DescriptionModule['Playground'] = ({ step, footer }) => {
+  const {
+    state: { position, shapes },
+  } = step;
+  return (
+    <Container>
+      <Row>
+        <Col>
+          <Chessboard fen={position} shapes={shapes} footer={footer} />
+        </Col>
+      </Row>
+    </Container>
+  );
 };
 
-const Exercise: StepComponent<DescriptionStep> = () => {
+const Exercise: DescriptionModule['Exercise'] = () => {
   return <>{'Description'}</>;
 };
 
-const ActionsComponent: StepComponent<DescriptionStep> = ({
+const ActionsComponent: DescriptionModule['Actions'] = ({
   step,
   setActiveStep,
 }) => {

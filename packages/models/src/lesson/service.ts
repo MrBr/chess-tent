@@ -1,9 +1,12 @@
 import { Lesson, TYPE_LESSON } from "./types";
 import {
   getLastStep,
+  getNextStep,
   getParentStep,
   getPreviousStep,
-  isStep,
+  getStepIndex,
+  getStepsCount,
+  isSameStep,
   Step
 } from "../step";
 import { updateSubjectState } from "../subject";
@@ -15,7 +18,7 @@ const isLesson = (entity: unknown) =>
 
 const getLessonParentStep = (lesson: Lesson, step: Step) => {
   for (const rootStep of lesson.state.steps) {
-    if (rootStep === step) {
+    if (isSameStep(rootStep, step)) {
       return null;
     }
     const parentStep = getParentStep(rootStep, step);
@@ -29,7 +32,7 @@ const getLessonPreviousStep = (lesson: Lesson, step: Step) => {
   let index = 0;
   for (const rootStep of lesson.state.steps) {
     const rootStep = lesson.state.steps[index];
-    if (rootStep === step) {
+    if (isSameStep(rootStep, step)) {
       return index > 0 ? getLastStep(lesson.state.steps[index - 1]) : null;
     }
     const previousStep = getPreviousStep(rootStep, step);
@@ -38,6 +41,39 @@ const getLessonPreviousStep = (lesson: Lesson, step: Step) => {
     }
     index++;
   }
+};
+
+const getLessonNextStep = (lesson: Lesson, step: Step) => {
+  let index = 0;
+  while (index < lesson.state.steps.length) {
+    const rootStep = lesson.state.steps[index];
+    if (isSameStep(rootStep, step)) {
+      return (
+        getNextStep(rootStep, step) || lesson.state.steps[index + 1] || null
+      );
+    }
+    const nextStep = getNextStep(rootStep, step);
+    if (nextStep) {
+      return nextStep;
+    }
+    index++;
+  }
+};
+
+const getLessonStepsCount = (lesson: Lesson) => {
+  let count = 0;
+  lesson.state.steps.forEach(step => {
+    count += getStepsCount(step);
+  });
+  return count;
+};
+
+const getLessonStepIndex = (lesson: Lesson, step: Step) => {
+  let index = 0;
+  lesson.state.steps.forEach(parentStep => {
+    index += getStepIndex(parentStep, step);
+  });
+  return index;
 };
 
 const setActiveStep = (lesson: Lesson, step: Step): Lesson =>
@@ -65,5 +101,8 @@ export {
   getLessonParentStep,
   getLessonPreviousStep,
   createLesson,
-  setActiveStep
+  getLessonNextStep,
+  setActiveStep,
+  getLessonStepsCount,
+  getLessonStepIndex
 };

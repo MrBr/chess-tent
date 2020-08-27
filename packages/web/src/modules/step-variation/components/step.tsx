@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { DrawShape } from '@chess-tent/chessground/dist/draw';
 import {
   Step,
@@ -6,10 +6,11 @@ import {
   addStep,
   getLastStep,
 } from '@chess-tent/models';
-import { FEN, Move, Piece, StepComponent, StepModule } from '@types';
+import { FEN, Move, Piece, StepModule } from '@types';
 import { hooks, components, state, stepModules, ui } from '@application';
+import Footer from './footer';
 
-const { Check, Container, Col, Row } = ui;
+const { Container, Col, Row } = ui;
 const { useDispatchBatched } = hooks;
 const { Chessboard, Stepper } = components;
 const {
@@ -93,7 +94,7 @@ const shapesReactor: VariationModule['shapesReactor'] = (
   step,
 ) => shapes => [updateStepState(step, { shapes })];
 
-const Editor: StepComponent<VariationStep> = ({ step, lesson }) => {
+const Editor: VariationModule['Editor'] = ({ step, lesson }) => {
   const {
     state: { position, shapes, editing },
   } = step;
@@ -117,12 +118,6 @@ const Editor: StepComponent<VariationStep> = ({ step, lesson }) => {
     [dispatch, step, lesson],
   );
 
-  const footer = (
-    <div>
-      Edit <Check onChange={toggleEditingMode} checked={!!editing} />
-    </div>
-  );
-
   return (
     <Container>
       <Row>
@@ -132,7 +127,12 @@ const Editor: StepComponent<VariationStep> = ({ step, lesson }) => {
             onChange={onChangeHandle}
             onShapesChange={updateShapes}
             shapes={shapes}
-            footer={footer}
+            footer={
+              <Footer
+                toggleEditingMode={toggleEditingMode}
+                editing={!!editing}
+              />
+            }
           />
         </Col>
       </Row>
@@ -140,33 +140,30 @@ const Editor: StepComponent<VariationStep> = ({ step, lesson }) => {
   );
 };
 
-const Picker: FunctionComponent = () => {
+const Picker: VariationModule['Picker'] = () => {
   return <>Variation</>;
 };
 
-const Playground: StepComponent<VariationStep> = () => {
+const Playground: VariationModule['Playground'] = ({ step, footer }) => {
+  const {
+    state: { position, shapes },
+  } = step;
   return (
     <Container>
       <Row>
         <Col>
-          <Chessboard
-            fen={position}
-            onChange={onChangeHandle}
-            onShapesChange={updateShapes}
-            shapes={shapes}
-            footer={footer}
-          />
+          <Chessboard fen={position} shapes={shapes} footer={footer} />
         </Col>
       </Row>
     </Container>
   );
 };
 
-const Exercise: StepComponent<VariationStep> = () => {
+const Exercise: VariationModule['Exercise'] = () => {
   return <>{'Variation'}</>;
 };
 
-const ActionsComponent: StepComponent<VariationStep> = ({
+const ActionsComponent: VariationModule['Actions'] = ({
   step,
   setActiveStep,
   lesson,

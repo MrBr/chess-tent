@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { DrawShape } from '@chess-tent/chessground/dist/draw';
 import {
   Step,
@@ -7,7 +7,7 @@ import {
   isLastStep,
   addStep,
 } from '@chess-tent/models';
-import { FEN, Move, Piece, StepComponent, StepModule } from '@types';
+import { FEN, Move, Piece, StepModule } from '@types';
 import {
   services,
   hooks,
@@ -115,7 +115,7 @@ const shapesReactor: MoveModule['shapesReactor'] = (lesson, step) => shapes => [
   updateStepState(step, { shapes }),
 ];
 
-const Editor: StepComponent<MoveStep> = ({ step, lesson }) => {
+const Editor: MoveModule['Editor'] = ({ step, lesson }) => {
   const {
     state: { position, shapes },
   } = step;
@@ -150,19 +150,30 @@ const Editor: StepComponent<MoveStep> = ({ step, lesson }) => {
   );
 };
 
-const Picker: FunctionComponent = () => {
+const Picker: MoveModule['Picker'] = () => {
   return <>Move</>;
 };
 
-const Playground: StepComponent<MoveStep> = () => {
-  return <>{'Basic step playground'}</>;
+const Playground: MoveModule['Playground'] = ({ step, footer }) => {
+  const {
+    state: { position, shapes },
+  } = step;
+  return (
+    <Container>
+      <Row>
+        <Col>
+          <Chessboard fen={position} shapes={shapes} footer={footer} />
+        </Col>
+      </Row>
+    </Container>
+  );
 };
 
-const Exercise: StepComponent<MoveStep> = () => {
+const Exercise: MoveModule['Exercise'] = () => {
   return <>{'Move'}</>;
 };
 
-const ActionsComponent: StepComponent<MoveStep> = ({
+const ActionsComponent: MoveModule['Actions'] = ({
   step,
   setActiveStep,
   ...props

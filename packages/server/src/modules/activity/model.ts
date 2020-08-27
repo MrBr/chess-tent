@@ -19,30 +19,34 @@ export interface DepupulatedActivity {
 
 export type ActivityDocument = DepupulatedActivity & Document;
 
-const activitySchema = db.createStandardSchema<DepupulatedActivity>({
-  subject: ({
-    type: Schema.Types.Mixed,
-    ref: TYPE_USER
-  } as unknown) as DepupulatedActivity["subject"],
-  owner: ({
-    type: String,
-    ref: TYPE_USER
-  } as unknown) as DepupulatedActivity["owner"],
-  users: [
-    {
+const activitySchema = db.createStandardSchema<DepupulatedActivity>(
+  {
+    subject: ({
+      type: Schema.Types.Mixed,
+      ref: TYPE_USER
+    } as unknown) as DepupulatedActivity["subject"],
+    owner: ({
       type: String,
       ref: TYPE_USER
-    } as unknown
-  ] as DepupulatedActivity["users"],
-  state: ({
-    type: Schema.Types.Mixed,
-    required: true
-  } as unknown) as DepupulatedActivity["state"],
-  type: ({
-    type: String,
-    default: TYPE_ACTIVITY
-  } as unknown) as typeof TYPE_ACTIVITY
-});
+    } as unknown) as DepupulatedActivity["owner"],
+    users: [
+      {
+        type: String,
+        ref: TYPE_USER
+      } as unknown
+    ] as DepupulatedActivity["users"],
+    state: ({
+      type: Schema.Types.Mixed,
+      required: true,
+      default: {}
+    } as unknown) as DepupulatedActivity["state"],
+    type: ({
+      type: String,
+      default: TYPE_ACTIVITY
+    } as unknown) as typeof TYPE_ACTIVITY
+  },
+  { minimize: false }
+);
 
 const ActivityModel = model<ActivityDocument>(TYPE_ACTIVITY, activitySchema);
 

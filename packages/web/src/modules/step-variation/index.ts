@@ -1,7 +1,7 @@
 import application from '@application';
 
 application.register(
-  () => import('./step'),
+  () => import('./components/step'),
   module => {
     application.stepModules.registerStep(module.default);
   },

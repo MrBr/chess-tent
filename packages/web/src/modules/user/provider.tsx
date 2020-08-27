@@ -19,7 +19,7 @@ const Provider: ComponentType = ({ children }) => {
     }
   }, [dispatch, response, updateActiveUser]);
 
-  if (!response || (!error && !user)) {
+  if (!user && !error) {
     return <>Loading</>;
   }
 

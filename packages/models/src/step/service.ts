@@ -4,46 +4,123 @@ import { Step, TYPE_STEP } from "./types";
 const isStep = (entity: unknown): entity is Step =>
   Object.getOwnPropertyDescriptor(entity, "type")?.value === TYPE_STEP;
 
-const getPreviousStep = (rootStep: Step, step: Step): Step | null => {
-  let lastStep = null;
-  for (const childStep of rootStep.state.steps) {
-    if (childStep === step) {
+/**
+ * Unfortunately there is no guaranteed that single step will
+ * always have the same reference hence ID must be used to check steps.
+ */
+const isSameStep = (leftStep: Step | null, rightStep: Step | null) => {
+  return leftStep?.id === rightStep?.id;
+};
+
+const getPreviousStep = (parentStep: Step, cursorStep: Step): Step | null => {
+  if (isSameStep(parentStep, cursorStep)) {
+    return null;
+  }
+  let index = 0;
+  while (index < parentStep.state.steps.length) {
+    const childStep = parentStep.state.steps[index];
+    if (isSameStep(childStep, cursorStep)) {
       // Found searched step, returning previous.
       // If the first or the only returning null otherwise returning previous step.
-      return lastStep;
+      const prevStep = parentStep.state.steps[index - 1];
+      return prevStep ? getLastStep(prevStep) : parentStep;
     }
-    const prevStep = getPreviousStep(childStep, step);
+    const prevStep = getPreviousStep(childStep, cursorStep);
     if (prevStep) {
       // Searched step has previous step in its section.
       return prevStep;
     }
+    index += 1;
   }
-  return lastStep;
+  return null;
 };
 
-const getLastStep = (rootStep: Step): Step | null => {
-  return rootStep.state.steps[rootStep.state.steps.length - 1] || null;
+const getNextStep = (parentStep: Step, cursorStep: Step): Step | null => {
+  if (isSameStep(parentStep, cursorStep)) {
+    return parentStep.state.steps[0];
+  }
+  let index = 0;
+  while (index < parentStep.state.steps.length) {
+    const step = parentStep.state.steps[index];
+    if (isSameStep(cursorStep, step)) {
+      return (
+        // Variation, dive in
+        step.state.steps[0] ||
+        // Next in a variation, continue
+        parentStep.state.steps[index + 1]
+      );
+    }
+
+    const nextStep = getNextStep(step, cursorStep);
+    if (nextStep) {
+      return nextStep;
+    } else if (nextStep === undefined) {
+      return parentStep.state.steps[index + 1];
+    }
+    index += 1;
+  }
+  return null;
 };
 
-const isLastStep = (rootStep: Step, step: Step) => {
-  return getLastStep(rootStep) === step;
+/**
+ * Get steps count including itself.
+ * @param step
+ * @param count
+ */
+const getStepsCount = (step: Step) => {
+  let count = 1;
+  step.state.steps.forEach((childStep: Step) => {
+    count += getStepsCount(childStep);
+  });
+  return count;
 };
 
-const getParentStep = (rootStep: Step, step: Step): Step | null => {
-  let parentStep = null;
-  for (const childStep of rootStep.state.steps) {
-    if (childStep === step) {
+const getStepIndex = (
+  parentStep: Step,
+  step: Step,
+  indexSearch = { index: 0, end: false }
+) => {
+  if (isSameStep(parentStep, step)) {
+    indexSearch.index += 1;
+    indexSearch.end = true;
+    return indexSearch.index;
+  }
+  indexSearch.index += 1;
+  for (let i = 0; i < parentStep.state.steps.length; i++) {
+    const childStep = parentStep.state.steps[i];
+    getStepIndex(childStep, step, indexSearch);
+    if (indexSearch.end) {
+      return indexSearch.index;
+    }
+  }
+  return indexSearch.index;
+};
+
+const getLastStep = (parentStep: Step): Step => {
+  const lastStep =
+    parentStep.state.steps[parentStep.state.steps.length - 1] || parentStep;
+  return lastStep === parentStep ? lastStep : getLastStep(lastStep);
+};
+
+const isLastStep = (parentStep: Step, step: Step) => {
+  return isSameStep(getLastStep(parentStep), step);
+};
+
+const getParentStep = (parentStep: Step, step: Step): Step | null => {
+  let closestParentStep = null;
+  for (const childStep of parentStep.state.steps) {
+    if (isSameStep(childStep, step)) {
       // Found searched step, returning previous.
       // If the first or the only returning null otherwise returning previous step.
-      return rootStep;
-    }
-    parentStep = getParentStep(childStep, step);
-    if (parentStep) {
-      // Searched step has previous step in its section.
       return parentStep;
     }
+    closestParentStep = getParentStep(childStep, step);
+    if (closestParentStep) {
+      // Searched step has previous step in its section.
+      return closestParentStep;
+    }
   }
-  return parentStep;
+  return closestParentStep;
 };
 
 const addStep = (parentStep: Step, step: Step): Step => {
@@ -72,9 +149,13 @@ const createStep = <T>(
 
 export {
   isStep,
+  isSameStep,
   createStep,
   addStep,
+  getStepsCount,
+  getStepIndex,
   getLastStep,
+  getNextStep,
   getPreviousStep,
   getParentStep,
   isLastStep

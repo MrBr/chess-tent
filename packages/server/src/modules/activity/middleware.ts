@@ -27,9 +27,6 @@ export const findActivities: MiddlewareFunction = (req, res, next) => {
   service
     .findActivities(res.locals.filters)
     .then(activities => {
-      if (!activities) {
-        throw new ActivityNotFoundError();
-      }
       res.locals.activities = activities;
       next();
     })

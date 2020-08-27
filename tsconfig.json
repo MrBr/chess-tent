@@ -1,15 +1,17 @@
 {
+  "extends": "./tsconfig.build.json",
   "compilerOptions": {
     "target": "es5",
     "allowJs": true,
     "skipLibCheck": true,
-    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "declaration": true,
-    "sourceMap": true
-  },
+    "esModuleInterop": true,
+    "paths": {
+      "@chess-tent/*": ["packages/*/src"]
+    }
+  }
 }

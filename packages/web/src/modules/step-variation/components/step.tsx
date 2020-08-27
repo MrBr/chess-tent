@@ -145,7 +145,21 @@ const Picker: FunctionComponent = () => {
 };
 
 const Playground: StepComponent<VariationStep> = () => {
-  return <>{'Basic step playground'}</>;
+  return (
+    <Container>
+      <Row>
+        <Col>
+          <Chessboard
+            fen={position}
+            onChange={onChangeHandle}
+            onShapesChange={updateShapes}
+            shapes={shapes}
+            footer={footer}
+          />
+        </Col>
+      </Row>
+    </Container>
+  );
 };
 
 const Exercise: StepComponent<VariationStep> = () => {

@@ -21,7 +21,7 @@ export const reducer = (
           ...lesson,
           state: {
             ...lesson.state,
-            activeStep: newActiveStepId,
+            activeStepId: newActiveStepId,
           },
         },
       };

@@ -78,7 +78,7 @@ const getLessonStepIndex = (lesson: Lesson, step: Step) => {
 
 const setActiveStep = (lesson: Lesson, step: Step): Lesson =>
   updateSubjectState(lesson, {
-    activeStep: step
+    activeStepId: step.id
   });
 
 const createLesson = (
@@ -91,7 +91,7 @@ const createLesson = (
   type: TYPE_LESSON,
   owner,
   state: {
-    activeStep,
+    activeStepId: activeStep.id,
     steps: steps
   }
 });

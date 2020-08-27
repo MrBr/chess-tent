@@ -3,7 +3,6 @@ export const lessonSchema = {
   relationships: {
     state: {
       steps: 'steps',
-      activeStep: 'steps',
     },
     owner: 'users',
   },

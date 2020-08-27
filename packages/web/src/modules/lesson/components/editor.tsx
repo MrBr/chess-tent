@@ -8,13 +8,20 @@ const { Container, Row, Col } = ui;
 const { Stepper, StepRenderer } = components;
 const {
   actions: { setLessonActiveStep },
+  selectors: { stepSelector },
 } = state;
-const { useDispatchBatched, useApi, useComponentStateSilent } = hooks;
+const {
+  useSelector,
+  useDispatchBatched,
+  useApi,
+  useComponentStateSilent,
+} = hooks;
 
 const Editor: Components['Editor'] = ({ lesson }) => {
   const componentState = useComponentStateSilent();
   const dispatch = useDispatchBatched();
-  const { steps, activeStep } = lesson.state;
+  const { steps, activeStepId } = lesson.state;
+  const activeStep = useSelector(stepSelector(activeStepId));
   const { fetch: lessonSave, error: lessonSaveError } = useApi(
     requests.lessonSave,
   );

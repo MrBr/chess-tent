@@ -137,14 +137,14 @@ export type State = {
     ) => SetLessonActiveStepAction;
     updateStep: (step: Step, patch: Partial<Step>) => UpdateStepAction;
     updateStepState: (step: Step, state: any) => UpdateStepStateAction;
-    updateActivityState: (
-      activity: Activity<Subject>,
-      state: {},
+    updateActivityState: <T extends Activity>(
+      activity: T,
+      state: Partial<T extends Activity<infer K, infer S> ? S : never>,
     ) => UpdateActivityStateAction;
-    updateActivity: <T extends Subject>(
-      activity: Activity<T>,
-      ppatch: Partial<Activity<T>>,
-    ) => UpdateActivityAction<T>;
+    updateActivity: <T extends Activity>(
+      activity: T,
+      patch: Partial<T>,
+    ) => UpdateActivityAction<T extends Activity<infer S> ? S : never>;
   };
   selectors: {
     lessonSelector: (lessonId: Lesson['id']) => (state: AppState) => Lesson;

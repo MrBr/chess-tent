@@ -10,9 +10,10 @@ import {
 
 const { Container, Row, Col, Button } = ui;
 const { StepRenderer } = components;
-const { useDispatchBatched } = hooks;
+const { useDispatchBatched, useSelector } = hooks;
 const {
   actions: { updateActivityState },
+  selectors: { stepSelector },
 } = state;
 
 const Footer = ({
@@ -41,7 +42,8 @@ const Activity: ActivityComponent<LessonActivity> = ({ activity }) => {
   const dispatch = useDispatchBatched();
   const lesson = activity.subject;
   const activeStep =
-    activity.state.activeStep || activity.subject.state.steps[0];
+    useSelector(stepSelector(activity.state.activeStepId)) ||
+    activity.subject.state.steps[0];
   const activeStepActivityState = activity.state[activeStep.id] || {};
 
   const stepsCount = useMemo(() => getLessonStepsCount(lesson), [lesson]);
@@ -60,13 +62,21 @@ const Activity: ActivityComponent<LessonActivity> = ({ activity }) => {
   const nextActivityStep = useCallback(() => {
     const nextStep = getLessonNextStep(lesson, activeStep);
     nextStep &&
-      dispatch(updateActivityState(activity, { activeStep: nextStep }));
+      dispatch(
+        updateActivityState(activity, {
+          activeStepId: nextStep.id,
+        }),
+      );
   }, [activity, activeStep, dispatch, lesson]);
 
   const prevActivityStep = useCallback(() => {
     const prevStep = getLessonPreviousStep(lesson, activeStep);
     prevStep &&
-      dispatch(updateActivityState(activity, { activeStep: prevStep }));
+      dispatch(
+        updateActivityState(activity, {
+          activeStepId: prevStep.id,
+        }),
+      );
   }, [activity, activeStep, dispatch, lesson]);
 
   return (

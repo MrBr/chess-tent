@@ -10,6 +10,13 @@ export const saveLesson: MiddlewareFunction = (req, res, next) => {
     .catch(next);
 };
 
+export const patchLesson: MiddlewareFunction = (req, res, next) => {
+  service
+    .saveLesson(res.locals.lesson as Lesson)
+    .then(next)
+    .catch(next);
+};
+
 export const getLesson: MiddlewareFunction = (req, res, next) => {
   service
     .getLesson(res.locals.lesson.id as Lesson["id"])

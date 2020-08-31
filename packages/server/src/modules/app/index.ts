@@ -23,6 +23,8 @@ application.service.registerGetRoute = (path, ...middlware) =>
   app.get(path, ...middlware);
 application.service.registerPostRoute = (path, ...middlware) =>
   app.post(path, ...middlware);
+application.service.registerPutRoute = (path, ...middlware) =>
+  app.put(path, ...middlware);
 
 application.start = () => {
   connect();

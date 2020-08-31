@@ -26,6 +26,10 @@ export type Service = {
     path: string,
     ...cb: ((...args: Parameters<RequestHandler>) => void)[]
   ) => void;
+  registerPutRoute: (
+    path: string,
+    ...cb: ((...args: Parameters<RequestHandler>) => void)[]
+  ) => void;
 
   generateApiToken: (user: User) => string;
   verifyToken: (token: string) => Auth["apiTokenPayload"];

@@ -3,7 +3,8 @@ import {
   canEditLesson,
   getLesson,
   saveLesson,
-  findLessons
+  findLessons,
+  patchLesson
 } from "./middleware";
 
 const { identify, sendData, sendStatusOk, toLocals } = middleware;
@@ -14,6 +15,14 @@ application.service.registerPostRoute(
   toLocals("lesson", req => req.body),
   canEditLesson,
   saveLesson,
+  sendStatusOk
+);
+application.service.registerPutRoute(
+  "/lesson/:id",
+  identify,
+  toLocals("lesson", req => req.body),
+  canEditLesson,
+  patchLesson,
   sendStatusOk
 );
 

@@ -13,6 +13,19 @@ export const saveLesson = (lesson: Lesson) =>
     });
   });
 
+export const patchLesson = (lesson: Lesson) =>
+  new Promise((resolve, reject) => {
+    LessonModel.updateOne(
+      { _id: lesson.id },
+      { $set: depopulate(lesson) }
+    ).exec((err, result) => {
+      if (err) {
+        throw err;
+      }
+      resolve();
+    });
+  });
+
 export const getLesson = (lessonId: Lesson["id"]): Promise<Lesson | null> =>
   new Promise((resolve, reject) => {
     LessonModel.findById(lessonId)

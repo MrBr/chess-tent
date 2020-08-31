@@ -12,6 +12,11 @@ const lessonSave = services.createRequest<Lesson, LessonResponse>(
   '/lesson/save',
 );
 
+const lessonPatch = services.createRequest<
+  [Lesson['id'], Partial<Lesson>],
+  LessonResponse
+>('PUT', (id, patch) => ({ url: `/lesson/${id}`, data: patch }));
+
 const lessons = services.createRequest<{ owner: User['id'] }, LessonsResponse>(
   'POST',
   '/lessons',

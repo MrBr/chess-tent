@@ -9,7 +9,7 @@ export type LessonsResponse = DataResponse<Lesson[]>;
 export type ActivityResponse = DataResponse<Activity>;
 export type ActivitiesResponse = DataResponse<Activity[]>;
 
-export type ApiMethods = 'GET' | 'POST';
+export type ApiMethods = 'GET' | 'POST' | 'PUT';
 export interface API {
   basePath: string;
   makeRequest: <T, U>(request: {

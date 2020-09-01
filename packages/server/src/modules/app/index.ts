@@ -4,6 +4,7 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import { errorHandler, sendData, sendStatusOk, toLocals } from "./middleware";
 import cookieParser from "cookie-parser";
+import { generateIndex } from "./service";
 
 const { connect } = db;
 
@@ -25,6 +26,7 @@ application.service.registerPostRoute = (path, ...middlware) =>
   app.post(path, ...middlware);
 application.service.registerPutRoute = (path, ...middlware) =>
   app.put(path, ...middlware);
+application.service.generateIndex = generateIndex;
 
 application.start = () => {
   connect();

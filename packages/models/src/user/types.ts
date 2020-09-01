@@ -5,6 +5,7 @@ export interface User {
   name: string;
   nickname: string;
   email: string;
+  imageUrl: string;
   type: typeof TYPE_USER;
   password: string;
 }
@@ -13,6 +14,7 @@ export interface NormalizedUser {
   id: User["id"];
   type: User["type"];
   name: User["name"];
+  imageUrl: User["imageUrl"];
   nickname: User["nickname"];
   email: User["email"];
   password: User["password"];

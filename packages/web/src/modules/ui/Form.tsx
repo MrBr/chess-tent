@@ -16,6 +16,7 @@ const FormGroup = styled(BFormGroup)({
 const Label = BForm.Label;
 const Input = BForm.Control;
 const Check = BForm.Check;
+const File = BForm.File;
 
 // Form connected components
 const Form: UI['Form'] = props => (
@@ -46,4 +47,4 @@ const FormInput: UI['Form']['Input'] = props => {
 };
 Form.Input = FormInput;
 
-export { Form, Input, ErrorMessage, FormGroup, Label, Check };
+export { Form, Input, ErrorMessage, FormGroup, Label, Check, File };

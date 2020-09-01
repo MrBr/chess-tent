@@ -44,6 +44,7 @@ const application: Application = createNamespace({
   register: register,
   init: init,
   pages,
+  requests,
 }) as Application;
 
 export {

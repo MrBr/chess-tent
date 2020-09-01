@@ -12,7 +12,7 @@ export const saveLesson: MiddlewareFunction = (req, res, next) => {
 
 export const patchLesson: MiddlewareFunction = (req, res, next) => {
   service
-    .saveLesson(res.locals.lesson as Lesson)
+    .patchLesson(res.locals.lesson.id, res.locals.lesson)
     .then(next)
     .catch(next);
 };

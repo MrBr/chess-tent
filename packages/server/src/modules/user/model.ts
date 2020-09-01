@@ -15,6 +15,9 @@ const userSchema = db.createStandardSchema<NormalizedUser>({
     required: true,
     unique: true
   } as unknown) as string,
+  imageUrl: ({
+    type: String
+  } as unknown) as string,
   password: ({
     type: String,
     required: true,

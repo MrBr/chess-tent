@@ -1,4 +1,3 @@
-import application from "@application";
 import { MiddlewareFunction } from "@types";
 import { User } from "@chess-tent/models";
 import * as service from "./service";
@@ -12,6 +11,13 @@ export const addUser: MiddlewareFunction = (req, res, next) => {
       res.locals.user = user;
       next();
     })
+    .catch(next);
+};
+
+export const updateUser: MiddlewareFunction = (req, res, next) => {
+  service
+    .updateUser(res.locals.user.id, res.locals.user)
+    .then(next)
     .catch(next);
 };
 

@@ -11,6 +11,7 @@ import {
 import { ErrorMessageProps, Formik } from 'formik';
 import FormCheck from 'react-bootstrap/FormCheck';
 import FormControl from 'react-bootstrap/FormControl';
+import FormFile from 'react-bootstrap/FormFile';
 
 export type ButtonProps = BButonProps & { onClick?: () => void };
 
@@ -29,6 +30,7 @@ export type UI = {
   Form: typeof Formik & {
     Input: ComponentType<FormControlProps & { name: string }>;
   };
+  File: typeof FormFile;
   Label: ComponentType<FormLabelProps>;
   FormGroup: ComponentType;
   Input: typeof FormControl;

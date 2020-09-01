@@ -6,3 +6,4 @@ application.register(() => import("./db"));
 application.register(() => import("./user"));
 application.register(() => import("./auth"));
 application.register(() => import("./activity"));
+application.register(() => import("./aws"));

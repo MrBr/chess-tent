@@ -18,6 +18,7 @@ export type Auth = {
 };
 
 export type Service = {
+  generateIndex: () => string;
   registerGetRoute: (
     path: string,
     ...cb: ((...args: Parameters<RequestHandler>) => void)[]
@@ -35,6 +36,9 @@ export type Service = {
   verifyToken: (token: string) => Auth["apiTokenPayload"];
 
   getUser: (userId: Partial<User>, projection?: string) => Promise<User | null>;
+
+  generateImgUrl: () => string;
+  fileStorage: AWS.S3;
 };
 
 export type Middleware = {

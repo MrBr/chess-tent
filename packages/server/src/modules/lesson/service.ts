@@ -13,7 +13,7 @@ export const saveLesson = (lesson: Lesson) =>
     });
   });
 
-export const patchLesson = (lesson: Lesson) =>
+export const patchLesson = (lessonId: Lesson["id"], lesson: Partial<Lesson>) =>
   new Promise((resolve, reject) => {
     LessonModel.updateOne(
       { _id: lesson.id },

@@ -4,10 +4,11 @@ import {
   validateUser,
   verifyUser,
   hashPassword,
-  getActiveUser
+  getActiveUser,
+  updateUser
 } from "./middleware";
 
-const { sendData, identify, webLogin, toLocals } = middleware;
+const { sendData, identify, webLogin, toLocals, sendStatusOk } = middleware;
 
 application.service.registerPostRoute(
   "/register",
@@ -31,4 +32,12 @@ application.service.registerGetRoute(
   identify,
   getActiveUser,
   sendData("user")
+);
+
+application.service.registerPutRoute(
+  "/me",
+  identify,
+  toLocals("user", (req, res) => ({ ...req.body, ...res.locals.user })),
+  updateUser,
+  sendStatusOk
 );

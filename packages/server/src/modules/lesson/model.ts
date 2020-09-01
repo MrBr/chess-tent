@@ -28,8 +28,9 @@ const lessonSchema = db.createStandardSchema<DepupulatedLesson>({
 
 const LessonModel = model<LessonDocument>(TYPE_LESSON, lessonSchema);
 
-const depopulate = (lesson: Lesson): DepupulatedLesson => {
-  return { ...lesson, owner: lesson.owner.id };
+const depopulate = (lesson: Partial<Lesson>): DepupulatedLesson => {
+  const owner = lesson.owner?.id;
+  return (owner ? { ...lesson, owner } : lesson) as DepupulatedLesson;
 };
 
 export { lessonSchema, LessonModel, depopulate };

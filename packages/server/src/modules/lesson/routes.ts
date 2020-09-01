@@ -21,6 +21,7 @@ application.service.registerPutRoute(
   "/lesson/:id",
   identify,
   toLocals("lesson", req => req.body),
+  toLocals("lesson.id", req => req.params.id),
   canEditLesson,
   patchLesson,
   sendStatusOk

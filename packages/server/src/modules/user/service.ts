@@ -2,9 +2,10 @@ import { Service } from "@types";
 import { UserModel } from "./model";
 import { User } from "@chess-tent/models";
 import { compare, hash } from "bcrypt";
+import { depopulate } from "../lesson/model";
 
 export const addUser = (user: User) =>
-  new Promise((resolve, reject) => {
+  new Promise(resolve => {
     new UserModel(user).save((err, result) => {
       if (err) {
         throw err;
@@ -13,8 +14,20 @@ export const addUser = (user: User) =>
     });
   });
 
+export const updateUser = (userId: User["id"], user: Partial<User>) =>
+  new Promise(resolve => {
+    UserModel.updateOne({ _id: user.id }, { $set: user }).exec(
+      (err, result) => {
+        if (err) {
+          throw err;
+        }
+        resolve();
+      }
+    );
+  });
+
 export const getUser: Service["getUser"] = (user, projection = "") =>
-  new Promise((resolve, reject) => {
+  new Promise(resolve => {
     UserModel.findOne(
       UserModel.translateAliases(user),
       projection,

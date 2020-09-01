@@ -14,6 +14,12 @@ const login = services.createRequest<
 
 const me = services.createRequest<undefined, UserResponse>('GET', '/me');
 
+const updateMe = services.createRequest<Partial<User>, UserResponse>(
+  'PUT',
+  '/me',
+);
+
 requests.register = register;
 requests.login = login;
 requests.me = me;
+requests.updateMe = updateMe;

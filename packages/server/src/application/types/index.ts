@@ -46,6 +46,7 @@ export type Middleware = {
   errorHandler: ErrorRequestHandler;
   sendData: (localProp: string) => MiddlewareFunction;
   webLogin: (...args: Parameters<RequestHandler>) => void;
+  webLogout: (...args: Parameters<RequestHandler>) => void;
   sendStatusOk: (...args: Parameters<RequestHandler>) => void;
   toLocals: (
     localsKey: string,

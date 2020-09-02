@@ -28,6 +28,7 @@ export type RequestFetch<T, U> = (...args: GenericArguments<T>) => Promise<U>;
 export type Requests = {
   register: RequestFetch<Partial<User>, StatusResponse>;
   login: RequestFetch<Pick<User, 'email' | 'password'>, UserResponse>;
+  logout: RequestFetch<undefined, StatusResponse>;
   me: RequestFetch<undefined, UserResponse>;
   updateMe: RequestFetch<Partial<User>, UserResponse>;
   lesson: RequestFetch<[string], LessonResponse>;

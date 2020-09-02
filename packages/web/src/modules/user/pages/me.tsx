@@ -4,7 +4,7 @@ import { User } from '@chess-tent/models';
 
 const { useActiveUserRecord, useApi } = hooks;
 const { Header, Lessons, Activities } = components;
-const { Container, File } = ui;
+const { Page, File } = ui;
 
 export default () => {
   const [user] = useActiveUserRecord() as [User, never, never];
@@ -23,31 +23,31 @@ export default () => {
         });
       }
     },
-    [],
+    [signImageApi, user.id],
   );
 
   useEffect(() => {
     if (signImageApi.response?.data && file) {
       uploadImageApi.fetch(signImageApi.response.data, file);
     }
-  }, [signImageApi.response, file]);
+  }, [signImageApi.response, file, uploadImageApi.fetch]);
 
   useEffect(() => {
     if (uploadImageApi.response && signImageApi.response) {
       updateMeApi.fetch({ imageUrl: uploadImageApi.response });
     }
-  }, [uploadImageApi.response, signImageApi.response]);
+  }, [uploadImageApi.response, signImageApi.response, updateMeApi.fetch]);
 
   return (
-    <Container>
+    <Page>
       <Header />
       <File>
         <File.Input onChange={fileUploadHandle} />
       </File>
-      <img src={user.imageUrl} alt="Profile image" width={100} />
+      <img src={user.imageUrl} alt="" width={100} />
       {JSON.stringify(user)}
       <Lessons owner={user} />
       <Activities owner={user} />
-    </Container>
+    </Page>
   );
 };

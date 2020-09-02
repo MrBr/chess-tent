@@ -8,7 +8,14 @@ import {
   updateUser
 } from "./middleware";
 
-const { sendData, identify, webLogin, toLocals, sendStatusOk } = middleware;
+const {
+  sendData,
+  identify,
+  webLogin,
+  webLogout,
+  toLocals,
+  sendStatusOk
+} = middleware;
 
 application.service.registerPostRoute(
   "/register",
@@ -26,6 +33,8 @@ application.service.registerPostRoute(
   webLogin,
   sendData("user")
 );
+
+application.service.registerGetRoute("/logout", webLogout, sendStatusOk);
 
 application.service.registerGetRoute(
   "/me",

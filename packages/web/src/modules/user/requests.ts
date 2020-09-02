@@ -12,6 +12,11 @@ const login = services.createRequest<
   UserResponse
 >('POST', '/login');
 
+const logout = services.createRequest<undefined, StatusResponse>(
+  'GET',
+  '/logout',
+);
+
 const me = services.createRequest<undefined, UserResponse>('GET', '/me');
 
 const updateMe = services.createRequest<Partial<User>, UserResponse>(
@@ -21,5 +26,6 @@ const updateMe = services.createRequest<Partial<User>, UserResponse>(
 
 requests.register = register;
 requests.login = login;
+requests.logout = logout;
 requests.me = me;
 requests.updateMe = updateMe;

@@ -4,7 +4,7 @@ import Register from './pages/register';
 import Login from './pages/login';
 import Me from './pages/me';
 
-const { Route } = components;
+const { Route, Authorized } = components;
 
 application.services.addRoute(() => (
   <Route exact path="/register">
@@ -18,7 +18,9 @@ application.services.addRoute(() => (
   </Route>
 ));
 application.services.addRoute(() => (
-  <Route exact path="/me">
-    <Me />
-  </Route>
+  <Authorized>
+    <Route exact path="/me">
+      <Me />
+    </Route>
+  </Authorized>
 ));

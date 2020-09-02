@@ -133,6 +133,24 @@ const addStep = (parentStep: Step, step: Step): Step => {
   };
 };
 
+const addStepRightToSame = (step: Step, newStep: Step) => {
+  const newStepIndex = step.state.steps.findIndex(
+    childStep => childStep.stepType !== newStep.stepType
+  );
+  const steps = [...step.state.steps];
+
+  newStepIndex >= 0
+    ? steps.splice(newStepIndex, 0, newStep)
+    : steps.push(newStep);
+  return {
+    ...step,
+    state: {
+      ...step.state,
+      steps
+    }
+  };
+};
+
 const createStep = <T>(
   id: string,
   stepType: T extends Step<infer U, infer K> ? K : never,
@@ -158,5 +176,6 @@ export {
   getNextStep,
   getPreviousStep,
   getParentStep,
-  isLastStep
+  isLastStep,
+  addStepRightToSame
 };

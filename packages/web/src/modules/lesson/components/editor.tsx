@@ -4,7 +4,7 @@ import { Components } from '@types';
 import { debounce } from 'lodash';
 import { state, hooks, components, ui, requests } from '@application';
 
-const { Container, Row, Col } = ui;
+const { Container, Row, Col, Headline2 } = ui;
 const { Stepper, StepRenderer } = components;
 const {
   actions: { setLessonActiveStep },
@@ -45,30 +45,28 @@ const Editor: Components['Editor'] = ({ lesson }) => {
   }, [lessonSaveError]);
 
   return (
-    <>
-      <Container fluid>
-        <Row noGutters>
-          <Col>
-            <StepRenderer<'Editor'>
-              step={activeStep}
-              component="Editor"
-              activeStep={activeStep}
-              setActiveStep={setActiveStepHandler}
-              lesson={lesson}
-            />
-          </Col>
-          <Col sm={3}>
-            <h1>Lesson</h1>
-            <Stepper
-              lesson={lesson}
-              steps={steps}
-              activeStep={activeStep}
-              setActiveStep={setActiveStepHandler}
-            />
-          </Col>
-        </Row>
-      </Container>
-    </>
+    <Container fluid className="px-0 h-100">
+      <Row noGutters className="h-100">
+        <Col>
+          <StepRenderer<'Editor'>
+            step={activeStep}
+            component="Editor"
+            activeStep={activeStep}
+            setActiveStep={setActiveStepHandler}
+            lesson={lesson}
+          />
+        </Col>
+        <Col sm={4}>
+          <Stepper
+            lesson={lesson}
+            header={<Headline2>Lesson</Headline2>}
+            steps={steps}
+            activeStep={activeStep}
+            setActiveStep={setActiveStepHandler}
+          />
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

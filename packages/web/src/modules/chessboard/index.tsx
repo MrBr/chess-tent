@@ -1,7 +1,7 @@
 import application from '@application';
 
 import './style.css';
-import './theme.css';
+import './themes/default.css';
 
 application.register(
   () => import('./board'),

@@ -1,8 +1,14 @@
-import { ComponentType, ReactElement, ReactNode } from 'react';
+import {
+  ComponentType,
+  ReactElement,
+  ReactEventHandler,
+  ReactNode,
+} from 'react';
 import {
   ColProps,
   ContainerProps,
   FormControlProps,
+  FormGroupProps,
   FormLabelProps,
   ModalProps as BModalProps,
   RowProps,
@@ -41,28 +47,34 @@ export declare interface TextProps {
   fontSize?: FontSize;
 }
 
+type UIComponent<T = {}> = ComponentType<
+  T & { className?: string; defaultProps?: Partial<T & { className: string }> }
+>;
+
 export type UI = {
   Form: typeof Formik & {
-    Input: ComponentType<FormControlProps & { name: string }>;
+    Input: UIComponent<FormControlProps & { name: string }>;
   };
-  Text: ComponentType<TextProps>;
-  Display1: ComponentType;
-  Display2: ComponentType;
-  Headline1: ComponentType;
-  Headline2: ComponentType;
-  Headline3: ComponentType;
-  Headline4: ComponentType;
+  Text: UIComponent<TextProps>;
+  Display1: UIComponent;
+  Display2: UIComponent;
+  Headline1: UIComponent;
+  Headline2: UIComponent;
+  Headline3: UIComponent;
+  Headline4: UIComponent;
+  Headline5: UIComponent;
+  Headline6: UIComponent;
   File: typeof FormFile;
-  Label: ComponentType<FormLabelProps>;
-  FormGroup: ComponentType;
+  Label: UIComponent<FormLabelProps>;
+  FormGroup: UIComponent<FormGroupProps>;
   Input: typeof FormControl;
   Check: typeof FormCheck;
-  Container: ComponentType<ContainerProps>;
-  Page: ComponentType<ContainerProps>;
-  Row: ComponentType<RowProps>;
-  Col: ComponentType<ColProps>;
-  ErrorMessage: ComponentType<ErrorMessageProps>;
-  Button: ComponentType<ButtonProps>;
-  Modal: ComponentType<ModalProps>;
-  Confirm: ComponentType<ConfirmProps>;
+  Container: UIComponent<ContainerProps & { onClick?: ReactEventHandler }>;
+  Page: UIComponent<ContainerProps>;
+  Row: UIComponent<RowProps>;
+  Col: UIComponent<ColProps>;
+  ErrorMessage: UIComponent<ErrorMessageProps>;
+  Button: UIComponent<ButtonProps>;
+  Modal: UIComponent<ModalProps>;
+  Confirm: UIComponent<ConfirmProps>;
 };

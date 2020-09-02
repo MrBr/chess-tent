@@ -15,6 +15,19 @@ const buttonPadding = (size: ButtonProps['size']) => {
   }
 };
 
+const buttonTextSize = (size: ButtonProps['size']) => {
+  switch (size) {
+    case 'extra-small':
+      return '0.75em';
+    case 'small':
+      return '0.875em';
+    case 'large':
+      return '1.4375em';
+    default:
+      return '1em';
+  }
+};
+
 const buttonBackground = (variant: ButtonProps['variant']) => {
   switch (variant) {
     case 'danger':
@@ -27,6 +40,7 @@ const buttonBackground = (variant: ButtonProps['variant']) => {
       return 'linear-gradient(90deg, #5AD9AB 0%, #26D95C 100%)';
   }
 };
+
 const buttonTextColor = (variant: ButtonProps['variant']) => {
   switch (variant) {
     case 'danger':
@@ -47,6 +61,7 @@ const buttonVariantEnhancer = (props: ButtonProps) => ({
 
 const buttonSizeEnhancer = (props: ButtonProps) => ({
   padding: buttonPadding(props.size),
+  fontSize: buttonTextSize(props.size),
   borderRadius: getBorderRadiusSize(
     props.size as BorderRadiusProps['borderRadius'],
   ),

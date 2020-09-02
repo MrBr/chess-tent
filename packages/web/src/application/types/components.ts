@@ -1,4 +1,10 @@
-import { Component, ReactElement, ReactNode, RefObject } from 'react';
+import {
+  Component,
+  FunctionComponent,
+  ReactElement,
+  ReactNode,
+  RefObject,
+} from 'react';
 import { FEN, Key, Piece } from '@chess-tent/chessground/dist/types';
 import { DrawCurrent, DrawShape } from '@chess-tent/chessground/dist/draw';
 import { Api } from '@chess-tent/chessground/dist/api';
@@ -15,8 +21,12 @@ export interface ChessboardProps {
   footer?: ReactNode;
   onReset?: Function;
   evaluate?: boolean;
+  width?: string | number;
+  height?: string | number;
   // Chessground proxy props
   viewOnly?: boolean;
+  selectablePieces?: boolean;
+  resizable?: boolean;
   fen: FEN;
   animation?: boolean;
   onChange?: (position: FEN, lastMove?: Move, piece?: Piece) => void;
@@ -48,8 +58,23 @@ export interface ChessboardInterface
 export type StepperProps = {
   steps: Step[];
   className?: string;
-  onStepClick?: (step: Step) => void;
+  header?: ReactElement;
 } & StepSystemProps;
+
+export type StepToolbox = FunctionComponent<{
+  active: boolean;
+  addStepHandler?: () => void;
+  addExerciseHandler?: () => void;
+  textChangeHandler?: (text: string) => void;
+  text?: string;
+}>;
+
+export type StepTag = FunctionComponent<{
+  children: ReactNode;
+  active: boolean;
+  step: Step;
+  className?: string;
+}>;
 
 export interface ActionProps {
   onClick?: () => void;

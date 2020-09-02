@@ -10,7 +10,7 @@ import { UI } from '@types';
 // Components connected to the Form, those can't be used without Form.
 
 // Standalone components
-const FormGroup = styled(BFormGroup)({
+const FormGroup = styled<UI['FormGroup']>(BFormGroup)({
   position: 'relative',
 });
 const Label = BForm.Label;

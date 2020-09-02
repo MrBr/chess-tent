@@ -30,12 +30,14 @@ export default () => {
     if (signImageApi.response?.data && file) {
       uploadImageApi.fetch(signImageApi.response.data, file);
     }
+    // eslint-disable-next-line
   }, [signImageApi.response, file, uploadImageApi.fetch]);
 
   useEffect(() => {
     if (uploadImageApi.response && signImageApi.response) {
       updateMeApi.fetch({ imageUrl: uploadImageApi.response });
     }
+    // eslint-disable-next-line
   }, [uploadImageApi.response, signImageApi.response, updateMeApi.fetch]);
 
   return (

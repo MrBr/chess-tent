@@ -19,8 +19,12 @@ import {
 
 const { Container, Col, Row } = ui;
 const { getPiece } = services;
-const { useDispatchBatched } = hooks;
-const { Chessboard, Action, Stepper } = components;
+const {
+  useDispatchBatched,
+  useAddDescriptionStep,
+  useUpdateStepDescriptionDebounced,
+} = hooks;
+const { Chessboard, StepTag, StepToolbox, Stepper } = components;
 const {
   actions: { updateStepState, updateEntities, setLessonActiveStep },
 } = state;
@@ -135,18 +139,12 @@ const Editor: MoveModule['Editor'] = ({ step, lesson }) => {
   );
 
   return (
-    <Container>
-      <Row>
-        <Col>
-          <Chessboard
-            fen={position}
-            onChange={onChangeHandle}
-            onShapesChange={updateShapes}
-            shapes={shapes}
-          />
-        </Col>
-      </Row>
-    </Container>
+    <Chessboard
+      fen={position}
+      onChange={onChangeHandle}
+      onShapesChange={updateShapes}
+      shapes={shapes}
+    />
   );
 };
 
@@ -158,51 +156,59 @@ const Playground: MoveModule['Playground'] = ({ step, footer }) => {
   const {
     state: { position, shapes },
   } = step;
-  return (
-    <Container>
-      <Row>
-        <Col>
-          <Chessboard fen={position} shapes={shapes} footer={footer} />
-        </Col>
-      </Row>
-    </Container>
-  );
+  return <Chessboard fen={position} shapes={shapes} footer={footer} />;
 };
 
 const Exercise: MoveModule['Exercise'] = () => {
   return <>{'Move'}</>;
 };
 
-const ActionsComponent: MoveModule['Actions'] = ({
+const StepperStep: MoveModule['StepperStep'] = ({
   step,
   setActiveStep,
+  activeStep,
+  lesson,
   ...props
 }) => {
-  // const updateMoveDebounced = useCallback(
-  //     _.debounce((description: string) => {
-  //         dispatch(updateStepState(step, { description }));
-  //     }, 500),
-  //     [dispatch],
-  // );
-  //
-  // const updateMove = useCallback(
-  //     e => {
-  //         updateMoveDebounced(e.target.value);
-  //     },
-  //     [updateMoveDebounced],
-  // );
+  const updateDescriptionDebounced = useUpdateStepDescriptionDebounced(step);
+  const addDescriptionStep = useAddDescriptionStep(
+    lesson,
+    step,
+    step.state.position,
+  );
+  const handleStepClick = useCallback(
+    event => {
+      event.stopPropagation();
+      activeStep !== step && setActiveStep(step);
+    },
+    [step, activeStep, setActiveStep],
+  );
 
   return (
-    <>
-      {step.state.move && (
-        <Action onClick={() => setActiveStep(step)}>{step.state.move}</Action>
-      )}
+    <Container onClick={handleStepClick}>
+      <Row>
+        <Col className="col-auto">
+          <StepTag step={step} active={activeStep === step}>
+            {step.state.move}
+          </StepTag>
+        </Col>
+        <Col>
+          <StepToolbox
+            text={step.state.description}
+            active={activeStep === step}
+            textChangeHandler={updateDescriptionDebounced}
+            addStepHandler={addDescriptionStep}
+          />
+        </Col>
+      </Row>
       <Stepper
         {...props}
+        activeStep={activeStep}
         steps={step.state.steps}
         setActiveStep={setActiveStep}
+        lesson={lesson}
       />
-    </>
+    </Container>
   );
 };
 
@@ -211,7 +217,7 @@ const Module: MoveModule = {
   Picker,
   Playground,
   Exercise,
-  Actions: ActionsComponent,
+  StepperStep,
   createStep,
   getEndSetup,
   stepType,

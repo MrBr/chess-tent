@@ -11,8 +11,12 @@ import { hooks, components, state, stepModules, ui } from '@application';
 import Footer from './footer';
 
 const { Container, Col, Row } = ui;
-const { useDispatchBatched } = hooks;
-const { Chessboard, Stepper } = components;
+const {
+  useDispatchBatched,
+  useAddDescriptionStep,
+  useUpdateStepDescriptionDebounced,
+} = hooks;
+const { Chessboard, Stepper, StepTag, StepToolbox } = components;
 const {
   actions: { updateStepState, setLessonActiveStep, updateEntities },
 } = state;
@@ -119,24 +123,15 @@ const Editor: VariationModule['Editor'] = ({ step, lesson }) => {
   );
 
   return (
-    <Container>
-      <Row>
-        <Col>
-          <Chessboard
-            fen={position}
-            onChange={onChangeHandle}
-            onShapesChange={updateShapes}
-            shapes={shapes}
-            footer={
-              <Footer
-                toggleEditingMode={toggleEditingMode}
-                editing={!!editing}
-              />
-            }
-          />
-        </Col>
-      </Row>
-    </Container>
+    <Chessboard
+      fen={position}
+      onChange={onChangeHandle}
+      onShapesChange={updateShapes}
+      shapes={shapes}
+      footer={
+        <Footer toggleEditingMode={toggleEditingMode} editing={!!editing} />
+      }
+    />
   );
 };
 
@@ -148,58 +143,59 @@ const Playground: VariationModule['Playground'] = ({ step, footer }) => {
   const {
     state: { position, shapes },
   } = step;
-  return (
-    <Container>
-      <Row>
-        <Col>
-          <Chessboard fen={position} shapes={shapes} footer={footer} />
-        </Col>
-      </Row>
-    </Container>
-  );
+  return <Chessboard fen={position} shapes={shapes} footer={footer} />;
 };
 
 const Exercise: VariationModule['Exercise'] = () => {
   return <>{'Variation'}</>;
 };
 
-const ActionsComponent: VariationModule['Actions'] = ({
+const StepperStep: VariationModule['StepperStep'] = ({
   step,
   setActiveStep,
+  activeStep,
   lesson,
   ...props
 }) => {
-  const dispatch = useDispatchBatched();
+  const updateDescriptionDebounced = useUpdateStepDescriptionDebounced(step);
+  const addDescriptionStep = useAddDescriptionStep(
+    lesson,
+    step,
+    step.state.position,
+  );
+  const handleStepClick = useCallback(
+    event => {
+      event.stopPropagation();
+      activeStep !== step && setActiveStep(step);
+    },
+    [step, activeStep, setActiveStep],
+  );
+
   return (
-    <>
-      <div onClick={() => setActiveStep(step)}>FEN</div>
-      <div
-        onClick={() => {
-          const newDescriptionStep = stepModules.createStep(
-            'description',
-            step.state.position,
-          );
-          dispatch(
-            updateEntities({
-              ...step,
-              state: {
-                ...step.state,
-                steps: [newDescriptionStep, ...step.state.steps],
-              },
-            }),
-            setLessonActiveStep(lesson, newDescriptionStep),
-          );
-        }}
-      >
-        Add step
-      </div>
+    <Container onClick={handleStepClick}>
+      <Row>
+        <Col className="col-auto">
+          <StepTag step={step} active={activeStep === step}>
+            Position
+          </StepTag>
+        </Col>
+        <Col>
+          <StepToolbox
+            text={step.state.description}
+            active={activeStep === step}
+            textChangeHandler={updateDescriptionDebounced}
+            addStepHandler={addDescriptionStep}
+          />
+        </Col>
+      </Row>
       <Stepper
         {...props}
+        activeStep={activeStep}
         steps={step.state.steps}
         setActiveStep={setActiveStep}
         lesson={lesson}
       />
-    </>
+    </Container>
   );
 };
 
@@ -208,7 +204,7 @@ const Module: VariationModule = {
   Picker,
   Playground,
   Exercise,
-  Actions: ActionsComponent,
+  StepperStep,
   createStep,
   getEndSetup,
   stepType,

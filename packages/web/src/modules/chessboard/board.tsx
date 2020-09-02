@@ -7,7 +7,7 @@ import {
   ChessboardInterface,
 } from '@types';
 
-import React, { Component, RefObject } from 'react';
+import React, { Component, FunctionComponent, RefObject } from 'react';
 import styled from '@emotion/styled';
 import { Chessground } from '@chess-tent/chessground';
 import _ from 'lodash';
@@ -52,6 +52,8 @@ type ChessgroundMappedPropsType = Record<
     | 'validateMove'
     | 'validateDrawable'
     | 'evaluate'
+    | 'width'
+    | 'height'
   >,
   string
 >;
@@ -60,6 +62,8 @@ const ChessgroundMappedProps: ChessgroundMappedPropsType = {
   viewOnly: 'viewOnly',
   fen: 'fen',
   shapes: 'drawable.shapes',
+  selectablePieces: 'selectable.enabled',
+  resizable: 'resizable',
   eraseDrawableOnClick: 'drawable.eraseOnClick',
   animation: 'animation.enabled',
 };
@@ -71,13 +75,46 @@ const BoardHeader = styled.div({
   alignItems: 'center',
 });
 
-const BoardOptions = styled.div({
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-});
+const BoardOptions = styled.div<{
+  width: string | number;
+}>(
+  {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    maxWidth: 720,
+    margin: 'auto',
+  },
+  ({ width }) => ({ width }),
+);
 
-const Board = styled.div({});
+const BoardContainer = styled<
+  FunctionComponent<{
+    width: string | number;
+    height: string | number;
+    className?: string;
+    boardRef: RefObject<any>;
+  }>
+>(props => (
+  <div className={props.className}>
+    <div ref={props.boardRef} className="board" />
+  </div>
+))(({ width, height }) => ({
+  '& > .board': {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translateX(-50%) translateY(-50%)',
+    width: '100%',
+    height: '100%',
+    maxWidth: 720,
+    maxHeight: 720,
+  },
+  width: width,
+  paddingBottom: height,
+  position: 'relative',
+  margin: 'auto',
+}));
 
 class Chessboard extends Component<ChessboardProps, ChessboardState>
   implements ChessboardInterface {
@@ -91,9 +128,13 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
     viewOnly: false,
     fen: START_FEN,
     animation: false,
+    resizable: true,
+    selectablePieces: false,
     eraseDrawableOnClick: false,
     onChange: () => {},
     validateMove: () => true,
+    width: '70%',
+    height: '70%',
   };
 
   componentDidMount() {
@@ -103,6 +144,8 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
       viewOnly,
       shapes,
       eraseDrawableOnClick,
+      selectablePieces,
+      resizable,
     } = this.props;
 
     if (!this.boardHost.current) {
@@ -112,6 +155,8 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
     this.api = Chessground(this.boardHost.current, {
       viewOnly,
       fen,
+      resizable,
+      selectable: { enabled: selectablePieces },
       animation: {
         enabled: animation,
         duration: 0,
@@ -238,7 +283,7 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
   };
 
   render() {
-    const { header, fen, evaluate, footer } = this.props;
+    const { header, fen, evaluate, footer, width, height } = this.props;
     const { renderPrompt } = this.state;
     return (
       <>
@@ -249,11 +294,15 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
             onBestMoveChange={console.log}
             onEvaluationChange={console.log}
           />
-        )}{' '}
+        )}
         <BoardHeader>{header}</BoardHeader>
-        <Board id="board" ref={this.boardHost} />
-        <BoardOptions>{footer}</BoardOptions>
-        <SparePieces onDragStart={this.onSparePieceDrag}></SparePieces>
+        <BoardContainer
+          width={width as string}
+          height={height as string}
+          boardRef={this.boardHost}
+        />
+        <BoardOptions width={width as string}>{footer}</BoardOptions>
+        <SparePieces onDragStart={this.onSparePieceDrag} />
         <Modal
           container={this.boardHost}
           show={!!renderPrompt}

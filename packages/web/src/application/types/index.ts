@@ -41,10 +41,11 @@ import {
   StepModuleComponentKey,
 } from './step';
 import {
-  ActionProps,
   AuthorizedProps,
   ChessboardInterface,
   StepperProps,
+  StepTag,
+  StepToolbox,
 } from './components';
 import { ClassComponent, GenericArguments } from './_helpers';
 import { UI } from './ui';
@@ -65,8 +66,17 @@ export type RecordHookReturn<T extends RecordValue> = [
   (value: T, meta?: {}) => void,
   () => void,
 ];
+
 export type Hooks = {
   useComponentStateSilent: () => { mounted: boolean };
+  useAddDescriptionStep: (
+    lesson: Lesson,
+    step: Step,
+    position: FEN,
+  ) => () => void;
+  useUpdateStepDescriptionDebounced: (
+    step: Step,
+  ) => (description: string) => void;
   useDispatchBatched: () => (...args: ReduxAction[]) => BatchAction;
   useDispatch: typeof useDispatch;
   useSelector: typeof useSelector;
@@ -203,7 +213,8 @@ export type Components = {
   Header: ComponentType;
   Chessboard: ClassComponent<ChessboardInterface>;
   Stepper: FunctionComponent<StepperProps>;
-  Action: FunctionComponent<ActionProps>;
+  StepToolbox: StepToolbox;
+  StepTag: StepTag;
   Router: ComponentType;
   Redirect: ComponentType<RedirectProps>;
   Route: ComponentType<RouteProps>;

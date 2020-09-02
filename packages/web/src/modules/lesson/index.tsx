@@ -21,7 +21,6 @@ application.register(
   () => import('./components/stepper'),
   module => {
     application.components.Stepper = module.Stepper;
-    application.components.Action = module.Action;
   },
 );
 application.register(

@@ -41,11 +41,23 @@ const Text = styled<FunctionComponent<TextProps>>(
   textDynamicStyle,
 );
 
-const Display1 = styled.p(headingStyle, { fontSize: '5.653em' });
-const Display2 = styled.p(headingStyle, { fontSize: '3.998em' });
-const Headline1 = styled.h1(headingStyle, { fontSize: '2.827em' });
-const Headline2 = styled.h2(headingStyle, { fontSize: '1.999em' });
-const Headline3 = styled.h3(headingStyle, { fontSize: '1.414em' });
-const Headline4 = styled.h4(headingStyle, { fontSize: '1.125em' });
+const Display1 = styled.p(headingStyle, { fontSize: '5.653em' }); // 90
+const Display2 = styled.p(headingStyle, { fontSize: '3.998em' }); // 64
+const Headline1 = styled.h1(headingStyle, { fontSize: '2.827em' }); // 45
+const Headline2 = styled.h2(headingStyle, { fontSize: '1.999em' }); // 32
+const Headline3 = styled.h3(headingStyle, { fontSize: '1.444em' }); // 23
+const Headline4 = styled.h4(headingStyle, { fontSize: '1.125em' }); // 18
+const Headline5 = styled.h4(headingStyle, { fontSize: '1em' }); // 16
+const Headline6 = styled.h4(headingStyle, { fontSize: '0.875em' }); // 14
 
-export { Text, Display1, Display2, Headline1, Headline2, Headline3, Headline4 };
+export {
+  Text,
+  Display1,
+  Display2,
+  Headline1,
+  Headline2,
+  Headline3,
+  Headline4,
+  Headline5,
+  Headline6,
+};

@@ -10,8 +10,11 @@ import {
   stepSchema,
   getStepModule,
 } from './model';
+import StepTag from './components/step-tag';
+import StepToolbox from './components/step-toolbox';
 
 application.register(() => import('./register'));
+application.register(() => import('./hooks'));
 
 application.state.actions.updateStep = updateStepAction;
 application.model.stepSchema = stepSchema;
@@ -22,4 +25,7 @@ application.stepModules.getStepModule = getStepModule;
 application.stepModules.getStepEndSetup = getStepModuleStepEndSetup;
 application.stepModules.createStep = createStepModuleStep;
 application.stepModules.registerStep = registerStep;
+application.components.StepRenderer = StepComponentRenderer;
+application.components.StepTag = StepTag;
+application.components.StepToolbox = StepToolbox;
 application.components.StepRenderer = StepComponentRenderer;

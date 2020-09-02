@@ -22,6 +22,8 @@ import {
   Headline2,
   Headline3,
   Headline4,
+  Headline5,
+  Headline6,
   Text,
 } from './Text';
 
@@ -48,4 +50,6 @@ application.ui.Headline1 = Headline1;
 application.ui.Headline2 = Headline2;
 application.ui.Headline3 = Headline3;
 application.ui.Headline4 = Headline4;
+application.ui.Headline5 = Headline5;
+application.ui.Headline6 = Headline6;
 application.ui.Text = Text;

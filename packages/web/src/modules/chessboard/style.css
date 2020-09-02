@@ -10,8 +10,6 @@ html, body, #root {
  */
 
 .cg-wrap {
-    width: 320px;
-    height: 320px;
     position: relative;
     display: block;
 }

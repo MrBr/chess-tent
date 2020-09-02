@@ -24,7 +24,7 @@ export type StepModuleComponentKey =
   | 'Editor'
   | 'Picker'
   | 'Playground'
-  | 'Actions'
+  | 'StepperStep'
   | 'Exercise';
 
 export type StepModule<
@@ -45,7 +45,7 @@ export type StepModule<
     }
   >;
   Exercise: StepComponent<T>;
-  Actions: StepComponent<T>;
+  StepperStep: StepComponent<T>;
   stepType: K;
   createStep: (
     id: string,

@@ -1,5 +1,5 @@
 import { Step } from '@chess-tent/models';
-import { FEN, Move, Shape } from './chess';
+import { FEN, Move, Piece, Shape } from './chess';
 import { StepModule } from './step';
 
 // Move
@@ -9,6 +9,8 @@ export type MoveStepState = {
   description?: string;
   move?: Move;
   steps: Step[];
+  moveIndex: number;
+  movedPiece?: Piece;
 };
 export type MoveStep = Step<MoveStepState, 'move'>;
 export type MoveModule = StepModule<MoveStep, 'move'>;
@@ -20,6 +22,7 @@ export type VariationStepState = {
   description?: string;
   steps: Step[];
   editing?: boolean;
+  moveIndex: number;
 };
 export type VariationStep = Step<VariationStepState, 'variation'>;
 export type VariationModule = StepModule<VariationStep, 'variation'>;

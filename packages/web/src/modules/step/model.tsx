@@ -1,5 +1,5 @@
 import React, { ComponentType } from 'react';
-import { Step } from '@chess-tent/models';
+import { Step, StepType } from '@chess-tent/models';
 import { Components, FEN, Steps } from '@types';
 import { utils, stepModules } from '@application';
 
@@ -13,6 +13,13 @@ const createStepModuleStep = <T extends Steps>(
     initialPosition,
     initialState,
   ) as unknown) as T;
+};
+
+const isStepType = <T extends Steps>(
+  step: Step,
+  stepType: StepType,
+): step is T => {
+  return step.stepType === stepType;
 };
 
 const StepComponentRenderer: Components['StepRenderer'] = ({
@@ -38,4 +45,4 @@ export const stepSchema = {
   },
 };
 
-export { createStepModuleStep, StepComponentRenderer };
+export { createStepModuleStep, StepComponentRenderer, isStepType };

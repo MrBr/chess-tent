@@ -198,6 +198,7 @@ export type Services = {
   createRecordHook: <T extends Entity>(
     recordKey: string,
   ) => () => RecordHookReturn<T>;
+  isStepType: <T extends Steps>(step: Step, stepType: StepType) => step is T;
   createStep: <T extends Steps>(
     stepType: T extends Step<infer U, infer K> ? K : never,
     initialPosition: FEN,

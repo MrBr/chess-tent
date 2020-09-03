@@ -50,7 +50,7 @@ const Editor: DescriptionModule['Editor'] = ({
   );
 
   const parentStep = getLessonParentStep(lesson, step) as VariationStep;
-  const ParentEditor = stepModules.variation.Editor;
+  const ParentEditor = stepModules[parentStep.stepType].Editor;
 
   return (
     <ParentEditor
@@ -59,7 +59,7 @@ const Editor: DescriptionModule['Editor'] = ({
       step={parentStep}
       Chessboard={props => (
         <Chessboard
-          fen={props.fen}
+          {...props}
           shapes={step.state.shapes}
           onShapesChange={updateShapes}
         />

@@ -6,6 +6,7 @@ import {
   isLastStep,
   addStep,
   Lesson,
+  getLessonPreviousStep,
 } from '@chess-tent/models';
 import { FEN, Move, MoveModule, MoveStep, Piece, VariationStep } from '@types';
 import { services, hooks, components, state, ui } from '@application';
@@ -33,6 +34,7 @@ const createStep = (
     shapes: [],
     steps: [],
     position: prevPosition,
+    moveIndex: 1,
     ...(initialState || {}),
   });
 
@@ -49,19 +51,40 @@ const boardChange = (
   if (!newMove || !movedPiece) {
     return [];
   }
+
   if (!move) {
+    // Resolve move index
+    const prevStep = getLessonPreviousStep(lesson, step);
+    let moveIndex;
+    if (services.isStepType<VariationStep>(prevStep, 'variation')) {
+      moveIndex = prevStep.state.moveIndex;
+    } else if (services.isStepType<MoveStep>(prevStep, 'move')) {
+      moveIndex =
+        movedPiece.color === 'white'
+          ? prevStep.state.moveIndex + 1
+          : prevStep.state.moveIndex;
+    }
+
     return [
       updateStepState(step, {
         position: newPosition,
         move: newMove,
+        moveIndex,
+        movedPiece,
       }),
     ];
   }
 
-  const parentStep = getLessonParentStep(lesson, step) as MoveStep;
+  const moveIndex =
+    movedPiece.color === 'white'
+      ? step.state.moveIndex + 1
+      : step.state.moveIndex;
+  const parentStep = getLessonParentStep(lesson, step) as VariationStep;
   const previousPiece = getPiece(position, move[1]) as Piece;
   const newMoveStep = services.createStep<MoveStep>('move', newPosition, {
     move: newMove,
+    moveIndex: moveIndex,
+    movedPiece,
   });
 
   if (movedPiece.color === previousPiece.color) {
@@ -71,6 +94,7 @@ const boardChange = (
       newPosition,
       {
         editing: true,
+        moveIndex,
       },
     );
     return [
@@ -79,13 +103,14 @@ const boardChange = (
     ];
   }
 
-  if (!isLastStep(parentStep, step)) {
+  if (!isLastStep(parentStep, step, false)) {
     // New variation
     const newVariationStep = services.createStep<VariationStep>(
       'variation',
       newPosition,
       {
         steps: [newMoveStep],
+        moveIndex,
       },
     );
     return [
@@ -165,6 +190,9 @@ const StepperStep: MoveModule['StepperStep'] = ({
       <Row noGutters>
         <Col className="col-auto">
           <StepTag step={step} active={activeStep === step}>
+            {step.state.movedPiece?.color === 'white'
+              ? step.state.moveIndex
+              : '..'}
             {step.state.move}
           </StepTag>
         </Col>

@@ -39,6 +39,7 @@ const createStep = (
     shapes: [],
     steps: [],
     position: prevPosition,
+    moveIndex: 1,
     ...(initialState || {}),
   });
 
@@ -64,9 +65,11 @@ const boardChange = (
 
   const newMoveStep = services.createStep<MoveStep>('move', newPosition, {
     move: newMove,
+    movedPiece,
+    moveIndex: step.state.moveIndex,
   });
 
-  const lastVariationStep = getLastStep(step);
+  const lastVariationStep = getLastStep(step, false);
   if (lastVariationStep?.stepType === 'move') {
     const newVariationStep = services.createStep<VariationStep>(
       'variation',

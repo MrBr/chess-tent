@@ -96,14 +96,18 @@ const getStepIndex = (
   return indexSearch.index;
 };
 
-const getLastStep = (parentStep: Step): Step => {
+const getLastStep = (parentStep: Step, recursive = true): Step => {
   const lastStep =
     parentStep.state.steps[parentStep.state.steps.length - 1] || parentStep;
-  return lastStep === parentStep ? lastStep : getLastStep(lastStep);
+  return isSameStep(lastStep, parentStep)
+    ? lastStep
+    : recursive
+    ? getLastStep(lastStep)
+    : lastStep;
 };
 
-const isLastStep = (parentStep: Step, step: Step) => {
-  return isSameStep(getLastStep(parentStep), step);
+const isLastStep = (parentStep: Step, step: Step, recursive = true) => {
+  return isSameStep(getLastStep(parentStep, recursive), step);
 };
 
 const getParentStep = (parentStep: Step, step: Step): Step | null => {

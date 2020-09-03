@@ -6,7 +6,7 @@ import {
   getLessonParentStep,
   addStepRightToSame,
 } from '@chess-tent/models';
-import { FEN, Move, Piece, StepModule } from '@types';
+import { FEN, StepModule } from '@types';
 import { components, hooks, state, stepModules, ui } from '@application';
 import Comment from './comment';
 
@@ -14,7 +14,7 @@ const {
   actions: { updateStepState, updateEntities, setLessonActiveStep },
 } = state;
 const { Container, Col, Row } = ui;
-const { Chessboard, StepTag, StepToolbox } = components;
+const { StepTag, StepToolbox } = components;
 const { useUpdateStepDescriptionDebounced, useDispatchBatched } = hooks;
 
 const stepType = 'description';
@@ -41,39 +41,42 @@ const createStep = (
     ...(initialState || {}),
   });
 
-const changeReactor: DescriptionModule['changeReactor'] = (lesson, step) => (
-  newPosition: FEN,
-  newMove?: Move,
-  movedPiece?: Piece,
-) => {
-  const parentStep = getLessonParentStep(lesson, step) as Step;
-  return stepModules
-    .getStepModule(parentStep.stepType)
-    .changeReactor(lesson, parentStep)(newPosition, newMove, movedPiece);
-};
-
-const shapesReactor: DescriptionModule['shapesReactor'] = (
-  lesson,
+const Editor: DescriptionModule['Editor'] = ({
+  Chessboard,
   step,
-) => shapes => [updateStepState(step, { shapes })];
-const getEndSetup: DescriptionModule['getEndSetup'] = ({
-  state,
-}: DescriptionStep) => ({
-  position: state.position,
-  shapes: state.shapes,
-});
+  lesson,
+  ...props
+}) => {
+  const dispatch = useDispatchBatched();
+  const updateShapes = useCallback(
+    (shapes: DrawShape[]) => dispatch(updateStepState(step, { shapes })),
+    [dispatch, step],
+  );
 
-const Editor: DescriptionModule['Editor'] = ({ step, lesson, ...props }) => {
   const parentStep = getLessonParentStep(lesson, step) as Step;
   const ParentEditor = stepModules.getStepModule(parentStep.stepType).Editor;
-  return <ParentEditor {...props} lesson={lesson} step={parentStep} />;
+
+  return (
+    <ParentEditor
+      {...props}
+      lesson={lesson}
+      step={parentStep}
+      Chessboard={props => (
+        <Chessboard
+          fen={props.fen}
+          shapes={step.state.shapes}
+          onShapesChange={updateShapes}
+        />
+      )}
+    />
+  );
 };
 
-const Picker: DescriptionModule['Picker'] = () => {
-  return <>Description</>;
-};
-
-const Playground: DescriptionModule['Playground'] = ({ step, footer }) => {
+const Playground: DescriptionModule['Playground'] = ({
+  Chessboard,
+  step,
+  footer,
+}) => {
   const {
     state: { position, shapes },
   } = step;
@@ -135,15 +138,11 @@ const StepperStep: DescriptionModule['StepperStep'] = ({
 
 const Module: DescriptionModule = {
   Editor,
-  Picker,
   Playground,
   Exercise,
   StepperStep,
   createStep,
-  getEndSetup,
   stepType,
-  changeReactor,
-  shapesReactor,
 };
 
 export default Module;

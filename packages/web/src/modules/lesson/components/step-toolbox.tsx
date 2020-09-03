@@ -35,7 +35,8 @@ const ToolboxActions = styled.div({
   flexDirection: 'column',
   position: 'absolute',
   right: 0,
-  top: 0,
+  top: '50%',
+  transform: 'translateY(-50%)',
   zIndex: 10,
 });
 

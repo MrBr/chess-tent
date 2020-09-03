@@ -35,3 +35,15 @@ application.register(
     application.components.Lessons = module.default;
   },
 );
+application.register(
+  () => import('./components/step-toolbox'),
+  module => {
+    application.components.StepToolbox = module.default;
+  },
+);
+application.register(
+  () => import('./components/step-tag'),
+  module => {
+    application.components.StepTag = module.default;
+  },
+);

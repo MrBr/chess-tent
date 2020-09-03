@@ -29,10 +29,6 @@ const createStepModuleStep = <T extends Step>(
   );
 };
 
-const getStepModuleStepEndSetup = (step: Step): StepEndSetup => {
-  return getStepModule(step.stepType)['getEndSetup'](step);
-};
-
 const StepComponentRenderer: Components['StepRenderer'] = ({
   component,
   step,
@@ -56,9 +52,4 @@ export const stepSchema = {
   },
 };
 
-export {
-  registerStep,
-  createStepModuleStep,
-  getStepModuleStepEndSetup,
-  StepComponentRenderer,
-};
+export { registerStep, createStepModuleStep, StepComponentRenderer };

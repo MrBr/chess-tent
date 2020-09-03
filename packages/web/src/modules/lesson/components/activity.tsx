@@ -9,7 +9,7 @@ import {
 } from '@chess-tent/models';
 
 const { Container, Row, Col, Button } = ui;
-const { StepRenderer } = components;
+const { StepRenderer, Chessboard } = components;
 const { useDispatchBatched, useSelector } = hooks;
 const {
   actions: { updateActivityState },
@@ -80,34 +80,33 @@ const Activity: ActivityComponent<LessonActivity> = ({ activity }) => {
   }, [activity, activeStep, dispatch, lesson]);
 
   return (
-    <>
-      <Container fluid>
-        <Row noGutters>
-          <Col>
-            <StepRenderer<'Playground'>
-              step={activeStep}
-              component="Playground"
-              activeStep={activeStep}
-              lesson={lesson}
-              setActiveStep={() => {}}
-              setStepActivityState={setStepActivityState}
-              stepActivityState={activeStepActivityState}
-              nextStep={nextActivityStep}
-              prevStep={prevActivityStep}
-              footer={
-                <Footer
-                  next={nextActivityStep}
-                  prev={prevActivityStep}
-                  stepsCount={stepsCount}
-                  currentStep={currentStepIndex}
-                />
-              }
-            />
-          </Col>
-          <Col sm={3}>Analysis</Col>
-        </Row>
-      </Container>
-    </>
+    <Container fluid>
+      <Row noGutters>
+        <Col>
+          <StepRenderer<'Playground'>
+            step={activeStep}
+            component="Playground"
+            activeStep={activeStep}
+            lesson={lesson}
+            setActiveStep={() => {}}
+            setStepActivityState={setStepActivityState}
+            stepActivityState={activeStepActivityState}
+            nextStep={nextActivityStep}
+            prevStep={prevActivityStep}
+            Chessboard={Chessboard}
+            footer={
+              <Footer
+                next={nextActivityStep}
+                prev={prevActivityStep}
+                stepsCount={stepsCount}
+                currentStep={currentStepIndex}
+              />
+            }
+          />
+        </Col>
+        <Col sm={3}>Analysis</Col>
+      </Row>
+    </Container>
   );
 };
 

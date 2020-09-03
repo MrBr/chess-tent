@@ -167,15 +167,19 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
       drawable: {
         validate: this.validateDrawable,
         onChange: this.onShapesChange,
+        visible: true,
+        enabled: true,
         eraseOnClick: eraseDrawableOnClick,
         onAdd: this.onShapeAdd,
         onRemove: this.onShapeRemove,
-        shapes,
       },
       events: {
         change: this.onChange,
       },
     });
+    // Shapes can't be set in the same time as fen so this is additional update
+    // TODO - edit Chessground
+    shapes && this.api.setShapes(shapes);
   }
 
   prompt(renderPrompt: ChessboardState['renderPrompt']) {
@@ -209,6 +213,7 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
       },
       {},
     );
+    console.log(patch);
     Object.keys(patch).length > 0 && this.api.set(patch);
   }
 

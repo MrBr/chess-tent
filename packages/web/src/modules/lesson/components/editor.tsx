@@ -5,7 +5,7 @@ import { debounce } from 'lodash';
 import { state, hooks, components, ui, requests } from '@application';
 
 const { Container, Row, Col, Headline2 } = ui;
-const { Stepper, StepRenderer } = components;
+const { Stepper, StepRenderer, Chessboard } = components;
 const {
   actions: { setLessonActiveStep },
   selectors: { stepSelector },
@@ -54,6 +54,7 @@ const Editor: Components['Editor'] = ({ lesson }) => {
             activeStep={activeStep}
             setActiveStep={setActiveStepHandler}
             lesson={lesson}
+            Chessboard={Chessboard}
           />
         </Col>
         <Col sm={4}>

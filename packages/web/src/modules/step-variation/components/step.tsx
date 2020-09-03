@@ -5,6 +5,7 @@ import {
   createStep as coreCreateStep,
   addStep,
   getLastStep,
+  Lesson,
 } from '@chess-tent/models';
 import { FEN, Move, Piece, StepModule } from '@types';
 import { hooks, components, state, stepModules, ui } from '@application';
@@ -16,7 +17,7 @@ const {
   useAddDescriptionStep,
   useUpdateStepDescriptionDebounced,
 } = hooks;
-const { Chessboard, Stepper, StepTag, StepToolbox } = components;
+const { Stepper, StepTag, StepToolbox } = components;
 const {
   actions: { updateStepState, setLessonActiveStep, updateEntities },
 } = state;
@@ -46,14 +47,9 @@ const createStep = (
     ...(initialState || {}),
   });
 
-const getEndSetup: VariationModule['getEndSetup'] = ({
-  state,
-}: VariationStep) => ({
-  position: state.position,
-  shapes: state.shapes,
-});
-
-const changeReactor: VariationModule['changeReactor'] = (lesson, step) => (
+const boardChange = (
+  lesson: Lesson,
+  step: VariationStep,
   newPosition: FEN,
   newMove?: Move,
   movedPiece?: Piece,
@@ -93,12 +89,7 @@ const changeReactor: VariationModule['changeReactor'] = (lesson, step) => (
   ];
 };
 
-const shapesReactor: VariationModule['shapesReactor'] = (
-  lesson,
-  step,
-) => shapes => [updateStepState(step, { shapes })];
-
-const Editor: VariationModule['Editor'] = ({ step, lesson }) => {
+const Editor: VariationModule['Editor'] = ({ Chessboard, step, lesson }) => {
   const {
     state: { position, shapes, editing },
   } = step;
@@ -110,15 +101,13 @@ const Editor: VariationModule['Editor'] = ({ step, lesson }) => {
   );
 
   const updateShapes = useCallback(
-    (shapes: DrawShape[]) => dispatch(...shapesReactor(lesson, step)(shapes)),
-    [dispatch, step, lesson],
+    (shapes: DrawShape[]) => dispatch(updateStepState(step, { shapes })),
+    [dispatch, step],
   );
 
   const onChangeHandle = useCallback(
     (newPosition: FEN, newMove?: Move, movedPiece?: Piece) =>
-      dispatch(
-        ...changeReactor(lesson, step)(newPosition, newMove, movedPiece),
-      ),
+      dispatch(...boardChange(lesson, step, newPosition, newMove, movedPiece)),
     [dispatch, step, lesson],
   );
 
@@ -135,11 +124,11 @@ const Editor: VariationModule['Editor'] = ({ step, lesson }) => {
   );
 };
 
-const Picker: VariationModule['Picker'] = () => {
-  return <>Variation</>;
-};
-
-const Playground: VariationModule['Playground'] = ({ step, footer }) => {
+const Playground: VariationModule['Playground'] = ({
+  Chessboard,
+  step,
+  footer,
+}) => {
   const {
     state: { position, shapes },
   } = step;
@@ -201,15 +190,11 @@ const StepperStep: VariationModule['StepperStep'] = ({
 
 const Module: VariationModule = {
   Editor,
-  Picker,
   Playground,
   Exercise,
   StepperStep,
   createStep,
-  getEndSetup,
   stepType,
-  changeReactor,
-  shapesReactor,
 };
 
 export default Module;

@@ -1,7 +1,8 @@
 import { ComponentType, FunctionComponent, ReactElement } from 'react';
 import { Lesson, Step, StepType } from '@chess-tent/models';
-import { Action } from 'redux';
-import { FEN, Move, Piece, Shape } from './chess';
+import { FEN, Shape } from './chess';
+import { ChessboardInterface, ChessboardProps } from './components';
+import { ClassComponent } from './_helpers';
 
 export type StepMap = Record<StepType, StepModule>;
 export type StepEndSetup = { position: FEN; shapes: Shape[] };
@@ -10,6 +11,11 @@ export type StepSystemProps = {
   setActiveStep: (step: Step) => void;
   activeStep: Step;
   lesson: Lesson;
+};
+export type StepBoardComponentProps = {
+  Chessboard:
+    | FunctionComponent<ChessboardProps>
+    | ClassComponent<ChessboardInterface>;
 };
 export type StepProps<S extends Step, P = {}> = {
   step: S;
@@ -22,7 +28,6 @@ export type StepComponent<S extends Step, P extends {} = {}> = ComponentType<
 
 export type StepModuleComponentKey =
   | 'Editor'
-  | 'Picker'
   | 'Playground'
   | 'StepperStep'
   | 'Exercise';
@@ -32,8 +37,7 @@ export type StepModule<
   K extends StepType = StepType,
   U extends {} = {}
 > = {
-  Picker: FunctionComponent;
-  Editor: StepComponent<T>;
+  Editor: StepComponent<T, StepBoardComponentProps>;
   Playground: StepComponent<
     T,
     {
@@ -42,9 +46,9 @@ export type StepModule<
       nextStep: () => void;
       prevStep: () => void;
       footer: ReactElement;
-    }
+    } & StepBoardComponentProps
   >;
-  Exercise: StepComponent<T>;
+  Exercise: StepComponent<T, StepBoardComponentProps>;
   StepperStep: StepComponent<T>;
   stepType: K;
   createStep: (
@@ -52,10 +56,4 @@ export type StepModule<
     prevPosition: FEN,
     initialState?: Partial<T extends Step<infer S, K> ? S : never>,
   ) => T;
-  getEndSetup: (step: T) => StepEndSetup;
-  changeReactor: (
-    lesson: Lesson,
-    step: T,
-  ) => (newPosition: FEN, move?: Move, movedPiece?: Piece) => Action[];
-  shapesReactor: (lesson: Lesson, step: T) => (shapes: Shape[]) => Action[];
 };

@@ -109,7 +109,6 @@ export type StepModules = {
     initialPosition: FEN,
     initialState?: T extends Step<infer U, infer K> ? U : never,
   ) => Step;
-  getStepEndSetup: (step: Step) => StepEndSetup;
 };
 
 export interface Schema {

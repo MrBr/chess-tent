@@ -30,6 +30,12 @@ export interface ChessboardProps {
   fen: FEN;
   animation?: boolean;
   onChange?: (position: FEN, lastMove?: Move, piece?: Piece) => void;
+  onMove?: (
+    position: FEN,
+    lastMove: Move,
+    piece: Piece,
+    captured: boolean,
+  ) => void;
   onShapesChange?: (shapes: DrawShape[]) => void;
   onShapeAdd?: (shape: DrawShape[]) => void;
   onShapeRemove?: (shape: DrawShape[]) => void;
@@ -73,6 +79,8 @@ export type StepTag = FunctionComponent<{
   active: boolean;
   step: Step;
   className?: string;
+  moveIndex?: number;
+  movedPiece?: Piece;
 }>;
 
 export interface ActionProps {

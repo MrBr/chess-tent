@@ -116,7 +116,7 @@ const Editor: VariationModule['Editor'] = ({ Chessboard, step, lesson }) => {
   return (
     <Chessboard
       fen={position}
-      onChange={onChangeHandle}
+      onMove={onChangeHandle}
       onShapesChange={updateShapes}
       shapes={shapes}
       footer={

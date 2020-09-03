@@ -44,6 +44,7 @@ const boardChange = (
   newPosition: FEN,
   newMove?: Move,
   movedPiece?: Piece,
+  captured?: boolean,
 ) => {
   const {
     state: { move, position },
@@ -71,6 +72,7 @@ const boardChange = (
         move: newMove,
         moveIndex,
         movedPiece,
+        captured,
       }),
     ];
   }
@@ -85,6 +87,7 @@ const boardChange = (
     move: newMove,
     moveIndex: moveIndex,
     movedPiece,
+    captured,
   });
 
   if (movedPiece.color === previousPiece.color) {
@@ -138,15 +141,24 @@ const Editor: MoveModule['Editor'] = ({ Chessboard, step, lesson }) => {
   );
 
   const onChangeHandle = useCallback(
-    (newPosition: FEN, newMove?: Move, movedPiece?: Piece) =>
-      dispatch(...boardChange(lesson, step, newPosition, newMove, movedPiece)),
+    (newPosition: FEN, newMove: Move, movedPiece: Piece, captured: boolean) =>
+      dispatch(
+        ...boardChange(
+          lesson,
+          step,
+          newPosition,
+          newMove,
+          movedPiece,
+          captured,
+        ),
+      ),
     [dispatch, step, lesson],
   );
 
   return (
     <Chessboard
       fen={position}
-      onChange={onChangeHandle}
+      onMove={onChangeHandle}
       onShapesChange={updateShapes}
       shapes={shapes}
     />
@@ -189,11 +201,14 @@ const StepperStep: MoveModule['StepperStep'] = ({
     <StepperStepContainer onClick={handleStepClick}>
       <Row noGutters>
         <Col className="col-auto">
-          <StepTag step={step} active={activeStep === step}>
-            {step.state.movedPiece?.color === 'white'
-              ? step.state.moveIndex
-              : '..'}
-            {step.state.move}
+          <StepTag
+            step={step}
+            active={activeStep === step}
+            moveIndex={step.state.moveIndex}
+            movedPiece={step.state.movedPiece}
+          >
+            {step.state.captured && 'x'}
+            {step.state.move?.[1]}
           </StepTag>
         </Col>
         <Col>

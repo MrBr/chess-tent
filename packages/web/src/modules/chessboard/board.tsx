@@ -5,6 +5,7 @@ import {
   Move,
   Piece,
   ChessboardInterface,
+  MoveMetadata,
 } from '@types';
 
 import React, { Component, FunctionComponent, RefObject } from 'react';
@@ -46,6 +47,7 @@ type ChessgroundMappedPropsType = Record<
     | 'footer'
     | 'onReset'
     | 'onChange'
+    | 'onMove'
     | 'onShapesChange'
     | 'onShapeAdd'
     | 'onShapeRemove'
@@ -163,6 +165,9 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
       },
       movable: {
         validate: this.validateMove,
+        events: {
+          after: this.onMove,
+        },
       },
       drawable: {
         validate: this.validateDrawable,
@@ -280,6 +285,14 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
     const lastMove = this.api.state.lastMove as Move;
     const piece = this.api.state.pieces[lastMove[1]];
     this.props.onChange && this.props.onChange(fen, lastMove, piece);
+  };
+
+  onMove = (orig: string, dest: string, metadata: MoveMetadata) => {
+    const fen = this.fen();
+    const lastMove = this.api.state.lastMove as Move;
+    const piece = this.api.state.pieces[lastMove[1]] as Piece;
+    this.props.onMove &&
+      this.props.onMove(fen, lastMove, piece, !!metadata.captured);
   };
 
   onSparePieceDrag = (piece: Piece, event: MouchEvent) => {

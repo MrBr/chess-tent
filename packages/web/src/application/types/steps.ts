@@ -11,6 +11,7 @@ export type MoveStepState = {
   steps: Step[];
   moveIndex: number;
   movedPiece?: Piece;
+  captured?: boolean;
 };
 export type MoveStep = Step<MoveStepState, 'move'>;
 export type MoveModule = StepModule<MoveStep, 'move'>;

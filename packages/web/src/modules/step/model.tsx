@@ -1,6 +1,6 @@
 import React, { ComponentType } from 'react';
 import { Step } from '@chess-tent/models';
-import { Components, FEN, StepEndSetup, StepMap, StepModule } from '@types';
+import { Components, FEN, StepMap, StepModule } from '@types';
 import { utils } from '@application';
 
 const StepsMap = {} as StepMap;

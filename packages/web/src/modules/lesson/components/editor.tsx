@@ -3,6 +3,7 @@ import { Step } from '@chess-tent/models';
 import { Components } from '@types';
 import { debounce } from 'lodash';
 import { state, hooks, components, ui, requests } from '@application';
+import styled from '@emotion/styled';
 
 const { Container, Row, Col, Headline2 } = ui;
 const { Stepper, StepRenderer, Chessboard } = components;
@@ -16,6 +17,13 @@ const {
   useApi,
   useComponentStateSilent,
 } = hooks;
+
+const StepperSidebar = styled(Col)({
+  height: '100%',
+  maxHeight: '100%',
+  background: '#FAFBFB',
+  overflowY: 'auto',
+});
 
 const Editor: Components['Editor'] = ({ lesson }) => {
   const componentState = useComponentStateSilent();
@@ -57,15 +65,15 @@ const Editor: Components['Editor'] = ({ lesson }) => {
             Chessboard={Chessboard}
           />
         </Col>
-        <Col sm={4}>
+        <StepperSidebar sm={4}>
+          <Headline2>Lesson</Headline2>
           <Stepper
             lesson={lesson}
-            header={<Headline2>Lesson</Headline2>}
             steps={steps}
             activeStep={activeStep}
             setActiveStep={setActiveStepHandler}
           />
-        </Col>
+        </StepperSidebar>
       </Row>
     </Container>
   );

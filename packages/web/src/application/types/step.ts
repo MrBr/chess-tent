@@ -1,11 +1,10 @@
 import { ComponentType, FunctionComponent, ReactElement } from 'react';
 import { Lesson, Step, StepType } from '@chess-tent/models';
-import { FEN, Shape } from './chess';
+import { FEN } from './chess';
 import { ChessboardInterface, ChessboardProps } from './components';
 import { ClassComponent } from './_helpers';
 
 export type StepMap = Record<StepType, StepModule>;
-export type StepEndSetup = { position: FEN; shapes: Shape[] };
 
 export type StepSystemProps = {
   setActiveStep: (step: Step) => void;

@@ -58,7 +58,6 @@ export interface ChessboardInterface
 export type StepperProps = {
   steps: Step[];
   className?: string;
-  header?: ReactElement;
 } & StepSystemProps;
 
 export type StepToolbox = FunctionComponent<{

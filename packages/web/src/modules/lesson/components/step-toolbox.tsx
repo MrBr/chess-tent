@@ -3,7 +3,7 @@ import { StepToolbox } from '@types';
 import { ui } from '@application';
 import styled from '@emotion/styled';
 
-const { Container, Row, Col, Button } = ui;
+const { Container, Button } = ui;
 
 const ToolboxText = styled(props => {
   const defaultValueRef = useRef(props.text);

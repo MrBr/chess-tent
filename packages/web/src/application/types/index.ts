@@ -1,4 +1,9 @@
-import { ComponentType, FunctionComponent, ReactElement } from 'react';
+import {
+  ComponentType,
+  FunctionComponent,
+  ReactElement,
+  ReactEventHandler,
+} from 'react';
 import {
   Reducer,
   Action as ReduxAction,
@@ -34,12 +39,7 @@ import {
   UpdateActivityAction,
 } from './state';
 import { FEN, Move, Piece } from './chess';
-import {
-  StepEndSetup,
-  StepMap,
-  StepModule,
-  StepModuleComponentKey,
-} from './step';
+import { StepMap, StepModule, StepModuleComponentKey } from './step';
 import {
   AuthorizedProps,
   ChessboardInterface,
@@ -212,6 +212,7 @@ export type Components = {
   Header: ComponentType;
   Chessboard: ClassComponent<ChessboardInterface>;
   Stepper: FunctionComponent<StepperProps>;
+  StepperStepContainer: ComponentType<{ onClick?: ReactEventHandler }>;
   StepToolbox: StepToolbox;
   StepTag: StepTag;
   Router: ComponentType;

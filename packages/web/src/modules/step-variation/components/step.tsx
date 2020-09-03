@@ -11,13 +11,13 @@ import { FEN, Move, Piece, StepModule } from '@types';
 import { hooks, components, state, stepModules, ui } from '@application';
 import Footer from './footer';
 
-const { Container, Col, Row } = ui;
+const { Col, Row } = ui;
 const {
   useDispatchBatched,
   useAddDescriptionStep,
   useUpdateStepDescriptionDebounced,
 } = hooks;
-const { Stepper, StepTag, StepToolbox } = components;
+const { Stepper, StepTag, StepToolbox, StepperStepContainer } = components;
 const {
   actions: { updateStepState, setLessonActiveStep, updateEntities },
 } = state;
@@ -161,11 +161,11 @@ const StepperStep: VariationModule['StepperStep'] = ({
   );
 
   return (
-    <Container onClick={handleStepClick}>
-      <Row>
+    <StepperStepContainer onClick={handleStepClick}>
+      <Row className="no-gutters">
         <Col className="col-auto">
           <StepTag step={step} active={activeStep === step}>
-            Position
+            fen
           </StepTag>
         </Col>
         <Col>
@@ -184,7 +184,7 @@ const StepperStep: VariationModule['StepperStep'] = ({
         setActiveStep={setActiveStep}
         lesson={lesson}
       />
-    </Container>
+    </StepperStepContainer>
   );
 };
 

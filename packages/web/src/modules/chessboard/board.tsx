@@ -213,7 +213,6 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
       },
       {},
     );
-    console.log(patch);
     Object.keys(patch).length > 0 && this.api.set(patch);
   }
 

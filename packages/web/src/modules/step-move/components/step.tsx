@@ -18,14 +18,14 @@ import {
   ui,
 } from '@application';
 
-const { Container, Col, Row } = ui;
+const { Col, Row } = ui;
 const { getPiece } = services;
 const {
   useDispatchBatched,
   useAddDescriptionStep,
   useUpdateStepDescriptionDebounced,
 } = hooks;
-const { StepTag, StepToolbox, Stepper } = components;
+const { StepTag, StepToolbox, Stepper, StepperStepContainer } = components;
 const {
   actions: { updateStepState, updateEntities, setLessonActiveStep },
 } = state;
@@ -173,8 +173,8 @@ const StepperStep: MoveModule['StepperStep'] = ({
   );
 
   return (
-    <Container onClick={handleStepClick}>
-      <Row>
+    <StepperStepContainer onClick={handleStepClick}>
+      <Row noGutters>
         <Col className="col-auto">
           <StepTag step={step} active={activeStep === step}>
             {step.state.move}
@@ -196,7 +196,7 @@ const StepperStep: MoveModule['StepperStep'] = ({
         setActiveStep={setActiveStep}
         lesson={lesson}
       />
-    </Container>
+    </StepperStepContainer>
   );
 };
 

@@ -13,8 +13,8 @@ import Comment from './comment';
 const {
   actions: { updateStepState, updateEntities, setLessonActiveStep },
 } = state;
-const { Container, Col, Row } = ui;
-const { StepTag, StepToolbox } = components;
+const { Col, Row } = ui;
+const { StepperStepContainer, StepTag, StepToolbox } = components;
 const { useUpdateStepDescriptionDebounced, useDispatchBatched } = hooks;
 
 const stepType = 'description';
@@ -116,8 +116,8 @@ const StepperStep: DescriptionModule['StepperStep'] = ({
   );
 
   return (
-    <Container onClick={handleStepClick}>
-      <Row>
+    <StepperStepContainer onClick={handleStepClick}>
+      <Row noGutters>
         <Col className="col-auto">
           <StepTag step={step} active={activeStep === step}>
             <Comment active={step === activeStep} />
@@ -132,7 +132,7 @@ const StepperStep: DescriptionModule['StepperStep'] = ({
           />
         </Col>
       </Row>
-    </Container>
+    </StepperStepContainer>
   );
 };
 

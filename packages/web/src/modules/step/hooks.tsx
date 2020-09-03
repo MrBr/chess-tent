@@ -1,4 +1,4 @@
-import { stepModules, hooks, state } from '@application';
+import { hooks, state, services } from '@application';
 import { useCallback } from 'react';
 import { addStepRightToSame, Lesson, Step } from '@chess-tent/models';
 import { FEN } from '@types';
@@ -16,7 +16,7 @@ export const useAddDescriptionStep = (
 ) => {
   const dispatch = useDispatchBatched();
   return useCallback(() => {
-    const newDescriptionStep = stepModules.createStep('description', position);
+    const newDescriptionStep = services.createStep('description', position);
     dispatch(
       updateEntities(addStepRightToSame(step, newDescriptionStep)),
       setLessonActiveStep(lesson, newDescriptionStep),

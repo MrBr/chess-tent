@@ -4,9 +4,9 @@ import {
   constants,
   hooks,
   state,
-  stepModules,
   utils,
   requests,
+  services,
 } from '@application';
 import { createLesson, Lesson, Step, User } from '@chess-tent/models';
 
@@ -19,7 +19,7 @@ const {
   useApi,
 } = hooks;
 const { Editor } = components;
-const { createStep } = stepModules;
+const { createStep } = services;
 const { START_FEN } = constants;
 const { generateIndex } = utils;
 const {

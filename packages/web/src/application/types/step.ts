@@ -4,8 +4,6 @@ import { FEN } from './chess';
 import { ChessboardInterface, ChessboardProps } from './components';
 import { ClassComponent } from './_helpers';
 
-export type StepMap = Record<StepType, StepModule>;
-
 export type StepSystemProps = {
   setActiveStep: (step: Step) => void;
   activeStep: Step;

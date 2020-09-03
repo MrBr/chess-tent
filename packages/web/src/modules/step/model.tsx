@@ -1,32 +1,18 @@
 import React, { ComponentType } from 'react';
 import { Step } from '@chess-tent/models';
-import { Components, FEN, StepMap, StepModule } from '@types';
-import { utils } from '@application';
+import { Components, FEN, Steps } from '@types';
+import { utils, stepModules } from '@application';
 
-const StepsMap = {} as StepMap;
-
-const registerStep = <K, T extends keyof StepMap>(
-  stepModule: K extends StepMap[T] ? K : never,
-) => {
-  StepsMap[stepModule.stepType as T] = stepModule;
-};
-
-export const getStepModule = <T extends keyof StepMap>(
-  type: T,
-): StepModule<Step, T> => {
-  return StepsMap[type] as StepModule<Step, T>;
-};
-
-const createStepModuleStep = <T extends Step>(
-  stepType: keyof StepMap,
+const createStepModuleStep = <T extends Steps>(
+  stepType: T extends Step<infer U, infer K> ? K : never,
   initialPosition: FEN,
-  initialState?: T extends Step<infer U, infer K> ? U : never,
-): Step => {
-  return getStepModule(stepType)['createStep'](
+  initialState?: Partial<T extends Step<infer U, infer K> ? U : never>,
+): T => {
+  return (stepModules[stepType]['createStep'](
     utils.generateIndex(),
     initialPosition,
     initialState,
-  );
+  ) as unknown) as T;
 };
 
 const StepComponentRenderer: Components['StepRenderer'] = ({
@@ -34,7 +20,7 @@ const StepComponentRenderer: Components['StepRenderer'] = ({
   step,
   ...otherProps
 }) => {
-  const Component = getStepModule(step.stepType)[component];
+  const Component = stepModules[step.stepType][component];
   const stepProps = otherProps as typeof Component extends ComponentType<
     infer P
   >
@@ -52,4 +38,4 @@ export const stepSchema = {
   },
 };
 
-export { registerStep, createStepModuleStep, StepComponentRenderer };
+export { createStepModuleStep, StepComponentRenderer };

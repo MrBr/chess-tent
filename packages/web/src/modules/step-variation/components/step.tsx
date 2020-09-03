@@ -1,14 +1,20 @@
 import React, { useCallback } from 'react';
 import { DrawShape } from '@chess-tent/chessground/dist/draw';
 import {
-  Step,
   createStep as coreCreateStep,
   addStep,
   getLastStep,
   Lesson,
 } from '@chess-tent/models';
-import { FEN, Move, Piece, StepModule } from '@types';
-import { hooks, components, state, stepModules, ui } from '@application';
+import {
+  FEN,
+  Move,
+  MoveStep,
+  Piece,
+  VariationModule,
+  VariationStep,
+} from '@types';
+import { hooks, components, state, services, ui } from '@application';
 import Footer from './footer';
 
 const { Col, Row } = ui;
@@ -23,17 +29,6 @@ const {
 } = state;
 
 const stepType = 'variation';
-
-type VariationStepState = {
-  shapes: DrawShape[];
-  position: FEN; // Step end position - position once step is finished
-  description?: string;
-  steps: Step[];
-  editing?: boolean;
-};
-type VariationStep = Step<VariationStepState, typeof stepType>;
-
-type VariationModule = StepModule<VariationStep, typeof stepType>;
 
 const createStep = (
   id: string,
@@ -67,15 +62,19 @@ const boardChange = (
     ];
   }
 
-  const newMoveStep = stepModules.createStep('move', newPosition, {
+  const newMoveStep = services.createStep<MoveStep>('move', newPosition, {
     move: newMove,
   });
 
   const lastVariationStep = getLastStep(step);
   if (lastVariationStep?.stepType === 'move') {
-    const newVariationStep = stepModules.createStep('variation', newPosition, {
-      steps: [newMoveStep],
-    });
+    const newVariationStep = services.createStep<VariationStep>(
+      'variation',
+      newPosition,
+      {
+        steps: [newMoveStep],
+      },
+    );
 
     return [
       updateEntities(addStep(step, newVariationStep)),

@@ -1,4 +1,4 @@
-export type StepType = "description" | "variation" | "move" | "exercise";
+export type StepType = "description" | "variation" | "move";
 
 export const TYPE_STEP = "steps";
 

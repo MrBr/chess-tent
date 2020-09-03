@@ -1,22 +1,14 @@
 import React, { useCallback } from 'react';
 import { DrawShape } from '@chess-tent/chessground/dist/draw';
 import {
-  Step,
   createStep as coreCreateStep,
   getLessonParentStep,
   isLastStep,
   addStep,
   Lesson,
 } from '@chess-tent/models';
-import { FEN, Move, Piece, StepModule } from '@types';
-import {
-  services,
-  hooks,
-  components,
-  state,
-  stepModules,
-  ui,
-} from '@application';
+import { FEN, Move, MoveModule, MoveStep, Piece, VariationStep } from '@types';
+import { services, hooks, components, state, ui } from '@application';
 
 const { Col, Row } = ui;
 const { getPiece } = services;
@@ -31,18 +23,6 @@ const {
 } = state;
 
 const stepType = 'move';
-
-type MoveStepState = {
-  shapes: DrawShape[];
-  position: FEN; // Step end position - position once step is finished
-  description?: string;
-  move?: Move;
-  steps: Step[];
-};
-
-type MoveStep = Step<MoveStepState, typeof stepType>;
-
-type MoveModule = StepModule<MoveStep, typeof stepType>;
 
 const createStep = (
   id: string,
@@ -80,15 +60,19 @@ const boardChange = (
 
   const parentStep = getLessonParentStep(lesson, step) as MoveStep;
   const previousPiece = getPiece(position, move[1]) as Piece;
-  const newMoveStep = stepModules.createStep('move', newPosition, {
+  const newMoveStep = services.createStep<MoveStep>('move', newPosition, {
     move: newMove,
   });
 
   if (movedPiece.color === previousPiece.color) {
     // New example
-    const newVariationStep = stepModules.createStep('variation', newPosition, {
-      editing: true,
-    });
+    const newVariationStep = services.createStep<VariationStep>(
+      'variation',
+      newPosition,
+      {
+        editing: true,
+      },
+    );
     return [
       updateEntities(addStep(step, newVariationStep)),
       setLessonActiveStep(lesson, newVariationStep),
@@ -97,9 +81,13 @@ const boardChange = (
 
   if (!isLastStep(parentStep, step)) {
     // New variation
-    const newVariationStep = stepModules.createStep('variation', newPosition, {
-      steps: [newMoveStep],
-    });
+    const newVariationStep = services.createStep<VariationStep>(
+      'variation',
+      newPosition,
+      {
+        steps: [newMoveStep],
+      },
+    );
     return [
       updateEntities(addStep(step, newVariationStep)),
       setLessonActiveStep(lesson, newMoveStep),

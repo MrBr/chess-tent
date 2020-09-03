@@ -16,6 +16,7 @@ import {
   Entity,
   Lesson,
   Step,
+  StepType,
   Subject,
   User,
 } from '@chess-tent/models';
@@ -39,7 +40,7 @@ import {
   UpdateActivityAction,
 } from './state';
 import { FEN, Move, Piece } from './chess';
-import { StepMap, StepModule, StepModuleComponentKey } from './step';
+import { StepModule, StepModuleComponentKey } from './step';
 import {
   AuthorizedProps,
   ChessboardInterface,
@@ -50,11 +51,13 @@ import {
 import { ClassComponent, GenericArguments } from './_helpers';
 import { UI } from './ui';
 import { API, RequestFetch, ApiMethods, Requests, StatusResponse } from './api';
+import { DescriptionModule, MoveModule, Steps, VariationModule } from './steps';
 
 export * from './activity';
 export * from './state';
 export * from './chess';
 export * from './step';
+export * from './steps';
 export * from './components';
 export * from './ui';
 export * from './api';
@@ -100,16 +103,17 @@ export type Hooks = {
 };
 
 // Application Components
-
-export type StepModules = {
-  registerStep: (stepModule: StepModule) => void;
-  getStepModule: <T extends keyof StepMap>(type: T) => StepModule<Step, T>;
-  createStep: <T extends Step>(
-    stepType: keyof StepMap,
-    initialPosition: FEN,
-    initialState?: T extends Step<infer U, infer K> ? U : never,
-  ) => Step;
+type ModuleRecord<K extends keyof any, T extends StepModule> = {
+  [P in K]: T extends StepModule<infer U, infer S>
+    ? S extends P
+      ? T
+      : never
+    : never;
 };
+export type StepModules = ModuleRecord<
+  StepType,
+  MoveModule | VariationModule | DescriptionModule
+>;
 
 export interface Schema {
   type: string;
@@ -194,6 +198,11 @@ export type Services = {
   createRecordHook: <T extends Entity>(
     recordKey: string,
   ) => () => RecordHookReturn<T>;
+  createStep: <T extends Steps>(
+    stepType: T extends Step<infer U, infer K> ? K : never,
+    initialPosition: FEN,
+    initialState?: Partial<T extends Step<infer U, infer K> ? U : never>,
+  ) => T;
 };
 
 export type Pages = {

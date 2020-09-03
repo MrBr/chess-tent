@@ -1,13 +1,19 @@
 import React, { useCallback } from 'react';
 import { DrawShape } from '@chess-tent/chessground/dist/draw';
 import {
-  Step,
   createStep as coreCreateStep,
   getLessonParentStep,
   addStepRightToSame,
 } from '@chess-tent/models';
-import { FEN, StepModule } from '@types';
-import { components, hooks, state, stepModules, ui } from '@application';
+import { DescriptionModule, DescriptionStep, FEN, VariationStep } from '@types';
+import {
+  components,
+  hooks,
+  state,
+  services,
+  ui,
+  stepModules,
+} from '@application';
 import Comment from './comment';
 
 const {
@@ -18,16 +24,6 @@ const { StepperStepContainer, StepTag, StepToolbox } = components;
 const { useUpdateStepDescriptionDebounced, useDispatchBatched } = hooks;
 
 const stepType = 'description';
-
-type DescriptionStepState = {
-  shapes: DrawShape[];
-  position: FEN; // Step end position - position once step is finished
-  description?: string;
-  steps: Step[];
-};
-type DescriptionStep = Step<DescriptionStepState, typeof stepType>;
-
-type DescriptionModule = StepModule<DescriptionStep, typeof stepType>;
 
 const createStep = (
   id: string,
@@ -53,8 +49,8 @@ const Editor: DescriptionModule['Editor'] = ({
     [dispatch, step],
   );
 
-  const parentStep = getLessonParentStep(lesson, step) as Step;
-  const ParentEditor = stepModules.getStepModule(parentStep.stepType).Editor;
+  const parentStep = getLessonParentStep(lesson, step) as VariationStep;
+  const ParentEditor = stepModules.variation.Editor;
 
   return (
     <ParentEditor
@@ -97,7 +93,7 @@ const StepperStep: DescriptionModule['StepperStep'] = ({
   const updateDescriptionDebounced = useUpdateStepDescriptionDebounced(step);
   const addDescriptionStep = useCallback(() => {
     const parentStep = getLessonParentStep(lesson, step);
-    const newDescriptionStep = stepModules.createStep(
+    const newDescriptionStep = services.createStep(
       'description',
       step.state.position,
     );

@@ -63,7 +63,6 @@ export default () => {
     const defaultLesson: Lesson = createLesson(
       newLessonId,
       [defaultStep],
-      defaultStep,
       user,
     );
     dispatch(updateEntities(defaultLesson));

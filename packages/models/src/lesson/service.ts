@@ -9,7 +9,6 @@ import {
   isSameStep,
   Step
 } from "../step";
-import { updateSubjectState } from "../subject";
 import { User } from "../user";
 
 // Lesson
@@ -76,22 +75,11 @@ const getLessonStepIndex = (lesson: Lesson, step: Step) => {
   return index;
 };
 
-const setActiveStep = (lesson: Lesson, step: Step): Lesson =>
-  updateSubjectState(lesson, {
-    activeStepId: step.id
-  });
-
-const createLesson = (
-  id: string,
-  steps: Step[],
-  activeStep: Step,
-  owner: User
-): Lesson => ({
+const createLesson = (id: string, steps: Step[], owner: User): Lesson => ({
   id,
   type: TYPE_LESSON,
   owner,
   state: {
-    activeStepId: activeStep.id,
     steps: steps
   }
 });
@@ -102,7 +90,6 @@ export {
   getLessonPreviousStep,
   createLesson,
   getLessonNextStep,
-  setActiveStep,
   getLessonStepsCount,
   getLessonStepIndex
 };

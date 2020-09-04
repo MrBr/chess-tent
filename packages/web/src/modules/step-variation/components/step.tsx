@@ -23,7 +23,7 @@ const {
   useAddDescriptionStep,
   useUpdateStepDescriptionDebounced,
 } = hooks;
-const { Stepper, StepTag, StepToolbox, StepperStepContainer } = components;
+const { Stepper, StepTag, StepToolbox } = components;
 const {
   actions: { updateStepState, setLessonActiveStep, updateEntities },
 } = state;

@@ -16,6 +16,7 @@ const {
   useDispatchBatched,
   useApi,
   useComponentStateSilent,
+  useLocation,
 } = hooks;
 
 const StepperSidebar = styled.div({
@@ -29,7 +30,11 @@ const StepperSidebar = styled.div({
 const Editor: Components['Editor'] = ({ lesson }) => {
   const componentState = useComponentStateSilent();
   const dispatch = useDispatchBatched();
-  const { steps, activeStepId } = lesson.state;
+  const { steps } = lesson.state;
+  const location = useLocation();
+  const activeStepId =
+    new URLSearchParams(location.search).get('activeStep') ||
+    lesson.state.steps[0].id;
   const activeStep = useSelector(stepSelector(activeStepId));
   const [isDirty, setIsDirty] = useState<boolean>(false);
   const {

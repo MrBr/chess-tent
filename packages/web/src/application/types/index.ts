@@ -25,6 +25,7 @@ import {
   RedirectProps,
   LinkProps,
   useParams,
+  useLocation,
 } from 'react-router-dom';
 import { Store } from 'redux';
 import { History } from 'history';
@@ -86,6 +87,7 @@ export type Hooks = {
   useUser: (userId: User['id']) => User;
   useActiveUserRecord: () => RecordHookReturn<User>;
   useHistory: () => History;
+  useLocation: typeof useLocation;
   useParams: typeof useParams;
   useApi: <T, K extends StatusResponse>(
     request: RequestFetch<T, K>,
@@ -205,6 +207,7 @@ export type Services = {
     initialPosition: FEN,
     initialState?: Partial<T extends Step<infer U, infer K> ? U : never>,
   ) => T;
+  history: History;
 };
 
 export type Pages = {

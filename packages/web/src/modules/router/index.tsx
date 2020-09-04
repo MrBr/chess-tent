@@ -8,6 +8,7 @@ import {
   Link,
   useHistory,
   useParams,
+  useLocation,
   Router as BaseRouter,
 } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
@@ -38,5 +39,7 @@ application.components.Route = Route;
 application.components.Link = Link;
 application.components.Redirect = Redirect;
 application.services.addRoute = addRoute;
+application.services.history = history;
 application.hooks.useHistory = useHistory;
+application.hooks.useLocation = useLocation;
 application.hooks.useParams = useParams;

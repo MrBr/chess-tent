@@ -91,7 +91,12 @@ const boardChange = (
   ];
 };
 
-const Editor: VariationModule['Editor'] = ({ Chessboard, step, lesson }) => {
+const Editor: VariationModule['Editor'] = ({
+  Chessboard,
+  step,
+  lesson,
+  status,
+}) => {
   const {
     state: { position, shapes, editing },
   } = step;
@@ -119,6 +124,7 @@ const Editor: VariationModule['Editor'] = ({ Chessboard, step, lesson }) => {
       onMove={onChangeHandle}
       onShapesChange={updateShapes}
       shapes={shapes}
+      header={status}
       footer={
         <Footer toggleEditingMode={toggleEditingMode} editing={!!editing} />
       }

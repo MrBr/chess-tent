@@ -31,5 +31,9 @@ export const useApi: Hooks['useApi'] = <T, U extends StatusResponse>(
     [request, setApiRequestState],
   );
 
-  return { fetch, ...apiRequestState };
+  const reset = useCallback(() => {
+    setApiRequestState({ response: null, loading: false, error: null });
+  }, [setApiRequestState]);
+
+  return { fetch, ...apiRequestState, reset };
 };

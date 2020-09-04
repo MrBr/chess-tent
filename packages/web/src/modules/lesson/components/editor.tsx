@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Step } from '@chess-tent/models';
 import { Components } from '@types';
 import { debounce } from 'lodash';
@@ -31,13 +31,21 @@ const Editor: Components['Editor'] = ({ lesson }) => {
   const dispatch = useDispatchBatched();
   const { steps, activeStepId } = lesson.state;
   const activeStep = useSelector(stepSelector(activeStepId));
-  const { fetch: lessonSave, error: lessonSaveError } = useApi(
-    requests.lessonSave,
-  );
-  const lessonSaveThrottle = useCallback(debounce(lessonSave, 1000), [fetch]);
+  const [isDirty, setIsDirty] = useState<boolean>(false);
+  const {
+    fetch: lessonSave,
+    error: lessonSaveError,
+    response: lessonSaved,
+  } = useApi(requests.lessonSave);
+  const lessonSaveThrottle = useCallback(debounce(lessonSave, 1000), [
+    lessonSave,
+  ]);
 
   useEffect(() => {
-    componentState.mounted && lessonSaveThrottle(lesson);
+    if (componentState.mounted) {
+      setIsDirty(true);
+      lessonSaveThrottle(lesson);
+    }
   }, [lesson, lessonSaveThrottle, componentState]);
 
   const setActiveStepHandler = useCallback(
@@ -48,10 +56,14 @@ const Editor: Components['Editor'] = ({ lesson }) => {
   );
 
   useEffect(() => {
-    if (lessonSaveError) {
-      alert('Lesson not saved!');
-    }
-  }, [lessonSaveError]);
+    setIsDirty(!!lessonSaved?.error);
+  }, [lessonSaveError, lessonSaved]);
+
+  const lessonStatus = lessonSaveError
+    ? 'Error!'
+    : isDirty
+    ? 'Have unsaved changes'
+    : 'Lesson saved';
 
   return (
     <Container fluid className="px-0 h-100">
@@ -63,6 +75,7 @@ const Editor: Components['Editor'] = ({ lesson }) => {
             activeStep={activeStep}
             setActiveStep={setActiveStepHandler}
             lesson={lesson}
+            status={lessonStatus}
             Chessboard={Chessboard}
           />
         </Col>

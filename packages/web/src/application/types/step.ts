@@ -13,6 +13,7 @@ export type StepBoardComponentProps = {
   Chessboard:
     | FunctionComponent<ChessboardProps>
     | ClassComponent<ChessboardInterface>;
+  status?: string;
 };
 export type StepProps<S extends Step, P = {}> = {
   step: S;

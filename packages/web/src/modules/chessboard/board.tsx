@@ -70,14 +70,19 @@ const ChessgroundMappedProps: ChessgroundMappedPropsType = {
   animation: 'animation.enabled',
 };
 
-const BoardHeader = styled.div({
-  display: 'flex',
-  height: 50,
-  justifyContent: 'space-between',
-  alignItems: 'center',
-});
+const BoardHeader = styled.div<{
+  width: string | number;
+}>(
+  {
+    display: 'flex',
+    height: 50,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  ({ width }) => ({ width }),
+);
 
-const BoardOptions = styled.div<{
+const BoardFooter = styled.div<{
   width: string | number;
 }>(
   {
@@ -312,13 +317,13 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
             onEvaluationChange={console.log}
           />
         )}
-        <BoardHeader>{header}</BoardHeader>
+        <BoardHeader width={width as string}>{header}</BoardHeader>
         <BoardContainer
           width={width as string}
           height={height as string}
           boardRef={this.boardHost}
         />
-        <BoardOptions width={width as string}>{footer}</BoardOptions>
+        <BoardFooter width={width as string}>{footer}</BoardFooter>
         <SparePieces onDragStart={this.onSparePieceDrag} />
         <Modal
           container={this.boardHost}

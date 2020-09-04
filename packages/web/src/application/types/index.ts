@@ -94,6 +94,7 @@ export type Hooks = {
     response: K | null;
     loading: boolean;
     error: null | string | {};
+    reset: () => void;
   };
   useRecord: <T extends RecordValue>(recordKey: string) => RecordHookReturn<T>;
   useDenormalize: <T extends RecordValue>(

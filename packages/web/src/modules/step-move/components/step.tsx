@@ -129,7 +129,7 @@ const boardChange = (
   ];
 };
 
-const Editor: MoveModule['Editor'] = ({ Chessboard, step, lesson }) => {
+const Editor: MoveModule['Editor'] = ({ Chessboard, step, lesson, status }) => {
   const {
     state: { position, shapes },
   } = step;
@@ -159,6 +159,7 @@ const Editor: MoveModule['Editor'] = ({ Chessboard, step, lesson }) => {
     <Chessboard
       fen={position}
       onMove={onChangeHandle}
+      header={status}
       onShapesChange={updateShapes}
       shapes={shapes}
     />

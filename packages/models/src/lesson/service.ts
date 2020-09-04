@@ -1,5 +1,6 @@
 import { Lesson, TYPE_LESSON } from "./types";
 import {
+  getChildStep,
   getLastStep,
   getNextStep,
   getParentStep,
@@ -14,6 +15,16 @@ import { User } from "../user";
 // Lesson
 const isLesson = (entity: unknown) =>
   Object.getOwnPropertyDescriptor(entity, "type")?.value === TYPE_LESSON;
+
+const getLessonStep = (lesson: Lesson, stepId: Step["id"]) => {
+  for (const rootStep of lesson.state.steps) {
+    const step = getChildStep(rootStep, stepId);
+    if (step) {
+      return step;
+    }
+  }
+  return null;
+};
 
 const getLessonParentStep = (lesson: Lesson, step: Step) => {
   for (const rootStep of lesson.state.steps) {
@@ -91,5 +102,6 @@ export {
   createLesson,
   getLessonNextStep,
   getLessonStepsCount,
-  getLessonStepIndex
+  getLessonStepIndex,
+  getLessonStep
 };

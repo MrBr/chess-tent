@@ -1,5 +1,4 @@
 import application from '@application';
-import { TYPE_ACTIVITY } from '@chess-tent/models';
 import { activitySchema } from './model';
 
 application.model.activitySchema = activitySchema;
@@ -9,16 +8,13 @@ application.register(
     application.components.Activities = module.default;
   },
 );
-application.register(
-  () => import('./state/reducer'),
-  module => {
-    application.state.registerEntityReducer(TYPE_ACTIVITY, module.reducer);
-  },
-);
+application.register(() => import('./register'));
 application.register(
   () => import('./state/actions'),
   module => {
     application.state.actions.updateActivity = module.updateActivityAction;
+    application.state.actions.setActivityActiveStep =
+      module.setActivityActiveStepAction;
     application.state.actions.updateActivityState =
       module.updateActivityStateAction;
   },

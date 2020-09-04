@@ -4,16 +4,16 @@ import { components, hooks, state, ui } from '@application';
 import {
   getLessonNextStep,
   getLessonPreviousStep,
+  getLessonStep,
   getLessonStepIndex,
   getLessonStepsCount,
 } from '@chess-tent/models';
 
 const { Container, Row, Col, Button } = ui;
 const { StepRenderer, Chessboard } = components;
-const { useDispatchBatched, useSelector } = hooks;
+const { useDispatchBatched, useLocation } = hooks;
 const {
-  actions: { updateActivityState },
-  selectors: { stepSelector },
+  actions: { updateActivityState, setActivityActiveStep },
 } = state;
 
 const Footer = ({
@@ -41,9 +41,11 @@ const Footer = ({
 const Activity: ActivityComponent<LessonActivity> = ({ activity }) => {
   const dispatch = useDispatchBatched();
   const lesson = activity.subject;
-  const activeStep =
-    useSelector(stepSelector(activity.state.activeStepId)) ||
-    activity.subject.state.steps[0];
+  const location = useLocation();
+  const activeStepId =
+    new URLSearchParams(location.search).get('activeStep') ||
+    activity.subject.state.steps[0].id;
+  const activeStep = getLessonStep(lesson, activeStepId);
   const activeStepActivityState = activity.state[activeStep.id] || {};
 
   const stepsCount = useMemo(() => getLessonStepsCount(lesson), [lesson]);
@@ -61,22 +63,12 @@ const Activity: ActivityComponent<LessonActivity> = ({ activity }) => {
 
   const nextActivityStep = useCallback(() => {
     const nextStep = getLessonNextStep(lesson, activeStep);
-    nextStep &&
-      dispatch(
-        updateActivityState(activity, {
-          activeStepId: nextStep.id,
-        }),
-      );
+    nextStep && dispatch(setActivityActiveStep(activity, nextStep));
   }, [activity, activeStep, dispatch, lesson]);
 
   const prevActivityStep = useCallback(() => {
     const prevStep = getLessonPreviousStep(lesson, activeStep);
-    prevStep &&
-      dispatch(
-        updateActivityState(activity, {
-          activeStepId: prevStep.id,
-        }),
-      );
+    prevStep && dispatch(setActivityActiveStep(activity, prevStep));
   }, [activity, activeStep, dispatch, lesson]);
 
   return (

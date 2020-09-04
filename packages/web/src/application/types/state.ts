@@ -19,6 +19,7 @@ export const UPDATE_LESSON = 'UPDATE_LESSON';
 export const UPDATE_STEP = 'UPDATE_STEP';
 export const UPDATE_STEP_STATE = 'UPDATE_STEP_STATE';
 
+export const SET_ACTIVITY_ACTIVE_STEP = 'SET_ACTIVITY_ACTIVE_STEP';
 export const UPDATE_ACTIVITY = 'UPDATE_ACTIVITY';
 export const UPDATE_ACTIVITY_STATE = 'UPDATE_ACTIVITY_STATE';
 
@@ -109,6 +110,11 @@ export type StepAction =
 /**
  * Activity
  */
+export type SetActivityActiveStepAction = Action<
+  typeof SET_ACTIVITY_ACTIVE_STEP,
+  Step['id'],
+  { id: Activity['id'] }
+>;
 export type UpdateActivityAction<T extends Subject> = Action<
   typeof UPDATE_ACTIVITY,
   Partial<NormalizedActivity<T>>,
@@ -122,6 +128,7 @@ export type UpdateActivityStateAction = Action<
 
 export type ActivityAction<T extends Subject> =
   | UpdateEntitiesAction
+  | SetActivityActiveStepAction
   | UpdateActivityAction<T>
   | UpdateActivityStateAction;
 

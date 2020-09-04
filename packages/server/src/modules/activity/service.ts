@@ -20,6 +20,7 @@ export const getActivity = (
     ActivityModel.findById(activityId)
       .populate("owner")
       .populate("users")
+      .populate("subject")
       .exec((err, result) => {
         if (err) {
           throw err;
@@ -35,6 +36,7 @@ export const findActivities = (
     ActivityModel.find(ActivityModel.translateAliases(activity))
       .populate("owner")
       .populate("users")
+      .populate("subject")
       .exec((err, result) => {
         if (err) {
           throw err;

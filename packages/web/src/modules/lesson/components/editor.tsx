@@ -4,8 +4,9 @@ import { Components } from '@types';
 import { debounce } from 'lodash';
 import { state, hooks, components, ui, requests } from '@application';
 import styled from '@emotion/styled';
+import TrainingModal from './trening-assign';
 
-const { Container, Row, Col, Headline2 } = ui;
+const { Container, Row, Col, Headline2, Button } = ui;
 const { Stepper, StepRenderer, Chessboard } = components;
 const {
   actions: { setLessonActiveStep },
@@ -17,6 +18,7 @@ const {
   useApi,
   useComponentStateSilent,
   useLocation,
+  usePromptModal,
 } = hooks;
 
 const StepperSidebar = styled.div({
@@ -36,6 +38,7 @@ const Editor: Components['Editor'] = ({ lesson }) => {
     new URLSearchParams(location.search).get('activeStep') ||
     lesson.state.steps[0].id;
   const activeStep = useSelector(stepSelector(activeStepId));
+  const promptModal = usePromptModal();
   const [isDirty, setIsDirty] = useState<boolean>(false);
   const {
     fetch: lessonSave,
@@ -86,6 +89,12 @@ const Editor: Components['Editor'] = ({ lesson }) => {
         </Col>
         <Col sm={4}>
           <StepperSidebar>
+            <Button
+              size="extra-small"
+              onClick={() => promptModal(<TrainingModal />)}
+            >
+              Assign lesson
+            </Button>
             <Headline2>Lesson</Headline2>
             <Stepper
               lesson={lesson}

@@ -12,6 +12,20 @@ const isSameStep = (leftStep: Step | null, rightStep: Step | null) => {
   return leftStep?.id === rightStep?.id;
 };
 
+const getChildStep = (parentStep: Step, childId: Step["id"]): Step | null => {
+  if (parentStep.id === childId) {
+    return parentStep;
+  }
+  for (const index in parentStep.state.steps) {
+    const step = parentStep.state.steps[index];
+    const childStep = getChildStep(step, childId);
+    if (childStep) {
+      return childStep;
+    }
+  }
+  return null;
+};
+
 const getPreviousStep = (parentStep: Step, cursorStep: Step): Step | null => {
   if (isSameStep(parentStep, cursorStep)) {
     return null;
@@ -181,5 +195,6 @@ export {
   getPreviousStep,
   getParentStep,
   isLastStep,
-  addStepRightToSame
+  addStepRightToSame,
+  getChildStep
 };

@@ -1,5 +1,7 @@
-import { Activity, Subject } from '@chess-tent/models';
+import { Activity, Step, Subject } from '@chess-tent/models';
 import {
+  SET_ACTIVITY_ACTIVE_STEP,
+  SetActivityActiveStepAction,
   UPDATE_ACTIVITY,
   UPDATE_ACTIVITY_STATE,
   UpdateActivityAction,
@@ -13,6 +15,17 @@ export const updateActivityAction = <T extends Subject>(
 ): UpdateActivityAction<T> => ({
   type: UPDATE_ACTIVITY,
   payload: utils.normalize({ ...activity, ...patch }).result,
+  meta: {
+    id: activity.id,
+  },
+});
+
+export const setActivityActiveStepAction = (
+  activity: Activity,
+  step: Step,
+): SetActivityActiveStepAction => ({
+  type: SET_ACTIVITY_ACTIVE_STEP,
+  payload: step.id,
   meta: {
     id: activity.id,
   },

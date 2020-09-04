@@ -39,6 +39,7 @@ import {
   RecordValue,
   UpdateActivityStateAction,
   UpdateActivityAction,
+  SetActivityActiveStepAction,
 } from './state';
 import { FEN, Move, Piece } from './chess';
 import { StepModule, StepModuleComponentKey } from './step';
@@ -73,6 +74,7 @@ export type RecordHookReturn<T extends RecordValue> = [
 
 export type Hooks = {
   useComponentStateSilent: () => { mounted: boolean };
+  usePromptModal: () => (modalContent: ReactElement) => void;
   useAddDescriptionStep: (
     lesson: Lesson,
     step: Step,
@@ -157,6 +159,10 @@ export type State = {
       activity: T,
       state: Partial<T extends Activity<infer K, infer S> ? S : never>,
     ) => UpdateActivityStateAction;
+    setActivityActiveStep: (
+      activity: Activity,
+      step: Step,
+    ) => SetActivityActiveStepAction;
     updateActivity: <T extends Activity>(
       activity: T,
       patch: Partial<T>,

@@ -3,7 +3,7 @@ export interface BorderRadiusProps {
 }
 
 export const getBorderRadiusSize = (
-  sizeName: BorderRadiusProps['borderRadius'],
+  sizeName?: BorderRadiusProps['borderRadius'],
 ) => {
   switch (sizeName) {
     case 'extra-small':
@@ -12,6 +12,7 @@ export const getBorderRadiusSize = (
       return 6;
     case 'large':
       return 16;
+    case 'regular':
     default:
       return 10;
   }

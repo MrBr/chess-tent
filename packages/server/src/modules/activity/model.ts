@@ -12,7 +12,8 @@ export interface DepupulatedActivity {
   id: Activity["id"];
   type: Activity["type"];
   state: Activity["state"];
-  subject: NormalizedActivity["subject"];
+  subject: NormalizedActivity["subject"]["id"];
+  subjectType: NormalizedActivity["subject"]["type"];
   owner: NormalizedActivity["owner"];
   users: NormalizedActivity["users"];
 }
@@ -22,9 +23,12 @@ export type ActivityDocument = DepupulatedActivity & Document;
 const activitySchema = db.createStandardSchema<DepupulatedActivity>(
   {
     subject: ({
-      type: Schema.Types.Mixed,
-      ref: TYPE_USER
+      type: String,
+      refPath: "subjectType"
     } as unknown) as DepupulatedActivity["subject"],
+    subjectType: ({
+      type: String
+    } as unknown) as DepupulatedActivity["subjectType"],
     owner: ({
       type: String,
       ref: TYPE_USER
@@ -52,7 +56,13 @@ const ActivityModel = model<ActivityDocument>(TYPE_ACTIVITY, activitySchema);
 
 const depopulate = (activity: Activity<Subject>): DepupulatedActivity => {
   const users = activity.users.map(user => user.id);
-  return { ...activity, owner: activity.owner.id, users };
+  return {
+    ...activity,
+    owner: activity.owner.id,
+    users,
+    subject: activity.subject.id,
+    subjectType: activity.subject.type
+  };
 };
 
 export { activitySchema, ActivityModel, depopulate };

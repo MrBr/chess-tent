@@ -4,6 +4,7 @@ import { default as BFormGroup } from 'react-bootstrap/FormGroup';
 import { default as BForm } from 'react-bootstrap/Form';
 import styled from '@emotion/styled';
 import { UI } from '@types';
+import { default as Select } from './Select';
 
 // There are 2 type of Form components.
 // Standalone component that can be use without Form parent.
@@ -29,6 +30,19 @@ const Form: UI['Form'] = props => (
   </Formik>
 );
 
+const FormSelect: UI['Form']['Select'] = props => {
+  const [field, { error }, { setValue }] = useField(props.name);
+  return (
+    <>
+      <Select
+        {...props}
+        {...field}
+        onChange={(option: any) => setValue(option)}
+      />
+      <BForm.Control.Feedback type="invalid">{error}</BForm.Control.Feedback>
+    </>
+  );
+};
 const FormInput: UI['Form']['Input'] = props => {
   const [field, { touched, error }] = useField(props);
   const isValid = !!touched && !error;
@@ -40,11 +54,13 @@ const FormInput: UI['Form']['Input'] = props => {
         isInvalid={isInvalid}
         {...props}
         {...field}
+        value={undefined}
       />
       <BForm.Control.Feedback type="invalid">{error}</BForm.Control.Feedback>
     </>
   );
 };
 Form.Input = FormInput;
+Form.Select = FormSelect;
 
 export { Form, Input, ErrorMessage, FormGroup, Label, Check, File };

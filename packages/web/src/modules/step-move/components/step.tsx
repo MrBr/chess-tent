@@ -11,7 +11,7 @@ import {
 import { FEN, Move, MoveModule, MoveStep, Piece, VariationStep } from '@types';
 import { services, hooks, components, state, ui } from '@application';
 
-const { Col, Row } = ui;
+const { Col, Row, Container } = ui;
 const { getPiece } = services;
 const {
   useDispatchBatched,
@@ -198,7 +198,7 @@ const StepperStep: MoveModule['StepperStep'] = ({
   );
 
   return (
-    <StepperStepContainer onClick={handleStepClick}>
+    <Container fluid onClick={handleStepClick} className="p-0">
       <Row noGutters>
         <Col className="col-auto">
           <StepTag
@@ -220,14 +220,16 @@ const StepperStep: MoveModule['StepperStep'] = ({
           />
         </Col>
       </Row>
-      <Stepper
-        {...props}
-        activeStep={activeStep}
-        steps={step.state.steps}
-        setActiveStep={setActiveStep}
-        lesson={lesson}
-      />
-    </StepperStepContainer>
+      <StepperStepContainer>
+        <Stepper
+          {...props}
+          activeStep={activeStep}
+          steps={step.state.steps}
+          setActiveStep={setActiveStep}
+          lesson={lesson}
+        />
+      </StepperStepContainer>
+    </Container>
   );
 };
 

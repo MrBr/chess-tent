@@ -18,11 +18,12 @@ const {
   useComponentStateSilent,
 } = hooks;
 
-const StepperSidebar = styled(Col)({
+const StepperSidebar = styled.div({
   height: '100%',
   maxHeight: '100%',
   background: '#FAFBFB',
   overflowY: 'auto',
+  padding: 24,
 });
 
 const Editor: Components['Editor'] = ({ lesson }) => {
@@ -65,15 +66,17 @@ const Editor: Components['Editor'] = ({ lesson }) => {
             Chessboard={Chessboard}
           />
         </Col>
-        <StepperSidebar sm={4}>
-          <Headline2>Lesson</Headline2>
-          <Stepper
-            lesson={lesson}
-            steps={steps}
-            activeStep={activeStep}
-            setActiveStep={setActiveStepHandler}
-          />
-        </StepperSidebar>
+        <Col sm={4}>
+          <StepperSidebar>
+            <Headline2>Lesson</Headline2>
+            <Stepper
+              lesson={lesson}
+              steps={steps}
+              activeStep={activeStep}
+              setActiveStep={setActiveStepHandler}
+            />
+          </StepperSidebar>
+        </Col>
       </Row>
     </Container>
   );

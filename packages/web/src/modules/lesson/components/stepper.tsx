@@ -5,15 +5,10 @@ import { StepperProps } from '@types';
 
 const { StepRenderer } = components;
 
-const StepperStepContainer = styled.div({
-  '& > & ': {
-    paddingLeft: 24,
-  },
-  '& > & > &': {
-    paddingLeft: 10,
-    marginLeft: 10,
-    borderLeft: '1px solid #D1D3D7',
-  },
+const StepperVariation = styled.div({
+  paddingLeft: 10,
+  marginLeft: 10,
+  borderLeft: '1px solid #D1D3D7',
   position: 'relative',
 });
 
@@ -43,4 +38,4 @@ const Stepper = ({
   );
 };
 
-export { Stepper, StepperStepContainer };
+export { Stepper, StepperVariation as StepperStepContainer };

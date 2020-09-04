@@ -17,7 +17,7 @@ import {
 import { hooks, components, state, services, ui } from '@application';
 import Footer from './footer';
 
-const { Col, Row } = ui;
+const { Col, Row, Container } = ui;
 const {
   useDispatchBatched,
   useAddDescriptionStep,
@@ -163,7 +163,7 @@ const StepperStep: VariationModule['StepperStep'] = ({
   );
 
   return (
-    <StepperStepContainer onClick={handleStepClick}>
+    <Container onClick={handleStepClick} fluid className="p-0">
       <Row className="no-gutters">
         <Col className="col-auto">
           <StepTag step={step} active={activeStep === step}>
@@ -186,7 +186,7 @@ const StepperStep: VariationModule['StepperStep'] = ({
         setActiveStep={setActiveStep}
         lesson={lesson}
       />
-    </StepperStepContainer>
+    </Container>
   );
 };
 

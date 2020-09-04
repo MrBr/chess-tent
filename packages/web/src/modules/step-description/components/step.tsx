@@ -19,8 +19,8 @@ import Comment from './comment';
 const {
   actions: { updateStepState, updateEntities, setLessonActiveStep },
 } = state;
-const { Col, Row } = ui;
-const { StepperStepContainer, StepTag, StepToolbox } = components;
+const { Col, Row, Container } = ui;
+const { StepTag, StepToolbox } = components;
 const { useUpdateStepDescriptionDebounced, useDispatchBatched } = hooks;
 
 const stepType = 'description';
@@ -112,7 +112,7 @@ const StepperStep: DescriptionModule['StepperStep'] = ({
   );
 
   return (
-    <StepperStepContainer onClick={handleStepClick}>
+    <Container onClick={handleStepClick} fluid className="p-0">
       <Row noGutters>
         <Col className="col-auto">
           <StepTag step={step} active={activeStep === step}>
@@ -128,7 +128,7 @@ const StepperStep: DescriptionModule['StepperStep'] = ({
           />
         </Col>
       </Row>
-    </StepperStepContainer>
+    </Container>
   );
 };
 

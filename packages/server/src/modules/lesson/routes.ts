@@ -18,10 +18,10 @@ application.service.registerPostRoute(
   sendStatusOk
 );
 application.service.registerPutRoute(
-  "/lesson/:id",
+  "/lesson/:lessonId",
   identify,
   toLocals("lesson", req => req.body),
-  toLocals("lesson.id", req => req.params.id),
+  toLocals("lesson.id", req => req.params.lessonId),
   canEditLesson,
   patchLesson,
   sendStatusOk

@@ -4,6 +4,8 @@ import { Step } from "./step/types";
 import { Activity } from "./activity/types";
 
 export * from "./subject";
+export * from "./conversation";
+export * from "./message";
 export * from "./activity";
 export * from "./step";
 export * from "./lesson";

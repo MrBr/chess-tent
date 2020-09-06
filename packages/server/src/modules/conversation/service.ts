@@ -34,10 +34,13 @@ export const addMessageToConversation = (
   });
 
 export const findConversations = (
-  users: User["id"][] | User["id"]
+  users: User["id"][]
 ): Promise<Conversation[]> =>
   new Promise(resolve => {
-    ConversationModel.find({ users })
+    ConversationModel.find(
+      { users: { $in: users } },
+      { messages: { $slice: -1 } }
+    )
       .populate("users")
       .exec((err, result) => {
         if (err) {

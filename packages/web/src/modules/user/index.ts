@@ -9,6 +9,12 @@ import { useActiveUserRecord, useUser } from './hooks';
 application.register(() => import('./provider'));
 application.register(() => import('./routes'));
 application.register(() => import('./requests'));
+application.register(
+  () => import('./components/coaches'),
+  module => {
+    application.components.Coaches = module.default;
+  },
+);
 application.model.userSchema = userSchema;
 application.pages.Register = Register;
 application.hooks.useUser = useUser;

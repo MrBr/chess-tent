@@ -3,6 +3,7 @@ import application from '@application';
 application.register(() => import('./app'));
 application.register(() => import('./api'));
 application.register(() => import('./auth'));
+application.register(() => import('./conversation'));
 application.register(() => import('./chess'));
 application.register(() => import('./chessboard'));
 application.register(() => import('./evaluator'));

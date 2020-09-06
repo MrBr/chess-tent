@@ -1,7 +1,11 @@
 import { MiddlewareFunction } from "@types";
 import { User } from "@chess-tent/models";
 import * as service from "./service";
-import { LoginFailedError, PasswordEncryptionError } from "./errors";
+import {
+  InvalidUserFiltersError,
+  LoginFailedError,
+  PasswordEncryptionError
+} from "./errors";
 import { validateUserPassword } from "./service";
 
 export const addUser: MiddlewareFunction = (req, res, next) => {
@@ -26,6 +30,19 @@ export const getActiveUser: MiddlewareFunction = (req, res, next) => {
     .getUser(res.locals.user as User)
     .then(user => {
       res.locals.user = user;
+      next();
+    })
+    .catch(next);
+};
+
+export const findUsers: MiddlewareFunction = (req, res, next) => {
+  if (!res.locals.filters || Object.keys(res.locals.filters).length < 0) {
+    throw new InvalidUserFiltersError();
+  }
+  service
+    .findUsers(res.locals.filters)
+    .then(users => {
+      res.locals.users = users;
       next();
     })
     .catch(next);

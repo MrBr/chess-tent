@@ -54,7 +54,23 @@ const FormInput: UI['Form']['Input'] = props => {
         isInvalid={isInvalid}
         {...props}
         {...field}
-        value={undefined}
+      />
+      <BForm.Control.Feedback type="invalid">{error}</BForm.Control.Feedback>
+    </>
+  );
+};
+const FormCheck: UI['Form']['Check'] = props => {
+  const [field, { touched, error }] = useField(props);
+  const isValid = !!touched && !error;
+  const isInvalid = !!touched && !!error;
+  return (
+    <>
+      <BForm.Control
+        type="checkbox"
+        isValid={isValid}
+        isInvalid={isInvalid}
+        {...props}
+        {...field}
       />
       <BForm.Control.Feedback type="invalid">{error}</BForm.Control.Feedback>
     </>
@@ -62,5 +78,6 @@ const FormInput: UI['Form']['Input'] = props => {
 };
 Form.Input = FormInput;
 Form.Select = FormSelect;
+Form.Check = FormCheck;
 
 export { Form, Input, ErrorMessage, FormGroup, Label, Check, File };

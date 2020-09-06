@@ -5,17 +5,19 @@ export interface User {
   name: string;
   nickname: string;
   email: string;
-  imageUrl: string;
+  imageUrl?: string;
   type: typeof TYPE_USER;
   password: string;
+  coach?: boolean;
 }
 
 export interface NormalizedUser {
   id: User["id"];
   type: User["type"];
   name: User["name"];
-  imageUrl: User["imageUrl"];
+  imageUrl?: User["imageUrl"];
   nickname: User["nickname"];
   email: User["email"];
   password: User["password"];
+  coach?: User["coach"];
 }

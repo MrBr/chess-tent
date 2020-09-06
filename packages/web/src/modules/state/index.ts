@@ -25,6 +25,8 @@ const { normalize, denormalize } = initService({
   lessons: model.lessonSchema,
   activities: model.activitySchema,
   steps: model.stepSchema,
+  conversations: model.conversationSchema,
+  messages: model.messageSchema,
 });
 application.utils.normalize = normalize;
 application.utils.denormalize = denormalize;

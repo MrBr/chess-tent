@@ -2,7 +2,6 @@ import { model, Schema, Document } from "mongoose";
 import {
   Conversation,
   NormalizedConversation,
-  NormalizedUser,
   TYPE_CONVERSATION,
   TYPE_USER
 } from "@chess-tent/models";

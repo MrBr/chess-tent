@@ -33,6 +33,7 @@ const SignupSchema = yup.object().shape({
     .string()
     .email('Invalid email')
     .required(),
+  coach: yup.boolean(),
 });
 
 export default () => {
@@ -72,6 +73,10 @@ export default () => {
       <FormGroup>
         <Label>Repeat password</Label>
         <Form.Input type="password" name="passwordConfirmation" />
+      </FormGroup>
+      <FormGroup>
+        <Label>Coach</Label>
+        <Form.Check name="coach" />
       </FormGroup>
       <FormGroup>
         <Button type="submit" disabled={loading}>

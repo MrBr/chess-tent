@@ -5,7 +5,8 @@ import {
   verifyUser,
   hashPassword,
   getActiveUser,
-  updateUser
+  updateUser,
+  findUsers
 } from "./middleware";
 
 const {
@@ -32,6 +33,14 @@ application.service.registerPostRoute(
   verifyUser,
   webLogin,
   sendData("user")
+);
+
+application.service.registerPostRoute(
+  "/users",
+  identify,
+  toLocals("filters", req => req.body),
+  findUsers,
+  sendData("users")
 );
 
 application.service.registerGetRoute("/logout", webLogout, sendStatusOk);

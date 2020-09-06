@@ -1,5 +1,5 @@
 import { model, Schema, Document } from "mongoose";
-import { NormalizedUser, TYPE_USER, User } from "@chess-tent/models";
+import { NormalizedUser, TYPE_USER } from "@chess-tent/models";
 import { db } from "@application";
 
 const userSchema = db.createStandardSchema<NormalizedUser>({
@@ -22,7 +22,8 @@ const userSchema = db.createStandardSchema<NormalizedUser>({
     type: String,
     required: true,
     select: false
-  } as unknown) as string
+  } as unknown) as string,
+  coach: (Schema.Types.Boolean as unknown) as boolean
 });
 
 const UserModel = model<NormalizedUser & Document>(TYPE_USER, userSchema);

@@ -20,6 +20,7 @@ import FormControl from 'react-bootstrap/FormControl';
 import FormFile from 'react-bootstrap/FormFile';
 import Select, { OptionProps } from 'react-select';
 import { SelectComponentsProps } from 'react-select/base';
+import { FormCheckInputProps } from 'react-bootstrap/FormCheckInput';
 
 export type ButtonProps = {
   variant?: 'primary' | 'secondary' | 'regular' | 'danger';
@@ -57,6 +58,7 @@ type UIComponent<T = {}> = ComponentType<
 export type UI = {
   Form: typeof Formik & {
     Input: UIComponent<FormControlProps & { name: string }>;
+    Check: UIComponent<FormCheckInputProps & { name: string }>;
     Select: UIComponent<
       Omit<FormControlProps, 'value'> & {
         name: string;
@@ -72,10 +74,13 @@ export type UI = {
   Headline4: UIComponent;
   Headline5: UIComponent;
   Headline6: UIComponent;
-  Img: ComponentType<{ src: string }>;
-  Avatar: ComponentType<{ src: string; size?: 'regular' | 'small' | 'large' }>;
+  Img: ComponentType<{ src: string | undefined }>;
+  Avatar: ComponentType<{
+    src: string | undefined;
+    size?: 'regular' | 'small' | 'large';
+  }>;
   Thumbnail: ComponentType<{
-    src: string;
+    src: string | undefined;
     size?: 'regular' | 'small' | 'large';
   }>;
   File: typeof FormFile;

@@ -6,14 +6,14 @@ export interface Message {
   id: string;
   message: string;
   owner: User;
-  timestamp: string;
+  timestamp: number;
   type: typeof TYPE_MESSAGE;
 }
 
 export interface NormalizedMessage {
-  id: string;
-  message: string;
+  id: Message["id"];
+  message: Message["message"];
   owner: User["id"];
-  timestamp: string;
+  timestamp: Message["timestamp"];
   type: typeof TYPE_MESSAGE;
 }

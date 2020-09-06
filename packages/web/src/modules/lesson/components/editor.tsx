@@ -37,7 +37,7 @@ const Editor: Components['Editor'] = ({ lesson }) => {
   const activeStepId =
     new URLSearchParams(location.search).get('activeStep') ||
     lesson.state.steps[0].id;
-  const activeStep = useSelector(stepSelector(activeStepId));
+  const activeStep = useSelector(stepSelector(activeStepId)) as Step;
   const promptModal = usePromptModal();
   const [isDirty, setIsDirty] = useState<boolean>(false);
   const {

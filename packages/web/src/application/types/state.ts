@@ -3,6 +3,7 @@ import {
   Entity,
   Lesson,
   NormalizedActivity,
+  NormalizedConversation,
   NormalizedLesson,
   NormalizedStep,
   NormalizedUser,
@@ -39,6 +40,7 @@ export type EntitiesState = {
   lessons: LessonState;
   steps: StepsState;
   activities: ActivityState;
+  conversations: ConversationState;
 };
 /**
  * Records are used to store single entity reference
@@ -54,6 +56,7 @@ export type RecordType = {
 };
 export type RecordState = Record<string, RecordType>;
 export type LessonState = EntityState<NormalizedLesson>;
+export type ConversationState = EntityState<NormalizedConversation>;
 export type StepsState = EntityState<NormalizedStep>;
 export type ActivityState = EntityState<NormalizedActivity<Subject>>;
 export type UserState = EntityState<NormalizedUser>;

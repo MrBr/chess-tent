@@ -4,6 +4,13 @@ export class PasswordEncryptionError extends Error {
   }
 }
 
+export class InvalidUserFiltersError extends Error {
+  status = 400;
+  constructor() {
+    super("Invalid user filters.");
+  }
+}
+
 export class UserNotFoundError extends Error {
   status = 400;
   constructor() {

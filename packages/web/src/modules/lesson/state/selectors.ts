@@ -4,4 +4,4 @@ import { utils } from '@application';
 
 export const lessonSelector = (lessonId: Lesson['id']) => (
   state: AppState,
-): Lesson => utils.denormalize(lessonId, TYPE_LESSON, state.entities);
+): Lesson | null => utils.denormalize(lessonId, TYPE_LESSON, state.entities);

@@ -2,7 +2,6 @@ import { Service } from "@types";
 import { UserModel } from "./model";
 import { User } from "@chess-tent/models";
 import { compare, hash } from "bcrypt";
-import { depopulate } from "../lesson/model";
 
 export const addUser = (user: User) =>
   new Promise(resolve => {
@@ -38,6 +37,19 @@ export const getUser: Service["getUser"] = (user, projection = "") =>
         resolve(user ? user.toObject() : null);
       }
     );
+  });
+
+export const findUsers = (
+  // TODO - validate filters (whole app)
+  filters: Partial<Pick<User, "coach" | "name">>
+): Promise<User[]> =>
+  new Promise(resolve => {
+    UserModel.find(filters).exec((err, result) => {
+      if (err) {
+        throw err;
+      }
+      resolve(result.map(item => item.toObject()));
+    });
   });
 
 export const validateUser = (user: unknown) => {

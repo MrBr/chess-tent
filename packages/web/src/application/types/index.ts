@@ -88,6 +88,7 @@ export type Hooks = {
   useSelector: typeof useSelector;
   useUser: (userId: User['id']) => User;
   useActiveUserRecord: () => RecordHookReturn<User>;
+  useConversationParticipant: () => RecordHookReturn<User>;
   useHistory: () => History;
   useLocation: typeof useLocation;
   useParams: typeof useParams;
@@ -130,6 +131,8 @@ export type Model = {
   lessonSchema: Schema;
   activitySchema: Schema;
   stepSchema: Schema;
+  conversationSchema: Schema;
+  messageSchema: Schema;
   userSchema: Schema;
 };
 export type Middleware = ReduxMiddleware;
@@ -169,8 +172,10 @@ export type State = {
     ) => UpdateActivityAction<T extends Activity<infer S> ? S : never>;
   };
   selectors: {
-    lessonSelector: (lessonId: Lesson['id']) => (state: AppState) => Lesson;
-    stepSelector: (stepId: Step['id']) => (state: AppState) => Step;
+    lessonSelector: (
+      lessonId: Lesson['id'],
+    ) => (state: AppState) => Lesson | null;
+    stepSelector: (stepId: Step['id']) => (state: AppState) => Step | null;
     activitySelector: <T extends Subject>(
       activityId: Activity<T>['id'],
     ) => (state: AppState) => Activity<T>;
@@ -183,7 +188,7 @@ export type Utils = {
   rightMouse: (f: Function) => (e: MouseEvent) => void;
   generateIndex: () => string;
   denormalize: (id: string, type: string, entities: {}) => any;
-  normalize: (entity: any) => any;
+  normalize: (entity: Entity) => any;
 };
 
 export type Services = {
@@ -230,6 +235,7 @@ export type ActivityComponent<T> = ComponentType<
 export type Components = {
   App: ComponentType;
   Header: ComponentType;
+  Layout: ComponentType<{ className?: string }>;
   Chessboard: ClassComponent<ChessboardInterface>;
   Stepper: FunctionComponent<StepperProps>;
   StepperStepContainer: ComponentType<{ onClick?: ReactEventHandler }>;
@@ -264,7 +270,9 @@ export type Components = {
   }>;
   Editor: ComponentType<{ lesson: Lesson }>;
   Lessons: ComponentType<{ owner: User }>;
+  Coaches: ComponentType;
   Activities: ComponentType<{ owner: User }>;
+  Conversations: ComponentType;
 };
 
 export type Constants = {

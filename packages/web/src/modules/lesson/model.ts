@@ -1,9 +1,11 @@
+import { TYPE_LESSON, TYPE_STEP, TYPE_USER } from '@chess-tent/models';
+
 export const lessonSchema = {
-  type: 'lessons',
+  type: TYPE_LESSON,
   relationships: {
     state: {
-      steps: 'steps',
+      steps: TYPE_STEP,
     },
-    owner: 'users',
+    owner: TYPE_USER,
   },
 };

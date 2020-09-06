@@ -33,7 +33,7 @@ export const getConversation: MiddlewareFunction = (req, res, next) => {
 
 export const findConversations: MiddlewareFunction = (req, res, next) => {
   service
-    .findConversations(res.locals.filters)
+    .findConversations(res.locals.filters.users)
     .then(conversations => {
       res.locals.conversations = conversations;
       next();

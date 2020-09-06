@@ -1,11 +1,15 @@
 import React from 'react';
-import { components } from '@application';
+import { components, ui } from '@application';
 
-const { Header, Link } = components;
+const { Layout, Coaches } = components;
+const { Row, Col } = ui;
 
 export default () => (
-  <>
-    <Header />
-    <Link to="/me">My profile</Link>
-  </>
+  <Layout>
+    <Row noGutters>
+      <Col>
+        <Coaches />
+      </Col>
+    </Row>
+  </Layout>
 );

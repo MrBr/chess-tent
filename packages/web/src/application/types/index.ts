@@ -13,8 +13,10 @@ import { BatchAction } from 'redux-batched-actions';
 import { register } from 'core-module';
 import {
   Activity,
+  Conversation,
   Entity,
   Lesson,
+  Message,
   Step,
   StepType,
   Subject,
@@ -31,6 +33,12 @@ import { Store } from 'redux';
 import { History } from 'history';
 import { useSelector, useDispatch } from 'react-redux';
 import {
+  API,
+  RequestFetch,
+  ApiMethods,
+  Requests,
+  StatusResponse,
+  SendMessageAction,
   AppState,
   SetLessonActiveStepAction,
   UpdateEntitiesAction,
@@ -40,7 +48,7 @@ import {
   UpdateActivityStateAction,
   UpdateActivityAction,
   SetActivityActiveStepAction,
-} from './state';
+} from '@chess-tent/types';
 import { FEN, Move, Piece } from './chess';
 import { StepModule, StepModuleComponentKey } from './step';
 import {
@@ -52,17 +60,17 @@ import {
 } from './components';
 import { ClassComponent, GenericArguments } from './_helpers';
 import { UI } from './ui';
-import { API, RequestFetch, ApiMethods, Requests, StatusResponse } from './api';
 import { DescriptionModule, MoveModule, Steps, VariationModule } from './steps';
+import { Socket } from './socket';
 
+export * from '@chess-tent/types';
 export * from './activity';
-export * from './state';
 export * from './chess';
 export * from './step';
 export * from './steps';
 export * from './components';
 export * from './ui';
-export * from './api';
+export * from './socket';
 export * from './_helpers';
 
 // Hooks
@@ -170,6 +178,11 @@ export type State = {
       activity: T,
       patch: Partial<T>,
     ) => UpdateActivityAction<T extends Activity<infer S> ? S : never>;
+    sendMessage: (
+      user: User,
+      conversation: Conversation,
+      message: Message,
+    ) => SendMessageAction;
   };
   selectors: {
     lessonSelector: (
@@ -293,6 +306,7 @@ export type Application = {
   hooks: Hooks;
   state: State;
   utils: Utils;
+  socket: Socket;
   model: Model;
   stepModules: StepModules;
 };

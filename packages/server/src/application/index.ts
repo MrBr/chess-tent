@@ -1,8 +1,9 @@
 import { register, createNamespace, init } from "core-module";
-import { Application, DB, Middleware, Service } from "@types";
+import { Application, DB, Middleware, Service, SocketService } from "@types";
 
 const db = createNamespace({}) as DB;
 const service = createNamespace({}) as Service;
+const socket = createNamespace({}) as SocketService;
 const middleware = createNamespace({}) as Middleware;
 
 const application = createNamespace({
@@ -10,7 +11,8 @@ const application = createNamespace({
   init,
   db,
   service,
-  middleware
+  middleware,
+  socket
 }) as Application;
 
-export { application as default, db, service, middleware };
+export { application as default, db, service, middleware, socket };

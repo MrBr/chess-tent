@@ -5,7 +5,7 @@ export const TYPE_MESSAGE = "messages";
 export interface Message {
   id: string;
   message: string;
-  owner: User;
+  owner: User["id"];
   timestamp: number;
   type: typeof TYPE_MESSAGE;
 }

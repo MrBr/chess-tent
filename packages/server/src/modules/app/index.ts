@@ -1,4 +1,4 @@
-import application, { db } from "@application";
+import application, { db, socket } from "@application";
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
@@ -33,7 +33,8 @@ application.start = () => {
   // Error handler must apply after all routes
   app.use(application.middleware.errorHandler);
 
-  app.listen(port, () =>
+  const server = app.listen(port, () =>
     console.log(`Application started at http://localhost:${port}`)
   );
+  socket.init(server);
 };

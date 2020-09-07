@@ -2,6 +2,9 @@ import { register } from "core-module";
 import { ErrorRequestHandler, RequestHandler } from "express";
 import { Schema, SchemaOptions } from "mongoose";
 import { NormalizedUser, User } from "@chess-tent/models";
+import { Socket } from "socket.io";
+import { Actions } from "@chess-tent/types";
+import { Server as HttpServer } from "http";
 
 export type DB = {
   connect: () => void;
@@ -13,7 +16,7 @@ export type DB = {
 
 export type Auth = {
   apiTokenPayload: {
-    user: NormalizedUser["id"];
+    user: NormalizedUser;
   };
 };
 
@@ -33,7 +36,7 @@ export type Service = {
   ) => void;
 
   generateApiToken: (user: User) => string;
-  verifyToken: (token: string) => Auth["apiTokenPayload"];
+  verifyToken: (token?: string) => Auth["apiTokenPayload"] | null;
 
   getUser: (userId: Partial<User>, projection?: string) => Promise<User | null>;
 
@@ -59,7 +62,24 @@ export type Application = {
   middleware: Middleware;
   db: DB;
   service: Service;
+  socket: SocketService;
   register: typeof register;
   init: () => Promise<any>;
   start: () => void;
+};
+
+export interface SocketStream {
+  client: Socket;
+  event: string;
+  data: any;
+}
+export type SocketService = {
+  init: (server: HttpServer) => void;
+  middleware: (
+    stream: SocketStream,
+    next: (stream: SocketStream) => void
+  ) => void;
+  registerMiddleware: (middleware: SocketService["middleware"]) => void;
+  sendAction: (channel: string, action: Actions) => void;
+  identify: (stream: SocketStream) => Auth["apiTokenPayload"] | null;
 };

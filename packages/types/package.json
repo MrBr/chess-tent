@@ -1,0 +1,15 @@
+{
+  "name": "@chess-tent/types",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build:dev": "tsc -p tsconfig.build.json",
+    "build": "yarn run clean && yarn run compile",
+    "clean": "rimraf -rf ./dist",
+    "compile": "tsc -p tsconfig.build.json"
+  },
+  "dependencies": {
+    "@chess-tent/models": "^1.0.0"
+  }
+}

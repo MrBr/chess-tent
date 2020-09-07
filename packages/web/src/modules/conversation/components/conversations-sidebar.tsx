@@ -1,9 +1,10 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { ReactElement, useCallback, useEffect } from 'react';
 import { hooks, requests, state, ui, utils } from '@application';
 import {
-  addMessageToConversation,
+  Conversation,
   createConversation,
   createMessage,
+  getParticipant,
   User,
 } from '@chess-tent/models';
 import styled from '@emotion/styled';
@@ -12,7 +13,7 @@ import { selectConversationByUsers } from '../state/selectors';
 const { Container, Headline3, Avatar, Text, Row, Col, Input } = ui;
 const { generateIndex } = utils;
 const {
-  actions: { updateEntities },
+  actions: { updateEntities, sendMessage },
 } = state;
 const {
   useApi,
@@ -35,7 +36,6 @@ const Close = styled.span({
 const ConversationComponent = styled(
   ({ className, owner }: { className?: string; owner: User }) => {
     const { fetch: conversationSave } = useApi(requests.conversationSave);
-    const { fetch: messageSend } = useApi(requests.messageSend);
     const dispatch = useDispatchBatched();
     const [participant, , clearParticipant] = useConversationParticipant();
     const conversation = useSelector(
@@ -60,21 +60,11 @@ const ConversationComponent = styled(
             conversationSave(newConversation);
             dispatch(updateEntities(newConversation));
           } else {
-            messageSend(conversation.id, message);
-            dispatch(
-              updateEntities(addMessageToConversation(conversation, message)),
-            );
+            dispatch(sendMessage(owner, conversation, message));
           }
         }
       },
-      [
-        conversation,
-        conversationSave,
-        dispatch,
-        messageSend,
-        owner,
-        participant,
-      ],
+      [conversation, conversationSave, dispatch, owner, participant],
     );
     if (!participant) {
       return null;
@@ -87,14 +77,31 @@ const ConversationComponent = styled(
         <Row className="flex-grow-1">
           <Col>
             <Headline3>Conversation with {participant.name}</Headline3>
-            {messages?.map(message => (
-              <Container>
-                {message.owner.id !== owner.id && (
-                  <Avatar size="small" src={message.owner.imageUrl} />
-                )}
-                <Text>{message.message}</Text>
-              </Container>
-            ))}
+            {messages?.reduce<ReactElement[]>((result, message, index) => {
+              const messageElement =
+                message.owner !== owner.id ? (
+                  <Container key={message.id} className="pl-0 pr-5">
+                    {messages[index - 1]?.owner !== message.owner && (
+                      <Avatar
+                        size="small"
+                        src={
+                          getParticipant(
+                            conversation as Conversation,
+                            message.owner,
+                          )?.imageUrl
+                        }
+                      />
+                    )}
+                    <Text>{message.message}</Text>
+                  </Container>
+                ) : (
+                  <Text key={message.id} className="pr-0 pl-5 text-right">
+                    {message.message}
+                  </Text>
+                );
+              result.push(messageElement);
+              return result;
+            }, [])}
           </Col>
         </Row>
         <Row>

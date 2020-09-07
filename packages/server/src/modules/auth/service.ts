@@ -6,8 +6,13 @@ export const generateApiToken: Service["generateApiToken"] = user => {
 };
 
 export const verifyToken: Service["verifyToken"] = token => {
-  return verify(
-    token,
-    process.env.TOKEN_SECRET as string
-  ) as Auth["apiTokenPayload"];
+  if (!token) {
+    return null;
+  }
+  return (
+    (verify(
+      token,
+      process.env.TOKEN_SECRET as string
+    ) as Auth["apiTokenPayload"]) || null
+  );
 };

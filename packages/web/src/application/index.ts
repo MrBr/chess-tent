@@ -12,6 +12,7 @@ import {
   UI,
   Pages,
   Requests,
+  Socket,
 } from '@types';
 
 const services = createNamespace({}) as Services;
@@ -25,6 +26,7 @@ const state = createNamespace({
   selectors: createNamespace({}),
 }) as State;
 const utils = createNamespace({}) as Utils;
+const socket = createNamespace({}) as Socket;
 const model = createNamespace({}) as Model;
 const stepModules = createNamespace({}) as StepModules;
 const constants = createNamespace({
@@ -45,10 +47,12 @@ const application: Application = createNamespace({
   init: init,
   pages,
   requests,
+  socket,
 }) as Application;
 
 export {
   application as default,
+  socket,
   services,
   components,
   ui,

@@ -21,4 +21,7 @@ const addMessageToConversation = (
   messages: [...conversation.messages, message]
 });
 
-export { createConversation, addMessageToConversation };
+const getParticipant = (conversation: Conversation, userId: User["id"]) =>
+  conversation.users.find(user => user.id === userId);
+
+export { createConversation, addMessageToConversation, getParticipant };

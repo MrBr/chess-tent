@@ -1,5 +1,5 @@
 import React, { ComponentType, ReactElement, useEffect } from 'react';
-import { hooks, requests, services } from '@application';
+import { hooks, requests, services, socket } from '@application';
 
 const { useApi, useDispatch, useActiveUserRecord } = hooks;
 
@@ -15,6 +15,7 @@ const Provider: ComponentType = ({ children }) => {
   }, [fetch]);
   useEffect(() => {
     if (response) {
+      socket.subscribe(`user-${response.data.id}`);
       updateActiveUser(response.data);
     }
   }, [dispatch, response, updateActiveUser]);

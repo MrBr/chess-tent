@@ -20,6 +20,8 @@
     "@types/jsonwebtoken": "^8.5.0",
     "@types/mongodb": "^3.5.17",
     "@types/mongoose": "^5.7.20",
+    "@types/socket.io": "^2.1.11",
+    "@types/ws": "^7.2.6",
     "dotenv": "^8.2.0",
     "nodemon": "^2.0.4",
     "ts-node": "^8.10.1",
@@ -39,6 +41,7 @@
     "mongodb": "^3.5.7",
     "mongoose": "^5.9.14",
     "rxjs": "^6.5.5",
+    "socket.io": "^2.3.0",
     "uuid": "^3.4.0",
     "ws": "^7.3.0"
   }

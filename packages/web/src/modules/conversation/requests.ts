@@ -1,6 +1,18 @@
 import { services, requests } from '@application';
-import { ConversationsResponse, Requests, StatusResponse } from '@types';
+import {
+  ConversationResponse,
+  ConversationsResponse,
+  Requests,
+  StatusResponse,
+} from '@types';
 import { Conversation, User } from '@chess-tent/models';
+
+const conversation = services.createRequest<
+  Conversation['id'],
+  ConversationResponse
+>('GET', conversationId => ({
+  url: `/conversation/${conversationId}`,
+}));
 
 const conversations = services.createRequest<
   User['id'][] | User['id'],
@@ -25,3 +37,4 @@ const conversationSave = services.createRequest<Conversation, StatusResponse>(
 requests.conversations = conversations;
 requests.conversationSave = conversationSave;
 requests.messageSend = messageSend;
+requests.conversation = conversation;

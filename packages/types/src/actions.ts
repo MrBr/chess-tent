@@ -1,4 +1,6 @@
 import {
+  Conversation,
+  NormalizedMessage,
   Activity,
   Entity,
   Lesson,
@@ -9,31 +11,35 @@ import {
   NormalizedUser,
   Step,
   Subject,
-  User,
-} from '@chess-tent/models';
+  User
+} from "@chess-tent/models";
 
-export const UPDATE_ENTITIES = 'UPDATE_ENTITIES';
+export const UPDATE_ENTITIES = "UPDATE_ENTITIES";
 
-export const SET_LESSON_ACTIVE_STEP = 'SET_LESSON_ACTIVE_STEP';
-export const UPDATE_LESSON = 'UPDATE_LESSON';
+export const SET_LESSON_ACTIVE_STEP = "SET_LESSON_ACTIVE_STEP";
+export const UPDATE_LESSON = "UPDATE_LESSON";
 
-export const UPDATE_STEP = 'UPDATE_STEP';
-export const UPDATE_STEP_STATE = 'UPDATE_STEP_STATE';
+export const UPDATE_STEP = "UPDATE_STEP";
+export const UPDATE_STEP_STATE = "UPDATE_STEP_STATE";
 
-export const SET_ACTIVITY_ACTIVE_STEP = 'SET_ACTIVITY_ACTIVE_STEP';
-export const UPDATE_ACTIVITY = 'UPDATE_ACTIVITY';
-export const UPDATE_ACTIVITY_STATE = 'UPDATE_ACTIVITY_STATE';
+export const SET_ACTIVITY_ACTIVE_STEP = "SET_ACTIVITY_ACTIVE_STEP";
+export const UPDATE_ACTIVITY = "UPDATE_ACTIVITY";
+export const UPDATE_ACTIVITY_STATE = "UPDATE_ACTIVITY_STATE";
 
-export const UPDATE_USER = 'UPDATE_USER';
+export const UPDATE_USER = "UPDATE_USER";
 
-export const UPDATE_RECORD = 'UPDATE_RECORD';
-export const DELETE_RECORD = 'DELETE_RECORD';
+export const UPDATE_RECORD = "UPDATE_RECORD";
+export const DELETE_RECORD = "DELETE_RECORD";
+
+export const SEND_MESSAGE = "SEND_MESSAGE";
 
 export type Action<T, P, M = {}> = {
   type: T;
   payload: P;
-  meta: M;
+  // push property indicates that actions is pushed from the server
+  meta: M & { push?: boolean };
 };
+
 export type EntityState<T> = { [key: string]: T };
 export type EntitiesState = {
   users: UserState;
@@ -76,13 +82,13 @@ export type UpdateEntitiesAction = Action<
  */
 export type SetLessonActiveStepAction = Action<
   typeof SET_LESSON_ACTIVE_STEP,
-  Step['id'],
-  { id: Lesson['id'] }
+  Step["id"],
+  { id: Lesson["id"] }
 >;
 export type UpdateLessonAction = Action<
   typeof UPDATE_LESSON,
-  Omit<NormalizedLesson, 'type' | 'id'>,
-  { id: Lesson['id'] }
+  Omit<NormalizedLesson, "type" | "id">,
+  { id: Lesson["id"] }
 >;
 
 export type LessonAction =
@@ -93,16 +99,16 @@ export type LessonAction =
 /**
  * Step
  */
-export type UpdatableStepProps = Omit<{}, 'moves' | 'type' | 'shapes' | 'id'>;
+export type UpdatableStepProps = Omit<{}, "moves" | "type" | "shapes" | "id">;
 export type UpdateStepAction = Action<
   typeof UPDATE_STEP,
   UpdatableStepProps,
-  { id: Step['id'] }
+  { id: Step["id"] }
 >;
 export type UpdateStepStateAction = Action<
   typeof UPDATE_STEP_STATE,
   {},
-  { id: Step['id'] }
+  { id: Step["id"] }
 >;
 
 export type StepAction =
@@ -115,18 +121,18 @@ export type StepAction =
  */
 export type SetActivityActiveStepAction = Action<
   typeof SET_ACTIVITY_ACTIVE_STEP,
-  Step['id'],
-  { id: Activity['id'] }
+  Step["id"],
+  { id: Activity["id"] }
 >;
 export type UpdateActivityAction<T extends Subject> = Action<
   typeof UPDATE_ACTIVITY,
   Partial<NormalizedActivity<T>>,
-  { id: Activity<never>['id'] }
+  { id: Activity<never>["id"] }
 >;
 export type UpdateActivityStateAction = Action<
   typeof UPDATE_ACTIVITY_STATE,
   {},
-  { id: Activity<never>['id'] }
+  { id: Activity<never>["id"] }
 >;
 
 export type ActivityAction<T extends Subject> =
@@ -141,7 +147,7 @@ export type ActivityAction<T extends Subject> =
 export type UpdateUserAction = Action<
   typeof UPDATE_USER,
   Partial<User>,
-  { id: User['id'] }
+  { id: User["id"] }
 >;
 
 export type UserAction = UpdateEntitiesAction | UpdateUserAction;
@@ -162,3 +168,27 @@ export type RecordDeleteAction = Action<
 >;
 
 export type RecordAction = RecordUpdateAction | RecordDeleteAction;
+
+/**
+ * Message
+ */
+export type MessageAction = SendMessageAction;
+
+export type SendMessageAction = Action<
+  typeof SEND_MESSAGE,
+  NormalizedMessage,
+  { conversationId: Conversation["id"] }
+>;
+
+/**
+ * Conversation
+ */
+export type ConversationAction = UpdateEntitiesAction | SendMessageAction;
+
+export type Actions =
+  | SendMessageAction
+  | ConversationAction
+  | LessonAction
+  | UserAction
+  | ActivityAction<any>
+  | StepAction;

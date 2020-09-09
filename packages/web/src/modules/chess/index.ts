@@ -1,6 +1,12 @@
 import { services } from '@application';
-import { createFen, Chess, getPiece } from './service';
+import {
+  Chess,
+  getPiece,
+  createFenForward,
+  createFenBackward,
+} from './service';
 
 services.Chess = Chess;
-services.recreateFenWithMoves = createFen;
+services.createFenForward = createFenForward;
+services.createFenBackward = createFenBackward;
 services.getPiece = getPiece;

@@ -1,5 +1,6 @@
+import React, { ComponentProps } from 'react';
 import styled from '@emotion/styled';
-import { ButtonProps } from '@types';
+import { ButtonProps, UI } from '@types';
 import { BorderRadiusProps, getBorderRadiusSize } from './enhancers';
 
 const buttonPadding = (size: ButtonProps['size']) => {
@@ -36,6 +37,9 @@ const buttonBackground = (variant: ButtonProps['variant']) => {
       return 'linear-gradient(90deg, #F46F24 0%, #F44D24 100%)';
     case 'regular':
       return '#E8E9EB';
+    case 'ghost':
+      return 'transparent';
+    case 'primary':
     default:
       return 'linear-gradient(90deg, #5AD9AB 0%, #26D95C 100%)';
   }
@@ -77,7 +81,32 @@ export const Button = styled.button<ButtonProps>(
   buttonSizeEnhancer,
   buttonVariantEnhancer,
 );
-
 Button.defaultProps = {
+  size: 'regular',
+};
+
+export const ToggleButton: UI['ToggleButton'] = styled(
+  ({ className, children, defaultChecked, onChange }) => (
+    <label className={className}>
+      <input
+        type="checkbox"
+        defaultChecked={defaultChecked}
+        onChange={onChange}
+      />
+      <span className="toggle-button">{children}</span>
+    </label>
+  ),
+)<ComponentProps<UI['ToggleButton']>>(props => ({
+  input: {
+    opacity: 0,
+    width: 0,
+    height: 0,
+  },
+  '.toggle-button': buttonSizeEnhancer(props),
+  'input:checked + .toggle-button': {
+    ...buttonVariantEnhancer(props),
+  },
+}));
+ToggleButton.defaultProps = {
   size: 'regular',
 };

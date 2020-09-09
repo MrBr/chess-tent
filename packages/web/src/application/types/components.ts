@@ -9,7 +9,7 @@ import { FEN, Key, Piece } from '@chess-tent/chessground/dist/types';
 import { DrawCurrent, DrawShape } from '@chess-tent/chessground/dist/draw';
 import { Api } from '@chess-tent/chessground/dist/api';
 import { Step } from '@chess-tent/models';
-import { Move, Shape } from './chess';
+import { Move, NotableMove, Shape } from './chess';
 import { StepSystemProps } from './step';
 
 export interface ChessboardState {
@@ -73,6 +73,23 @@ export type StepToolbox = FunctionComponent<{
   textChangeHandler?: (text: string) => void;
   text?: string;
 }>;
+
+export type LessonToolboxText = FunctionComponent<{
+  onChange?: (text: string) => void;
+  defaultText?: string;
+  placeholder?: string;
+}>;
+
+// Move written in chess notation
+export type StepMove = FunctionComponent<
+  {
+    className?: string;
+    showIndex?: boolean;
+    prefix?: string | ReactElement;
+    suffix?: string | ReactElement;
+    blackIndexSign?: string | ReactElement;
+  } & NotableMove
+>;
 
 export type StepTag = FunctionComponent<{
   children: ReactNode;

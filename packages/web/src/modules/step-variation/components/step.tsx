@@ -18,11 +18,7 @@ import { hooks, components, state, services, ui } from '@application';
 import Footer from './footer';
 
 const { Col, Row, Container } = ui;
-const {
-  useDispatchBatched,
-  useAddDescriptionStep,
-  useUpdateStepDescriptionDebounced,
-} = hooks;
+const { useDispatchBatched, useAddDescriptionStep, useUpdateStepState } = hooks;
 const { Stepper, StepTag, StepToolbox } = components;
 const {
   actions: { updateStepState, setLessonActiveStep, updateEntities },
@@ -154,7 +150,7 @@ const StepperStep: VariationModule['StepperStep'] = ({
   lesson,
   ...props
 }) => {
-  const updateDescriptionDebounced = useUpdateStepDescriptionDebounced(step);
+  const updateStepState = useUpdateStepState(step);
   const addDescriptionStep = useAddDescriptionStep(
     lesson,
     step,
@@ -180,7 +176,7 @@ const StepperStep: VariationModule['StepperStep'] = ({
           <StepToolbox
             text={step.state.description}
             active={activeStep === step}
-            textChangeHandler={updateDescriptionDebounced}
+            textChangeHandler={description => updateStepState({ description })}
             addStepHandler={addDescriptionStep}
           />
         </Col>

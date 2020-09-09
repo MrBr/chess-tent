@@ -12,6 +12,7 @@ application.register(() => import('./state'));
 application.register(() => import('./step'));
 application.register(() => import('./step-move'));
 application.register(() => import('./step-description'));
+application.register(() => import('./step-exercise'));
 application.register(() => import('./step-variation'));
 application.register(() => import('./ui'));
 application.register(() => import('./utils'));

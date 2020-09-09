@@ -12,6 +12,13 @@ export type FEN = CG_FEN;
 export type Piece = CG_PIECE;
 export type Key = CG_KEY;
 export type Move = [Key, Key];
+export type NotableMove = {
+  move?: Move;
+  promoted?: boolean;
+  captured?: boolean;
+  movedPiece?: Piece;
+  moveIndex?: number;
+};
 export type MoveMetadata = CG_MOVEMETADATA;
 export type PieceColor = CG_COLOR;
 export type PieceRole = CG_ROLE;

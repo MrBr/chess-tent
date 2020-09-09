@@ -21,7 +21,7 @@ const {
 } = state;
 const { Col, Row, Container } = ui;
 const { StepTag, StepToolbox } = components;
-const { useUpdateStepDescriptionDebounced, useDispatchBatched } = hooks;
+const { useUpdateStepState, useDispatchBatched } = hooks;
 
 const stepType = 'description';
 
@@ -90,7 +90,7 @@ const StepperStep: DescriptionModule['StepperStep'] = ({
   lesson,
 }) => {
   const dispatch = useDispatchBatched();
-  const updateDescriptionDebounced = useUpdateStepDescriptionDebounced(step);
+  const updateStepState = useUpdateStepState(step);
   const addDescriptionStep = useCallback(() => {
     const parentStep = getLessonParentStep(lesson, step);
     const newDescriptionStep = services.createStep(
@@ -123,7 +123,7 @@ const StepperStep: DescriptionModule['StepperStep'] = ({
           <StepToolbox
             text={step.state.description}
             active={activeStep === step}
-            textChangeHandler={updateDescriptionDebounced}
+            textChangeHandler={description => updateStepState({ description })}
             addStepHandler={addDescriptionStep}
           />
         </Col>

@@ -1,31 +1,51 @@
 import React, { useCallback, useRef } from 'react';
-import { StepToolbox } from '@types';
+import { Components, StepToolbox } from '@types';
 import { ui } from '@application';
 import styled from '@emotion/styled';
+import { debounce } from 'lodash';
 
 const { Container, Button } = ui;
 
-const ToolboxText = styled(props => {
-  const defaultValueRef = useRef(props.text);
-  return (
-    <div
-      contentEditable
-      dangerouslySetInnerHTML={{ __html: defaultValueRef.current }}
-      {...props}
-    />
-  );
-})({
-  '&:empty:before': {
-    content: '"Add comment..."',
-    color: '#A3A7AE',
+export const ToolboxText: Components['LessonToolboxText'] = styled(
+  ({ defaultText, onChange, ...props }) => {
+    // Updating div html resets the cursor so ToolboxText can't be controlled.
+    // Ref is used to set static default value which won't change on props update.
+    const defaultValueRef = useRef(defaultText);
+    const debouncedTextChange =
+      onChange &&
+      useCallback(debounce(onChange, 500, { trailing: true }), [onChange]);
+    const onTextChange = useCallback(
+      e => {
+        onChange && debouncedTextChange(e.target.innerText);
+      },
+      [onChange, debouncedTextChange],
+    );
+
+    return (
+      <div
+        contentEditable
+        dangerouslySetInnerHTML={{ __html: defaultValueRef.current }}
+        {...props}
+        onInput={onTextChange}
+      />
+    );
   },
-  '&:focus': {
-    outline: 0,
+)(
+  {
+    '&:focus': {
+      outline: 0,
+    },
+    color: '#2F3849',
+    fontSize: 13 / 16 + 'em',
+    cursor: 'pointer',
   },
-  color: '#2F3849',
-  fontSize: 13 / 16 + 'em',
-  cursor: 'pointer',
-});
+  ({ placeholder }) => ({
+    '&:empty:before': {
+      content: `"${placeholder || 'Type here..'}"`,
+      color: '#A3A7AE',
+    },
+  }),
+);
 
 const ToolboxActions = styled.div({
   '> button': {
@@ -40,19 +60,29 @@ const ToolboxActions = styled.div({
   zIndex: 10,
 });
 
-export default (({ textChangeHandler, active, text, addStepHandler }) => {
-  const onTextChange = useCallback(
-    e => {
-      textChangeHandler && textChangeHandler(e.target.innerText);
-    },
-    [textChangeHandler],
-  );
+export default (({
+  textChangeHandler,
+  active,
+  text,
+  addStepHandler,
+  addExerciseHandler,
+}) => {
   return (
     <Container className="d-flex align-items-center h-100">
-      {(text || active) && <ToolboxText onInput={onTextChange} text={text} />}
+      {(text || active) && (
+        <ToolboxText
+          onChange={textChangeHandler}
+          defaultText={text}
+          placeholder="Add comment"
+        />
+      )}
       {active && (
         <ToolboxActions>
-          <Button variant="regular" size="extra-small">
+          <Button
+            variant="regular"
+            size="extra-small"
+            onClick={addExerciseHandler}
+          >
             Q
           </Button>
           <Button size="extra-small" variant="regular" onClick={addStepHandler}>

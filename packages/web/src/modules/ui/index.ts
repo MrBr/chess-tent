@@ -3,7 +3,7 @@ import application from '@application';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.css';
 
-import { Button } from './Button';
+import { Button, ToggleButton } from './Button';
 import {
   Form,
   Input,
@@ -15,6 +15,7 @@ import {
 } from './Form';
 import { Container, Row, Col, Page } from './Grid';
 import { default as Select, Option } from './Select';
+import { Dropdown } from './Dropdown';
 import {
   Display1,
   Display2,
@@ -33,6 +34,7 @@ application.register(() => import('./Modal'));
 application.ui.FormGroup = FormGroup;
 application.ui.Form = Form;
 application.ui.Button = Button;
+application.ui.ToggleButton = ToggleButton;
 application.ui.Label = Label;
 application.ui.Input = Input;
 application.ui.File = File;
@@ -40,6 +42,8 @@ application.ui.Check = Check;
 application.ui.Select = Select;
 application.ui.Option = Option;
 application.ui.ErrorMessage = ErrorMessage;
+
+application.ui.Dropdown = Dropdown;
 
 application.ui.Img = Img;
 application.ui.Avatar = Avatar;

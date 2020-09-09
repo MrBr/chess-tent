@@ -40,11 +40,18 @@ application.register(
   () => import('./components/step-toolbox'),
   module => {
     application.components.StepToolbox = module.default;
+    application.components.LessonToolboxText = module.ToolboxText;
   },
 );
 application.register(
   () => import('./components/step-tag'),
   module => {
     application.components.StepTag = module.default;
+  },
+);
+application.register(
+  () => import('./components/step-move'),
+  module => {
+    application.components.StepMove = module.default;
   },
 );

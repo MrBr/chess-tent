@@ -16,9 +16,16 @@ const { getPiece } = services;
 const {
   useDispatchBatched,
   useAddDescriptionStep,
-  useUpdateStepDescriptionDebounced,
+  useUpdateStepState,
+  useAddExerciseStep,
 } = hooks;
-const { StepTag, StepToolbox, Stepper, StepperStepContainer } = components;
+const {
+  StepTag,
+  StepToolbox,
+  Stepper,
+  StepperStepContainer,
+  StepMove,
+} = components;
 const {
   actions: { updateStepState, updateEntities, setLessonActiveStep },
 } = state;
@@ -184,12 +191,13 @@ const StepperStep: MoveModule['StepperStep'] = ({
   lesson,
   ...props
 }) => {
-  const updateDescriptionDebounced = useUpdateStepDescriptionDebounced(step);
+  const updateStepState = useUpdateStepState(step);
   const addDescriptionStep = useAddDescriptionStep(
     lesson,
     step,
     step.state.position,
   );
+  const addExerciseStep = useAddExerciseStep(lesson, step, step.state.position);
   const handleStepClick = useCallback(
     event => {
       event.stopPropagation();
@@ -208,16 +216,21 @@ const StepperStep: MoveModule['StepperStep'] = ({
             moveIndex={step.state.moveIndex}
             movedPiece={step.state.movedPiece}
           >
-            {step.state.captured && 'x'}
-            {step.state.move?.[1]}
+            <StepMove
+              move={step.state.move}
+              captured={step.state.captured}
+              movedPiece={step.state.movedPiece}
+              moveIndex={step.state.moveIndex}
+            />
           </StepTag>
         </Col>
         <Col>
           <StepToolbox
             text={step.state.description}
             active={activeStep === step}
-            textChangeHandler={updateDescriptionDebounced}
+            textChangeHandler={description => updateStepState({ description })}
             addStepHandler={addDescriptionStep}
+            addExerciseHandler={addExerciseStep}
           />
         </Col>
       </Row>

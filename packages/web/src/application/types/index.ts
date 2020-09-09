@@ -54,13 +54,21 @@ import { StepModule, StepModuleComponentKey } from './step';
 import {
   AuthorizedProps,
   ChessboardInterface,
+  LessonToolboxText,
   StepperProps,
   StepTag,
   StepToolbox,
+  StepMove,
 } from './components';
 import { ClassComponent, GenericArguments } from './_helpers';
 import { UI } from './ui';
-import { DescriptionModule, MoveModule, Steps, VariationModule } from './steps';
+import {
+  DescriptionModule,
+  ExerciseModule,
+  MoveModule,
+  Steps,
+  VariationModule,
+} from './steps';
 import { Socket } from './socket';
 
 export * from '@chess-tent/types';
@@ -83,14 +91,13 @@ export type RecordHookReturn<T extends RecordValue> = [
 export type Hooks = {
   useComponentStateSilent: () => { mounted: boolean };
   usePromptModal: () => (modalContent: ReactElement) => void;
+  useUpdateStepState: (step: Step) => (state: {}) => void;
   useAddDescriptionStep: (
     lesson: Lesson,
     step: Step,
     position: FEN,
   ) => () => void;
-  useUpdateStepDescriptionDebounced: (
-    step: Step,
-  ) => (description: string) => void;
+  useAddExerciseStep: (lesson: Lesson, step: Step, position: FEN) => () => void;
   useDispatchBatched: () => (...args: ReduxAction[]) => BatchAction;
   useDispatch: typeof useDispatch;
   useSelector: typeof useSelector;
@@ -126,7 +133,7 @@ type ModuleRecord<K extends keyof any, T extends StepModule> = {
 };
 export type StepModules = ModuleRecord<
   StepType,
-  MoveModule | VariationModule | DescriptionModule
+  MoveModule | VariationModule | DescriptionModule | ExerciseModule
 >;
 
 export interface Schema {
@@ -208,7 +215,8 @@ export type Services = {
   Chess: {
     new (fen?: string): {};
   };
-  recreateFenWithMoves: (fen: FEN, moves: Move[]) => FEN;
+  createFenForward: (fen: FEN, moves: Move[]) => FEN;
+  createFenBackward: (fen: FEN, moves: Move[]) => FEN;
   getPiece: (position: FEN, square: string) => Piece | null;
 
   // Add non infrastructural providers
@@ -253,7 +261,9 @@ export type Components = {
   Stepper: FunctionComponent<StepperProps>;
   StepperStepContainer: ComponentType<{ onClick?: ReactEventHandler }>;
   StepToolbox: StepToolbox;
+  LessonToolboxText: LessonToolboxText;
   StepTag: StepTag;
+  StepMove: StepMove;
   Router: ComponentType;
   Redirect: ComponentType<RedirectProps>;
   Route: ComponentType<RouteProps>;

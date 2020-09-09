@@ -87,7 +87,7 @@ const Editor: Components['Editor'] = ({ lesson }) => {
             Chessboard={Chessboard}
           />
         </Col>
-        <Col sm={4}>
+        <Col sm={5} xl={4}>
           <StepperSidebar>
             <Button
               size="extra-small"

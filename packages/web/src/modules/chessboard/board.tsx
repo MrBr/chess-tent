@@ -16,6 +16,7 @@ import { Api } from '@chess-tent/chessground/dist/api';
 import { Key, MouchEvent } from '@chess-tent/chessground/dist/types';
 import { State as CGState } from '@chess-tent/chessground/dist/state';
 import { DrawShape } from '@chess-tent/chessground/dist/draw';
+import { Config } from '@chess-tent/chessground/dist/config';
 
 import { SparePieces } from './spare-pieces';
 
@@ -149,7 +150,6 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
       animation,
       fen,
       viewOnly,
-      shapes,
       eraseDrawableOnClick,
       selectablePieces,
       resizable,
@@ -159,7 +159,8 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
       return;
     }
 
-    this.api = Chessground(this.boardHost.current, {
+    this.api = Chessground(this.boardHost.current, {});
+    this.setConfig({
       viewOnly,
       fen,
       resizable,
@@ -187,9 +188,17 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
         change: this.onChange,
       },
     });
+  }
+
+  /**
+   * Helper function to workaround some Chessground issues until they are fixed
+   * @param config
+   */
+  setConfig(config: Partial<Config>) {
+    this.api.set(config);
     // Shapes can't be set in the same time as fen so this is additional update
     // TODO - edit Chessground
-    shapes && this.api.setShapes(shapes);
+    this.props.shapes && this.api.setShapes([...this.props.shapes]);
   }
 
   prompt(renderPrompt: ChessboardState['renderPrompt']) {
@@ -223,7 +232,7 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
       },
       {},
     );
-    Object.keys(patch).length > 0 && this.api.set(patch);
+    Object.keys(patch).length > 0 && this.setConfig(patch);
   }
 
   getState() {

@@ -21,9 +21,10 @@ import FormFile from 'react-bootstrap/FormFile';
 import Select, { OptionProps } from 'react-select';
 import { SelectComponentsProps } from 'react-select/base';
 import { FormCheckInputProps } from 'react-bootstrap/FormCheckInput';
+import Dropdown from 'react-bootstrap/Dropdown';
 
 export type ButtonProps = {
-  variant?: 'primary' | 'secondary' | 'regular' | 'danger';
+  variant?: 'primary' | 'secondary' | 'regular' | 'danger' | 'ghost';
   size?: 'large' | 'regular' | 'small' | 'extra-small';
   type?: 'button' | 'reset' | 'submit';
   disabled?: boolean;
@@ -49,6 +50,7 @@ export declare interface TextProps {
   weight?: number;
   align?: 'center' | 'left' | 'right';
   fontSize?: FontSize;
+  onClick?: ReactEventHandler;
 }
 
 type UIComponent<T = {}> = ComponentType<
@@ -75,6 +77,7 @@ export type UI = {
   Headline5: UIComponent;
   Headline6: UIComponent;
   Img: ComponentType<{ src: string | undefined }>;
+  Dropdown: typeof Dropdown;
   Avatar: ComponentType<{
     src: string | undefined;
     size?: 'regular' | 'small' | 'large';
@@ -96,6 +99,14 @@ export type UI = {
   Col: UIComponent<ColProps>;
   ErrorMessage: UIComponent<ErrorMessageProps>;
   Button: UIComponent<ButtonProps>;
+  ToggleButton: UIComponent<
+    ButtonProps & {
+      checked?: boolean;
+      defaultChecked?: boolean;
+      value?: string | number;
+      onChange?: ReactEventHandler;
+    }
+  >;
   Modal: UIComponent<ModalProps>;
   ModalBody: typeof ModalBody;
   Confirm: UIComponent<ConfirmProps>;

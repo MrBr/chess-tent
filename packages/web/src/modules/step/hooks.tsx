@@ -1,8 +1,7 @@
 import { hooks, state, services } from '@application';
 import { useCallback } from 'react';
-import { addStepRightToSame, Lesson, Step } from '@chess-tent/models';
+import { addStep, addStepRightToSame, Lesson, Step } from '@chess-tent/models';
 import { FEN } from '@types';
-import { debounce } from 'lodash';
 
 const { useDispatchBatched } = hooks;
 const {
@@ -24,15 +23,31 @@ export const useAddDescriptionStep = (
   }, [step, position, lesson, dispatch]);
 };
 
-export const useUpdateStepDescriptionDebounced = (step: Step) => {
+export const useAddExerciseStep = (
+  lesson: Lesson,
+  step: Step,
+  position: FEN,
+) => {
+  const dispatch = useDispatchBatched();
+  return useCallback(() => {
+    const newDescriptionStep = services.createStep('exercise', position);
+    dispatch(
+      updateEntities(addStep(step, newDescriptionStep)),
+      setLessonActiveStep(lesson, newDescriptionStep),
+    );
+  }, [step, position, lesson, dispatch]);
+};
+
+export const useUpdateStepState = (step: Step) => {
   const dispatch = useDispatchBatched();
   return useCallback(
-    debounce((description: string) => {
-      dispatch(updateStepState(step, { description }));
-    }, 500),
+    (state: {}) => {
+      dispatch(updateStepState(step, state));
+    },
     [dispatch, step],
   );
 };
 
 hooks.useAddDescriptionStep = useAddDescriptionStep;
-hooks.useUpdateStepDescriptionDebounced = useUpdateStepDescriptionDebounced;
+hooks.useAddExerciseStep = useAddExerciseStep;
+hooks.useUpdateStepState = useUpdateStepState;

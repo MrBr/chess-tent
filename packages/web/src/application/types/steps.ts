@@ -38,4 +38,15 @@ export type DescriptionStepState = {
 export type DescriptionStep = Step<DescriptionStepState, 'description'>;
 export type DescriptionModule = StepModule<DescriptionStep, 'description'>;
 
-export type Steps = MoveStep | DescriptionStep | VariationStep;
+// Exercise
+export type ExerciseStepState = {
+  shapes: Shape[];
+  position: FEN; // Step end position - position once step is finished
+  exerciseState: {};
+  exerciseType: 'board' | 'question' | 'select';
+  steps: Step[];
+};
+export type ExerciseStep = Step<ExerciseStepState, 'exercise'>;
+export type ExerciseModule = StepModule<ExerciseStep, 'exercise'>;
+
+export type Steps = MoveStep | DescriptionStep | VariationStep | ExerciseStep;

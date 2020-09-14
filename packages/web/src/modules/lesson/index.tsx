@@ -50,6 +50,12 @@ application.register(
   },
 );
 application.register(
+  () => import('./components/playground'),
+  module => {
+    application.components.LessonPlayground = module.default;
+  },
+);
+application.register(
   () => import('./components/step-move'),
   module => {
     application.components.StepMove = module.default;

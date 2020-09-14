@@ -11,20 +11,23 @@ export interface DepupulatedLesson {
 
 export type LessonDocument = DepupulatedLesson & Document;
 
-const lessonSchema = db.createStandardSchema<DepupulatedLesson>({
-  owner: ({
-    type: String,
-    ref: TYPE_USER
-  } as unknown) as DepupulatedLesson["owner"],
-  state: ({
-    type: Schema.Types.Mixed,
-    required: true
-  } as unknown) as DepupulatedLesson["state"],
-  type: ({
-    type: String,
-    default: TYPE_LESSON
-  } as unknown) as typeof TYPE_LESSON
-});
+const lessonSchema = db.createStandardSchema<DepupulatedLesson>(
+  {
+    owner: ({
+      type: String,
+      ref: TYPE_USER
+    } as unknown) as DepupulatedLesson["owner"],
+    state: ({
+      type: Schema.Types.Mixed,
+      required: true
+    } as unknown) as DepupulatedLesson["state"],
+    type: ({
+      type: String,
+      default: TYPE_LESSON
+    } as unknown) as typeof TYPE_LESSON
+  },
+  { minimize: false }
+);
 
 const LessonModel = model<LessonDocument>(TYPE_LESSON, lessonSchema);
 

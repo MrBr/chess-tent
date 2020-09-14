@@ -27,11 +27,7 @@ const ConversationModel = model<NormalizedConversation & Document>(
 
 const depopulate = (conversation: Conversation): NormalizedConversation => ({
   ...conversation,
-  users: conversation.users.map(user => user.id),
-  messages: conversation.messages.map(message => ({
-    ...message,
-    owner: message.owner.id
-  }))
+  users: conversation.users.map(user => user.id)
 });
 
 export { conversationSchema, ConversationModel, depopulate };

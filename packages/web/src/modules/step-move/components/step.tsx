@@ -219,8 +219,8 @@ const StepperStep: MoveModule['StepperStep'] = ({
             <StepMove
               move={step.state.move}
               captured={step.state.captured}
-              movedPiece={step.state.movedPiece}
-              moveIndex={step.state.moveIndex}
+              piece={step.state.movedPiece}
+              index={step.state.moveIndex}
             />
           </StepTag>
         </Col>

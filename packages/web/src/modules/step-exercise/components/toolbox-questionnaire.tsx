@@ -1,14 +1,13 @@
 import React, { useCallback } from 'react';
-import { ExerciseStep } from '@types';
+import { ExerciseQuestionnaireState, ExerciseStep } from '@types';
 import { components, ui } from '@application';
 import { useUpdateExerciseState } from '../hooks';
-import { SelectExerciseState } from '../model';
 
 const { Check, Row, Col, Text, Container } = ui;
 const { LessonToolboxText } = components;
 
 export default ({ step }: { step: ExerciseStep }) => {
-  const state = step.state.exerciseState as SelectExerciseState;
+  const state = step.state.exerciseState as ExerciseQuestionnaireState;
   const updateExerciseState = useUpdateExerciseState(step);
   const addOption = useCallback(() => {
     updateExerciseState({

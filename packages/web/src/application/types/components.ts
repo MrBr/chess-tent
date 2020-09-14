@@ -74,6 +74,11 @@ export type StepToolbox = FunctionComponent<{
   text?: string;
 }>;
 
+export type LessonPlayground = FunctionComponent<{
+  board: ReactElement;
+  sidebar: ReactElement;
+}>;
+
 export type LessonToolboxText = FunctionComponent<{
   onChange?: (text: string) => void;
   defaultText?: string;

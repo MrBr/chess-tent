@@ -1,5 +1,5 @@
 import { ComponentType, FunctionComponent, ReactElement } from 'react';
-import { Lesson, Step, StepType } from '@chess-tent/models';
+import { Activity, Lesson, Step, StepType } from '@chess-tent/models';
 import { FEN } from './chess';
 import { ChessboardInterface, ChessboardProps } from './components';
 import { ClassComponent } from './_helpers';
@@ -44,6 +44,8 @@ export type StepModule<
       nextStep: () => void;
       prevStep: () => void;
       footer: ReactElement;
+      activity: Activity;
+      completeStep: (step: Step) => void;
     } & StepBoardComponentProps
   >;
   Exercise: StepComponent<T, StepBoardComponentProps>;

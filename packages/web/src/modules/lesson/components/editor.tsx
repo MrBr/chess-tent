@@ -3,8 +3,8 @@ import { Step } from '@chess-tent/models';
 import { Components } from '@types';
 import { debounce } from 'lodash';
 import { state, hooks, components, ui, requests } from '@application';
-import styled from '@emotion/styled';
 import TrainingModal from './trening-assign';
+import Sidebar from './sidebar';
 
 const { Container, Row, Col, Headline2, Button } = ui;
 const { Stepper, StepRenderer, Chessboard } = components;
@@ -20,14 +20,6 @@ const {
   useLocation,
   usePromptModal,
 } = hooks;
-
-const StepperSidebar = styled.div({
-  height: '100%',
-  maxHeight: '100%',
-  background: '#FAFBFB',
-  overflowY: 'auto',
-  padding: 24,
-});
 
 const Editor: Components['Editor'] = ({ lesson }) => {
   const componentState = useComponentStateSilent();
@@ -88,7 +80,7 @@ const Editor: Components['Editor'] = ({ lesson }) => {
           />
         </Col>
         <Col sm={5} xl={4}>
-          <StepperSidebar>
+          <Sidebar>
             <Button
               size="extra-small"
               onClick={() => promptModal(<TrainingModal />)}
@@ -102,7 +94,7 @@ const Editor: Components['Editor'] = ({ lesson }) => {
               activeStep={activeStep}
               setActiveStep={setActiveStepHandler}
             />
-          </StepperSidebar>
+          </Sidebar>
         </Col>
       </Row>
     </Container>

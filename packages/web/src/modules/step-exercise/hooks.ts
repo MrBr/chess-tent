@@ -1,7 +1,6 @@
 import { hooks, state } from '@application';
-import { ExerciseStep } from '@types';
+import { ExerciseState, ExerciseStep } from '@types';
 import { useCallback } from 'react';
-import { ExerciseState } from './model';
 
 const {
   actions: { updateStepState },

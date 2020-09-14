@@ -1,27 +1,25 @@
 import React from 'react';
-import { ExerciseStep } from '@types';
+import { ExerciseStep, ExerciseVariationState } from '@types';
 import { components, ui } from '@application';
 import { useUpdateExerciseStateProp } from '../hooks';
-import { BoardExerciseState } from '../model';
 
 const { Text, Container } = ui;
 const { LessonToolboxText, StepMove } = components;
 
 export default ({ step }: { step: ExerciseStep }) => {
   const { question, explanation, moves, activeMoveIndex } = step.state
-    .exerciseState as BoardExerciseState;
-  const updateQuestion = useUpdateExerciseStateProp<BoardExerciseState>(
+    .exerciseState as ExerciseVariationState;
+  const updateQuestion = useUpdateExerciseStateProp<ExerciseVariationState>(
     step,
     'question',
   );
-  const updateExplanation = useUpdateExerciseStateProp<BoardExerciseState>(
+  const updateExplanation = useUpdateExerciseStateProp<ExerciseVariationState>(
     step,
     'explanation',
   );
-  const updateActiveMoveIndex = useUpdateExerciseStateProp<BoardExerciseState>(
-    step,
-    'activeMoveIndex',
-  );
+  const updateActiveMoveIndex = useUpdateExerciseStateProp<
+    ExerciseVariationState
+  >(step, 'activeMoveIndex');
 
   return (
     <>

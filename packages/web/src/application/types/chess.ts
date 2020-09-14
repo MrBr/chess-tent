@@ -16,8 +16,8 @@ export type NotableMove = {
   move?: Move;
   promoted?: boolean;
   captured?: boolean;
-  movedPiece?: Piece;
-  moveIndex?: number;
+  piece?: Piece;
+  index?: number;
 };
 export type MoveMetadata = CG_MOVEMETADATA;
 export type PieceColor = CG_COLOR;

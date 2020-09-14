@@ -10,6 +10,8 @@ export interface Activity<T extends Subject = Subject, S extends {} = {}> {
   type: typeof TYPE_ACTIVITY;
   owner: User;
   users: User[]; // Collaborators - write permissions
+  completedSteps: string[];
+  completed: boolean;
 }
 
 export interface NormalizedActivity<

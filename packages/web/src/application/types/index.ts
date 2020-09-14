@@ -59,6 +59,7 @@ import {
   StepTag,
   StepToolbox,
   StepMove,
+  LessonPlayground,
 } from './components';
 import { ClassComponent, GenericArguments } from './_helpers';
 import { UI } from './ui';
@@ -262,6 +263,7 @@ export type Components = {
   StepperStepContainer: ComponentType<{ onClick?: ReactEventHandler }>;
   StepToolbox: StepToolbox;
   LessonToolboxText: LessonToolboxText;
+  LessonPlayground: LessonPlayground;
   StepTag: StepTag;
   StepMove: StepMove;
   Router: ComponentType;

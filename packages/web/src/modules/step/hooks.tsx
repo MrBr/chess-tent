@@ -30,10 +30,10 @@ export const useAddExerciseStep = (
 ) => {
   const dispatch = useDispatchBatched();
   return useCallback(() => {
-    const newDescriptionStep = services.createStep('exercise', position);
+    const newExerciseStep = services.createStep('exercise', position);
     dispatch(
-      updateEntities(addStep(step, newDescriptionStep)),
-      setLessonActiveStep(lesson, newDescriptionStep),
+      updateEntities(addStep(step, newExerciseStep)),
+      setLessonActiveStep(lesson, newExerciseStep),
     );
   }, [step, position, lesson, dispatch]);
 };

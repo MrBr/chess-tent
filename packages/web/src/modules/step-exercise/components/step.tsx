@@ -1,9 +1,10 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { createStep as coreCreateStep } from '@chess-tent/models';
-import { ExerciseModule, ExerciseStep, FEN } from '@types';
+import { ExerciseModule, ExerciseStep, ExerciseTypes, FEN } from '@types';
 import { components, hooks, state, ui } from '@application';
 import ExerciseToolbox from './toolbox';
 import ExerciseEditor from './editor';
+import ExercisePlayground from './playground';
 
 const {
   actions: { updateStepState },
@@ -23,34 +24,36 @@ const createStep = (
     shapes: [],
     steps: [],
     position: prevPosition,
-    exerciseType: 'board',
+    exerciseType: 'variation',
     exerciseState: {},
     ...(initialState || {}),
   });
 
 const Editor: ExerciseModule['Editor'] = ExerciseEditor;
 
-const Playground: ExerciseModule['Playground'] = ({
-  Chessboard,
-  step,
-  footer,
-}) => {
-  const {
-    state: { position, shapes },
-  } = step;
-  return <Chessboard fen={position} shapes={shapes} footer={footer} />;
-};
+const Playground: ExerciseModule['Playground'] = ExercisePlayground;
 
 const Exercise: ExerciseModule['Exercise'] = () => {
   return <>{'Description'}</>;
 };
 
+const exerciseTypes: { text: string; type: ExerciseTypes }[] = [
+  { text: 'Questionnaire', type: 'questionnaire' },
+  { text: 'Question', type: 'question' },
+  { text: 'Arrange pieces', type: 'arrange-pieces' },
+  { text: 'Select square or pieces', type: 'select-squares-pieces' },
+  { text: 'Play variation', type: 'variation' },
+];
 const StepperStep: ExerciseModule['StepperStep'] = ({
   step,
   setActiveStep,
   activeStep,
 }) => {
   const dispatch = useDispatchBatched();
+  const selectedTypeDescriptor = useMemo(
+    () => exerciseTypes.find(({ type }) => type === step.state.exerciseType),
+    [step.state.exerciseType],
+  );
 
   const handleStepClick = useCallback(
     event => {
@@ -75,27 +78,18 @@ const StepperStep: ExerciseModule['StepperStep'] = ({
             }}
           >
             <Dropdown.Toggle id="dropdown-basic" size="sm" variant="secondary">
-              {step.state.exerciseType || 'Choose type'}
+              {selectedTypeDescriptor?.text || 'Choose type'}
             </Dropdown.Toggle>
             <Dropdown.Menu>
-              <Dropdown.Item
-                active={step.state.exerciseType === 'question'}
-                eventKey="question"
-              >
-                Question
-              </Dropdown.Item>
-              <Dropdown.Item
-                active={step.state.exerciseType === 'select'}
-                eventKey="select"
-              >
-                Select
-              </Dropdown.Item>
-              <Dropdown.Item
-                active={step.state.exerciseType === 'board'}
-                eventKey="board"
-              >
-                Board
-              </Dropdown.Item>
+              {exerciseTypes.map(typeDescriptor => (
+                <Dropdown.Item
+                  key={typeDescriptor.type}
+                  active={step.state.exerciseType === typeDescriptor.type}
+                  eventKey={typeDescriptor.type}
+                >
+                  {typeDescriptor.text}
+                </Dropdown.Item>
+              ))}
             </Dropdown.Menu>
           </Dropdown>
           <ExerciseToolbox step={step} />

@@ -7,13 +7,15 @@ import {
   getLessonStep,
   getLessonStepIndex,
   getLessonStepsCount,
+  markStepCompleted,
+  Step,
 } from '@chess-tent/models';
 
-const { Container, Row, Col, Button } = ui;
+const { Container, Button } = ui;
 const { StepRenderer, Chessboard } = components;
 const { useDispatchBatched, useLocation } = hooks;
 const {
-  actions: { updateActivityState, setActivityActiveStep },
+  actions: { updateActivityState, setActivityActiveStep, updateActivity },
 } = state;
 
 const Footer = ({
@@ -71,34 +73,40 @@ const Activity: ActivityComponent<LessonActivity> = ({ activity }) => {
     prevStep && dispatch(setActivityActiveStep(activity, prevStep));
   }, [activity, activeStep, dispatch, lesson]);
 
+  const completeStep = useCallback(
+    (step: Step) => {
+      dispatch(
+        updateActivity(activity, {
+          completedSteps: markStepCompleted(activity, step),
+        }),
+      );
+    },
+    [dispatch, activity],
+  );
+
   return (
-    <Container fluid>
-      <Row noGutters>
-        <Col>
-          <StepRenderer<'Playground'>
-            step={activeStep}
-            component="Playground"
-            activeStep={activeStep}
-            lesson={lesson}
-            setActiveStep={() => {}}
-            setStepActivityState={setStepActivityState}
-            stepActivityState={activeStepActivityState}
-            nextStep={nextActivityStep}
-            prevStep={prevActivityStep}
-            Chessboard={Chessboard}
-            footer={
-              <Footer
-                next={nextActivityStep}
-                prev={prevActivityStep}
-                stepsCount={stepsCount}
-                currentStep={currentStepIndex}
-              />
-            }
-          />
-        </Col>
-        <Col sm={3}>Analysis</Col>
-      </Row>
-    </Container>
+    <StepRenderer<'Playground'>
+      step={activeStep}
+      component="Playground"
+      activeStep={activeStep}
+      lesson={lesson}
+      setActiveStep={() => {}}
+      setStepActivityState={setStepActivityState}
+      stepActivityState={activeStepActivityState}
+      nextStep={nextActivityStep}
+      prevStep={prevActivityStep}
+      Chessboard={Chessboard}
+      activity={activity}
+      completeStep={completeStep}
+      footer={
+        <Footer
+          next={nextActivityStep}
+          prev={prevActivityStep}
+          stepsCount={stepsCount}
+          currentStep={currentStepIndex}
+        />
+      }
+    />
   );
 };
 

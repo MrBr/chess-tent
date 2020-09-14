@@ -5,9 +5,14 @@ import React, {
   useMemo,
 } from 'react';
 import { components, hooks, ui, services } from '@application';
-import { ExerciseModule, Move, Piece, Shape } from '@types';
+import {
+  ExerciseModule,
+  ExerciseVariationState,
+  Move,
+  Piece,
+  Shape,
+} from '@types';
 import { useUpdateExerciseState } from '../hooks';
-import { BoardExerciseState } from '../model';
 
 const { Chessboard } = components;
 const { createFenForward } = services;
@@ -20,9 +25,11 @@ const Editor: FunctionComponent<ComponentProps<ExerciseModule['Editor']>> = ({
 }) => {
   const { position, shapes } = step.state;
   const { editing, moves, activeMoveIndex } = step.state
-    .exerciseState as BoardExerciseState;
+    .exerciseState as ExerciseVariationState;
   const activeMove = moves?.[activeMoveIndex as number];
-  const updateExerciseState = useUpdateExerciseState<BoardExerciseState>(step);
+  const updateExerciseState = useUpdateExerciseState<ExerciseVariationState>(
+    step,
+  );
   const updateStepState = useUpdateStepState(step);
   const handleShapes = useCallback(
     (shapes: Shape[]) => {
@@ -44,14 +51,14 @@ const Editor: FunctionComponent<ComponentProps<ExerciseModule['Editor']>> = ({
     [activeMoveIndex, moves, updateExerciseState, updateStepState],
   );
   const handleMove = useCallback(
-    (position, move, movedPiece: Piece, captured) => {
+    (position, move, piece: Piece, captured) => {
       if (editing) {
         updateStepState({ position });
       } else {
-        let moveIndex = moves?.[moves?.length - 1]?.moveIndex || 0;
+        let moveIndex = moves?.[moves?.length - 1]?.index || 0;
         if (
-          movedPiece.color === 'white' ||
-          (movedPiece.color === 'black' && moveIndex === 0)
+          piece.color === 'white' ||
+          (piece.color === 'black' && moveIndex === 0)
         ) {
           moveIndex += 1;
         }
@@ -61,8 +68,8 @@ const Editor: FunctionComponent<ComponentProps<ExerciseModule['Editor']>> = ({
             {
               move,
               captured,
-              movedPiece,
-              moveIndex,
+              piece,
+              index: moveIndex,
               shapes: [],
             },
           ],

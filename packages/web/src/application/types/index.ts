@@ -71,6 +71,7 @@ import {
   VariationModule,
 } from './steps';
 import { Socket } from './socket';
+import { ChessInstance } from 'chess.js';
 
 export * from '@chess-tent/types';
 export * from './activity';
@@ -91,7 +92,10 @@ export type RecordHookReturn<T extends RecordValue> = [
 
 export type Hooks = {
   useComponentStateSilent: () => { mounted: boolean };
-  usePromptModal: () => (modalContent: ReactElement) => void;
+  useComponentState: () => { mounted: boolean };
+  usePromptModal: () => (
+    renderModal: (close: () => void) => ReactElement,
+  ) => void;
   useUpdateStepState: (step: Step) => (state: {}) => void;
   useAddDescriptionStep: (
     lesson: Lesson,
@@ -214,7 +218,7 @@ export type Utils = {
 
 export type Services = {
   Chess: {
-    new (fen?: string): {};
+    new (fen?: string): ChessInstance;
   };
   createFenForward: (fen: FEN, moves: Move[]) => FEN;
   createFenBackward: (fen: FEN, moves: Move[]) => FEN;

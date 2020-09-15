@@ -12,7 +12,7 @@ import {
 import { model } from '@application';
 import { Schema } from '@types';
 import { v4 as uuid } from 'uuid';
-import { useComponentStateSilent } from './hooks';
+import { useComponentState, useComponentStateSilent } from './hooks';
 
 application.utils.getEntitySchema = (entity: unknown): Schema => {
   if (isStep(entity)) {
@@ -45,3 +45,4 @@ application.utils.rightMouse = (f: Function) => (e: MouseEvent) =>
   e.button === 2 && f(e);
 
 application.hooks.useComponentStateSilent = useComponentStateSilent;
+application.hooks.useComponentState = useComponentState;

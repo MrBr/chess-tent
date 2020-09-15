@@ -94,6 +94,8 @@ const Editor: FunctionComponent<ComponentProps<ExerciseModule['Editor']>> = ({
 
   return (
     <Chessboard
+      edit
+      sparePieces
       fen={activePosition}
       onMove={handleMove}
       header={status}

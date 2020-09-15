@@ -9,6 +9,7 @@ import {
   getLessonStepsCount,
   markStepCompleted,
   Step,
+  updateStepState,
 } from '@chess-tent/models';
 
 const { Container, Button } = ui;
@@ -58,7 +59,11 @@ const Activity: ActivityComponent<LessonActivity> = ({ activity }) => {
 
   const setStepActivityState = useCallback(
     state => {
-      dispatch(updateActivityState(activity, { [activeStep.id]: state }));
+      dispatch(
+        updateActivityState(activity, {
+          [activeStep.id]: updateStepState(activity, activeStep.id, state),
+        }),
+      );
     },
     [activity, dispatch, activeStep.id],
   );

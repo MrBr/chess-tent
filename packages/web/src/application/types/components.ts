@@ -5,11 +5,18 @@ import {
   ReactNode,
   RefObject,
 } from 'react';
-import { FEN, Key, Piece } from '@chess-tent/chessground/dist/types';
 import { DrawCurrent, DrawShape } from '@chess-tent/chessground/dist/draw';
 import { Api } from '@chess-tent/chessground/dist/api';
 import { Step } from '@chess-tent/models';
-import { Move, NotableMove, Shape } from './chess';
+import {
+  Move,
+  NotableMove,
+  Key,
+  FEN,
+  Piece,
+  Shape,
+  ExtendedKey,
+} from './chess';
 import { StepSystemProps } from './step';
 
 export interface ChessboardState {
@@ -39,13 +46,15 @@ export interface ChessboardProps {
   onShapesChange?: (shapes: DrawShape[]) => void;
   onShapeAdd?: (shape: DrawShape[]) => void;
   onShapeRemove?: (shape: DrawShape[]) => void;
-  validateMove?: (orig: Key, dest: Key) => boolean;
+  validateMove?: (orig: ExtendedKey, dest: ExtendedKey) => boolean;
   validateDrawable?: (
     newDrawShape: DrawCurrent,
     curDrawShape: DrawCurrent,
   ) => boolean;
   eraseDrawableOnClick?: boolean;
   shapes?: Shape[];
+  sparePieces?: boolean;
+  edit?: boolean;
 }
 
 export interface ChessboardInterface
@@ -57,7 +66,7 @@ export interface ChessboardInterface
   closePrompt: () => void;
   removeShape: (shape: DrawShape) => void;
   resetBoard: () => void;
-  fen: () => FEN;
+  fen: (move?: Move, piece?: Piece) => FEN;
   move: (from: Key, to: Key) => void;
 }
 

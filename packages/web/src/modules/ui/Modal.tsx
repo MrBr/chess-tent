@@ -2,6 +2,7 @@ import React, {
   ComponentType,
   FunctionComponent,
   ReactElement,
+  useCallback,
   useContext,
   useState,
 } from 'react';
@@ -13,13 +14,13 @@ import { ConfirmProps } from '@types';
 import { Button } from './Button';
 
 const ModalProviderContext = React.createContext<
-  (modalContent: ReactElement) => void
+  (renderModal: (close: () => void) => ReactElement) => void
 >(() => {});
 
 const Modal = BModal;
 // @ts-ignore
 Modal.defaultProps = {
-  onHide: console.log,
+  onHide: () => {},
 };
 
 const Confirm = styled<FunctionComponent<ConfirmProps>>(
@@ -41,14 +42,15 @@ const usePromptModal = () => {
 
 const ModalProvider: ComponentType = ({ children }) => {
   const [modal, setModal] = useState<ReactElement | null>(null);
+  const promptModal = useCallback(
+    (renderModal: (close: () => void) => ReactElement) =>
+      setModal(renderModal(() => setModal(null))),
+    [setModal],
+  );
   return (
-    <ModalProviderContext.Provider value={setModal}>
+    <ModalProviderContext.Provider value={promptModal}>
       {children}
-      {modal && (
-        <Modal show onEscapeKeyDown={() => setModal(null)}>
-          {modal}
-        </Modal>
-      )}
+      {modal && modal}
     </ModalProviderContext.Provider>
   );
 };

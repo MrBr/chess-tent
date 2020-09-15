@@ -164,6 +164,8 @@ const Editor: MoveModule['Editor'] = ({ Chessboard, step, lesson, status }) => {
 
   return (
     <Chessboard
+      edit
+      sparePieces
       fen={position}
       onMove={onChangeHandle}
       header={status}

@@ -5,6 +5,7 @@ import { debounce } from 'lodash';
 import { state, hooks, components, ui, requests } from '@application';
 import TrainingModal from './trening-assign';
 import Sidebar from './sidebar';
+import { PreviewModal } from './preview';
 
 const { Container, Row, Col, Headline2, Button } = ui;
 const { Stepper, StepRenderer, Chessboard } = components;
@@ -83,9 +84,25 @@ const Editor: Components['Editor'] = ({ lesson }) => {
           <Sidebar>
             <Button
               size="extra-small"
-              onClick={() => promptModal(<TrainingModal />)}
+              onClick={() =>
+                promptModal(close => <TrainingModal close={close} />)
+              }
             >
               Assign lesson
+            </Button>
+            <Button
+              size="extra-small"
+              onClick={() =>
+                promptModal(close => (
+                  <PreviewModal
+                    close={close}
+                    lesson={lesson}
+                    step={activeStep}
+                  />
+                ))
+              }
+            >
+              Preview
             </Button>
             <Headline2>Lesson</Headline2>
             <Stepper

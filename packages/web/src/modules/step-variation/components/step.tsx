@@ -116,6 +116,8 @@ const Editor: VariationModule['Editor'] = ({
 
   return (
     <Chessboard
+      edit
+      sparePieces
       fen={position}
       onMove={onChangeHandle}
       onShapesChange={updateShapes}

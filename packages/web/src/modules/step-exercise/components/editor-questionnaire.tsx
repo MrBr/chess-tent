@@ -13,6 +13,8 @@ const Editor: FunctionComponent<ComponentProps<ExerciseModule['Editor']>> = ({
   const updateStepState = useUpdateStepState(step);
   return (
     <Chessboard
+      edit
+      sparePieces
       fen={position}
       onMove={position => updateStepState({ position })}
       header={status}

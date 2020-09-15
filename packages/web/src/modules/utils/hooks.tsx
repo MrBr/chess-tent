@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { defer } from 'lodash';
 
 export const useComponentStateSilent = () => {
@@ -9,4 +9,14 @@ export const useComponentStateSilent = () => {
     });
   }, []);
   return ref.current;
+};
+
+export const useComponentState = () => {
+  const [state, setState] = useState<{ mounted: boolean }>({
+    mounted: false,
+  });
+  useEffect(() => {
+    defer(() => setState({ mounted: true }));
+  }, [setState]);
+  return state;
 };

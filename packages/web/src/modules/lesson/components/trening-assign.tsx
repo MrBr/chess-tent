@@ -14,6 +14,7 @@ const {
   Avatar,
   Thumbnail,
   Text,
+  Modal,
 } = ui;
 const { useApi, useActiveUserRecord } = hooks;
 const { generateIndex } = utils;
@@ -23,7 +24,7 @@ const TrainingSchema = yup.object().shape({
   lesson: yup.string().required(),
 });
 
-export default () => {
+export default ({ close }: { close: () => void }) => {
   const { fetch: saveActivity } = useApi(requests.activitySave);
   const [user] = useActiveUserRecord() as [User, never, never];
   const { fetch: fetchUserLessons, response } = useApi(requests.lessons);
@@ -42,41 +43,43 @@ export default () => {
   }, [fetchUserLessons, user.id]);
 
   return (
-    <ModalBody>
-      <Headline3>New Training</Headline3>
-      <Form
-        initialValues={{ user: '', lesson: '' }}
-        validationSchema={TrainingSchema}
-        onSubmit={assignTraining}
-      >
-        <FormGroup>
-          <Label>Assign to</Label>
-          <Form.Select
-            name="user"
-            placeholder="test"
-            options={[user]}
-            formatOptionLabel={({ imageUrl, name }: User) => (
-              <>
-                <Avatar src={imageUrl} /> <Text inline>{name}</Text>
-              </>
-            )}
-          />
-        </FormGroup>
-        <FormGroup>
-          <Label>Lesson</Label>
-          <Form.Select
-            name="lesson"
-            options={response?.data || []}
-            formatOptionLabel={(lesson: Lesson) => (
-              <>
-                <Thumbnail src={lessonThumbUrl} />
-                <Text inline>{lesson.id}</Text>
-              </>
-            )}
-          />
-        </FormGroup>
-        <Button type="submit">Assign</Button>
-      </Form>
-    </ModalBody>
+    <Modal show onEscapeKeyDown={close}>
+      <ModalBody>
+        <Headline3>New Training</Headline3>
+        <Form
+          initialValues={{ user: '', lesson: '' }}
+          validationSchema={TrainingSchema}
+          onSubmit={assignTraining}
+        >
+          <FormGroup>
+            <Label>Assign to</Label>
+            <Form.Select
+              name="user"
+              placeholder="test"
+              options={[user]}
+              formatOptionLabel={({ imageUrl, name }: User) => (
+                <>
+                  <Avatar src={imageUrl} /> <Text inline>{name}</Text>
+                </>
+              )}
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label>Lesson</Label>
+            <Form.Select
+              name="lesson"
+              options={response?.data || []}
+              formatOptionLabel={(lesson: Lesson) => (
+                <>
+                  <Thumbnail src={lessonThumbUrl} />
+                  <Text inline>{lesson.id}</Text>
+                </>
+              )}
+            />
+          </FormGroup>
+          <Button type="submit">Assign</Button>
+        </Form>
+      </ModalBody>
+    </Modal>
   );
 };

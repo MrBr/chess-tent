@@ -3,7 +3,10 @@ import { User } from "../user";
 
 export const TYPE_ACTIVITY = "activities";
 
-export interface Activity<T extends Subject = Subject, S extends {} = {}> {
+export interface Activity<
+  T extends Subject = Subject,
+  S extends { [key: string]: any } = any
+> {
   id: string;
   state: S;
   subject: T;

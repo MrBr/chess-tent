@@ -1,4 +1,4 @@
-import { ui, components, constants } from '@application';
+import { ui, components, constants, services } from '@application';
 import {
   ChessboardProps,
   ChessboardState,
@@ -6,40 +6,29 @@ import {
   Piece,
   ChessboardInterface,
   MoveMetadata,
+  Key,
 } from '@types';
 
+import { ChessInstance } from 'chess.js';
 import React, { Component, FunctionComponent, RefObject } from 'react';
 import styled from '@emotion/styled';
 import { Chessground } from '@chess-tent/chessground';
 import _ from 'lodash';
 import { Api } from '@chess-tent/chessground/dist/api';
-import { Key, MouchEvent } from '@chess-tent/chessground/dist/types';
+import { MouchEvent } from '@chess-tent/chessground/dist/types';
 import { State as CGState } from '@chess-tent/chessground/dist/state';
 import { DrawShape } from '@chess-tent/chessground/dist/draw';
 import { Config } from '@chess-tent/chessground/dist/config';
 
 import { SparePieces } from './spare-pieces';
+import { replaceFENPosition, updateMovable } from './themes/_helpers';
 
 const { Evaluator } = components;
 const { START_FEN } = constants;
 const { Modal } = ui;
+const { Chess } = services;
 
 export type State = CGState;
-
-// prettier-ignore
-export type SquareKey =
-/* eslint-disable */
-    'a1' | 'b1' | 'c1' | 'd1' | 'e1' | 'f1' | 'g1' | 'h1' |
-    'a2' | 'b2' | 'c2' | 'd2' | 'e2' | 'f2' | 'g2' | 'h2' |
-    'a3' | 'b3' | 'c3' | 'd3' | 'e3' | 'f3' | 'g3' | 'h3' |
-    'a4' | 'b4' | 'c4' | 'd4' | 'e4' | 'f4' | 'g4' | 'h4' |
-    'a5' | 'b5' | 'c5' | 'd5' | 'e5' | 'f5' | 'g5' | 'h5' |
-    'a6' | 'b6' | 'c6' | 'd6' | 'e6' | 'f6' | 'g6' | 'h6' |
-    'a7' | 'b7' | 'c7' | 'd7' | 'e7' | 'f7' | 'g7' | 'h7' |
-    'a8' | 'b8' | 'c8' | 'd8' | 'e8' | 'f8' | 'g8' | 'h8';
-/* eslint-enable */
-
-export type PositionObject = Record<SquareKey, string>;
 
 type ChessgroundMappedPropsType = Record<
   keyof Omit<
@@ -57,6 +46,7 @@ type ChessgroundMappedPropsType = Record<
     | 'evaluate'
     | 'width'
     | 'height'
+    | 'sparePieces'
   >,
   string
 >;
@@ -69,6 +59,7 @@ const ChessgroundMappedProps: ChessgroundMappedPropsType = {
   resizable: 'resizable',
   eraseDrawableOnClick: 'drawable.eraseOnClick',
   animation: 'animation.enabled',
+  edit: 'movable.free',
 };
 
 const BoardHeader = styled.div<{
@@ -124,10 +115,17 @@ const BoardContainer = styled<
   margin: 'auto',
 }));
 
+// Chessground resizing expects custom event to be
+// triggered on the document.body once resizing occur.
+window.addEventListener('resize', () =>
+  document.body.dispatchEvent(new Event('chessground.resize')),
+);
+
 class Chessboard extends Component<ChessboardProps, ChessboardState>
   implements ChessboardInterface {
   boardHost: RefObject<HTMLDivElement> = React.createRef();
   api: Api = new Proxy({}, {}) as Api;
+  chess: ChessInstance;
   state: ChessboardState = {
     renderPrompt: undefined,
   };
@@ -139,11 +137,15 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
     resizable: true,
     selectablePieces: false,
     eraseDrawableOnClick: false,
-    onChange: () => {},
-    validateMove: () => true,
     width: '70%',
     height: '70%',
+    edit: false,
   };
+
+  constructor(props: ChessboardProps) {
+    super(props);
+    this.chess = new Chess();
+  }
 
   componentDidMount() {
     const {
@@ -153,6 +155,7 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
       eraseDrawableOnClick,
       selectablePieces,
       resizable,
+      edit,
     } = this.props;
 
     if (!this.boardHost.current) {
@@ -170,6 +173,7 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
         duration: 0,
       },
       movable: {
+        free: edit,
         validate: this.validateMove,
         events: {
           after: this.onMove,
@@ -195,10 +199,14 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
    * @param config
    */
   setConfig(config: Partial<Config>) {
-    this.api.set(config);
+    const finalConfig = this.props.edit
+      ? config
+      : updateMovable(config, config.fen || this.props.fen);
+    this.api.set(finalConfig);
     // Shapes can't be set in the same time as fen so this is additional update
     // TODO - edit Chessground
     this.props.shapes && this.api.setShapes([...this.props.shapes]);
+    config.fen && this.chess.load(config.fen);
   }
 
   prompt(renderPrompt: ChessboardState['renderPrompt']) {
@@ -255,8 +263,19 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
     this.onReset();
   };
 
-  fen = () => {
-    return this.api.getFen() + ' b - - 0 1';
+  fen = (move?: Move, piece?: Piece) => {
+    const { edit } = this.props;
+    if (edit) {
+      this.chess.load(
+        // Update position and color who's turn is.
+        // Useful for variation to automatically start with a correct color.
+        replaceFENPosition(this.chess.fen(), this.api.getFen(), piece),
+      );
+    } else if (move) {
+      // Only valid moves are in "play" mode
+      this.chess.move({ from: move[0], to: move[1] });
+    }
+    return this.chess.fen();
   };
 
   move(from: Key, to: Key) {
@@ -295,18 +314,23 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
 
   // TODO - use move event?
   onChange = () => {
-    const fen = this.fen();
+    if (!this.props.onChange) {
+      return;
+    }
     const lastMove = this.api.state.lastMove as Move;
     const piece = this.api.state.pieces[lastMove[1]];
-    this.props.onChange && this.props.onChange(fen, lastMove, piece);
+    const fen = this.fen(lastMove, piece);
+    this.props.onChange(fen, lastMove, piece);
   };
 
   onMove = (orig: string, dest: string, metadata: MoveMetadata) => {
-    const fen = this.fen();
+    if (!this.props.onMove) {
+      return;
+    }
     const lastMove = this.api.state.lastMove as Move;
     const piece = this.api.state.pieces[lastMove[1]] as Piece;
-    this.props.onMove &&
-      this.props.onMove(fen, lastMove, piece, !!metadata.captured);
+    const fen = this.fen(lastMove, piece);
+    this.props.onMove(fen, lastMove, piece, !!metadata.captured);
   };
 
   onSparePieceDrag = (piece: Piece, event: MouchEvent) => {
@@ -314,7 +338,15 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
   };
 
   render() {
-    const { header, fen, evaluate, footer, width, height } = this.props;
+    const {
+      header,
+      fen,
+      evaluate,
+      footer,
+      width,
+      height,
+      sparePieces,
+    } = this.props;
     const { renderPrompt } = this.state;
     return (
       <>
@@ -333,7 +365,9 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
           boardRef={this.boardHost}
         />
         <BoardFooter width={width as string}>{footer}</BoardFooter>
-        <SparePieces onDragStart={this.onSparePieceDrag} />
+        {sparePieces && (
+          <SparePieces onDragStart={this.onSparePieceDrag} />
+        )}{' '}
         <Modal
           container={this.boardHost}
           show={!!renderPrompt}

@@ -5,8 +5,8 @@
   "dependencies": {
     "@chess-tent/chessground": "1.0.0",
     "@chess-tent/models": "1.0.0",
-    "@chess-tent/types": "1.0.0",
     "@chess-tent/normalization": "1.0.0",
+    "@chess-tent/types": "1.0.0",
     "@emotion/core": "^10.0.10",
     "@emotion/styled": "^10.0.10",
     "@testing-library/jest-dom": "^4.2.4",

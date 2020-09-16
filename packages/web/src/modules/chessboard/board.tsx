@@ -21,7 +21,7 @@ import { DrawShape } from '@chess-tent/chessground/dist/draw';
 import { Config } from '@chess-tent/chessground/dist/config';
 
 import { SparePieces } from './spare-pieces';
-import { replaceFENPosition, updateMovable } from './themes/_helpers';
+import { replaceFENPosition, updateMovable } from './_helpers';
 
 const { Evaluator } = components;
 const { START_FEN } = constants;

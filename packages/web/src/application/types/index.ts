@@ -49,7 +49,7 @@ import {
   UpdateActivityAction,
   SetActivityActiveStepAction,
 } from '@chess-tent/types';
-import { FEN, Move, Piece } from './chess';
+import { FEN, Move, Piece, PieceColor } from './chess';
 import { StepModule, StepModuleComponentKey } from './step';
 import {
   AuthorizedProps,
@@ -223,6 +223,8 @@ export type Services = {
   createFenForward: (fen: FEN, moves: Move[]) => FEN;
   createFenBackward: (fen: FEN, moves: Move[]) => FEN;
   getPiece: (position: FEN, square: string) => Piece | null;
+  getTurnColor: (position: FEN) => PieceColor;
+  setTurnColor: (position: FEN, color: PieceColor) => FEN;
 
   // Add non infrastructural providers
   // Allow modules to inject their own non dependant Providers

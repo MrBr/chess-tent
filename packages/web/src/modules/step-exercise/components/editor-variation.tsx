@@ -17,7 +17,7 @@ import {
 import { useUpdateExerciseState } from '../hooks';
 
 const { Chessboard } = components;
-const { createFenForward, getPiece } = services;
+const { createFenForward, getPiece, getTurnColor, setTurnColor } = services;
 const { useUpdateStepState } = hooks;
 const { ToggleButton } = ui;
 
@@ -81,13 +81,17 @@ const Editor: FunctionComponent<ComponentProps<ExerciseModule['Editor']>> = ({
     [activeMoveIndex, moves, updateExerciseState, updateStepState],
   );
   const handleMove = useCallback(
-    (position, move, piece: Piece, captured) => {
+    (newPosition, move, piece: Piece, captured) => {
       if (editing) {
-        updateStepState({ position });
+        updateStepState({ position: newPosition });
         updateExerciseState({ moves: [] });
         return;
       }
       const currentIndex = activeMoveIndex === undefined ? -1 : activeMoveIndex;
+      if (currentIndex === -1 && piece.color !== getTurnColor(position)) {
+        // Updating base position FEN to match first move color
+        updateStepState({ position: setTurnColor(position, piece.color) });
+      }
       const prevMoves = removeOldLineMoves(currentIndex, moves);
       const moveIndex = resolveNextMoveIndex(piece, prevMoves);
       updateExerciseState(
@@ -103,7 +107,14 @@ const Editor: FunctionComponent<ComponentProps<ExerciseModule['Editor']>> = ({
         ),
       );
     },
-    [editing, moves, updateExerciseState, updateStepState, activeMoveIndex],
+    [
+      editing,
+      moves,
+      updateExerciseState,
+      updateStepState,
+      activeMoveIndex,
+      position,
+    ],
   );
 
   const activePosition = useMemo(() => {
@@ -137,14 +148,16 @@ const Editor: FunctionComponent<ComponentProps<ExerciseModule['Editor']>> = ({
       shapes={activeShapes}
       validateMove={validateMove}
       footer={
-        <ToggleButton
-          value={1}
-          checked
-          size="extra-small"
-          onChange={() => updateExerciseState({ editing: !editing })}
-        >
-          {editing ? 'Set position' : 'Edit board'}
-        </ToggleButton>
+        <>
+          <ToggleButton
+            value={1}
+            checked
+            size="extra-small"
+            onChange={() => updateExerciseState({ editing: !editing })}
+          >
+            {editing ? 'Set position' : 'Edit board'}
+          </ToggleButton>
+        </>
       }
     />
   );

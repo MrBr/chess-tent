@@ -42,3 +42,13 @@ export const getPiece: Services['getPiece'] = (position, square) => {
     color: transformColorKey(piece.color),
   };
 };
+
+export const getTurnColor: Services['getTurnColor'] = position => {
+  return position.split(' ')[1] === 'w' ? 'white' : 'black';
+};
+
+export const setTurnColor: Services['setTurnColor'] = (position, color) => {
+  const fenChunks = position.split(' ');
+  fenChunks[1] = color === 'white' ? 'w' : 'b';
+  return fenChunks.join(' ');
+};

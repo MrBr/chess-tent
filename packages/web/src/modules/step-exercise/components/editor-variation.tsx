@@ -17,7 +17,7 @@ import {
 import { useUpdateExerciseState } from '../hooks';
 
 const { Chessboard } = components;
-const { createFenForward } = services;
+const { createFenForward, getPiece } = services;
 const { useUpdateStepState } = hooks;
 const { ToggleButton } = ui;
 
@@ -118,6 +118,14 @@ const Editor: FunctionComponent<ComponentProps<ExerciseModule['Editor']>> = ({
   }, [position, activeMoveIndex, moves]);
   const activeShapes = activeMove ? activeMove.shapes : shapes;
 
+  const validateMove = useCallback(
+    orig => {
+      const piece = getPiece(activePosition, orig);
+      return activeMove?.piece?.color !== piece?.color;
+    },
+    [activePosition, activeMove],
+  );
+
   return (
     <Chessboard
       edit
@@ -127,6 +135,7 @@ const Editor: FunctionComponent<ComponentProps<ExerciseModule['Editor']>> = ({
       header={status}
       onShapesChange={handleShapes}
       shapes={activeShapes}
+      validateMove={validateMove}
       footer={
         <ToggleButton
           value={1}

@@ -175,11 +175,11 @@ const Editor: MoveModule['Editor'] = ({ Chessboard, step, lesson, status }) => {
   );
 };
 
-const Playground: MoveModule['Playground'] = ({ Chessboard, step, footer }) => {
+const Playground: MoveModule['Playground'] = ({ Chessboard, step, Footer }) => {
   const {
     state: { position, shapes },
   } = step;
-  return <Chessboard fen={position} shapes={shapes} footer={footer} />;
+  return <Chessboard fen={position} shapes={shapes} footer={<Footer />} />;
 };
 
 const Exercise: MoveModule['Exercise'] = () => {

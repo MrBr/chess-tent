@@ -133,12 +133,12 @@ const Editor: VariationModule['Editor'] = ({
 const Playground: VariationModule['Playground'] = ({
   Chessboard,
   step,
-  footer,
+  Footer,
 }) => {
   const {
     state: { position, shapes },
   } = step;
-  return <Chessboard fen={position} shapes={shapes} footer={footer} />;
+  return <Chessboard fen={position} shapes={shapes} footer={<Footer />} />;
 };
 
 const Exercise: VariationModule['Exercise'] = () => {

@@ -71,12 +71,12 @@ const Editor: DescriptionModule['Editor'] = ({
 const Playground: DescriptionModule['Playground'] = ({
   Chessboard,
   step,
-  footer,
+  Footer,
 }) => {
   const {
     state: { position, shapes },
   } = step;
-  return <Chessboard fen={position} shapes={shapes} footer={footer} />;
+  return <Chessboard fen={position} shapes={shapes} footer={<Footer />} />;
 };
 
 const Exercise: DescriptionModule['Exercise'] = () => {

@@ -30,6 +30,12 @@ export type StepModuleComponentKey =
   | 'StepperStep'
   | 'Exercise';
 
+export type ActivityFooterProps = {
+  next?: () => void;
+  prev?: () => void;
+  stepsCount?: number;
+  currentStep?: number;
+};
 export type StepModule<
   T extends Step = any,
   K extends StepType = StepType,
@@ -43,7 +49,7 @@ export type StepModule<
       stepActivityState: U;
       nextStep: () => void;
       prevStep: () => void;
-      footer: ReactElement;
+      Footer: FunctionComponent<ActivityFooterProps>;
       activity: Activity;
       completeStep: (step: Step) => void;
     } & StepBoardComponentProps

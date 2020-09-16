@@ -29,7 +29,7 @@ const getPieceStatus = (
 
 const Playground: FunctionComponent<ComponentProps<
   ExerciseModule['Playground']
->> = ({ step, status, stepActivityState, setStepActivityState }) => {
+>> = ({ step, status, stepActivityState, setStepActivityState, Footer }) => {
   const { position, shapes } = step.state;
   const {
     moves: activityMoves,
@@ -73,6 +73,7 @@ const Playground: FunctionComponent<ComponentProps<
           header={status}
           shapes={shapes}
           animation
+          footer={<Footer />}
         />
       }
       sidebar={

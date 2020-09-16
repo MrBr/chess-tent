@@ -5,7 +5,7 @@ import { debounce } from 'lodash';
 import { state, hooks, components, ui, requests } from '@application';
 import TrainingModal from './trening-assign';
 import Sidebar from './sidebar';
-import { PreviewModal } from './preview';
+import { PreviewModal } from './activity-preview';
 
 const { Container, Row, Col, Headline2, Button } = ui;
 const { Stepper, StepRenderer, Chessboard } = components;

@@ -19,6 +19,7 @@ const Playground: FunctionComponent<ComponentProps<
   setStepActivityState,
   activity,
   completeStep,
+  Footer,
 }) => {
   const { position, shapes } = step.state;
   const {
@@ -42,7 +43,13 @@ const Playground: FunctionComponent<ComponentProps<
   return (
     <LessonPlayground
       board={
-        <Chessboard fen={position} header={status} shapes={shapes} animation />
+        <Chessboard
+          fen={position}
+          header={status}
+          shapes={shapes}
+          animation
+          footer={<Footer />}
+        />
       }
       sidebar={
         <>

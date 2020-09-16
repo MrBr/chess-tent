@@ -20,7 +20,7 @@ const isCorrectActivityMove = (activityMove: Move, stepMove: Move) =>
 
 const Playground: FunctionComponent<ComponentProps<
   ExerciseModule['Playground']
->> = ({ step, status, stepActivityState, setStepActivityState }) => {
+>> = ({ step, status, stepActivityState, setStepActivityState, Footer }) => {
   const { position, shapes } = step.state;
   const {
     activeMoveIndex,
@@ -80,6 +80,7 @@ const Playground: FunctionComponent<ComponentProps<
           header={status}
           shapes={activeShapes}
           animation
+          footer={<Footer />}
         />
       }
       sidebar={

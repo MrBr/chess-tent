@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
-import { ActivityComponent, LessonActivity } from '@types';
-import { components, hooks, state, ui } from '@application';
+import { ActivityComponent, ActivityFooterProps, LessonActivity } from '@types';
+import { components, hooks, state } from '@application';
 import {
   getLessonNextStep,
   getLessonPreviousStep,
@@ -11,35 +11,13 @@ import {
   Step,
   updateStepState,
 } from '@chess-tent/models';
+import Footer from './activity-footer';
 
-const { Container, Button } = ui;
 const { StepRenderer, Chessboard } = components;
 const { useDispatchBatched, useLocation } = hooks;
 const {
   actions: { updateActivityState, setActivityActiveStep, updateActivity },
 } = state;
-
-const Footer = ({
-  next,
-  prev,
-  currentStep,
-  stepsCount,
-}: {
-  next: () => void;
-  prev: () => void;
-  stepsCount: number;
-  currentStep: number;
-}) => {
-  return (
-    <Container>
-      <div>
-        {currentStep}/{stepsCount}
-      </div>
-      <Button onClick={prev}>Prev</Button>
-      <Button onClick={next}>Next</Button>
-    </Container>
-  );
-};
 
 const Activity: ActivityComponent<LessonActivity> = ({ activity }) => {
   const dispatch = useDispatchBatched();
@@ -89,6 +67,16 @@ const Activity: ActivityComponent<LessonActivity> = ({ activity }) => {
     [dispatch, activity],
   );
 
+  const footerRender = (props: Partial<ActivityFooterProps>) => (
+    <Footer
+      next={nextActivityStep}
+      prev={prevActivityStep}
+      stepsCount={stepsCount}
+      currentStep={currentStepIndex}
+      {...props}
+    />
+  );
+
   return (
     <StepRenderer<'Playground'>
       step={activeStep}
@@ -103,14 +91,7 @@ const Activity: ActivityComponent<LessonActivity> = ({ activity }) => {
       Chessboard={Chessboard}
       activity={activity}
       completeStep={completeStep}
-      footer={
-        <Footer
-          next={nextActivityStep}
-          prev={prevActivityStep}
-          stepsCount={stepsCount}
-          currentStep={currentStepIndex}
-        />
-      }
+      Footer={footerRender}
     />
   );
 };

@@ -20,6 +20,7 @@ const Playground: FunctionComponent<ComponentProps<
   setStepActivityState,
   activity,
   completeStep,
+  Footer,
 }) => {
   const { position, shapes } = step.state;
   const {
@@ -67,6 +68,7 @@ const Playground: FunctionComponent<ComponentProps<
           animation
           onShapesChange={handleShapesChange}
           validateDrawable={validateShapes}
+          footer={<Footer />}
         />
       }
       sidebar={

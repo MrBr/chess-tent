@@ -109,6 +109,7 @@ const BoardContainer = styled<
     maxWidth: 720,
     maxHeight: 720,
   },
+  zIndex: 10, // important for dragged piece to cover spare piece base
   width: width,
   paddingBottom: height,
   position: 'relative',

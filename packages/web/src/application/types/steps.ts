@@ -39,11 +39,12 @@ export type DescriptionStep = Step<DescriptionStepState, 'description'>;
 export type DescriptionModule = StepModule<DescriptionStep, 'description'>;
 
 // Exercise
+export type ExerciseMove = NotableMove & { shapes: Shape[] };
 export interface ExerciseVariationState {
   editing?: boolean;
   question?: string;
   explanation?: string;
-  moves?: (NotableMove & { shapes: Shape[] })[];
+  moves?: ExerciseMove[];
   activeMoveIndex?: number;
 }
 export interface ExerciseVariationActivityState {

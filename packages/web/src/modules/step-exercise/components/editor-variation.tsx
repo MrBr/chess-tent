@@ -7,8 +7,10 @@ import React, {
 import { components, hooks, ui, services } from '@application';
 import {
   ExerciseModule,
+  ExerciseMove,
   ExerciseVariationState,
   Move,
+  NotableMove,
   Piece,
   Shape,
 } from '@types';
@@ -18,6 +20,41 @@ const { Chessboard } = components;
 const { createFenForward } = services;
 const { useUpdateStepState } = hooks;
 const { ToggleButton } = ui;
+
+const updateMoveShapes = (
+  moveIndex: number,
+  moves: NotableMove[] | undefined,
+  shapes: Shape[],
+) =>
+  moves?.map((move, index) =>
+    index === moveIndex
+      ? {
+          ...move,
+          shapes,
+        }
+      : move,
+  );
+
+const addNewMove = (
+  newMove: ExerciseMove,
+  moves?: ExerciseMove[],
+): Partial<ExerciseVariationState> => ({
+  moves: [...(moves || []), newMove],
+  activeMoveIndex: moves?.length ? moves.length : 0,
+});
+
+const resolveNextMoveIndex = (piece: Piece, moves?: ExerciseMove[]) => {
+  let index = moves?.[moves?.length - 1]?.index || 0;
+  if (piece.color === 'white' || (piece.color === 'black' && index === 0)) {
+    index += 1;
+  }
+  return index;
+};
+
+const removeOldLineMoves = (index: number, moves?: ExerciseMove[]) =>
+  moves && index < moves.length - 1
+    ? moves.slice(0, moves.length - (moves.length - index) + 1)
+    : moves;
 
 const Editor: FunctionComponent<ComponentProps<ExerciseModule['Editor']>> = ({
   step,
@@ -35,14 +72,7 @@ const Editor: FunctionComponent<ComponentProps<ExerciseModule['Editor']>> = ({
     (shapes: Shape[]) => {
       if (activeMoveIndex) {
         updateExerciseState({
-          moves: moves?.map((move, index) =>
-            index === activeMoveIndex
-              ? {
-                  ...move,
-                  shapes,
-                }
-              : move,
-          ),
+          moves: updateMoveShapes(activeMoveIndex, moves, shapes),
         });
       } else {
         updateStepState({ shapes });
@@ -54,30 +84,26 @@ const Editor: FunctionComponent<ComponentProps<ExerciseModule['Editor']>> = ({
     (position, move, piece: Piece, captured) => {
       if (editing) {
         updateStepState({ position });
-      } else {
-        let moveIndex = moves?.[moves?.length - 1]?.index || 0;
-        if (
-          piece.color === 'white' ||
-          (piece.color === 'black' && moveIndex === 0)
-        ) {
-          moveIndex += 1;
-        }
-        updateExerciseState({
-          moves: [
-            ...(moves || []),
-            {
-              move,
-              captured,
-              piece,
-              index: moveIndex,
-              shapes: [],
-            },
-          ],
-          activeMoveIndex: moves?.length ? moves.length : 0,
-        });
+        updateExerciseState({ moves: [] });
+        return;
       }
+      const currentIndex = activeMoveIndex === undefined ? -1 : activeMoveIndex;
+      const prevMoves = removeOldLineMoves(currentIndex, moves);
+      const moveIndex = resolveNextMoveIndex(piece, prevMoves);
+      updateExerciseState(
+        addNewMove(
+          {
+            move,
+            captured,
+            piece,
+            index: moveIndex,
+            shapes: [],
+          },
+          prevMoves,
+        ),
+      );
     },
-    [editing, moves, updateExerciseState, updateStepState],
+    [editing, moves, updateExerciseState, updateStepState, activeMoveIndex],
   );
 
   const activePosition = useMemo(() => {

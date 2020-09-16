@@ -11,3 +11,5 @@ export type GenericArguments<T> = T extends
   : T extends void
   ? []
   : [T];
+
+export type Unarray<T> = T extends Array<infer U> ? U : T;

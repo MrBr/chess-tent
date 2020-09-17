@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Chapter,
   getChapterStep,
@@ -26,6 +26,7 @@ const {
   useLocation,
   usePromptModal,
 } = hooks;
+
 const Editor: Components['Editor'] = ({ lesson }) => {
   const componentState = useComponentStateSilent();
   const dispatch = useDispatchBatched();
@@ -33,11 +34,19 @@ const Editor: Components['Editor'] = ({ lesson }) => {
   const location = useLocation();
   const activeChapterId =
     new URLSearchParams(location.search).get('activeChapter') || chapters[0].id;
-  const activeChapter = getLessonChapter(lesson, activeChapterId) as Chapter;
+
+  const activeChapter = useMemo(
+    () => getLessonChapter(lesson, activeChapterId),
+    [lesson, activeChapterId],
+  ) as Chapter;
   const activeStepId =
     new URLSearchParams(location.search).get('activeStep') ||
     activeChapter.state.steps[0].id;
-  const activeStep = getChapterStep(activeChapter, activeStepId) as Step;
+  const activeStep = useMemo(
+    () => getChapterStep(activeChapter, activeStepId),
+    [activeChapter, activeStepId],
+  ) as Step;
+
   const {
     state: { steps },
   } = activeChapter;
@@ -76,9 +85,9 @@ const Editor: Components['Editor'] = ({ lesson }) => {
 
   const setActiveStepHandler = useCallback(
     (step: Step) => {
-      dispatch(setLessonActiveStep(lesson, step));
+      dispatch(setLessonActiveStep(lesson.id, step));
     },
-    [dispatch, lesson],
+    [dispatch, lesson.id],
   );
 
   useEffect(() => {
@@ -90,7 +99,6 @@ const Editor: Components['Editor'] = ({ lesson }) => {
     : isDirty
     ? 'Have unsaved changes'
     : 'Lesson saved';
-
   return (
     <Container fluid className="px-0 h-100">
       <Row noGutters className="h-100">

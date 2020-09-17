@@ -7,13 +7,13 @@ import {
 } from '@types';
 
 export const setLessonActiveStepAction = (
-  lesson: Lesson,
+  lessonId: Lesson['id'],
   step: Step,
 ): SetLessonActiveStepAction => ({
   type: SET_LESSON_ACTIVE_STEP,
   payload: step.id,
   meta: {
-    id: lesson.id,
+    id: lessonId,
   },
 });
 

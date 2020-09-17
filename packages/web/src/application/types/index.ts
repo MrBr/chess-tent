@@ -170,7 +170,7 @@ export type State = {
   actions: {
     updateEntities: (entity: Entity | Entity[]) => UpdateEntitiesAction;
     setLessonActiveStep: (
-      lesson: Lesson,
+      lessonId: Lesson['id'],
       step: Step,
     ) => SetLessonActiveStepAction;
     updateActivityState: <T extends Activity>(

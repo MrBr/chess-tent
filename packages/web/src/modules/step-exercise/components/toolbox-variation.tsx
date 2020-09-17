@@ -1,25 +1,29 @@
 import React from 'react';
-import { ExerciseStep, ExerciseVariationState } from '@types';
+import { ExerciseToolboxProps, ExerciseVariationState } from '@types';
 import { components, ui } from '@application';
 import { useUpdateExerciseStateProp } from '../hooks';
 
 const { Text, Container } = ui;
 const { LessonToolboxText, StepMove } = components;
 
-export default ({ step }: { step: ExerciseStep }) => {
+export default ({ lesson, chapter, step }: ExerciseToolboxProps) => {
   const { question, explanation, moves, activeMoveIndex } = step.state
     .exerciseState as ExerciseVariationState;
   const updateQuestion = useUpdateExerciseStateProp<ExerciseVariationState>(
+    lesson,
+    chapter,
     step,
     'question',
   );
   const updateExplanation = useUpdateExerciseStateProp<ExerciseVariationState>(
+    lesson,
+    chapter,
     step,
     'explanation',
   );
   const updateActiveMoveIndex = useUpdateExerciseStateProp<
     ExerciseVariationState
-  >(step, 'activeMoveIndex');
+  >(lesson, chapter, step, 'activeMoveIndex');
 
   return (
     <>

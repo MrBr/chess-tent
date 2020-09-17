@@ -1,5 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Step } from '@chess-tent/models';
+import {
+  Chapter,
+  getChapterStep,
+  getLessonChapter,
+  Step,
+} from '@chess-tent/models';
 import { Components } from '@types';
 import { debounce } from 'lodash';
 import { state, hooks, components, ui, requests } from '@application';
@@ -11,10 +16,8 @@ const { Container, Row, Col, Headline2, Button } = ui;
 const { Stepper, StepRenderer, Chessboard } = components;
 const {
   actions: { setLessonActiveStep },
-  selectors: { stepSelector },
 } = state;
 const {
-  useSelector,
   useDispatchBatched,
   useApi,
   useComponentStateSilent,
@@ -25,12 +28,18 @@ const {
 const Editor: Components['Editor'] = ({ lesson }) => {
   const componentState = useComponentStateSilent();
   const dispatch = useDispatchBatched();
-  const { steps } = lesson.state;
+  const { chapters } = lesson.state;
   const location = useLocation();
+  const activeChapterId =
+    new URLSearchParams(location.search).get('activeChapter') || chapters[0].id;
+  const activeChapter = getLessonChapter(lesson, activeChapterId) as Chapter;
   const activeStepId =
     new URLSearchParams(location.search).get('activeStep') ||
-    lesson.state.steps[0].id;
-  const activeStep = useSelector(stepSelector(activeStepId)) as Step;
+    activeChapter.state.steps[0].id;
+  const activeStep = getChapterStep(activeChapter, activeStepId) as Step;
+  const {
+    state: { steps },
+  } = activeChapter;
   const promptModal = usePromptModal();
   const [isDirty, setIsDirty] = useState<boolean>(false);
   const {
@@ -78,6 +87,7 @@ const Editor: Components['Editor'] = ({ lesson }) => {
             lesson={lesson}
             status={lessonStatus}
             Chessboard={Chessboard}
+            chapter={activeChapter}
           />
         </Col>
         <Col sm={5} xl={4}>
@@ -98,6 +108,7 @@ const Editor: Components['Editor'] = ({ lesson }) => {
                     close={close}
                     lesson={lesson}
                     step={activeStep}
+                    chapter={activeChapter}
                   />
                 ))
               }
@@ -110,6 +121,7 @@ const Editor: Components['Editor'] = ({ lesson }) => {
               steps={steps}
               activeStep={activeStep}
               setActiveStep={setActiveStepHandler}
+              chapter={activeChapter}
             />
           </Sidebar>
         </Col>

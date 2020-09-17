@@ -169,6 +169,48 @@ const addStepRightToSame = (step: Step, newStep: Step) => {
   };
 };
 
+const getStepPath = (parentStep: Step, step: Step): number[] | null => {
+  for (let index = 0; index < parentStep.state.steps.length; index++) {
+    const childStep = parentStep.state.steps[index];
+    if (isSameStep(step, childStep)) {
+      return [index];
+    }
+    const path = getStepPath(childStep, step);
+    if (path) {
+      path.unshift(index);
+      return path;
+    }
+  }
+  return null;
+};
+
+const updateStep = (step: Step, patch: Partial<Step>) => ({
+  ...step,
+  ...patch
+});
+
+const updateNestedStep = (
+  parentStep: Step,
+  patch: Partial<Step>,
+  path: number[]
+): Step => {
+  const [index, ...nestedPath] = path;
+  const steps = [...parentStep.state.steps];
+  steps[index] = {
+    ...steps[index],
+    ...(nestedPath.length > 0
+      ? updateNestedStep(steps[index], patch, nestedPath)
+      : patch)
+  };
+  return {
+    ...parentStep,
+    state: {
+      ...parentStep.state,
+      steps
+    }
+  };
+};
+
 const createStep = <T>(
   id: string,
   stepType: T extends Step<infer U, infer K> ? K : never,
@@ -196,5 +238,8 @@ export {
   getParentStep,
   isLastStep,
   addStepRightToSame,
-  getChildStep
+  getChildStep,
+  getStepPath,
+  updateNestedStep,
+  updateStep
 };

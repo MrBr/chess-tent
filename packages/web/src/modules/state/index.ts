@@ -24,7 +24,6 @@ const { normalize, denormalize } = initService({
   users: model.userSchema,
   lessons: model.lessonSchema,
   activities: model.activitySchema,
-  steps: model.stepSchema,
   conversations: model.conversationSchema,
   messages: model.messageSchema,
 });

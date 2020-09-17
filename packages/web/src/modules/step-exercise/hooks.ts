@@ -1,20 +1,23 @@
 import { hooks, state } from '@application';
 import { ExerciseState, ExerciseStep } from '@types';
 import { useCallback } from 'react';
+import { Chapter, Lesson } from '@chess-tent/models';
 
 const {
-  actions: { updateStepState },
+  actions: { updateLessonStepState },
 } = state;
 const { useDispatch } = hooks;
 
 export const useUpdateExerciseState = <T extends ExerciseState>(
+  lesson: Lesson,
+  chapter: Chapter,
   step: ExerciseStep,
 ) => {
   const dispatch = useDispatch();
   return useCallback(
     (exerciseState: ExerciseState) => {
       dispatch(
-        updateStepState(step, {
+        updateLessonStepState(lesson, chapter, step, {
           exerciseState: {
             ...step.state.exerciseState,
             ...exerciseState,
@@ -22,15 +25,17 @@ export const useUpdateExerciseState = <T extends ExerciseState>(
         }),
       );
     },
-    [step, dispatch],
+    [dispatch, lesson, chapter, step],
   );
 };
 
 export const useUpdateExerciseStateProp = <T>(
+  lesson: Lesson,
+  chapter: Chapter,
   step: ExerciseStep,
   prop: T extends ExerciseState ? keyof T : never,
 ) => {
-  const updateExerciseState = useUpdateExerciseState(step);
+  const updateExerciseState = useUpdateExerciseState(lesson, chapter, step);
   return useCallback(
     (value: T[typeof prop]) => updateExerciseState({ [prop]: value }),
     [updateExerciseState, prop],

@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { DrawShape } from '@chess-tent/chessground/dist/draw';
 import {
   createStep as coreCreateStep,
-  getLessonParentStep,
+  getChapterParentStep,
   addStepRightToSame,
 } from '@chess-tent/models';
 import { DescriptionModule, DescriptionStep, FEN, VariationStep } from '@types';
@@ -17,11 +17,15 @@ import {
 import Comment from './comment';
 
 const {
-  actions: { updateStepState, updateEntities, setLessonActiveStep },
+  actions: {
+    updateLessonStepState,
+    updateLessonStep: updateLessonStepAction,
+    setLessonActiveStep,
+  },
 } = state;
 const { Col, Row, Container } = ui;
 const { StepTag, StepToolbox } = components;
-const { useUpdateStepState, useDispatchBatched } = hooks;
+const { useUpdateLessonStepState, useDispatchBatched } = hooks;
 
 const stepType = 'description';
 
@@ -41,15 +45,17 @@ const Editor: DescriptionModule['Editor'] = ({
   Chessboard,
   step,
   lesson,
+  chapter,
   ...props
 }) => {
   const dispatch = useDispatchBatched();
   const updateShapes = useCallback(
-    (shapes: DrawShape[]) => dispatch(updateStepState(step, { shapes })),
-    [dispatch, step],
+    (shapes: DrawShape[]) =>
+      dispatch(updateLessonStepState(lesson, chapter, step, { shapes })),
+    [chapter, dispatch, lesson, step],
   );
 
-  const parentStep = getLessonParentStep(lesson, step) as VariationStep;
+  const parentStep = getChapterParentStep(chapter, step) as VariationStep;
   const ParentEditor = stepModules[parentStep.stepType].Editor;
 
   return (
@@ -57,6 +63,7 @@ const Editor: DescriptionModule['Editor'] = ({
       {...props}
       lesson={lesson}
       step={parentStep}
+      chapter={chapter}
       Chessboard={props => (
         <Chessboard
           {...props}
@@ -88,20 +95,25 @@ const StepperStep: DescriptionModule['StepperStep'] = ({
   setActiveStep,
   activeStep,
   lesson,
+  chapter,
 }) => {
   const dispatch = useDispatchBatched();
-  const updateStepState = useUpdateStepState(step);
+  const updateLessonStep = useUpdateLessonStepState(lesson, chapter, step);
   const addDescriptionStep = useCallback(() => {
-    const parentStep = getLessonParentStep(lesson, step);
+    const parentStep = getChapterParentStep(chapter, step);
     const newDescriptionStep = services.createStep(
       'description',
       step.state.position,
     );
     dispatch(
-      updateEntities(addStepRightToSame(parentStep, newDescriptionStep)),
+      updateLessonStepAction(
+        lesson,
+        chapter,
+        addStepRightToSame(parentStep, newDescriptionStep),
+      ),
       setLessonActiveStep(lesson, newDescriptionStep),
     );
-  }, [step, lesson, dispatch]);
+  }, [chapter, step, dispatch, lesson]);
 
   const handleStepClick = useCallback(
     event => {
@@ -123,7 +135,7 @@ const StepperStep: DescriptionModule['StepperStep'] = ({
           <StepToolbox
             text={step.state.description}
             active={activeStep === step}
-            textChangeHandler={description => updateStepState({ description })}
+            textChangeHandler={description => updateLessonStep({ description })}
             addStepHandler={addDescriptionStep}
           />
         </Col>

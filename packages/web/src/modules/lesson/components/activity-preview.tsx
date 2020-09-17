@@ -1,12 +1,13 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { components, hooks, ui } from '@application';
 import {
+  Chapter,
   createActivity,
-  getLessonNextStep,
-  getLessonPreviousStep,
-  getLessonStep,
-  getLessonStepIndex,
-  getLessonStepsCount,
+  getChapterNextStep,
+  getChapterPreviousStep,
+  getChapterStep,
+  getChapterStepIndex,
+  getChapterStepsCount,
   Lesson,
   markStepCompleted,
   Step,
@@ -19,23 +20,27 @@ import Footer from './activity-footer';
 interface PreviewProps {
   lesson: Lesson;
   step: Step;
+  chapter: Chapter;
 }
 
 const { useActiveUserRecord, useComponentState } = hooks;
 const { StepRenderer, Chessboard } = components;
 const { Modal } = ui;
 
-const Preview = ({ lesson, step }: PreviewProps) => {
+const Preview = ({ lesson, chapter, step }: PreviewProps) => {
   const [user] = useActiveUserRecord() as [User, never, never];
   const [activity, updateActivity] = useState<LessonActivity>(
-    createActivity('preview', lesson, user, { activeStepId: step.id }),
+    createActivity('preview', lesson, user, {
+      activeStepId: step.id,
+      activeChapterId: chapter.id,
+    }),
   );
-  const activeStep = getLessonStep(lesson, activity.state.activeStepId);
+  const activeStep = getChapterStep(chapter, activity.state.activeStepId);
   const activityStepState = activity.state[step.id] || {};
-  const stepsCount = useMemo(() => getLessonStepsCount(lesson), [lesson]);
+  const stepsCount = useMemo(() => getChapterStepsCount(chapter), [chapter]);
   const currentStepIndex = useMemo(
-    () => getLessonStepIndex(lesson, activeStep),
-    [lesson, activeStep],
+    () => getChapterStepIndex(chapter, activeStep),
+    [chapter, activeStep],
   );
 
   const setStepActivityState = useCallback(
@@ -52,7 +57,7 @@ const Preview = ({ lesson, step }: PreviewProps) => {
   );
 
   const nextActivityStep = useCallback(() => {
-    const nextStep = getLessonNextStep(lesson, activeStep);
+    const nextStep = getChapterNextStep(chapter, activeStep);
     nextStep &&
       updateActivity({
         ...activity,
@@ -61,9 +66,9 @@ const Preview = ({ lesson, step }: PreviewProps) => {
           activeStepId: nextStep.id,
         },
       });
-  }, [activity, activeStep, updateActivity, lesson]);
+  }, [activity, activeStep, updateActivity, chapter]);
   const prevActivityStep = useCallback(() => {
-    const prevStep = getLessonPreviousStep(lesson, activeStep);
+    const prevStep = getChapterPreviousStep(chapter, activeStep);
     prevStep &&
       updateActivity({
         ...activity,
@@ -72,7 +77,7 @@ const Preview = ({ lesson, step }: PreviewProps) => {
           activeStepId: prevStep.id,
         },
       });
-  }, [activity, activeStep, updateActivity, lesson]);
+  }, [activity, activeStep, updateActivity, chapter]);
 
   const completeStep = useCallback(
     (step: Step) => {
@@ -97,6 +102,7 @@ const Preview = ({ lesson, step }: PreviewProps) => {
   return (
     <StepRenderer<'Playground'>
       step={activeStep}
+      chapter={chapter}
       component="Playground"
       activeStep={activeStep}
       lesson={lesson}

@@ -1,15 +1,22 @@
 import { hooks, state, services } from '@application';
 import { useCallback } from 'react';
-import { addStep, addStepRightToSame, Lesson, Step } from '@chess-tent/models';
+import {
+  addStep,
+  addStepRightToSame,
+  Chapter,
+  Lesson,
+  Step,
+} from '@chess-tent/models';
 import { FEN } from '@types';
 
 const { useDispatchBatched } = hooks;
 const {
-  actions: { updateStepState, setLessonActiveStep, updateEntities },
+  actions: { setLessonActiveStep, updateLessonStep },
 } = state;
 
 export const useAddDescriptionStep = (
   lesson: Lesson,
+  chapter: Chapter,
   step: Step,
   position: FEN,
 ) => {
@@ -17,14 +24,19 @@ export const useAddDescriptionStep = (
   return useCallback(() => {
     const newDescriptionStep = services.createStep('description', position);
     dispatch(
-      updateEntities(addStepRightToSame(step, newDescriptionStep)),
+      updateLessonStep(
+        lesson,
+        chapter,
+        addStepRightToSame(step, newDescriptionStep),
+      ),
       setLessonActiveStep(lesson, newDescriptionStep),
     );
-  }, [step, position, lesson, dispatch]);
+  }, [position, dispatch, lesson, chapter, step]);
 };
 
 export const useAddExerciseStep = (
   lesson: Lesson,
+  chapter: Chapter,
   step: Step,
   position: FEN,
 ) => {
@@ -32,22 +44,11 @@ export const useAddExerciseStep = (
   return useCallback(() => {
     const newExerciseStep = services.createStep('exercise', position);
     dispatch(
-      updateEntities(addStep(step, newExerciseStep)),
+      updateLessonStep(lesson, chapter, addStep(step, newExerciseStep)),
       setLessonActiveStep(lesson, newExerciseStep),
     );
-  }, [step, position, lesson, dispatch]);
-};
-
-export const useUpdateStepState = (step: Step) => {
-  const dispatch = useDispatchBatched();
-  return useCallback(
-    (state: {}) => {
-      dispatch(updateStepState(step, state));
-    },
-    [dispatch, step],
-  );
+  }, [position, dispatch, lesson, chapter, step]);
 };
 
 hooks.useAddDescriptionStep = useAddDescriptionStep;
 hooks.useAddExerciseStep = useAddExerciseStep;
-hooks.useUpdateStepState = useUpdateStepState;

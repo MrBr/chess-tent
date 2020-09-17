@@ -1,18 +1,21 @@
 import React from 'react';
-import { ExerciseSelectSquaresAndPiecesState, ExerciseStep } from '@types';
+import {
+  ExerciseSelectSquaresAndPiecesState,
+  ExerciseToolboxProps,
+} from '@types';
 import { components } from '@application';
 import { useUpdateExerciseStateProp } from '../hooks';
 
 const { LessonToolboxText } = components;
 
-export default ({ step }: { step: ExerciseStep }) => {
+export default ({ lesson, chapter, step }: ExerciseToolboxProps) => {
   const state = step.state.exerciseState as ExerciseSelectSquaresAndPiecesState;
   const updateQuestion = useUpdateExerciseStateProp<
     ExerciseSelectSquaresAndPiecesState
-  >(step, 'question');
+  >(lesson, chapter, step, 'question');
   const updateExplanation = useUpdateExerciseStateProp<
     ExerciseSelectSquaresAndPiecesState
-  >(step, 'explanation');
+  >(lesson, chapter, step, 'explanation');
 
   return (
     <>

@@ -3,14 +3,16 @@ import { components, hooks } from '@application';
 import { ExerciseModule, Shape } from '@types';
 
 const { Chessboard } = components;
-const { useUpdateStepState } = hooks;
+const { useUpdateLessonStepState } = hooks;
 
 const Editor: FunctionComponent<ComponentProps<ExerciseModule['Editor']>> = ({
   step,
   status,
+  chapter,
+  lesson,
 }) => {
   const { position, shapes } = step.state;
-  const updateStepState = useUpdateStepState(step);
+  const updateStepState = useUpdateLessonStepState(lesson, chapter, step);
   const handleShapes = useCallback(
     (shapes: Shape[]) => {
       updateStepState({ shapes });

@@ -11,16 +11,15 @@ import {
   NormalizedUser,
   Step,
   Subject,
-  User
+  User,
+  Chapter
 } from "@chess-tent/models";
 
 export const UPDATE_ENTITIES = "UPDATE_ENTITIES";
 
 export const SET_LESSON_ACTIVE_STEP = "SET_LESSON_ACTIVE_STEP";
+export const UPDATE_LESSON_STEP = "UPDATE_LESSON_STEP";
 export const UPDATE_LESSON = "UPDATE_LESSON";
-
-export const UPDATE_STEP = "UPDATE_STEP";
-export const UPDATE_STEP_STATE = "UPDATE_STEP_STATE";
 
 export const SET_ACTIVITY_ACTIVE_STEP = "SET_ACTIVITY_ACTIVE_STEP";
 export const UPDATE_ACTIVITY = "UPDATE_ACTIVITY";
@@ -85,6 +84,11 @@ export type SetLessonActiveStepAction = Action<
   Step["id"],
   { id: Lesson["id"] }
 >;
+export type UpdateLessonStepAction = Action<
+  typeof UPDATE_LESSON_STEP,
+  Step,
+  { lessonId: Lesson["id"]; chapterId: Chapter["id"]; path: number[] }
+>;
 export type UpdateLessonAction = Action<
   typeof UPDATE_LESSON,
   Omit<NormalizedLesson, "type" | "id">,
@@ -94,27 +98,8 @@ export type UpdateLessonAction = Action<
 export type LessonAction =
   | UpdateEntitiesAction
   | SetLessonActiveStepAction
+  | UpdateLessonStepAction
   | UpdateLessonAction;
-
-/**
- * Step
- */
-export type UpdatableStepProps = Omit<{}, "moves" | "type" | "shapes" | "id">;
-export type UpdateStepAction = Action<
-  typeof UPDATE_STEP,
-  UpdatableStepProps,
-  { id: Step["id"] }
->;
-export type UpdateStepStateAction = Action<
-  typeof UPDATE_STEP_STATE,
-  {},
-  { id: Step["id"] }
->;
-
-export type StepAction =
-  | UpdateEntitiesAction
-  | UpdateStepAction
-  | UpdateStepStateAction;
 
 /**
  * Activity
@@ -190,5 +175,4 @@ export type Actions =
   | ConversationAction
   | LessonAction
   | UserAction
-  | ActivityAction<any>
-  | StepAction;
+  | ActivityAction<any>;

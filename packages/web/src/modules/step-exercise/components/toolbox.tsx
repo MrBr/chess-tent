@@ -1,5 +1,5 @@
 import React from 'react';
-import { ExerciseStep } from '@types';
+import { ExerciseToolboxProps } from '@types';
 
 import QuestionnaireExercise from './toolbox-questionnaire';
 import QuestionExercise from './toolbox-question';
@@ -7,19 +7,19 @@ import BoardExercise from './toolbox-variation';
 import SelectSquaresPiecesExercise from './toolbox-select-squares-pieces';
 import ArrangePiecesExercise from './toolbox-arrange-pieces';
 
-export default ({ step }: { step: ExerciseStep }) => {
+export default ({ step, ...props }: ExerciseToolboxProps) => {
   const { exerciseType } = step.state;
   switch (exerciseType) {
     case 'variation':
-      return <BoardExercise step={step} />;
+      return <BoardExercise step={step} {...props} />;
     case 'question':
-      return <QuestionExercise step={step} />;
+      return <QuestionExercise step={step} {...props} />;
     case 'questionnaire':
-      return <QuestionnaireExercise step={step} />;
+      return <QuestionnaireExercise step={step} {...props} />;
     case 'select-squares-pieces':
-      return <SelectSquaresPiecesExercise step={step} />;
+      return <SelectSquaresPiecesExercise step={step} {...props} />;
     case 'arrange-pieces':
-      return <ArrangePiecesExercise step={step} />;
+      return <ArrangePiecesExercise step={step} {...props} />;
     default:
       return null;
   }

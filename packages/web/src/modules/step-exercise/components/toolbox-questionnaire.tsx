@@ -1,14 +1,14 @@
 import React, { useCallback } from 'react';
-import { ExerciseQuestionnaireState, ExerciseStep } from '@types';
+import { ExerciseQuestionnaireState, ExerciseToolboxProps } from '@types';
 import { components, ui } from '@application';
 import { useUpdateExerciseState } from '../hooks';
 
 const { Check, Row, Col, Text, Container } = ui;
 const { LessonToolboxText } = components;
 
-export default ({ step }: { step: ExerciseStep }) => {
+export default ({ lesson, chapter, step }: ExerciseToolboxProps) => {
   const state = step.state.exerciseState as ExerciseQuestionnaireState;
-  const updateExerciseState = useUpdateExerciseState(step);
+  const updateExerciseState = useUpdateExerciseState(lesson, chapter, step);
   const addOption = useCallback(() => {
     updateExerciseState({
       options: [...(state?.options || []), { text: '', correct: false }],

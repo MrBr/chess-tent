@@ -8,7 +8,13 @@ import {
   requests,
   services,
 } from '@application';
-import { createLesson, Lesson, Step, User } from '@chess-tent/models';
+import {
+  createChapter,
+  createLesson,
+  Lesson,
+  Step,
+  User,
+} from '@chess-tent/models';
 
 const {
   useParams,
@@ -60,9 +66,12 @@ export default () => {
     }
     const defaultStep: Step = createStep('variation', START_FEN);
     const newLessonId = generateIndex();
+    const defaultChapter = createChapter(generateIndex(), 'Chapter', [
+      defaultStep,
+    ]);
     const defaultLesson: Lesson = createLesson(
       newLessonId,
-      [defaultStep],
+      [defaultChapter],
       user,
     );
     dispatch(updateEntities(defaultLesson));

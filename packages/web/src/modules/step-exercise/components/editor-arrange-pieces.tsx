@@ -14,23 +14,27 @@ import {
 import { useUpdateExerciseState, useUpdateExerciseStateProp } from '../hooks';
 
 const { Chessboard } = components;
-const { useUpdateStepState } = hooks;
+const { useUpdateLessonStepState } = hooks;
 const { createFenForward } = services;
 const { ToggleButton } = ui;
 
 const Editor: FunctionComponent<ComponentProps<ExerciseModule['Editor']>> = ({
   step,
   status,
+  lesson,
+  chapter,
 }) => {
   const { position, shapes } = step.state;
   const { moves, editing } = step.state
     .exerciseState as ExerciseArrangePiecesState;
   const updateMoves = useUpdateExerciseStateProp<ExerciseArrangePiecesState>(
+    lesson,
+    chapter,
     step,
     'moves',
   );
-  const updateStepState = useUpdateStepState(step);
-  const updateExerciseState = useUpdateExerciseState(step);
+  const updateStepState = useUpdateLessonStepState(lesson, chapter, step);
+  const updateExerciseState = useUpdateExerciseState(lesson, chapter, step);
   const handleShapes = useCallback(
     (shapes: Shape[]) => {
       updateStepState({ shapes });

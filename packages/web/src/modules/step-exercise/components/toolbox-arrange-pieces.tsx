@@ -1,20 +1,22 @@
 import React from 'react';
-import { ExerciseArrangePiecesState, ExerciseStep } from '@types';
+import { ExerciseArrangePiecesState, ExerciseToolboxProps } from '@types';
 import { components, ui } from '@application';
 import { useUpdateExerciseStateProp } from '../hooks';
 
 const { LessonToolboxText } = components;
 const { Container, Text } = ui;
 
-export default ({ step }: { step: ExerciseStep }) => {
+export default ({ lesson, chapter, step }: ExerciseToolboxProps) => {
   const state = step.state.exerciseState as ExerciseArrangePiecesState;
   const updateQuestion = useUpdateExerciseStateProp<ExerciseArrangePiecesState>(
+    lesson,
+    chapter,
     step,
     'question',
   );
   const updateExplanation = useUpdateExerciseStateProp<
     ExerciseArrangePiecesState
-  >(step, 'explanation');
+  >(lesson, chapter, step, 'explanation');
 
   return (
     <>

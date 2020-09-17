@@ -1,5 +1,5 @@
-import { ComponentType, FunctionComponent, ReactElement } from 'react';
-import { Activity, Lesson, Step, StepType } from '@chess-tent/models';
+import { ComponentType, FunctionComponent } from 'react';
+import { Activity, Chapter, Lesson, Step, StepType } from '@chess-tent/models';
 import { FEN } from './chess';
 import { ChessboardInterface, ChessboardProps } from './components';
 import { ClassComponent } from './_helpers';
@@ -8,6 +8,7 @@ export type StepSystemProps = {
   setActiveStep: (step: Step) => void;
   activeStep: Step;
   lesson: Lesson;
+  chapter: Chapter;
 };
 export type StepBoardComponentProps = {
   Chessboard:

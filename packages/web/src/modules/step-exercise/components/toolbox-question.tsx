@@ -1,17 +1,21 @@
 import React from 'react';
-import { ExerciseQuestionState, ExerciseStep } from '@types';
+import { ExerciseQuestionState, ExerciseToolboxProps } from '@types';
 import { components } from '@application';
 import { useUpdateExerciseStateProp } from '../hooks';
 
 const { LessonToolboxText } = components;
 
-export default ({ step }: { step: ExerciseStep }) => {
+export default ({ lesson, chapter, step }: ExerciseToolboxProps) => {
   const state = step.state.exerciseState as ExerciseQuestionState;
   const updateQuestion = useUpdateExerciseStateProp<ExerciseQuestionState>(
+    lesson,
+    chapter,
     step,
     'question',
   );
   const updateExplanation = useUpdateExerciseStateProp<ExerciseQuestionState>(
+    lesson,
+    chapter,
     step,
     'explanation',
   );

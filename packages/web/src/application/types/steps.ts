@@ -1,4 +1,4 @@
-import { Step } from '@chess-tent/models';
+import { Chapter, Lesson, Step } from '@chess-tent/models';
 import { FEN, Move, NotableMove, Piece, Shape } from './chess';
 import { StepModule } from './step';
 
@@ -112,6 +112,11 @@ export type ExerciseStepState = {
   exerciseState: ExerciseState;
   exerciseType: ExerciseTypes;
   steps: Step[];
+};
+export type ExerciseToolboxProps = {
+  step: ExerciseStep;
+  lesson: Lesson;
+  chapter: Chapter;
 };
 export type ExerciseStep = Step<ExerciseStepState, 'exercise'>;
 export type ExerciseModule = StepModule<

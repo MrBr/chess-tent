@@ -13,6 +13,7 @@ import { BatchAction } from 'redux-batched-actions';
 import { register } from 'core-module';
 import {
   Activity,
+  Chapter,
   Conversation,
   Entity,
   Lesson,
@@ -42,13 +43,13 @@ import {
   AppState,
   SetLessonActiveStepAction,
   UpdateEntitiesAction,
-  UpdateStepAction,
-  UpdateStepStateAction,
   RecordValue,
   UpdateActivityStateAction,
   UpdateActivityAction,
   SetActivityActiveStepAction,
+  UpdateLessonStepAction,
 } from '@chess-tent/types';
+import { ChessInstance } from 'chess.js';
 import { FEN, Move, Piece, PieceColor } from './chess';
 import { StepModule, StepModuleComponentKey } from './step';
 import {
@@ -71,7 +72,6 @@ import {
   VariationModule,
 } from './steps';
 import { Socket } from './socket';
-import { ChessInstance } from 'chess.js';
 
 export * from '@chess-tent/types';
 export * from './activity';
@@ -96,13 +96,23 @@ export type Hooks = {
   usePromptModal: () => (
     renderModal: (close: () => void) => ReactElement,
   ) => void;
-  useUpdateStepState: (step: Step) => (state: {}) => void;
+  useUpdateLessonStepState: <T extends Step>(
+    lesson: Lesson,
+    chapter: Chapter,
+    step: T,
+  ) => (state: Partial<T['state']>) => void;
   useAddDescriptionStep: (
     lesson: Lesson,
+    chapter: Chapter,
     step: Step,
     position: FEN,
   ) => () => void;
-  useAddExerciseStep: (lesson: Lesson, step: Step, position: FEN) => () => void;
+  useAddExerciseStep: (
+    lesson: Lesson,
+    chapter: Chapter,
+    step: Step,
+    position: FEN,
+  ) => () => void;
   useDispatchBatched: () => (...args: ReduxAction[]) => BatchAction;
   useDispatch: typeof useDispatch;
   useSelector: typeof useSelector;
@@ -176,8 +186,6 @@ export type State = {
       lesson: Lesson,
       step: Step,
     ) => SetLessonActiveStepAction;
-    updateStep: (step: Step, patch: Partial<Step>) => UpdateStepAction;
-    updateStepState: (step: Step, state: any) => UpdateStepStateAction;
     updateActivityState: <T extends Activity>(
       activity: T,
       state: Partial<T extends Activity<infer K, infer S> ? S : never>,
@@ -195,12 +203,22 @@ export type State = {
       conversation: Conversation,
       message: Message,
     ) => SendMessageAction;
+    updateLessonStep: <T extends Step>(
+      lesson: Lesson,
+      chapter: Chapter,
+      step: T,
+    ) => UpdateLessonStepAction;
+    updateLessonStepState: <T extends Step>(
+      lesson: Lesson,
+      chapter: Chapter,
+      step: T,
+      state: Partial<T['state']>,
+    ) => UpdateLessonStepAction;
   };
   selectors: {
     lessonSelector: (
       lessonId: Lesson['id'],
     ) => (state: AppState) => Lesson | null;
-    stepSelector: (stepId: Step['id']) => (state: AppState) => Step | null;
     activitySelector: <T extends Subject>(
       activityId: Activity<T>['id'],
     ) => (state: AppState) => Activity<T>;

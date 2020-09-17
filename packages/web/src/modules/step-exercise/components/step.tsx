@@ -7,7 +7,7 @@ import ExerciseEditor from './editor';
 import ExercisePlayground from './playground';
 
 const {
-  actions: { updateStepState },
+  actions: { updateLessonStepState },
 } = state;
 const { Col, Row, Container, Dropdown } = ui;
 const { StepTag } = components;
@@ -48,6 +48,8 @@ const StepperStep: ExerciseModule['StepperStep'] = ({
   step,
   setActiveStep,
   activeStep,
+  chapter,
+  lesson,
 }) => {
   const dispatch = useDispatchBatched();
   const selectedTypeDescriptor = useMemo(
@@ -74,7 +76,11 @@ const StepperStep: ExerciseModule['StepperStep'] = ({
         <Col>
           <Dropdown
             onSelect={(exerciseType: string) => {
-              dispatch(updateStepState(step, { exerciseType }));
+              dispatch(
+                updateLessonStepState(lesson, chapter, step, {
+                  exerciseType,
+                } as { exerciseType: ExerciseTypes }),
+              );
             }}
           >
             <Dropdown.Toggle id="dropdown-basic" size="sm" variant="secondary">
@@ -92,7 +98,7 @@ const StepperStep: ExerciseModule['StepperStep'] = ({
               ))}
             </Dropdown.Menu>
           </Dropdown>
-          <ExerciseToolbox step={step} />
+          <ExerciseToolbox step={step} lesson={lesson} chapter={chapter} />
         </Col>
       </Row>
     </Container>

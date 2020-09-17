@@ -5,6 +5,7 @@ import {
   addStep,
   getLastStep,
   Lesson,
+  Chapter,
 } from '@chess-tent/models';
 import {
   FEN,
@@ -18,10 +19,14 @@ import { hooks, components, state, services, ui } from '@application';
 import Footer from './footer';
 
 const { Col, Row, Container } = ui;
-const { useDispatchBatched, useAddDescriptionStep, useUpdateStepState } = hooks;
+const {
+  useDispatchBatched,
+  useAddDescriptionStep,
+  useUpdateLessonStepState,
+} = hooks;
 const { Stepper, StepTag, StepToolbox } = components;
 const {
-  actions: { updateStepState, setLessonActiveStep, updateEntities },
+  actions: { updateLessonStepState, setLessonActiveStep, updateLessonStep },
 } = state;
 
 const stepType = 'variation';
@@ -41,6 +46,7 @@ const createStep = (
 
 const boardChange = (
   lesson: Lesson,
+  chapter: Chapter,
   step: VariationStep,
   newPosition: FEN,
   newMove?: Move,
@@ -51,7 +57,7 @@ const boardChange = (
   } = step;
   if (editing || !newMove || !movedPiece) {
     return [
-      updateStepState(step, {
+      updateLessonStepState(lesson, chapter, step, {
         position: newPosition,
         editing: true,
         steps: [],
@@ -76,13 +82,13 @@ const boardChange = (
     );
 
     return [
-      updateEntities(addStep(step, newVariationStep)),
+      updateLessonStep(lesson, chapter, addStep(step, newVariationStep)),
       setLessonActiveStep(lesson, newMoveStep),
     ];
   }
 
   return [
-    updateEntities(addStep(step, newMoveStep)),
+    updateLessonStep(lesson, chapter, addStep(step, newMoveStep)),
     setLessonActiveStep(lesson, newMoveStep),
   ];
 };
@@ -92,6 +98,7 @@ const Editor: VariationModule['Editor'] = ({
   step,
   lesson,
   status,
+  chapter,
 }) => {
   const {
     state: { position, shapes, editing },
@@ -99,19 +106,25 @@ const Editor: VariationModule['Editor'] = ({
   const dispatch = useDispatchBatched();
 
   const toggleEditingMode = useCallback(
-    () => dispatch(updateStepState(step, { editing: !editing })),
-    [dispatch, step, editing],
+    () =>
+      dispatch(
+        updateLessonStepState(lesson, chapter, step, { editing: !editing }),
+      ),
+    [dispatch, lesson, chapter, step, editing],
   );
 
   const updateShapes = useCallback(
-    (shapes: DrawShape[]) => dispatch(updateStepState(step, { shapes })),
-    [dispatch, step],
+    (shapes: DrawShape[]) =>
+      dispatch(updateLessonStepState(lesson, chapter, step, { shapes })),
+    [chapter, dispatch, lesson, step],
   );
 
   const onChangeHandle = useCallback(
     (newPosition: FEN, newMove?: Move, movedPiece?: Piece) =>
-      dispatch(...boardChange(lesson, step, newPosition, newMove, movedPiece)),
-    [dispatch, step, lesson],
+      dispatch(
+        ...boardChange(lesson, chapter, step, newPosition, newMove, movedPiece),
+      ),
+    [dispatch, lesson, chapter, step],
   );
 
   return (
@@ -150,11 +163,13 @@ const StepperStep: VariationModule['StepperStep'] = ({
   setActiveStep,
   activeStep,
   lesson,
+  chapter,
   ...props
 }) => {
-  const updateStepState = useUpdateStepState(step);
+  const updateStepState = useUpdateLessonStepState(lesson, chapter, step);
   const addDescriptionStep = useAddDescriptionStep(
     lesson,
+    chapter,
     step,
     step.state.position,
   );
@@ -189,6 +204,7 @@ const StepperStep: VariationModule['StepperStep'] = ({
         steps={step.state.steps}
         setActiveStep={setActiveStep}
         lesson={lesson}
+        chapter={chapter}
       />
     </Container>
   );

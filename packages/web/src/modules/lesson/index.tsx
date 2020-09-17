@@ -1,6 +1,10 @@
 import application from '@application';
 
-import { setLessonActiveStepAction } from './state/actions';
+import {
+  setLessonActiveStepAction,
+  updateLessonStepAction,
+  updateLessonStepStateAction,
+} from './state/actions';
 import { lessonSelector } from './state/selectors';
 
 application.register(() => import('./register'));
@@ -8,12 +12,21 @@ application.register(() => import('./routes'));
 application.register(() => import('./requests'));
 
 application.state.actions.setLessonActiveStep = setLessonActiveStepAction;
+application.state.actions.updateLessonStepState = updateLessonStepStateAction;
+application.state.actions.updateLessonStep = updateLessonStepAction;
 application.state.selectors.lessonSelector = lessonSelector;
 
 application.register(
   () => import('./model'),
   module => {
     application.model.lessonSchema = module.lessonSchema;
+  },
+);
+application.register(
+  () => import('./state/hooks'),
+  module => {
+    application.hooks.useUpdateLessonStepState =
+      module.useUpdateLessonStepState;
   },
 );
 

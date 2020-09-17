@@ -2,11 +2,13 @@ import React, { useCallback, useMemo } from 'react';
 import { ActivityComponent, ActivityFooterProps, LessonActivity } from '@types';
 import { components, hooks, state } from '@application';
 import {
-  getLessonNextStep,
-  getLessonPreviousStep,
-  getLessonStep,
-  getLessonStepIndex,
-  getLessonStepsCount,
+  Chapter,
+  getChapterNextStep,
+  getChapterPreviousStep,
+  getChapterStep,
+  getChapterStepIndex,
+  getChapterStepsCount,
+  getLessonChapter,
   markStepCompleted,
   Step,
   updateStepState,
@@ -23,16 +25,22 @@ const Activity: ActivityComponent<LessonActivity> = ({ activity }) => {
   const dispatch = useDispatchBatched();
   const lesson = activity.subject;
   const location = useLocation();
+  const activeChapterId =
+    new URLSearchParams(location.search).get('activeChapter') ||
+    activity.subject.state.chapters[0].id;
+  const activeChapter = getLessonChapter(lesson, activeChapterId) as Chapter;
   const activeStepId =
     new URLSearchParams(location.search).get('activeStep') ||
-    activity.subject.state.steps[0].id;
-  const activeStep = getLessonStep(lesson, activeStepId);
+    activeChapter.state.steps[0].id;
+  const activeStep = getChapterStep(activeChapter, activeStepId);
   const activeStepActivityState = activity.state[activeStep.id] || {};
 
-  const stepsCount = useMemo(() => getLessonStepsCount(lesson), [lesson]);
+  const stepsCount = useMemo(() => getChapterStepsCount(activeChapter), [
+    activeChapter,
+  ]);
   const currentStepIndex = useMemo(
-    () => getLessonStepIndex(lesson, activeStep),
-    [lesson, activeStep],
+    () => getChapterStepIndex(activeChapter, activeStep),
+    [activeChapter, activeStep],
   );
 
   const setStepActivityState = useCallback(
@@ -47,14 +55,14 @@ const Activity: ActivityComponent<LessonActivity> = ({ activity }) => {
   );
 
   const nextActivityStep = useCallback(() => {
-    const nextStep = getLessonNextStep(lesson, activeStep);
+    const nextStep = getChapterNextStep(activeChapter, activeStep);
     nextStep && dispatch(setActivityActiveStep(activity, nextStep));
-  }, [activity, activeStep, dispatch, lesson]);
+  }, [activity, activeStep, dispatch, activeChapter]);
 
   const prevActivityStep = useCallback(() => {
-    const prevStep = getLessonPreviousStep(lesson, activeStep);
+    const prevStep = getChapterPreviousStep(activeChapter, activeStep);
     prevStep && dispatch(setActivityActiveStep(activity, prevStep));
-  }, [activity, activeStep, dispatch, lesson]);
+  }, [activity, activeStep, dispatch, activeChapter]);
 
   const completeStep = useCallback(
     (step: Step) => {
@@ -80,6 +88,7 @@ const Activity: ActivityComponent<LessonActivity> = ({ activity }) => {
   return (
     <StepRenderer<'Playground'>
       step={activeStep}
+      chapter={activeChapter}
       component="Playground"
       activeStep={activeStep}
       lesson={lesson}

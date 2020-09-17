@@ -1,6 +1,6 @@
 import { User } from "../user";
 import { Subject } from "../subject";
-import { Step } from "../step";
+import { Chapter } from "../chapter/types";
 
 export const TYPE_LESSON = "lessons";
 
@@ -9,7 +9,7 @@ export interface Lesson extends Subject {
   owner: User;
   type: typeof TYPE_LESSON;
   state: {
-    steps: Step[];
+    chapters: Chapter[];
   };
 }
 
@@ -18,6 +18,6 @@ export interface NormalizedLesson {
   type: Lesson["type"];
   owner: User["id"];
   state: {
-    steps: Step["id"][];
+    chapters: Chapter["id"][];
   };
 }

@@ -8,14 +8,14 @@ import { useUpdateExerciseStateProp } from '../hooks';
 
 const { LessonToolboxText } = components;
 
-export default ({ lesson, chapter, step }: ExerciseToolboxProps) => {
+export default ({ step, updateStep }: ExerciseToolboxProps) => {
   const state = step.state.exerciseState as ExerciseSelectSquaresAndPiecesState;
   const updateQuestion = useUpdateExerciseStateProp<
     ExerciseSelectSquaresAndPiecesState
-  >(lesson, chapter, step, 'question');
+  >(updateStep, step, 'question');
   const updateExplanation = useUpdateExerciseStateProp<
     ExerciseSelectSquaresAndPiecesState
-  >(lesson, chapter, step, 'explanation');
+  >(updateStep, step, 'explanation');
 
   return (
     <>

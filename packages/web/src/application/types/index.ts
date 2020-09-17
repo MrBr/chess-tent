@@ -97,22 +97,9 @@ export type Hooks = {
     renderModal: (close: () => void) => ReactElement,
   ) => void;
   useUpdateLessonStepState: <T extends Step>(
-    lesson: Lesson,
-    chapter: Chapter,
+    updateStep: (step: T) => void,
     step: T,
   ) => (state: Partial<T['state']>) => void;
-  useAddDescriptionStep: (
-    lesson: Lesson,
-    chapter: Chapter,
-    step: Step,
-    position: FEN,
-  ) => () => void;
-  useAddExerciseStep: (
-    lesson: Lesson,
-    chapter: Chapter,
-    step: Step,
-    position: FEN,
-  ) => () => void;
   useDispatchBatched: () => (...args: ReduxAction[]) => BatchAction;
   useDispatch: typeof useDispatch;
   useSelector: typeof useSelector;

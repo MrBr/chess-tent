@@ -1,5 +1,17 @@
 import { LessonModel, depopulate } from "./model";
-import { Lesson } from "@chess-tent/models";
+import { Chapter, Lesson, Step } from "@chess-tent/models";
+import { LessonUpdates } from "@chess-tent/types";
+
+const generateStepPath = (path: number[]): string => {
+  const [index, ...nestedPath] = path;
+  return `.state.steps.${index}${
+    nestedPath.length > 0 ? generateStepPath(nestedPath) : ""
+  }`;
+};
+const lessonStepPathToMongoosePath = (path: number[]) => {
+  const [chapterIndex, ...nestedPath] = path;
+  return `state.chapters.${chapterIndex}${generateStepPath(nestedPath)}`;
+};
 
 export const saveLesson = (lesson: Lesson) =>
   new Promise(resolve => {
@@ -15,15 +27,14 @@ export const saveLesson = (lesson: Lesson) =>
 
 export const patchLesson = (lessonId: Lesson["id"], lesson: Partial<Lesson>) =>
   new Promise(resolve => {
-    LessonModel.updateOne(
-      { _id: lesson.id },
-      { $set: depopulate(lesson) }
-    ).exec((err, result) => {
-      if (err) {
-        throw err;
+    LessonModel.updateOne({ _id: lessonId }, { $set: depopulate(lesson) }).exec(
+      (err, result) => {
+        if (err) {
+          throw err;
+        }
+        resolve();
       }
-      resolve();
-    });
+    );
   });
 
 export const getLesson = (lessonId: Lesson["id"]): Promise<Lesson | null> =>
@@ -37,6 +48,28 @@ export const getLesson = (lessonId: Lesson["id"]): Promise<Lesson | null> =>
         resolve(result ? result.toObject() : null);
       });
   });
+
+export const updateLessonSteps = (
+  lessonId: Lesson["id"],
+  updates: LessonUpdates
+) => {
+  const $set = updates.reduce<Record<string, Step | Chapter>>(
+    (result, update) => {
+      const path = lessonStepPathToMongoosePath(update.path);
+      result[path] = update.entity;
+      return result;
+    },
+    {}
+  );
+  return new Promise(resolve => {
+    LessonModel.updateOne({ _id: lessonId }, { $set }).exec((err, result) => {
+      if (err) {
+        throw err;
+      }
+      resolve();
+    });
+  });
+};
 
 export const findLessons = (lesson: Partial<Lesson>): Promise<Lesson[]> =>
   new Promise(resolve => {

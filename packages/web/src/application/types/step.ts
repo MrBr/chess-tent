@@ -25,11 +25,7 @@ export type StepComponent<S extends Step, P extends {} = {}> = ComponentType<
   StepProps<S, P>
 >;
 
-export type StepModuleComponentKey =
-  | 'Editor'
-  | 'Playground'
-  | 'StepperStep'
-  | 'Exercise';
+export type StepModuleComponentKey = 'Editor' | 'Playground' | 'StepperStep';
 
 export type ActivityFooterProps = {
   next?: () => void;
@@ -42,7 +38,10 @@ export type StepModule<
   K extends StepType = StepType,
   U extends {} = {}
 > = {
-  Editor: StepComponent<T, StepBoardComponentProps>;
+  Editor: StepComponent<
+    T,
+    { updateStep: (step: Step) => void } & StepBoardComponentProps
+  >;
   Playground: StepComponent<
     T,
     {
@@ -55,8 +54,7 @@ export type StepModule<
       completeStep: (step: Step) => void;
     } & StepBoardComponentProps
   >;
-  Exercise: StepComponent<T, StepBoardComponentProps>;
-  StepperStep: StepComponent<T>;
+  StepperStep: StepComponent<T, { updateStep: (step: Step) => void }>;
   stepType: K;
   createStep: (
     id: string,

@@ -34,6 +34,7 @@ export interface API {
 }
 
 export type RequestFetch<T, U> = (...args: GenericArguments<T>) => Promise<U>;
+export type LessonUpdates = { path: number[]; entity: any }[];
 
 export type Requests = {
   register: RequestFetch<Partial<User>, StatusResponse>;
@@ -45,6 +46,7 @@ export type Requests = {
   lesson: RequestFetch<[string], LessonResponse>;
   lessonSave: RequestFetch<Lesson, StatusResponse>;
   lessonPatch: RequestFetch<[Lesson["id"], Partial<Lesson>], StatusResponse>;
+  lessonUpdates: RequestFetch<[Lesson["id"], LessonUpdates], StatusResponse>;
   lessons: RequestFetch<{ owner: User["id"] }, LessonsResponse>;
   activity: RequestFetch<[string], ActivityResponse>;
   activitySave: RequestFetch<Activity, StatusResponse>;

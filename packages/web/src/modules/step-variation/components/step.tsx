@@ -6,6 +6,8 @@ import {
   getLastStep,
   Lesson,
   Chapter,
+  updateStepState,
+  Step,
 } from '@chess-tent/models';
 import {
   FEN,
@@ -15,19 +17,11 @@ import {
   VariationModule,
   VariationStep,
 } from '@types';
-import { hooks, components, state, services, ui } from '@application';
+import { components, services, ui } from '@application';
 import Footer from './footer';
 
 const { Col, Row, Container } = ui;
-const {
-  useDispatchBatched,
-  useAddDescriptionStep,
-  useUpdateLessonStepState,
-} = hooks;
 const { Stepper, StepTag, StepToolbox } = components;
-const {
-  actions: { updateLessonStepState, setLessonActiveStep, updateLessonStep },
-} = state;
 
 const stepType = 'variation';
 
@@ -48,6 +42,8 @@ const boardChange = (
   lesson: Lesson,
   chapter: Chapter,
   step: VariationStep,
+  updateStep: (step: Step) => void,
+  setActiveStep: (step: Step) => void,
   newPosition: FEN,
   newMove?: Move,
   movedPiece?: Piece,
@@ -56,13 +52,14 @@ const boardChange = (
     state: { editing },
   } = step;
   if (editing || !newMove || !movedPiece) {
-    return [
-      updateLessonStepState(lesson, chapter, step, {
+    updateStep(
+      updateStepState(step, {
         position: newPosition,
         editing: true,
         steps: [],
       }),
-    ];
+    );
+    return;
   }
 
   const newMoveStep = services.createStep<MoveStep>('move', newPosition, {
@@ -81,16 +78,13 @@ const boardChange = (
       },
     );
 
-    return [
-      updateLessonStep(lesson, chapter, addStep(step, newVariationStep)),
-      setLessonActiveStep(lesson, newMoveStep),
-    ];
+    updateStep(addStep(step, newVariationStep));
+    setActiveStep(newMoveStep);
+    return;
   }
 
-  return [
-    updateLessonStep(lesson, chapter, addStep(step, newMoveStep)),
-    setLessonActiveStep(lesson, newMoveStep),
-  ];
+  updateStep(addStep(step, newMoveStep));
+  setActiveStep(newMoveStep);
 };
 
 const Editor: VariationModule['Editor'] = ({
@@ -99,32 +93,36 @@ const Editor: VariationModule['Editor'] = ({
   lesson,
   status,
   chapter,
+  updateStep,
+  setActiveStep,
 }) => {
   const {
     state: { position, shapes, editing },
   } = step;
-  const dispatch = useDispatchBatched();
 
   const toggleEditingMode = useCallback(
-    () =>
-      dispatch(
-        updateLessonStepState(lesson, chapter, step, { editing: !editing }),
-      ),
-    [dispatch, lesson, chapter, step, editing],
+    () => updateStep(updateStepState(step, { editing: !editing })),
+    [updateStep, step, editing],
   );
 
   const updateShapes = useCallback(
-    (shapes: DrawShape[]) =>
-      dispatch(updateLessonStepState(lesson, chapter, step, { shapes })),
-    [chapter, dispatch, lesson, step],
+    (shapes: DrawShape[]) => updateStep(updateStepState(step, { shapes })),
+    [step, updateStep],
   );
 
   const onChangeHandle = useCallback(
     (newPosition: FEN, newMove?: Move, movedPiece?: Piece) =>
-      dispatch(
-        ...boardChange(lesson, chapter, step, newPosition, newMove, movedPiece),
+      boardChange(
+        lesson,
+        chapter,
+        step,
+        updateStep,
+        setActiveStep,
+        newPosition,
+        newMove,
+        movedPiece,
       ),
-    [dispatch, lesson, chapter, step],
+    [lesson, chapter, step, updateStep, setActiveStep],
   );
 
   return (
@@ -154,25 +152,22 @@ const Playground: VariationModule['Playground'] = ({
   return <Chessboard fen={position} shapes={shapes} footer={<Footer />} />;
 };
 
-const Exercise: VariationModule['Exercise'] = () => {
-  return <>{'Variation'}</>;
-};
-
 const StepperStep: VariationModule['StepperStep'] = ({
   step,
   setActiveStep,
   activeStep,
   lesson,
   chapter,
+  updateStep,
   ...props
 }) => {
-  const updateStepState = useUpdateLessonStepState(lesson, chapter, step);
-  const addDescriptionStep = useAddDescriptionStep(
-    lesson,
-    chapter,
-    step,
-    step.state.position,
-  );
+  const addDescriptionStep = useCallback(() => {
+    const descriptionStep = services.createStep(
+      'description',
+      step.state.position,
+    );
+    updateStep(addStep(step, descriptionStep));
+  }, [step, updateStep]);
   const handleStepClick = useCallback(
     event => {
       event.stopPropagation();
@@ -193,7 +188,9 @@ const StepperStep: VariationModule['StepperStep'] = ({
           <StepToolbox
             text={step.state.description}
             active={activeStep === step}
-            textChangeHandler={description => updateStepState({ description })}
+            textChangeHandler={description =>
+              updateStep(updateStepState(step, { description }))
+            }
             addStepHandler={addDescriptionStep}
           />
         </Col>
@@ -205,6 +202,7 @@ const StepperStep: VariationModule['StepperStep'] = ({
         setActiveStep={setActiveStep}
         lesson={lesson}
         chapter={chapter}
+        updateStep={updateStep}
       />
     </Container>
   );
@@ -213,7 +211,6 @@ const StepperStep: VariationModule['StepperStep'] = ({
 const Module: VariationModule = {
   Editor,
   Playground,
-  Exercise,
   StepperStep,
   createStep,
   stepType,

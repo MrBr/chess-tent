@@ -5,21 +5,16 @@ import {
   getChapterParentStep,
   isLastStep,
   addStep,
-  Lesson,
   getChapterPreviousStep,
   Chapter,
+  Step,
+  updateStepState,
 } from '@chess-tent/models';
 import { FEN, Move, MoveModule, MoveStep, Piece, VariationStep } from '@types';
-import { services, hooks, components, state, ui } from '@application';
+import { services, components, ui } from '@application';
 
 const { Col, Row, Container } = ui;
 const { getPiece } = services;
-const {
-  useDispatchBatched,
-  useAddDescriptionStep,
-  useUpdateLessonStepState,
-  useAddExerciseStep,
-} = hooks;
 const {
   StepTag,
   StepToolbox,
@@ -27,9 +22,6 @@ const {
   StepperStepContainer,
   StepMove,
 } = components;
-const {
-  actions: { updateLessonStepState, updateLessonStep, setLessonActiveStep },
-} = state;
 
 const stepType = 'move';
 
@@ -48,8 +40,9 @@ const createStep = (
 
 const boardChange = (
   chapter: Chapter,
-  lesson: Lesson,
   step: MoveStep,
+  updateStep: (step: Step) => void,
+  setActiveStep: (step: Step) => void,
   newPosition: FEN,
   newMove?: Move,
   movedPiece?: Piece,
@@ -59,7 +52,7 @@ const boardChange = (
     state: { move, position },
   } = step;
   if (!newMove || !movedPiece) {
-    return [];
+    return;
   }
 
   if (!move) {
@@ -75,15 +68,16 @@ const boardChange = (
           : prevStep.state.moveIndex;
     }
 
-    return [
-      updateLessonStepState(lesson, chapter, step, {
+    updateStep(
+      updateStepState(step, {
         position: newPosition,
         move: newMove,
         moveIndex,
         movedPiece,
         captured,
       }),
-    ];
+    );
+    return;
   }
 
   const moveIndex =
@@ -109,10 +103,10 @@ const boardChange = (
         moveIndex,
       },
     );
-    return [
-      updateLessonStep(lesson, chapter, addStep(step, newVariationStep)),
-      setLessonActiveStep(lesson, newVariationStep),
-    ];
+
+    updateStep(addStep(step, newVariationStep));
+    setActiveStep(newVariationStep);
+    return;
   }
 
   if (!isLastStep(parentStep, step, false)) {
@@ -125,51 +119,46 @@ const boardChange = (
         moveIndex,
       },
     );
-    return [
-      updateLessonStep(lesson, chapter, addStep(step, newVariationStep)),
-      setLessonActiveStep(lesson, newMoveStep),
-    ];
+    updateStep(addStep(step, newVariationStep));
+    setActiveStep(newMoveStep);
+    return;
   }
 
   // Continuing the current variation
-  return [
-    updateLessonStep(lesson, chapter, addStep(parentStep, newMoveStep)),
-    setLessonActiveStep(lesson, newMoveStep),
-  ];
+  updateStep(addStep(parentStep, newMoveStep));
+  setActiveStep(newMoveStep);
 };
 
 const Editor: MoveModule['Editor'] = ({
   Chessboard,
   step,
-  lesson,
   status,
   chapter,
+  updateStep,
+  setActiveStep,
 }) => {
   const {
     state: { position, shapes },
   } = step;
-  const dispatch = useDispatchBatched();
 
   const updateShapes = useCallback(
-    (shapes: DrawShape[]) =>
-      dispatch(updateLessonStepState(lesson, chapter, step, { shapes })),
-    [chapter, dispatch, lesson, step],
+    (shapes: DrawShape[]) => updateStep(updateStepState(step, { shapes })),
+    [step, updateStep],
   );
 
   const onChangeHandle = useCallback(
     (newPosition: FEN, newMove: Move, movedPiece: Piece, captured: boolean) =>
-      dispatch(
-        ...boardChange(
-          chapter,
-          lesson,
-          step,
-          newPosition,
-          newMove,
-          movedPiece,
-          captured,
-        ),
+      boardChange(
+        chapter,
+        step,
+        updateStep,
+        setActiveStep,
+        newPosition,
+        newMove,
+        movedPiece,
+        captured,
       ),
-    [dispatch, chapter, lesson, step],
+    [chapter, step, updateStep, setActiveStep],
   );
 
   return (
@@ -192,31 +181,27 @@ const Playground: MoveModule['Playground'] = ({ Chessboard, step, Footer }) => {
   return <Chessboard fen={position} shapes={shapes} footer={<Footer />} />;
 };
 
-const Exercise: MoveModule['Exercise'] = () => {
-  return <>{'Move'}</>;
-};
-
 const StepperStep: MoveModule['StepperStep'] = ({
   step,
   setActiveStep,
   activeStep,
   lesson,
   chapter,
+  updateStep,
   ...props
 }) => {
-  const updateStepState = useUpdateLessonStepState(lesson, chapter, step);
-  const addDescriptionStep = useAddDescriptionStep(
-    lesson,
-    chapter,
-    step,
-    step.state.position,
-  );
-  const addExerciseStep = useAddExerciseStep(
-    lesson,
-    chapter,
-    step,
-    step.state.position,
-  );
+  const addDescriptionStep = useCallback(() => {
+    const descriptionStep = services.createStep(
+      'description',
+      step.state.position,
+    );
+    updateStep(addStep(step, descriptionStep));
+  }, [step, updateStep]);
+  const addExerciseStep = useCallback(() => {
+    const exerciseStep = services.createStep('exercise', step.state.position);
+    updateStep(addStep(step, exerciseStep));
+  }, [step, updateStep]);
+
   const handleStepClick = useCallback(
     event => {
       event.stopPropagation();
@@ -247,7 +232,9 @@ const StepperStep: MoveModule['StepperStep'] = ({
           <StepToolbox
             text={step.state.description}
             active={activeStep === step}
-            textChangeHandler={description => updateStepState({ description })}
+            textChangeHandler={description =>
+              updateStep(updateStepState(step, { description }))
+            }
             addStepHandler={addDescriptionStep}
             addExerciseHandler={addExerciseStep}
           />
@@ -261,6 +248,7 @@ const StepperStep: MoveModule['StepperStep'] = ({
           setActiveStep={setActiveStep}
           lesson={lesson}
           chapter={chapter}
+          updateStep={updateStep}
         />
       </StepperStepContainer>
     </Container>
@@ -270,7 +258,6 @@ const StepperStep: MoveModule['StepperStep'] = ({
 const Module: MoveModule = {
   Editor,
   Playground,
-  Exercise,
   StepperStep,
   createStep,
   stepType,

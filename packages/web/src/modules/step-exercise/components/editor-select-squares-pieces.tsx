@@ -1,29 +1,27 @@
 import React, { ComponentProps, FunctionComponent, useCallback } from 'react';
-import { components, hooks } from '@application';
+import { components } from '@application';
 import { ExerciseModule, Shape } from '@types';
+import { updateStepState } from '@chess-tent/models';
 
 const { Chessboard } = components;
-const { useUpdateLessonStepState } = hooks;
 
 const Editor: FunctionComponent<ComponentProps<ExerciseModule['Editor']>> = ({
   step,
   status,
-  chapter,
-  lesson,
+  updateStep,
 }) => {
   const { position, shapes } = step.state;
-  const updateStepState = useUpdateLessonStepState(lesson, chapter, step);
   const handleShapes = useCallback(
     (shapes: Shape[]) => {
-      updateStepState({ shapes });
+      updateStep(updateStepState(step, { shapes }));
     },
-    [updateStepState],
+    [updateStep, step],
   );
   const handleMove = useCallback(
     position => {
-      updateStepState({ position });
+      updateStep(updateStepState(step, { position }));
     },
-    [updateStepState],
+    [step, updateStep],
   );
 
   return (

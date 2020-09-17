@@ -11,7 +11,7 @@ import {
   getLessonChapter,
   markStepCompleted,
   Step,
-  updateStepState,
+  updateActivityStepState,
 } from '@chess-tent/models';
 import Footer from './activity-footer';
 
@@ -47,7 +47,11 @@ const Activity: ActivityComponent<LessonActivity> = ({ activity }) => {
     state => {
       dispatch(
         updateActivityState(activity, {
-          [activeStep.id]: updateStepState(activity, activeStep.id, state),
+          [activeStep.id]: updateActivityStepState(
+            activity,
+            activeStep.id,
+            state,
+          ),
         }),
       );
     },

@@ -1,7 +1,7 @@
 import { Lesson, TYPE_LESSON } from "./types";
 import { User } from "../user";
 import { Chapter } from "../chapter/types";
-import { Step } from "../step";
+import { getStepAt, Step } from "../step";
 import { getChapterStepPath, updateChapterStep } from "../chapter";
 
 const isLesson = (entity: unknown) =>
@@ -26,6 +26,12 @@ const getLessonStepPath = (lesson: Lesson, chapter: Chapter, step: Step) => {
     }
   }
   return null;
+};
+
+const getLessonStepAt = (lesson: Lesson, path: number[]) => {
+  const [index, rootStepIndex, ...nestedPath] = path;
+  const parentStep = lesson.state.chapters[index].state.steps[rootStepIndex];
+  return nestedPath.length > 0 ? getStepAt(parentStep, nestedPath) : parentStep;
 };
 
 const updateLessonStep = (
@@ -61,5 +67,6 @@ export {
   createLesson,
   getLessonChapter,
   getLessonStepPath,
-  updateLessonStep
+  updateLessonStep,
+  getLessonStepAt
 };

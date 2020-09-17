@@ -5,17 +5,15 @@ import { useUpdateExerciseStateProp } from '../hooks';
 
 const { LessonToolboxText } = components;
 
-export default ({ lesson, chapter, step }: ExerciseToolboxProps) => {
+export default ({ step, updateStep }: ExerciseToolboxProps) => {
   const state = step.state.exerciseState as ExerciseQuestionState;
   const updateQuestion = useUpdateExerciseStateProp<ExerciseQuestionState>(
-    lesson,
-    chapter,
+    updateStep,
     step,
     'question',
   );
   const updateExplanation = useUpdateExerciseStateProp<ExerciseQuestionState>(
-    lesson,
-    chapter,
+    updateStep,
     step,
     'explanation',
   );

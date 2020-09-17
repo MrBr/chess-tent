@@ -4,47 +4,44 @@ import React, {
   useCallback,
   useMemo,
 } from 'react';
-import { components, hooks, services, ui } from '@application';
+import { components, services, ui } from '@application';
 import {
   ExerciseModule,
   ExerciseArrangePiecesState,
   Move,
   Shape,
 } from '@types';
+import { updateStepState } from '@chess-tent/models';
 import { useUpdateExerciseState, useUpdateExerciseStateProp } from '../hooks';
 
 const { Chessboard } = components;
-const { useUpdateLessonStepState } = hooks;
 const { createFenForward } = services;
 const { ToggleButton } = ui;
 
 const Editor: FunctionComponent<ComponentProps<ExerciseModule['Editor']>> = ({
   step,
   status,
-  lesson,
-  chapter,
+  updateStep,
 }) => {
   const { position, shapes } = step.state;
   const { moves, editing } = step.state
     .exerciseState as ExerciseArrangePiecesState;
   const updateMoves = useUpdateExerciseStateProp<ExerciseArrangePiecesState>(
-    lesson,
-    chapter,
+    updateStep,
     step,
     'moves',
   );
-  const updateStepState = useUpdateLessonStepState(lesson, chapter, step);
-  const updateExerciseState = useUpdateExerciseState(lesson, chapter, step);
+  const updateExerciseState = useUpdateExerciseState(updateStep, step);
   const handleShapes = useCallback(
     (shapes: Shape[]) => {
-      updateStepState({ shapes });
+      updateStep(updateStepState(step, { shapes }));
     },
-    [updateStepState],
+    [updateStep, step],
   );
   const handleMove = useCallback(
     (position, newMove, piece, captured) => {
       if (editing) {
-        updateStepState({ position });
+        updateStep(updateStepState(step, { position }));
         updateMoves([]);
         return;
       }
@@ -61,7 +58,7 @@ const Editor: FunctionComponent<ComponentProps<ExerciseModule['Editor']>> = ({
         },
       ]);
     },
-    [editing, moves, updateMoves, updateStepState],
+    [editing, moves, step, updateMoves, updateStep],
   );
   const activePosition = useMemo(
     () =>

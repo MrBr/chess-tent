@@ -6,24 +6,22 @@ import { useUpdateExerciseStateProp } from '../hooks';
 const { Text, Container } = ui;
 const { LessonToolboxText, StepMove } = components;
 
-export default ({ lesson, chapter, step }: ExerciseToolboxProps) => {
+export default ({ step, updateStep }: ExerciseToolboxProps) => {
   const { question, explanation, moves, activeMoveIndex } = step.state
     .exerciseState as ExerciseVariationState;
   const updateQuestion = useUpdateExerciseStateProp<ExerciseVariationState>(
-    lesson,
-    chapter,
+    updateStep,
     step,
     'question',
   );
   const updateExplanation = useUpdateExerciseStateProp<ExerciseVariationState>(
-    lesson,
-    chapter,
+    updateStep,
     step,
     'explanation',
   );
   const updateActiveMoveIndex = useUpdateExerciseStateProp<
     ExerciseVariationState
-  >(lesson, chapter, step, 'activeMoveIndex');
+  >(updateStep, step, 'activeMoveIndex');
 
   return (
     <>

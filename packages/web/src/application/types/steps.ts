@@ -117,6 +117,7 @@ export type ExerciseToolboxProps = {
   step: ExerciseStep;
   lesson: Lesson;
   chapter: Chapter;
+  updateStep: (step: Step<ExerciseStepState>) => void;
 };
 export type ExerciseStep = Step<ExerciseStepState, 'exercise'>;
 export type ExerciseModule = StepModule<

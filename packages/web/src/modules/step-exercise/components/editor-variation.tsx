@@ -59,19 +59,17 @@ const removeOldLineMoves = (index: number, moves?: ExerciseMove[]) =>
 const Editor: FunctionComponent<ComponentProps<ExerciseModule['Editor']>> = ({
   step,
   status,
-  chapter,
-  lesson,
+  updateStep,
 }) => {
   const { position, shapes } = step.state;
   const { editing, moves, activeMoveIndex } = step.state
     .exerciseState as ExerciseVariationState;
   const activeMove = moves?.[activeMoveIndex as number];
   const updateExerciseState = useUpdateExerciseState<ExerciseVariationState>(
-    lesson,
-    chapter,
+    updateStep,
     step,
   );
-  const updateStepState = useUpdateLessonStepState(lesson, chapter, step);
+  const updateStepState = useUpdateLessonStepState(updateStep, step);
   const handleShapes = useCallback(
     (shapes: Shape[]) => {
       if (activeMoveIndex) {

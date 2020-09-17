@@ -1,5 +1,10 @@
 import { services, requests } from '@application';
-import { LessonResponse, LessonsResponse, StatusResponse } from '@types';
+import {
+  LessonResponse,
+  LessonsResponse,
+  LessonUpdates,
+  StatusResponse,
+} from '@types';
 import { Lesson, User } from '@chess-tent/models';
 
 const lesson = services.createRequest<[string], LessonResponse>(
@@ -17,6 +22,11 @@ const lessonPatch = services.createRequest<
   StatusResponse
 >('PUT', (id, patch) => ({ url: `/lesson/${id}`, data: patch }));
 
+const lessonUpdates = services.createRequest<
+  [Lesson['id'], LessonUpdates],
+  StatusResponse
+>('PUT', (id, patch) => ({ url: `/lesson-update/${id}`, data: patch }));
+
 const lessons = services.createRequest<{ owner: User['id'] }, LessonsResponse>(
   'POST',
   '/lessons',
@@ -26,3 +36,4 @@ requests.lesson = lesson;
 requests.lessonSave = lessonSave;
 requests.lessons = lessons;
 requests.lessonPatch = lessonPatch;
+requests.lessonUpdates = lessonUpdates;

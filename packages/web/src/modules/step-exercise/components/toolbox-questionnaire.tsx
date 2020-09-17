@@ -6,9 +6,9 @@ import { useUpdateExerciseState } from '../hooks';
 const { Check, Row, Col, Text, Container } = ui;
 const { LessonToolboxText } = components;
 
-export default ({ lesson, chapter, step }: ExerciseToolboxProps) => {
+export default ({ step, updateStep }: ExerciseToolboxProps) => {
   const state = step.state.exerciseState as ExerciseQuestionnaireState;
-  const updateExerciseState = useUpdateExerciseState(lesson, chapter, step);
+  const updateExerciseState = useUpdateExerciseState(updateStep, step);
   const addOption = useCallback(() => {
     updateExerciseState({
       options: [...(state?.options || []), { text: '', correct: false }],

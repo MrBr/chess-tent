@@ -11,7 +11,7 @@ import {
   Lesson,
   markStepCompleted,
   Step,
-  updateStepState,
+  updateActivityStepState,
   User,
 } from '@chess-tent/models';
 import { ActivityFooterProps, LessonActivity } from '@types';
@@ -49,7 +49,7 @@ const Preview = ({ lesson, chapter, step }: PreviewProps) => {
         ...activity,
         state: {
           ...activity.state,
-          [step.id]: updateStepState(activity, step.id, state),
+          [step.id]: updateActivityStepState(activity, step.id, state),
         },
       });
     },

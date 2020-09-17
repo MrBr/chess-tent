@@ -1,26 +1,24 @@
 import React, { ComponentProps, FunctionComponent } from 'react';
-import { components, hooks } from '@application';
+import { components } from '@application';
 import { ExerciseModule } from '@types';
+import { updateStepState } from '@chess-tent/models';
 
 const { Chessboard } = components;
-const { useUpdateLessonStepState } = hooks;
 
 const Editor: FunctionComponent<ComponentProps<ExerciseModule['Editor']>> = ({
   step,
   status,
-  lesson,
-  chapter,
+  updateStep,
 }) => {
   const { position, shapes } = step.state;
-  const updateStepState = useUpdateLessonStepState(lesson, chapter, step);
   return (
     <Chessboard
       edit
       sparePieces
       fen={position}
-      onMove={position => updateStepState({ position })}
+      onMove={position => updateStep(updateStepState(step, { position }))}
       header={status}
-      onShapesChange={shapes => updateStepState({ shapes })}
+      onShapesChange={shapes => updateStep(updateStepState(step, { shapes }))}
       shapes={shapes}
     />
   );

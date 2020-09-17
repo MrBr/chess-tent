@@ -184,9 +184,26 @@ const getStepPath = (parentStep: Step, step: Step): number[] | null => {
   return null;
 };
 
+const getStepAt = (parentStep: Step, path: number[]): Step => {
+  const [index, ...nestedPath] = path;
+  const step = parentStep.state.steps[index];
+  return nestedPath.length > 0 ? getStepAt(step, nestedPath) : step;
+};
+
 const updateStep = (step: Step, patch: Partial<Step>) => ({
   ...step,
   ...patch
+});
+
+const updateStepState = <T extends Step>(
+  step: T,
+  state: Partial<T["state"]>
+) => ({
+  ...step,
+  state: {
+    ...step.state,
+    ...state
+  }
 });
 
 const updateNestedStep = (
@@ -241,5 +258,7 @@ export {
   getChildStep,
   getStepPath,
   updateNestedStep,
-  updateStep
+  updateStep,
+  updateStepState,
+  getStepAt
 };

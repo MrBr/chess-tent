@@ -31,7 +31,7 @@ export const markStepCompleted = (
   step: Step
 ): Activity["completedSteps"] => [...activity.completedSteps, step.id];
 
-export const updateStepState = <T>(
+export const updateActivityStepState = <T>(
   activity: T extends Activity ? T : never,
   stepId: Step["id"],
   state: {}

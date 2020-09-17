@@ -163,7 +163,7 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
       return;
     }
 
-    this.api = Chessground(this.boardHost.current, {});
+    this.api = Chessground(this.boardHost.current, { fen });
     this.setConfig({
       viewOnly,
       fen,

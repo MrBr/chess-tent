@@ -7,8 +7,6 @@ import {
   stepSchema,
 } from './model';
 
-application.register(() => import('./hooks'));
-
 application.model.stepSchema = stepSchema;
 application.services.createStep = createStepModuleStep;
 application.services.isStepType = isStepType;

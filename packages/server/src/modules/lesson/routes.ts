@@ -4,7 +4,8 @@ import {
   getLesson,
   saveLesson,
   findLessons,
-  patchLesson
+  patchLesson,
+  updateLesson
 } from "./middleware";
 
 const { identify, sendData, sendStatusOk, toLocals } = middleware;
@@ -17,6 +18,7 @@ application.service.registerPostRoute(
   saveLesson,
   sendStatusOk
 );
+
 application.service.registerPutRoute(
   "/lesson/:lessonId",
   identify,
@@ -24,6 +26,16 @@ application.service.registerPutRoute(
   toLocals("lesson.id", req => req.params.lessonId),
   canEditLesson,
   patchLesson,
+  sendStatusOk
+);
+
+application.service.registerPutRoute(
+  "/lesson-update/:lessonId",
+  identify,
+  toLocals("update", req => req.body),
+  toLocals("lesson.id", req => req.params.lessonId),
+  canEditLesson,
+  updateLesson,
   sendStatusOk
 );
 

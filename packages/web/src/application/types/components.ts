@@ -73,6 +73,7 @@ export interface ChessboardInterface
 export type StepperProps = {
   steps: Step[];
   className?: string;
+  updateStep: <T extends Step>(step: T) => void;
 } & StepSystemProps;
 
 export type StepToolbox = FunctionComponent<{

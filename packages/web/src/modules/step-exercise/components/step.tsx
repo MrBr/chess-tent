@@ -33,10 +33,6 @@ const Editor: ExerciseModule['Editor'] = ExerciseEditor;
 
 const Playground: ExerciseModule['Playground'] = ExercisePlayground;
 
-const Exercise: ExerciseModule['Exercise'] = () => {
-  return <>{'Description'}</>;
-};
-
 const exerciseTypes: { text: string; type: ExerciseTypes }[] = [
   { text: 'Questionnaire', type: 'questionnaire' },
   { text: 'Question', type: 'question' },
@@ -50,6 +46,7 @@ const StepperStep: ExerciseModule['StepperStep'] = ({
   activeStep,
   chapter,
   lesson,
+  updateStep,
 }) => {
   const dispatch = useDispatchBatched();
   const selectedTypeDescriptor = useMemo(
@@ -98,7 +95,12 @@ const StepperStep: ExerciseModule['StepperStep'] = ({
               ))}
             </Dropdown.Menu>
           </Dropdown>
-          <ExerciseToolbox step={step} lesson={lesson} chapter={chapter} />
+          <ExerciseToolbox
+            step={step}
+            lesson={lesson}
+            chapter={chapter}
+            updateStep={updateStep}
+          />
         </Col>
       </Row>
     </Container>
@@ -108,7 +110,6 @@ const StepperStep: ExerciseModule['StepperStep'] = ({
 const Module: ExerciseModule = {
   Editor,
   Playground,
-  Exercise,
   StepperStep,
   createStep,
   stepType,

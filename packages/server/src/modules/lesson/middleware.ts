@@ -17,6 +17,13 @@ export const patchLesson: MiddlewareFunction = (req, res, next) => {
     .catch(next);
 };
 
+export const updateLesson: MiddlewareFunction = (req, res, next) => {
+  service
+    .updateLessonSteps(res.locals.lesson.id, res.locals.update)
+    .then(next)
+    .catch(next);
+};
+
 export const getLesson: MiddlewareFunction = (req, res, next) => {
   service
     .getLesson(res.locals.lesson.id as Lesson["id"])

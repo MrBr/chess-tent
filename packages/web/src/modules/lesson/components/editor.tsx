@@ -3,6 +3,7 @@ import {
   Chapter,
   getChapterStep,
   getLessonChapter,
+  Lesson,
   Step,
 } from '@chess-tent/models';
 import { Components } from '@types';
@@ -11,11 +12,12 @@ import { state, hooks, components, ui, requests } from '@application';
 import TrainingModal from './trening-assign';
 import Sidebar from './sidebar';
 import { PreviewModal } from './activity-preview';
+import { addLessonUpdate, getLessonUpdates } from '../service';
 
 const { Container, Row, Col, Headline2, Button } = ui;
 const { Stepper, StepRenderer, Chessboard } = components;
 const {
-  actions: { setLessonActiveStep },
+  actions: { setLessonActiveStep, updateLessonStep },
 } = state;
 const {
   useDispatchBatched,
@@ -24,7 +26,6 @@ const {
   useLocation,
   usePromptModal,
 } = hooks;
-
 const Editor: Components['Editor'] = ({ lesson }) => {
   const componentState = useComponentStateSilent();
   const dispatch = useDispatchBatched();
@@ -46,10 +47,25 @@ const Editor: Components['Editor'] = ({ lesson }) => {
     fetch: lessonSave,
     error: lessonSaveError,
     response: lessonSaved,
-  } = useApi(requests.lessonSave);
-  const lessonSaveThrottle = useCallback(debounce(lessonSave, 1000), [
-    lessonSave,
-  ]);
+  } = useApi(requests.lessonUpdates);
+  const lessonSaveThrottle = useCallback(
+    debounce(
+      (lesson: Lesson) => lessonSave(lesson.id, getLessonUpdates(lesson)),
+      5000,
+      {
+        trailing: true,
+      },
+    ),
+    [lessonSave],
+  );
+  const updateStep = useCallback(
+    (step: Step) => {
+      const action = updateLessonStep(lesson, activeChapter, step);
+      addLessonUpdate(action);
+      dispatch(action);
+    },
+    [activeChapter, dispatch, lesson],
+  );
 
   useEffect(() => {
     if (componentState.mounted) {
@@ -88,6 +104,7 @@ const Editor: Components['Editor'] = ({ lesson }) => {
             status={lessonStatus}
             Chessboard={Chessboard}
             chapter={activeChapter}
+            updateStep={updateStep}
           />
         </Col>
         <Col sm={5} xl={4}>
@@ -122,6 +139,7 @@ const Editor: Components['Editor'] = ({ lesson }) => {
               activeStep={activeStep}
               setActiveStep={setActiveStepHandler}
               chapter={activeChapter}
+              updateStep={updateStep}
             />
           </Sidebar>
         </Col>

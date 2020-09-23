@@ -1,9 +1,8 @@
-import { SocketService } from "@types";
+import { SocketService, SocketStream } from "@types";
 import application, { service } from "@application";
 import socketIo, { Server, Socket } from "socket.io";
 import {
   ACTION_EVENT,
-  Actions,
   SUBSCRIBE_EVENT,
   UNSUBSCRIBE_EVENT
 } from "@chess-tent/types";
@@ -35,7 +34,7 @@ const registerMiddleware = (socketMiddleware: SocketService["middleware"]) => {
 
 const dispatch = (client: Socket, event: string, data: []) => {
   let index = 0;
-  const next = (stream: { client: Socket; event: string; data: [] }) => {
+  const next = (stream: SocketStream) => {
     index += 1;
     middleware[index]?.(stream, next);
   };
@@ -59,8 +58,9 @@ const init: SocketService["init"] = server => {
   });
 };
 
-const sendAction = (channel: string, action: Actions) => {
-  io.sockets.in(channel).emit(ACTION_EVENT, action);
+const sendAction = (channel: string, stream: SocketStream) => {
+  // Using stream client to send action wont send it itself
+  stream.client.in(channel).emit(ACTION_EVENT, stream.data);
 };
 
 application.socket.init = init;

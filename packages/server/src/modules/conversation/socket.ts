@@ -9,7 +9,7 @@ socket.registerMiddleware(async (stream, next) => {
     addMessageToConversation(conversation.id, action.payload);
     conversation.users.forEach(user => {
       user.id !== action.payload.owner &&
-        socket.sendAction(`user-${user.id}`, action);
+        socket.sendAction(`user-${user.id}`, stream);
     });
   }
   next(stream);

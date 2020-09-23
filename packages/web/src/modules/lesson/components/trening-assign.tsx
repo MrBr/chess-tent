@@ -26,21 +26,25 @@ const TrainingSchema = yup.object().shape({
 
 export default ({ close }: { close: () => void }) => {
   const { fetch: saveActivity } = useApi(requests.activitySave);
+  const { fetch: getUsers, response: users } = useApi(requests.users);
   const [user] = useActiveUserRecord() as [User, never, never];
   const { fetch: fetchUserLessons, response } = useApi(requests.lessons);
 
   const assignTraining = useCallback(
     data => {
       const activityId = generateIndex();
-      const activity = createActivity(activityId, data.lesson, data.user, {});
+      const activity = createActivity(activityId, data.lesson, data.user, {}, [
+        user,
+      ]);
       saveActivity(activity);
     },
-    [saveActivity],
+    [saveActivity, user],
   );
 
   useEffect(() => {
     fetchUserLessons({ owner: user.id });
-  }, [fetchUserLessons, user.id]);
+    getUsers({});
+  }, [fetchUserLessons, user.id, getUsers]);
 
   return (
     <Modal show onEscapeKeyDown={close}>
@@ -56,7 +60,7 @@ export default ({ close }: { close: () => void }) => {
             <Form.Select
               name="user"
               placeholder="test"
-              options={[user]}
+              options={users?.data}
               formatOptionLabel={({ imageUrl, name }: User) => (
                 <>
                   <Avatar src={imageUrl} /> <Text inline>{name}</Text>

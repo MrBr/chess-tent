@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { hooks, state, requests } from '@application';
+import { hooks, state, requests, socket } from '@application';
 import { LessonActivity } from '@types';
 import { isLesson } from '@chess-tent/models';
 import LessonActivityPlayground from '../components/activity';
@@ -19,6 +19,17 @@ export default () => {
   } = useApi(requests.activity);
   const dispatch = useDispatchBatched();
   const activity = useSelector(activitySelector(activityId)) as LessonActivity;
+
+  useEffect(() => {
+    return () => {
+      // In case activity change from within activity this may not trigger
+      // take care
+      socket.unsubscribe(`activity-${activityId}`);
+    };
+  }, [activityId]);
+  useEffect(() => {
+    socket.subscribe(`activity-${activityId}`);
+  }, [activityId]);
 
   useEffect(() => {
     // Load existing activity

@@ -1,5 +1,6 @@
 import { ActivityModel, depopulate } from "./model";
 import { Activity, User } from "@chess-tent/models";
+import { ActivityFilters } from "@chess-tent/types";
 
 export const saveActivity = (activity: Activity) =>
   new Promise(resolve => {
@@ -30,10 +31,10 @@ export const getActivity = (
   });
 
 export const findActivities = (
-  activity: Partial<Activity>
+  activityFilters: ActivityFilters[]
 ): Promise<Activity[]> =>
   new Promise(resolve => {
-    ActivityModel.find(ActivityModel.translateAliases(activity))
+    ActivityModel.find({ $or: activityFilters })
       .populate("owner")
       .populate("users")
       .populate("subject")

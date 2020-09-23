@@ -20,7 +20,11 @@ application.service.registerPostRoute(
 application.service.registerPostRoute(
   "/activities",
   identify,
-  toLocals("filters", req => ({ owner: req.body.owner })),
+  toLocals("filters", req => [
+    { owner: req.body.owner },
+    { users: req.body.users },
+    { subject: req.body.subject }
+  ]),
   findActivities,
   sendData("activities")
 );

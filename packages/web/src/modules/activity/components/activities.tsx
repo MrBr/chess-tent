@@ -15,7 +15,7 @@ const Activities: Components['Activities'] = ({ owner }) => {
 
   useEffect(() => {
     if (!activities) {
-      fetch({ owner: owner.id });
+      fetch({ owner: owner.id, users: owner.id });
     }
   }, [fetch, activities, owner.id]);
 

@@ -1,6 +1,6 @@
 import { services, requests } from '@application';
-import { ActivityResponse, ActivitiesResponse } from '@types';
-import { Activity, User } from '@chess-tent/models';
+import { ActivityResponse, ActivitiesResponse, ActivityFilters } from '@types';
+import { Activity } from '@chess-tent/models';
 
 const activity = services.createRequest<[string], ActivityResponse>(
   'GET',
@@ -12,10 +12,10 @@ const activitySave = services.createRequest<Activity, ActivityResponse>(
   '/activity/save',
 );
 
-const activities = services.createRequest<
-  { owner: User['id'] },
-  ActivitiesResponse
->('POST', '/activities');
+const activities = services.createRequest<ActivityFilters, ActivitiesResponse>(
+  'POST',
+  '/activities',
+);
 
 requests.activity = activity;
 requests.activitySave = activitySave;

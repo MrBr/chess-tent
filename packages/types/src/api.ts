@@ -20,6 +20,12 @@ export type ActivitiesResponse = DataResponse<Activity[]>;
 export type ConversationsResponse = DataResponse<Conversation[]>;
 export type ConversationResponse = DataResponse<Conversation>;
 
+export type ActivityFilters = {
+  owner?: User["id"];
+  users?: User["id"] | User["id"][];
+  subject?: Lesson["id"];
+};
+
 export type ApiMethods = "GET" | "POST" | "PUT";
 export interface Request<T> {
   url: string;
@@ -50,7 +56,7 @@ export type Requests = {
   lessons: RequestFetch<{ owner: User["id"] }, LessonsResponse>;
   activity: RequestFetch<[string], ActivityResponse>;
   activitySave: RequestFetch<Activity, StatusResponse>;
-  activities: RequestFetch<{ owner: User["id"] }, ActivitiesResponse>;
+  activities: RequestFetch<ActivityFilters, ActivitiesResponse>;
   uploadImage: RequestFetch<[string, File], any>;
   signImageUrl: RequestFetch<
     { contentType: string; key: string },

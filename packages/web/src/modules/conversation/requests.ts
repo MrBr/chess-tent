@@ -1,7 +1,9 @@
 import { services, requests } from '@application';
 import {
+  ConversationMessagesResponse,
   ConversationResponse,
   ConversationsResponse,
+  Pagination,
   Requests,
   StatusResponse,
 } from '@types';
@@ -34,7 +36,16 @@ const conversationSave = services.createRequest<Conversation, StatusResponse>(
   '/conversation/save',
 );
 
+const messages = services.createRequest<
+  [Conversation['id'], Pagination],
+  ConversationMessagesResponse
+>('POST', (conversationId, pagination) => ({
+  url: `/conversation/${conversationId}/messages`,
+  data: pagination,
+}));
+
 requests.conversations = conversations;
 requests.conversationSave = conversationSave;
 requests.messageSend = messageSend;
 requests.conversation = conversation;
+requests.messages = messages;

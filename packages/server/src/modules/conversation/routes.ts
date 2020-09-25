@@ -4,7 +4,8 @@ import {
   getConversation,
   saveConversation,
   findConversations,
-  addMessageToConversation
+  addMessageToConversation,
+  getConversationMessages
 } from "./middleware";
 
 const { identify, sendData, sendStatusOk, toLocals } = middleware;
@@ -40,7 +41,17 @@ application.service.registerGetRoute(
   "/conversation/:conversationId",
   identify,
   toLocals("conversation.id", req => req.params.conversationId),
-  getConversation,
   canEditConversation,
+  getConversation,
   sendData("conversation")
+);
+
+application.service.registerPostRoute(
+  "/conversation/:conversationId/messages",
+  identify,
+  toLocals("conversation.id", req => req.params.conversationId),
+  toLocals("pagination", req => req.body),
+  canEditConversation,
+  getConversationMessages,
+  sendData("messages")
 );

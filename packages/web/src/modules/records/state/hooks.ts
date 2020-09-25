@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { RecordHookReturn, RecordValue } from '@types';
 import { useDispatch, useSelector } from 'react-redux';
 import { hooks } from '@application';
@@ -24,5 +24,9 @@ export const useRecord = <T extends RecordValue>(
     dispatch(deleteRecordAction(recordKey));
   }, [recordKey, dispatch]);
 
-  return [recordValue, update, remove];
+  return useMemo(() => [recordValue, update, remove], [
+    recordValue,
+    update,
+    remove,
+  ]);
 };

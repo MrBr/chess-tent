@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component, ReactEventHandler } from 'react';
 
 export type ClassComponent<T> = T extends Component<infer P, infer S, infer C>
   ? { new (props: P, context?: C): T }
@@ -13,3 +13,5 @@ export type GenericArguments<T> = T extends
   : [T];
 
 export type Unarray<T> = T extends Array<infer U> ? U : T;
+
+export type ClickHandler = { onClick?: ReactEventHandler };

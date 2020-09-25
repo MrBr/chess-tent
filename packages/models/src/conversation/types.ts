@@ -6,7 +6,7 @@ export const TYPE_CONVERSATION = "conversations";
 export interface Conversation {
   id: string;
   users: User[];
-  messages: Message[];
+  messages: NormalizedMessage[];
   type: typeof TYPE_CONVERSATION;
 }
 

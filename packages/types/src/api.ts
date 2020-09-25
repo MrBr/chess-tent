@@ -8,6 +8,8 @@ import {
 } from "@chess-tent/models";
 import { GenericArguments } from "./_helpers";
 
+export type Pagination = [number, number];
+
 export type StatusResponse = { error: string | null };
 export type SignedImageResponse = { data: string } & StatusResponse;
 export type DataResponse<T> = { data: T } & StatusResponse;
@@ -19,6 +21,7 @@ export type ActivityResponse = DataResponse<Activity>;
 export type ActivitiesResponse = DataResponse<Activity[]>;
 export type ConversationsResponse = DataResponse<Conversation[]>;
 export type ConversationResponse = DataResponse<Conversation>;
+export type ConversationMessagesResponse = DataResponse<NormalizedMessage[]>;
 
 export type ActivityFilters = {
   owner?: User["id"];
@@ -66,4 +69,8 @@ export type Requests = {
   messageSend: RequestFetch<[Conversation["id"], Message], StatusResponse>;
   conversationSave: RequestFetch<Conversation, StatusResponse>;
   conversation: RequestFetch<Conversation["id"], ConversationResponse>;
+  messages: RequestFetch<
+    [Conversation["id"], Pagination],
+    ConversationMessagesResponse
+  >;
 };

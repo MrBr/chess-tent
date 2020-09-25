@@ -4,6 +4,7 @@ import { Step } from "./step/types";
 import { Activity } from "./activity/types";
 import { Conversation } from "./conversation/types";
 import { Chapter } from "./chapter/types";
+import { Message } from "./message";
 
 export * from "./subject";
 export * from "./conversation";
@@ -14,4 +15,11 @@ export * from "./lesson";
 export * from "./user";
 export * from "./chapter";
 
-export type Entity = User | Lesson | Step | Activity | Conversation | Chapter;
+export type Entity =
+  | User
+  | Lesson
+  | Step
+  | Activity
+  | Conversation
+  | Chapter
+  | Message;

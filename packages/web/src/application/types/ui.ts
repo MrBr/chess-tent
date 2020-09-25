@@ -22,6 +22,7 @@ import Select, { OptionProps } from 'react-select';
 import { SelectComponentsProps } from 'react-select/base';
 import { FormCheckInputProps } from 'react-bootstrap/FormCheckInput';
 import Dropdown from 'react-bootstrap/Dropdown';
+import { ClickHandler } from './_helpers';
 
 export type ButtonProps = {
   variant?: 'primary' | 'secondary' | 'regular' | 'danger' | 'ghost';
@@ -93,9 +94,9 @@ export type UI = {
   Select: typeof Select;
   Option: ComponentType<OptionProps<any>>;
   Check: typeof FormCheck;
-  Container: UIComponent<ContainerProps & { onClick?: ReactEventHandler }>;
+  Container: UIComponent<ContainerProps & ClickHandler>;
   Page: UIComponent<ContainerProps>;
-  Row: UIComponent<RowProps>;
+  Row: UIComponent<RowProps & ClickHandler>;
   Col: UIComponent<ColProps>;
   ErrorMessage: UIComponent<ErrorMessageProps>;
   Button: UIComponent<ButtonProps>;

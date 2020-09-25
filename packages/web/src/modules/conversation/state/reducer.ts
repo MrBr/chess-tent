@@ -17,7 +17,7 @@ export const reducer = (
       }
       const conversation = {
         ...prevConversation,
-        messages: [...prevConversation.messages, action.payload],
+        messages: [action.payload, ...prevConversation.messages],
       };
       return {
         ...state,

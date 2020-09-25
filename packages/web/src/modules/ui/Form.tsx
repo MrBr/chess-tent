@@ -15,7 +15,17 @@ const FormGroup = styled<UI['FormGroup']>(BFormGroup)({
   position: 'relative',
 });
 const Label = BForm.Label;
-const Input = BForm.Control;
+const Input = (styled(BForm.Control)({
+  '&:empty': {
+    background: '#F3F4F5',
+    color: 'rgba(47,56,73,0.4)',
+  },
+  '&:focus': {
+    background: '#E8E9EB',
+    color: '#2F3849',
+  },
+}) as unknown) as typeof BForm.Control;
+
 const Check = BForm.Check;
 const File = BForm.File;
 
@@ -49,12 +59,7 @@ const FormInput: UI['Form']['Input'] = props => {
   const isInvalid = !!touched && !!error;
   return (
     <>
-      <BForm.Control
-        isValid={isValid}
-        isInvalid={isInvalid}
-        {...props}
-        {...field}
-      />
+      <Input isValid={isValid} isInvalid={isInvalid} {...props} {...field} />
       <BForm.Control.Feedback type="invalid">{error}</BForm.Control.Feedback>
     </>
   );

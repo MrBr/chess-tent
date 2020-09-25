@@ -2,6 +2,7 @@ import { MiddlewareFunction } from "@types";
 import { Conversation, Lesson } from "@chess-tent/models";
 import * as service from "./service";
 import { UnauthorizedConversationEditError } from "./errors";
+import { Pagination } from "@chess-tent/types";
 
 export const saveConversation: MiddlewareFunction = (req, res, next) => {
   service
@@ -26,6 +27,19 @@ export const getConversation: MiddlewareFunction = (req, res, next) => {
     .getConversation(res.locals.conversation.id as Conversation["id"])
     .then(conversation => {
       res.locals.conversation = conversation;
+      next();
+    })
+    .catch(next);
+};
+
+export const getConversationMessages: MiddlewareFunction = (req, res, next) => {
+  service
+    .getConversationMessages(
+      res.locals.conversation.id as Conversation["id"],
+      res.locals.pagination as Pagination
+    )
+    .then(messages => {
+      res.locals.messages = messages;
       next();
     })
     .catch(next);

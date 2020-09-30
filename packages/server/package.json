@@ -4,6 +4,7 @@
   "description": "Chess tent server",
   "main": "index.js",
   "scripts": {
+    "preinstall": "node ./scripts/preinstall.js",
     "start": "ts-node -r tsconfig-paths/register ./src/index.ts",
     "build:dev": "echo no build",
     "build": "echo no build",

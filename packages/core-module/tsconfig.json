@@ -5,6 +5,7 @@
     "moduleResolution": "node",
     "target": "es5",
     "declaration": true,
-    "declarationDir": "./dist"
+    "declarationDir": "./dist",
+    "lib": [ "ESNext", "DOM"]
   }
 }

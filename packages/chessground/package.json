@@ -21,6 +21,7 @@
   },
   "scripts": {
     "build:dev": "tsc",
+    "build": "tsc",
     "compile": "tsc",
     "prepublish": "npm run compile"
   },

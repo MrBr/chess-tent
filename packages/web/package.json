@@ -42,6 +42,7 @@
     "yup": "^0.29.1"
   },
   "scripts": {
+    "preinstall": "node ./scripts/preinstall.js",
     "start": "craco start --no-cache",
     "build:dev": "echo no build",
     "build": "craco build",

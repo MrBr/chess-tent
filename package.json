@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build:dev": "lerna exec \"yarn build:dev\""
+    "build:dev": "lerna exec \"yarn build:dev\"",
+    "build": "lerna exec \"yarn build\"",
+    "postinstall": "lerna exec \"yarn install\""
   },
   "devDependencies": {
     "lerna": "^3.21.0"

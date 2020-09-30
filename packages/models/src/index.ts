@@ -14,6 +14,7 @@ export * from "./step";
 export * from "./lesson";
 export * from "./user";
 export * from "./chapter";
+export * from "./mentorship";
 
 export type Entity =
   | User

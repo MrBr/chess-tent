@@ -10,7 +10,8 @@ export type DB = {
   connect: () => void;
   createStandardSchema: <T extends {}>(
     definition: Omit<T, "id">,
-    options?: SchemaOptions
+    options?: SchemaOptions,
+    useDefault?: boolean
   ) => Schema;
 };
 

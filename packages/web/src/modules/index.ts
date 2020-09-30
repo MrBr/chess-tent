@@ -21,3 +21,4 @@ application.register(() => import('./user'));
 application.register(() => import('./socket'));
 application.register(() => import('./records'));
 application.register(() => import('./activity'));
+application.register(() => import('./mentorship'));

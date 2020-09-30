@@ -22,6 +22,8 @@ export type ActivitiesResponse = DataResponse<Activity[]>;
 export type ConversationsResponse = DataResponse<Conversation[]>;
 export type ConversationResponse = DataResponse<Conversation>;
 export type ConversationMessagesResponse = DataResponse<NormalizedMessage[]>;
+export type CoachesResponse = DataResponse<User[]>;
+export type StudentsResponse = DataResponse<User[]>;
 
 export type ActivityFilters = {
   owner?: User["id"];
@@ -73,4 +75,14 @@ export type Requests = {
     [Conversation["id"], Pagination],
     ConversationMessagesResponse
   >;
+  mentorshipRequest: RequestFetch<
+    { studentId: User["id"]; coachId: User["id"] },
+    StatusResponse
+  >;
+  mentorshipResolve: RequestFetch<
+    { studentId: User["id"]; coachId: User["id"]; approved: boolean },
+    StatusResponse
+  >;
+  coaches: RequestFetch<User, CoachesResponse>;
+  students: RequestFetch<User, StudentsResponse>;
 };

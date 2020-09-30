@@ -44,12 +44,9 @@ const LoadMore = ({
 }) => {
   const { ref, inView } = useInView();
   useEffect(() => {
-    console.log('Load more: ', inView, loading, noMore);
     inView && !loading && !noMore && loadMore();
   }, [inView, loadMore, loading, noMore]);
-  return (
-    <div ref={ref}>{loading ? 'Loading...' : noMore ? 'No more' : '?'}</div>
-  );
+  return <div ref={ref}>{loading ? 'Loading...' : ''}</div>;
 };
 
 const useLoadMoreMessages = (

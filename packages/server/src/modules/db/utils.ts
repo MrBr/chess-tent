@@ -11,11 +11,15 @@ const transformRemove_id = <T>(
 
 export const createStandardSchema: DB["createStandardSchema"] = (
   definition,
-  options = {}
+  options = {},
+  useDefault = true
 ) => {
+  const defaultDefinition = {
+    _id: ({ type: String, default: uuid, alias: "id" } as unknown) as string
+  };
   const schema = new Schema<typeof definition>(
     {
-      _id: ({ type: String, default: uuid, alias: "id" } as unknown) as string,
+      ...(useDefault ? defaultDefinition : {}),
       ...definition
     },
     {

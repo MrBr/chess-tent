@@ -11,7 +11,6 @@ let moduleCursor: {
 } | null = null;
 
 class DependencyError extends Error {
-  getDependantPath: Function;
   constructor(message) {
     super(message);
     this.name = "DependencyError";
@@ -20,16 +19,15 @@ class DependencyError extends Error {
 export const createNamespace = (initialNamespace = {}) =>
   new Proxy(initialNamespace, {
     get(target, prop, receiver) {
-      if (prop === "__esModule") {
+      if (prop === "__esModule" || prop === "then") {
         // Lol
         return target;
-      } else if (prop === "then") {
-        // Lol x 2
-        return;
       } else if (target[prop]) {
         return target[prop];
       }
-      throw new DependencyError(`Prop ${String(prop)} not defined yet!`);
+      throw new DependencyError(
+        `Namespace export ${String(prop)} not defined.`
+      );
     }
   });
 
@@ -53,12 +51,14 @@ const resolveModule = (loadModule: () => Promise<any>, cb?: Function) => {
               cachedRequire.id !== undefined
                 ? cachedRequire.id
                 : cachedRequire.i;
-            !loaded && delete require.cache[id];
+            if (!loaded) {
+              delete require.cache[id];
+            }
           });
+          reject(e);
         } else {
-          console.error(e);
+          throw e;
         }
-        reject(e);
       });
   });
 };

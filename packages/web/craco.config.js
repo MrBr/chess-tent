@@ -1,5 +1,6 @@
 const CracoAlias = require('craco-alias');
 const webpack = require('webpack');
+const path = require('path');
 
 module.exports = {
   plugins: [
@@ -22,6 +23,14 @@ module.exports = {
               maxChunks: 1,
             }),
           );
+          webpackConfig.module.rules.push({
+            test: /\.(ts|tsx)$/,
+            use: [
+              {
+                loader: path.resolve('loader.js'),
+              },
+            ],
+          });
 
           // Always return the config object.
           return webpackConfig;

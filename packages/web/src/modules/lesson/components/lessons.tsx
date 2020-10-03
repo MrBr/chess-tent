@@ -1,37 +1,33 @@
-import React, { useEffect } from 'react';
-import { components, hooks, requests, ui } from '@application';
-import { Lesson } from '@chess-tent/models';
+import React from 'react';
+import { hooks, ui } from '@application';
 import { Components } from '@types';
+import lessonCardImg from '../images/lesson-card.svg';
 
-const { useRecord, useApi } = hooks;
-const { Link } = components;
-const { Container } = ui;
+const { useHistory } = hooks;
+const { Container, Img, Headline5, Text, Row, Col, Card } = ui;
 
-const Lessons: Components['Lessons'] = ({ owner }) => {
-  const { fetch, response } = useApi(requests.lessons);
-  const [lessons, saveLessons] = useRecord<Lesson[]>(`${owner.id}-lessons`);
-
-  useEffect(() => {
-    if (!lessons) {
-      fetch({ owner: owner.id });
-    }
-  }, [fetch, lessons, owner.id]);
-
-  useEffect(() => {
-    if (response) {
-      saveLessons(response.data);
-    }
-  }, [saveLessons, response]);
-
+const Lessons: Components['Lessons'] = ({ lessons }) => {
+  const history = useHistory();
   return (
-    <>
-      <h2>Lessons</h2>
-      {lessons?.map(lesson => (
-        <Container key={lesson.id}>
-          <Link to={`/lesson/${lesson.id}`}>{lesson.id}</Link>
-        </Container>
-      ))}
-    </>
+    <Container fluid>
+      <Row>
+        {lessons?.map(lesson => (
+          <Col key={lesson.id} xs={3}>
+            <Card
+              onClick={() => history.push(`/lesson/${lesson.id}`)}
+              className="cursor-pointer"
+            >
+              <Img src={lessonCardImg} />
+              <Headline5 className="mt-2">Lesson Title</Headline5>
+              <Text fontSize="extra-small" weight={700}>
+                Category
+              </Text>
+              <Text fontSize="small">Description</Text>
+            </Card>
+          </Col>
+        ))}
+      </Row>
+    </Container>
   );
 };
 

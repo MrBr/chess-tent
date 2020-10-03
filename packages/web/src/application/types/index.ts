@@ -72,9 +72,11 @@ import {
   VariationModule,
 } from './steps';
 import { Socket } from './socket';
+import { HOC } from './hoc';
 
 export * from '@chess-tent/types';
 export * from './activity';
+export * from './hoc';
 export * from './chess';
 export * from './step';
 export * from './steps';
@@ -105,6 +107,8 @@ export type Hooks = {
   useSelector: typeof useSelector;
   useUser: (userId: User['id']) => User;
   useActiveUserRecord: () => RecordHookReturn<User>;
+  useUserActivitiesRecord: (user: User) => RecordHookReturn<Activity[]>;
+  useUserLessonsRecord: (user: User) => RecordHookReturn<Lesson[]>;
   useConversationParticipant: () => RecordHookReturn<User>;
   useHistory: () => History;
   useLocation: typeof useLocation;
@@ -242,7 +246,7 @@ export type Services = {
       | string
       | ((...args: GenericArguments<K>) => { url: string; data?: any }),
   ) => (...args: GenericArguments<K>) => Promise<U>;
-  createRecordHook: <T extends Entity>(
+  createRecordHook: <T extends RecordValue>(
     recordKey: string,
   ) => () => RecordHookReturn<T>;
   isStepType: <T extends Steps>(step: Step, stepType: StepType) => step is T;
@@ -305,9 +309,9 @@ export type Components = {
     onBestMoveChange?: (bestMove: Move, ponder?: Move) => void;
   }>;
   Editor: ComponentType<{ lesson: Lesson }>;
-  Lessons: ComponentType<{ owner: User }>;
+  Lessons: ComponentType<{ lessons: Lesson[] | null }>;
   Coaches: ComponentType;
-  Activities: ComponentType<{ owner: User }>;
+  Activities: ComponentType<{ activities: Activity[] | null }>;
   Conversations: ComponentType;
 };
 
@@ -317,7 +321,6 @@ export type Constants = {
 
 export type Application = {
   services: Services;
-  test: () => string;
   register: typeof register;
   init: () => Promise<any>;
   start: () => void;
@@ -332,4 +335,5 @@ export type Application = {
   socket: Socket;
   model: Model;
   stepModules: StepModules;
+  hoc: HOC;
 };

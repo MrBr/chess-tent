@@ -29,7 +29,7 @@ export default () => {
   }, [response, updateUser]);
 
   if (user) {
-    return <Redirect to="/me" />;
+    return <Redirect to="/" />;
   }
 
   return (

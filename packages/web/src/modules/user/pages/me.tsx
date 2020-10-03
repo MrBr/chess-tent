@@ -1,55 +1,78 @@
-import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
-import { components, hooks, ui, requests } from '@application';
+import React, { useEffect } from 'react';
+import { components, hooks, ui, requests, hoc } from '@application';
 import { User } from '@chess-tent/models';
+import { FileUploaderProps } from '@types';
 
 const { useActiveUserRecord, useApi } = hooks;
-const { Header, Lessons, Activities } = components;
-const { Page, File } = ui;
+const { Header } = components;
+const { withFiles } = hoc;
+const { Page, Col, Row, Avatar, Headline3, Text } = ui;
 
-export default () => {
+export default withFiles(({ files, openFileDialog }: FileUploaderProps) => {
   const [user] = useActiveUserRecord() as [User, never, never];
-  const signImageApi = useApi(requests.signImageUrl);
-  const uploadImageApi = useApi(requests.uploadImage);
-  const updateMeApi = useApi(requests.updateMe);
-  const [file, setFile] = useState<File | null>(null);
-
-  const fileUploadHandle = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      if (event.target.files) {
-        setFile(event.target.files[0]);
-        signImageApi.fetch({
-          contentType: event.target.files[0].type,
-          key: user.id,
-        });
-      }
-    },
-    [signImageApi, user.id],
+  const { fetch: signImage, response: signImageResponse } = useApi(
+    requests.signImageUrl,
   );
+  const { fetch: uploadImage, response: uploadImageResponse } = useApi(
+    requests.uploadImage,
+  );
+  const { fetch: updateMe } = useApi(requests.updateMe);
 
   useEffect(() => {
-    if (signImageApi.response?.data && file) {
-      uploadImageApi.fetch(signImageApi.response.data, file);
+    if (files.length === 0) {
+      return;
     }
-    // eslint-disable-next-line
-  }, [signImageApi.response, file, uploadImageApi.fetch]);
+    signImage({
+      contentType: files[0].type,
+      key: user.id,
+    });
+  }, [files, signImage, user.id]);
 
   useEffect(() => {
-    if (uploadImageApi.response && signImageApi.response) {
-      updateMeApi.fetch({ imageUrl: uploadImageApi.response });
+    if (signImageResponse?.data && files.length > 0) {
+      uploadImage(signImageResponse.data, files[0]);
     }
-    // eslint-disable-next-line
-  }, [uploadImageApi.response, signImageApi.response, updateMeApi.fetch]);
+  }, [signImageResponse, files, uploadImage]);
+
+  useEffect(() => {
+    if (uploadImageResponse && signImageResponse) {
+      updateMe({ imageUrl: uploadImageResponse });
+    }
+  }, [uploadImageResponse, signImageResponse, updateMe]);
 
   return (
     <Page>
       <Header />
-      <File>
-        <File.Input onChange={fileUploadHandle} />
-      </File>
-      <img src={user.imageUrl} alt="" width={100} />
-      {JSON.stringify(user)}
-      <Lessons owner={user} />
-      <Activities owner={user} />
+      <Row>
+        <Col className="col-auto">
+          <Avatar src={user.imageUrl} size="large" onClick={openFileDialog} />
+        </Col>
+        <Col>
+          <Headline3>{user.name}</Headline3>
+          <Text>{user.punchline}</Text>
+          <Text>{user.studentElo}</Text>
+          <Text className="text-uppercase">Pricing</Text>
+          <Text>{user.pricing}</Text>
+          <Text className="text-uppercase">Availability</Text>
+          <Text>{user.availability}</Text>
+          <Text className="text-uppercase">Speciality</Text>
+          <Text>{user.speciality}</Text>
+        </Col>
+        <Col>
+          <Headline3>About me</Headline3>
+          <Text>{user.about}</Text>
+        </Col>
+        <Col>
+          <Headline3>Playing experience</Headline3>
+          <Text>{user.playingExperience}</Text>
+        </Col>
+        <Col>
+          <Headline3>Teaching experience</Headline3>
+          <Text>{user.playingExperience}</Text>
+          <Headline3>Teaching methodology</Headline3>
+          <Text>{user.teachingMethodology}</Text>
+        </Col>
+      </Row>
     </Page>
   );
-};
+});

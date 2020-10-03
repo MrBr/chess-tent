@@ -40,7 +40,7 @@ const Text = styled<FunctionComponent<TextProps>>(
     ),
 )(
   {
-    marginBottom: '1.15rem',
+    marginBottom: '0.5rem',
   },
   textDynamicStyle,
 );

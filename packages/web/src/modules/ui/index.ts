@@ -27,7 +27,11 @@ import {
   Headline6,
   Text,
 } from './Text';
-import { Avatar, Img, Thumbnail } from './Img';
+import { Avatar, FramedProfile, Img, Thumbnail } from './Img';
+import { Card, CardBody } from './Card';
+import { withFiles } from './hoc';
+
+application.hoc.withFiles = withFiles;
 
 application.register(() => import('./Modal'));
 
@@ -45,7 +49,11 @@ application.ui.ErrorMessage = ErrorMessage;
 
 application.ui.Dropdown = Dropdown;
 
+application.ui.Card = Card;
+application.ui.CardBody = CardBody;
+
 application.ui.Img = Img;
+application.ui.FramedProfile = FramedProfile;
 application.ui.Avatar = Avatar;
 application.ui.Thumbnail = Thumbnail;
 

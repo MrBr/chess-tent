@@ -13,6 +13,7 @@ import {
   Pages,
   Requests,
   Socket,
+  HOC,
 } from '@types';
 
 const services = createNamespace({}) as Services;
@@ -28,6 +29,7 @@ const state = createNamespace({
 const utils = createNamespace({}) as Utils;
 const socket = createNamespace({}) as Socket;
 const model = createNamespace({}) as Model;
+const hoc = createNamespace({}) as HOC;
 const stepModules = createNamespace({}) as StepModules;
 const constants = createNamespace({
   START_FEN: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
@@ -48,10 +50,12 @@ const application: Application = createNamespace({
   pages,
   requests,
   socket,
+  hoc,
 }) as Application;
 
 export {
   application as default,
+  hoc,
   socket,
   services,
   components,

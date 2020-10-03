@@ -1,4 +1,5 @@
-import { Step, updateStepState } from '@chess-tent/models';
+import { Step, updateStepState, User, Lesson } from '@chess-tent/models';
+import { hooks } from '@application';
 import { useCallback } from 'react';
 
 export const useUpdateLessonStepState = <T extends Step>(
@@ -10,3 +11,6 @@ export const useUpdateLessonStepState = <T extends Step>(
     [step, updateStep],
   );
 };
+
+export const useUserLessonRecord = (user: User) =>
+  hooks.useRecord<Lesson[]>(`${user.id}-lessons`);

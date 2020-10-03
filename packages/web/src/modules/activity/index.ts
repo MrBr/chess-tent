@@ -25,4 +25,10 @@ application.register(
     application.state.selectors.activitySelector = module.activitySelector;
   },
 );
+application.register(
+  () => import('./state/hooks'),
+  module => {
+    application.hooks.useUserActivitiesRecord = module.useUserActivitiesRecord;
+  },
+);
 application.register(() => import('./requests'));

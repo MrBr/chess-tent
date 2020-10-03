@@ -54,7 +54,7 @@ const buttonTextColor = (variant: ButtonProps['variant']) => {
     case 'regular':
       return '#2F3849';
     default:
-      return '#FFFFFF';
+      return '#182235';
   }
 };
 
@@ -76,6 +76,7 @@ export const Button = styled.button<ButtonProps>(
     '&:focus': {
       outline: 'none',
     },
+    fontWeight: 700,
     border: 'none',
   },
   buttonSizeEnhancer,

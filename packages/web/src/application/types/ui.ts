@@ -22,7 +22,7 @@ import Select, { OptionProps } from 'react-select';
 import { SelectComponentsProps } from 'react-select/base';
 import { FormCheckInputProps } from 'react-bootstrap/FormCheckInput';
 import Dropdown from 'react-bootstrap/Dropdown';
-import { ClickHandler } from './_helpers';
+import { ClassNameProps, ClickProps } from './_helpers';
 
 export type ButtonProps = {
   variant?: 'primary' | 'secondary' | 'regular' | 'danger' | 'ghost';
@@ -77,11 +77,13 @@ export type UI = {
   Headline4: UIComponent;
   Headline5: UIComponent;
   Headline6: UIComponent;
-  Img: ComponentType<{ src: string | undefined }>;
+  Img: ComponentType<{ src: string | undefined; className?: string }>;
+  FramedProfile: ComponentType<{ src: string | undefined }>;
   Dropdown: typeof Dropdown;
   Avatar: ComponentType<{
     src: string | undefined;
     size?: 'regular' | 'small' | 'large';
+    onClick?: ReactEventHandler;
   }>;
   Thumbnail: ComponentType<{
     src: string | undefined;
@@ -94,10 +96,10 @@ export type UI = {
   Select: typeof Select;
   Option: ComponentType<OptionProps<any>>;
   Check: typeof FormCheck;
-  Container: UIComponent<ContainerProps & ClickHandler>;
+  Container: UIComponent<ContainerProps & ClickProps>;
   Page: UIComponent<ContainerProps>;
-  Row: UIComponent<RowProps & ClickHandler>;
-  Col: UIComponent<ColProps>;
+  Row: UIComponent<RowProps & ClickProps>;
+  Col: UIComponent<ColProps & ClickProps>;
   ErrorMessage: UIComponent<ErrorMessageProps>;
   Button: UIComponent<ButtonProps>;
   ToggleButton: UIComponent<
@@ -108,6 +110,8 @@ export type UI = {
       onChange?: ReactEventHandler;
     }
   >;
+  Card: ComponentType<ClickProps & ClassNameProps>;
+  CardBody: ComponentType;
   Modal: UIComponent<ModalProps>;
   ModalBody: typeof ModalBody;
   Confirm: UIComponent<ConfirmProps>;

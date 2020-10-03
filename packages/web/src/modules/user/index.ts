@@ -4,7 +4,7 @@ import { userSchema } from './model';
 import './register';
 
 import Register from './pages/register';
-import { useActiveUserRecord, useUser } from './hooks';
+import { useActiveUserRecord, useUser } from './state/hooks';
 
 application.register(() => import('./provider'));
 application.register(() => import('./routes'));

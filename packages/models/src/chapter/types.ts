@@ -9,6 +9,7 @@ export interface Chapter extends Subject {
   state: {
     title: string;
     steps: Step[];
+    description?: string;
   };
 }
 
@@ -18,5 +19,6 @@ export interface NormalizedChapter {
   state: {
     title: Chapter["state"]["title"];
     steps: Step["id"][];
+    description?: Chapter["state"]["description"];
   };
 }

@@ -282,6 +282,7 @@ export type Components = {
   StepTag: StepTag;
   StepMove: StepMove;
   Router: ComponentType;
+  Switch: ComponentType;
   Redirect: ComponentType<RedirectProps>;
   Route: ComponentType<RouteProps>;
   Link: ComponentType<LinkProps>;
@@ -308,7 +309,7 @@ export type Components = {
     // after position changed it can still provide best move for the previous position
     onBestMoveChange?: (bestMove: Move, ponder?: Move) => void;
   }>;
-  Editor: ComponentType<{ lesson: Lesson }>;
+  Editor: ComponentType<{ lesson: Lesson; save: Requests['lessonUpdates'] }>;
   Lessons: ComponentType<{ lessons: Lesson[] | null }>;
   Coaches: ComponentType;
   Activities: ComponentType<{ activities: Activity[] | null }>;

@@ -12,7 +12,9 @@ export default () => {
   return (
     <Container fluid>
       <Link to="/me">{user?.name}</Link>
-      <Button onClick={() => history.push('/lesson')}>Add new lesson</Button>
+      <Button onClick={() => history.push('/lesson/new')}>
+        Add new lesson
+      </Button>
       <Button onClick={() => logoutApi.fetch()}>Logout</Button>
     </Container>
   );

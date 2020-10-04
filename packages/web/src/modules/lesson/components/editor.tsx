@@ -8,13 +8,13 @@ import {
 } from '@chess-tent/models';
 import { Components } from '@types';
 import { debounce } from 'lodash';
-import { state, hooks, components, ui, requests } from '@application';
+import { state, hooks, components, ui } from '@application';
 import TrainingModal from './trening-assign';
 import Sidebar from './sidebar';
 import { PreviewModal } from './activity-preview';
 import { addLessonUpdate, getLessonUpdates } from '../service';
 
-const { Container, Row, Col, Headline2, Button } = ui;
+const { Container, Row, Col, Headline2, Button, Dropdown } = ui;
 const { Stepper, StepRenderer, Chessboard } = components;
 const {
   actions: { setLessonActiveStep, updateLessonStep },
@@ -27,7 +27,7 @@ const {
   usePromptModal,
 } = hooks;
 
-const Editor: Components['Editor'] = ({ lesson }) => {
+const Editor: Components['Editor'] = ({ lesson, save }) => {
   const componentState = useComponentStateSilent();
   const dispatch = useDispatchBatched();
   const { chapters } = lesson.state;
@@ -53,19 +53,19 @@ const Editor: Components['Editor'] = ({ lesson }) => {
   const promptModal = usePromptModal();
   const [isDirty, setIsDirty] = useState<boolean>(false);
   const {
-    fetch: lessonSave,
-    error: lessonSaveError,
-    response: lessonSaved,
-  } = useApi(requests.lessonUpdates);
-  const lessonSaveThrottle = useCallback(
+    fetch: lessonUpdate,
+    error: lessonUpdateError,
+    response: lessonUpdated,
+  } = useApi(save);
+  const lessonUpdateThrottle = useCallback(
     debounce(
-      (lesson: Lesson) => lessonSave(lesson.id, getLessonUpdates(lesson)),
+      (lesson: Lesson) => lessonUpdate(lesson.id, getLessonUpdates(lesson)),
       5000,
       {
         trailing: true,
       },
     ),
-    [lessonSave],
+    [lessonUpdate],
   );
   const updateStep = useCallback(
     (step: Step) => {
@@ -79,9 +79,9 @@ const Editor: Components['Editor'] = ({ lesson }) => {
   useEffect(() => {
     if (componentState.mounted) {
       setIsDirty(true);
-      lessonSaveThrottle(lesson);
+      lessonUpdateThrottle(lesson);
     }
-  }, [lesson, lessonSaveThrottle, componentState]);
+  }, [lesson, lessonUpdateThrottle, componentState]);
 
   const setActiveStepHandler = useCallback(
     (step: Step) => {
@@ -91,14 +91,15 @@ const Editor: Components['Editor'] = ({ lesson }) => {
   );
 
   useEffect(() => {
-    setIsDirty(!!lessonSaved?.error);
-  }, [lessonSaveError, lessonSaved]);
+    setIsDirty(!!lessonUpdated?.error);
+  }, [lessonUpdateError, lessonUpdated]);
 
-  const lessonStatus = lessonSaveError
+  const lessonStatus = lessonUpdateError
     ? 'Error!'
     : isDirty
     ? 'Have unsaved changes'
     : 'Lesson saved';
+
   return (
     <Container fluid className="px-0 h-100">
       <Row noGutters className="h-100">
@@ -141,6 +142,12 @@ const Editor: Components['Editor'] = ({ lesson }) => {
               Preview
             </Button>
             <Headline2>Lesson</Headline2>
+            <Dropdown>
+              <Dropdown.Toggle id="chapters">Chapter</Dropdown.Toggle>
+              <Dropdown.Menu>
+                <Dropdown.Item>Chapter</Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
             <Stepper
               lesson={lesson}
               steps={steps}

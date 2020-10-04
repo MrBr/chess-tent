@@ -11,10 +11,25 @@ import {
   useLocation,
   Router as BaseRouter,
 } from 'react-router-dom';
-import { createBrowserHistory } from 'history';
+import { createBrowserHistory, History, LocationState } from 'history';
 
 const routes: ComponentType[] = [];
-const history = createBrowserHistory();
+const history = new Proxy(createBrowserHistory(), {
+  get(target: History, prop: PropertyKey, receiver: any): any {
+    if (prop === 'push') {
+      return (path: string, state: LocationState) =>
+        Reflect.get(
+          target,
+          prop,
+          receiver,
+        )(path, {
+          from: target.location.pathname,
+          ...state,
+        });
+    }
+    return Reflect.get(target, prop, receiver);
+  },
+});
 
 const Router: ComponentType = () => {
   return (
@@ -35,6 +50,7 @@ const addRoute: Services['addRoute'] = Route => {
 };
 
 application.components.Router = Router;
+application.components.Switch = Switch;
 application.components.Route = Route;
 application.components.Link = Link;
 application.components.Redirect = Redirect;

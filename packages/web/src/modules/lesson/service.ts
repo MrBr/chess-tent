@@ -1,10 +1,10 @@
-import { LessonUpdates, UpdateLessonStepAction } from '@chess-tent/types';
-import { getLessonStepAt, Lesson } from '@chess-tent/models';
+import { LessonUpdatableAction, LessonUpdates } from '@chess-tent/types';
+import { getLessonValueAt, Lesson, LessonPath } from '@chess-tent/models';
 import { uniqWith } from 'lodash';
 
-const updatesMap: { [key: string]: UpdateLessonStepAction[] } = {};
+const updatesMap: { [key: string]: LessonUpdatableAction[] } = {};
 
-const isSamePathBase = (path1: number[], path2: number[]) => {
+const isSamePathBase = (path1: LessonPath, path2: LessonPath) => {
   const shorterPath = path1.length < path2.length ? path1 : path2;
   for (let i = shorterPath.length - 1; i >= 0; i--) {
     if (path2[i] !== path1[i]) {
@@ -27,7 +27,7 @@ const removeWeakerPaths = (updates: LessonUpdates) => {
   });
 };
 
-export const addLessonUpdate = (action: UpdateLessonStepAction) => {
+export const addLessonUpdate = (action: LessonUpdatableAction) => {
   let actions = updatesMap[action.meta.lessonId];
   if (!actions) {
     actions = [];
@@ -39,15 +39,15 @@ export const addLessonUpdate = (action: UpdateLessonStepAction) => {
 export const getLessonUpdates = (lesson: Lesson): LessonUpdates => {
   const updates = updatesMap[lesson.id]?.map(({ meta, payload }) => ({
     path: meta.path,
-    entity: payload,
+    value: payload,
   }));
   const uniqueUpdate = uniqWith(
     updates,
-    (update1, update2) => update1.path.join() === update2.path.join(),
+    (update1, update2) => update1?.path.join() === update2?.path.join(),
   );
   updatesMap[lesson.id] = [];
   return removeWeakerPaths(uniqueUpdate).map(update => ({
     ...update,
-    entity: getLessonStepAt(lesson, update.path),
+    value: getLessonValueAt(lesson, update.path),
   }));
 };

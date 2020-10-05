@@ -12,13 +12,16 @@ import {
   Step,
   Subject,
   User,
-  Chapter
+  Chapter,
+  LessonPath
 } from "@chess-tent/models";
 
 export const UPDATE_ENTITIES = "UPDATE_ENTITIES";
 
-export const SET_LESSON_ACTIVE_STEP = "SET_LESSON_ACTIVE_STEP";
 export const UPDATE_LESSON_STEP = "UPDATE_LESSON_STEP";
+export const UPDATE_LESSON_CHAPTER = "UPDATE_LESSON_CHAPTER";
+export const ADD_LESSON_CHAPTER = "ADD_LESSON_CHAPTER";
+export const UPDATE_LESSON_STATE = "UPDATE_LESSON_STATE";
 export const UPDATE_LESSON = "UPDATE_LESSON";
 
 export const SET_ACTIVITY_ACTIVE_STEP = "SET_ACTIVITY_ACTIVE_STEP";
@@ -79,15 +82,29 @@ export type UpdateEntitiesAction = Action<
 /**
  * Exercise
  */
-export type SetLessonActiveStepAction = Action<
-  typeof SET_LESSON_ACTIVE_STEP,
-  Step["id"],
-  { id: Lesson["id"] }
+export type UpdateLessonChapterAction = Action<
+  typeof UPDATE_LESSON_CHAPTER,
+  Chapter,
+  { lessonId: Lesson["id"]; chapterId: Chapter["id"]; path: LessonPath }
+>;
+export type AddLessonChapterAction = Action<
+  typeof ADD_LESSON_CHAPTER,
+  Chapter,
+  { lessonId: Lesson["id"]; path: LessonPath }
 >;
 export type UpdateLessonStepAction = Action<
   typeof UPDATE_LESSON_STEP,
   Step,
   { lessonId: Lesson["id"]; chapterId: Chapter["id"]; path: number[] }
+>;
+
+export type UpdateLessonStateAction = Action<
+  typeof UPDATE_LESSON_STATE,
+  Partial<Omit<NormalizedLesson["state"], "chapters">>,
+  {
+    lessonId: Lesson["id"];
+    path: LessonPath;
+  }
 >;
 export type UpdateLessonAction = Action<
   typeof UPDATE_LESSON,
@@ -97,9 +114,11 @@ export type UpdateLessonAction = Action<
 
 export type LessonAction =
   | UpdateEntitiesAction
-  | SetLessonActiveStepAction
+  | UpdateLessonAction
+  | UpdateLessonStateAction
   | UpdateLessonStepAction
-  | UpdateLessonAction;
+  | UpdateLessonChapterAction
+  | AddLessonChapterAction;
 
 /**
  * Activity
@@ -111,7 +130,7 @@ export type SetActivityActiveStepAction = Action<
 >;
 export type UpdateActivityAction<T extends Subject> = Action<
   typeof UPDATE_ACTIVITY,
-  Partial<NormalizedActivity<T>>,
+  NormalizedActivity<T>,
   { id: Activity<never>["id"] }
 >;
 export type UpdateActivityStateAction = Action<

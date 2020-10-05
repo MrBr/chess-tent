@@ -1,8 +1,18 @@
-import { Lesson, TYPE_LESSON } from "./types";
+import {
+  Lesson,
+  LessonPath,
+  LessonStepPath,
+  NormalizedLesson,
+  TYPE_LESSON
+} from "./types";
 import { User } from "../user";
-import { Chapter } from "../chapter/types";
-import { getStepAt, Step } from "../step";
-import { getChapterStepPath, updateChapterStep } from "../chapter";
+import { Step } from "../step";
+import {
+  getChapterStepPath,
+  updateChapterStep,
+  Chapter,
+  getChapterStepAt
+} from "../chapter";
 
 const isLesson = (entity: unknown) =>
   Object.getOwnPropertyDescriptor(entity, "type")?.value === TYPE_LESSON;
@@ -14,6 +24,25 @@ const getLessonChapter = (lesson: Lesson, chapterId: Chapter["id"]) => {
     }
   }
   return null;
+};
+
+const addChapterToLesson = <T extends Lesson | NormalizedLesson>(
+  lesson: T,
+  chapter: Chapter
+): T => ({
+  ...lesson,
+  state: {
+    ...lesson.state,
+    chapters: [...lesson.state.chapters, chapter]
+  }
+});
+
+const getLessonChapterIndex = (lesson: Lesson, chapterId: Chapter["id"]) => {
+  return lesson.state.chapters.findIndex(({ id }) => id === chapterId);
+};
+
+const getLessonChapterPath = (lesson: Lesson, chapterId: Chapter["id"]) => {
+  return [getLessonChapterIndex(lesson, chapterId)];
 };
 
 const getLessonStepPath = (lesson: Lesson, chapter: Chapter, step: Step) => {
@@ -28,10 +57,16 @@ const getLessonStepPath = (lesson: Lesson, chapter: Chapter, step: Step) => {
   return null;
 };
 
-const getLessonStepAt = (lesson: Lesson, path: number[]) => {
-  const [index, rootStepIndex, ...nestedPath] = path;
-  const parentStep = lesson.state.chapters[index].state.steps[rootStepIndex];
-  return nestedPath.length > 0 ? getStepAt(parentStep, nestedPath) : parentStep;
+const getLessonValueAt = (lesson: Lesson, path: LessonPath) => {
+  const [rootPath, nextPath, ...nestedPath] = path;
+  if (typeof rootPath === "string") {
+    return lesson.state[rootPath as keyof Lesson["state"]];
+  }
+  const chapter = lesson.state.chapters[rootPath];
+  if (!nextPath) {
+    return chapter;
+  }
+  return getChapterStepAt(chapter, nestedPath as LessonStepPath);
 };
 
 const updateLessonStep = (
@@ -54,19 +89,23 @@ const updateLessonStep = (
 const createLesson = (
   id: string,
   chapters: Chapter[],
-  owner: User
+  owner: User,
+  title = "Lesson"
 ): Lesson => ({
   id,
   type: TYPE_LESSON,
   owner,
-  state: { chapters }
+  state: { chapters, title }
 });
 
 export {
   isLesson,
   createLesson,
   getLessonChapter,
+  addChapterToLesson,
   getLessonStepPath,
   updateLessonStep,
-  getLessonStepAt
+  getLessonValueAt,
+  getLessonChapterIndex,
+  getLessonChapterPath
 };

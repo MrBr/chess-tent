@@ -8,16 +8,18 @@ import {
 } from '@chess-tent/models';
 import { Components } from '@types';
 import { debounce } from 'lodash';
-import { state, hooks, components, ui } from '@application';
+import { services, state, hooks, components, ui } from '@application';
 import TrainingModal from './trening-assign';
 import Sidebar from './sidebar';
 import { PreviewModal } from './activity-preview';
+import ChaptersDropdown from './chapters-dropdown';
 import { addLessonUpdate, getLessonUpdates } from '../service';
 
-const { Container, Row, Col, Headline2, Button, Dropdown } = ui;
+const { Container, Row, Col, Headline2, Button } = ui;
+const { createChapter } = services;
 const { Stepper, StepRenderer, Chessboard } = components;
 const {
-  actions: { setLessonActiveStep, updateLessonStep },
+  actions: { updateLessonStep, addLessonChapter, updateLessonChapter },
 } = state;
 const {
   useDispatchBatched,
@@ -25,6 +27,7 @@ const {
   useComponentStateSilent,
   useLocation,
   usePromptModal,
+  useHistory,
 } = hooks;
 
 const Editor: Components['Editor'] = ({ lesson, save }) => {
@@ -32,6 +35,7 @@ const Editor: Components['Editor'] = ({ lesson, save }) => {
   const dispatch = useDispatchBatched();
   const { chapters } = lesson.state;
   const location = useLocation();
+  const history = useHistory();
   const activeChapterId =
     new URLSearchParams(location.search).get('activeChapter') || chapters[0].id;
 
@@ -75,6 +79,33 @@ const Editor: Components['Editor'] = ({ lesson, save }) => {
     },
     [activeChapter, dispatch, lesson],
   );
+  const updateChapter = useCallback(
+    (chapter: Chapter) => {
+      const action = updateLessonChapter(lesson, chapter);
+      addLessonUpdate(action);
+      dispatch(action);
+    },
+    [dispatch, lesson],
+  );
+  const addNewChapter = useCallback(() => {
+    const newChapter = createChapter();
+    const action = addLessonChapter(lesson, newChapter);
+    addLessonUpdate(action);
+    dispatch(action);
+    history.push(location.pathname + '?activeChapter=' + newChapter.id);
+  }, [dispatch, history, lesson, location.pathname]);
+  const updateChapterTitle = useCallback(
+    (title: string) => {
+      updateChapter({
+        ...activeChapter,
+        state: {
+          ...activeChapter.state,
+          title,
+        },
+      });
+    },
+    [updateChapter, activeChapter],
+  );
 
   useEffect(() => {
     if (componentState.mounted) {
@@ -85,9 +116,21 @@ const Editor: Components['Editor'] = ({ lesson, save }) => {
 
   const setActiveStepHandler = useCallback(
     (step: Step) => {
-      dispatch(setLessonActiveStep(lesson.id, step));
+      history.replace({
+        ...services.history.location,
+        search: `?activeStep=${step.id}&activeChapter=${activeChapterId}`,
+      });
     },
-    [dispatch, lesson.id],
+    [history, activeChapterId],
+  );
+  const setActiveChapterHandler = useCallback(
+    (chapter: Chapter) => {
+      history.replace({
+        ...services.history.location,
+        search: `?activeChapter=${chapter.id}`,
+      });
+    },
+    [history],
   );
 
   useEffect(() => {
@@ -141,13 +184,24 @@ const Editor: Components['Editor'] = ({ lesson, save }) => {
             >
               Preview
             </Button>
-            <Headline2>Lesson</Headline2>
-            <Dropdown>
-              <Dropdown.Toggle id="chapters">Chapter</Dropdown.Toggle>
-              <Dropdown.Menu>
-                <Dropdown.Item>Chapter</Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
+            <Container>
+              <Row>
+                <Col>
+                  <Headline2 contentEditable>Lesson</Headline2>
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  <ChaptersDropdown
+                    activeChapter={activeChapter}
+                    chapters={chapters}
+                    onChange={setActiveChapterHandler}
+                    onEdit={updateChapterTitle}
+                    onNew={addNewChapter}
+                  />
+                </Col>
+              </Row>
+            </Container>
             <Stepper
               lesson={lesson}
               steps={steps}

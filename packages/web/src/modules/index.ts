@@ -5,6 +5,7 @@ application.register(() => import('./api'));
 application.register(() => import('./auth'));
 application.register(() => import('./conversation'));
 application.register(() => import('./chess'));
+application.register(() => import('./chapter'));
 application.register(() => import('./chessboard'));
 application.register(() => import('./evaluator'));
 application.register(() => import('./lesson'));

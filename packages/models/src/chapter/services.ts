@@ -5,6 +5,7 @@ import {
   getNextStep,
   getParentStep,
   getPreviousStep,
+  getStepAt,
   getStepIndex,
   getStepPath,
   getStepsCount,
@@ -102,6 +103,12 @@ const getChapterStepPath = (chapter: Chapter, step: Step) => {
   return null;
 };
 
+const getChapterStepAt = (chapter: Chapter, stepPath: number[]) => {
+  const [rootStepIndex, ...nestedPath] = stepPath;
+  const parentStep = chapter.state.steps[rootStepIndex];
+  return nestedPath.length > 0 ? getStepAt(parentStep, nestedPath) : parentStep;
+};
+
 const updateChapterStep = (
   chapter: Chapter,
   patch: Partial<Step>,
@@ -142,5 +149,6 @@ export {
   isChapter,
   getChapterStepPath,
   createChapter,
-  updateChapterStep
+  updateChapterStep,
+  getChapterStepAt
 };

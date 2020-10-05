@@ -15,4 +15,5 @@ export type GenericArguments<T> = T extends
 export type Unarray<T> = T extends Array<infer U> ? U : T;
 
 export type ClickProps = { onClick?: ReactEventHandler };
+export type ContentEditableProps = { contentEditable?: boolean };
 export type ClassNameProps = { className?: string };

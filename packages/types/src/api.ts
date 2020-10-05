@@ -2,11 +2,18 @@ import {
   Activity,
   Conversation,
   Lesson,
+  LessonPath,
   Message,
   NormalizedMessage,
   User
 } from "@chess-tent/models";
 import { GenericArguments } from "./_helpers";
+import {
+  AddLessonChapterAction,
+  UpdateLessonChapterAction,
+  UpdateLessonStateAction,
+  UpdateLessonStepAction
+} from "./actions";
 
 export type Pagination = [number, number];
 
@@ -45,7 +52,12 @@ export interface API {
 }
 
 export type RequestFetch<T, U> = (...args: GenericArguments<T>) => Promise<U>;
-export type LessonUpdates = { path: number[]; entity: any }[];
+export type LessonUpdatableAction =
+  | UpdateLessonStepAction
+  | UpdateLessonChapterAction
+  | AddLessonChapterAction
+  | UpdateLessonStateAction;
+export type LessonUpdates = { path: LessonPath; value: any }[];
 
 export type Requests = {
   register: RequestFetch<Partial<User>, StatusResponse>;

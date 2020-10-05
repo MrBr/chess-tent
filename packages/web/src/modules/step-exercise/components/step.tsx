@@ -1,17 +1,16 @@
 import React, { useCallback, useMemo } from 'react';
-import { createStep as coreCreateStep } from '@chess-tent/models';
+import {
+  createStep as coreCreateStep,
+  updateStepState,
+} from '@chess-tent/models';
 import { ExerciseModule, ExerciseStep, ExerciseTypes, FEN } from '@types';
-import { components, hooks, state, ui } from '@application';
+import { components, ui } from '@application';
 import ExerciseToolbox from './toolbox';
 import ExerciseEditor from './editor';
 import ExercisePlayground from './playground';
 
-const {
-  actions: { updateLessonStepState },
-} = state;
 const { Col, Row, Container, Dropdown } = ui;
 const { StepTag } = components;
-const { useDispatchBatched } = hooks;
 
 const stepType = 'exercise';
 
@@ -48,7 +47,6 @@ const StepperStep: ExerciseModule['StepperStep'] = ({
   lesson,
   updateStep,
 }) => {
-  const dispatch = useDispatchBatched();
   const selectedTypeDescriptor = useMemo(
     () => exerciseTypes.find(({ type }) => type === step.state.exerciseType),
     [step.state.exerciseType],
@@ -73,8 +71,8 @@ const StepperStep: ExerciseModule['StepperStep'] = ({
         <Col>
           <Dropdown
             onSelect={(exerciseType: string) => {
-              dispatch(
-                updateLessonStepState(lesson, chapter, step, {
+              updateStep(
+                updateStepState(step, {
                   exerciseType,
                 } as { exerciseType: ExerciseTypes }),
               );

@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import {
   components,
-  constants,
   hooks,
   state,
   utils,
@@ -24,7 +23,6 @@ const {
 } = hooks;
 const { Editor } = components;
 const { createStep } = services;
-const { START_FEN } = constants;
 const { generateIndex } = utils;
 const {
   selectors: { lessonSelector },
@@ -32,7 +30,7 @@ const {
 } = state;
 
 const createNewLesson = (user: User) => {
-  const defaultStep: Step = createStep('variation', START_FEN);
+  const defaultStep: Step = createStep('variation');
   const newLessonId = generateIndex();
   const defaultChapter = createChapter(generateIndex(), 'Chapter', [
     defaultStep,

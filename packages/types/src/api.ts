@@ -2,7 +2,7 @@ import {
   Activity,
   Conversation,
   Lesson,
-  LessonPath,
+  SubjectPath,
   Message,
   NormalizedMessage,
   User
@@ -57,7 +57,7 @@ export type LessonUpdatableAction =
   | UpdateLessonChapterAction
   | AddLessonChapterAction
   | UpdateLessonStateAction;
-export type LessonUpdates = { path: LessonPath; value: any }[];
+export type LessonUpdates = { path: SubjectPath; value: any }[];
 
 export type Requests = {
   register: RequestFetch<Partial<User>, StatusResponse>;

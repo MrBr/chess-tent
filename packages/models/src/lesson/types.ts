@@ -4,10 +4,6 @@ import { Chapter } from "../chapter";
 
 export const TYPE_LESSON = "lessons";
 
-export type LessonStepPath = number[];
-export type LessonStatePath = [string];
-export type LessonPath = LessonStepPath | LessonStatePath;
-
 export interface Lesson extends Subject {
   id: string;
   owner: User;

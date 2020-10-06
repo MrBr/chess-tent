@@ -1,29 +1,9 @@
 import { LessonModel, depopulate } from "./model";
-import {
-  Chapter,
-  Lesson,
-  LessonPath,
-  LessonStepPath,
-  Step
-} from "@chess-tent/models";
+import { Chapter, Lesson, SubjectPath, Step } from "@chess-tent/models";
 import { LessonUpdates } from "@chess-tent/types";
 
-const generateStepPath = (path: LessonStepPath): string => {
-  const [index, ...nestedPath] = path;
-  return `.state.steps.${index}${
-    nestedPath.length > 0 ? generateStepPath(nestedPath) : ""
-  }`;
-};
-const lessonValuePathToMongoosePath = (path: LessonPath) => {
-  const [rootPath, ...nestedPath] = path;
-  if (typeof rootPath === "string") {
-    return `state.${rootPath}`;
-  }
-  const chapterPath = `state.chapters.${rootPath}`;
-  if (nestedPath.length === 0) {
-    return chapterPath;
-  }
-  return `${chapterPath}${generateStepPath(nestedPath as LessonStepPath)}`;
+const lessonValuePathToMongoosePath = (path: SubjectPath) => {
+  return path.join(".");
 };
 
 export const saveLesson = (lesson: Lesson) =>

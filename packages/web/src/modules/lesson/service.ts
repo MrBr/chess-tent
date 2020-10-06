@@ -1,10 +1,10 @@
 import { LessonUpdatableAction, LessonUpdates } from '@chess-tent/types';
-import { getLessonValueAt, Lesson, LessonPath } from '@chess-tent/models';
+import { getSubjectValueAt, Lesson, SubjectPath } from '@chess-tent/models';
 import { uniqWith } from 'lodash';
 
 const updatesMap: { [key: string]: LessonUpdatableAction[] } = {};
 
-const isSamePathBase = (path1: LessonPath, path2: LessonPath) => {
+const isSamePathBase = (path1: SubjectPath, path2: SubjectPath) => {
   const shorterPath = path1.length < path2.length ? path1 : path2;
   for (let i = shorterPath.length - 1; i >= 0; i--) {
     if (path2[i] !== path1[i]) {
@@ -48,6 +48,6 @@ export const getLessonUpdates = (lesson: Lesson): LessonUpdates => {
   updatesMap[lesson.id] = [];
   return removeWeakerPaths(uniqueUpdate).map(update => ({
     ...update,
-    value: getLessonValueAt(lesson, update.path),
+    value: getSubjectValueAt(lesson, update.path),
   }));
 };

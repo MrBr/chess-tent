@@ -1,6 +1,7 @@
 import {
   Chapter,
   getLessonChapterPath,
+  getLessonStatePath,
   getLessonStepPath,
   Lesson,
   Step,
@@ -53,7 +54,7 @@ export const addLessonChapterAction = (
   payload: chapter,
   meta: {
     lessonId: lesson.id,
-    path: [lesson.state.chapters.length],
+    path: ['state', 'chapters', lesson.state.chapters.length],
   },
 });
 
@@ -79,6 +80,6 @@ export const updateLessonStateAction = <T extends keyof Lesson['state']>(
   payload: { [key]: value },
   meta: {
     lessonId: lesson.id,
-    path: [key],
+    path: getLessonStatePath(key),
   },
 });

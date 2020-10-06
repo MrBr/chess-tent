@@ -13,7 +13,7 @@ import {
   Subject,
   User,
   Chapter,
-  LessonPath
+  SubjectPath
 } from "@chess-tent/models";
 
 export const UPDATE_ENTITIES = "UPDATE_ENTITIES";
@@ -85,17 +85,17 @@ export type UpdateEntitiesAction = Action<
 export type UpdateLessonChapterAction = Action<
   typeof UPDATE_LESSON_CHAPTER,
   Chapter,
-  { lessonId: Lesson["id"]; chapterId: Chapter["id"]; path: LessonPath }
+  { lessonId: Lesson["id"]; chapterId: Chapter["id"]; path: SubjectPath }
 >;
 export type AddLessonChapterAction = Action<
   typeof ADD_LESSON_CHAPTER,
   Chapter,
-  { lessonId: Lesson["id"]; path: LessonPath }
+  { lessonId: Lesson["id"]; path: SubjectPath }
 >;
 export type UpdateLessonStepAction = Action<
   typeof UPDATE_LESSON_STEP,
   Step,
-  { lessonId: Lesson["id"]; chapterId: Chapter["id"]; path: number[] }
+  { lessonId: Lesson["id"]; chapterId: Chapter["id"]; path: SubjectPath }
 >;
 
 export type UpdateLessonStateAction = Action<
@@ -103,7 +103,7 @@ export type UpdateLessonStateAction = Action<
   Partial<Omit<NormalizedLesson["state"], "chapters">>,
   {
     lessonId: Lesson["id"];
-    path: LessonPath;
+    path: SubjectPath;
   }
 >;
 export type UpdateLessonAction = Action<

@@ -13,7 +13,6 @@ import {
   Lesson,
   NormalizedLesson,
   updateLessonStep,
-  LessonStepPath,
 } from '@chess-tent/models';
 
 export const reducer = (
@@ -28,7 +27,7 @@ export const reducer = (
         [lessonId]: (updateLessonStep(
           (state[lessonId] as unknown) as Lesson,
           action.payload,
-          path as LessonStepPath,
+          path,
         ) as unknown) as NormalizedLesson,
       };
     }

@@ -1,4 +1,9 @@
 import { Step, TYPE_STEP } from "./types";
+import {
+  getSubjectValueAt,
+  SubjectPath,
+  updateSubjectValueAt
+} from "../subject";
 
 // Step
 const isStep = (entity: unknown): entity is Step =>
@@ -151,6 +156,18 @@ const addStep = (parentStep: Step, step: Step): Step => {
   };
 };
 
+const removeStep = (parentStep: Step, step: Step): Step => {
+  return {
+    ...parentStep,
+    state: {
+      ...parentStep.state,
+      steps: parentStep.state.steps.filter(childStep =>
+        isSameStep(childStep, step) ? false : true
+      )
+    }
+  };
+};
+
 const addStepRightToSame = (step: Step, newStep: Step) => {
   const newStepIndex = step.state.steps.findIndex(
     childStep => childStep.stepType !== newStep.stepType
@@ -169,25 +186,22 @@ const addStepRightToSame = (step: Step, newStep: Step) => {
   };
 };
 
-const getStepPath = (parentStep: Step, step: Step): number[] | null => {
+const getStepPath = (parentStep: Step, step: Step): SubjectPath | null => {
   for (let index = 0; index < parentStep.state.steps.length; index++) {
     const childStep = parentStep.state.steps[index];
     if (isSameStep(step, childStep)) {
-      return [index];
+      return ["state", "steps", index];
     }
     const path = getStepPath(childStep, step);
     if (path) {
-      path.unshift(index);
-      return path;
+      return ["state", "steps", index, ...path];
     }
   }
   return null;
 };
 
-const getStepAt = (parentStep: Step, path: number[]): Step => {
-  const [index, ...nestedPath] = path;
-  const step = parentStep.state.steps[index];
-  return nestedPath.length > 0 ? getStepAt(step, nestedPath) : step;
+const getStepAt = (parentStep: Step, path: SubjectPath): Step => {
+  return getSubjectValueAt(parentStep, path);
 };
 
 const updateStep = (step: Step, patch: Partial<Step>) => ({
@@ -209,24 +223,8 @@ const updateStepState = <T extends Step>(
 const updateNestedStep = (
   parentStep: Step,
   patch: Partial<Step>,
-  path: number[]
-): Step => {
-  const [index, ...nestedPath] = path;
-  const steps = [...parentStep.state.steps];
-  steps[index] = {
-    ...steps[index],
-    ...(nestedPath.length > 0
-      ? updateNestedStep(steps[index], patch, nestedPath)
-      : patch)
-  };
-  return {
-    ...parentStep,
-    state: {
-      ...parentStep.state,
-      steps
-    }
-  };
-};
+  path: SubjectPath
+): Step => updateSubjectValueAt(parentStep, path, patch);
 
 const createStep = <T>(
   id: string,
@@ -247,6 +245,7 @@ export {
   isSameStep,
   createStep,
   addStep,
+  removeStep,
   getStepsCount,
   getStepIndex,
   getLastStep,

@@ -18,7 +18,7 @@ export interface NormalizedChapter {
   type: Chapter["type"];
   state: {
     title: Chapter["state"]["title"];
-    steps: Step["id"][];
+    steps: Step[];
     description?: Chapter["state"]["description"];
   };
 }

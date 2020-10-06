@@ -22,7 +22,7 @@ import Select, { OptionProps } from 'react-select';
 import { SelectComponentsProps } from 'react-select/base';
 import { FormCheckInputProps } from 'react-bootstrap/FormCheckInput';
 import Dropdown from 'react-bootstrap/Dropdown';
-import { ClassNameProps, ClickProps } from './_helpers';
+import { ClassNameProps, ClickProps, ContentEditableProps } from './_helpers';
 
 export type ButtonProps = {
   variant?: 'primary' | 'secondary' | 'regular' | 'danger' | 'ghost';
@@ -52,6 +52,7 @@ export declare interface TextProps {
   align?: 'center' | 'left' | 'right';
   fontSize?: FontSize;
   onClick?: ReactEventHandler;
+  contentEditable?: boolean;
 }
 
 type UIComponent<T = {}> = ComponentType<
@@ -72,7 +73,7 @@ export type UI = {
   Display1: UIComponent;
   Display2: UIComponent;
   Headline1: UIComponent;
-  Headline2: UIComponent;
+  Headline2: UIComponent<ContentEditableProps>;
   Headline3: UIComponent;
   Headline4: UIComponent;
   Headline5: UIComponent;

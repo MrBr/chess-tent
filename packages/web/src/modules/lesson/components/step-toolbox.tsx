@@ -66,6 +66,7 @@ export default (({
   text,
   addStepHandler,
   addExerciseHandler,
+  deleteStepHandler,
 }) => {
   return (
     <Container className="d-flex align-items-center h-100">
@@ -78,16 +79,33 @@ export default (({
       )}
       {active && (
         <ToolboxActions>
-          <Button
-            variant="regular"
-            size="extra-small"
-            onClick={addExerciseHandler}
-          >
-            Q
-          </Button>
-          <Button size="extra-small" variant="regular" onClick={addStepHandler}>
-            +
-          </Button>
+          {addExerciseHandler && (
+            <Button
+              variant="regular"
+              size="extra-small"
+              onClick={addExerciseHandler}
+            >
+              Q
+            </Button>
+          )}
+          {addStepHandler && (
+            <Button
+              size="extra-small"
+              variant="regular"
+              onClick={addStepHandler}
+            >
+              +
+            </Button>
+          )}
+          {deleteStepHandler && (
+            <Button
+              size="extra-small"
+              variant="regular"
+              onClick={deleteStepHandler}
+            >
+              x
+            </Button>
+          )}
         </ToolboxActions>
       )}
     </Container>

@@ -78,6 +78,7 @@ const StepperStep: DescriptionModule['StepperStep'] = ({
   activeStep,
   chapter,
   updateStep,
+  removeStep,
 }) => {
   const addDescriptionStep = useCallback(() => {
     const parentStep = getChapterParentStep(chapter, step);
@@ -88,6 +89,9 @@ const StepperStep: DescriptionModule['StepperStep'] = ({
     updateStep(addStepRightToSame(parentStep, newDescriptionStep));
     setActiveStep(newDescriptionStep);
   }, [chapter, step, updateStep, setActiveStep]);
+  const removeDescriptionStep = useCallback(() => {
+    removeStep(step);
+  }, [step, removeStep]);
 
   const handleStepClick = useCallback(
     event => {
@@ -113,6 +117,7 @@ const StepperStep: DescriptionModule['StepperStep'] = ({
               updateStep(updateStepState(step, { description }))
             }
             addStepHandler={addDescriptionStep}
+            deleteStepHandler={removeDescriptionStep}
           />
         </Col>
       </Row>

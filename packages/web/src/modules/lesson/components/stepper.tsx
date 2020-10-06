@@ -27,10 +27,10 @@ const Stepper = ({
         return (
           <StepRenderer<'StepperStep'>
             component="StepperStep"
-            step={child}
             key={`${child.id}-step`}
             activeStep={activeStep}
             {...systemProps}
+            step={child}
           />
         );
       })}

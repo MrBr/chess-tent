@@ -5,14 +5,14 @@ import {
   getNextStep,
   getParentStep,
   getPreviousStep,
+  getStepAt,
   getStepIndex,
   getStepPath,
   getStepsCount,
   isSameStep,
-  Step,
-  updateNestedStep,
-  updateStep
+  Step
 } from "../step";
+import { SubjectPath, updateSubjectValueAt } from "../subject";
 
 const isChapter = (entity: unknown) =>
   Object.getOwnPropertyDescriptor(entity, "type")?.value === TYPE_CHAPTER;
@@ -91,36 +91,27 @@ const getChapterStepPath = (chapter: Chapter, step: Step) => {
   for (let index = 0; index < chapter.state.steps.length; index++) {
     const childStep = chapter.state.steps[index];
     if (isSameStep(childStep, step)) {
-      return [index];
+      return ["state", "steps", index];
     }
     const path = getStepPath(childStep, step);
     if (path) {
-      path.unshift(index);
-      return path;
+      return ["state", "steps", index, ...path];
     }
   }
   return null;
 };
 
+const getChapterStepAt = (chapter: Chapter, stepPath: number[]) => {
+  const [rootStepIndex, ...nestedPath] = stepPath;
+  const parentStep = chapter.state.steps[rootStepIndex];
+  return nestedPath.length > 0 ? getStepAt(parentStep, nestedPath) : parentStep;
+};
+
 const updateChapterStep = (
   chapter: Chapter,
   patch: Partial<Step>,
-  path: number[]
-): Chapter => {
-  const [index, ...nestedPath] = path;
-  const steps = [...chapter.state.steps];
-  steps[index] =
-    nestedPath.length > 0
-      ? updateNestedStep(steps[index], patch, nestedPath)
-      : updateStep(steps[index], patch);
-  return {
-    ...chapter,
-    state: {
-      ...chapter.state,
-      steps
-    }
-  };
-};
+  path: SubjectPath
+) => updateSubjectValueAt(chapter, path, patch);
 
 const createChapter = (
   id: string,
@@ -142,5 +133,6 @@ export {
   isChapter,
   getChapterStepPath,
   createChapter,
-  updateChapterStep
+  updateChapterStep,
+  getChapterStepAt
 };

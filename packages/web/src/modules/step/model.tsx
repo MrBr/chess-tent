@@ -1,11 +1,13 @@
 import React, { ComponentType } from 'react';
 import { Step, StepType } from '@chess-tent/models';
 import { Components, FEN, Steps } from '@types';
-import { utils, stepModules } from '@application';
+import { utils, stepModules, constants } from '@application';
+
+const { START_FEN } = constants;
 
 const createStepModuleStep = <T extends Steps>(
   stepType: T extends Step<infer U, infer K> ? K : never,
-  initialPosition: FEN,
+  initialPosition: FEN = START_FEN,
   initialState?: Partial<T extends Step<infer U, infer K> ? U : never>,
 ): T => {
   return (stepModules[stepType]['createStep'](

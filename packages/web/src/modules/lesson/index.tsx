@@ -1,9 +1,11 @@
 import application from '@application';
 
 import {
-  setLessonActiveStepAction,
+  addLessonChapterAction,
+  updateLessonAction,
+  updateLessonChapterAction,
+  updateLessonStateAction,
   updateLessonStepAction,
-  updateLessonStepStateAction,
 } from './state/actions';
 import { lessonSelector } from './state/selectors';
 
@@ -11,9 +13,11 @@ application.register(() => import('./register'));
 application.register(() => import('./routes'));
 application.register(() => import('./requests'));
 
-application.state.actions.setLessonActiveStep = setLessonActiveStepAction;
-application.state.actions.updateLessonStepState = updateLessonStepStateAction;
 application.state.actions.updateLessonStep = updateLessonStepAction;
+application.state.actions.updateLessonState = updateLessonStateAction;
+application.state.actions.updateLessonChapter = updateLessonChapterAction;
+application.state.actions.addLessonChapter = addLessonChapterAction;
+application.state.actions.updateLesson = updateLessonAction;
 application.state.selectors.lessonSelector = lessonSelector;
 
 application.register(

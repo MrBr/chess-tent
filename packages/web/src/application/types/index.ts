@@ -41,13 +41,16 @@ import {
   StatusResponse,
   SendMessageAction,
   AppState,
-  SetLessonActiveStepAction,
   UpdateEntitiesAction,
   RecordValue,
   UpdateActivityStateAction,
   UpdateActivityAction,
   SetActivityActiveStepAction,
   UpdateLessonStepAction,
+  UpdateLessonAction,
+  AddLessonChapterAction,
+  UpdateLessonChapterAction,
+  UpdateLessonStateAction,
 } from '@chess-tent/types';
 import { ChessInstance } from 'chess.js';
 import { FEN, Move, Piece, PieceColor } from './chess';
@@ -173,10 +176,12 @@ export type State = {
   getRootReducer: () => Reducer;
   actions: {
     updateEntities: (entity: Entity | Entity[]) => UpdateEntitiesAction;
-    setLessonActiveStep: (
-      lessonId: Lesson['id'],
-      step: Step,
-    ) => SetLessonActiveStepAction;
+    updateLesson: (
+      lesson: Lesson,
+      patch:
+        | Partial<Omit<Lesson, 'state'>>
+        | { state: Partial<Lesson['state']> },
+    ) => UpdateLessonAction;
     updateActivityState: <T extends Activity>(
       activity: T,
       state: Partial<T extends Activity<infer K, infer S> ? S : never>,
@@ -199,12 +204,19 @@ export type State = {
       chapter: Chapter,
       step: T,
     ) => UpdateLessonStepAction;
-    updateLessonStepState: <T extends Step>(
+    addLessonChapter: (
       lesson: Lesson,
       chapter: Chapter,
-      step: T,
-      state: Partial<T['state']>,
-    ) => UpdateLessonStepAction;
+    ) => AddLessonChapterAction;
+    updateLessonChapter: (
+      lesson: Lesson,
+      chapter: Chapter,
+    ) => UpdateLessonChapterAction;
+    updateLessonState: <T extends keyof Lesson['state']>(
+      lesson: Lesson,
+      key: keyof Lesson['state'],
+      value: Lesson['state'][T],
+    ) => UpdateLessonStateAction;
   };
   selectors: {
     lessonSelector: (
@@ -252,9 +264,10 @@ export type Services = {
   isStepType: <T extends Steps>(step: Step, stepType: StepType) => step is T;
   createStep: <T extends Steps>(
     stepType: T extends Step<infer U, infer K> ? K : never,
-    initialPosition: FEN,
+    initialPosition?: FEN,
     initialState?: Partial<T extends Step<infer U, infer K> ? U : never>,
   ) => T;
+  createChapter: (title?: string, steps?: Step[]) => Chapter;
   history: History;
 };
 

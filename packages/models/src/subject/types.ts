@@ -3,3 +3,5 @@ export interface Subject {
   state: {};
   type: string;
 }
+
+export type SubjectPath = (string | number)[];

@@ -152,15 +152,8 @@ const Playground: VariationModule['Playground'] = ({
   return <Chessboard fen={position} shapes={shapes} footer={<Footer />} />;
 };
 
-const StepperStep: VariationModule['StepperStep'] = ({
-  step,
-  setActiveStep,
-  activeStep,
-  lesson,
-  chapter,
-  updateStep,
-  ...props
-}) => {
+const StepperStep: VariationModule['StepperStep'] = props => {
+  const { step, setActiveStep, activeStep, updateStep, removeStep } = props;
   const addDescriptionStep = useCallback(() => {
     const descriptionStep = services.createStep(
       'description',
@@ -168,6 +161,9 @@ const StepperStep: VariationModule['StepperStep'] = ({
     );
     updateStep(addStep(step, descriptionStep));
   }, [step, updateStep]);
+  const removeVariationStep = useCallback(() => {
+    removeStep(step);
+  }, [step, removeStep]);
   const handleStepClick = useCallback(
     event => {
       event.stopPropagation();
@@ -192,18 +188,11 @@ const StepperStep: VariationModule['StepperStep'] = ({
               updateStep(updateStepState(step, { description }))
             }
             addStepHandler={addDescriptionStep}
+            deleteStepHandler={removeVariationStep}
           />
         </Col>
       </Row>
-      <Stepper
-        {...props}
-        activeStep={activeStep}
-        steps={step.state.steps}
-        setActiveStep={setActiveStep}
-        lesson={lesson}
-        chapter={chapter}
-        updateStep={updateStep}
-      />
+      <Stepper {...props} steps={step.state.steps} />
     </Container>
   );
 };

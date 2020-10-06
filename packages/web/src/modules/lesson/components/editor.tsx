@@ -1,9 +1,12 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Chapter,
+  getChapterParentStep,
+  getChapterPreviousStep,
   getChapterStep,
   getLessonChapter,
   Lesson,
+  removeStep,
   Step,
 } from '@chess-tent/models';
 import { Components } from '@types';
@@ -83,6 +86,22 @@ const Editor: Components['Editor'] = ({ lesson, save }) => {
       dispatch(action);
     },
     [activeChapter, dispatch, lesson],
+  );
+  const deleteStep = useCallback(
+    (step: Step) => {
+      const parentStep = getChapterParentStep(activeChapter, step);
+      const newActiveStep = getChapterPreviousStep(activeChapter, step);
+      if (!newActiveStep) {
+        // Don't allow deleting first step (for now)
+        return;
+      }
+      updateStep(removeStep(parentStep, step));
+      history.replace({
+        pathname: history.location.pathname,
+        search: `?activeStep=${newActiveStep.id}`,
+      });
+    },
+    [activeChapter, history, updateStep],
   );
   const updateChapter = useCallback(
     (chapter: Chapter) => {
@@ -177,6 +196,7 @@ const Editor: Components['Editor'] = ({ lesson, save }) => {
             Chessboard={Chessboard}
             chapter={activeChapter}
             updateStep={updateStep}
+            removeStep={deleteStep}
           />
         </Col>
         <Col sm={5} xl={4}>
@@ -207,7 +227,7 @@ const Editor: Components['Editor'] = ({ lesson, save }) => {
             <Container>
               <Row>
                 <Col>
-                  <Headline2 contentEditable>Lesson</Headline2>
+                  <Headline2>Lesson</Headline2>
                 </Col>
               </Row>
               <Row>
@@ -230,6 +250,7 @@ const Editor: Components['Editor'] = ({ lesson, save }) => {
               setActiveStep={setActiveStepHandler}
               chapter={activeChapter}
               updateStep={updateStep}
+              removeStep={deleteStep}
             />
           </Sidebar>
         </Col>

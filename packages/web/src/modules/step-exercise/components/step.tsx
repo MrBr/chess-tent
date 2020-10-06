@@ -10,7 +10,7 @@ import ExerciseEditor from './editor';
 import ExercisePlayground from './playground';
 
 const { Col, Row, Container, Dropdown } = ui;
-const { StepTag } = components;
+const { StepTag, StepToolbox } = components;
 
 const stepType = 'exercise';
 
@@ -45,13 +45,16 @@ const StepperStep: ExerciseModule['StepperStep'] = ({
   activeStep,
   chapter,
   lesson,
+  removeStep,
   updateStep,
 }) => {
   const selectedTypeDescriptor = useMemo(
     () => exerciseTypes.find(({ type }) => type === step.state.exerciseType),
     [step.state.exerciseType],
   );
-
+  const removeExerciseStep = useCallback(() => {
+    removeStep(step);
+  }, [step, removeStep]);
   const handleStepClick = useCallback(
     event => {
       event.stopPropagation();
@@ -98,6 +101,10 @@ const StepperStep: ExerciseModule['StepperStep'] = ({
             lesson={lesson}
             chapter={chapter}
             updateStep={updateStep}
+          />
+          <StepToolbox
+            deleteStepHandler={removeExerciseStep}
+            active={activeStep === step}
           />
         </Col>
       </Row>

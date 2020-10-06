@@ -59,9 +59,9 @@ export default () => {
   const saveLesson = useCallback(() => {
     const saveLessonPromise = requests.lessonSave(lesson);
     saveLessonPromise.then(() => {
-      const activeStep = new URLSearchParams(history.location.search).get(
-        'activeStep',
-      );
+      const activeStep =
+        new URLSearchParams(history.location.search).get('activeStep') ||
+        lesson.state.chapters[0].state.steps[0].id;
       history.replace(`/lesson/${lesson.id}?activeStep=${activeStep}`);
     });
     return saveLessonPromise;

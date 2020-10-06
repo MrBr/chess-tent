@@ -181,15 +181,8 @@ const Playground: MoveModule['Playground'] = ({ Chessboard, step, Footer }) => {
   return <Chessboard fen={position} shapes={shapes} footer={<Footer />} />;
 };
 
-const StepperStep: MoveModule['StepperStep'] = ({
-  step,
-  setActiveStep,
-  activeStep,
-  lesson,
-  chapter,
-  updateStep,
-  ...props
-}) => {
+const StepperStep: MoveModule['StepperStep'] = props => {
+  const { step, setActiveStep, activeStep, updateStep, removeStep } = props;
   const addDescriptionStep = useCallback(() => {
     const descriptionStep = services.createStep(
       'description',
@@ -197,6 +190,9 @@ const StepperStep: MoveModule['StepperStep'] = ({
     );
     updateStep(addStep(step, descriptionStep));
   }, [step, updateStep]);
+  const removeMoveStep = useCallback(() => {
+    removeStep(step);
+  }, [step, removeStep]);
   const addExerciseStep = useCallback(() => {
     const exerciseStep = services.createStep('exercise', step.state.position);
     updateStep(addStep(step, exerciseStep));
@@ -237,19 +233,12 @@ const StepperStep: MoveModule['StepperStep'] = ({
             }
             addStepHandler={addDescriptionStep}
             addExerciseHandler={addExerciseStep}
+            deleteStepHandler={removeMoveStep}
           />
         </Col>
       </Row>
       <StepperStepContainer>
-        <Stepper
-          {...props}
-          activeStep={activeStep}
-          steps={step.state.steps}
-          setActiveStep={setActiveStep}
-          lesson={lesson}
-          chapter={chapter}
-          updateStep={updateStep}
-        />
+        <Stepper {...props} steps={step.state.steps} />
       </StepperStepContainer>
     </Container>
   );

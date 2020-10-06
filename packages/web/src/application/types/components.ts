@@ -17,7 +17,7 @@ import {
   Shape,
   ExtendedKey,
 } from './chess';
-import { StepSystemProps } from './step';
+import { EditorProps, StepSystemProps } from './step';
 
 export interface ChessboardState {
   renderPrompt?: (close: () => void) => ReactElement;
@@ -73,13 +73,14 @@ export interface ChessboardInterface
 export type StepperProps = {
   steps: Step[];
   className?: string;
-  updateStep: <T extends Step>(step: T) => void;
-} & StepSystemProps;
+} & StepSystemProps &
+  EditorProps;
 
 export type StepToolbox = FunctionComponent<{
   active: boolean;
   addStepHandler?: () => void;
   addExerciseHandler?: () => void;
+  deleteStepHandler?: () => void;
   textChangeHandler?: (text: string) => void;
   text?: string;
 }>;

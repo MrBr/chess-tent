@@ -156,6 +156,18 @@ const addStep = (parentStep: Step, step: Step): Step => {
   };
 };
 
+const removeStep = (parentStep: Step, step: Step): Step => {
+  return {
+    ...parentStep,
+    state: {
+      ...parentStep.state,
+      steps: parentStep.state.steps.filter(childStep =>
+        isSameStep(childStep, step) ? false : true
+      )
+    }
+  };
+};
+
 const addStepRightToSame = (step: Step, newStep: Step) => {
   const newStepIndex = step.state.steps.findIndex(
     childStep => childStep.stepType !== newStep.stepType
@@ -233,6 +245,7 @@ export {
   isSameStep,
   createStep,
   addStep,
+  removeStep,
   getStepsCount,
   getStepIndex,
   getLastStep,

@@ -20,6 +20,10 @@ export type StepProps<S extends Step, P = {}> = {
   step: S;
 } & StepSystemProps &
   P;
+export interface EditorProps {
+  updateStep: (step: Step) => void;
+  removeStep: (step: Step) => void;
+}
 
 export type StepComponent<S extends Step, P extends {} = {}> = ComponentType<
   StepProps<S, P>
@@ -38,10 +42,7 @@ export type StepModule<
   K extends StepType = StepType,
   U extends {} = {}
 > = {
-  Editor: StepComponent<
-    T,
-    { updateStep: (step: Step) => void } & StepBoardComponentProps
-  >;
+  Editor: StepComponent<T, EditorProps & StepBoardComponentProps>;
   Playground: StepComponent<
     T,
     {
@@ -54,7 +55,7 @@ export type StepModule<
       completeStep: (step: Step) => void;
     } & StepBoardComponentProps
   >;
-  StepperStep: StepComponent<T, { updateStep: (step: Step) => void }>;
+  StepperStep: StepComponent<T, EditorProps>;
   stepType: K;
   createStep: (
     id: string,

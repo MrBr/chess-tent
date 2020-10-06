@@ -19,7 +19,12 @@ const { Container, Row, Col, Headline2, Button } = ui;
 const { createChapter } = services;
 const { Stepper, StepRenderer, Chessboard } = components;
 const {
-  actions: { updateLessonStep, addLessonChapter, updateLessonChapter },
+  actions: {
+    updateLessonStep,
+    addLessonChapter,
+    updateLessonChapter,
+    updateLessonState,
+  },
 } = state;
 const {
   useDispatchBatched,
@@ -92,8 +97,23 @@ const Editor: Components['Editor'] = ({ lesson, save }) => {
     const action = addLessonChapter(lesson, newChapter);
     addLessonUpdate(action);
     dispatch(action);
-    history.push(location.pathname + '?activeChapter=' + newChapter.id);
+    history.push({
+      pathname: location.pathname,
+      search: 'activeChapter=' + newChapter.id,
+    });
   }, [dispatch, history, lesson, location.pathname]);
+  const removeChapter = useCallback(
+    (chapter: Chapter) => {
+      const newChapters = lesson.state.chapters.filter(
+        ({ id }) => id !== chapter.id,
+      );
+      const action = updateLessonState(lesson, 'chapters', newChapters);
+      addLessonUpdate(action);
+      dispatch(action);
+      history.replace(location.pathname);
+    },
+    [dispatch, history, lesson, location.pathname],
+  );
   const updateChapterTitle = useCallback(
     (title: string) => {
       updateChapter({
@@ -198,6 +218,7 @@ const Editor: Components['Editor'] = ({ lesson, save }) => {
                     onChange={setActiveChapterHandler}
                     onEdit={updateChapterTitle}
                     onNew={addNewChapter}
+                    onRemove={removeChapter}
                   />
                 </Col>
               </Row>

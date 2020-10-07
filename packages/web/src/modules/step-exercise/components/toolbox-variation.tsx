@@ -30,8 +30,8 @@ export default ({ step, updateStep }: ExerciseToolboxProps) => {
         placeholder="The task.."
         onChange={updateQuestion}
       />
-      <Container>
-        <Text>Moves:</Text>
+      <Container className="p-0">
+        <Text inline>Moves: </Text>
         <Text inline onClick={() => updateActiveMoveIndex(undefined)}>
           FEN
         </Text>

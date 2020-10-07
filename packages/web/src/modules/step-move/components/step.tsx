@@ -84,15 +84,8 @@ const boardChange = (
     movedPiece.color === 'white'
       ? step.state.moveIndex + 1
       : step.state.moveIndex;
-  const parentStep = getChapterParentStep(chapter, step) as VariationStep;
-  const previousPiece = getPiece(position, move[1]) as Piece;
-  const newMoveStep = services.createStep<MoveStep>('move', newPosition, {
-    move: newMove,
-    moveIndex: moveIndex,
-    movedPiece,
-    captured,
-  });
 
+  const previousPiece = getPiece(position, move[1]) as Piece;
   if (movedPiece.color === previousPiece.color) {
     // New example
     const newVariationStep = services.createStep<VariationStep>(
@@ -109,21 +102,27 @@ const boardChange = (
     return;
   }
 
+  const parentStep = getChapterParentStep(chapter, step) as VariationStep;
   if (!isLastStep(parentStep, step, false)) {
     // New variation
     const newVariationStep = services.createStep<VariationStep>(
       'variation',
       newPosition,
       {
-        steps: [newMoveStep],
         moveIndex,
       },
     );
     updateStep(addStep(step, newVariationStep));
-    setActiveStep(newMoveStep);
+    setActiveStep(newVariationStep);
     return;
   }
 
+  const newMoveStep = services.createStep<MoveStep>('move', newPosition, {
+    move: newMove,
+    moveIndex: moveIndex,
+    movedPiece,
+    captured,
+  });
   // Continuing the current variation
   updateStep(addStep(parentStep, newMoveStep));
   setActiveStep(newMoveStep);

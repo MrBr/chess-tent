@@ -54,7 +54,7 @@ const ToolboxActions = styled.div({
   display: 'flex',
   flexDirection: 'column',
   position: 'absolute',
-  right: 0,
+  right: -16,
   top: '50%',
   transform: 'translateY(-50%)',
   zIndex: 10,
@@ -67,10 +67,11 @@ export default (({
   addStepHandler,
   addExerciseHandler,
   deleteStepHandler,
+  showInput = true,
 }) => {
   return (
-    <Container className="d-flex align-items-center h-100">
-      {(text || active) && (
+    <Container className="d-flex align-items-center h-100 pr-0">
+      {(text || active) && showInput && (
         <ToolboxText
           onChange={textChangeHandler}
           defaultText={text}

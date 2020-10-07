@@ -32,13 +32,13 @@ export const reducer = (
       };
     }
     case UPDATE_LESSON_STATE: {
-      const { lessonId, path } = action.meta;
+      const { lessonId } = action.meta;
       const lesson = state[lessonId];
       return {
         ...state,
         [lessonId]: {
           ...lesson,
-          state: { ...lesson.state, [path[0]]: action.payload },
+          state: { ...lesson.state, ...action.payload },
         },
       };
     }

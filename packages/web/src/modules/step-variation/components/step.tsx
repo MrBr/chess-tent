@@ -19,8 +19,9 @@ import {
 } from '@types';
 import { components, services, ui } from '@application';
 import Footer from './footer';
+import BoardSrc from '../images/board.svg';
 
-const { Col, Row, Container } = ui;
+const { Col, Row, Container, Img } = ui;
 const { Stepper, StepTag, StepToolbox } = components;
 
 const stepType = 'variation';
@@ -177,7 +178,7 @@ const StepperStep: VariationModule['StepperStep'] = props => {
       <Row className="no-gutters">
         <Col className="col-auto">
           <StepTag step={step} active={activeStep === step}>
-            fen
+            <Img src={BoardSrc} style={{ background: '#ffffff' }}></Img>
           </StepTag>
         </Col>
         <Col>

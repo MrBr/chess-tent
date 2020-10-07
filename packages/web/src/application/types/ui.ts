@@ -1,4 +1,6 @@
 import {
+  Component,
+  ComponentProps,
   ComponentType,
   ReactElement,
   ReactEventHandler,
@@ -14,6 +16,7 @@ import {
   ModalProps as BModalProps,
   RowProps,
 } from 'react-bootstrap';
+import DropdownToggle from 'react-bootstrap/DropdownToggle';
 import { ErrorMessageProps, Formik } from 'formik';
 import FormCheck from 'react-bootstrap/FormCheck';
 import FormControl from 'react-bootstrap/FormControl';
@@ -58,6 +61,17 @@ export declare interface TextProps {
 type UIComponent<T = {}> = ComponentType<
   T & { className?: string; defaultProps?: Partial<T & { className: string }> }
 >;
+class D extends Component<ComponentProps<typeof Dropdown>> {
+  static Toggle: ComponentType<
+    ComponentProps<typeof DropdownToggle> & {
+      size?: 'regular' | 'small' | 'extra-small';
+    }
+  >;
+  static Menu: typeof Dropdown['Menu'];
+  static Item: typeof Dropdown['Item'];
+  static Divider: typeof Dropdown['Divider'];
+  static Header: typeof Dropdown['Header'];
+}
 
 export type UI = {
   Form: typeof Formik & {
@@ -78,9 +92,13 @@ export type UI = {
   Headline4: UIComponent;
   Headline5: UIComponent;
   Headline6: UIComponent;
-  Img: ComponentType<{ src: string | undefined; className?: string }>;
+  Img: ComponentType<{
+    src: string | undefined;
+    className?: string;
+    style?: {};
+  }>;
   FramedProfile: ComponentType<{ src: string | undefined }>;
-  Dropdown: typeof Dropdown;
+  Dropdown: typeof D;
   Avatar: ComponentType<{
     src: string | undefined;
     size?: 'regular' | 'small' | 'large';

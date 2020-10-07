@@ -83,6 +83,7 @@ export type StepToolbox = FunctionComponent<{
   deleteStepHandler?: () => void;
   textChangeHandler?: (text: string) => void;
   text?: string;
+  showInput?: boolean;
 }>;
 
 export type LessonPlayground = FunctionComponent<{

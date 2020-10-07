@@ -31,12 +31,19 @@ export default ({ step, updateStep }: ExerciseToolboxProps) => {
         onChange={updateQuestion}
       />
       <Container className="p-0">
-        <Text inline>Moves: </Text>
-        <Text inline onClick={() => updateActiveMoveIndex(undefined)}>
+        <Text inline fontSize="small">
+          Moves:{' '}
+        </Text>
+        <Text
+          inline
+          fontSize="small"
+          onClick={() => updateActiveMoveIndex(undefined)}
+        >
           FEN
         </Text>
         {moves?.map((move, index) => (
           <Text
+            fontSize="small"
             inline
             weight={activeMoveIndex === index ? 700 : 500}
             onClick={() => updateActiveMoveIndex(index)}

@@ -8,6 +8,7 @@ import {
   Chapter,
   updateStepState,
   Step,
+  addStepToLeft,
 } from '@chess-tent/models';
 import {
   FEN,
@@ -160,11 +161,16 @@ const StepperStep: VariationModule['StepperStep'] = props => {
       'description',
       step.state.position,
     );
-    updateStep(addStep(step, descriptionStep));
+    updateStep(addStepToLeft(step, descriptionStep));
   }, [step, updateStep]);
   const removeVariationStep = useCallback(() => {
     removeStep(step);
   }, [step, removeStep]);
+  const addExerciseStep = useCallback(() => {
+    const exerciseStep = services.createStep('exercise', step.state.position);
+    updateStep(addStepToLeft(step, exerciseStep));
+    setActiveStep(exerciseStep);
+  }, [setActiveStep, step, updateStep]);
   const handleStepClick = useCallback(
     event => {
       event.stopPropagation();
@@ -190,6 +196,7 @@ const StepperStep: VariationModule['StepperStep'] = props => {
             }
             addStepHandler={addDescriptionStep}
             deleteStepHandler={removeVariationStep}
+            addExerciseHandler={addExerciseStep}
           />
         </Col>
       </Row>

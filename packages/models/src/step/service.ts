@@ -155,6 +155,15 @@ const addStep = (parentStep: Step, step: Step): Step => {
     }
   };
 };
+const addStepToLeft = (parentStep: Step, step: Step): Step => {
+  return {
+    ...parentStep,
+    state: {
+      ...parentStep.state,
+      steps: [step, ...parentStep.state.steps]
+    }
+  };
+};
 
 const removeStep = (parentStep: Step, step: Step): Step => {
   return {
@@ -259,5 +268,6 @@ export {
   updateNestedStep,
   updateStep,
   updateStepState,
-  getStepAt
+  getStepAt,
+  addStepToLeft
 };

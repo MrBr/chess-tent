@@ -95,6 +95,7 @@ export type LessonToolboxText = FunctionComponent<{
   onChange?: (text: string) => void;
   defaultText?: string;
   placeholder?: string;
+  className?: string;
 }>;
 
 // Move written in chess notation

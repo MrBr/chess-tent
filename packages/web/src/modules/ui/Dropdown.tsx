@@ -9,12 +9,14 @@ const sizeEnhancer = (props: ComponentProps<UI['Dropdown']['Toggle']>) => {
       return {
         fontSize: 12,
         padding: '2px 8px 3px 8px',
+        lineHeight: '19px',
         borderRadius: 4,
       };
     case 'small':
       return {
         borderRadius: 6,
         fontSize: 14,
+        lineHeight: '16px',
         padding: '7px 12px 8px 12px',
       };
     default:

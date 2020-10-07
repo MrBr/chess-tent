@@ -81,7 +81,7 @@ const StepperStep: ExerciseModule['StepperStep'] = ({
               );
             }}
           >
-            <Dropdown.Toggle id="exercises" size="small" variant="secondary">
+            <Dropdown.Toggle id="exercises" size="extra-small" className="mb-2">
               {selectedTypeDescriptor?.text || 'Choose type'}
             </Dropdown.Toggle>
             <Dropdown.Menu>

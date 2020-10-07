@@ -9,6 +9,7 @@ import {
   Chapter,
   Step,
   updateStepState,
+  addStepToLeft,
 } from '@chess-tent/models';
 import { FEN, Move, MoveModule, MoveStep, Piece, VariationStep } from '@types';
 import { services, components, ui } from '@application';
@@ -187,15 +188,17 @@ const StepperStep: MoveModule['StepperStep'] = props => {
       'description',
       step.state.position,
     );
-    updateStep(addStep(step, descriptionStep));
-  }, [step, updateStep]);
+    updateStep(addStepToLeft(step, descriptionStep));
+    setActiveStep(descriptionStep);
+  }, [setActiveStep, step, updateStep]);
   const removeMoveStep = useCallback(() => {
     removeStep(step);
   }, [step, removeStep]);
   const addExerciseStep = useCallback(() => {
     const exerciseStep = services.createStep('exercise', step.state.position);
     updateStep(addStep(step, exerciseStep));
-  }, [step, updateStep]);
+    setActiveStep(exerciseStep);
+  }, [setActiveStep, step, updateStep]);
 
   const handleStepClick = useCallback(
     event => {

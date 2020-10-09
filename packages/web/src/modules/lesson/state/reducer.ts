@@ -5,7 +5,7 @@ import {
   UPDATE_ENTITIES,
   UPDATE_LESSON,
   UPDATE_LESSON_CHAPTER,
-  UPDATE_LESSON_STATE,
+  UPDATE_LESSON_PATH,
   UPDATE_LESSON_STEP,
 } from '@types';
 import {
@@ -13,6 +13,7 @@ import {
   Lesson,
   NormalizedLesson,
   updateLessonStep,
+  updateSubjectValueAt,
 } from '@chess-tent/models';
 
 export const reducer = (
@@ -31,15 +32,12 @@ export const reducer = (
         ) as unknown) as NormalizedLesson,
       };
     }
-    case UPDATE_LESSON_STATE: {
-      const { lessonId } = action.meta;
+    case UPDATE_LESSON_PATH: {
+      const { lessonId, path } = action.meta;
       const lesson = state[lessonId];
       return {
         ...state,
-        [lessonId]: {
-          ...lesson,
-          state: { ...lesson.state, ...action.payload },
-        },
+        [lessonId]: updateSubjectValueAt(lesson, path, action.payload),
       };
     }
     case ADD_LESSON_CHAPTER: {

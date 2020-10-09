@@ -50,7 +50,7 @@ import {
   UpdateLessonAction,
   AddLessonChapterAction,
   UpdateLessonChapterAction,
-  UpdateLessonStateAction,
+  UpdateLessonPathAction,
 } from '@chess-tent/types';
 import { ChessInstance } from 'chess.js';
 import { FEN, Move, Piece, PieceColor } from './chess';
@@ -212,11 +212,11 @@ export type State = {
       lesson: Lesson,
       chapter: Chapter,
     ) => UpdateLessonChapterAction;
-    updateLessonState: <T extends keyof Lesson['state']>(
+    updateLessonPath: <T extends keyof Lesson, K extends keyof Lesson['state']>(
       lesson: Lesson,
-      key: keyof Lesson['state'],
-      value: Lesson['state'][T],
-    ) => UpdateLessonStateAction;
+      path: T extends 'state' ? [T, K] : [T],
+      value: T extends 'state' ? Lesson[T][K] : Lesson[T],
+    ) => UpdateLessonPathAction;
   };
   selectors: {
     lessonSelector: (

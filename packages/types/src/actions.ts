@@ -21,7 +21,7 @@ export const UPDATE_ENTITIES = "UPDATE_ENTITIES";
 export const UPDATE_LESSON_STEP = "UPDATE_LESSON_STEP";
 export const UPDATE_LESSON_CHAPTER = "UPDATE_LESSON_CHAPTER";
 export const ADD_LESSON_CHAPTER = "ADD_LESSON_CHAPTER";
-export const UPDATE_LESSON_STATE = "UPDATE_LESSON_STATE";
+export const UPDATE_LESSON_PATH = "UPDATE_LESSON_PATH";
 export const UPDATE_LESSON = "UPDATE_LESSON";
 
 export const SET_ACTIVITY_ACTIVE_STEP = "SET_ACTIVITY_ACTIVE_STEP";
@@ -98,12 +98,15 @@ export type UpdateLessonStepAction = Action<
   { lessonId: Lesson["id"]; chapterId: Chapter["id"]; path: SubjectPath }
 >;
 
-export type UpdateLessonStateAction = Action<
-  typeof UPDATE_LESSON_STATE,
-  Partial<Omit<NormalizedLesson["state"], "chapters">>,
+export type UpdateLessonPathAction<
+  T extends keyof Lesson = keyof Lesson,
+  K extends keyof Lesson["state"] = keyof Lesson["state"]
+> = Action<
+  typeof UPDATE_LESSON_PATH,
+  T extends "state" ? Lesson[T][K] : Lesson[T],
   {
     lessonId: Lesson["id"];
-    path: SubjectPath;
+    path: T extends "state" ? [T, K] : [T];
   }
 >;
 export type UpdateLessonAction = Action<
@@ -115,7 +118,7 @@ export type UpdateLessonAction = Action<
 export type LessonAction =
   | UpdateEntitiesAction
   | UpdateLessonAction
-  | UpdateLessonStateAction
+  | UpdateLessonPathAction
   | UpdateLessonStepAction
   | UpdateLessonChapterAction
   | AddLessonChapterAction;

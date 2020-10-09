@@ -1,6 +1,7 @@
 import React, { ComponentProps, FormEvent, useMemo } from 'react';
 import {
   Chapter,
+  Difficulty,
   getChapterParentStep,
   getChapterPreviousStep,
   getChapterStep,
@@ -9,13 +10,19 @@ import {
   removeStep,
   Step,
 } from '@chess-tent/models';
-import { Action, Components, LessonUpdates } from '@types';
+import {
+  Actions,
+  Components,
+  LessonUpdatableAction,
+  LessonUpdates,
+} from '@types';
 import { debounce } from 'lodash';
-import { services, state, hooks, components, ui } from '@application';
+import { components, hooks, services, state, ui } from '@application';
 import TrainingModal from './trening-assign';
 import Sidebar from './sidebar';
 import { PreviewModal } from './activity-preview';
 import ChaptersDropdown from './chapters-dropdown';
+import DifficultyDropdown from './difficulty-dropdown';
 import { addLessonUpdate, getLessonUpdates } from '../service';
 
 const { Container, Row, Col, Headline2, Button } = ui;
@@ -26,7 +33,7 @@ const {
     updateLessonStep,
     addLessonChapter,
     updateLessonChapter,
-    updateLessonState,
+    updateLessonPath,
   },
 } = state;
 const {
@@ -41,7 +48,7 @@ type EditorRendererProps = ComponentProps<Components['Editor']> & {
   activeChapter: Chapter;
   activeStep: Step;
   lessonUpdate: (lessonId: Lesson['id'], updates: LessonUpdates) => void;
-  dispatch: (action: Action<any, any>) => void;
+  dispatch: (action: Actions) => void;
   history: ReturnType<typeof useHistory>;
   location: ReturnType<typeof useLocation>;
   promptModal: ReturnType<typeof usePromptModal>;
@@ -67,6 +74,12 @@ class EditorRenderer extends React.Component<
       this.setState({ dirty: true });
       this.lessonUpdateThrottle(lesson);
     }
+  }
+
+  addLessonUpdate(action: LessonUpdatableAction) {
+    const { dispatch } = this.props;
+    addLessonUpdate(action);
+    dispatch(action);
   }
 
   setActiveStepHandler = (step: Step) => {
@@ -95,10 +108,9 @@ class EditorRenderer extends React.Component<
   );
 
   updateLessonTitleDebounced = debounce(title => {
-    const { lesson, dispatch } = this.props;
-    const action = updateLessonState(lesson, 'title', title);
-    addLessonUpdate(action);
-    dispatch(action);
+    const { lesson } = this.props;
+    const action = updateLessonPath(lesson, ['state', 'title'], title);
+    this.addLessonUpdate(action);
   }, 500);
 
   updateLessonTitle = (event: FormEvent<HTMLHeadingElement>) => {
@@ -112,11 +124,16 @@ class EditorRenderer extends React.Component<
     this.updateLessonTitleDebounced(elem.innerText);
   };
 
+  updateLessonDifficulty = (difficulty: Difficulty) => {
+    const { lesson } = this.props;
+    const action = updateLessonPath(lesson, ['difficulty'], difficulty);
+    this.addLessonUpdate(action);
+  };
+
   updateStep = (step: Step) => {
-    const { dispatch, lesson, activeChapter } = this.props;
+    const { lesson, activeChapter } = this.props;
     const action = updateLessonStep(lesson, activeChapter, step);
-    addLessonUpdate(action);
-    dispatch(action);
+    this.addLessonUpdate(action);
   };
 
   deleteStep = (step: Step) => {
@@ -135,24 +152,22 @@ class EditorRenderer extends React.Component<
   };
 
   updateChapter = (chapter: Chapter) => {
-    const { dispatch, lesson } = this.props;
+    const { lesson } = this.props;
     const action = updateLessonChapter(lesson, chapter);
-    addLessonUpdate(action);
-    dispatch(action);
+    this.addLessonUpdate(action);
   };
   addNewChapter = () => {
-    const { dispatch, history, lesson, location } = this.props;
+    const { history, lesson, location } = this.props;
     const newChapter = createChapter();
     const action = addLessonChapter(lesson, newChapter);
-    addLessonUpdate(action);
-    dispatch(action);
+    this.addLessonUpdate(action);
     history.push({
       pathname: location.pathname,
       search: 'activeChapter=' + newChapter.id,
     });
   };
   removeChapter = (chapter: Chapter) => {
-    const { dispatch, history, lesson, location } = this.props;
+    const { history, lesson, location } = this.props;
     const newChapters = lesson.state.chapters.filter(
       ({ id }) => id !== chapter.id,
     );
@@ -160,9 +175,8 @@ class EditorRenderer extends React.Component<
       // Don't allow deleting last chapter
       return;
     }
-    const action = updateLessonState(lesson, 'chapters', newChapters);
-    addLessonUpdate(action);
-    dispatch(action);
+    const action = updateLessonPath(lesson, ['state', 'chapters'], newChapters);
+    this.addLessonUpdate(action);
     history.replace(location.pathname);
   };
   updateChapterTitle = (title: string) => {
@@ -234,6 +248,16 @@ class EditorRenderer extends React.Component<
               >
                 Preview
               </Button>
+              <Container>
+                <Row>
+                  <Col>
+                    <DifficultyDropdown
+                      difficulty={lesson.difficulty}
+                      onChange={this.updateLessonDifficulty}
+                    />
+                  </Col>
+                </Row>
+              </Container>
               <Container>
                 <Row>
                   <Col>

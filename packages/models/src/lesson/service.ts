@@ -1,8 +1,9 @@
-import { Lesson, NormalizedLesson, TYPE_LESSON } from "./types";
+import { Difficulty, Lesson, NormalizedLesson, TYPE_LESSON } from "./types";
 import { User } from "../user";
 import { Step } from "../step";
-import { getChapterStepPath, Chapter } from "../chapter";
+import { Chapter, getChapterStepPath } from "../chapter";
 import { SubjectPath, updateSubjectValueAt } from "../subject";
+import { Tag } from "../tag";
 
 const isLesson = (entity: unknown) =>
   Object.getOwnPropertyDescriptor(entity, "type")?.value === TYPE_LESSON;
@@ -67,11 +68,15 @@ const createLesson = (
   id: string,
   chapters: Chapter[],
   owner: User,
-  title = "Lesson"
+  title = "Lesson",
+  difficulty: Difficulty = Difficulty.BEGINNER,
+  tags: Tag[] = []
 ): Lesson => ({
   id,
   type: TYPE_LESSON,
   owner,
+  difficulty,
+  tags,
   state: { chapters, title }
 });
 

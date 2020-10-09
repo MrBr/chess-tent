@@ -1,10 +1,11 @@
-import { User } from "./user/types";
-import { Lesson } from "./lesson/types";
-import { Step } from "./step/types";
-import { Activity } from "./activity/types";
-import { Conversation } from "./conversation/types";
-import { Chapter } from "./chapter/types";
+import { User } from "./user";
+import { Lesson } from "./lesson";
+import { Step } from "./step";
+import { Activity } from "./activity";
+import { Conversation } from "./conversation";
+import { Chapter } from "./chapter";
 import { Message } from "./message";
+import { Tag } from "./tag";
 
 export * from "./subject";
 export * from "./conversation";
@@ -15,6 +16,7 @@ export * from "./lesson";
 export * from "./user";
 export * from "./chapter";
 export * from "./mentorship";
+export * from "./tag";
 
 export type Entity =
   | User
@@ -23,4 +25,5 @@ export type Entity =
   | Activity
   | Conversation
   | Chapter
-  | Message;
+  | Message
+  | Tag;

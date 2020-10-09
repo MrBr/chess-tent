@@ -4,7 +4,7 @@ import {
   addLessonChapterAction,
   updateLessonAction,
   updateLessonChapterAction,
-  updateLessonStateAction,
+  updateLessonPathAction,
   updateLessonStepAction,
 } from './state/actions';
 import { lessonSelector } from './state/selectors';
@@ -14,7 +14,7 @@ application.register(() => import('./routes'));
 application.register(() => import('./requests'));
 
 application.state.actions.updateLessonStep = updateLessonStepAction;
-application.state.actions.updateLessonState = updateLessonStateAction;
+application.state.actions.updateLessonPath = updateLessonPathAction;
 application.state.actions.updateLessonChapter = updateLessonChapterAction;
 application.state.actions.addLessonChapter = addLessonChapterAction;
 application.state.actions.updateLesson = updateLessonAction;

@@ -83,6 +83,7 @@ export type StepToolbox = FunctionComponent<{
   deleteStepHandler?: () => void;
   textChangeHandler?: (text: string) => void;
   text?: string;
+  showInput?: boolean;
 }>;
 
 export type LessonPlayground = FunctionComponent<{
@@ -94,6 +95,7 @@ export type LessonToolboxText = FunctionComponent<{
   onChange?: (text: string) => void;
   defaultText?: string;
   placeholder?: string;
+  className?: string;
 }>;
 
 // Move written in chess notation

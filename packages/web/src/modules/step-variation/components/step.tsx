@@ -8,6 +8,7 @@ import {
   Chapter,
   updateStepState,
   Step,
+  addStepToLeft,
 } from '@chess-tent/models';
 import {
   FEN,
@@ -19,8 +20,9 @@ import {
 } from '@types';
 import { components, services, ui } from '@application';
 import Footer from './footer';
+import BoardSrc from '../images/board.svg';
 
-const { Col, Row, Container } = ui;
+const { Col, Row, Container, Img } = ui;
 const { Stepper, StepTag, StepToolbox } = components;
 
 const stepType = 'variation';
@@ -159,11 +161,16 @@ const StepperStep: VariationModule['StepperStep'] = props => {
       'description',
       step.state.position,
     );
-    updateStep(addStep(step, descriptionStep));
+    updateStep(addStepToLeft(step, descriptionStep));
   }, [step, updateStep]);
   const removeVariationStep = useCallback(() => {
     removeStep(step);
   }, [step, removeStep]);
+  const addExerciseStep = useCallback(() => {
+    const exerciseStep = services.createStep('exercise', step.state.position);
+    updateStep(addStepToLeft(step, exerciseStep));
+    setActiveStep(exerciseStep);
+  }, [setActiveStep, step, updateStep]);
   const handleStepClick = useCallback(
     event => {
       event.stopPropagation();
@@ -177,7 +184,7 @@ const StepperStep: VariationModule['StepperStep'] = props => {
       <Row className="no-gutters">
         <Col className="col-auto">
           <StepTag step={step} active={activeStep === step}>
-            fen
+            <Img src={BoardSrc} style={{ background: '#ffffff' }}></Img>
           </StepTag>
         </Col>
         <Col>
@@ -189,6 +196,7 @@ const StepperStep: VariationModule['StepperStep'] = props => {
             }
             addStepHandler={addDescriptionStep}
             deleteStepHandler={removeVariationStep}
+            addExerciseHandler={addExerciseStep}
           />
         </Col>
       </Row>

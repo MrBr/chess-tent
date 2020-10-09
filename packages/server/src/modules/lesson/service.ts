@@ -34,6 +34,7 @@ export const getLesson = (lessonId: Lesson["id"]): Promise<Lesson | null> =>
   new Promise(resolve => {
     LessonModel.findById(lessonId)
       .populate("owner")
+      .populate("tags")
       .exec((err, result) => {
         if (err) {
           throw err;
@@ -68,6 +69,7 @@ export const findLessons = (lesson: Partial<Lesson>): Promise<Lesson[]> =>
   new Promise(resolve => {
     LessonModel.find(LessonModel.translateAliases(lesson))
       .populate("owner")
+      .populate("tags")
       .exec((err, result) => {
         if (err) {
           throw err;

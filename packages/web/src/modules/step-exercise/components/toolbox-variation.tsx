@@ -30,13 +30,20 @@ export default ({ step, updateStep }: ExerciseToolboxProps) => {
         placeholder="The task.."
         onChange={updateQuestion}
       />
-      <Container>
-        <Text>Moves:</Text>
-        <Text inline onClick={() => updateActiveMoveIndex(undefined)}>
+      <Container className="p-0">
+        <Text inline fontSize="small">
+          Moves:{' '}
+        </Text>
+        <Text
+          inline
+          fontSize="small"
+          onClick={() => updateActiveMoveIndex(undefined)}
+        >
           FEN
         </Text>
         {moves?.map((move, index) => (
           <Text
+            fontSize="small"
             inline
             weight={activeMoveIndex === index ? 700 : 500}
             onClick={() => updateActiveMoveIndex(index)}

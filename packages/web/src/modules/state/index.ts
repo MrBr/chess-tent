@@ -26,6 +26,7 @@ const { normalize, denormalize } = initService({
   activities: model.activitySchema,
   conversations: model.conversationSchema,
   messages: model.messageSchema,
+  tags: model.tagSchema,
 });
 application.utils.normalize = normalize;
 application.utils.denormalize = denormalize;

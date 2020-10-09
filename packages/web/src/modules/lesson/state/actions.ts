@@ -1,7 +1,6 @@
 import {
   Chapter,
   getLessonChapterPath,
-  getLessonStatePath,
   getLessonStepPath,
   Lesson,
   Step,
@@ -12,10 +11,10 @@ import {
   State,
   UPDATE_LESSON,
   UPDATE_LESSON_CHAPTER,
-  UPDATE_LESSON_STATE,
+  UPDATE_LESSON_PATH,
   UPDATE_LESSON_STEP,
   UpdateLessonChapterAction,
-  UpdateLessonStateAction,
+  UpdateLessonPathAction,
   UpdateLessonStepAction,
 } from '@types';
 import { utils } from '@application';
@@ -71,15 +70,15 @@ export const updateLessonChapterAction = (
   },
 });
 
-export const updateLessonStateAction = <T extends keyof Lesson['state']>(
-  lesson: Lesson,
-  key: keyof Lesson['state'],
-  value: Lesson['state'][T],
-): UpdateLessonStateAction => ({
-  type: UPDATE_LESSON_STATE,
-  payload: { [key]: value },
+export const updateLessonPathAction: State['actions']['updateLessonPath'] = (
+  lesson,
+  path,
+  value,
+): UpdateLessonPathAction => ({
+  type: UPDATE_LESSON_PATH,
+  payload: value,
   meta: {
     lessonId: lesson.id,
-    path: getLessonStatePath(key),
+    path: path,
   },
 });

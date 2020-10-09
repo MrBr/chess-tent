@@ -18,9 +18,11 @@ import {
   Entity,
   Lesson,
   Message,
+  NormalizedLesson,
   Step,
   StepType,
   Subject,
+  Tag,
   User,
 } from '@chess-tent/models';
 import {
@@ -50,7 +52,7 @@ import {
   UpdateLessonAction,
   AddLessonChapterAction,
   UpdateLessonChapterAction,
-  UpdateLessonStateAction,
+  UpdateLessonPathAction,
 } from '@chess-tent/types';
 import { ChessInstance } from 'chess.js';
 import { FEN, Move, Piece, PieceColor } from './chess';
@@ -108,6 +110,7 @@ export type Hooks = {
   useDispatchBatched: () => (...args: ReduxAction[]) => BatchAction;
   useDispatch: typeof useDispatch;
   useSelector: typeof useSelector;
+  useTags: () => Tag[];
   useUser: (userId: User['id']) => User;
   useActiveUserRecord: () => RecordHookReturn<User>;
   useUserActivitiesRecord: (user: User) => RecordHookReturn<Activity[]>;
@@ -158,6 +161,7 @@ export type Model = {
   conversationSchema: Schema;
   messageSchema: Schema;
   userSchema: Schema;
+  tagSchema: Schema;
 };
 export type Middleware = ReduxMiddleware;
 
@@ -212,11 +216,14 @@ export type State = {
       lesson: Lesson,
       chapter: Chapter,
     ) => UpdateLessonChapterAction;
-    updateLessonState: <T extends keyof Lesson['state']>(
+    updateLessonPath: <
+      T extends keyof NormalizedLesson,
+      K extends keyof NormalizedLesson['state']
+    >(
       lesson: Lesson,
-      key: keyof Lesson['state'],
-      value: Lesson['state'][T],
-    ) => UpdateLessonStateAction;
+      path: T extends 'state' ? [T, K] : [T],
+      value: T extends 'state' ? NormalizedLesson[T][K] : NormalizedLesson[T],
+    ) => UpdateLessonPathAction;
   };
   selectors: {
     lessonSelector: (

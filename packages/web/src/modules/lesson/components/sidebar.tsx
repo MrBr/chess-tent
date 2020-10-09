@@ -6,4 +6,5 @@ export default styled.div({
   background: '#FAFBFB',
   overflowY: 'auto',
   padding: 24,
+  paddingRight: 40,
 });

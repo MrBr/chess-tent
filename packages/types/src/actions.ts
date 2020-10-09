@@ -13,7 +13,8 @@ import {
   Subject,
   User,
   Chapter,
-  SubjectPath
+  SubjectPath,
+  NormalizedTag
 } from "@chess-tent/models";
 
 export const UPDATE_ENTITIES = "UPDATE_ENTITIES";
@@ -21,7 +22,7 @@ export const UPDATE_ENTITIES = "UPDATE_ENTITIES";
 export const UPDATE_LESSON_STEP = "UPDATE_LESSON_STEP";
 export const UPDATE_LESSON_CHAPTER = "UPDATE_LESSON_CHAPTER";
 export const ADD_LESSON_CHAPTER = "ADD_LESSON_CHAPTER";
-export const UPDATE_LESSON_STATE = "UPDATE_LESSON_STATE";
+export const UPDATE_LESSON_PATH = "UPDATE_LESSON_PATH";
 export const UPDATE_LESSON = "UPDATE_LESSON";
 
 export const SET_ACTIVITY_ACTIVE_STEP = "SET_ACTIVITY_ACTIVE_STEP";
@@ -49,6 +50,7 @@ export type EntitiesState = {
   steps: StepsState;
   activities: ActivityState;
   conversations: ConversationState;
+  tags: TagState;
 };
 /**
  * Records are used to store single entity reference
@@ -68,6 +70,7 @@ export type ConversationState = EntityState<NormalizedConversation>;
 export type StepsState = EntityState<NormalizedStep>;
 export type ActivityState = EntityState<NormalizedActivity<Subject>>;
 export type UserState = EntityState<NormalizedUser>;
+export type TagState = EntityState<NormalizedTag>;
 
 export interface AppState {
   entities: EntitiesState;
@@ -98,12 +101,15 @@ export type UpdateLessonStepAction = Action<
   { lessonId: Lesson["id"]; chapterId: Chapter["id"]; path: SubjectPath }
 >;
 
-export type UpdateLessonStateAction = Action<
-  typeof UPDATE_LESSON_STATE,
-  Partial<Omit<NormalizedLesson["state"], "chapters">>,
+export type UpdateLessonPathAction<
+  T extends keyof NormalizedLesson = keyof NormalizedLesson,
+  K extends keyof NormalizedLesson["state"] = keyof NormalizedLesson["state"]
+> = Action<
+  typeof UPDATE_LESSON_PATH,
+  T extends "state" ? NormalizedLesson[T][K] : NormalizedLesson[T],
   {
-    lessonId: Lesson["id"];
-    path: SubjectPath;
+    lessonId: NormalizedLesson["id"];
+    path: T extends "state" ? [T, K] : [T];
   }
 >;
 export type UpdateLessonAction = Action<
@@ -115,7 +121,7 @@ export type UpdateLessonAction = Action<
 export type LessonAction =
   | UpdateEntitiesAction
   | UpdateLessonAction
-  | UpdateLessonStateAction
+  | UpdateLessonPathAction
   | UpdateLessonStepAction
   | UpdateLessonChapterAction
   | AddLessonChapterAction;

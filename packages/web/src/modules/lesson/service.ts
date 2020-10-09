@@ -1,6 +1,7 @@
 import { LessonUpdatableAction, LessonUpdates } from '@chess-tent/types';
 import { getSubjectValueAt, Lesson, SubjectPath } from '@chess-tent/models';
 import { uniqWith } from 'lodash';
+import { utils } from '@application';
 
 const updatesMap: { [key: string]: LessonUpdatableAction[] } = {};
 
@@ -37,7 +38,9 @@ export const addLessonUpdate = (action: LessonUpdatableAction) => {
 };
 
 export const getLessonUpdates = (lesson: Lesson): LessonUpdates => {
-  const updates = updatesMap[lesson.id]?.map(({ meta, payload }) => ({
+  // TODO - change signature to use NormalizedLesson - maybe a way to go is to use middleware for updates
+  const normalizedLesson = utils.normalize(lesson).result;
+  const updates = updatesMap[normalizedLesson.id]?.map(({ meta, payload }) => ({
     path: meta.path,
     value: payload,
   }));
@@ -45,9 +48,9 @@ export const getLessonUpdates = (lesson: Lesson): LessonUpdates => {
     updates,
     (update1, update2) => update1?.path.join() === update2?.path.join(),
   );
-  updatesMap[lesson.id] = [];
+  updatesMap[normalizedLesson.id] = [];
   return removeWeakerPaths(uniqueUpdate).map(update => ({
     ...update,
-    value: getSubjectValueAt(lesson, update.path),
+    value: getSubjectValueAt(normalizedLesson, update.path),
   }));
 };

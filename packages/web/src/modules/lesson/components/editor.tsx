@@ -7,8 +7,10 @@ import {
   getChapterStep,
   getLessonChapter,
   Lesson,
+  NormalizedLesson,
   removeStep,
   Step,
+  Tag,
 } from '@chess-tent/models';
 import {
   Actions,
@@ -23,6 +25,7 @@ import Sidebar from './sidebar';
 import { PreviewModal } from './activity-preview';
 import ChaptersDropdown from './chapters-dropdown';
 import DifficultyDropdown from './difficulty-dropdown';
+import TagsDropdown from './tags-dropdown';
 import { addLessonUpdate, getLessonUpdates } from '../service';
 
 const { Container, Row, Col, Headline2, Button } = ui;
@@ -42,6 +45,7 @@ const {
   useLocation,
   usePromptModal,
   useHistory,
+  useTags,
 } = hooks;
 
 type EditorRendererProps = ComponentProps<Components['Editor']> & {
@@ -53,6 +57,7 @@ type EditorRendererProps = ComponentProps<Components['Editor']> & {
   location: ReturnType<typeof useLocation>;
   promptModal: ReturnType<typeof usePromptModal>;
   lessonUpdateError: string | {} | null;
+  tags: Tag[];
 };
 type EditorRendererState = { dirty: boolean };
 
@@ -189,6 +194,11 @@ class EditorRenderer extends React.Component<
       },
     });
   };
+  updateTags = (tags: NormalizedLesson['tags']) => {
+    const { lesson } = this.props;
+    const action = updateLessonPath(lesson, ['tags'], tags);
+    this.addLessonUpdate(action);
+  };
 
   render() {
     const {
@@ -197,6 +207,7 @@ class EditorRenderer extends React.Component<
       promptModal,
       lessonUpdateError,
       activeChapter,
+      tags,
     } = this.props;
     const { dirty } = this.state;
     const lessonStatus = lessonUpdateError
@@ -250,10 +261,19 @@ class EditorRenderer extends React.Component<
               </Button>
               <Container>
                 <Row>
-                  <Col>
+                  <Col className="col-auto">
                     <DifficultyDropdown
                       difficulty={lesson.difficulty}
                       onChange={this.updateLessonDifficulty}
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <TagsDropdown
+                      tags={tags}
+                      selected={lesson.tags}
+                      onChange={this.updateTags}
                     />
                   </Col>
                 </Row>
@@ -305,6 +325,7 @@ const Editor: Components['Editor'] = ({ lesson, save }) => {
   const { chapters } = lesson.state;
   const location = useLocation();
   const history = useHistory();
+  const tags = useTags();
   const activeChapterId =
     new URLSearchParams(location.search).get('activeChapter') || chapters[0].id;
 
@@ -335,6 +356,7 @@ const Editor: Components['Editor'] = ({ lesson, save }) => {
       history={history}
       promptModal={promptModal}
       save={save}
+      tags={tags}
     />
   );
 };

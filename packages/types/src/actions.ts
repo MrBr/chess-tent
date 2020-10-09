@@ -13,7 +13,8 @@ import {
   Subject,
   User,
   Chapter,
-  SubjectPath
+  SubjectPath,
+  NormalizedTag
 } from "@chess-tent/models";
 
 export const UPDATE_ENTITIES = "UPDATE_ENTITIES";
@@ -49,6 +50,7 @@ export type EntitiesState = {
   steps: StepsState;
   activities: ActivityState;
   conversations: ConversationState;
+  tags: TagState;
 };
 /**
  * Records are used to store single entity reference
@@ -68,6 +70,7 @@ export type ConversationState = EntityState<NormalizedConversation>;
 export type StepsState = EntityState<NormalizedStep>;
 export type ActivityState = EntityState<NormalizedActivity<Subject>>;
 export type UserState = EntityState<NormalizedUser>;
+export type TagState = EntityState<NormalizedTag>;
 
 export interface AppState {
   entities: EntitiesState;
@@ -99,13 +102,13 @@ export type UpdateLessonStepAction = Action<
 >;
 
 export type UpdateLessonPathAction<
-  T extends keyof Lesson = keyof Lesson,
-  K extends keyof Lesson["state"] = keyof Lesson["state"]
+  T extends keyof NormalizedLesson = keyof NormalizedLesson,
+  K extends keyof NormalizedLesson["state"] = keyof NormalizedLesson["state"]
 > = Action<
   typeof UPDATE_LESSON_PATH,
-  T extends "state" ? Lesson[T][K] : Lesson[T],
+  T extends "state" ? NormalizedLesson[T][K] : NormalizedLesson[T],
   {
-    lessonId: Lesson["id"];
+    lessonId: NormalizedLesson["id"];
     path: T extends "state" ? [T, K] : [T];
   }
 >;

@@ -1,7 +1,6 @@
 import {
   Chapter,
   getLessonChapterPath,
-  getLessonStatePath,
   getLessonStepPath,
   Lesson,
   Step,

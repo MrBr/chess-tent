@@ -1,7 +1,14 @@
 import application, { middleware } from "@application";
-import { findTags } from "./middleware";
+import { findTags, getAll } from "./middleware";
 
 const { identify, sendData, toLocals } = middleware;
+
+application.service.registerGetRoute(
+  "/tags",
+  identify,
+  getAll,
+  sendData("tags")
+);
 
 application.service.registerPostRoute(
   "/tags",

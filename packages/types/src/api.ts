@@ -5,7 +5,8 @@ import {
   SubjectPath,
   Message,
   NormalizedMessage,
-  User
+  User,
+  Tag
 } from "@chess-tent/models";
 import { GenericArguments } from "./_helpers";
 import {
@@ -31,6 +32,7 @@ export type ConversationResponse = DataResponse<Conversation>;
 export type ConversationMessagesResponse = DataResponse<NormalizedMessage[]>;
 export type CoachesResponse = DataResponse<User[]>;
 export type StudentsResponse = DataResponse<User[]>;
+export type TagsResponse = DataResponse<Tag[]>;
 
 export type ActivityFilters = {
   owner?: User["id"];
@@ -97,4 +99,6 @@ export type Requests = {
   >;
   coaches: RequestFetch<User, CoachesResponse>;
   students: RequestFetch<User, StudentsResponse>;
+  findTags: RequestFetch<string, TagsResponse>;
+  tags: RequestFetch<undefined, TagsResponse>;
 };

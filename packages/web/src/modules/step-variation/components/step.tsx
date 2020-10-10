@@ -102,9 +102,9 @@ const Editor: VariationModule['Editor'] = ({
     state: { position, shapes, editing },
   } = step;
 
-  const toggleEditingMode = useCallback(
-    () => updateStep(updateStepState(step, { editing: !editing })),
-    [updateStep, step, editing],
+  const updateEditing = useCallback(
+    (editing: boolean) => updateStep(updateStepState(step, { editing })),
+    [updateStep, step],
   );
 
   const updateShapes = useCallback(
@@ -136,9 +136,7 @@ const Editor: VariationModule['Editor'] = ({
       onShapesChange={updateShapes}
       shapes={shapes}
       header={status}
-      footer={
-        <Footer toggleEditingMode={toggleEditingMode} editing={!!editing} />
-      }
+      footer={<Footer updateEditing={updateEditing} editing={!!editing} />}
     />
   );
 };
@@ -184,7 +182,7 @@ const StepperStep: VariationModule['StepperStep'] = props => {
       <Row className="no-gutters">
         <Col className="col-auto">
           <StepTag step={step} active={activeStep === step}>
-            <Img src={BoardSrc} style={{ background: '#ffffff' }}></Img>
+            <Img src={BoardSrc} style={{ background: '#ffffff' }} />
           </StepTag>
         </Col>
         <Col>

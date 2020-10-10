@@ -1,3 +1,4 @@
+import merge from "lodash.merge";
 import { Step, TYPE_STEP } from "./types";
 import {
   getSubjectValueAt,
@@ -83,8 +84,6 @@ const getNextStep = (parentStep: Step, cursorStep: Step): Step | null => {
 
 /**
  * Get steps count including itself.
- * @param step
- * @param count
  */
 const getStepsCount = (step: Step) => {
   let count = 1;
@@ -170,8 +169,8 @@ const removeStep = (parentStep: Step, step: Step): Step => {
     ...parentStep,
     state: {
       ...parentStep.state,
-      steps: parentStep.state.steps.filter(childStep =>
-        isSameStep(childStep, step) ? false : true
+      steps: parentStep.state.steps.filter(
+        childStep => !isSameStep(childStep, step)
       )
     }
   };
@@ -223,10 +222,7 @@ const updateStepState = <T extends Step>(
   state: Partial<T["state"]>
 ) => ({
   ...step,
-  state: {
-    ...step.state,
-    ...state
-  }
+  state: merge({}, step.state, state)
 });
 
 const updateNestedStep = (

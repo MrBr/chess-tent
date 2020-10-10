@@ -43,6 +43,12 @@ application.register(
   },
 );
 application.register(
+  () => import('./components/edit-board-toggle'),
+  module => {
+    application.components.EditBoardToggle = module.default;
+  },
+);
+application.register(
   () => import('./components/editor'),
   module => {
     application.components.Editor = module.default;

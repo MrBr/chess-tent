@@ -224,6 +224,23 @@ export type State = {
       path: T extends 'state' ? [T, K] : [T],
       value: T extends 'state' ? NormalizedLesson[T][K] : NormalizedLesson[T],
     ) => UpdateLessonPathAction;
+    // TODO - not implemented - requires some refactoring, but useful for atomic updates
+    updateLessonStepState: <
+      T extends Step,
+      K extends keyof T['state'],
+      U extends keyof T['state'][K],
+      S extends keyof T['state'][K][U]
+    >(
+      lesson: Lesson,
+      chapter: Chapter,
+      step: T,
+      path: [K] | [K, U] | [K, U, S],
+      value: T['state'][K] extends {}
+        ? T['state'][K][U] extends {}
+          ? T['state'][K][U][S]
+          : T['state'][K][U]
+        : T['state'][K],
+    ) => void;
   };
   selectors: {
     lessonSelector: (
@@ -331,6 +348,10 @@ export type Components = {
   }>;
   Editor: ComponentType<{ lesson: Lesson; save: Requests['lessonUpdates'] }>;
   Lessons: ComponentType<{ lessons: Lesson[] | null }>;
+  EditBoardToggle: ComponentType<{
+    editing: boolean;
+    onChange: (editing: boolean) => void;
+  }>;
   Coaches: ComponentType;
   Activities: ComponentType<{ activities: Activity[] | null }>;
   Conversations: ComponentType;

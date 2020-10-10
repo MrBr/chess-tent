@@ -4,29 +4,27 @@ import React, {
   useCallback,
   useMemo,
 } from 'react';
-import { components, hooks, ui, services } from '@application';
+import { components, services } from '@application';
 import {
   ExerciseModule,
   ExerciseMove,
+  ExerciseStepState,
   ExerciseVariationState,
   Move,
-  NotableMove,
   Piece,
   Shape,
 } from '@types';
-import { useUpdateExerciseState } from '../hooks';
+import { useUpdateExerciseStep } from '../hooks';
 
-const { Chessboard } = components;
+const { Chessboard, EditBoardToggle } = components;
 const { createFenForward, getPiece, getTurnColor, setTurnColor } = services;
-const { useUpdateLessonStepState } = hooks;
-const { ToggleButton } = ui;
 
 const updateMoveShapes = (
   moveIndex: number,
-  moves: NotableMove[] | undefined,
+  moves: ExerciseMove[] = [],
   shapes: Shape[],
-) =>
-  moves?.map((move, index) =>
+): ExerciseMove[] =>
+  moves.map((move, index) =>
     index === moveIndex
       ? {
           ...move,
@@ -65,58 +63,49 @@ const Editor: FunctionComponent<ComponentProps<ExerciseModule['Editor']>> = ({
   const { editing, moves, activeMoveIndex } = step.state
     .exerciseState as ExerciseVariationState;
   const activeMove = moves?.[activeMoveIndex as number];
-  const updateExerciseState = useUpdateExerciseState<ExerciseVariationState>(
+  const updateExerciseStep = useUpdateExerciseStep<ExerciseVariationState>(
     updateStep,
     step,
   );
-  const updateStepState = useUpdateLessonStepState(updateStep, step);
   const handleShapes = useCallback(
     (shapes: Shape[]) => {
       if (activeMoveIndex) {
-        updateExerciseState({
+        updateExerciseStep({
           moves: updateMoveShapes(activeMoveIndex, moves, shapes),
         });
       } else {
-        updateStepState({ shapes });
+        updateExerciseStep({}, { shapes });
       }
     },
-    [activeMoveIndex, moves, updateExerciseState, updateStepState],
+    [activeMoveIndex, moves, updateExerciseStep],
   );
   const handleMove = useCallback(
     (newPosition, move, piece: Piece, captured) => {
       if (editing) {
-        updateStepState({ position: newPosition });
-        updateExerciseState({ moves: [] });
+        updateExerciseStep({ moves: [] }, { position: newPosition });
         return;
       }
       const currentIndex = activeMoveIndex === undefined ? -1 : activeMoveIndex;
+      const updatedStepState = {} as ExerciseStepState;
       if (currentIndex === -1 && piece.color !== getTurnColor(position)) {
         // Updating base position FEN to match first move color
-        updateStepState({ position: setTurnColor(position, piece.color) });
+        updatedStepState.position = setTurnColor(position, piece.color);
       }
       const prevMoves = removeOldLineMoves(currentIndex, moves);
       const moveIndex = resolveNextMoveIndex(piece, prevMoves);
-      updateExerciseState(
-        addNewMove(
-          {
-            move,
-            captured,
-            piece,
-            index: moveIndex,
-            shapes: [],
-          },
-          prevMoves,
-        ),
+      const updatedExerciseState = addNewMove(
+        {
+          move,
+          captured,
+          piece,
+          index: moveIndex,
+          shapes: [],
+        },
+        prevMoves,
       );
+      updateExerciseStep(updatedExerciseState, updatedStepState);
     },
-    [
-      editing,
-      moves,
-      updateExerciseState,
-      updateStepState,
-      activeMoveIndex,
-      position,
-    ],
+    [editing, moves, updateExerciseStep, activeMoveIndex, position],
   );
 
   const activePosition = useMemo(() => {
@@ -133,10 +122,13 @@ const Editor: FunctionComponent<ComponentProps<ExerciseModule['Editor']>> = ({
 
   const validateMove = useCallback(
     orig => {
+      if (editing) {
+        return true;
+      }
       const piece = getPiece(activePosition, orig);
       return activeMove?.piece?.color !== piece?.color;
     },
-    [activePosition, activeMove],
+    [activePosition, activeMove, editing],
   );
 
   return (
@@ -151,14 +143,10 @@ const Editor: FunctionComponent<ComponentProps<ExerciseModule['Editor']>> = ({
       validateMove={validateMove}
       footer={
         <>
-          <ToggleButton
-            value={1}
-            checked
-            size="extra-small"
-            onChange={() => updateExerciseState({ editing: !editing })}
-          >
-            {editing ? 'Set position' : 'Edit board'}
-          </ToggleButton>
+          <EditBoardToggle
+            onChange={editing => updateExerciseStep({ editing })}
+            editing={!!editing}
+          />
         </>
       }
     />

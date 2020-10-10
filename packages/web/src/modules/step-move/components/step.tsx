@@ -111,6 +111,11 @@ const boardChange = (
       newPosition,
       {
         moveIndex,
+        move: {
+          move: newMove,
+          captured: captured,
+          index: moveIndex,
+        },
       },
     );
     updateStep(addStep(step, newVariationStep));

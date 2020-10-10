@@ -23,7 +23,7 @@ import Footer from './footer';
 import BoardSrc from '../images/board.svg';
 
 const { Col, Row, Container, Img } = ui;
-const { Stepper, StepTag, StepToolbox } = components;
+const { Stepper, StepTag, StepToolbox, StepMove } = components;
 
 const stepType = 'variation';
 
@@ -59,6 +59,7 @@ const boardChange = (
         position: newPosition,
         editing: true,
         steps: [],
+        move: undefined,
       }),
     );
     return;
@@ -67,7 +68,9 @@ const boardChange = (
   const newMoveStep = services.createStep<MoveStep>('move', newPosition, {
     move: newMove,
     movedPiece,
-    moveIndex: step.state.moveIndex,
+    moveIndex: step.state.move
+      ? step.state.moveIndex + 1
+      : step.state.moveIndex,
   });
 
   const lastVariationStep = getLastStep(step, false);
@@ -182,7 +185,16 @@ const StepperStep: VariationModule['StepperStep'] = props => {
       <Row className="no-gutters">
         <Col className="col-auto">
           <StepTag step={step} active={activeStep === step}>
-            <Img src={BoardSrc} style={{ background: '#ffffff' }} />
+            {step.state.move ? (
+              <StepMove
+                move={step.state.move.move}
+                captured={step.state.move.captured}
+                piece={step.state.move.piece}
+                index={step.state.move.index}
+              />
+            ) : (
+              <Img src={BoardSrc} style={{ background: '#ffffff' }} />
+            )}
           </StepTag>
         </Col>
         <Col>

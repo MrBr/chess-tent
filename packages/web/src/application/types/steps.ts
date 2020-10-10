@@ -24,6 +24,9 @@ export type VariationStepState = {
   steps: Step[];
   editing?: boolean;
   moveIndex: number;
+  // Used for variations derived from previous line.
+  // Editing position for specific variation from unrelated position (line) will clear move.
+  move?: NotableMove;
 };
 export type VariationStep = Step<VariationStepState, 'variation'>;
 export type VariationModule = StepModule<VariationStep, 'variation'>;

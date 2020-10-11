@@ -100,7 +100,7 @@ const Preview = ({ lesson, chapter, step }: PreviewProps) => {
   );
 
   return (
-    <StepRenderer<'Playground'>
+    <StepRenderer
       step={activeStep}
       chapter={chapter}
       component="Playground"

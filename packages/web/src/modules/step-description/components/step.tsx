@@ -6,7 +6,7 @@ import {
   addStepRightToSame,
   updateStepState,
 } from '@chess-tent/models';
-import { DescriptionModule, DescriptionStep, FEN, VariationStep } from '@types';
+import { DescriptionModule, DescriptionStep, VariationStep } from '@types';
 import { components, services, ui, stepModules } from '@application';
 import Comment from './comment';
 
@@ -15,15 +15,10 @@ const { StepTag, StepToolbox } = components;
 
 const stepType = 'description';
 
-const createStep = (
-  id: string,
-  prevPosition: FEN,
-  initialState?: Partial<DescriptionStep['state']>,
-) =>
+const createStep: DescriptionModule['createStep'] = (id, initialState) =>
   coreCreateStep<DescriptionStep>(id, stepType, {
     shapes: [],
     steps: [],
-    position: prevPosition,
     ...(initialState || {}),
   });
 
@@ -82,10 +77,9 @@ const StepperStep: DescriptionModule['StepperStep'] = ({
 }) => {
   const addDescriptionStep = useCallback(() => {
     const parentStep = getChapterParentStep(chapter, step);
-    const newDescriptionStep = services.createStep(
-      'description',
-      step.state.position,
-    );
+    const newDescriptionStep = services.createStep('description', {
+      position: step.state.position,
+    });
     updateStep(addStepRightToSame(parentStep, newDescriptionStep));
     setActiveStep(newDescriptionStep);
   }, [chapter, step, updateStep, setActiveStep]);

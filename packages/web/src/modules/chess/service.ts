@@ -52,3 +52,11 @@ export const setTurnColor: Services['setTurnColor'] = (position, color) => {
   fenChunks[1] = color === 'white' ? 'w' : 'b';
   return fenChunks.join(' ');
 };
+
+export const createNotableMove: Services['createNotableMove'] = (
+  move,
+  index,
+  piece,
+  captured = false,
+  promoted = false,
+) => ({ move, index, piece, promoted, captured });

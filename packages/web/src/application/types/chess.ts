@@ -24,11 +24,11 @@ export type Key =
 export type ExtendedKey = Key | 'a0';
 export type Move = [Key, Key];
 export type NotableMove = {
-  move?: Move;
+  move: Move;
   promoted?: boolean;
   captured?: boolean;
-  piece?: Piece;
-  index?: number;
+  piece: Piece;
+  index: number;
 };
 export type MoveMetadata = CG_MOVEMETADATA;
 export type PieceColor = CG_COLOR;

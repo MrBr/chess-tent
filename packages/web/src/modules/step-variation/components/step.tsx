@@ -10,14 +10,7 @@ import {
   Step,
   addStepToLeft,
 } from '@chess-tent/models';
-import {
-  FEN,
-  Move,
-  MoveStep,
-  Piece,
-  VariationModule,
-  VariationStep,
-} from '@types';
+import { FEN, Move, Piece, VariationModule, VariationStep } from '@types';
 import { components, services, ui } from '@application';
 import Footer from './footer';
 import BoardSrc from '../images/board.svg';
@@ -27,15 +20,10 @@ const { Stepper, StepTag, StepToolbox, StepMove } = components;
 
 const stepType = 'variation';
 
-const createStep = (
-  id: string,
-  prevPosition: FEN,
-  initialState?: Partial<VariationStep['state']>,
-) =>
+const createStep: VariationModule['createStep'] = (id, initialState) =>
   coreCreateStep<VariationStep>(id, stepType, {
     shapes: [],
     steps: [],
-    position: prevPosition,
     moveIndex: 1,
     ...(initialState || {}),
   });
@@ -65,23 +53,22 @@ const boardChange = (
     return;
   }
 
-  const newMoveStep = services.createStep<MoveStep>('move', newPosition, {
-    move: newMove,
+  const notableMove = services.createNotableMove(
+    newMove,
+    step.state.move ? step.state.moveIndex + 1 : step.state.moveIndex,
     movedPiece,
-    moveIndex: step.state.move
-      ? step.state.moveIndex + 1
-      : step.state.moveIndex,
+  );
+  const newMoveStep = services.createStep('move', {
+    position: newPosition,
+    move: notableMove,
   });
 
   const lastVariationStep = getLastStep(step, false);
   if (lastVariationStep?.stepType === 'move') {
-    const newVariationStep = services.createStep<VariationStep>(
-      'variation',
-      newPosition,
-      {
-        steps: [newMoveStep],
-      },
-    );
+    const newVariationStep = services.createStep('variation', {
+      position: newPosition,
+      steps: [newMoveStep],
+    });
 
     updateStep(addStep(step, newVariationStep));
     setActiveStep(newMoveStep);
@@ -158,17 +145,18 @@ const Playground: VariationModule['Playground'] = ({
 const StepperStep: VariationModule['StepperStep'] = props => {
   const { step, setActiveStep, activeStep, updateStep, removeStep } = props;
   const addDescriptionStep = useCallback(() => {
-    const descriptionStep = services.createStep(
-      'description',
-      step.state.position,
-    );
+    const descriptionStep = services.createStep('description', {
+      position: step.state.position,
+    });
     updateStep(addStepToLeft(step, descriptionStep));
   }, [step, updateStep]);
   const removeVariationStep = useCallback(() => {
     removeStep(step);
   }, [step, removeStep]);
   const addExerciseStep = useCallback(() => {
-    const exerciseStep = services.createStep('exercise', step.state.position);
+    const exerciseStep = services.createStep('exercise', {
+      position: step.state.position,
+    });
     updateStep(addStepToLeft(step, exerciseStep));
     setActiveStep(exerciseStep);
   }, [setActiveStep, step, updateStep]);

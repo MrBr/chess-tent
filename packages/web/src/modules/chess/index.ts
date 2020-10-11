@@ -6,6 +6,7 @@ import {
   createFenBackward,
   getTurnColor,
   setTurnColor,
+  createNotableMove,
 } from './service';
 
 services.Chess = Chess;
@@ -14,3 +15,4 @@ services.createFenBackward = createFenBackward;
 services.getPiece = getPiece;
 services.getTurnColor = getTurnColor;
 services.setTurnColor = setTurnColor;
+services.createNotableMove = createNotableMove;

@@ -1,5 +1,5 @@
 import { Chapter, Lesson, Step } from '@chess-tent/models';
-import { FEN, Move, NotableMove, Piece, Shape } from './chess';
+import { FEN, NotableMove, Shape } from './chess';
 import { StepModule } from './step';
 
 // Move
@@ -7,14 +7,15 @@ export type MoveStepState = {
   shapes: Shape[];
   position: FEN; // Step end position - position once step is finished
   description?: string;
-  move?: Move;
+  move: NotableMove;
   steps: Step[];
-  moveIndex: number;
-  movedPiece?: Piece;
-  captured?: boolean;
 };
 export type MoveStep = Step<MoveStepState, 'move'>;
-export type MoveModule = StepModule<MoveStep, 'move'>;
+export type MoveModule = StepModule<
+  MoveStep,
+  'move',
+  { position: MoveStepState['position']; move: NotableMove }
+>;
 
 // Variation
 export type VariationStepState = {
@@ -29,17 +30,25 @@ export type VariationStepState = {
   move?: NotableMove;
 };
 export type VariationStep = Step<VariationStepState, 'variation'>;
-export type VariationModule = StepModule<VariationStep, 'variation'>;
+export type VariationModule = StepModule<
+  VariationStep,
+  'variation',
+  { position: VariationStepState['position'] }
+>;
 
 // Description
 export type DescriptionStepState = {
   shapes: Shape[];
   position: FEN; // Step end position - position once step is finished
   description?: string;
-  steps: Step[];
+  steps: Step[]; // Dead end - description step shouldn't have children
 };
 export type DescriptionStep = Step<DescriptionStepState, 'description'>;
-export type DescriptionModule = StepModule<DescriptionStep, 'description'>;
+export type DescriptionModule = StepModule<
+  DescriptionStep,
+  'description',
+  { position: DescriptionStepState['position'] }
+>;
 
 // Exercise
 export type ExerciseMove = NotableMove & { shapes: Shape[] };
@@ -126,6 +135,7 @@ export type ExerciseStep = Step<ExerciseStepState, 'exercise'>;
 export type ExerciseModule = StepModule<
   ExerciseStep,
   'exercise',
+  { position: ExerciseStepState['position'] },
   ExerciseActivityState
 >;
 

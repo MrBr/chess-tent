@@ -25,7 +25,7 @@ const Stepper = ({
     <>
       {steps.map(child => {
         return (
-          <StepRenderer<'StepperStep'>
+          <StepRenderer
             component="StepperStep"
             key={`${child.id}-step`}
             activeStep={activeStep}

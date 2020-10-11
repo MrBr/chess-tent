@@ -50,6 +50,7 @@ const Editor: FunctionComponent<ComponentProps<ExerciseModule['Editor']>> = ({
           move: [movedPiecePrevMove?.move?.[0] || newMove[0], newMove[1]],
           piece,
           captured,
+          index: 0,
         },
       ];
       updateExerciseStep({ moves: newMoves });

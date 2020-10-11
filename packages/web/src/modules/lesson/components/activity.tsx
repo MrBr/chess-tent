@@ -90,7 +90,7 @@ const Activity: ActivityComponent<LessonActivity> = ({ activity }) => {
   );
 
   return (
-    <StepRenderer<'Playground'>
+    <StepRenderer
       step={activeStep}
       chapter={activeChapter}
       component="Playground"

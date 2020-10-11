@@ -55,7 +55,7 @@ import {
   UpdateLessonPathAction,
 } from '@chess-tent/types';
 import { ChessInstance } from 'chess.js';
-import { FEN, Move, Piece, PieceColor } from './chess';
+import { FEN, Move, NotableMove, Piece, PieceColor } from './chess';
 import { StepModule, StepModuleComponentKey } from './step';
 import {
   AuthorizedProps,
@@ -136,8 +136,8 @@ export type Hooks = {
 };
 
 // Application Components
-type ModuleRecord<K extends keyof any, T extends StepModule> = {
-  [P in K]: T extends StepModule<infer U, infer S>
+type ModuleRecord<K extends StepType, T> = {
+  [P in K]: T extends StepModule<infer U, infer S, infer Z, infer Y>
     ? S extends P
       ? T
       : never
@@ -270,6 +270,13 @@ export type Services = {
   getPiece: (position: FEN, square: string) => Piece | null;
   getTurnColor: (position: FEN) => PieceColor;
   setTurnColor: (position: FEN, color: PieceColor) => FEN;
+  createNotableMove: (
+    move: Move,
+    index: number,
+    piece: Piece,
+    captured?: boolean,
+    promoted?: boolean,
+  ) => NotableMove;
 
   // Add non infrastructural providers
   // Allow modules to inject their own non dependant Providers
@@ -286,11 +293,10 @@ export type Services = {
     recordKey: string,
   ) => () => RecordHookReturn<T>;
   isStepType: <T extends Steps>(step: Step, stepType: StepType) => step is T;
-  createStep: <T extends Steps>(
-    stepType: T extends Step<infer U, infer K> ? K : never,
-    initialPosition?: FEN,
-    initialState?: Partial<T extends Step<infer U, infer K> ? U : never>,
-  ) => T;
+  createStep: <T extends StepType>(
+    stepType: T,
+    initialState: Parameters<StepModules[T]['createStep']>[1],
+  ) => StepModules[T] extends StepModule<infer S, infer K> ? S : never;
   createChapter: (title?: string, steps?: Step[]) => Chapter;
   history: History;
 };
@@ -326,9 +332,25 @@ export type Components = {
   Authorized: ComponentType<AuthorizedProps>;
   Provider: ComponentType;
   StateProvider: ComponentType;
-  StepRenderer: <T extends StepModuleComponentKey>(
-    props: StepModule[T] extends ComponentType<infer P>
-      ? P & { component: StepModuleComponentKey; step: Step }
+  StepRenderer: <T extends StepModuleComponentKey, S extends Step>(
+    props: StepModule<
+      S,
+      S extends Step<infer U, infer K> ? K : never,
+      {},
+      S extends Step<infer U, infer K>
+        ? K extends StepType
+          ? StepModules[K] extends StepModule<
+              infer A,
+              infer B,
+              infer C,
+              infer D
+            >
+            ? D
+            : never
+          : never
+        : never
+    >[T] extends ComponentType<infer P>
+      ? P & { component: T; step: S }
       : never,
   ) => ReactElement;
   Evaluator: ComponentType<{

@@ -3,7 +3,7 @@ import {
   createStep as coreCreateStep,
   updateStepState,
 } from '@chess-tent/models';
-import { ExerciseModule, ExerciseStep, ExerciseTypes, FEN } from '@types';
+import { ExerciseModule, ExerciseStep, ExerciseTypes } from '@types';
 import { components, ui } from '@application';
 import ExerciseToolbox from './toolbox';
 import ExerciseEditor from './editor';
@@ -14,15 +14,10 @@ const { StepTag, StepToolbox } = components;
 
 const stepType = 'exercise';
 
-const createStep = (
-  id: string,
-  prevPosition: FEN,
-  initialState?: Partial<ExerciseStep['state']>,
-) =>
+const createStep: ExerciseModule['createStep'] = (id, initialState) =>
   coreCreateStep<ExerciseStep>(id, stepType, {
     shapes: [],
     steps: [],
-    position: prevPosition,
     exerciseType: 'variation',
     exerciseState: {},
     ...(initialState || {}),

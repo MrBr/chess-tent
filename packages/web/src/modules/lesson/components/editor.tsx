@@ -311,6 +311,7 @@ class EditorRenderer extends React.Component<
                 chapter={activeChapter}
                 updateStep={this.updateStep}
                 removeStep={this.deleteStep}
+                root
               />
             </Sidebar>
           </Col>

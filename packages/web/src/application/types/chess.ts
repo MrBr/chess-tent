@@ -6,6 +6,7 @@ import {
   MoveMetadata as CG_MOVEMETADATA,
 } from '@chess-tent/chessground/dist/types';
 import { DrawShape } from '@chess-tent/chessground/dist/draw';
+import { PieceType, ShortMove } from 'chess.js';
 
 export type FEN = CG_FEN;
 export type Piece = CG_PIECE;
@@ -25,12 +26,18 @@ export type ExtendedKey = Key | 'a0';
 export type Move = [Key, Key];
 export type NotableMove = {
   move: Move;
-  promoted?: boolean;
+  promoted?: PieceRole;
   captured?: boolean;
   piece: Piece;
   index: number;
+  position: FEN;
 };
+export type MoveShort = ShortMove;
 export type MoveMetadata = CG_MOVEMETADATA;
 export type PieceColor = CG_COLOR;
+export type PieceColorShort = 'w' | 'b';
 export type PieceRole = CG_ROLE;
+export type PieceRolePromotable = 'knight' | 'rook' | 'bishop' | 'queen';
+export type PieceRoleShort = PieceType;
+export type PieceRoleShortPromotable = 'n' | 'r' | 'b' | 'q';
 export type Shape = DrawShape;

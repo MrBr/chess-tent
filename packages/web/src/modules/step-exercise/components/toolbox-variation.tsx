@@ -49,7 +49,7 @@ export default ({ step, updateStep }: ExerciseToolboxProps) => {
             onClick={() => updateActiveMoveIndex(index)}
             key={index}
           >
-            <StepMove {...move} suffix=" " prefix=" " blackIndexSign=" " />
+            <StepMove move={move} suffix=" " prefix=" " blackIndexSign=" " />
           </Text>
         ))}
       </Container>

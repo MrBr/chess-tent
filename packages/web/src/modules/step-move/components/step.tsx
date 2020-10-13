@@ -3,25 +3,19 @@ import { DrawShape } from '@chess-tent/chessground/dist/draw';
 import {
   createStep as coreCreateStep,
   getChapterParentStep,
-  isLastStep,
   addStep,
   Chapter,
   Step,
   updateStepState,
   addStepToLeft,
+  getRightStep,
 } from '@chess-tent/models';
 import { FEN, Move, MoveModule, MoveStep, Piece, VariationStep } from '@types';
 import { services, components, ui } from '@application';
 
 const { Col, Row, Container } = ui;
 const { getPiece, createNotableMove } = services;
-const {
-  StepTag,
-  StepToolbox,
-  Stepper,
-  StepperStepContainer,
-  StepMove,
-} = components;
+const { StepTag, StepToolbox, Stepper, StepMove } = components;
 
 const stepType = 'move';
 
@@ -38,16 +32,14 @@ const boardChange = (
   updateStep: (step: Step) => void,
   setActiveStep: (step: Step) => void,
   newPosition: FEN,
-  newMove?: Move,
-  movedPiece?: Piece,
+  newMove: Move,
+  movedPiece: Piece,
   captured?: boolean,
 ) => {
   const {
-    state: { move, position },
+    state: { move },
   } = step;
-  if (!newMove || !movedPiece) {
-    return;
-  }
+  const { position } = move;
 
   const moveIndex =
     movedPiece.color === 'white'
@@ -68,31 +60,43 @@ const boardChange = (
     return;
   }
 
-  const parentStep = getChapterParentStep(chapter, step) as VariationStep;
   const notableMove = createNotableMove(
+    newPosition,
     newMove,
     moveIndex,
     movedPiece,
     captured,
   );
-  if (!isLastStep(parentStep, step, false)) {
-    // New variation
-    const newVariationStep = services.createStep('variation', {
-      moveIndex,
+
+  const variationStep = getChapterParentStep(chapter, step) as VariationStep;
+  const rightStep = getRightStep(variationStep, step) as VariationStep;
+  // Move that possibly already exists in the chapter
+  let sameMoveStep = services.getSameMoveVariationStep(step, notableMove);
+  if (!sameMoveStep) {
+    sameMoveStep =
+      rightStep && services.isSameStepMove(rightStep, notableMove)
+        ? rightStep
+        : null;
+  }
+  if (sameMoveStep) {
+    setActiveStep(sameMoveStep);
+    return;
+  }
+
+  if (rightStep) {
+    const newMoveStep = services.createStep('variation', {
       move: notableMove,
-      position: newPosition,
     });
-    updateStep(addStep(step, newVariationStep));
-    setActiveStep(newVariationStep);
+    updateStep(addStep(step, newMoveStep));
+    setActiveStep(newMoveStep);
     return;
   }
 
   const newMoveStep = services.createStep('move', {
-    position: newPosition,
     move: notableMove,
   });
   // Continuing the current variation
-  updateStep(addStep(parentStep, newMoveStep));
+  updateStep(addStep(variationStep, newMoveStep));
   setActiveStep(newMoveStep);
 };
 
@@ -105,7 +109,10 @@ const Editor: MoveModule['Editor'] = ({
   setActiveStep,
 }) => {
   const {
-    state: { position, shapes },
+    state: {
+      shapes,
+      move: { position },
+    },
   } = step;
 
   const updateShapes = useCallback(
@@ -143,7 +150,10 @@ const Editor: MoveModule['Editor'] = ({
 
 const Playground: MoveModule['Playground'] = ({ Chessboard, step, Footer }) => {
   const {
-    state: { position, shapes },
+    state: {
+      move: { position },
+      shapes,
+    },
   } = step;
   return <Chessboard fen={position} shapes={shapes} footer={<Footer />} />;
 };
@@ -152,7 +162,7 @@ const StepperStep: MoveModule['StepperStep'] = props => {
   const { step, setActiveStep, activeStep, updateStep, removeStep } = props;
   const addDescriptionStep = useCallback(() => {
     const descriptionStep = services.createStep('description', {
-      position: step.state.position,
+      position: step.state.move.position,
     });
     updateStep(addStepToLeft(step, descriptionStep));
     setActiveStep(descriptionStep);
@@ -162,7 +172,7 @@ const StepperStep: MoveModule['StepperStep'] = props => {
   }, [step, removeStep]);
   const addExerciseStep = useCallback(() => {
     const exerciseStep = services.createStep('exercise', {
-      position: step.state.position,
+      position: step.state.move.position,
     });
     updateStep(addStep(step, exerciseStep));
     setActiveStep(exerciseStep);
@@ -183,15 +193,9 @@ const StepperStep: MoveModule['StepperStep'] = props => {
           <StepTag
             step={step}
             active={activeStep === step}
-            moveIndex={step.state.move.index}
-            movedPiece={step.state.move.piece}
+            move={step.state.move}
           >
-            <StepMove
-              move={step.state.move.move}
-              captured={step.state.move.captured}
-              piece={step.state.move.piece}
-              index={step.state.move.index}
-            />
+            <StepMove move={step.state.move} />
           </StepTag>
         </Col>
         <Col>
@@ -207,9 +211,7 @@ const StepperStep: MoveModule['StepperStep'] = props => {
           />
         </Col>
       </Row>
-      <StepperStepContainer>
-        <Stepper {...props} steps={step.state.steps} />
-      </StepperStepContainer>
+      <Stepper {...props} steps={step.state.steps} />
     </Container>
   );
 };

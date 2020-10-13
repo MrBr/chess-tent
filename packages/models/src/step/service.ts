@@ -82,6 +82,26 @@ const getNextStep = (parentStep: Step, cursorStep: Step): Step | null => {
   return null;
 };
 
+const getRightStep = (parentStep: Step, cursorStep: Step): Step | null => {
+  if (isSameStep(parentStep, cursorStep)) {
+    return null;
+  }
+  let index = 0;
+  while (index < parentStep.state.steps.length) {
+    const step = parentStep.state.steps[index];
+    if (isSameStep(cursorStep, step)) {
+      return parentStep.state.steps[index + 1] || null;
+    }
+
+    const nextStep = getRightStep(step, cursorStep);
+    if (nextStep) {
+      return nextStep;
+    }
+    index += 1;
+  }
+  return null;
+};
+
 /**
  * Get steps count including itself.
  */
@@ -164,14 +184,21 @@ const addStepToLeft = (parentStep: Step, step: Step): Step => {
   };
 };
 
+/**
+ * Remove all step and all adjacent steps
+ */
 const removeStep = (parentStep: Step, step: Step): Step => {
+  let removeStep = false;
   return {
     ...parentStep,
     state: {
       ...parentStep.state,
-      steps: parentStep.state.steps.filter(
-        childStep => !isSameStep(childStep, step)
-      )
+      steps: parentStep.state.steps.filter((childStep, index) => {
+        if (isSameStep(childStep, step)) {
+          removeStep = true;
+        }
+        return !removeStep;
+      })
     }
   };
 };
@@ -203,6 +230,22 @@ const getStepPath = (parentStep: Step, step: Step): SubjectPath | null => {
     const path = getStepPath(childStep, step);
     if (path) {
       return ["state", "steps", index, ...path];
+    }
+  }
+  return null;
+};
+
+const getStepSequence = (parentStep: Step, step: Step): Step[] | null => {
+  const sequence = [];
+  for (let index = 0; index < parentStep.state.steps.length; index++) {
+    const childStep = parentStep.state.steps[index];
+    sequence.push(childStep);
+    if (isSameStep(step, childStep)) {
+      return sequence;
+    }
+    const path = getStepSequence(childStep, step);
+    if (path) {
+      return [...sequence, ...path];
     }
   }
   return null;
@@ -255,12 +298,14 @@ export {
   getStepIndex,
   getLastStep,
   getNextStep,
+  getRightStep,
   getPreviousStep,
   getParentStep,
   isLastStep,
   addStepRightToSame,
   getChildStep,
   getStepPath,
+  getStepSequence,
   updateNestedStep,
   updateStep,
   updateStepState,

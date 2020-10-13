@@ -2,9 +2,8 @@ import styled from '@emotion/styled';
 import React from 'react';
 import { StepTag } from '@types';
 
-export default styled(({ children, className, moveIndex, movedPiece }) => (
+export default styled(({ children, className, move }) => (
   <span className={className}>
-    {moveIndex && movedPiece?.color === 'white' && moveIndex}
     <span>{children}</span>
   </span>
 ))(({ active }) => ({

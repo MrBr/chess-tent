@@ -5,36 +5,27 @@ import { StepModule } from './step';
 // Move
 export type MoveStepState = {
   shapes: Shape[];
-  position: FEN; // Step end position - position once step is finished
   description?: string;
   move: NotableMove;
   steps: Step[];
 };
 export type MoveStep = Step<MoveStepState, 'move'>;
-export type MoveModule = StepModule<
-  MoveStep,
-  'move',
-  { position: MoveStepState['position']; move: NotableMove }
->;
+export type MoveModule = StepModule<MoveStep, 'move', { move: NotableMove }>;
 
 // Variation
 export type VariationStepState = {
   shapes: Shape[];
-  position: FEN; // Step end position - position once step is finished
+  position?: FEN; // Step end position - position once step is finished
   description?: string;
-  steps: Step[];
+  steps: (VariationStep | DescriptionStep | ExerciseStep)[];
   editing?: boolean;
-  moveIndex: number;
+  moveIndex?: number;
   // Used for variations derived from previous line.
   // Editing position for specific variation from unrelated position (line) will clear move.
-  move?: NotableMove;
+  move?: NotableMove | null;
 };
 export type VariationStep = Step<VariationStepState, 'variation'>;
-export type VariationModule = StepModule<
-  VariationStep,
-  'variation',
-  { position: VariationStepState['position'] }
->;
+export type VariationModule = StepModule<VariationStep, 'variation'>;
 
 // Description
 export type DescriptionStepState = {

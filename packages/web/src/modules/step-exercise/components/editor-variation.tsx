@@ -1,23 +1,17 @@
-import React, {
-  ComponentProps,
-  FunctionComponent,
-  useCallback,
-  useMemo,
-} from 'react';
+import React, { ComponentProps, FunctionComponent, useCallback } from 'react';
 import { components, services } from '@application';
 import {
   ExerciseModule,
   ExerciseMove,
   ExerciseStepState,
   ExerciseVariationState,
-  Move,
   Piece,
   Shape,
 } from '@types';
 import { useUpdateExerciseStep } from '../hooks';
 
 const { Chessboard, EditBoardToggle } = components;
-const { createFenForward, getPiece, getTurnColor, setTurnColor } = services;
+const { getPiece, getTurnColor, setTurnColor, createNotableMove } = services;
 
 const updateMoveShapes = (
   moveIndex: number,
@@ -95,10 +89,7 @@ const Editor: FunctionComponent<ComponentProps<ExerciseModule['Editor']>> = ({
       const moveIndex = resolveNextMoveIndex(piece, prevMoves);
       const updatedExerciseState = addNewMove(
         {
-          move,
-          captured,
-          piece,
-          index: moveIndex,
+          ...createNotableMove(newPosition, move, moveIndex, piece, captured),
           shapes: [],
         },
         prevMoves,
@@ -108,16 +99,7 @@ const Editor: FunctionComponent<ComponentProps<ExerciseModule['Editor']>> = ({
     [editing, moves, updateExerciseStep, activeMoveIndex, position],
   );
 
-  const activePosition = useMemo(() => {
-    return activeMoveIndex !== undefined && moves
-      ? createFenForward(
-          position,
-          moves
-            .slice(0, activeMoveIndex + 1)
-            .map(notableMove => notableMove.move as Move),
-        )
-      : position;
-  }, [position, activeMoveIndex, moves]);
+  const activePosition = activeMove?.position || position;
   const activeShapes = activeMove ? activeMove.shapes : shapes;
 
   const validateMove = useCallback(

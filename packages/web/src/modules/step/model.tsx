@@ -1,7 +1,17 @@
 import React, { ComponentProps } from 'react';
 import { Step, StepType } from '@chess-tent/models';
-import { Components, StepModule, StepModules, Steps } from '@types';
+import {
+  Components,
+  MoveStep,
+  NotableMove,
+  Services,
+  StepModule,
+  StepModules,
+  Steps,
+  VariationStep,
+} from '@types';
 import { utils, stepModules } from '@application';
+import { isEqual } from 'lodash';
 
 const createStepModuleStep = <T extends StepType>(
   stepType: T,
@@ -36,6 +46,27 @@ export const stepSchema = {
       steps: 'steps',
     },
   },
+};
+
+export const isSameStepMove: Services['isSameStepMove'] = (
+  step: VariationStep | MoveStep,
+  move: NotableMove,
+) => {
+  return isEqual(step.state.move, move);
+};
+
+export const getSameMoveVariationStep: Services['getSameMoveVariationStep'] = (
+  step: VariationStep | MoveStep,
+  move: NotableMove,
+) => {
+  return (
+    (step.state.steps.find(childStep => {
+      if (childStep.stepType === 'variation') {
+        return isSameStepMove(childStep as VariationStep, move);
+      }
+      return false;
+    }) as VariationStep) || null
+  );
 };
 
 export { createStepModuleStep, StepComponentRenderer, isStepType };

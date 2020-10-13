@@ -8,6 +8,8 @@ const { StepRenderer } = components;
 const StepperVariation = styled.div({
   paddingLeft: 10,
   marginLeft: 10,
+  marginTop: 10,
+  marginBottom: 10,
   borderLeft: '1px solid #D1D3D7',
   position: 'relative',
 });
@@ -15,6 +17,7 @@ const StepperVariation = styled.div({
 const Stepper = ({
   steps,
   activeStep,
+  root,
   className,
   ...systemProps
 }: StepperProps) => {
@@ -24,14 +27,20 @@ const Stepper = ({
   return (
     <>
       {steps.map(child => {
-        return (
+        const stepper = (
           <StepRenderer
             component="StepperStep"
             key={`${child.id}-step`}
             activeStep={activeStep}
             {...systemProps}
+            // Override current step
             step={child}
           />
+        );
+        return child.stepType === 'variation' && !root ? (
+          <StepperVariation>{stepper}</StepperVariation>
+        ) : (
+          stepper
         );
       })}
     </>

@@ -14,7 +14,7 @@ import {
 import { useUpdateExerciseStep } from '../hooks';
 
 const { Chessboard, EditBoardToggle } = components;
-const { createFenForward } = services;
+const { createFenForward, createNotableMove } = services;
 
 const Editor: FunctionComponent<ComponentProps<ExerciseModule['Editor']>> = ({
   step,
@@ -46,12 +46,13 @@ const Editor: FunctionComponent<ComponentProps<ExerciseModule['Editor']>> = ({
       const newMoves: typeof moves = [
         // Remove piece previous move
         ...(moves || []).filter(move => move !== movedPiecePrevMove),
-        {
-          move: [movedPiecePrevMove?.move?.[0] || newMove[0], newMove[1]],
-          piece,
+        createNotableMove(
+          position,
+          [movedPiecePrevMove?.move?.[0] || newMove[0], newMove[1]],
+          0,
           captured,
-          index: 0,
-        },
+          piece,
+        ),
       ];
       updateExerciseStep({ moves: newMoves });
     },

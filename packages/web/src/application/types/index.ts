@@ -55,7 +55,17 @@ import {
   UpdateLessonPathAction,
 } from '@chess-tent/types';
 import { ChessInstance } from 'chess.js';
-import { FEN, Move, NotableMove, Piece, PieceColor } from './chess';
+import {
+  FEN,
+  Move,
+  MoveShort,
+  NotableMove,
+  Piece,
+  PieceColor,
+  PieceRole,
+  PieceRolePromotable,
+  PieceRoleShort,
+} from './chess';
 import { StepModule, StepModuleComponentKey } from './step';
 import {
   AuthorizedProps,
@@ -73,8 +83,10 @@ import {
   DescriptionModule,
   ExerciseModule,
   MoveModule,
+  MoveStep,
   Steps,
   VariationModule,
+  VariationStep,
 } from './steps';
 import { Socket } from './socket';
 import { HOC } from './hoc';
@@ -270,14 +282,27 @@ export type Services = {
   getPiece: (position: FEN, square: string) => Piece | null;
   getTurnColor: (position: FEN) => PieceColor;
   setTurnColor: (position: FEN, color: PieceColor) => FEN;
+  createMoveShortObject: (
+    move: Move,
+    promoted?: PieceRolePromotable,
+  ) => MoveShort;
+  shortenRole: (role: PieceRole) => PieceRoleShort;
   createNotableMove: (
+    position: FEN,
     move: Move,
     index: number,
     piece: Piece,
     captured?: boolean,
-    promoted?: boolean,
+    promoted?: PieceRole,
   ) => NotableMove;
-
+  isSameStepMove: (
+    step: VariationStep | MoveStep,
+    move: NotableMove,
+  ) => boolean;
+  getSameMoveVariationStep: (
+    step: VariationStep | MoveStep,
+    move: NotableMove,
+  ) => VariationStep | null;
   // Add non infrastructural providers
   // Allow modules to inject their own non dependant Providers
   addProvider: (provider: ComponentType) => void;

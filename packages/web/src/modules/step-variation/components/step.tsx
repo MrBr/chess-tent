@@ -3,12 +3,13 @@ import { DrawShape } from '@chess-tent/chessground/dist/draw';
 import {
   createStep as coreCreateStep,
   addStep,
-  getLastStep,
   Lesson,
   Chapter,
   updateStepState,
   Step,
   addStepToLeft,
+  getNextStep,
+  addStepRightToSame,
 } from '@chess-tent/models';
 import {
   FEN,
@@ -23,19 +24,14 @@ import Footer from './footer';
 import BoardSrc from '../images/board.svg';
 
 const { Col, Row, Container, Img } = ui;
-const { Stepper, StepTag, StepToolbox } = components;
+const { Stepper, StepTag, StepToolbox, StepMove } = components;
 
 const stepType = 'variation';
 
-const createStep = (
-  id: string,
-  prevPosition: FEN,
-  initialState?: Partial<VariationStep['state']>,
-) =>
+const createStep: VariationModule['createStep'] = (id, initialState) =>
   coreCreateStep<VariationStep>(id, stepType, {
     shapes: [],
     steps: [],
-    position: prevPosition,
     moveIndex: 1,
     ...(initialState || {}),
   });
@@ -51,40 +47,66 @@ const boardChange = (
   movedPiece?: Piece,
 ) => {
   const {
-    state: { editing },
+    state: { editing, move, position },
   } = step;
-  if (editing || !newMove || !movedPiece) {
+
+  if (editing && position) {
     updateStep(
       updateStepState(step, {
         position: newPosition,
         editing: true,
         steps: [],
+        move: null,
       }),
     );
     return;
   }
 
-  const newMoveStep = services.createStep<MoveStep>('move', newPosition, {
-    move: newMove,
-    movedPiece,
-    moveIndex: step.state.moveIndex,
-  });
-
-  const lastVariationStep = getLastStep(step, false);
-  if (lastVariationStep?.stepType === 'move') {
-    const newVariationStep = services.createStep<VariationStep>(
-      'variation',
-      newPosition,
+  if (editing || !newMove || !movedPiece) {
+    const newVariationStep = services.createStep('variation', {
+      position: newPosition,
+      editing: true,
+    });
+    const updatedStep = updateStepState(
+      addStepRightToSame(step, newVariationStep) as VariationStep,
       {
-        steps: [newMoveStep],
+        editing: false,
       },
     );
+    updateStep(updatedStep);
+    setActiveStep(newVariationStep);
+    return;
+  }
 
-    updateStep(addStep(step, newVariationStep));
+  const notableMove = services.createNotableMove(
+    newPosition,
+    newMove,
+    move ? move.index + 1 : 1,
+    movedPiece,
+  );
+
+  const nextStep = getNextStep(step, step) as MoveStep;
+
+  // Move that possibly already exists in the chapter
+  const sameMoveStep = services.getSameMoveVariationStep(step, notableMove);
+
+  if (sameMoveStep) {
+    setActiveStep(sameMoveStep);
+    return;
+  }
+
+  if (nextStep) {
+    const newMoveStep = services.createStep('variation', {
+      move: notableMove,
+    });
+    updateStep(addStepToLeft(step, newMoveStep));
     setActiveStep(newMoveStep);
     return;
   }
 
+  const newMoveStep = services.createStep('move', {
+    move: notableMove,
+  });
   updateStep(addStep(step, newMoveStep));
   setActiveStep(newMoveStep);
 };
@@ -99,12 +121,14 @@ const Editor: VariationModule['Editor'] = ({
   setActiveStep,
 }) => {
   const {
-    state: { position, shapes, editing },
+    state: { shapes, editing, move },
   } = step;
 
-  const toggleEditingMode = useCallback(
-    () => updateStep(updateStepState(step, { editing: !editing })),
-    [updateStep, step, editing],
+  const position = move ? move.position : (step.state.position as FEN);
+
+  const updateEditing = useCallback(
+    (editing: boolean) => updateStep(updateStepState(step, { editing })),
+    [updateStep, step],
   );
 
   const updateShapes = useCallback(
@@ -136,9 +160,7 @@ const Editor: VariationModule['Editor'] = ({
       onShapesChange={updateShapes}
       shapes={shapes}
       header={status}
-      footer={
-        <Footer toggleEditingMode={toggleEditingMode} editing={!!editing} />
-      }
+      footer={<Footer updateEditing={updateEditing} editing={!!editing} />}
     />
   );
 };
@@ -149,28 +171,33 @@ const Playground: VariationModule['Playground'] = ({
   Footer,
 }) => {
   const {
-    state: { position, shapes },
+    state: { move, shapes },
   } = step;
+  const position = move ? move.position : (step.state.position as FEN);
   return <Chessboard fen={position} shapes={shapes} footer={<Footer />} />;
 };
 
 const StepperStep: VariationModule['StepperStep'] = props => {
   const { step, setActiveStep, activeStep, updateStep, removeStep } = props;
+  const position = step.state.move
+    ? step.state.move.position
+    : (step.state.position as FEN);
   const addDescriptionStep = useCallback(() => {
-    const descriptionStep = services.createStep(
-      'description',
-      step.state.position,
-    );
+    const descriptionStep = services.createStep('description', {
+      position,
+    });
     updateStep(addStepToLeft(step, descriptionStep));
-  }, [step, updateStep]);
+  }, [position, step, updateStep]);
   const removeVariationStep = useCallback(() => {
     removeStep(step);
   }, [step, removeStep]);
   const addExerciseStep = useCallback(() => {
-    const exerciseStep = services.createStep('exercise', step.state.position);
+    const exerciseStep = services.createStep('exercise', {
+      position,
+    });
     updateStep(addStepToLeft(step, exerciseStep));
     setActiveStep(exerciseStep);
-  }, [setActiveStep, step, updateStep]);
+  }, [position, setActiveStep, step, updateStep]);
   const handleStepClick = useCallback(
     event => {
       event.stopPropagation();
@@ -183,8 +210,16 @@ const StepperStep: VariationModule['StepperStep'] = props => {
     <Container onClick={handleStepClick} fluid className="p-0">
       <Row className="no-gutters">
         <Col className="col-auto">
-          <StepTag step={step} active={activeStep === step}>
-            <Img src={BoardSrc} style={{ background: '#ffffff' }}></Img>
+          <StepTag
+            step={step}
+            active={activeStep === step}
+            move={step.state.move}
+          >
+            {step.state.move ? (
+              <StepMove move={step.state.move} />
+            ) : (
+              <Img src={BoardSrc} style={{ background: '#ffffff' }} />
+            )}
           </StepTag>
         </Col>
         <Col>

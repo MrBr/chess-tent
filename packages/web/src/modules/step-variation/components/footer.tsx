@@ -1,13 +1,14 @@
 import React from 'react';
-import { ui } from '@application';
+import { components } from '@application';
 
-const { Check, Container } = ui;
+const { EditBoardToggle } = components;
+
 interface FooterProps {
-  toggleEditingMode: () => void;
+  updateEditing: (editing: boolean) => void;
   editing: boolean;
 }
-export default ({ toggleEditingMode, editing }: FooterProps) => (
-  <Container>
-    Edit <Check onChange={toggleEditingMode} checked={!!editing} />
-  </Container>
+export default ({ updateEditing, editing }: FooterProps) => (
+  <>
+    <EditBoardToggle editing={editing} onChange={updateEditing} />
+  </>
 );

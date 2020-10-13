@@ -2,6 +2,14 @@ import { LessonUpdatableAction, LessonUpdates } from '@chess-tent/types';
 import { getSubjectValueAt, Lesson, SubjectPath } from '@chess-tent/models';
 import { uniqWith } from 'lodash';
 import { utils } from '@application';
+import { isEqual } from 'lodash';
+import {
+  MoveStep,
+  MoveStepState,
+  NotableMove,
+  VariationStep,
+  VariationStepState,
+} from '@types';
 
 const updatesMap: { [key: string]: LessonUpdatableAction[] } = {};
 
@@ -53,4 +61,17 @@ export const getLessonUpdates = (lesson: Lesson): LessonUpdates => {
     ...update,
     value: getSubjectValueAt(normalizedLesson, update.path),
   }));
+};
+
+export const hasVariationMove = (
+  step: MoveStep | VariationStep,
+  move: NotableMove,
+) => {
+  return step.state.steps.some(({ stepType, state }) => {
+    if (stepType === 'variation' || stepType === 'move') {
+      const stepMove = (state as MoveStepState | VariationStepState).move;
+      return isEqual(stepMove, move);
+    }
+    return false;
+  });
 };

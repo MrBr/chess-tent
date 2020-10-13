@@ -7,6 +7,8 @@ import {
   ChessboardInterface,
   MoveMetadata,
   Key,
+  ExtendedKey,
+  PieceRolePromotable,
 } from '@types';
 
 import { ChessInstance } from 'chess.js';
@@ -21,12 +23,13 @@ import { DrawShape } from '@chess-tent/chessground/dist/draw';
 import { Config } from '@chess-tent/chessground/dist/config';
 
 import { SparePieces } from './spare-pieces';
+import Promotion from './promotion';
 import { replaceFENPosition, updateMovable } from './_helpers';
 
 const { Evaluator } = components;
 const { START_FEN } = constants;
 const { Modal } = ui;
-const { Chess } = services;
+const { Chess, createMoveShortObject } = services;
 
 export type State = CGState;
 
@@ -97,6 +100,7 @@ const BoardContainer = styled<
 >(props => (
   <div className={props.className}>
     <div ref={props.boardRef} className="board" />
+    {props.children}
   </div>
 ))(({ width, height }) => ({
   '& > .board': {
@@ -129,6 +133,7 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
   chess: ChessInstance;
   state: ChessboardState = {
     renderPrompt: undefined,
+    promotion: undefined,
   };
   static defaultProps = {
     evaluate: false,
@@ -264,17 +269,21 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
     this.onReset();
   };
 
-  fen = (move?: Move, piece?: Piece) => {
+  fen = (
+    move?: Move,
+    options?: { piece?: Piece; promoted?: PieceRolePromotable },
+  ) => {
     const { edit } = this.props;
     if (edit) {
       this.chess.load(
         // Update position and color who's turn is.
         // Useful for variation to automatically start with a correct color.
-        replaceFENPosition(this.chess.fen(), this.api.getFen(), piece),
+        replaceFENPosition(this.chess.fen(), this.api.getFen(), options?.piece),
       );
     } else if (move) {
-      // Only valid moves are in "play" mode
-      this.chess.move({ from: move[0], to: move[1] });
+      const chessMove = createMoveShortObject(move, options?.promoted);
+      // Only valid moves are allowed in "play" mode
+      console.log(this.chess.move(chessMove));
     }
     return this.chess.fen();
   };
@@ -318,20 +327,49 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
     if (!this.props.onChange) {
       return;
     }
-    const lastMove = this.api.state.lastMove as Move;
-    const piece = this.api.state.pieces[lastMove[1]];
-    const fen = this.fen(lastMove, piece);
-    this.props.onChange(fen, lastMove, piece);
+    const fen = this.fen();
+    this.props.onChange(fen);
   };
 
-  onMove = (orig: string, dest: string, metadata: MoveMetadata) => {
+  onMove = (orig: ExtendedKey, dest: ExtendedKey, metadata: MoveMetadata) => {
+    const lastMove = this.api.state.lastMove as Move;
+    const piece = this.api.state.pieces[lastMove[1]] as Piece;
+    const rank = parseInt(dest.charAt(1));
+    if (piece.role === 'pawn' && (rank === 1 || rank === 8)) {
+      this.setState({
+        promotion: {
+          from: orig as Key,
+          to: dest as Key,
+          piece,
+        },
+      });
+      return;
+    }
     if (!this.props.onMove) {
       return;
     }
-    const lastMove = this.api.state.lastMove as Move;
-    const piece = this.api.state.pieces[lastMove[1]] as Piece;
-    const fen = this.fen(lastMove, piece);
+    const fen = this.fen(lastMove, { piece });
     this.props.onMove(fen, lastMove, piece, !!metadata.captured);
+  };
+
+  onPromotion = (role: PieceRolePromotable) => {
+    const { promotion } = this.state;
+    if (!promotion) {
+      return;
+    }
+    const { from, to, piece } = promotion;
+    const capturedPiece = this.chess.get(to);
+    this.setState({ promotion: undefined });
+    const move = [from, to] as Move;
+    const fen = this.fen(move, { promoted: role });
+
+    this.props.onMove &&
+      this.props.onMove(fen, move, piece, !!capturedPiece, role);
+  };
+
+  onPromotionCancel = () => {
+    this.setConfig({ fen: this.chess.fen() });
+    this.setState({ promotion: undefined });
   };
 
   onSparePieceDrag = (piece: Piece, event: MouchEvent) => {
@@ -348,7 +386,7 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
       height,
       sparePieces,
     } = this.props;
-    const { renderPrompt } = this.state;
+    const { renderPrompt, promotion } = this.state;
     return (
       <>
         {false && (
@@ -364,11 +402,18 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
           width={width as string}
           height={height as string}
           boardRef={this.boardHost}
-        />
+        >
+          {promotion && (
+            <Promotion
+              file={promotion.to}
+              color={promotion.piece.color}
+              onPromote={this.onPromotion}
+              onCancel={this.onPromotionCancel}
+            />
+          )}
+        </BoardContainer>
         <BoardFooter width={width as string}>{footer}</BoardFooter>
-        {sparePieces && (
-          <SparePieces onDragStart={this.onSparePieceDrag} />
-        )}{' '}
+        {sparePieces && <SparePieces onDragStart={this.onSparePieceDrag} />}
         <Modal
           container={this.boardHost}
           show={!!renderPrompt}

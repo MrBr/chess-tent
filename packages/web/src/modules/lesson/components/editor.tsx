@@ -220,7 +220,7 @@ class EditorRenderer extends React.Component<
       <Container fluid className="px-0 h-100">
         <Row noGutters className="h-100">
           <Col>
-            <StepRenderer<'Editor'>
+            <StepRenderer
               step={activeStep}
               component="Editor"
               activeStep={activeStep}
@@ -311,6 +311,7 @@ class EditorRenderer extends React.Component<
                 chapter={activeChapter}
                 updateStep={this.updateStep}
                 removeStep={this.deleteStep}
+                root
               />
             </Sidebar>
           </Col>

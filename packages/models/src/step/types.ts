@@ -6,7 +6,7 @@ export interface Step<T extends {} = {}, K extends StepType = StepType> {
   id: string;
   type: typeof TYPE_STEP;
   stepType: K;
-  state: T & { steps: Step[] };
+  state: { steps: Step[] } & T;
 }
 
 export interface NormalizedStep {

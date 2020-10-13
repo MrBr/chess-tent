@@ -6,6 +6,7 @@ import {
   utils,
   requests,
   services,
+  constants,
 } from '@application';
 import {
   createChapter,
@@ -24,13 +25,16 @@ const {
 const { Editor } = components;
 const { createStep } = services;
 const { generateIndex } = utils;
+const { START_FEN } = constants;
 const {
   selectors: { lessonSelector },
   actions: { updateEntities },
 } = state;
 
 const createNewLesson = (user: User) => {
-  const defaultStep: Step = createStep('variation');
+  const defaultStep: Step = createStep('variation', {
+    position: START_FEN,
+  });
   const newLessonId = generateIndex();
   const defaultChapter = createChapter(generateIndex(), 'Chapter', [
     defaultStep,

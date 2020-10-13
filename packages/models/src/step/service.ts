@@ -1,3 +1,4 @@
+import merge from "lodash.merge";
 import { Step, TYPE_STEP } from "./types";
 import {
   getSubjectValueAt,
@@ -81,10 +82,28 @@ const getNextStep = (parentStep: Step, cursorStep: Step): Step | null => {
   return null;
 };
 
+const getRightStep = (parentStep: Step, cursorStep: Step): Step | null => {
+  if (isSameStep(parentStep, cursorStep)) {
+    return null;
+  }
+  let index = 0;
+  while (index < parentStep.state.steps.length) {
+    const step = parentStep.state.steps[index];
+    if (isSameStep(cursorStep, step)) {
+      return parentStep.state.steps[index + 1] || null;
+    }
+
+    const nextStep = getRightStep(step, cursorStep);
+    if (nextStep) {
+      return nextStep;
+    }
+    index += 1;
+  }
+  return null;
+};
+
 /**
  * Get steps count including itself.
- * @param step
- * @param count
  */
 const getStepsCount = (step: Step) => {
   let count = 1;
@@ -165,14 +184,21 @@ const addStepToLeft = (parentStep: Step, step: Step): Step => {
   };
 };
 
+/**
+ * Remove all step and all adjacent steps
+ */
 const removeStep = (parentStep: Step, step: Step): Step => {
+  let removeStep = false;
   return {
     ...parentStep,
     state: {
       ...parentStep.state,
-      steps: parentStep.state.steps.filter(childStep =>
-        isSameStep(childStep, step) ? false : true
-      )
+      steps: parentStep.state.steps.filter((childStep, index) => {
+        if (isSameStep(childStep, step)) {
+          removeStep = true;
+        }
+        return !removeStep;
+      })
     }
   };
 };
@@ -209,6 +235,22 @@ const getStepPath = (parentStep: Step, step: Step): SubjectPath | null => {
   return null;
 };
 
+const getStepSequence = (parentStep: Step, step: Step): Step[] | null => {
+  const sequence = [];
+  for (let index = 0; index < parentStep.state.steps.length; index++) {
+    const childStep = parentStep.state.steps[index];
+    sequence.push(childStep);
+    if (isSameStep(step, childStep)) {
+      return sequence;
+    }
+    const path = getStepSequence(childStep, step);
+    if (path) {
+      return [...sequence, ...path];
+    }
+  }
+  return null;
+};
+
 const getStepAt = (parentStep: Step, path: SubjectPath): Step => {
   return getSubjectValueAt(parentStep, path);
 };
@@ -223,10 +265,7 @@ const updateStepState = <T extends Step>(
   state: Partial<T["state"]>
 ) => ({
   ...step,
-  state: {
-    ...step.state,
-    ...state
-  }
+  state: merge({}, step.state, state)
 });
 
 const updateNestedStep = (
@@ -259,12 +298,14 @@ export {
   getStepIndex,
   getLastStep,
   getNextStep,
+  getRightStep,
   getPreviousStep,
   getParentStep,
   isLastStep,
   addStepRightToSame,
   getChildStep,
   getStepPath,
+  getStepSequence,
   updateNestedStep,
   updateStep,
   updateStepState,

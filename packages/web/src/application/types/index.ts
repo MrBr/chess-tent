@@ -55,7 +55,17 @@ import {
   UpdateLessonPathAction,
 } from '@chess-tent/types';
 import { ChessInstance } from 'chess.js';
-import { FEN, Move, Piece, PieceColor } from './chess';
+import {
+  FEN,
+  Move,
+  MoveShort,
+  NotableMove,
+  Piece,
+  PieceColor,
+  PieceRole,
+  PieceRolePromotable,
+  PieceRoleShort,
+} from './chess';
 import { StepModule, StepModuleComponentKey } from './step';
 import {
   AuthorizedProps,
@@ -73,8 +83,10 @@ import {
   DescriptionModule,
   ExerciseModule,
   MoveModule,
+  MoveStep,
   Steps,
   VariationModule,
+  VariationStep,
 } from './steps';
 import { Socket } from './socket';
 import { HOC } from './hoc';
@@ -136,8 +148,8 @@ export type Hooks = {
 };
 
 // Application Components
-type ModuleRecord<K extends keyof any, T extends StepModule> = {
-  [P in K]: T extends StepModule<infer U, infer S>
+type ModuleRecord<K extends StepType, T> = {
+  [P in K]: T extends StepModule<infer U, infer S, infer Z, infer Y>
     ? S extends P
       ? T
       : never
@@ -224,6 +236,23 @@ export type State = {
       path: T extends 'state' ? [T, K] : [T],
       value: T extends 'state' ? NormalizedLesson[T][K] : NormalizedLesson[T],
     ) => UpdateLessonPathAction;
+    // TODO - not implemented - requires some refactoring, but useful for atomic updates
+    updateLessonStepState: <
+      T extends Step,
+      K extends keyof T['state'],
+      U extends keyof T['state'][K],
+      S extends keyof T['state'][K][U]
+    >(
+      lesson: Lesson,
+      chapter: Chapter,
+      step: T,
+      path: [K] | [K, U] | [K, U, S],
+      value: T['state'][K] extends {}
+        ? T['state'][K][U] extends {}
+          ? T['state'][K][U][S]
+          : T['state'][K][U]
+        : T['state'][K],
+    ) => void;
   };
   selectors: {
     lessonSelector: (
@@ -253,7 +282,27 @@ export type Services = {
   getPiece: (position: FEN, square: string) => Piece | null;
   getTurnColor: (position: FEN) => PieceColor;
   setTurnColor: (position: FEN, color: PieceColor) => FEN;
-
+  createMoveShortObject: (
+    move: Move,
+    promoted?: PieceRolePromotable,
+  ) => MoveShort;
+  shortenRole: (role: PieceRole) => PieceRoleShort;
+  createNotableMove: (
+    position: FEN,
+    move: Move,
+    index: number,
+    piece: Piece,
+    captured?: boolean,
+    promoted?: PieceRole,
+  ) => NotableMove;
+  isSameStepMove: (
+    step: VariationStep | MoveStep,
+    move: NotableMove,
+  ) => boolean;
+  getSameMoveVariationStep: (
+    step: VariationStep | MoveStep,
+    move: NotableMove,
+  ) => VariationStep | null;
   // Add non infrastructural providers
   // Allow modules to inject their own non dependant Providers
   addProvider: (provider: ComponentType) => void;
@@ -269,11 +318,10 @@ export type Services = {
     recordKey: string,
   ) => () => RecordHookReturn<T>;
   isStepType: <T extends Steps>(step: Step, stepType: StepType) => step is T;
-  createStep: <T extends Steps>(
-    stepType: T extends Step<infer U, infer K> ? K : never,
-    initialPosition?: FEN,
-    initialState?: Partial<T extends Step<infer U, infer K> ? U : never>,
-  ) => T;
+  createStep: <T extends StepType>(
+    stepType: T,
+    initialState: Parameters<StepModules[T]['createStep']>[1],
+  ) => StepModules[T] extends StepModule<infer S, infer K> ? S : never;
   createChapter: (title?: string, steps?: Step[]) => Chapter;
   history: History;
 };
@@ -309,9 +357,25 @@ export type Components = {
   Authorized: ComponentType<AuthorizedProps>;
   Provider: ComponentType;
   StateProvider: ComponentType;
-  StepRenderer: <T extends StepModuleComponentKey>(
-    props: StepModule[T] extends ComponentType<infer P>
-      ? P & { component: StepModuleComponentKey; step: Step }
+  StepRenderer: <T extends StepModuleComponentKey, S extends Step>(
+    props: StepModule<
+      S,
+      S extends Step<infer U, infer K> ? K : never,
+      {},
+      S extends Step<infer U, infer K>
+        ? K extends StepType
+          ? StepModules[K] extends StepModule<
+              infer A,
+              infer B,
+              infer C,
+              infer D
+            >
+            ? D
+            : never
+          : never
+        : never
+    >[T] extends ComponentType<infer P>
+      ? P & { component: T; step: S }
       : never,
   ) => ReactElement;
   Evaluator: ComponentType<{
@@ -331,6 +395,10 @@ export type Components = {
   }>;
   Editor: ComponentType<{ lesson: Lesson; save: Requests['lessonUpdates'] }>;
   Lessons: ComponentType<{ lessons: Lesson[] | null }>;
+  EditBoardToggle: ComponentType<{
+    editing: boolean;
+    onChange: (editing: boolean) => void;
+  }>;
   Coaches: ComponentType;
   Activities: ComponentType<{ activities: Activity[] | null }>;
   Conversations: ComponentType;

@@ -1,25 +1,25 @@
 import React, { useCallback } from 'react';
 import { ExerciseQuestionnaireState, ExerciseToolboxProps } from '@types';
 import { components, ui } from '@application';
-import { useUpdateExerciseState } from '../hooks';
+import { useUpdateExerciseStep } from '../hooks';
 
 const { Check, Row, Col, Text, Container } = ui;
 const { LessonToolboxText } = components;
 
 export default ({ step, updateStep }: ExerciseToolboxProps) => {
   const state = step.state.exerciseState as ExerciseQuestionnaireState;
-  const updateExerciseState = useUpdateExerciseState(updateStep, step);
+  const updateExerciseStep = useUpdateExerciseStep(updateStep, step);
   const addOption = useCallback(() => {
-    updateExerciseState({
+    updateExerciseStep({
       options: [...(state?.options || []), { text: '', correct: false }],
     });
-  }, [state, updateExerciseState]);
+  }, [state, updateExerciseStep]);
 
   const updateOption = (index: number, update: {}) => {
     const options = state?.options?.map((option, optionIndex) =>
       optionIndex === index ? { ...option, ...update } : option,
     );
-    updateExerciseState({ options });
+    updateExerciseStep({ options });
   };
 
   return (

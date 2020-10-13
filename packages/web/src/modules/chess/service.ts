@@ -1,4 +1,11 @@
-import { FEN, Move, Services } from '@types';
+import {
+  FEN,
+  Move,
+  PieceRole,
+  PieceRoleShort,
+  PieceRoleShortPromotable,
+  Services,
+} from '@types';
 import { forEachRight } from 'lodash';
 import { transformColorKey, transformPieceTypeToRole } from './helpers';
 
@@ -52,3 +59,34 @@ export const setTurnColor: Services['setTurnColor'] = (position, color) => {
   fenChunks[1] = color === 'white' ? 'w' : 'b';
   return fenChunks.join(' ');
 };
+
+const shortRoleMap: Record<PieceRole, PieceRoleShort> = {
+  knight: 'n',
+  king: 'k',
+  rook: 'r',
+  queen: 'q',
+  pawn: 'p',
+  bishop: 'b',
+};
+export const shortenRole: Services['shortenRole'] = (role: PieceRole) =>
+  shortRoleMap[role];
+
+export const createMoveShortObject: Services['createMoveShortObject'] = (
+  move,
+  promoted,
+) => ({
+  from: move[0],
+  to: move[1],
+  promotion: promoted
+    ? (shortenRole(promoted) as PieceRoleShortPromotable)
+    : undefined,
+});
+
+export const createNotableMove: Services['createNotableMove'] = (
+  position,
+  move,
+  index,
+  piece,
+  captured = false,
+  promoted = undefined,
+) => ({ position, move, index, piece, promoted, captured });

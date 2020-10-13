@@ -4,19 +4,17 @@ import React, {
   useCallback,
   useMemo,
 } from 'react';
-import { components, services, ui } from '@application';
+import { components, services } from '@application';
 import {
   ExerciseModule,
   ExerciseArrangePiecesState,
   Move,
   Shape,
 } from '@types';
-import { updateStepState } from '@chess-tent/models';
-import { useUpdateExerciseState, useUpdateExerciseStateProp } from '../hooks';
+import { useUpdateExerciseStep } from '../hooks';
 
-const { Chessboard } = components;
-const { createFenForward } = services;
-const { ToggleButton } = ui;
+const { Chessboard, EditBoardToggle } = components;
+const { createFenForward, createNotableMove } = services;
 
 const Editor: FunctionComponent<ComponentProps<ExerciseModule['Editor']>> = ({
   step,
@@ -26,39 +24,39 @@ const Editor: FunctionComponent<ComponentProps<ExerciseModule['Editor']>> = ({
   const { position, shapes } = step.state;
   const { moves, editing } = step.state
     .exerciseState as ExerciseArrangePiecesState;
-  const updateMoves = useUpdateExerciseStateProp<ExerciseArrangePiecesState>(
+  const updateExerciseStep = useUpdateExerciseStep<ExerciseArrangePiecesState>(
     updateStep,
     step,
-    'moves',
   );
-  const updateExerciseState = useUpdateExerciseState(updateStep, step);
   const handleShapes = useCallback(
     (shapes: Shape[]) => {
-      updateStep(updateStepState(step, { shapes }));
+      updateExerciseStep({}, { shapes });
     },
-    [updateStep, step],
+    [updateExerciseStep],
   );
   const handleMove = useCallback(
     (position, newMove, piece, captured) => {
       if (editing) {
-        updateStep(updateStepState(step, { position }));
-        updateMoves([]);
+        updateExerciseStep({ moves: [] }, { position });
         return;
       }
       const movedPiecePrevMove = moves?.find(
         move => move.move?.[1] === newMove[0],
       );
-      updateMoves([
+      const newMoves: typeof moves = [
         // Remove piece previous move
         ...(moves || []).filter(move => move !== movedPiecePrevMove),
-        {
-          move: [movedPiecePrevMove?.move?.[0] || newMove[0], newMove[1]],
-          piece,
+        createNotableMove(
+          position,
+          [movedPiecePrevMove?.move?.[0] || newMove[0], newMove[1]],
+          0,
           captured,
-        },
-      ]);
+          piece,
+        ),
+      ];
+      updateExerciseStep({ moves: newMoves });
     },
-    [editing, moves, step, updateMoves, updateStep],
+    [editing, moves, updateExerciseStep],
   );
   const activePosition = useMemo(
     () =>
@@ -76,14 +74,12 @@ const Editor: FunctionComponent<ComponentProps<ExerciseModule['Editor']>> = ({
       onShapesChange={handleShapes}
       shapes={shapes}
       footer={
-        <ToggleButton
-          value={1}
-          checked
-          size="extra-small"
-          onChange={() => updateExerciseState({ editing: !editing })}
+        <EditBoardToggle
+          editing={!!editing}
+          onChange={() => updateExerciseStep({ editing })}
         >
           {editing ? 'Set position' : 'Edit board'}
-        </ToggleButton>
+        </EditBoardToggle>
       }
     />
   );

@@ -3,25 +3,16 @@ import { StepMove } from '@types';
 import styled from '@emotion/styled';
 
 const StepMoveComponent: StepMove = styled(
-  ({
-    className,
-    move,
-    moveIndex,
-    movedPiece,
-    captured,
-    prefix,
-    suffix,
-    blackIndexSign,
-  }) => (
+  ({ className, move, prefix, suffix, blackIndexSign }) => (
     <span className={className}>
       {prefix}
-      {moveIndex &&
-        (movedPiece?.color === 'black' ? blackIndexSign : `${moveIndex}.`)}
-      {movedPiece && (
-        <span className={`piece ${movedPiece.color} ${movedPiece.role}`} />
+      {move.index &&
+        (move.piece?.color === 'black' ? blackIndexSign : `${move.index}.`)}
+      {move.piece && (
+        <span className={`piece ${move.piece.color} ${move.piece.role}`} />
       )}
-      {captured && 'x'}
-      {move?.[1]}
+      {move.captured && 'x'}
+      {move.move[1]}
       {suffix}
     </span>
   ),

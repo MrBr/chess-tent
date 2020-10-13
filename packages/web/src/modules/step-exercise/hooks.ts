@@ -2,13 +2,14 @@ import { ExerciseState, ExerciseStep } from '@types';
 import { useCallback } from 'react';
 import { updateStepState } from '@chess-tent/models';
 
-export const useUpdateExerciseState = <T extends ExerciseState>(
+export const useUpdateExerciseStep = <T extends ExerciseState>(
   updateStep: (step: ExerciseStep) => void,
   step: ExerciseStep,
 ) => {
   return useCallback(
-    (exerciseState: ExerciseState) => {
+    (exerciseState: T, state: Partial<ExerciseStep['state']> = {}) => {
       const updatedStep = updateStepState(step, {
+        ...state,
         exerciseState: {
           ...step.state.exerciseState,
           ...exerciseState,
@@ -25,7 +26,7 @@ export const useUpdateExerciseStateProp = <T>(
   step: ExerciseStep,
   prop: T extends ExerciseState ? keyof T : never,
 ) => {
-  const updateExerciseState = useUpdateExerciseState(updateStep, step);
+  const updateExerciseState = useUpdateExerciseStep(updateStep, step);
   return useCallback(
     (value: T[typeof prop]) => updateExerciseState({ [prop]: value }),
     [updateExerciseState, prop],

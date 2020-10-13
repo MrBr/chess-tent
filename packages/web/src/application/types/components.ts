@@ -16,11 +16,18 @@ import {
   Piece,
   Shape,
   ExtendedKey,
+  PieceRole,
+  PieceRolePromotable,
 } from './chess';
 import { EditorProps, StepSystemProps } from './step';
 
 export interface ChessboardState {
   renderPrompt?: (close: () => void) => ReactElement;
+  promotion?: {
+    from: Key;
+    to: Key;
+    piece: Piece;
+  };
 }
 
 export interface ChessboardProps {
@@ -36,12 +43,13 @@ export interface ChessboardProps {
   resizable?: boolean;
   fen: FEN;
   animation?: boolean;
-  onChange?: (position: FEN, lastMove?: Move, piece?: Piece) => void;
+  onChange?: (position: FEN) => void;
   onMove?: (
     position: FEN,
     lastMove: Move,
     piece: Piece,
     captured: boolean,
+    promoted?: PieceRole,
   ) => void;
   onShapesChange?: (shapes: DrawShape[]) => void;
   onShapeAdd?: (shape: DrawShape[]) => void;
@@ -66,13 +74,17 @@ export interface ChessboardInterface
   closePrompt: () => void;
   removeShape: (shape: DrawShape) => void;
   resetBoard: () => void;
-  fen: (move?: Move, piece?: Piece) => FEN;
+  fen: (
+    move?: Move,
+    options?: { piece?: Piece; promoted?: PieceRolePromotable },
+  ) => FEN;
   move: (from: Key, to: Key) => void;
 }
 
 export type StepperProps = {
   steps: Step[];
   className?: string;
+  root?: boolean;
 } & StepSystemProps &
   EditorProps;
 
@@ -99,23 +111,21 @@ export type LessonToolboxText = FunctionComponent<{
 }>;
 
 // Move written in chess notation
-export type StepMove = FunctionComponent<
-  {
-    className?: string;
-    showIndex?: boolean;
-    prefix?: string | ReactElement;
-    suffix?: string | ReactElement;
-    blackIndexSign?: string | ReactElement;
-  } & NotableMove
->;
+export type StepMove = FunctionComponent<{
+  className?: string;
+  showIndex?: boolean;
+  prefix?: string | ReactElement;
+  suffix?: string | ReactElement;
+  blackIndexSign?: string | ReactElement;
+  move: NotableMove;
+}>;
 
 export type StepTag = FunctionComponent<{
   children: ReactNode;
   active: boolean;
   step: Step;
   className?: string;
-  moveIndex?: number;
-  movedPiece?: Piece;
+  move?: NotableMove | null;
 }>;
 
 export interface ActionProps {

@@ -5,10 +5,12 @@ import {
   getNextStep,
   getParentStep,
   getPreviousStep,
+  getRightStep,
   getStepAt,
   getStepIndex,
   getStepPath,
   getStepsCount,
+  getStepSequence,
   isSameStep,
   Step
 } from "../step";
@@ -71,6 +73,22 @@ const getChapterNextStep = (chapter: Chapter, step: Step) => {
   }
 };
 
+const getChapterRightStep = (chapter: Chapter, step: Step): Step | null => {
+  let index = 0;
+  while (index < chapter.state.steps.length) {
+    const rootStep = chapter.state.steps[index];
+    if (isSameStep(rootStep, step)) {
+      return chapter.state.steps[index + 1] || null;
+    }
+    const nextStep = getRightStep(rootStep, step);
+    if (nextStep) {
+      return nextStep;
+    }
+    index++;
+  }
+  return null;
+};
+
 const getChapterStepsCount = (chapter: Chapter) => {
   let count = 0;
   chapter.state.steps.forEach(step => {
@@ -96,6 +114,20 @@ const getChapterStepPath = (chapter: Chapter, step: Step) => {
     const path = getStepPath(childStep, step);
     if (path) {
       return ["state", "steps", index, ...path];
+    }
+  }
+  return null;
+};
+
+const getChapterStepSequence = (chapter: Chapter, step: Step) => {
+  for (let index = 0; index < chapter.state.steps.length; index++) {
+    const childStep = chapter.state.steps[index];
+    if (isSameStep(childStep, step)) {
+      return [childStep];
+    }
+    const path = getStepSequence(childStep, step);
+    if (path) {
+      return [childStep, ...path];
     }
   }
   return null;
@@ -127,11 +159,13 @@ export {
   getChapterParentStep,
   getChapterPreviousStep,
   getChapterNextStep,
+  getChapterRightStep,
   getChapterStepsCount,
   getChapterStepIndex,
   getChapterStep,
   isChapter,
   getChapterStepPath,
+  getChapterStepSequence,
   createChapter,
   updateChapterStep,
   getChapterStepAt

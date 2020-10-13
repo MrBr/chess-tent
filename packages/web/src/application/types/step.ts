@@ -1,6 +1,5 @@
 import { ComponentType, FunctionComponent } from 'react';
 import { Activity, Chapter, Lesson, Step, StepType } from '@chess-tent/models';
-import { FEN } from './chess';
 import { ChessboardInterface, ChessboardProps } from './components';
 import { ClassComponent } from './_helpers';
 
@@ -38,16 +37,17 @@ export type ActivityFooterProps = {
   currentStep?: number;
 };
 export type StepModule<
-  T extends Step = any,
-  K extends StepType = StepType,
-  U extends {} = {}
+  STEP extends Step,
+  STEP_TYPE extends StepType,
+  REQUIRED_STATE extends {} = {},
+  ACTIVITY_STATE extends {} = {}
 > = {
-  Editor: StepComponent<T, EditorProps & StepBoardComponentProps>;
+  Editor: StepComponent<STEP, EditorProps & StepBoardComponentProps>;
   Playground: StepComponent<
-    T,
+    STEP,
     {
       setStepActivityState: (state: {}) => void;
-      stepActivityState: U;
+      stepActivityState: ACTIVITY_STATE;
       nextStep: () => void;
       prevStep: () => void;
       Footer: FunctionComponent<ActivityFooterProps>;
@@ -55,11 +55,11 @@ export type StepModule<
       completeStep: (step: Step) => void;
     } & StepBoardComponentProps
   >;
-  StepperStep: StepComponent<T, EditorProps>;
-  stepType: K;
+  StepperStep: StepComponent<STEP, EditorProps>;
+  stepType: STEP_TYPE;
   createStep: (
     id: string,
-    prevPosition: FEN,
-    initialState?: Partial<T extends Step<infer S, K> ? S : never>,
-  ) => T;
+    initialState: Partial<STEP extends Step<infer S, infer ST> ? S : never> &
+      REQUIRED_STATE,
+  ) => STEP;
 };

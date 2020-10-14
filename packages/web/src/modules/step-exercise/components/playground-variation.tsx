@@ -12,7 +12,7 @@ import {
   Move,
 } from '@types';
 
-const { Chessboard, LessonPlayground } = components;
+const { LessonPlayground } = components;
 const { createFenForward } = services;
 
 const isCorrectActivityMove = (activityMove: Move, stepMove: Move) =>
@@ -20,7 +20,14 @@ const isCorrectActivityMove = (activityMove: Move, stepMove: Move) =>
 
 const Playground: FunctionComponent<ComponentProps<
   ExerciseModule['Playground']
->> = ({ step, status, stepActivityState, setStepActivityState, Footer }) => {
+>> = ({
+  step,
+  status,
+  stepActivityState,
+  setStepActivityState,
+  Footer,
+  Chessboard,
+}) => {
   const { position, shapes } = step.state;
   const {
     activeMoveIndex,

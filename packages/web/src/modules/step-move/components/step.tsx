@@ -13,9 +13,16 @@ import {
 import { FEN, Move, MoveModule, MoveStep, Piece, VariationStep } from '@types';
 import { services, components, ui } from '@application';
 
-const { Col, Row, Container } = ui;
+const { Col, Row, Container, Text } = ui;
 const { getPiece, createNotableMove } = services;
-const { StepTag, StepToolbox, Stepper, StepMove } = components;
+const {
+  StepTag,
+  StepToolbox,
+  Stepper,
+  StepMove,
+  LessonPlayground,
+  LessonPlaygroundSidebar,
+} = components;
 
 const stepType = 'move';
 
@@ -148,14 +155,30 @@ const Editor: MoveModule['Editor'] = ({
   );
 };
 
-const Playground: MoveModule['Playground'] = ({ Chessboard, step, Footer }) => {
+const Playground: MoveModule['Playground'] = ({
+  Chessboard,
+  step,
+  Footer,
+  lesson,
+  chapter,
+}) => {
   const {
     state: {
       move: { position },
       shapes,
     },
   } = step;
-  return <Chessboard fen={position} shapes={shapes} footer={<Footer />} />;
+  return (
+    <LessonPlayground
+      board={<Chessboard fen={position} shapes={shapes} footer={<Footer />} />}
+      sidebar={
+        <LessonPlaygroundSidebar lesson={lesson} step={step} chapter={chapter}>
+          {step.state.move && <StepMove move={step.state.move} />}
+          <Text>{step.state.description}</Text>
+        </LessonPlaygroundSidebar>
+      }
+    />
+  );
 };
 
 const StepperStep: MoveModule['StepperStep'] = props => {

@@ -11,7 +11,7 @@ import { components, services, ui, stepModules } from '@application';
 import Comment from './comment';
 
 const { Col, Row, Container } = ui;
-const { StepTag, StepToolbox } = components;
+const { StepTag, StepToolbox, LessonPlayground } = components;
 
 const stepType = 'description';
 
@@ -64,7 +64,12 @@ const Playground: DescriptionModule['Playground'] = ({
   const {
     state: { position, shapes },
   } = step;
-  return <Chessboard fen={position} shapes={shapes} footer={<Footer />} />;
+  return (
+    <LessonPlayground
+      board={<Chessboard fen={position} shapes={shapes} footer={<Footer />} />}
+      sidebar={<>sidebar description</>}
+    />
+  );
 };
 
 const StepperStep: DescriptionModule['StepperStep'] = ({

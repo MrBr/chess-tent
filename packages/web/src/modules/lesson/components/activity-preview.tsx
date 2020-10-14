@@ -14,8 +14,9 @@ import {
   updateActivityStepState,
   User,
 } from '@chess-tent/models';
-import { ActivityFooterProps, LessonActivity } from '@types';
+import { ActivityFooterProps, ChessboardProps, LessonActivity } from '@types';
 import Footer from './activity-footer';
+import Header from './activity-header';
 
 interface PreviewProps {
   lesson: Lesson;
@@ -25,7 +26,7 @@ interface PreviewProps {
 
 const { useActiveUserRecord, useComponentState } = hooks;
 const { StepRenderer, Chessboard } = components;
-const { Modal } = ui;
+const { Modal, Icon, Absolute } = ui;
 
 const Preview = ({ lesson, chapter, step }: PreviewProps) => {
   const [user] = useActiveUserRecord() as [User, never, never];
@@ -99,6 +100,10 @@ const Preview = ({ lesson, chapter, step }: PreviewProps) => {
     />
   );
 
+  const boardRender = (props: ChessboardProps) => (
+    <Chessboard header={<Header lesson={lesson} />} {...props} />
+  );
+
   return (
     <StepRenderer
       step={activeStep}
@@ -111,7 +116,7 @@ const Preview = ({ lesson, chapter, step }: PreviewProps) => {
       stepActivityState={activityStepState}
       nextStep={() => {}}
       prevStep={() => {}}
-      Chessboard={Chessboard}
+      Chessboard={boardRender}
       activity={activity}
       completeStep={completeStep}
       Footer={footerRender}
@@ -127,6 +132,9 @@ const PreviewModal = ({
   return (
     <Modal show onEscapeKeyDown={close} dialogClassName="full-screen-dialog">
       {mounted && <Preview {...props} />}
+      <Absolute left={25} top={15} onClick={close}>
+        <Icon type="close" size="large" />
+      </Absolute>
     </Modal>
   );
 };

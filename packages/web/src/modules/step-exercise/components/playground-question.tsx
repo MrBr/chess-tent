@@ -7,7 +7,7 @@ import {
 } from '@types';
 import { isStepCompleted } from '@chess-tent/models';
 
-const { Chessboard, LessonPlayground, LessonToolboxText } = components;
+const { LessonPlayground, LessonToolboxText } = components;
 const { Headline3, Text, Button } = ui;
 
 const Playground: FunctionComponent<ComponentProps<
@@ -20,6 +20,7 @@ const Playground: FunctionComponent<ComponentProps<
   activity,
   completeStep,
   Footer,
+  Chessboard,
 }) => {
   const { position, shapes } = step.state;
   const { answer } = stepActivityState as ExerciseQuestionActivityState;

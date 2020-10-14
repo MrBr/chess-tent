@@ -23,8 +23,15 @@ import { components, services, ui } from '@application';
 import Footer from './footer';
 import BoardSrc from '../images/board.svg';
 
-const { Col, Row, Container, Img } = ui;
-const { Stepper, StepTag, StepToolbox, StepMove } = components;
+const { Col, Row, Container, Img, Text } = ui;
+const {
+  Stepper,
+  StepTag,
+  StepToolbox,
+  StepMove,
+  LessonPlayground,
+  LessonPlaygroundSidebar,
+} = components;
 
 const stepType = 'variation';
 
@@ -169,12 +176,24 @@ const Playground: VariationModule['Playground'] = ({
   Chessboard,
   step,
   Footer,
+  lesson,
+  chapter,
 }) => {
   const {
     state: { move, shapes },
   } = step;
   const position = move ? move.position : (step.state.position as FEN);
-  return <Chessboard fen={position} shapes={shapes} footer={<Footer />} />;
+  return (
+    <LessonPlayground
+      board={<Chessboard fen={position} shapes={shapes} footer={<Footer />} />}
+      sidebar={
+        <LessonPlaygroundSidebar lesson={lesson} step={step} chapter={chapter}>
+          {step.state.move && <StepMove move={step.state.move} />}
+          <Text>{step.state.description}</Text>
+        </LessonPlaygroundSidebar>
+      }
+    />
+  );
 };
 
 const StepperStep: VariationModule['StepperStep'] = props => {

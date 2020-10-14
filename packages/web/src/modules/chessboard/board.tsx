@@ -69,10 +69,8 @@ const BoardHeader = styled.div<{
   width: string | number;
 }>(
   {
-    display: 'flex',
-    height: 50,
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    minHeight: 50,
+    margin: 'auto',
   },
   ({ width }) => ({ width }),
 );

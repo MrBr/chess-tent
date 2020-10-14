@@ -1,6 +1,11 @@
 import React, { useCallback, useMemo } from 'react';
-import { ActivityComponent, ActivityFooterProps, LessonActivity } from '@types';
-import { components, hooks, state } from '@application';
+import {
+  ActivityComponent,
+  ActivityFooterProps,
+  ChessboardProps,
+  LessonActivity,
+} from '@types';
+import { components, hooks, state, ui } from '@application';
 import {
   Chapter,
   getChapterNextStep,
@@ -20,6 +25,7 @@ const { useDispatchBatched, useLocation } = hooks;
 const {
   actions: { updateActivityState, setActivityActiveStep, updateActivity },
 } = state;
+const { Avatar, Headline3, Text } = ui;
 
 const Activity: ActivityComponent<LessonActivity> = ({ activity }) => {
   const dispatch = useDispatchBatched();
@@ -89,6 +95,19 @@ const Activity: ActivityComponent<LessonActivity> = ({ activity }) => {
     />
   );
 
+  const boardRender = (props: ChessboardProps) => (
+    <Chessboard
+      {...props}
+      header={
+        <>
+          <Headline3 className="mt-0">{lesson.state.title}</Headline3>
+          <Avatar src={lesson.owner.imageUrl} size="extra-small" />
+          <Text inline>{lesson.owner.name}</Text>
+        </>
+      }
+    />
+  );
+
   return (
     <StepRenderer
       step={activeStep}
@@ -101,7 +120,7 @@ const Activity: ActivityComponent<LessonActivity> = ({ activity }) => {
       stepActivityState={activeStepActivityState}
       nextStep={nextActivityStep}
       prevStep={prevActivityStep}
-      Chessboard={Chessboard}
+      Chessboard={boardRender}
       activity={activity}
       completeStep={completeStep}
       Footer={footerRender}

@@ -21,7 +21,7 @@ import {
 import { debounce } from 'lodash';
 import { components, hooks, services, state, ui } from '@application';
 import TrainingModal from './trening-assign';
-import Sidebar from './sidebar';
+import Sidebar from './editor-sidebar';
 import { PreviewModal } from './activity-preview';
 import ChaptersDropdown from './chapters-dropdown';
 import DifficultyDropdown from './difficulty-dropdown';
@@ -72,6 +72,18 @@ class EditorRenderer extends React.Component<
   state = {
     dirty: false,
   };
+
+  componentDidMount() {
+    const { promptModal, lesson, activeStep, activeChapter } = this.props;
+    promptModal(close => (
+      <PreviewModal
+        close={close}
+        lesson={lesson}
+        step={activeStep}
+        chapter={activeChapter}
+      />
+    ));
+  }
 
   componentDidUpdate(prevProps: EditorRendererProps) {
     const { lesson } = this.props;
@@ -293,6 +305,7 @@ class EditorRenderer extends React.Component<
                 <Row>
                   <Col>
                     <ChaptersDropdown
+                      editable
                       activeChapter={activeChapter}
                       chapters={lesson.state.chapters}
                       onChange={this.setActiveChapterHandler}

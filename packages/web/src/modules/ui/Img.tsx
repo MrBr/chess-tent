@@ -8,6 +8,9 @@ export const Img = styled.img({ width: '100%' }) as UI['Img'];
 const sizeEnhancer = (props: ComponentProps<UI['Avatar']>) => {
   let size;
   switch (props.size) {
+    case 'extra-small':
+      size = 25;
+      break;
     case 'small':
       size = 32;
       break;

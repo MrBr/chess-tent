@@ -7,7 +7,7 @@ import {
 } from 'react';
 import { DrawCurrent, DrawShape } from '@chess-tent/chessground/dist/draw';
 import { Api } from '@chess-tent/chessground/dist/api';
-import { Step } from '@chess-tent/models';
+import { Chapter, Lesson, Step } from '@chess-tent/models';
 import {
   Move,
   NotableMove,
@@ -134,4 +134,10 @@ export interface ActionProps {
 
 export interface AuthorizedProps {
   children: ReactElement | ((authorized: boolean) => ReactElement);
+}
+
+export interface LessonPlaygroundSidebarProps {
+  lesson: Lesson;
+  chapter: Chapter;
+  step: Step;
 }

@@ -7,5 +7,11 @@ export default styled.div<ComponentProps<UI['Absolute']>>(
     display: 'inline-block',
     position: 'absolute',
   },
-  ({ top, right, bottom, left }) => ({ top, right, bottom, left }),
+  ({ top, right, bottom, left, zIndex }) => ({
+    top,
+    right,
+    bottom,
+    left,
+    zIndex,
+  }),
 );

@@ -30,16 +30,14 @@ const textualEnhancer = (props: IconProps) =>
     verticalAlign: 'sub',
   };
 
-const Icon = styled<FunctionComponent<IconProps>>(
-  ({ type, className, ...props }) => {
-    const IconSvgComponent = iconsMap[type];
-    return (
-      <span className={className}>
-        <IconSvgComponent className="svg-icon" />
-      </span>
-    );
-  },
-)<IconProps>(
+const Icon = styled<FunctionComponent<IconProps>>(({ type, className }) => {
+  const IconSvgComponent = iconsMap[type];
+  return (
+    <span className={className}>
+      <IconSvgComponent className="svg-icon" />
+    </span>
+  );
+})<IconProps>(
   {
     '.svg-icon': {
       width: '100%',

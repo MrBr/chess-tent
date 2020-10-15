@@ -127,6 +127,7 @@ export type UI = {
       right?: number;
       bottom?: number;
       left?: number;
+      zIndex?: number;
     } & ClickProps
   >;
   Page: UIComponent<ContainerProps>;

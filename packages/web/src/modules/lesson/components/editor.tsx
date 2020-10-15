@@ -73,18 +73,6 @@ class EditorRenderer extends React.Component<
     dirty: false,
   };
 
-  componentDidMount() {
-    const { promptModal, lesson, activeStep, activeChapter } = this.props;
-    promptModal(close => (
-      <PreviewModal
-        close={close}
-        lesson={lesson}
-        step={activeStep}
-        chapter={activeChapter}
-      />
-    ));
-  }
-
   componentDidUpdate(prevProps: EditorRendererProps) {
     const { lesson } = this.props;
     if (lesson !== prevProps.lesson) {

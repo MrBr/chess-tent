@@ -34,7 +34,7 @@ const Icon = styled<FunctionComponent<IconProps>>(
   ({ type, className, ...props }) => {
     const IconSvgComponent = iconsMap[type];
     return (
-      <span {...props} className={className}>
+      <span className={className}>
         <IconSvgComponent className="svg-icon" />
       </span>
     );

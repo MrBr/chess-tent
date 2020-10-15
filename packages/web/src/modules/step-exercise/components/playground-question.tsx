@@ -7,20 +7,25 @@ import {
 } from '@types';
 import { isStepCompleted } from '@chess-tent/models';
 
-const { LessonPlayground, LessonToolboxText } = components;
-const { Headline3, Text, Button } = ui;
+const {
+  LessonPlayground,
+  LessonToolboxText,
+  LessonPlaygroundSidebar,
+} = components;
+const { Headline4, Text, Button } = ui;
 
 const Playground: FunctionComponent<ComponentProps<
   ExerciseModule['Playground']
 >> = ({
   step,
-  status,
   stepActivityState,
   setStepActivityState,
   activity,
   completeStep,
   Footer,
   Chessboard,
+  lesson,
+  chapter,
 }) => {
   const { position, shapes } = step.state;
   const { answer } = stepActivityState as ExerciseQuestionActivityState;
@@ -44,23 +49,24 @@ const Playground: FunctionComponent<ComponentProps<
       board={
         <Chessboard
           fen={position}
-          header={status}
           shapes={shapes}
           animation
           footer={<Footer />}
         />
       }
       sidebar={
-        <>
-          <Headline3>Answer the question</Headline3>
+        <LessonPlaygroundSidebar lesson={lesson} chapter={chapter} step={step}>
+          <Headline4>Answer the question</Headline4>
           <Text>{question}</Text>
           <LessonToolboxText
             defaultText={answer}
             onChange={handleAnswerChange}
           />
           {completed && <Text>{explanation}</Text>}
-          <Button onClick={handleSubmit}>Submit</Button>
-        </>
+          <Button onClick={handleSubmit} size="extra-small">
+            Submit
+          </Button>
+        </LessonPlaygroundSidebar>
       }
     />
   );

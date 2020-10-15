@@ -14,7 +14,7 @@ import {
 } from '@types';
 
 const { LessonPlayground, LessonPlaygroundSidebar } = components;
-const { Text } = ui;
+const { Text, Headline4 } = ui;
 
 const getPieceStatus = (
   activityMoves?: ExerciseActivityArrangePiecesState['moves'],
@@ -100,6 +100,7 @@ const Playground: FunctionComponent<ComponentProps<
       }
       sidebar={
         <LessonPlaygroundSidebar lesson={lesson} step={step} chapter={chapter}>
+          <Headline4>Arrange the pieces</Headline4>
           {exerciseMoves?.map(({ move }) => (
             <Text key={move[0]}>
               {move[0]} - {getPieceStatus(activityMoves, move)}

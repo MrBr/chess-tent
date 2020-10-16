@@ -15,14 +15,25 @@ const Lessons: Components['Lessons'] = ({ lessons }) => {
           <Col key={lesson.id} xs={3}>
             <Card
               onClick={() => history.push(`/lesson/${lesson.id}`)}
-              className="cursor-pointer"
+              className="cursor-pointer mb-4"
             >
               <Img src={lessonCardImg} />
-              <Headline5 className="mt-2">Lesson Title</Headline5>
-              <Text fontSize="extra-small" weight={700}>
-                Category
+              <Headline5 className="mt-2 mb-2">{lesson.state.title}</Headline5>
+              <Text fontSize="extra-small" weight={700} className="mb-1">
+                {lesson.difficulty}
               </Text>
-              <Text fontSize="small">Description</Text>
+              <div>
+                {lesson.tags?.map(({ text }) => (
+                  <Text
+                    fontSize="extra-small"
+                    inline
+                    className="mr-1"
+                    weight={700}
+                  >
+                    {text}
+                  </Text>
+                ))}
+              </div>
             </Card>
           </Col>
         ))}

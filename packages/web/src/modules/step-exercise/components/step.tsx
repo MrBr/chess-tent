@@ -1,16 +1,25 @@
 import React, { useCallback, useMemo } from 'react';
 import {
+  addStepRightToSame,
   createStep as coreCreateStep,
+  getChapterParentStep,
   updateStepState,
 } from '@chess-tent/models';
-import { ExerciseModule, ExerciseStep, ExerciseTypes } from '@types';
-import { components, ui } from '@application';
+import {
+  ExerciseModule,
+  ExerciseStep,
+  ExerciseTypes,
+  MoveStep,
+  VariationStep,
+} from '@types';
+import { components, constants, services, ui } from '@application';
 import ExerciseToolbox from './toolbox';
 import ExerciseEditor from './editor';
 import ExercisePlayground from './playground';
 
 const { Col, Row, Container, Dropdown } = ui;
 const { StepTag, StepToolbox } = components;
+const { START_FEN } = constants;
 
 const stepType = 'exercise';
 
@@ -50,6 +59,19 @@ const StepperStep: ExerciseModule['StepperStep'] = ({
   const removeExerciseStep = useCallback(() => {
     removeStep(step);
   }, [step, removeStep]);
+  const addExerciseStep = useCallback(() => {
+    const parentStep = getChapterParentStep(chapter, step) as
+      | VariationStep
+      | MoveStep;
+    const exerciseStep = services.createStep('exercise', {
+      position:
+        parentStep.state.move?.position ||
+        (parentStep as VariationStep).state.position ||
+        START_FEN,
+    });
+    updateStep(addStepRightToSame(parentStep, exerciseStep));
+    setActiveStep(exerciseStep);
+  }, [chapter, setActiveStep, step, updateStep]);
   const handleStepClick = useCallback(
     event => {
       event.stopPropagation();
@@ -99,6 +121,7 @@ const StepperStep: ExerciseModule['StepperStep'] = ({
           />
           <StepToolbox
             deleteStepHandler={removeExerciseStep}
+            addExerciseHandler={addExerciseStep}
             active={activeStep === step}
             showInput={false}
           />

@@ -43,6 +43,12 @@ application.register(
   },
 );
 application.register(
+  () => import('./components/chapters-dropdown'),
+  module => {
+    application.components.LessonChapters = module.default;
+  },
+);
+application.register(
   () => import('./components/edit-board-toggle'),
   module => {
     application.components.EditBoardToggle = module.default;
@@ -74,9 +80,15 @@ application.register(
   },
 );
 application.register(
-  () => import('./components/playground'),
+  () => import('./components/activity-playground'),
   module => {
     application.components.LessonPlayground = module.default;
+  },
+);
+application.register(
+  () => import('./components/activity-sidebar'),
+  module => {
+    application.components.LessonPlaygroundSidebar = module.default;
   },
 );
 application.register(

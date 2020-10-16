@@ -1,4 +1,11 @@
-import React, { ComponentProps, FormEvent, useMemo } from 'react';
+import React, {
+  ComponentProps,
+  FormEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import {
   Chapter,
   Difficulty,
@@ -12,23 +19,18 @@ import {
   Step,
   Tag,
 } from '@chess-tent/models';
-import {
-  Actions,
-  Components,
-  LessonUpdatableAction,
-  LessonUpdates,
-} from '@types';
+import { Actions, Components, LessonUpdatableAction } from '@types';
 import { debounce } from 'lodash';
 import { components, hooks, services, state, ui } from '@application';
 import TrainingModal from './trening-assign';
-import Sidebar from './sidebar';
+import Sidebar from './editor-sidebar';
 import { PreviewModal } from './activity-preview';
 import ChaptersDropdown from './chapters-dropdown';
 import DifficultyDropdown from './difficulty-dropdown';
 import TagsDropdown from './tags-dropdown';
 import { addLessonUpdate, getLessonUpdates } from '../service';
 
-const { Container, Row, Col, Headline2, Button } = ui;
+const { Container, Row, Col, Headline2, Button, Absolute, Text } = ui;
 const { createChapter } = services;
 const { Stepper, StepRenderer, Chessboard } = components;
 const {
@@ -48,18 +50,24 @@ const {
   useTags,
 } = hooks;
 
+enum LessonStatus {
+  SAVED,
+  ERROR,
+  DIRTY,
+}
 type EditorRendererProps = ComponentProps<Components['Editor']> & {
   activeChapter: Chapter;
   activeStep: Step;
-  lessonUpdate: (lessonId: Lesson['id'], updates: LessonUpdates) => void;
+  lessonUpdate: (lesson: Lesson) => void;
   dispatch: (action: Actions) => void;
   history: ReturnType<typeof useHistory>;
   location: ReturnType<typeof useLocation>;
   promptModal: ReturnType<typeof usePromptModal>;
-  lessonUpdateError: string | {} | null;
+  lessonStatus: LessonStatus;
   tags: Tag[];
+  addLessonUpdate: (action: LessonUpdatableAction) => void;
 };
-type EditorRendererState = { dirty: boolean };
+type EditorRendererState = {};
 
 /**
  * EditorRenderer is used to save handlers to the component instance.
@@ -69,20 +77,20 @@ class EditorRenderer extends React.Component<
   EditorRendererProps,
   EditorRendererState
 > {
-  state = {
-    dirty: false,
-  };
+  componentDidMount() {
+    const { location } = this.props;
+    console.log(location.state);
+  }
 
   componentDidUpdate(prevProps: EditorRendererProps) {
-    const { lesson } = this.props;
+    const { lesson, lessonUpdate } = this.props;
     if (lesson !== prevProps.lesson) {
-      this.setState({ dirty: true });
-      this.lessonUpdateThrottle(lesson);
+      lessonUpdate(lesson);
     }
   }
 
   addLessonUpdate(action: LessonUpdatableAction) {
-    const { dispatch } = this.props;
+    const { dispatch, addLessonUpdate } = this.props;
     addLessonUpdate(action);
     dispatch(action);
   }
@@ -102,15 +110,6 @@ class EditorRenderer extends React.Component<
       search: `?activeChapter=${chapter.id}`,
     });
   };
-
-  lessonUpdateThrottle = debounce(
-    (lesson: Lesson) =>
-      this.props.lessonUpdate(lesson.id, getLessonUpdates(lesson)),
-    5000,
-    {
-      trailing: true,
-    },
-  );
 
   updateLessonTitleDebounced = debounce(title => {
     const { lesson } = this.props;
@@ -200,66 +199,81 @@ class EditorRenderer extends React.Component<
     this.addLessonUpdate(action);
   };
 
+  renderLessonStatus() {
+    const { lessonStatus } = this.props;
+    switch (lessonStatus) {
+      case LessonStatus.DIRTY:
+        return 'Have unsaved changes';
+      case LessonStatus.ERROR:
+        return 'Something went wrong, lesson not saved.';
+      case LessonStatus.SAVED:
+      default:
+        return 'Lesson saved';
+    }
+  }
+
   render() {
     const {
       activeStep,
       lesson,
       promptModal,
-      lessonUpdateError,
       activeChapter,
       tags,
+      history,
     } = this.props;
-    const { dirty } = this.state;
-    const lessonStatus = lessonUpdateError
-      ? 'Error!'
-      : dirty
-      ? 'Have unsaved changes'
-      : 'Lesson saved';
+    const lessonStatusText = this.renderLessonStatus();
 
     return (
       <Container fluid className="px-0 h-100">
+        <Absolute left={15} top={15} zIndex={100}>
+          <Text onClick={history.goBack}>Back</Text>
+        </Absolute>
         <Row noGutters className="h-100">
-          <Col>
+          <Col className="pt-5">
             <StepRenderer
               step={activeStep}
               component="Editor"
               activeStep={activeStep}
               setActiveStep={this.setActiveStepHandler}
               lesson={lesson}
-              status={lessonStatus}
+              status={lessonStatusText}
               Chessboard={Chessboard}
               chapter={activeChapter}
               updateStep={this.updateStep}
               removeStep={this.deleteStep}
             />
           </Col>
-          <Col sm={5} xl={4}>
+          <Col sm={5} xl={4} className="mh-100">
             <Sidebar>
-              <Button
-                size="extra-small"
-                className="mr-3"
-                onClick={() =>
-                  promptModal(close => <TrainingModal close={close} />)
-                }
-              >
-                Assign lesson
-              </Button>
-              <Button
-                size="extra-small"
-                onClick={() =>
-                  promptModal(close => (
-                    <PreviewModal
-                      close={close}
-                      lesson={lesson}
-                      step={activeStep}
-                      chapter={activeChapter}
-                    />
-                  ))
-                }
-              >
-                Preview
-              </Button>
               <Container>
+                <Row>
+                  <Col>
+                    <Button
+                      size="extra-small"
+                      className="mr-3"
+                      onClick={() =>
+                        promptModal(close => <TrainingModal close={close} />)
+                      }
+                    >
+                      Assign lesson
+                    </Button>
+                    <Button
+                      size="extra-small"
+                      onClick={() =>
+                        promptModal(close => (
+                          <PreviewModal
+                            close={close}
+                            lesson={lesson}
+                            step={activeStep}
+                            chapter={activeChapter}
+                          />
+                        ))
+                      }
+                    >
+                      Preview
+                    </Button>
+                  </Col>
+                </Row>
                 <Row>
                   <Col className="col-auto">
                     <DifficultyDropdown
@@ -287,12 +301,14 @@ class EditorRenderer extends React.Component<
                         __html: lesson.state.title,
                       }}
                       onInput={this.updateLessonTitle}
+                      className="mt-4"
                     />
                   </Col>
                 </Row>
-                <Row>
+                <Row className="mb-4">
                   <Col>
                     <ChaptersDropdown
+                      editable
                       activeChapter={activeChapter}
                       chapters={lesson.state.chapters}
                       onChange={this.setActiveChapterHandler}
@@ -327,9 +343,18 @@ const Editor: Components['Editor'] = ({ lesson, save }) => {
   const location = useLocation();
   const history = useHistory();
   const tags = useTags();
+  const {
+    fetch: lessonUpdate,
+    error: lessonUpdateError,
+    response: lessonUpdateResponse,
+    reset: lessonUpdateReset,
+  } = useApi(save);
+  const [lessonStatus, setLessonStatus] = useState<LessonStatus>(
+    LessonStatus.SAVED,
+  );
+
   const activeChapterId =
     new URLSearchParams(location.search).get('activeChapter') || chapters[0].id;
-
   const activeChapter = useMemo(
     () => getLessonChapter(lesson, activeChapterId),
     [lesson, activeChapterId],
@@ -342,14 +367,48 @@ const Editor: Components['Editor'] = ({ lesson, save }) => {
     [activeChapter, activeStepId],
   ) as Step;
 
+  useEffect(() => {
+    if (lessonUpdateError && lessonStatus !== LessonStatus.ERROR) {
+      setLessonStatus(LessonStatus.ERROR);
+    } else if (lessonUpdateResponse && lessonStatus !== LessonStatus.SAVED) {
+      setLessonStatus(LessonStatus.SAVED);
+    } else {
+      lessonUpdateReset();
+    }
+  }, [
+    lessonStatus,
+    lessonUpdateError,
+    lessonUpdateReset,
+    lessonUpdateResponse,
+  ]);
+
+  const lessonUpdateDebounced = useCallback(
+    debounce(
+      (lesson: Lesson) => lessonUpdate(lesson.id, getLessonUpdates(lesson)),
+      5000,
+      {
+        trailing: true,
+      },
+    ),
+    [lessonUpdate],
+  );
+
+  const handleLessonUpdate = useCallback(
+    action => {
+      setLessonStatus(LessonStatus.DIRTY);
+      addLessonUpdate(action);
+      dispatch(action);
+    },
+    [dispatch, setLessonStatus],
+  );
+
   const promptModal = usePromptModal();
-  const { fetch: lessonUpdate, error: lessonUpdateError } = useApi(save);
 
   return (
     <EditorRenderer
       lesson={lesson}
-      lessonUpdate={lessonUpdate}
-      lessonUpdateError={lessonUpdateError}
+      lessonUpdate={lessonUpdateDebounced}
+      lessonStatus={lessonStatus}
       activeChapter={activeChapter}
       activeStep={activeStep}
       dispatch={dispatch}
@@ -358,6 +417,7 @@ const Editor: Components['Editor'] = ({ lesson, save }) => {
       promptModal={promptModal}
       save={save}
       tags={tags}
+      addLessonUpdate={handleLessonUpdate}
     />
   );
 };

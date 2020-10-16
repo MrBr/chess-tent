@@ -31,10 +31,10 @@ export type StepComponent<S extends Step, P extends {} = {}> = ComponentType<
 export type StepModuleComponentKey = 'Editor' | 'Playground' | 'StepperStep';
 
 export type ActivityFooterProps = {
-  next?: () => void;
-  prev?: () => void;
-  stepsCount?: number;
-  currentStep?: number;
+  next: () => void;
+  prev: () => void;
+  stepsCount: number;
+  currentStep: number;
 };
 export type StepModule<
   STEP extends Step,
@@ -50,7 +50,7 @@ export type StepModule<
       stepActivityState: ACTIVITY_STATE;
       nextStep: () => void;
       prevStep: () => void;
-      Footer: FunctionComponent<ActivityFooterProps>;
+      Footer: FunctionComponent<Partial<ActivityFooterProps>>;
       activity: Activity;
       completeStep: (step: Step) => void;
     } & StepBoardComponentProps

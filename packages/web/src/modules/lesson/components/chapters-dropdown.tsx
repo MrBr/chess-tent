@@ -1,22 +1,14 @@
-import React from 'react';
+import React, { ComponentProps } from 'react';
 import { Chapter } from '@chess-tent/models';
 import { debounce } from 'lodash';
-
 import { ui } from '@application';
 import { ValueType } from 'react-select';
+import { Components } from '@types';
 
 const { Select, Text, Input } = ui;
-interface ChaptersDropdownProps {
-  chapters: Chapter[];
-  activeChapter: Chapter;
-  onChange?: (chapter: Chapter) => void;
-  onEdit?: (title: string) => void;
-  onNew?: () => void;
-  onRemove?: (chapter: Chapter) => void;
-}
 
 class ChaptersDropdown extends React.Component<
-  ChaptersDropdownProps,
+  ComponentProps<Components['LessonChapters']>,
   { editing: boolean }
 > {
   state = { editing: false };
@@ -63,7 +55,7 @@ class ChaptersDropdown extends React.Component<
   };
   render() {
     const { editing } = this.state;
-    const { chapters, activeChapter, onRemove } = this.props;
+    const { chapters, activeChapter, onRemove, editable } = this.props;
     return (
       <>
         {editing ? (
@@ -84,32 +76,36 @@ class ChaptersDropdown extends React.Component<
             onChange={this.changeHandle}
           />
         )}
-        <Text
-          inline
-          fontSize="extra-small"
-          weight={700}
-          className="mr-3 cursor-pointer"
-          onClick={this.newHandle}
-        >
-          Add
-        </Text>
-        <Text
-          inline
-          fontSize="extra-small"
-          className="mr-3"
-          weight={700}
-          onClick={() => this.setState({ editing: !editing })}
-        >
-          Edit
-        </Text>
-        <Text
-          inline
-          fontSize="extra-small"
-          weight={700}
-          onClick={() => onRemove && onRemove(activeChapter)}
-        >
-          Remove
-        </Text>
+        {editable && (
+          <>
+            <Text
+              inline
+              fontSize="extra-small"
+              weight={700}
+              className="mr-3 cursor-pointer"
+              onClick={this.newHandle}
+            >
+              Add
+            </Text>
+            <Text
+              inline
+              fontSize="extra-small"
+              className="mr-3"
+              weight={700}
+              onClick={() => this.setState({ editing: !editing })}
+            >
+              Edit
+            </Text>
+            <Text
+              inline
+              fontSize="extra-small"
+              weight={700}
+              onClick={() => onRemove && onRemove(activeChapter)}
+            >
+              Remove
+            </Text>
+          </>
+        )}
       </>
     );
   }

@@ -1,11 +1,11 @@
-@import url('https://fonts.googleapis.com/css?family=Inter:400|Poppins:400,700');
+@import url('https://fonts.googleapis.com/css?family=Inter:500,700');
 
 html {font-size: 100%;} /*16px*/
 
 body {
     background-color: white;
-    font-family: 'Poppins', sans-serif;
-    font-weight: 400;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
     line-height: 1.65;
     color: #333;
 }

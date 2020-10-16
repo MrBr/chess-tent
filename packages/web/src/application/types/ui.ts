@@ -58,7 +58,7 @@ export declare interface TextProps {
   contentEditable?: boolean;
 }
 
-type UIComponent<T = {}> = ComponentType<
+export type UIComponent<T = {}> = ComponentType<
   T & { className?: string; defaultProps?: Partial<T & { className: string }> }
 >;
 class D extends Component<ComponentProps<typeof Dropdown>> {
@@ -92,6 +92,11 @@ export type UI = {
   Headline4: UIComponent;
   Headline5: UIComponent;
   Headline6: UIComponent;
+  Icon: UIComponent<{
+    type: 'close' | 'comment';
+    textual?: boolean;
+    size?: 'large' | 'regular';
+  }>;
   Img: ComponentType<{
     src: string | undefined;
     className?: string;
@@ -101,12 +106,12 @@ export type UI = {
   Dropdown: typeof D;
   Avatar: ComponentType<{
     src: string | undefined;
-    size?: 'regular' | 'small' | 'large';
+    size?: 'regular' | 'small' | 'large' | 'extra-small';
     onClick?: ReactEventHandler;
   }>;
   Thumbnail: ComponentType<{
     src: string | undefined;
-    size?: 'regular' | 'small' | 'large';
+    size?: 'regular' | 'small' | 'large' | 'extra-small';
   }>;
   File: typeof FormFile;
   Label: UIComponent<FormLabelProps>;
@@ -116,6 +121,15 @@ export type UI = {
   Option: ComponentType<OptionProps<any>>;
   Check: typeof FormCheck;
   Container: UIComponent<ContainerProps & ClickProps>;
+  Absolute: UIComponent<
+    {
+      top?: number;
+      right?: number;
+      bottom?: number;
+      left?: number;
+      zIndex?: number;
+    } & ClickProps
+  >;
   Page: UIComponent<ContainerProps>;
   Row: UIComponent<RowProps & ClickProps>;
   Col: UIComponent<ColProps & ClickProps>;

@@ -76,6 +76,7 @@ import {
   StepToolbox,
   StepMove,
   LessonPlayground,
+  LessonPlaygroundSidebarProps,
 } from './components';
 import { ClassComponent, GenericArguments } from './_helpers';
 import { UI } from './ui';
@@ -347,6 +348,7 @@ export type Components = {
   StepToolbox: StepToolbox;
   LessonToolboxText: LessonToolboxText;
   LessonPlayground: LessonPlayground;
+  LessonPlaygroundSidebar: ComponentType<LessonPlaygroundSidebarProps>;
   StepTag: StepTag;
   StepMove: StepMove;
   Router: ComponentType;
@@ -395,6 +397,15 @@ export type Components = {
   }>;
   Editor: ComponentType<{ lesson: Lesson; save: Requests['lessonUpdates'] }>;
   Lessons: ComponentType<{ lessons: Lesson[] | null }>;
+  LessonChapters: ComponentType<{
+    chapters: Chapter[];
+    activeChapter: Chapter;
+    editable?: boolean;
+    onChange?: (chapter: Chapter) => void;
+    onEdit?: (title: string) => void;
+    onNew?: () => void;
+    onRemove?: (chapter: Chapter) => void;
+  }>;
   EditBoardToggle: ComponentType<{
     editing: boolean;
     onChange: (editing: boolean) => void;

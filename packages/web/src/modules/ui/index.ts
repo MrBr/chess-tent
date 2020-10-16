@@ -29,6 +29,8 @@ import {
 } from './Text';
 import { Avatar, FramedProfile, Img, Thumbnail } from './Img';
 import { Card, CardBody } from './Card';
+import Icon from './Icon';
+import Absolute from './Absolute';
 import { withFiles } from './hoc';
 
 application.hoc.withFiles = withFiles;
@@ -62,6 +64,8 @@ application.ui.Page = Page;
 application.ui.Row = Row;
 application.ui.Col = Col;
 
+application.ui.Absolute = Absolute;
+
 application.ui.Display1 = Display1;
 application.ui.Display2 = Display2;
 application.ui.Headline1 = Headline1;
@@ -71,3 +75,5 @@ application.ui.Headline4 = Headline4;
 application.ui.Headline5 = Headline5;
 application.ui.Headline6 = Headline6;
 application.ui.Text = Text;
+
+application.ui.Icon = Icon;

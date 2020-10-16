@@ -8,10 +8,10 @@ export default ({
   board,
   sidebar,
 }: ComponentProps<Components['LessonPlayground']>) => (
-  <Container fluid className="px-0 h-100">
-    <Row noGutters className="h-100">
-      <Col>{board}</Col>
-      <Col xs={5} xl={4} className="h-100 overflow-y-auto">
+  <Container fluid className="h-100">
+    <Row className="h-100">
+      <Col className="pt-5">{board}</Col>
+      <Col xs={5} xl={4} className="h-100 overflow-y-auto pt-4">
         {sidebar}
       </Col>
     </Row>

@@ -69,10 +69,7 @@ const BoardHeader = styled.div<{
   width: string | number;
 }>(
   {
-    display: 'flex',
-    height: 50,
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    margin: '1em auto',
   },
   ({ width }) => ({ width }),
 );
@@ -85,7 +82,7 @@ const BoardFooter = styled.div<{
     justifyContent: 'space-between',
     alignItems: 'center',
     maxWidth: 720,
-    margin: 'auto',
+    margin: '1em auto',
   },
   ({ width }) => ({ width }),
 );

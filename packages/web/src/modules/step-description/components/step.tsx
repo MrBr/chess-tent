@@ -10,8 +10,13 @@ import { DescriptionModule, DescriptionStep, VariationStep } from '@types';
 import { components, services, ui, stepModules } from '@application';
 import Comment from './comment';
 
-const { Col, Row, Container } = ui;
-const { StepTag, StepToolbox } = components;
+const { Col, Row, Container, Icon, Text } = ui;
+const {
+  StepTag,
+  StepToolbox,
+  LessonPlayground,
+  LessonPlaygroundSidebar,
+} = components;
 
 const stepType = 'description';
 
@@ -60,11 +65,23 @@ const Playground: DescriptionModule['Playground'] = ({
   Chessboard,
   step,
   Footer,
+  lesson,
+  chapter,
 }) => {
   const {
     state: { position, shapes },
   } = step;
-  return <Chessboard fen={position} shapes={shapes} footer={<Footer />} />;
+  return (
+    <LessonPlayground
+      board={<Chessboard fen={position} shapes={shapes} footer={<Footer />} />}
+      sidebar={
+        <LessonPlaygroundSidebar lesson={lesson} step={step} chapter={chapter}>
+          <Icon type="comment" textual />
+          <Text>{step.state.description}</Text>
+        </LessonPlaygroundSidebar>
+      }
+    />
+  );
 };
 
 const StepperStep: DescriptionModule['StepperStep'] = ({

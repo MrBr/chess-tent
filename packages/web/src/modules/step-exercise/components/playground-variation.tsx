@@ -4,7 +4,7 @@ import React, {
   useCallback,
   useMemo,
 } from 'react';
-import { components, services } from '@application';
+import { components, services, ui } from '@application';
 import {
   ExerciseModule,
   ExerciseVariationActivityState,
@@ -12,15 +12,24 @@ import {
   Move,
 } from '@types';
 
-const { Chessboard, LessonPlayground } = components;
+const { LessonPlayground, LessonPlaygroundSidebar } = components;
 const { createFenForward } = services;
+const { Text } = ui;
 
 const isCorrectActivityMove = (activityMove: Move, stepMove: Move) =>
   stepMove[0] === activityMove[0] && stepMove[1] === activityMove[1];
 
 const Playground: FunctionComponent<ComponentProps<
   ExerciseModule['Playground']
->> = ({ step, status, stepActivityState, setStepActivityState, Footer }) => {
+>> = ({
+  step,
+  stepActivityState,
+  setStepActivityState,
+  Footer,
+  Chessboard,
+  lesson,
+  chapter,
+}) => {
   const { position, shapes } = step.state;
   const {
     activeMoveIndex,
@@ -77,22 +86,23 @@ const Playground: FunctionComponent<ComponentProps<
         <Chessboard
           fen={activePosition}
           onMove={handleMove}
-          header={status}
           shapes={activeShapes}
           animation
           footer={<Footer />}
         />
       }
       sidebar={
-        <>
-          {isCorrectActiveMove
-            ? 'Excellent, continue..'
-            : !!activityActiveMove
-            ? 'Wrong move, try again'
-            : stepToPlayMove
-            ? stepToPlayMove.piece?.color + ' to play'
-            : 'Done!'}
-        </>
+        <LessonPlaygroundSidebar lesson={lesson} chapter={chapter} step={step}>
+          <Text>
+            {isCorrectActiveMove
+              ? 'Excellent, continue..'
+              : !!activityActiveMove
+              ? 'Wrong move, try again'
+              : stepToPlayMove
+              ? stepToPlayMove.piece?.color + ' to play'
+              : 'Done!'}
+          </Text>
+        </LessonPlaygroundSidebar>
       }
     />
   );

@@ -15,6 +15,6 @@ export default ({
     size="extra-small"
     onChange={() => onChange(!editing)}
   >
-    {editing ? 'Set position' : 'Edit board'}
+    {editing ? 'Done editing' : 'Edit board'}
   </ToggleButton>
 );

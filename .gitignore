@@ -5,6 +5,7 @@ notes
 
 # IDE
 .idea
+.vscode
 
 # dependencies
 **/node_modules

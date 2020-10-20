@@ -8,7 +8,6 @@ import { generateIndex } from "./service";
 
 const { connect } = db;
 
-const port = 3007;
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -33,8 +32,8 @@ application.start = () => {
   // Error handler must apply after all routes
   app.use(application.middleware.errorHandler);
 
-  const server = app.listen(port, () =>
-    console.log(`Application started at http://localhost:${port}`)
+  const server = app.listen(process.env.PORT, () =>
+    console.log(`Application started at port: ${process.env.PORT}`)
   );
   socket.init(server);
 };

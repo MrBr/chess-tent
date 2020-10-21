@@ -45,7 +45,7 @@ export interface ConfirmProps {
   onCancel: () => void;
 }
 
-type FontSize = 'base' | 'small' | 'extra-small';
+type FontSize = 'base' | 'small' | 'extra-small' | 'large';
 
 export declare interface TextProps {
   children: ReactNode | ReactElement[];

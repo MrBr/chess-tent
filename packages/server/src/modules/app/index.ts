@@ -21,11 +21,11 @@ application.middleware.sendData = sendData;
 application.middleware.sendStatusOk = sendStatusOk;
 application.middleware.toLocals = toLocals;
 application.service.registerGetRoute = (path, ...middlware) =>
-  app.get(path, ...middlware);
+  app.get(process.env.API_BASE_PATH + path, ...middlware);
 application.service.registerPostRoute = (path, ...middlware) =>
-  app.post(path, ...middlware);
+  app.post(process.env.API_BASE_PATH + path, ...middlware);
 application.service.registerPutRoute = (path, ...middlware) =>
-  app.put(path, ...middlware);
+  app.put(process.env.API_BASE_PATH + path, ...middlware);
 application.service.generateIndex = generateIndex;
 
 application.start = () => {

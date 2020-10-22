@@ -10,6 +10,7 @@ const { connect } = db;
 
 const app = express();
 
+app.use(express.static(process.env.PUBLIC_HTML_PATH as string));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors({ origin: process.env.APP_DOMAIN, credentials: true }));

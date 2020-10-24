@@ -4,9 +4,9 @@ import { User } from '@chess-tent/models';
 import { FileUploaderProps } from '@types';
 
 const { useActiveUserRecord, useApi } = hooks;
-const { Header } = components;
+const { Header, UserAvatar } = components;
 const { withFiles } = hoc;
-const { Page, Col, Row, Avatar, Headline3, Text } = ui;
+const { Page, Col, Row, Headline3, Text } = ui;
 
 export default withFiles(({ files, openFileDialog }: FileUploaderProps) => {
   const [user] = useActiveUserRecord() as [User, never, never];
@@ -45,7 +45,7 @@ export default withFiles(({ files, openFileDialog }: FileUploaderProps) => {
       <Header />
       <Row>
         <Col className="col-auto">
-          <Avatar src={user.imageUrl} size="large" onClick={openFileDialog} />
+          <UserAvatar user={user} size="large" onClick={openFileDialog} />
         </Col>
         <Col>
           <Headline3>{user.name}</Headline3>

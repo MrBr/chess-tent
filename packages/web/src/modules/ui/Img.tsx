@@ -24,12 +24,24 @@ const sizeEnhancer = (props: ComponentProps<UI['Avatar']>) => {
   return {
     width: size,
     height: size,
+    lineHeight: size + 'px',
   };
 };
 
-export const Avatar = styled.img(
+export const Avatar = styled(({ src, name, className }) => {
+  return src ? (
+    <img className={className} src={src} alt={name} />
+  ) : (
+    <div className={className}>{name?.[0] || 'A'}</div>
+  );
+})(
   {
     borderRadius: '50%',
+    display: 'inline-block',
+    background: 'linear-gradient(90deg, #6664CF 0%, #5026D9 100%)',
+    textAlign: 'center',
+    color: '#fff',
+    fontWeight: 700,
   },
   sizeEnhancer,
 );

@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
-import { hooks, requests, state, ui, utils } from '@application';
+import { components, hooks, requests, state, ui, utils } from '@application';
 import { createConversation, User } from '@chess-tent/models';
 import Conversation from './conversation';
 import { selectConversationByUsers } from '../state/selectors';
 
-const { Container, Headline3, Avatar, Text, Row, Col } = ui;
+const { Container, Headline3, Text, Row, Col } = ui;
+const { UserAvatar } = components;
 const {
   actions: { updateEntities },
 } = state;
@@ -69,7 +70,7 @@ export default () => {
         return (
           <Row onClick={() => setParticipant(participant)} key={participant.id}>
             <Col className="col-auto d-flex align-items-center">
-              <Avatar src={participant.imageUrl} />
+              <UserAvatar user={participant} />
             </Col>
             <Col>
               <Text weight={700} className="m-0" fontSize="small">

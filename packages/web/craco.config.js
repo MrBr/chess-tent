@@ -17,7 +17,10 @@ module.exports = {
     },
     {
       plugin: {
-        overrideWebpackConfig: ({ webpackConfig }) => {
+        overrideWebpackConfig: ({ webpackConfig, context: { env } }) => {
+          if (env === 'production') {
+            webpackConfig.devtool = 'none';
+          }
           webpackConfig.plugins.push(
             new webpack.optimize.LimitChunkCountPlugin({
               maxChunks: 1,

@@ -8,9 +8,9 @@ import { generateIndex } from "./service";
 
 const { connect } = db;
 
-const port = 3007;
 const app = express();
 
+app.use(express.static(process.env.PUBLIC_HTML_PATH as string));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors({ origin: process.env.APP_DOMAIN, credentials: true }));
@@ -21,11 +21,11 @@ application.middleware.sendData = sendData;
 application.middleware.sendStatusOk = sendStatusOk;
 application.middleware.toLocals = toLocals;
 application.service.registerGetRoute = (path, ...middlware) =>
-  app.get(path, ...middlware);
+  app.get(process.env.API_BASE_PATH + path, ...middlware);
 application.service.registerPostRoute = (path, ...middlware) =>
-  app.post(path, ...middlware);
+  app.post(process.env.API_BASE_PATH + path, ...middlware);
 application.service.registerPutRoute = (path, ...middlware) =>
-  app.put(path, ...middlware);
+  app.put(process.env.API_BASE_PATH + path, ...middlware);
 application.service.generateIndex = generateIndex;
 
 application.start = () => {
@@ -33,8 +33,8 @@ application.start = () => {
   // Error handler must apply after all routes
   app.use(application.middleware.errorHandler);
 
-  const server = app.listen(port, () =>
-    console.log(`Application started at http://localhost:${port}`)
+  const server = app.listen(process.env.PORT, () =>
+    console.log(`Application started at port: ${process.env.PORT}`)
   );
   socket.init(server);
 };

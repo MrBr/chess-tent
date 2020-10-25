@@ -93,7 +93,7 @@ export type UI = {
   Headline5: UIComponent;
   Headline6: UIComponent;
   Icon: UIComponent<{
-    type: 'close' | 'comment';
+    type: 'close' | 'comment' | 'king' | 'logo' | 'board' | 'brain';
     textual?: boolean;
     size?: 'large' | 'regular';
   }>;

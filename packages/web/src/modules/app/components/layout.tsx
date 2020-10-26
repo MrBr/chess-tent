@@ -21,9 +21,11 @@ export default styled<Components['Layout']>(({ className, children }) => (
     height: 96,
     boxShadow: '0px 1px 0px #ECECEC',
     zIndex: 10,
+    padding: '0 5em',
   },
   '.layout-content': {
     gridArea: 'content',
+    padding: '0 5em',
     background: '#FAFBFB',
   },
   '.layout-sidebar': {
@@ -32,6 +34,7 @@ export default styled<Components['Layout']>(({ className, children }) => (
   },
   display: 'grid',
   gridTemplateRows: 'min-content auto',
+  gridTemplateColumns: '4fr 1fr',
   gridTemplateAreas: `
     "header header"
     "content sidebar"

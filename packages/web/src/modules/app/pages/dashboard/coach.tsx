@@ -33,7 +33,10 @@ export default ({ user }: { user: User }) => {
           <Activities activities={activities} />
         </>
       ) : (
-        <Coaches />
+        <>
+          <Headline3>Coaches</Headline3>
+          <Coaches />
+        </>
       )}
       <Headline3>My lessons</Headline3>
       <Lessons lessons={lessons} />

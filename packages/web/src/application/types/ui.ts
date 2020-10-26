@@ -61,7 +61,7 @@ export declare interface TextProps {
 export type UIComponent<T = {}> = ComponentType<
   T & { className?: string; defaultProps?: Partial<T & { className: string }> }
 >;
-class D extends Component<ComponentProps<typeof Dropdown>> {
+class DropdownClass extends Component<ComponentProps<typeof Dropdown>> {
   static Toggle: ComponentType<
     ComponentProps<typeof DropdownToggle> & {
       size?: 'regular' | 'small' | 'extra-small';
@@ -105,7 +105,7 @@ export type UI = {
     style?: {};
   }>;
   FramedProfile: ComponentType<{ src: string | undefined }>;
-  Dropdown: typeof D;
+  Dropdown: typeof DropdownClass;
   Avatar: ComponentType<{
     src: string | undefined;
     size?: 'regular' | 'small' | 'large' | 'extra-small';

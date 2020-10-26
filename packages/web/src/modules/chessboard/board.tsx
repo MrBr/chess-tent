@@ -47,8 +47,7 @@ type ChessgroundMappedPropsType = Record<
     | 'validateMove'
     | 'validateDrawable'
     | 'evaluate'
-    | 'width'
-    | 'height'
+    | 'size'
     | 'sparePieces'
   >,
   string
@@ -89,8 +88,7 @@ const BoardFooter = styled.div<{
 
 const BoardContainer = styled<
   FunctionComponent<{
-    width: string | number;
-    height: string | number;
+    size: string | number;
     className?: string;
     boardRef: RefObject<any>;
   }>
@@ -99,22 +97,20 @@ const BoardContainer = styled<
     <div ref={props.boardRef} className="board" />
     {props.children}
   </div>
-))(({ width, height }) => ({
+))(({ size }) => ({
   '& > .board': {
     position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translateX(-50%) translateY(-50%)',
     width: '100%',
     height: '100%',
     maxWidth: 720,
     maxHeight: 720,
   },
   zIndex: 10, // important for dragged piece to cover spare piece base
-  width: width,
-  paddingBottom: height,
+  width: size,
+  height: size,
   position: 'relative',
   margin: 'auto',
+  boxSizing: 'content-box',
 }));
 
 // Chessground resizing expects custom event to be
@@ -140,8 +136,7 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
     resizable: true,
     selectablePieces: false,
     eraseDrawableOnClick: false,
-    width: '70%',
-    height: '70%',
+    size: 'calc(100vh - 40vh)',
     edit: false,
   };
 
@@ -374,15 +369,7 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
   };
 
   render() {
-    const {
-      header,
-      fen,
-      evaluate,
-      footer,
-      width,
-      height,
-      sparePieces,
-    } = this.props;
+    const { header, fen, evaluate, footer, size, sparePieces } = this.props;
     const { renderPrompt, promotion } = this.state;
     return (
       <>
@@ -394,12 +381,8 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
             onEvaluationChange={console.log}
           />
         )}
-        <BoardHeader width={width as string}>{header}</BoardHeader>
-        <BoardContainer
-          width={width as string}
-          height={height as string}
-          boardRef={this.boardHost}
-        >
+        <BoardHeader width={size as string}>{header}</BoardHeader>
+        <BoardContainer size={size as string} boardRef={this.boardHost}>
           {promotion && (
             <Promotion
               file={promotion.to}
@@ -409,7 +392,7 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
             />
           )}
         </BoardContainer>
-        <BoardFooter width={width as string}>{footer}</BoardFooter>
+        <BoardFooter width={size as string}>{footer}</BoardFooter>
         {sparePieces && <SparePieces onDragStart={this.onSparePieceDrag} />}
         <Modal
           container={this.boardHost}

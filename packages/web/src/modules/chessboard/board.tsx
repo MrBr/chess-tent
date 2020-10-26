@@ -275,7 +275,7 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
     } else if (move) {
       const chessMove = createMoveShortObject(move, options?.promoted);
       // Only valid moves are allowed in "play" mode
-      console.log(this.chess.move(chessMove));
+      this.chess.move(chessMove);
     }
     return this.chess.fen();
   };

@@ -123,7 +123,11 @@ const Editor: MoveModule['Editor'] = ({
   } = step;
 
   const updateShapes = useCallback(
-    (shapes: DrawShape[]) => updateStep(updateStepState(step, { shapes })),
+    (shapes: DrawShape[]) => {
+      const updatedStep = updateStepState(step, { shapes });
+      console.log(updatedStep.state.shapes);
+      updateStep(updatedStep);
+    },
     [step, updateStep],
   );
 

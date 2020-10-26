@@ -77,11 +77,6 @@ class EditorRenderer extends React.Component<
   EditorRendererProps,
   EditorRendererState
 > {
-  componentDidMount() {
-    const { location } = this.props;
-    console.log(location.state);
-  }
-
   componentDidUpdate(prevProps: EditorRendererProps) {
     const { lesson, lessonUpdate } = this.props;
     if (lesson !== prevProps.lesson) {
@@ -90,9 +85,8 @@ class EditorRenderer extends React.Component<
   }
 
   addLessonUpdate(action: LessonUpdatableAction) {
-    const { dispatch, addLessonUpdate } = this.props;
+    const { addLessonUpdate } = this.props;
     addLessonUpdate(action);
-    dispatch(action);
   }
 
   setActiveStepHandler = (step: Step) => {

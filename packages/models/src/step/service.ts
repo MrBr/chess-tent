@@ -1,4 +1,4 @@
-import merge from "lodash.merge";
+import mergeWith from "lodash.mergewith";
 import { Step, TYPE_STEP } from "./types";
 import {
   getSubjectValueAt,
@@ -260,12 +260,17 @@ const updateStep = (step: Step, patch: Partial<Step>) => ({
   ...patch
 });
 
+function omitArrayMerge(objValue: any, srcValue: any) {
+  if (Array.isArray(objValue)) {
+    return srcValue;
+  }
+}
 const updateStepState = <T extends Step>(
   step: T,
   state: Partial<T["state"]>
 ) => ({
   ...step,
-  state: merge({}, step.state, state)
+  state: mergeWith({}, step.state, state, omitArrayMerge)
 });
 
 const updateNestedStep = (

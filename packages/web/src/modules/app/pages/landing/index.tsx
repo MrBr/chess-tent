@@ -6,7 +6,17 @@ import heroUrl from './hero.png';
 import lessonsUrl from './lessons.png';
 
 const { Link } = components;
-const { Display2, Headline3, Container, Row, Col, Button, Text, Icon } = ui;
+const {
+  Display2,
+  Headline3,
+  Container,
+  Row,
+  Col,
+  Button,
+  Text,
+  Icon,
+  Headline1,
+} = ui;
 
 const Header = styled(Container)({
   // backgroundImage: `url(${heroUrl})`,
@@ -68,19 +78,36 @@ export default () => (
         </ContentRow>
       </Col>
     </SectionRow>
-    {/* <Lesson /> */}
-    {/* <Row noGutters>
-      <Col md={{ span: 6, offset: 1 }} xs={12}>
+
+    <SectionRow noGutters>
+      <Col md={{ span: 5 }} xs={12}>
         <Icon type="king" size="large" />
+        <Headline1>Create Engaging Lessons and Build Your Audience</Headline1>
+        <Headline3>
+          Full express yourself in the context of online chess teaching.
+        </Headline3>
+        <Text fontSize="large">
+          Anyone who trained a chess know how much questions needs to be asked
+          in a lesson or a training and for the first time you can do it.
+        </Text>
+        <Text fontSize="large">
+          Create the most interactive online lessons and training. Become
+          visible to chess players.
+        </Text>
       </Col>
-    </Row>
-    <Row noGutters>
+      <Col md={{ span: 7 }} xs={12}>
+        <Lesson />
+      </Col>
+    </SectionRow>
+    {/* <Row noGutters>
       <Col md={{ span: 6, offset: 1 }} xs={12}>
         <Icon type="brain" size="large" />
         <Icon type="board" size="large" />
       </Col>
     </Row> */}
 
-    {/* <Link to="/login">Login</Link> */}
+    <Link style={{ position: 'fixed', top: 0 }} to="/login">
+      Login
+    </Link>
   </>
 );

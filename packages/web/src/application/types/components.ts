@@ -35,8 +35,7 @@ export interface ChessboardProps {
   footer?: ReactNode;
   onReset?: Function;
   evaluate?: boolean;
-  width?: string | number;
-  height?: string | number;
+  size?: string | number;
   // Chessground proxy props
   viewOnly?: boolean;
   selectablePieces?: boolean;

@@ -1,6 +1,6 @@
 import React, { ReactElement, useCallback, useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
-import { hooks, requests, state, ui, utils } from '@application';
+import { components, hooks, requests, state, ui, utils } from '@application';
 import {
   Conversation,
   createMessage,
@@ -10,21 +10,13 @@ import {
 import styled from '@emotion/styled';
 import { DateTime } from 'luxon';
 
-const { Container, Headline3, Avatar, Text, Row, Col, Input } = ui;
+const { Container, Headline3, Text, Row, Col, Input, Icon, Absolute } = ui;
+const { UserAvatar } = components;
 const { generateIndex } = utils;
 const {
   actions: { updateEntities, sendMessage },
 } = state;
 const { useApi, useDispatchBatched } = hooks;
-
-const Close = styled.span({
-  '&:before': {
-    content: '"x"',
-  },
-  position: 'absolute',
-  top: 10,
-  right: 20,
-});
 
 const ActiveUserMessages = styled(Text)({
   background: '#F3F4F5',
@@ -119,7 +111,9 @@ export default styled(
 
     return (
       <Container className={`${className} pl-5 pr-5 pb-3`}>
-        <Close onClick={close} />
+        <Absolute top={10} right={20} zIndex={2}>
+          <Icon type="close" onClick={close} />
+        </Absolute>
         <Row className="flex-grow-1">
           <Col>
             <Headline3 className="mb-5">
@@ -136,14 +130,12 @@ export default styled(
                   <Container key={message.id} className="pl-0">
                     {messages[index - 1]?.owner !== message.owner && (
                       <>
-                        <Avatar
+                        <UserAvatar
                           size="small"
-                          src={
-                            getParticipant(
-                              conversation as Conversation,
-                              message.owner,
-                            )?.imageUrl
-                          }
+                          user={getParticipant(
+                            conversation as Conversation,
+                            message.owner,
+                          )}
                         />
                         <Text
                           inline

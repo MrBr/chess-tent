@@ -20,12 +20,12 @@ import {
 } from '@chess-tent/models';
 import Footer from './activity-footer';
 
-const { StepRenderer, Chessboard } = components;
+const { StepRenderer, Chessboard, UserAvatar } = components;
 const { useDispatchBatched, useLocation } = hooks;
 const {
   actions: { updateActivityState, setActivityActiveStep, updateActivity },
 } = state;
-const { Avatar, Headline3, Text } = ui;
+const { Headline3, Text } = ui;
 
 const Activity: ActivityComponent<LessonActivity> = ({ activity }) => {
   const dispatch = useDispatchBatched();
@@ -101,7 +101,7 @@ const Activity: ActivityComponent<LessonActivity> = ({ activity }) => {
       header={
         <>
           <Headline3 className="mt-0">{lesson.state.title}</Headline3>
-          <Avatar src={lesson.owner.imageUrl} size="extra-small" />
+          <UserAvatar user={lesson.owner} size="extra-small" />
           <Text inline>{lesson.owner.name}</Text>
         </>
       }

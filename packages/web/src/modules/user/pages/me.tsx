@@ -4,9 +4,9 @@ import { User } from '@chess-tent/models';
 import { FileUploaderProps } from '@types';
 
 const { useActiveUserRecord, useApi } = hooks;
-const { Header } = components;
+const { UserAvatar, Layout } = components;
 const { withFiles } = hoc;
-const { Page, Col, Row, Avatar, Headline3, Text } = ui;
+const { Col, Row, Headline3, Text } = ui;
 
 export default withFiles(({ files, openFileDialog }: FileUploaderProps) => {
   const [user] = useActiveUserRecord() as [User, never, never];
@@ -41,11 +41,10 @@ export default withFiles(({ files, openFileDialog }: FileUploaderProps) => {
   }, [uploadImageResponse, signImageResponse, updateMe]);
 
   return (
-    <Page>
-      <Header />
+    <Layout>
       <Row>
         <Col className="col-auto">
-          <Avatar src={user.imageUrl} size="large" onClick={openFileDialog} />
+          <UserAvatar user={user} size="large" onClick={openFileDialog} />
         </Col>
         <Col>
           <Headline3>{user.name}</Headline3>
@@ -73,6 +72,6 @@ export default withFiles(({ files, openFileDialog }: FileUploaderProps) => {
           <Text>{user.teachingMethodology}</Text>
         </Col>
       </Row>
-    </Page>
+    </Layout>
   );
 });

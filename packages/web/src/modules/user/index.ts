@@ -15,6 +15,12 @@ application.register(
     application.components.Coaches = module.default;
   },
 );
+application.register(
+  () => import('./components/user-avatar'),
+  module => {
+    application.components.UserAvatar = module.default;
+  },
+);
 application.model.userSchema = userSchema;
 application.pages.Register = Register;
 application.hooks.useUser = useUser;

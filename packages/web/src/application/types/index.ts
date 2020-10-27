@@ -1,4 +1,5 @@
 import {
+  ComponentProps,
   ComponentType,
   FunctionComponent,
   ReactElement,
@@ -410,6 +411,11 @@ export type Components = {
     editing: boolean;
     onChange: (editing: boolean) => void;
   }>;
+  UserAvatar: ComponentType<
+    {
+      user: User;
+    } & Pick<ComponentProps<UI['Avatar']>, 'size' | 'onClick'>
+  >;
   Coaches: ComponentType;
   Activities: ComponentType<{ activities: Activity[] | null }>;
   Conversations: ComponentType;

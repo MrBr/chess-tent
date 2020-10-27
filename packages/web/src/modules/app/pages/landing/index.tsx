@@ -31,32 +31,44 @@ const UnderlineText = styled(Text)({
   color: 'gray',
 });
 
-const PageRow = styled(Row)({
+const SectionRow = styled(Row)({
   height: '100vh',
+});
+
+const ContentRow = styled(Row)({
+  marginTop: '10.0625em',
 });
 
 export default () => (
   <>
     <Header fluid />
-    <PageRow noGutters>
-      <Col md={{ span: 6, offset: 1 }} xs={12}>
-        {/* <Headline3>CHESS + TENT</Headline3> */}
-        <Icon type="logo" size="large" />
-        <Display2>Have serious skills and wish to teach chess?</Display2>
-        <Headline3>
-          Create engaging chess lessons and build your audience. <br />
-          Join early beta and help us build flexible creator platform.
-        </Headline3>
-        <Button>
-          <Text inline fontSize="large" weight={900}>
-            Get beta access
-          </Text>
-        </Button>
-        <Text>Want to learn from experienced chess coaches?</Text>
-        <UnderlineText>Notify me when lessons go live?</UnderlineText>
+    <SectionRow noGutters>
+      <Col md={{ span: 5, offset: 1 }} xs={12}>
+        <Row noGutters>
+          <Headline3>CHESS + TENT</Headline3>
+        </Row>
+        {/* <Icon type="logo" size="large" /> */}
+        <ContentRow
+          noGutters
+          className="flex-column align-items-start justify-content-md-between"
+        >
+          <Display2>Have serious skills and wish to teach chess?</Display2>
+          <Headline3>
+            Create engaging chess lessons and build your <br />
+            audience. Join early beta and help us build flexible <br />
+            creator platform.
+          </Headline3>
+          <Button className="my-lg-4">
+            <Text inline fontSize="large" weight={900} className="mx-xl-5">
+              Get beta access
+            </Text>
+          </Button>
+          <Text>Want to learn from experienced chess coaches?</Text>
+          <UnderlineText>Notify me when lessons go live?</UnderlineText>
+        </ContentRow>
       </Col>
-    </PageRow>
-    <Lesson />
+    </SectionRow>
+    {/* <Lesson /> */}
     {/* <Row noGutters>
       <Col md={{ span: 6, offset: 1 }} xs={12}>
         <Icon type="king" size="large" />

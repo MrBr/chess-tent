@@ -185,9 +185,9 @@ const addStepToLeft = (parentStep: Step, step: Step): Step => {
 };
 
 /**
- * Remove all step and all adjacent steps
+ * Remove the step and all adjacent steps
  */
-const removeStep = (parentStep: Step, step: Step): Step => {
+const removeStep = (parentStep: Step, step: Step, adjacent = true): Step => {
   let removeStep = false;
   return {
     ...parentStep,
@@ -195,7 +195,8 @@ const removeStep = (parentStep: Step, step: Step): Step => {
       ...parentStep.state,
       steps: parentStep.state.steps.filter((childStep, index) => {
         if (isSameStep(childStep, step)) {
-          removeStep = true;
+          removeStep = adjacent;
+          return false;
         }
         return !removeStep;
       })

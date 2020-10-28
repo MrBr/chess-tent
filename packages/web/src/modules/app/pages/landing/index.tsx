@@ -26,7 +26,7 @@ const Header = styled(Container)({
   // backgroundAttachment: 'fixed',
   position: 'absolute',
   width: '1180px',
-  minHeight: '100vh',
+  height: '1167px',
   // top: '-122px',
   right: 0,
 });
@@ -42,7 +42,7 @@ const UnderlineText = styled(Text)({
 });
 
 const SectionRow = styled(Row)({
-  height: '100vh',
+  height: '1167px',
 });
 
 const ContentRow = styled(Row)({
@@ -50,10 +50,10 @@ const ContentRow = styled(Row)({
 });
 
 export default () => (
-  <>
+  <Container fluid className="pl-5">
     <Header fluid />
     <SectionRow noGutters>
-      <Col md={{ span: 5, offset: 1 }} xs={12}>
+      <Col md={{ span: 5 }} xs={12}>
         <Row noGutters>
           <Headline3>CHESS + TENT</Headline3>
         </Row>
@@ -78,7 +78,7 @@ export default () => (
         </ContentRow>
       </Col>
     </SectionRow>
-    <SectionRow noGutters>
+    <Row>
       <Col md={{ span: 5 }} xs={12}>
         <Icon type="king" size="large" />
         <Headline1>Create Engaging Lessons and Build Your Audience</Headline1>
@@ -93,11 +93,16 @@ export default () => (
           Create the most interactive online lessons and training. Become
           visible to chess players.
         </Text>
+        <Button className="my-lg-4">
+          <Text inline fontSize="large" weight={900} className="mx-xl-5">
+            Become a Coach
+          </Text>
+        </Button>
       </Col>
       <Col md={{ span: 7 }} xs={12}>
         <Lesson />
       </Col>
-    </SectionRow>
+    </Row>
     {/* <Row noGutters>
       <Col md={{ span: 6, offset: 1 }} xs={12}>
         <Icon type="brain" size="large" />
@@ -108,5 +113,5 @@ export default () => (
     <Link style={{ position: 'fixed', top: 0 }} to="/login">
       Login
     </Link>
-  </>
+  </Container>
 );

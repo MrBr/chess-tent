@@ -78,7 +78,6 @@ export default () => (
         </ContentRow>
       </Col>
     </SectionRow>
-
     <SectionRow noGutters>
       <Col md={{ span: 5 }} xs={12}>
         <Icon type="king" size="large" />

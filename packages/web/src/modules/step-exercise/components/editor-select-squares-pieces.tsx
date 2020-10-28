@@ -1,6 +1,6 @@
-import React, { ComponentProps, FunctionComponent, useCallback } from 'react';
+import React, { ComponentProps, FunctionComponent } from 'react';
 import { components } from '@application';
-import { ExerciseModule, Shape } from '@types';
+import { ExerciseModule } from '@types';
 import { updateStepState } from '@chess-tent/models';
 
 const { Chessboard } = components;

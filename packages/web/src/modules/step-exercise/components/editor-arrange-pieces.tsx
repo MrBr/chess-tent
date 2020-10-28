@@ -34,10 +34,12 @@ const Editor: FunctionComponent<ComponentProps<ExerciseModule['Editor']>> = ({
     },
     [updateExerciseStep],
   );
-  const handleMove = useCallback(
-    (position, newMove, piece, captured) => {
-      if (editing) {
-        updateExerciseStep({ moves: [] }, { position });
+  const handleChange = useCallback(
+    (position, newMove?, piece?, captured?) => {
+      if (editing || !newMove) {
+        // editing: true - In case new piece is added or removed,
+        // turning editing mode on (in case it isn't)
+        updateExerciseStep({ moves: [], editing: true }, { position });
         return;
       }
       const movedPiecePrevMove = moves?.find(
@@ -69,17 +71,17 @@ const Editor: FunctionComponent<ComponentProps<ExerciseModule['Editor']>> = ({
       edit
       sparePieces
       fen={activePosition}
-      onMove={handleMove}
+      onMove={handleChange}
+      onPieceRemove={position => handleChange(position)}
+      onPieceDrop={position => handleChange(position)}
       header={status}
       onShapesChange={handleShapes}
       shapes={shapes}
       footer={
         <EditBoardToggle
           editing={!!editing}
-          onChange={() => updateExerciseStep({ editing })}
-        >
-          {editing ? 'Set position' : 'Edit board'}
-        </EditBoardToggle>
+          onChange={editing => updateExerciseStep({ editing })}
+        />
       }
     />
   );

@@ -16,6 +16,10 @@ const Editor: FunctionComponent<ComponentProps<ExerciseModule['Editor']>> = ({
       edit
       sparePieces
       fen={position}
+      onPieceDrop={position => updateStep(updateStepState(step, { position }))}
+      onPieceRemove={position =>
+        updateStep(updateStepState(step, { position }))
+      }
       onMove={position => updateStep(updateStepState(step, { position }))}
       header={status}
       onShapesChange={shapes => updateStep(updateStepState(step, { shapes }))}

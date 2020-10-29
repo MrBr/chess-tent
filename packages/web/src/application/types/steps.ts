@@ -1,4 +1,4 @@
-import { Chapter, Lesson, Step } from '@chess-tent/models';
+import { Chapter, Lesson, Step, StepType } from '@chess-tent/models';
 import { FEN, NotableMove, Shape } from './chess';
 import { StepModule } from './step';
 
@@ -131,3 +131,15 @@ export type ExerciseModule = StepModule<
 >;
 
 export type Steps = MoveStep | DescriptionStep | VariationStep | ExerciseStep;
+
+type ModuleRecord<K extends StepType, T> = {
+  [P in K]: T extends StepModule<infer U, infer S, infer Z, infer Y>
+    ? S extends P
+      ? T
+      : never
+    : never;
+};
+export type StepModules = ModuleRecord<
+  StepType,
+  MoveModule | VariationModule | DescriptionModule | ExerciseModule
+>;

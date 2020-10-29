@@ -142,7 +142,9 @@ class EditorRenderer extends React.Component<
       // Don't allow deleting first step (for now)
       return;
     }
-    this.updateStep(removeStep(parentStep, step));
+    this.updateStep(
+      removeStep(parentStep, step, step.stepType !== 'variation'),
+    );
     history.replace({
       pathname: history.location.pathname,
       search: `?activeStep=${newActiveStep.id}`,

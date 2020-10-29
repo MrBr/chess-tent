@@ -38,7 +38,9 @@ const Stepper = ({
           />
         );
         return child.stepType === 'variation' && !root ? (
-          <StepperVariation>{stepper}</StepperVariation>
+          <StepperVariation key={`variation-${child.id}`}>
+            {stepper}
+          </StepperVariation>
         ) : (
           stepper
         );

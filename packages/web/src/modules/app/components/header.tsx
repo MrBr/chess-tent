@@ -41,7 +41,7 @@ export default () => {
     if (logoutApi.response) {
       history.push('/');
     }
-  }, [logoutApi]);
+  }, [history, logoutApi]);
   const [user] = useActiveUserRecord() as [User, never, never];
   return (
     <Container fluid className="h-100">

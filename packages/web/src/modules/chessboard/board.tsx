@@ -9,6 +9,7 @@ import {
   Key,
   ExtendedKey,
   PieceRolePromotable,
+  FEN,
 } from '@types';
 
 import { ChessInstance } from 'chess.js';
@@ -49,6 +50,8 @@ type ChessgroundMappedPropsType = Record<
     | 'evaluate'
     | 'size'
     | 'sparePieces'
+    | 'onPieceDrop'
+    | 'onPieceRemove'
   >,
   string
 >;
@@ -165,6 +168,9 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
       viewOnly,
       fen,
       resizable,
+      draggable: {
+        deleteOnDropOff: true,
+      },
       selectable: { enabled: selectablePieces },
       animation: {
         enabled: animation,
@@ -188,6 +194,8 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
       },
       events: {
         change: this.onChange,
+        dropNewPiece: this.onPieceDrop,
+        removePiece: this.onPieceRemove,
       },
     });
   }
@@ -261,24 +269,39 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
     this.onReset();
   };
 
-  fen = (
-    move?: Move,
-    options?: { piece?: Piece; promoted?: PieceRolePromotable },
-  ) => {
-    const { edit } = this.props;
-    if (edit) {
-      this.chess.load(
-        // Update position and color who's turn is.
-        // Useful for variation to automatically start with a correct color.
-        replaceFENPosition(this.chess.fen(), this.api.getFen(), options?.piece),
-      );
-    } else if (move) {
-      const chessMove = createMoveShortObject(move, options?.promoted);
-      // Only valid moves are allowed in "play" mode
-      this.chess.move(chessMove);
-    }
-    return this.chess.fen();
-  };
+  fen = (() => {
+    // FEN Memoization
+    // Board fen can be requested by multiple methods on a single change (that triggers multiple events).
+    // This memoization prevents multiple calculations and potential fen overrides on a single change.
+    let lastFen: FEN;
+    return (
+      move?: Move,
+      options?: { piece?: Piece; promoted?: PieceRolePromotable },
+    ) => {
+      const { edit } = this.props;
+      const fen = this.api.getFen();
+      if (fen === lastFen) {
+        return this.chess.fen();
+      }
+      lastFen = fen;
+      if (edit) {
+        this.chess.load(
+          // Update position and color who's turn is.
+          // Useful for variation to automatically start with a correct color.
+          replaceFENPosition(
+            this.chess.fen(),
+            this.api.getFen(),
+            options?.piece,
+          ),
+        );
+      } else if (move) {
+        const chessMove = createMoveShortObject(move, options?.promoted);
+        // Only valid moves are allowed in "play" mode
+        this.chess.move(chessMove);
+      }
+      return this.chess.fen();
+    };
+  })();
 
   move(from: Key, to: Key) {
     this.api.move(from, to);
@@ -314,13 +337,28 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
     return this.props.onShapesChange(...args);
   };
 
-  // TODO - use move event?
   onChange = () => {
     if (!this.props.onChange) {
       return;
     }
     const fen = this.fen();
     this.props.onChange(fen);
+  };
+
+  onPieceDrop = (piece: Piece, key: ExtendedKey) => {
+    if (!this.props.onPieceDrop) {
+      return;
+    }
+    const fen = this.fen();
+    this.props.onPieceDrop(fen, piece, key as Key);
+  };
+
+  onPieceRemove = (piece: Piece, key: ExtendedKey) => {
+    if (!this.props.onPieceRemove) {
+      return;
+    }
+    const fen = this.fen();
+    this.props.onPieceRemove(fen, piece, key as Key);
   };
 
   onMove = (orig: ExtendedKey, dest: ExtendedKey, metadata: MoveMetadata) => {

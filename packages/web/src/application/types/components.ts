@@ -43,6 +43,8 @@ export interface ChessboardProps {
   fen: FEN;
   animation?: boolean;
   onChange?: (position: FEN) => void;
+  onPieceDrop?: (position: FEN, piece: Piece, key: Key) => void;
+  onPieceRemove?: (position: FEN, piece: Piece, key: Key) => void;
   onMove?: (
     position: FEN,
     lastMove: Move,

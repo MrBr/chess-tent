@@ -145,6 +145,17 @@ const Editor: MoveModule['Editor'] = ({
       ),
     [chapter, step, updateStep, setActiveStep],
   );
+  const onPieceAddRemove = useCallback(
+    (position: FEN) => {
+      const newVariation = services.createStep('variation', {
+        position,
+        editing: true,
+      });
+      updateStep(addStep(step, newVariation));
+      setActiveStep(newVariation);
+    },
+    [setActiveStep, step, updateStep],
+  );
 
   return (
     <Chessboard
@@ -152,6 +163,8 @@ const Editor: MoveModule['Editor'] = ({
       sparePieces
       fen={position}
       onMove={onChangeHandle}
+      onPieceRemove={onPieceAddRemove}
+      onPieceDrop={onPieceAddRemove}
       header={status}
       onShapesChange={updateShapes}
       shapes={shapes}

@@ -157,6 +157,18 @@ const Editor: VariationModule['Editor'] = ({
       ),
     [lesson, chapter, step, updateStep, setActiveStep],
   );
+  const onPieceAddRemove = useCallback(
+    (newPosition: FEN) =>
+      boardChange(
+        lesson,
+        chapter,
+        step,
+        updateStep,
+        setActiveStep,
+        newPosition,
+      ),
+    [lesson, chapter, step, updateStep, setActiveStep],
+  );
 
   return (
     <Chessboard
@@ -165,6 +177,8 @@ const Editor: VariationModule['Editor'] = ({
       fen={position}
       onMove={onChangeHandle}
       onShapesChange={updateShapes}
+      onPieceDrop={onPieceAddRemove}
+      onPieceRemove={onPieceAddRemove}
       shapes={shapes}
       header={status}
       footer={<Footer updateEditing={updateEditing} editing={!!editing} />}

@@ -9,7 +9,7 @@ import React, {
 import {
   Chapter,
   Difficulty,
-  getChapterParentStep,
+  getParentStep,
   getChapterPreviousStep,
   getChapterStep,
   getLessonChapter,
@@ -136,7 +136,7 @@ class EditorRenderer extends React.Component<
 
   deleteStep = (step: Step) => {
     const { activeChapter, history } = this.props;
-    const parentStep = getChapterParentStep(activeChapter, step);
+    const parentStep = getParentStep(activeChapter, step);
     const newActiveStep = getChapterPreviousStep(activeChapter, step);
     if (!newActiveStep) {
       // Don't allow deleting first step (for now)
@@ -231,10 +231,9 @@ class EditorRenderer extends React.Component<
               component="Editor"
               activeStep={activeStep}
               setActiveStep={this.setActiveStepHandler}
-              lesson={lesson}
+              stepRoot={activeChapter}
               status={lessonStatusText}
               Chessboard={Chessboard}
-              chapter={activeChapter}
               updateStep={this.updateStep}
               removeStep={this.deleteStep}
             />
@@ -270,7 +269,7 @@ class EditorRenderer extends React.Component<
                     </Button>
                   </Col>
                 </Row>
-                <Row>
+                <Row className="mt-3 mb-3">
                   <Col className="col-auto">
                     <DifficultyDropdown
                       difficulty={lesson.difficulty}
@@ -316,11 +315,10 @@ class EditorRenderer extends React.Component<
                 </Row>
               </Container>
               <Stepper
-                lesson={lesson}
                 steps={activeChapter.state.steps}
                 activeStep={activeStep}
                 setActiveStep={this.setActiveStepHandler}
-                chapter={activeChapter}
+                stepRoot={activeChapter}
                 updateStep={this.updateStep}
                 removeStep={this.deleteStep}
                 root

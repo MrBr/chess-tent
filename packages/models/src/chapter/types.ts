@@ -1,9 +1,9 @@
 import { Subject } from "../subject";
-import { Step } from "../step";
+import { Step, StepRoot } from "../step";
 
 export const TYPE_CHAPTER = "chapters";
 
-export interface Chapter extends Subject {
+export interface Chapter extends Subject, StepRoot {
   id: string;
   type: typeof TYPE_CHAPTER;
   state: {

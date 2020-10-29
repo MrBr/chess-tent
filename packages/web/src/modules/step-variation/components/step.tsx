@@ -3,8 +3,6 @@ import { DrawShape } from '@chess-tent/chessground/dist/draw';
 import {
   createStep as coreCreateStep,
   addStep,
-  Lesson,
-  Chapter,
   updateStepState,
   Step,
   addStepToLeft,
@@ -44,8 +42,6 @@ const createStep: VariationModule['createStep'] = (id, initialState) =>
   });
 
 const boardChange = (
-  lesson: Lesson,
-  chapter: Chapter,
   step: VariationStep,
   updateStep: (step: Step) => void,
   setActiveStep: (step: Step) => void,
@@ -121,9 +117,7 @@ const boardChange = (
 const Editor: VariationModule['Editor'] = ({
   Chessboard,
   step,
-  lesson,
   status,
-  chapter,
   updateStep,
   setActiveStep,
 }) => {
@@ -146,8 +140,6 @@ const Editor: VariationModule['Editor'] = ({
   const onChangeHandle = useCallback(
     (newPosition: FEN, newMove?: Move, movedPiece?: Piece) =>
       boardChange(
-        lesson,
-        chapter,
         step,
         updateStep,
         setActiveStep,
@@ -155,19 +147,12 @@ const Editor: VariationModule['Editor'] = ({
         newMove,
         movedPiece,
       ),
-    [lesson, chapter, step, updateStep, setActiveStep],
+    [step, updateStep, setActiveStep],
   );
   const onPieceAddRemove = useCallback(
     (newPosition: FEN) =>
-      boardChange(
-        lesson,
-        chapter,
-        step,
-        updateStep,
-        setActiveStep,
-        newPosition,
-      ),
-    [lesson, chapter, step, updateStep, setActiveStep],
+      boardChange(step, updateStep, setActiveStep, newPosition),
+    [step, updateStep, setActiveStep],
   );
 
   return (

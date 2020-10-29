@@ -2,13 +2,13 @@ import React, { useCallback } from 'react';
 import { DrawShape } from '@chess-tent/chessground/dist/draw';
 import {
   createStep as coreCreateStep,
-  getChapterParentStep,
   addStep,
-  Chapter,
   Step,
   updateStepState,
   addStepToLeft,
   getRightStep,
+  getParentStep,
+  StepRoot,
 } from '@chess-tent/models';
 import { FEN, Move, MoveModule, MoveStep, Piece, VariationStep } from '@types';
 import { services, components, ui } from '@application';
@@ -34,7 +34,7 @@ const createStep: MoveModule['createStep'] = (id, initialState) =>
   });
 
 const boardChange = (
-  chapter: Chapter,
+  stepRoot: StepRoot,
   step: MoveStep,
   updateStep: (step: Step) => void,
   setActiveStep: (step: Step) => void,
@@ -75,7 +75,7 @@ const boardChange = (
     captured,
   );
 
-  const variationStep = getChapterParentStep(chapter, step) as VariationStep;
+  const variationStep = getParentStep(stepRoot, step) as VariationStep;
   const rightStep = getRightStep(variationStep, step) as VariationStep;
   // Move that possibly already exists in the chapter
   let sameMoveStep = services.getSameMoveVariationStep(step, notableMove);
@@ -111,7 +111,7 @@ const Editor: MoveModule['Editor'] = ({
   Chessboard,
   step,
   status,
-  chapter,
+  stepRoot,
   updateStep,
   setActiveStep,
 }) => {
@@ -134,7 +134,7 @@ const Editor: MoveModule['Editor'] = ({
   const onChangeHandle = useCallback(
     (newPosition: FEN, newMove: Move, movedPiece: Piece, captured: boolean) =>
       boardChange(
-        chapter,
+        stepRoot,
         step,
         updateStep,
         setActiveStep,
@@ -143,7 +143,7 @@ const Editor: MoveModule['Editor'] = ({
         movedPiece,
         captured,
       ),
-    [chapter, step, updateStep, setActiveStep],
+    [stepRoot, step, updateStep, setActiveStep],
   );
   const onPieceAddRemove = useCallback(
     (position: FEN) => {

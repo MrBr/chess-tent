@@ -3,7 +3,6 @@ import {
   getChildStep,
   getLastStep,
   getNextStep,
-  getParentStep,
   getPreviousStep,
   getRightStep,
   getStepAt,
@@ -27,18 +26,6 @@ const getChapterStep = (chapter: Chapter, stepId: Step["id"]) => {
     }
   }
   return null;
-};
-
-const getChapterParentStep = (chapter: Chapter, step: Step) => {
-  for (const rootStep of chapter.state.steps) {
-    if (isSameStep(rootStep, step)) {
-      return null;
-    }
-    const parentStep = getParentStep(rootStep, step);
-    if (parentStep) {
-      return parentStep;
-    }
-  }
 };
 
 const getChapterPreviousStep = (chapter: Chapter, step: Step) => {
@@ -156,7 +143,6 @@ const createChapter = (
 });
 
 export {
-  getChapterParentStep,
   getChapterPreviousStep,
   getChapterNextStep,
   getChapterRightStep,

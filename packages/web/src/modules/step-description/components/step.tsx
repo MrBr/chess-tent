@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { DrawShape } from '@chess-tent/chessground/dist/draw';
 import {
   createStep as coreCreateStep,
-  getChapterParentStep,
+  getParentStep,
   addStepRightToSame,
   updateStepState,
 } from '@chess-tent/models';
@@ -30,9 +30,8 @@ const createStep: DescriptionModule['createStep'] = (id, initialState) =>
 const Editor: DescriptionModule['Editor'] = ({
   Chessboard,
   step,
-  lesson,
-  chapter,
   updateStep,
+  stepRoot,
   ...props
 }) => {
   const updateShapes = useCallback(
@@ -40,15 +39,14 @@ const Editor: DescriptionModule['Editor'] = ({
     [step, updateStep],
   );
 
-  const parentStep = getChapterParentStep(chapter, step) as VariationStep;
+  const parentStep = getParentStep(stepRoot, step) as VariationStep;
   const ParentEditor = stepModules[parentStep.stepType].Editor;
 
   return (
     <ParentEditor
       {...props}
-      lesson={lesson}
       step={parentStep}
-      chapter={chapter}
+      stepRoot={stepRoot}
       updateStep={updateStep}
       Chessboard={props => (
         <Chessboard
@@ -88,18 +86,18 @@ const StepperStep: DescriptionModule['StepperStep'] = ({
   step,
   setActiveStep,
   activeStep,
-  chapter,
+  stepRoot,
   updateStep,
   removeStep,
 }) => {
   const addDescriptionStep = useCallback(() => {
-    const parentStep = getChapterParentStep(chapter, step);
+    const parentStep = getParentStep(stepRoot, step);
     const newDescriptionStep = services.createStep('description', {
       position: step.state.position,
     });
     updateStep(addStepRightToSame(parentStep, newDescriptionStep));
     setActiveStep(newDescriptionStep);
-  }, [chapter, step, updateStep, setActiveStep]);
+  }, [stepRoot, step, updateStep, setActiveStep]);
   const removeDescriptionStep = useCallback(() => {
     removeStep(step);
   }, [step, removeStep]);

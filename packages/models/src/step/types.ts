@@ -17,3 +17,8 @@ export interface NormalizedStep {
     steps: Step["id"][];
   };
 }
+
+// Step root shape has steps array in the state but it doesn't have to be a step itself.
+export type StepRoot = {
+  state: { steps: Step[] };
+};

@@ -14,6 +14,7 @@ import { LinkProps, RedirectProps, RouteProps } from 'react-router-dom';
 import { Requests } from '@chess-tent/types';
 import {
   Activity,
+  Analysis,
   Chapter,
   Lesson,
   Step,
@@ -247,4 +248,6 @@ export type Components = {
   Coaches: ComponentType;
   Activities: ComponentType<{ activities: Activity[] | null }>;
   Conversations: ComponentType;
+  AnalysisBoard: ComponentType<{ step: Step }>;
+  AnalysisSidebar: ComponentType<{ analysis: Analysis; activeStep?: Step }>;
 };

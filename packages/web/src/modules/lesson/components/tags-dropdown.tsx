@@ -29,6 +29,7 @@ class DifficultyDropdown extends React.Component<
         getOptionValue={({ id }) => id}
         getOptionLabel={({ text }) => text}
         onChange={this.onChange}
+        placeholder="Select tags"
         isMulti
       />
     );

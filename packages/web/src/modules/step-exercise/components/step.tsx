@@ -2,7 +2,7 @@ import React, { useCallback, useMemo } from 'react';
 import {
   addStepRightToSame,
   createStep as coreCreateStep,
-  getChapterParentStep,
+  getParentStep,
   updateStepState,
 } from '@chess-tent/models';
 import {
@@ -47,8 +47,7 @@ const StepperStep: ExerciseModule['StepperStep'] = ({
   step,
   setActiveStep,
   activeStep,
-  chapter,
-  lesson,
+  stepRoot,
   removeStep,
   updateStep,
 }) => {
@@ -60,7 +59,7 @@ const StepperStep: ExerciseModule['StepperStep'] = ({
     removeStep(step);
   }, [step, removeStep]);
   const addExerciseStep = useCallback(() => {
-    const parentStep = getChapterParentStep(chapter, step) as
+    const parentStep = getParentStep(stepRoot, step) as
       | VariationStep
       | MoveStep;
     const exerciseStep = services.createStep('exercise', {
@@ -71,7 +70,7 @@ const StepperStep: ExerciseModule['StepperStep'] = ({
     });
     updateStep(addStepRightToSame(parentStep, exerciseStep));
     setActiveStep(exerciseStep);
-  }, [chapter, setActiveStep, step, updateStep]);
+  }, [stepRoot, setActiveStep, step, updateStep]);
   const handleStepClick = useCallback(
     event => {
       event.stopPropagation();
@@ -113,12 +112,7 @@ const StepperStep: ExerciseModule['StepperStep'] = ({
               ))}
             </Dropdown.Menu>
           </Dropdown>
-          <ExerciseToolbox
-            step={step}
-            lesson={lesson}
-            chapter={chapter}
-            updateStep={updateStep}
-          />
+          <ExerciseToolbox step={step} updateStep={updateStep} />
           <StepToolbox
             deleteStepHandler={removeExerciseStep}
             addExerciseHandler={addExerciseStep}

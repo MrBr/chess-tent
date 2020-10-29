@@ -1,13 +1,19 @@
 import { ComponentType, FunctionComponent } from 'react';
-import { Activity, Chapter, Lesson, Step, StepType } from '@chess-tent/models';
+import {
+  Activity,
+  Chapter,
+  Lesson,
+  Step,
+  StepRoot,
+  StepType,
+} from '@chess-tent/models';
 import { ChessboardInterface, ChessboardProps } from './components';
 import { ClassComponent } from './_helpers';
 
 export type StepSystemProps = {
   setActiveStep: (step: Step) => void;
   activeStep: Step;
-  lesson: Lesson;
-  chapter: Chapter;
+  stepRoot: StepRoot;
 };
 export type StepBoardComponentProps = {
   Chessboard:
@@ -53,6 +59,8 @@ export type StepModule<
       Footer: FunctionComponent<Partial<ActivityFooterProps>>;
       activity: Activity;
       completeStep: (step: Step) => void;
+      lesson: Lesson;
+      chapter: Chapter;
     } & StepBoardComponentProps
   >;
   StepperStep: StepComponent<STEP, EditorProps>;

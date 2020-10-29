@@ -1,5 +1,5 @@
 import mergeWith from "lodash.mergewith";
-import { Step, TYPE_STEP } from "./types";
+import { Step, StepRoot, TYPE_STEP } from "./types";
 import {
   getSubjectValueAt,
   SubjectPath,
@@ -148,13 +148,16 @@ const isLastStep = (parentStep: Step, step: Step, recursive = true) => {
   return isSameStep(getLastStep(parentStep, recursive), step);
 };
 
-const getParentStep = (parentStep: Step, step: Step): Step | null => {
+const getParentStep = (
+  parentStep: Step | StepRoot,
+  step: Step
+): Step | null => {
   let closestParentStep = null;
   for (const childStep of parentStep.state.steps) {
     if (isSameStep(childStep, step)) {
       // Found searched step, returning previous.
       // If the first or the only returning null otherwise returning previous step.
-      return parentStep;
+      return isStep(parentStep) ? parentStep : null;
     }
     closestParentStep = getParentStep(childStep, step);
     if (closestParentStep) {

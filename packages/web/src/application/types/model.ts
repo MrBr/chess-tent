@@ -12,4 +12,5 @@ export type Model = {
   messageSchema: Schema;
   userSchema: Schema;
   tagSchema: Schema;
+  analysisSchema: Schema;
 };

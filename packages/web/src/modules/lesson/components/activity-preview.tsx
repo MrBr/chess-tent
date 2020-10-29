@@ -101,12 +101,13 @@ const Preview = ({ lesson, chapter, step }: PreviewProps) => {
   );
 
   const boardRender = (props: ChessboardProps) => (
-    <Chessboard header={<Header lesson={lesson} />} {...props} />
+    <Chessboard header={<Header lesson={lesson} />} edit {...props} />
   );
 
   return (
     <StepRenderer
       step={activeStep}
+      stepRoot={chapter}
       chapter={chapter}
       component="Playground"
       activeStep={activeStep}

@@ -112,6 +112,7 @@ const Activity: ActivityComponent<LessonActivity> = ({ activity }) => {
     <StepRenderer
       step={activeStep}
       chapter={activeChapter}
+      stepRoot={activeChapter}
       component="Playground"
       activeStep={activeStep}
       lesson={lesson}

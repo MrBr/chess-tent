@@ -6,7 +6,9 @@ import { Conversation } from "./conversation";
 import { Chapter } from "./chapter";
 import { Message } from "./message";
 import { Tag } from "./tag";
+import { Analysis } from "./analysis";
 
+export * from "./analysis";
 export * from "./subject";
 export * from "./conversation";
 export * from "./message";
@@ -26,4 +28,5 @@ export type Entity =
   | Conversation
   | Chapter
   | Message
-  | Tag;
+  | Tag
+  | Analysis;

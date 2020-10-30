@@ -104,7 +104,6 @@ export interface ChessboardInterface
 }
 
 export type StepperProps = {
-  steps: Step[];
   className?: string;
   root?: boolean;
 } & StepSystemProps &
@@ -150,10 +149,6 @@ export type StepTag = FunctionComponent<{
   move?: NotableMove | null;
 }>;
 
-export interface ActionProps {
-  onClick?: () => void;
-}
-
 export interface AuthorizedProps {
   children: ReactElement | ((authorized: boolean) => ReactElement);
 }
@@ -167,6 +162,15 @@ export interface LessonPlaygroundSidebarProps {
 export type ActivityComponent<T> = ComponentType<
   T extends Activity<infer U, infer K> ? { activity: T } : never
 >;
+
+export interface AnalysisSystemProps {
+  activeStep: Step;
+  step: Step;
+  analysis: Analysis;
+  setActiveStep: (step: Step) => void;
+  updateStep: (step: Partial<Step>) => void;
+  removeStep: (step: Step) => void;
+}
 
 export type Components = {
   App: ComponentType;
@@ -248,6 +252,6 @@ export type Components = {
   Coaches: ComponentType;
   Activities: ComponentType<{ activities: Activity[] | null }>;
   Conversations: ComponentType;
-  AnalysisBoard: ComponentType<{ step: Step }>;
-  AnalysisSidebar: ComponentType<{ analysis: Analysis; activeStep?: Step }>;
+  AnalysisBoard: ComponentType<AnalysisSystemProps>;
+  AnalysisSidebar: ComponentType<AnalysisSystemProps>;
 };

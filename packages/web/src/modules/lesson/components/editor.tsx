@@ -315,7 +315,6 @@ class EditorRenderer extends React.Component<
                 </Row>
               </Container>
               <Stepper
-                steps={activeChapter.state.steps}
                 activeStep={activeStep}
                 setActiveStep={this.setActiveStepHandler}
                 stepRoot={activeChapter}

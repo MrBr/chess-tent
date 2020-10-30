@@ -251,7 +251,7 @@ const StepperStep: MoveModule['StepperStep'] = props => {
           />
         </Col>
       </Row>
-      <Stepper {...props} steps={step.state.steps} />
+      <Stepper {...props} stepRoot={step} />
     </Container>
   );
 };

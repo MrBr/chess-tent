@@ -15,12 +15,12 @@ const StepperVariation = styled.div({
 });
 
 const Stepper = ({
-  steps,
   activeStep,
   root,
   className,
   ...systemProps
 }: StepperProps) => {
+  const steps = systemProps.stepRoot.state.steps;
   if (!steps) {
     return null;
   }

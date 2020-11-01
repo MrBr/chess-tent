@@ -4,7 +4,7 @@ import React, {
   useCallback,
   useMemo,
 } from 'react';
-import { components, services, ui } from '@application';
+import { services } from '@application';
 import {
   ExerciseModule,
   ExerciseVariationActivityState,
@@ -12,23 +12,19 @@ import {
   Move,
 } from '@types';
 
-const { LessonPlayground, LessonPlaygroundSidebar } = components;
 const { createFenForward } = services;
-const { Text } = ui;
 
 const isCorrectActivityMove = (activityMove: Move, stepMove: Move) =>
   stepMove[0] === activityMove[0] && stepMove[1] === activityMove[1];
 
 const Playground: FunctionComponent<ComponentProps<
-  ExerciseModule['Playground']
+  ExerciseModule['ActivityBoard']
 >> = ({
   step,
   stepActivityState,
   setStepActivityState,
   Footer,
   Chessboard,
-  lesson,
-  chapter,
 }) => {
   const { position, shapes } = step.state;
   const {
@@ -40,14 +36,6 @@ const Playground: FunctionComponent<ComponentProps<
   const moveToPlayIndex = activeMoveIndex ? activeMoveIndex + 1 : 0;
   const stepToPlayMove = exerciseMoves?.[moveToPlayIndex];
   const stepActiveMove = exerciseMoves?.[activeMoveIndex as number];
-  const activityActiveMove =
-    activeMoveIndex !== undefined ? activityMoves?.[activeMoveIndex] : null;
-  const isCorrectActiveMove = activityActiveMove?.move
-    ? isCorrectActivityMove(
-        activityActiveMove.move,
-        stepToPlayMove?.move as Move,
-      )
-    : false;
   const activeShapes = stepActiveMove ? stepActiveMove.shapes : shapes;
   const activeMoves = exerciseMoves?.map(
     (move, index) => activityMoves?.[index] || move,
@@ -81,29 +69,12 @@ const Playground: FunctionComponent<ComponentProps<
   );
 
   return (
-    <LessonPlayground
-      board={
-        <Chessboard
-          fen={activePosition}
-          onMove={handleMove}
-          shapes={activeShapes}
-          animation
-          footer={<Footer />}
-        />
-      }
-      sidebar={
-        <LessonPlaygroundSidebar lesson={lesson} chapter={chapter} step={step}>
-          <Text>
-            {isCorrectActiveMove
-              ? 'Excellent, continue..'
-              : !!activityActiveMove
-              ? 'Wrong move, try again'
-              : stepToPlayMove
-              ? stepToPlayMove.piece?.color + ' to play'
-              : 'Done!'}
-          </Text>
-        </LessonPlaygroundSidebar>
-      }
+    <Chessboard
+      fen={activePosition}
+      onMove={handleMove}
+      shapes={activeShapes}
+      animation
+      footer={<Footer />}
     />
   );
 };

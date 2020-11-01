@@ -20,7 +20,13 @@ import {
 } from '@chess-tent/models';
 import Footer from './activity-footer';
 
-const { StepRenderer, Chessboard, UserAvatar } = components;
+const {
+  StepRenderer,
+  Chessboard,
+  UserAvatar,
+  LessonPlayground,
+  LessonPlaygroundSidebar,
+} = components;
 const { useDispatchBatched, useLocation } = hooks;
 const {
   actions: { updateActivityState, setActivityActiveStep, updateActivity },
@@ -109,22 +115,51 @@ const Activity: ActivityComponent<LessonActivity> = ({ activity }) => {
   );
 
   return (
-    <StepRenderer
-      step={activeStep}
-      chapter={activeChapter}
-      stepRoot={activeChapter}
-      component="Playground"
-      activeStep={activeStep}
-      lesson={lesson}
-      setActiveStep={() => {}}
-      setStepActivityState={setStepActivityState}
-      stepActivityState={activeStepActivityState}
-      nextStep={nextActivityStep}
-      prevStep={prevActivityStep}
-      Chessboard={boardRender}
-      activity={activity}
-      completeStep={completeStep}
-      Footer={footerRender}
+    <LessonPlayground
+      board={
+        <StepRenderer
+          step={activeStep}
+          chapter={activeChapter}
+          stepRoot={activeChapter}
+          component="ActivityBoard"
+          activeStep={activeStep}
+          lesson={lesson}
+          setActiveStep={() => {}}
+          setStepActivityState={setStepActivityState}
+          stepActivityState={activeStepActivityState}
+          nextStep={nextActivityStep}
+          prevStep={prevActivityStep}
+          Chessboard={boardRender}
+          activity={activity}
+          completeStep={completeStep}
+          Footer={footerRender}
+        />
+      }
+      sidebar={
+        <LessonPlaygroundSidebar
+          lesson={lesson}
+          chapter={activeChapter}
+          step={activeStep}
+        >
+          <StepRenderer
+            step={activeStep}
+            chapter={activeChapter}
+            stepRoot={activeChapter}
+            component="ActivitySidebar"
+            activeStep={activeStep}
+            lesson={lesson}
+            setActiveStep={() => {}}
+            setStepActivityState={setStepActivityState}
+            stepActivityState={activeStepActivityState}
+            nextStep={nextActivityStep}
+            prevStep={prevActivityStep}
+            Chessboard={boardRender}
+            activity={activity}
+            completeStep={completeStep}
+            Footer={footerRender}
+          />
+        </LessonPlaygroundSidebar>
+      }
     />
   );
 };

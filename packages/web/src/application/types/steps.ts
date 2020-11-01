@@ -1,5 +1,5 @@
 import { Step, StepType } from '@chess-tent/models';
-import { FEN, NotableMove, Shape } from './chess';
+import { FEN, Key, NotableMove, Shape } from './chess';
 import { StepModule } from './step';
 
 // Move
@@ -71,6 +71,7 @@ export interface ExerciseArrangePiecesState {
 }
 export interface ExerciseActivityArrangePiecesState {
   moves?: NotableMove[];
+  invalidPiece?: Key; // Piece at key
 }
 export interface ExerciseQuestionState {
   question?: string;

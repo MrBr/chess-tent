@@ -29,7 +29,7 @@ const Stepper = ({
       {steps.map(child => {
         const stepper = (
           <StepRenderer
-            component="StepperStep"
+            component="EditorSidebar"
             key={`${child.id}-step`}
             activeStep={activeStep}
             {...systemProps}

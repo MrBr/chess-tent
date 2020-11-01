@@ -1,7 +1,6 @@
 import React, { useCallback } from 'react';
 import { DrawShape } from '@chess-tent/chessground/dist/draw';
 import {
-  createStep as coreCreateStep,
   addStep,
   updateStepState,
   Step,
@@ -21,25 +20,8 @@ import { components, services, ui } from '@application';
 import Footer from './footer';
 import BoardSrc from '../images/board.svg';
 
-const { Col, Row, Container, Img, Text } = ui;
-const {
-  Stepper,
-  StepTag,
-  StepToolbox,
-  StepMove,
-  LessonPlayground,
-  LessonPlaygroundSidebar,
-} = components;
-
-const stepType = 'variation';
-
-const createStep: VariationModule['createStep'] = (id, initialState) =>
-  coreCreateStep<VariationStep>(id, stepType, {
-    shapes: [],
-    steps: [],
-    moveIndex: 1,
-    ...(initialState || {}),
-  });
+const { Col, Row, Container, Img } = ui;
+const { Stepper, StepTag, StepToolbox, StepMove } = components;
 
 const boardChange = (
   step: VariationStep,
@@ -114,7 +96,7 @@ const boardChange = (
   setActiveStep(newMoveStep);
 };
 
-const Editor: VariationModule['Editor'] = ({
+const EditorBoard: VariationModule['EditorBoard'] = ({
   Chessboard,
   step,
   status,
@@ -171,31 +153,7 @@ const Editor: VariationModule['Editor'] = ({
   );
 };
 
-const Playground: VariationModule['Playground'] = ({
-  Chessboard,
-  step,
-  Footer,
-  lesson,
-  chapter,
-}) => {
-  const {
-    state: { move, shapes },
-  } = step;
-  const position = move ? move.position : (step.state.position as FEN);
-  return (
-    <LessonPlayground
-      board={<Chessboard fen={position} shapes={shapes} footer={<Footer />} />}
-      sidebar={
-        <LessonPlaygroundSidebar lesson={lesson} step={step} chapter={chapter}>
-          {step.state.move && <StepMove move={step.state.move} />}
-          <Text>{step.state.description}</Text>
-        </LessonPlaygroundSidebar>
-      }
-    />
-  );
-};
-
-const StepperStep: VariationModule['StepperStep'] = props => {
+const EditorSidebar: VariationModule['EditorSidebar'] = props => {
   const { step, setActiveStep, activeStep, updateStep, removeStep } = props;
   const position = step.state.move
     ? step.state.move.position
@@ -258,12 +216,4 @@ const StepperStep: VariationModule['StepperStep'] = props => {
   );
 };
 
-const Module: VariationModule = {
-  Editor,
-  Playground,
-  StepperStep,
-  createStep,
-  stepType,
-};
-
-export default Module;
+export { EditorBoard, EditorSidebar };

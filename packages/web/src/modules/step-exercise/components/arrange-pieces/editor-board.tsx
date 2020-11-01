@@ -11,16 +11,14 @@ import {
   Move,
   Shape,
 } from '@types';
-import { useUpdateExerciseStep } from '../hooks';
+import { useUpdateExerciseStep } from '../../hooks';
 
 const { Chessboard, EditBoardToggle } = components;
 const { createFenForward, createNotableMove } = services;
 
-const Editor: FunctionComponent<ComponentProps<ExerciseModule['Editor']>> = ({
-  step,
-  status,
-  updateStep,
-}) => {
+const Editor: FunctionComponent<ComponentProps<
+  ExerciseModule['EditorBoard']
+>> = ({ step, status, updateStep }) => {
   const { position, shapes } = step.state;
   const { moves, editing } = step.state
     .exerciseState as ExerciseArrangePiecesState;

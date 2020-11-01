@@ -1,7 +1,6 @@
 import React, { useCallback } from 'react';
 import { DrawShape } from '@chess-tent/chessground/dist/draw';
 import {
-  createStep as coreCreateStep,
   addStep,
   Step,
   updateStepState,
@@ -13,25 +12,9 @@ import {
 import { FEN, Move, MoveModule, MoveStep, Piece, VariationStep } from '@types';
 import { services, components, ui } from '@application';
 
-const { Col, Row, Container, Text } = ui;
+const { Col, Row, Container } = ui;
 const { getPiece, createNotableMove } = services;
-const {
-  StepTag,
-  StepToolbox,
-  Stepper,
-  StepMove,
-  LessonPlayground,
-  LessonPlaygroundSidebar,
-} = components;
-
-const stepType = 'move';
-
-const createStep: MoveModule['createStep'] = (id, initialState) =>
-  coreCreateStep<MoveStep>(id, stepType, {
-    shapes: [],
-    steps: [],
-    ...initialState,
-  });
+const { StepTag, StepToolbox, Stepper, StepMove } = components;
 
 const boardChange = (
   stepRoot: StepRoot,
@@ -107,7 +90,7 @@ const boardChange = (
   setActiveStep(newMoveStep);
 };
 
-const Editor: MoveModule['Editor'] = ({
+const EditorBoard: MoveModule['EditorBoard'] = ({
   Chessboard,
   step,
   status,
@@ -172,33 +155,7 @@ const Editor: MoveModule['Editor'] = ({
   );
 };
 
-const Playground: MoveModule['Playground'] = ({
-  Chessboard,
-  step,
-  Footer,
-  lesson,
-  chapter,
-}) => {
-  const {
-    state: {
-      move: { position },
-      shapes,
-    },
-  } = step;
-  return (
-    <LessonPlayground
-      board={<Chessboard fen={position} shapes={shapes} footer={<Footer />} />}
-      sidebar={
-        <LessonPlaygroundSidebar lesson={lesson} step={step} chapter={chapter}>
-          {step.state.move && <StepMove move={step.state.move} />}
-          <Text>{step.state.description}</Text>
-        </LessonPlaygroundSidebar>
-      }
-    />
-  );
-};
-
-const StepperStep: MoveModule['StepperStep'] = props => {
+const EditorSidebar: MoveModule['EditorSidebar'] = props => {
   const { step, setActiveStep, activeStep, updateStep, removeStep } = props;
   const addDescriptionStep = useCallback(() => {
     const descriptionStep = services.createStep('description', {
@@ -256,12 +213,4 @@ const StepperStep: MoveModule['StepperStep'] = props => {
   );
 };
 
-const Module: MoveModule = {
-  Editor,
-  Playground,
-  StepperStep,
-  createStep,
-  stepType,
-};
-
-export default Module;
+export { EditorBoard, EditorSidebar };

@@ -1,7 +1,7 @@
 import React from 'react';
 import { ExerciseArrangePiecesState, ExerciseToolboxProps } from '@types';
 import { components, ui } from '@application';
-import { useUpdateExerciseStateProp } from '../hooks';
+import { useUpdateExerciseStateProp } from '../../hooks';
 
 const { LessonToolboxText } = components;
 const { Container, Text } = ui;

@@ -5,12 +5,11 @@ import { updateStepState } from '@chess-tent/models';
 
 const { Chessboard } = components;
 
-const Editor: FunctionComponent<ComponentProps<ExerciseModule['Editor']>> = ({
-  step,
-  status,
-  updateStep,
-}) => {
+const Editor: FunctionComponent<ComponentProps<
+  ExerciseModule['EditorBoard']
+>> = ({ step, status, updateStep }) => {
   const { position, shapes } = step.state;
+
   return (
     <Chessboard
       edit

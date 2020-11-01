@@ -228,7 +228,7 @@ class EditorRenderer extends React.Component<
           <Col className="pt-5">
             <StepRenderer
               step={activeStep}
-              component="Editor"
+              component="EditorBoard"
               activeStep={activeStep}
               setActiveStep={this.setActiveStepHandler}
               stepRoot={activeChapter}

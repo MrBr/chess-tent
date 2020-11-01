@@ -1,31 +1,10 @@
-import React, {
-  ComponentProps,
-  FunctionComponent,
-  useCallback,
-  useState,
-} from 'react';
-import { components, ui } from '@application';
+import React, { ComponentProps, FunctionComponent, useCallback } from 'react';
 import {
   ExerciseModule,
   ExerciseArrangePiecesState,
-  Move,
   ExerciseActivityArrangePiecesState,
   Key,
 } from '@types';
-
-const { LessonPlayground, LessonPlaygroundSidebar } = components;
-const { Text, Headline4 } = ui;
-
-const getPieceStatus = (
-  activityMoves?: ExerciseActivityArrangePiecesState['moves'],
-  destMove?: Move,
-) => {
-  const move = activityMoves?.find(({ move }) => move?.[0] === destMove?.[0]);
-  if (!move) {
-    return 'Not moved';
-  }
-  return move.move?.[1] === destMove?.[1] ? 'Correct' : 'Wrong square';
-};
 
 const isPieceToMove = (
   exerciseMoves: ExerciseActivityArrangePiecesState['moves'],
@@ -34,21 +13,18 @@ const isPieceToMove = (
   !!exerciseMoves?.some(exerciseMove => exerciseMove.move?.[0] === orig);
 
 const Playground: FunctionComponent<ComponentProps<
-  ExerciseModule['Playground']
+  ExerciseModule['ActivityBoard']
 >> = ({
   step,
   stepActivityState,
   setStepActivityState,
   Footer,
-  lesson,
-  chapter,
   Chessboard,
 }) => {
   const { position, shapes } = step.state;
   const {
     moves: activityMoves,
   } = stepActivityState as ExerciseActivityArrangePiecesState;
-  const [invalidPiece, setInvalidMove] = useState<Key | null>(null);
   const { moves: exerciseMoves } = step.state
     .exerciseState as ExerciseArrangePiecesState;
   const activePosition = activityMoves
@@ -79,38 +55,21 @@ const Playground: FunctionComponent<ComponentProps<
   const validateMove = useCallback(
     orig => {
       const isValid = isPieceToMove(exerciseMoves, orig);
-      setInvalidMove(isValid ? null : orig);
+      setStepActivityState(isValid ? null : orig);
       return isValid;
     },
-    [exerciseMoves],
+    [exerciseMoves, setStepActivityState],
   );
 
   return (
-    <LessonPlayground
-      board={
-        <Chessboard
-          fen={activePosition}
-          onMove={handleMove}
-          shapes={shapes}
-          validateMove={validateMove}
-          animation
-          footer={<Footer />}
-          edit
-        />
-      }
-      sidebar={
-        <LessonPlaygroundSidebar lesson={lesson} step={step} chapter={chapter}>
-          <Headline4>Arrange the pieces</Headline4>
-          {exerciseMoves?.map(({ move }) => (
-            <Text key={move[0]}>
-              {move[0]} - {getPieceStatus(activityMoves, move)}
-            </Text>
-          ))}
-          {invalidPiece && (
-            <Text fontSize="small">{invalidPiece} shouldn't be moved</Text>
-          )}
-        </LessonPlaygroundSidebar>
-      }
+    <Chessboard
+      fen={activePosition}
+      onMove={handleMove}
+      shapes={shapes}
+      validateMove={validateMove}
+      animation
+      footer={<Footer />}
+      edit
     />
   );
 };

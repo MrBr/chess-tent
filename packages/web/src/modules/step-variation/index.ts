@@ -1,8 +1,3 @@
 import application from '@application';
 
-application.register(
-  () => import('./components/step'),
-  module => {
-    application.stepModules.variation = module.default;
-  },
-);
+application.register(() => import('./register'));

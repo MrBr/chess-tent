@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { ExerciseQuestionnaireState, ExerciseToolboxProps } from '@types';
 import { components, ui } from '@application';
-import { useUpdateExerciseStep } from '../hooks';
+import { useUpdateExerciseStep } from '../../hooks';
 
 const { Check, Row, Col, Text, Container } = ui;
 const { LessonToolboxText } = components;

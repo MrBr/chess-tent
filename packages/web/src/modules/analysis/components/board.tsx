@@ -14,7 +14,7 @@ const AnalysisBoard: Components['AnalysisBoard'] = ({
   return (
     <StepRenderer
       step={step}
-      component="Editor"
+      component="EditorBoard"
       activeStep={step}
       stepRoot={analysis}
       Chessboard={Chessboard}

@@ -1,33 +1,18 @@
 import React, { useCallback } from 'react';
 import { DrawShape } from '@chess-tent/chessground/dist/draw';
 import {
-  createStep as coreCreateStep,
   getParentStep,
   addStepRightToSame,
   updateStepState,
 } from '@chess-tent/models';
-import { DescriptionModule, DescriptionStep, VariationStep } from '@types';
+import { DescriptionModule, VariationStep } from '@types';
 import { components, services, ui, stepModules } from '@application';
 import Comment from './comment';
 
-const { Col, Row, Container, Icon, Text } = ui;
-const {
-  StepTag,
-  StepToolbox,
-  LessonPlayground,
-  LessonPlaygroundSidebar,
-} = components;
+const { Col, Row, Container } = ui;
+const { StepTag, StepToolbox } = components;
 
-const stepType = 'description';
-
-const createStep: DescriptionModule['createStep'] = (id, initialState) =>
-  coreCreateStep<DescriptionStep>(id, stepType, {
-    shapes: [],
-    steps: [],
-    ...(initialState || {}),
-  });
-
-const Editor: DescriptionModule['Editor'] = ({
+export const EditorBoard: DescriptionModule['EditorBoard'] = ({
   Chessboard,
   step,
   updateStep,
@@ -40,7 +25,7 @@ const Editor: DescriptionModule['Editor'] = ({
   );
 
   const parentStep = getParentStep(stepRoot, step) as VariationStep;
-  const ParentEditor = stepModules[parentStep.stepType].Editor;
+  const ParentEditor = stepModules[parentStep.stepType].EditorBoard;
 
   return (
     <ParentEditor
@@ -59,30 +44,7 @@ const Editor: DescriptionModule['Editor'] = ({
   );
 };
 
-const Playground: DescriptionModule['Playground'] = ({
-  Chessboard,
-  step,
-  Footer,
-  lesson,
-  chapter,
-}) => {
-  const {
-    state: { position, shapes },
-  } = step;
-  return (
-    <LessonPlayground
-      board={<Chessboard fen={position} shapes={shapes} footer={<Footer />} />}
-      sidebar={
-        <LessonPlaygroundSidebar lesson={lesson} step={step} chapter={chapter}>
-          <Icon type="comment" textual />
-          <Text>{step.state.description}</Text>
-        </LessonPlaygroundSidebar>
-      }
-    />
-  );
-};
-
-const StepperStep: DescriptionModule['StepperStep'] = ({
+export const EditorSidebar: DescriptionModule['EditorSidebar'] = ({
   step,
   setActiveStep,
   activeStep,
@@ -133,13 +95,3 @@ const StepperStep: DescriptionModule['StepperStep'] = ({
     </Container>
   );
 };
-
-const Module: DescriptionModule = {
-  Editor,
-  Playground,
-  StepperStep,
-  createStep,
-  stepType,
-};
-
-export default Module;

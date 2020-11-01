@@ -4,7 +4,7 @@ import {
   ExerciseToolboxProps,
 } from '@types';
 import { components } from '@application';
-import { useUpdateExerciseStateProp } from '../hooks';
+import { useUpdateExerciseStateProp } from '../../hooks';
 
 const { LessonToolboxText } = components;
 

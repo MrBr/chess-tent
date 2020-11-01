@@ -34,7 +34,11 @@ export type StepComponent<S extends Step, P extends {} = {}> = ComponentType<
   StepProps<S, P>
 >;
 
-export type StepModuleComponentKey = 'Editor' | 'Playground' | 'StepperStep';
+export type StepModuleComponentKey =
+  | 'EditorBoard'
+  | 'EditorSidebar'
+  | 'ActivityBoard'
+  | 'ActivitySidebar';
 
 export type ActivityFooterProps = {
   next: () => void;
@@ -48,8 +52,9 @@ export type StepModule<
   REQUIRED_STATE extends {} = {},
   ACTIVITY_STATE extends {} = {}
 > = {
-  Editor: StepComponent<STEP, EditorProps & StepBoardComponentProps>;
-  Playground: StepComponent<
+  EditorBoard: StepComponent<STEP, EditorProps & StepBoardComponentProps>;
+  EditorSidebar: StepComponent<STEP, EditorProps>;
+  ActivityBoard: StepComponent<
     STEP,
     {
       setStepActivityState: (state: {}) => void;
@@ -63,7 +68,20 @@ export type StepModule<
       chapter: Chapter;
     } & StepBoardComponentProps
   >;
-  StepperStep: StepComponent<STEP, EditorProps>;
+  ActivitySidebar: StepComponent<
+    STEP,
+    {
+      setStepActivityState: (state: {}) => void;
+      stepActivityState: ACTIVITY_STATE;
+      nextStep: () => void;
+      prevStep: () => void;
+      Footer: FunctionComponent<Partial<ActivityFooterProps>>;
+      activity: Activity;
+      completeStep: (step: Step) => void;
+      lesson: Lesson;
+      chapter: Chapter;
+    } & StepBoardComponentProps
+  >;
   stepType: STEP_TYPE;
   createStep: (
     id: string,

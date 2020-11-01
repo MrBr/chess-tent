@@ -5,13 +5,10 @@ import { updateStepState } from '@chess-tent/models';
 
 const { Chessboard } = components;
 
-const Editor: FunctionComponent<ComponentProps<ExerciseModule['Editor']>> = ({
-  step,
-  status,
-  updateStep,
-}) => {
+const Editor: FunctionComponent<ComponentProps<
+  ExerciseModule['EditorBoard']
+>> = ({ step, status, updateStep }) => {
   const { position, shapes } = step.state;
-
   return (
     <Chessboard
       edit
@@ -22,8 +19,8 @@ const Editor: FunctionComponent<ComponentProps<ExerciseModule['Editor']>> = ({
         updateStep(updateStepState(step, { position }))
       }
       onMove={position => updateStep(updateStepState(step, { position }))}
-      onShapesChange={shapes => updateStep(updateStepState(step, { shapes }))}
       header={status}
+      onShapesChange={shapes => updateStep(updateStepState(step, { shapes }))}
       shapes={shapes}
     />
   );

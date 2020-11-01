@@ -106,8 +106,8 @@ export const LandingPage = () => (
         <Lesson />
       </Col>
     </Row>
-    <Row noGutters className="mb-5 ">
-      <Col md={{ span: 3, offset: 1 }} xs={12}>
+    <Row noGutters className="mb-5">
+      <Col md={{ span: 2, offset: 1 }} xs={12}>
         <Icon type="brain" size="large" />
         <Headline1>Get a coach!</Headline1>
         <Headline3>
@@ -124,10 +124,10 @@ export const LandingPage = () => (
           will still guide you through your learning but with steady peace.
         </Text>
       </Col>
-      <Col md={{ span: 3 }} xs={12} className="position-relative">
+      <Col md={{ span: 4 }} xs={12} className="position-relative">
         <VerticalLine />
       </Col>
-      <Col md={{ span: 3 }} xs={12}>
+      <Col md={{ span: 2 }} xs={12}>
         <Icon type="board" size="large" />
         <Headline1>Find a lesson</Headline1>
         <Headline3>

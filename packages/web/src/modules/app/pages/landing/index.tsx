@@ -4,6 +4,9 @@ import styled from '@emotion/styled';
 
 import heroUrl from '../../images/hero.png';
 import lessonsUrl from '../../images/lessons.png';
+import boardSrc from '../../images/board.svg';
+import brainSrc from '../../images/brain.svg';
+import kingSrc from '../../images/king.svg';
 
 const { Link } = components;
 const {
@@ -14,8 +17,8 @@ const {
   Col,
   Button,
   Text,
-  Icon,
   Headline1,
+  Img,
 } = ui;
 
 const Header = styled(Container)({
@@ -81,7 +84,7 @@ export const LandingPage = () => (
     </SectionRow>
     <Row>
       <Col md={{ span: 3, offset: 1 }} xs={12}>
-        <Icon type="king" size="large" />
+        <Img src={kingSrc} height="72px" />
         <Headline1>Create Engaging Lessons and Build Your Audience</Headline1>
         <Headline3>
           Full express yourself in the context of online chess teaching.
@@ -104,7 +107,7 @@ export const LandingPage = () => (
     </Row>
     <Row noGutters className="mb-5">
       <Col md={{ span: 2, offset: 1 }} xs={12}>
-        <Icon type="brain" size="large" />
+        <Img src={brainSrc} height="72px" />
         <Headline1>Get a coach!</Headline1>
         <Headline3>
           Unique lessons editor provides students and coaches simple way to
@@ -124,7 +127,7 @@ export const LandingPage = () => (
         <VerticalLine />
       </Col>
       <Col md={{ span: 2 }} xs={12}>
-        <Icon type="board" size="large" />
+        <Img src={boardSrc} height="72px" />
         <Headline1>Find a lesson</Headline1>
         <Headline3>
           Interactive chess lessons designed to help you learn how to adopt

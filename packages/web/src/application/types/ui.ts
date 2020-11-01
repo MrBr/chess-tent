@@ -5,6 +5,7 @@ import {
   ReactElement,
   ReactEventHandler,
   ReactNode,
+  ImgHTMLAttributes,
 } from 'react';
 import {
   ColProps,
@@ -93,15 +94,17 @@ export type UI = {
   Headline5: UIComponent;
   Headline6: UIComponent;
   Icon: UIComponent<{
-    type: 'close' | 'comment' | 'king' | 'logo' | 'board' | 'brain';
+    type: 'close' | 'comment';
     textual?: boolean;
     size?: 'large' | 'regular';
   }>;
-  Img: ComponentType<{
-    src: string | undefined;
-    className?: string;
-    style?: {};
-  }>;
+  Img: ComponentType<
+    {
+      src: string | undefined;
+      className?: string;
+      style?: {};
+    } & ImgHTMLAttributes<unknown>
+  >;
   FramedProfile: ComponentType<{ src: string | undefined }>;
   Dropdown: typeof D;
   Avatar: ComponentType<{

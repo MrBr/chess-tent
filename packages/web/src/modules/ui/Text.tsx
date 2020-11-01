@@ -15,8 +15,6 @@ const fontSize = (props: TextProps) => {
       return '0.875em';
     case 'extra-small':
       return '0.707em';
-    case 'large':
-      return '1.444em';
     default:
       // base
       return '1em';

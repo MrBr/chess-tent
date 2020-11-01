@@ -73,10 +73,8 @@ export const LandingPage = () => (
             audience. Join early beta and help us build flexible <br />
             creator platform.
           </Headline3>
-          <Button className="my-lg-4">
-            <Text inline fontSize="large" weight={900} className="mx-xl-5">
-              Get beta access
-            </Text>
+          <Button className="my-lg-4" size="large">
+            Get beta access
           </Button>
         </ContentRow>
       </Col>
@@ -96,10 +94,8 @@ export const LandingPage = () => (
           Create the most interactive online lessons and training. Become
           visible to chess players.
         </Text>
-        <Button className="my-lg-4">
-          <Text inline fontSize="large" weight={900} className="mx-xl-5">
-            Become a Coach
-          </Text>
+        <Button className="my-lg-4" size="large">
+          Become a Coach
         </Button>
       </Col>
       <Col md={{ span: 8 }} xs={12}>

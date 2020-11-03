@@ -41,7 +41,7 @@ import {
 } from './step';
 import { ClassComponent } from './_helpers';
 import { UI } from './ui';
-import { StepModules } from './index';
+import { LessonActivity, StepModules, Steps } from './index';
 
 export interface ChessboardState {
   renderPrompt?: (close: () => void) => ReactElement;
@@ -165,6 +165,23 @@ export type ActivityComponent<T> = ComponentType<
 export interface AnalysisSystemProps {
   analysis: Analysis;
   updateAnalysis: (analysis: Analysis) => void;
+}
+
+export interface ActivityRendererProps {
+  activity: LessonActivity;
+  updateActivity: (activity: LessonActivity) => void;
+  updateActivityStepState: (
+    activity: LessonActivity,
+    step: Step,
+    state: {},
+  ) => void;
+  currentStepIndex: number;
+  stepsCount: number;
+  activeStep: Steps;
+  chapter: Chapter;
+  analysis: Analysis;
+  lesson: Lesson;
+  activityStepState: {};
 }
 
 export type Components = {

@@ -35,7 +35,6 @@ const ActivityPagination = styled(
   },
 )({
   boxShadow: ' 0px 1px 8px 1px rgba(24, 34, 53, 0.05), 0px 1px 0px #ECECEC',
-  marginTop: '4em',
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
@@ -48,9 +47,11 @@ export default ({
   prev,
   currentStep,
   stepsCount,
+  children,
 }: ActivityFooterProps) => {
   return (
     <Container>
+      <Container className="mb-4">{children || <br />}</Container>
       <ActivityPagination
         next={next}
         prev={prev}

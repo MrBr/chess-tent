@@ -104,7 +104,12 @@ export const ToggleButton: UI['ToggleButton'] = styled(
     width: 0,
     height: 0,
   },
-  '.toggle-button': buttonSizeEnhancer(props),
+  '.toggle-button': {
+    display: 'inline-block',
+    userSelect: 'none',
+    cursor: 'pointer',
+    ...buttonSizeEnhancer(props),
+  },
   'input:checked + .toggle-button': {
     ...buttonVariantEnhancer(props),
   },

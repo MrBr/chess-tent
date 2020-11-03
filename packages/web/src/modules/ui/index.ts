@@ -29,6 +29,7 @@ import {
 } from './Text';
 import { Avatar, FramedProfile, Img, Thumbnail } from './Img';
 import { Card, CardBody } from './Card';
+import { Tab, Tabs } from './Tab';
 import Icon from './Icon';
 import Absolute from './Absolute';
 import { withFiles } from './hoc';
@@ -61,6 +62,8 @@ application.ui.Thumbnail = Thumbnail;
 
 application.ui.Container = Container;
 application.ui.Page = Page;
+application.ui.Tabs = Tabs;
+application.ui.Tab = Tab;
 application.ui.Row = Row;
 application.ui.Col = Col;
 

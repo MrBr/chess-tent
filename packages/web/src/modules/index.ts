@@ -24,3 +24,4 @@ application.register(() => import('./records'));
 application.register(() => import('./activity'));
 application.register(() => import('./mentorship'));
 application.register(() => import('./tag'));
+application.register(() => import('./analysis'));

@@ -15,6 +15,8 @@ import {
   ModalBody,
   ModalProps as BModalProps,
   RowProps,
+  Tabs,
+  Tab,
 } from 'react-bootstrap';
 import DropdownToggle from 'react-bootstrap/DropdownToggle';
 import { ErrorMessageProps, Formik } from 'formik';
@@ -134,6 +136,8 @@ export type UI = {
     } & ClickProps
   >;
   Page: UIComponent<ContainerProps>;
+  Tabs: typeof Tabs;
+  Tab: typeof Tab;
   Row: UIComponent<RowProps & ClickProps>;
   Col: UIComponent<ColProps & ClickProps>;
   ErrorMessage: UIComponent<ErrorMessageProps>;

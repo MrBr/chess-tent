@@ -1,5 +1,5 @@
-import { Chapter, Lesson, Step } from '@chess-tent/models';
-import { FEN, NotableMove, Shape } from './chess';
+import { Step, StepType } from '@chess-tent/models';
+import { FEN, Key, NotableMove, Shape } from './chess';
 import { StepModule } from './step';
 
 // Move
@@ -15,7 +15,7 @@ export type MoveModule = StepModule<MoveStep, 'move', { move: NotableMove }>;
 // Variation
 export type VariationStepState = {
   shapes: Shape[];
-  position?: FEN; // Step end position - position once step is finished
+  position?: FEN;
   description?: string;
   steps: (VariationStep | DescriptionStep | ExerciseStep)[];
   editing?: boolean;
@@ -71,6 +71,7 @@ export interface ExerciseArrangePiecesState {
 }
 export interface ExerciseActivityArrangePiecesState {
   moves?: NotableMove[];
+  invalidPiece?: Key; // Piece at key
 }
 export interface ExerciseQuestionState {
   question?: string;
@@ -118,8 +119,6 @@ export type ExerciseStepState = {
 };
 export type ExerciseToolboxProps = {
   step: ExerciseStep;
-  lesson: Lesson;
-  chapter: Chapter;
   updateStep: (step: Step<ExerciseStepState>) => void;
 };
 export type ExerciseStep = Step<ExerciseStepState, 'exercise'>;
@@ -131,3 +130,15 @@ export type ExerciseModule = StepModule<
 >;
 
 export type Steps = MoveStep | DescriptionStep | VariationStep | ExerciseStep;
+
+type ModuleRecord<K extends StepType, T> = {
+  [P in K]: T extends StepModule<infer U, infer S, infer Z, infer Y>
+    ? S extends P
+      ? T
+      : never
+    : never;
+};
+export type StepModules = ModuleRecord<
+  StepType,
+  MoveModule | VariationModule | DescriptionModule | ExerciseModule
+>;

@@ -9,15 +9,15 @@ import React, {
 import {
   Chapter,
   Difficulty,
-  getChapterParentStep,
-  getChapterPreviousStep,
-  getChapterStep,
+  getParentStep,
+  getPreviousStep,
   getLessonChapter,
   Lesson,
   NormalizedLesson,
   removeStep,
   Step,
   Tag,
+  getChildStep,
 } from '@chess-tent/models';
 import { Actions, Components, LessonUpdatableAction } from '@types';
 import { debounce } from 'lodash';
@@ -136,8 +136,8 @@ class EditorRenderer extends React.Component<
 
   deleteStep = (step: Step) => {
     const { activeChapter, history } = this.props;
-    const parentStep = getChapterParentStep(activeChapter, step);
-    const newActiveStep = getChapterPreviousStep(activeChapter, step);
+    const parentStep = getParentStep(activeChapter, step);
+    const newActiveStep = getPreviousStep(activeChapter, step);
     if (!newActiveStep) {
       // Don't allow deleting first step (for now)
       return;
@@ -228,13 +228,12 @@ class EditorRenderer extends React.Component<
           <Col className="pt-5">
             <StepRenderer
               step={activeStep}
-              component="Editor"
+              component="EditorBoard"
               activeStep={activeStep}
               setActiveStep={this.setActiveStepHandler}
-              lesson={lesson}
+              stepRoot={activeChapter}
               status={lessonStatusText}
               Chessboard={Chessboard}
-              chapter={activeChapter}
               updateStep={this.updateStep}
               removeStep={this.deleteStep}
             />
@@ -270,7 +269,7 @@ class EditorRenderer extends React.Component<
                     </Button>
                   </Col>
                 </Row>
-                <Row>
+                <Row className="mt-3 mb-3">
                   <Col className="col-auto">
                     <DifficultyDropdown
                       difficulty={lesson.difficulty}
@@ -316,11 +315,9 @@ class EditorRenderer extends React.Component<
                 </Row>
               </Container>
               <Stepper
-                lesson={lesson}
-                steps={activeChapter.state.steps}
                 activeStep={activeStep}
                 setActiveStep={this.setActiveStepHandler}
-                chapter={activeChapter}
+                stepRoot={activeChapter}
                 updateStep={this.updateStep}
                 removeStep={this.deleteStep}
                 root
@@ -358,10 +355,10 @@ const Editor: Components['Editor'] = ({ lesson, save }) => {
   const activeStepId =
     new URLSearchParams(location.search).get('activeStep') ||
     activeChapter.state.steps[0].id;
-  const activeStep = useMemo(
-    () => getChapterStep(activeChapter, activeStepId),
-    [activeChapter, activeStepId],
-  ) as Step;
+  const activeStep = useMemo(() => getChildStep(activeChapter, activeStepId), [
+    activeChapter,
+    activeStepId,
+  ]) as Step;
 
   useEffect(() => {
     if (lessonUpdateError && lessonStatus !== LessonStatus.ERROR) {

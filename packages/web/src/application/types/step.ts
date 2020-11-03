@@ -1,4 +1,4 @@
-import { ComponentType, FunctionComponent } from 'react';
+import { ComponentType, FunctionComponent, ReactElement } from 'react';
 import {
   Activity,
   Chapter,
@@ -45,6 +45,7 @@ export type ActivityFooterProps = {
   prev: () => void;
   stepsCount: number;
   currentStep: number;
+  children?: ReactElement;
 };
 export type StepModule<
   STEP extends Step,

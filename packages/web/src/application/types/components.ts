@@ -34,6 +34,7 @@ import {
 } from './chess';
 import {
   EditorProps,
+  StepBoardComponentProps,
   StepModule,
   StepModuleComponentKey,
   StepSystemProps,
@@ -120,8 +121,8 @@ export type StepToolbox = FunctionComponent<{
 }>;
 
 export type LessonPlayground = FunctionComponent<{
-  board: ReactElement;
-  sidebar: ReactElement;
+  header: ReactElement;
+  tabs: { board: ReactElement; sidebar: ReactElement; title: string }[];
 }>;
 
 export type LessonToolboxText = FunctionComponent<{
@@ -154,9 +155,7 @@ export interface AuthorizedProps {
 }
 
 export interface LessonPlaygroundSidebarProps {
-  lesson: Lesson;
-  chapter: Chapter;
-  step: Step;
+  header?: ReactElement;
 }
 
 export type ActivityComponent<T> = ComponentType<
@@ -164,12 +163,8 @@ export type ActivityComponent<T> = ComponentType<
 >;
 
 export interface AnalysisSystemProps {
-  activeStep: Step;
-  step: Step;
   analysis: Analysis;
-  setActiveStep: (step: Step) => void;
-  updateStep: (step: Partial<Step>) => void;
-  removeStep: (step: Step) => void;
+  updateAnalysis: (analysis: Analysis) => void;
 }
 
 export type Components = {
@@ -252,6 +247,6 @@ export type Components = {
   Coaches: ComponentType;
   Activities: ComponentType<{ activities: Activity[] | null }>;
   Conversations: ComponentType;
-  AnalysisBoard: ComponentType<AnalysisSystemProps>;
+  AnalysisBoard: ComponentType<AnalysisSystemProps & StepBoardComponentProps>;
   AnalysisSidebar: ComponentType<AnalysisSystemProps>;
 };

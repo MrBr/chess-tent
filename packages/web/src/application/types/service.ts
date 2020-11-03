@@ -1,7 +1,7 @@
 import { ChessInstance } from 'chess.js';
 import { ComponentType } from 'react';
 import { API, ApiMethods, RecordValue } from '@chess-tent/types';
-import { Chapter, Step, StepType } from '@chess-tent/models';
+import { Analysis, Chapter, Step, StepType } from '@chess-tent/models';
 import { History } from 'history';
 import {
   FEN,
@@ -69,6 +69,9 @@ export type Services = {
     stepType: T,
     initialState: Parameters<StepModules[T]['createStep']>[1],
   ) => StepModules[T] extends StepModule<infer S, infer K> ? S : never;
+  getStepPosition: (step: Steps) => FEN;
   createChapter: (title?: string, steps?: Step[]) => Chapter;
   history: History;
+  createAnalysis: (param: [Step] | FEN) => Analysis;
+  removeAnalysisStep: (analysis: Analysis, step: Step) => Analysis;
 };

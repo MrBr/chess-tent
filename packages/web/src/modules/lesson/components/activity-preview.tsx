@@ -1,20 +1,29 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { components, hooks, ui } from '@application';
+import { components, hooks, services, ui } from '@application';
 import {
+  addStep,
+  Analysis,
   Chapter,
   createActivity,
-  getChapterNextStep,
-  getChapterPreviousStep,
-  getChapterStep,
-  getChapterStepIndex,
-  getChapterStepsCount,
+  getChildStep,
+  getNextStep,
+  getPreviousStep,
+  getStepIndex,
+  getStepsCount,
   Lesson,
   markStepCompleted,
   Step,
   updateActivityStepState,
   User,
 } from '@chess-tent/models';
-import { ActivityFooterProps, ChessboardProps, LessonActivity } from '@types';
+import {
+  ActivityFooterProps,
+  ChessboardProps,
+  FEN,
+  LessonActivity,
+  NotableMove,
+  Steps,
+} from '@types';
 import Footer from './activity-footer';
 import Header from './activity-header';
 
@@ -28,8 +37,10 @@ const { useActiveUserRecord, useComponentState } = hooks;
 const {
   StepRenderer,
   Chessboard,
-  LessonPlaygroundSidebar,
   LessonPlayground,
+  AnalysisBoard,
+  AnalysisSidebar,
+  LessonChapters,
 } = components;
 const { Modal, Icon, Absolute } = ui;
 
@@ -41,13 +52,20 @@ const Preview = ({ lesson, chapter, step }: PreviewProps) => {
       activeChapterId: chapter.id,
     }),
   );
-  const activeStep = getChapterStep(chapter, activity.state.activeStepId);
+  const activeStep = getChildStep(
+    chapter,
+    activity.state.activeStepId,
+  ) as Steps;
   const activityStepState = activity.state[step.id] || {};
-  const stepsCount = useMemo(() => getChapterStepsCount(chapter), [chapter]);
-  const currentStepIndex = useMemo(
-    () => getChapterStepIndex(chapter, activeStep),
-    [chapter, activeStep],
-  );
+  const stepsCount = useMemo(() => getStepsCount(chapter), [chapter]);
+  const currentStepIndex = useMemo(() => getStepIndex(chapter, activeStep), [
+    chapter,
+    activeStep,
+  ]);
+  const analysis =
+    // TODO - Define activity step state analysis property
+    (activityStepState as { analysis: Analysis }).analysis ||
+    services.createAnalysis(services.getStepPosition(activeStep));
 
   const setStepActivityState = useCallback(
     state => {
@@ -62,8 +80,29 @@ const Preview = ({ lesson, chapter, step }: PreviewProps) => {
     [step.id, activity, updateActivity],
   );
 
+  const setStepActivityAnalysisState = useCallback(
+    analysis => {
+      setStepActivityState({
+        analysis,
+      });
+    },
+    [setStepActivityState],
+  );
+
+  const startAnalysingPosition = useCallback(
+    (position: FEN, move: NotableMove) => {
+      setStepActivityAnalysisState(
+        addStep(
+          analysis,
+          services.createStep('variation', { position: position, move }),
+        ),
+      );
+    },
+    [analysis, setStepActivityAnalysisState],
+  );
+
   const nextActivityStep = useCallback(() => {
-    const nextStep = getChapterNextStep(chapter, activeStep);
+    const nextStep = getNextStep(chapter, activeStep);
     nextStep &&
       updateActivity({
         ...activity,
@@ -74,7 +113,7 @@ const Preview = ({ lesson, chapter, step }: PreviewProps) => {
       });
   }, [activity, activeStep, updateActivity, chapter]);
   const prevActivityStep = useCallback(() => {
-    const prevStep = getChapterPreviousStep(chapter, activeStep);
+    const prevStep = getPreviousStep(chapter, activeStep);
     prevStep &&
       updateActivity({
         ...activity,
@@ -106,55 +145,93 @@ const Preview = ({ lesson, chapter, step }: PreviewProps) => {
   );
 
   const boardRender = (props: ChessboardProps) => (
-    <Chessboard header={<Header lesson={lesson} />} edit {...props} />
+    <Chessboard
+      onMove={(position, move, piece, captured, promoted) =>
+        startAnalysingPosition(
+          position,
+          services.createNotableMove(
+            position,
+            move,
+            1,
+            piece,
+            captured,
+            promoted,
+          ),
+        )
+      }
+      edit
+      {...props}
+      header={<Header lesson={lesson} />}
+    />
   );
 
   return (
     <LessonPlayground
-      board={
-        <StepRenderer
-          step={activeStep}
-          stepRoot={chapter}
-          chapter={chapter}
-          component="ActivityBoard"
-          activeStep={activeStep}
-          lesson={lesson}
-          setActiveStep={() => {}}
-          setStepActivityState={setStepActivityState}
-          stepActivityState={activityStepState}
-          nextStep={() => {}}
-          prevStep={() => {}}
-          Chessboard={boardRender}
-          activity={activity}
-          completeStep={completeStep}
-          Footer={footerRender}
+      header={
+        <LessonChapters
+          chapters={lesson.state.chapters}
+          activeChapter={chapter}
         />
       }
-      sidebar={
-        <LessonPlaygroundSidebar
-          lesson={lesson}
-          chapter={chapter}
-          step={activeStep}
-        >
-          <StepRenderer
-            step={activeStep}
-            stepRoot={chapter}
-            chapter={chapter}
-            component="ActivitySidebar"
-            activeStep={activeStep}
-            lesson={lesson}
-            setActiveStep={() => {}}
-            setStepActivityState={setStepActivityState}
-            stepActivityState={activityStepState}
-            nextStep={() => {}}
-            prevStep={() => {}}
-            Chessboard={boardRender}
-            activity={activity}
-            completeStep={completeStep}
-            Footer={footerRender}
-          />
-        </LessonPlaygroundSidebar>
-      }
+      tabs={[
+        {
+          title: 'Step',
+          board: (
+            <StepRenderer
+              step={activeStep}
+              stepRoot={chapter}
+              chapter={chapter}
+              component="ActivityBoard"
+              activeStep={activeStep}
+              lesson={lesson}
+              setActiveStep={() => {}}
+              setStepActivityState={setStepActivityState}
+              stepActivityState={activityStepState}
+              nextStep={() => {}}
+              prevStep={() => {}}
+              Chessboard={boardRender}
+              activity={activity}
+              completeStep={completeStep}
+              Footer={footerRender}
+            />
+          ),
+          sidebar: (
+            <StepRenderer
+              step={activeStep}
+              stepRoot={chapter}
+              chapter={chapter}
+              component="ActivitySidebar"
+              activeStep={activeStep}
+              lesson={lesson}
+              setActiveStep={() => {}}
+              setStepActivityState={setStepActivityState}
+              stepActivityState={activityStepState}
+              nextStep={() => {}}
+              prevStep={() => {}}
+              Chessboard={boardRender}
+              activity={activity}
+              completeStep={completeStep}
+              Footer={footerRender}
+            />
+          ),
+        },
+        {
+          title: 'Analysis',
+          board: (
+            <AnalysisBoard
+              analysis={analysis}
+              updateAnalysis={setStepActivityAnalysisState}
+              Chessboard={boardRender}
+            />
+          ),
+          sidebar: (
+            <AnalysisSidebar
+              analysis={analysis}
+              updateAnalysis={setStepActivityAnalysisState}
+            />
+          ),
+        },
+      ]}
     />
   );
 };

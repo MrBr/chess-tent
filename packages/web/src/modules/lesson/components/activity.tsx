@@ -8,11 +8,11 @@ import {
 import { components, hooks, state, ui } from '@application';
 import {
   Chapter,
-  getChapterNextStep,
-  getChapterPreviousStep,
-  getChapterStep,
-  getChapterStepIndex,
-  getChapterStepsCount,
+  getNextStep,
+  getPreviousStep,
+  getChildStep,
+  getStepIndex,
+  getStepsCount,
   getLessonChapter,
   markStepCompleted,
   Step,
@@ -25,7 +25,7 @@ const {
   Chessboard,
   UserAvatar,
   LessonPlayground,
-  LessonPlaygroundSidebar,
+  LessonChapters,
 } = components;
 const { useDispatchBatched, useLocation } = hooks;
 const {
@@ -44,14 +44,14 @@ const Activity: ActivityComponent<LessonActivity> = ({ activity }) => {
   const activeStepId =
     new URLSearchParams(location.search).get('activeStep') ||
     activeChapter.state.steps[0].id;
-  const activeStep = getChapterStep(activeChapter, activeStepId);
+  const activeStep = getChildStep(activeChapter, activeStepId);
   const activeStepActivityState = activity.state[activeStep.id] || {};
 
-  const stepsCount = useMemo(() => getChapterStepsCount(activeChapter), [
+  const stepsCount = useMemo(() => getStepsCount(activeChapter), [
     activeChapter,
   ]);
   const currentStepIndex = useMemo(
-    () => getChapterStepIndex(activeChapter, activeStep),
+    () => getStepIndex(activeChapter, activeStep),
     [activeChapter, activeStep],
   );
 
@@ -71,12 +71,12 @@ const Activity: ActivityComponent<LessonActivity> = ({ activity }) => {
   );
 
   const nextActivityStep = useCallback(() => {
-    const nextStep = getChapterNextStep(activeChapter, activeStep);
+    const nextStep = getNextStep(activeChapter, activeStep);
     nextStep && dispatch(setActivityActiveStep(activity, nextStep));
   }, [activity, activeStep, dispatch, activeChapter]);
 
   const prevActivityStep = useCallback(() => {
-    const prevStep = getChapterPreviousStep(activeChapter, activeStep);
+    const prevStep = getPreviousStep(activeChapter, activeStep);
     prevStep && dispatch(setActivityActiveStep(activity, prevStep));
   }, [activity, activeStep, dispatch, activeChapter]);
 
@@ -116,50 +116,55 @@ const Activity: ActivityComponent<LessonActivity> = ({ activity }) => {
 
   return (
     <LessonPlayground
-      board={
-        <StepRenderer
-          step={activeStep}
-          chapter={activeChapter}
-          stepRoot={activeChapter}
-          component="ActivityBoard"
-          activeStep={activeStep}
-          lesson={lesson}
-          setActiveStep={() => {}}
-          setStepActivityState={setStepActivityState}
-          stepActivityState={activeStepActivityState}
-          nextStep={nextActivityStep}
-          prevStep={prevActivityStep}
-          Chessboard={boardRender}
-          activity={activity}
-          completeStep={completeStep}
-          Footer={footerRender}
+      header={
+        <LessonChapters
+          chapters={lesson.state.chapters}
+          activeChapter={activeChapter}
         />
       }
-      sidebar={
-        <LessonPlaygroundSidebar
-          lesson={lesson}
-          chapter={activeChapter}
-          step={activeStep}
-        >
-          <StepRenderer
-            step={activeStep}
-            chapter={activeChapter}
-            stepRoot={activeChapter}
-            component="ActivitySidebar"
-            activeStep={activeStep}
-            lesson={lesson}
-            setActiveStep={() => {}}
-            setStepActivityState={setStepActivityState}
-            stepActivityState={activeStepActivityState}
-            nextStep={nextActivityStep}
-            prevStep={prevActivityStep}
-            Chessboard={boardRender}
-            activity={activity}
-            completeStep={completeStep}
-            Footer={footerRender}
-          />
-        </LessonPlaygroundSidebar>
-      }
+      tabs={[
+        {
+          title: 'Step',
+          board: (
+            <StepRenderer
+              step={activeStep}
+              chapter={activeChapter}
+              stepRoot={activeChapter}
+              component="ActivityBoard"
+              activeStep={activeStep}
+              lesson={lesson}
+              setActiveStep={() => {}}
+              setStepActivityState={setStepActivityState}
+              stepActivityState={activeStepActivityState}
+              nextStep={nextActivityStep}
+              prevStep={prevActivityStep}
+              Chessboard={boardRender}
+              activity={activity}
+              completeStep={completeStep}
+              Footer={footerRender}
+            />
+          ),
+          sidebar: (
+            <StepRenderer
+              step={activeStep}
+              chapter={activeChapter}
+              stepRoot={activeChapter}
+              component="ActivitySidebar"
+              activeStep={activeStep}
+              lesson={lesson}
+              setActiveStep={() => {}}
+              setStepActivityState={setStepActivityState}
+              stepActivityState={activeStepActivityState}
+              nextStep={nextActivityStep}
+              prevStep={prevActivityStep}
+              Chessboard={boardRender}
+              activity={activity}
+              completeStep={completeStep}
+              Footer={footerRender}
+            />
+          ),
+        },
+      ]}
     />
   );
 };

@@ -15,7 +15,7 @@ export type MoveModule = StepModule<MoveStep, 'move', { move: NotableMove }>;
 // Variation
 export type VariationStepState = {
   shapes: Shape[];
-  position?: FEN; // Step end position - position once step is finished
+  position?: FEN;
   description?: string;
   steps: (VariationStep | DescriptionStep | ExerciseStep)[];
   editing?: boolean;

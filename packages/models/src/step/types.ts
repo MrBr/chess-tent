@@ -1,3 +1,5 @@
+import { Subject } from "../subject";
+
 export type StepType = "description" | "variation" | "move" | "exercise";
 
 export const TYPE_STEP = "steps";
@@ -19,6 +21,6 @@ export interface NormalizedStep {
 }
 
 // Step root shape has steps array in the state but it doesn't have to be a step itself.
-export type StepRoot = {
+export interface StepRoot extends Subject {
   state: { steps: Step[] };
-};
+}

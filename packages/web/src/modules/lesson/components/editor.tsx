@@ -10,14 +10,14 @@ import {
   Chapter,
   Difficulty,
   getParentStep,
-  getChapterPreviousStep,
-  getChapterStep,
+  getPreviousStep,
   getLessonChapter,
   Lesson,
   NormalizedLesson,
   removeStep,
   Step,
   Tag,
+  getChildStep,
 } from '@chess-tent/models';
 import { Actions, Components, LessonUpdatableAction } from '@types';
 import { debounce } from 'lodash';
@@ -137,7 +137,7 @@ class EditorRenderer extends React.Component<
   deleteStep = (step: Step) => {
     const { activeChapter, history } = this.props;
     const parentStep = getParentStep(activeChapter, step);
-    const newActiveStep = getChapterPreviousStep(activeChapter, step);
+    const newActiveStep = getPreviousStep(activeChapter, step);
     if (!newActiveStep) {
       // Don't allow deleting first step (for now)
       return;
@@ -355,10 +355,10 @@ const Editor: Components['Editor'] = ({ lesson, save }) => {
   const activeStepId =
     new URLSearchParams(location.search).get('activeStep') ||
     activeChapter.state.steps[0].id;
-  const activeStep = useMemo(
-    () => getChapterStep(activeChapter, activeStepId),
-    [activeChapter, activeStepId],
-  ) as Step;
+  const activeStep = useMemo(() => getChildStep(activeChapter, activeStepId), [
+    activeChapter,
+    activeStepId,
+  ]) as Step;
 
   useEffect(() => {
     if (lessonUpdateError && lessonStatus !== LessonStatus.ERROR) {

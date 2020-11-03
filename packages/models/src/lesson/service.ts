@@ -1,7 +1,7 @@
 import { Difficulty, Lesson, NormalizedLesson, TYPE_LESSON } from "./types";
 import { User } from "../user";
-import { Step } from "../step";
-import { Chapter, getChapterStepPath } from "../chapter";
+import { getStepPath, Step } from "../step";
+import { Chapter } from "../chapter";
 import { SubjectPath, updateSubjectValueAt } from "../subject";
 import { Tag } from "../tag";
 
@@ -51,7 +51,7 @@ const getLessonStepPath = (
   for (let index = 0; index < lesson.state.chapters.length; index++) {
     const childChapter = lesson.state.chapters[index];
     if (childChapter.id === chapter.id) {
-      const path = getChapterStepPath(chapter, step);
+      const path = getStepPath(chapter, step);
       return path ? ["state", "chapters", index, ...path] : null;
     }
   }

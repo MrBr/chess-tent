@@ -1,12 +1,22 @@
 import { Analysis, TYPE_ANALYSIS } from "./types";
-import { getStepPath, Step } from "../step";
+import { getChildStep, getStepPath, Step } from "../step";
 import { SubjectPath, updateSubjectValueAt } from "../subject";
 
-const updateAnalysisStep = (
+const updateAnalysisPath = (
   analysis: Analysis,
-  patch: Partial<Step>,
-  path: SubjectPath
+  path: SubjectPath,
+  patch: Step["id"] | Step | Step[]
 ) => updateSubjectValueAt(analysis, path, patch);
+
+const updateAnalysisActiveStepId = (analysis: Analysis, stepId: Step["id"]) =>
+  updateAnalysisPath(analysis, ["state", "activeStepId"], stepId);
+
+const getAnalysisActiveStep = (analysis: Analysis): Step => {
+  const activeStep =
+    analysis.state.activeStepId &&
+    getChildStep(analysis, analysis.state.activeStepId);
+  return activeStep || (analysis.state.steps[0] as Step);
+};
 
 const getAnalysisStepPath = (
   analysis: Analysis,
@@ -25,10 +35,28 @@ const getAnalysisStepPath = (
   return null;
 };
 
-const createAnalysis = (id: string, steps: Step[] = []): Analysis => ({
+const updateAnalysisStep = (analysis: Analysis, step: Step) => {
+  const path = getAnalysisStepPath(analysis, step);
+  if (!path) {
+    throw new Error("Trying to update step which doesn't exists in analysis.");
+  }
+  return updateAnalysisPath(analysis, path, step);
+};
+
+const createAnalysis = (
+  id: string,
+  steps: Analysis["state"]["steps"]
+): Analysis => ({
   id,
   type: TYPE_ANALYSIS,
   state: { steps }
 });
 
-export { updateSubjectValueAt, getAnalysisStepPath, createAnalysis };
+export {
+  updateAnalysisStep,
+  getAnalysisActiveStep,
+  updateAnalysisPath,
+  getAnalysisStepPath,
+  createAnalysis,
+  updateAnalysisActiveStepId
+};

@@ -33,16 +33,24 @@ const Header = styled(Container)({
 });
 
 const Lesson = styled.div({
-  background: `url(${lessonsUrl}) no-repeat top right`,
+  background: `url(${lessonsUrl}) no-repeat top center`,
   height: '869px',
-  '@media (max-width: 576px)': {
+  backgroundSize: '100% auto',
+  '@media (max-width: 1200px)': {
+    backgroundPosition: 'center',
+  },
+  '@media (max-width: 768px)': {
     height: '309px',
-    backgroundSize: '360px 309px',
+    backgroundSize: '100% auto',
+    backgroundPosition: 'center',
   },
 });
 
 const SectionRow = styled(Row)({
   height: '1167px',
+  '@media (max-width: 576px)': {
+    height: 'auto',
+  },
 });
 
 const ContentRow = styled(Row)({
@@ -59,10 +67,10 @@ const VerticalLine = styled.div({
 });
 
 export const LandingPage = () => (
-  <Container fluid>
+  <Container fluid className="pb-5">
     <Header fluid />
     <SectionRow noGutters>
-      <Col md={{ span: 4, offset: 1 }} xs={12}>
+      <Col md={{ span: 4, offset: 1 }} sm={12}>
         <Row noGutters>
           <Headline3>CHESS TENT</Headline3>
         </Row>
@@ -83,7 +91,7 @@ export const LandingPage = () => (
       </Col>
     </SectionRow>
     <Row>
-      <Col md={{ span: 3, offset: 1 }} xs={12}>
+      <Col md={{ span: 5, offset: 1 }} lg={{ span: 5, offset: 1 }} sm={12}>
         <Img src={kingSrc} height="72px" />
         <Headline1>Create Engaging Lessons and Build Your Audience</Headline1>
         <Headline3>
@@ -101,12 +109,12 @@ export const LandingPage = () => (
           Become a Coach
         </Button>
       </Col>
-      <Col md={{ span: 8 }} xs={12}>
+      <Col md={{ span: 6 }} lg={6} sm={12}>
         <Lesson />
       </Col>
     </Row>
     <Row noGutters className="mb-5">
-      <Col md={{ span: 2, offset: 1 }} xs={12}>
+      <Col md={{ span: 3, offset: 1 }} lg={{ span: 4, offset: 1 }} sm={12}>
         <Img src={brainSrc} height="72px" />
         <Headline1>Get a coach!</Headline1>
         <Headline3>
@@ -123,10 +131,10 @@ export const LandingPage = () => (
           will still guide you through your learning but with steady peace.
         </Text>
       </Col>
-      <Col md={{ span: 4 }} xs={12} className="position-relative">
+      <Col md={4} xs={12} lg={2} sm={2} className="position-relative">
         <VerticalLine />
       </Col>
-      <Col md={{ span: 2 }} xs={12}>
+      <Col md={3} lg={4} sm={12}>
         <Img src={boardSrc} height="72px" />
         <Headline1>Find a lesson</Headline1>
         <Headline3>

@@ -28,11 +28,13 @@ const sizeEnhancer = (props: ComponentProps<UI['Avatar']>) => {
   };
 };
 
-export const Avatar = styled(({ src, name, className }) => {
+export const Avatar = styled(({ src, name, className, onClick }) => {
   return src ? (
-    <img className={className} src={src} alt={name} />
+    <img className={className} src={src} alt={name} onClick={onClick} />
   ) : (
-    <div className={className}>{name?.[0] || 'A'}</div>
+    <div className={className} onClick={onClick}>
+      {name?.[0] || 'A'}
+    </div>
   );
 })(
   {

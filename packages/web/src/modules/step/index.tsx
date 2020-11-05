@@ -8,11 +8,12 @@ import {
   StepComponentRenderer,
   stepSchema,
 } from './model';
+import { getStepPosition } from './service';
 
 application.model.stepSchema = stepSchema;
 application.services.createStep = createStepModuleStep;
 application.services.isStepType = isStepType;
 application.services.isSameStepMove = isSameStepMove;
 application.services.getSameMoveVariationStep = getSameMoveVariationStep;
-application.components.StepRenderer = StepComponentRenderer;
+application.services.getStepPosition = getStepPosition;
 application.components.StepRenderer = StepComponentRenderer;

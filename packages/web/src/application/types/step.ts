@@ -1,13 +1,19 @@
-import { ComponentType, FunctionComponent } from 'react';
-import { Activity, Chapter, Lesson, Step, StepType } from '@chess-tent/models';
+import { ComponentType, FunctionComponent, ReactElement } from 'react';
+import {
+  Activity,
+  Chapter,
+  Lesson,
+  Step,
+  StepRoot,
+  StepType,
+} from '@chess-tent/models';
 import { ChessboardInterface, ChessboardProps } from './components';
 import { ClassComponent } from './_helpers';
 
 export type StepSystemProps = {
   setActiveStep: (step: Step) => void;
   activeStep: Step;
-  lesson: Lesson;
-  chapter: Chapter;
+  stepRoot: StepRoot;
 };
 export type StepBoardComponentProps = {
   Chessboard:
@@ -28,13 +34,18 @@ export type StepComponent<S extends Step, P extends {} = {}> = ComponentType<
   StepProps<S, P>
 >;
 
-export type StepModuleComponentKey = 'Editor' | 'Playground' | 'StepperStep';
+export type StepModuleComponentKey =
+  | 'EditorBoard'
+  | 'EditorSidebar'
+  | 'ActivityBoard'
+  | 'ActivitySidebar';
 
 export type ActivityFooterProps = {
   next: () => void;
   prev: () => void;
   stepsCount: number;
   currentStep: number;
+  children?: ReactElement;
 };
 export type StepModule<
   STEP extends Step,
@@ -42,8 +53,9 @@ export type StepModule<
   REQUIRED_STATE extends {} = {},
   ACTIVITY_STATE extends {} = {}
 > = {
-  Editor: StepComponent<STEP, EditorProps & StepBoardComponentProps>;
-  Playground: StepComponent<
+  EditorBoard: StepComponent<STEP, EditorProps & StepBoardComponentProps>;
+  EditorSidebar: StepComponent<STEP, EditorProps>;
+  ActivityBoard: StepComponent<
     STEP,
     {
       setStepActivityState: (state: {}) => void;
@@ -53,9 +65,24 @@ export type StepModule<
       Footer: FunctionComponent<Partial<ActivityFooterProps>>;
       activity: Activity;
       completeStep: (step: Step) => void;
+      lesson: Lesson;
+      chapter: Chapter;
     } & StepBoardComponentProps
   >;
-  StepperStep: StepComponent<STEP, EditorProps>;
+  ActivitySidebar: StepComponent<
+    STEP,
+    {
+      setStepActivityState: (state: {}) => void;
+      stepActivityState: ACTIVITY_STATE;
+      nextStep: () => void;
+      prevStep: () => void;
+      Footer: FunctionComponent<Partial<ActivityFooterProps>>;
+      activity: Activity;
+      completeStep: (step: Step) => void;
+      lesson: Lesson;
+      chapter: Chapter;
+    } & StepBoardComponentProps
+  >;
   stepType: STEP_TYPE;
   createStep: (
     id: string,

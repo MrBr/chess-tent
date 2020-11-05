@@ -1,21 +1,78 @@
-import React from 'react';
+import React, { FunctionComponent, useEffect } from 'react';
 import { ui, hooks, requests, components } from '@application';
+import styled from '@emotion/styled';
+import { User } from '@chess-tent/models';
 
-const { Container, Button } = ui;
+const { Container, Headline4, Row, Col, Dropdown, Text } = ui;
 const { useHistory, useApi, useActiveUserRecord } = hooks;
-const { Link } = components;
-
+const { UserAvatar } = components;
+const TabButton = styled<
+  FunctionComponent<{ path: string; className?: string }>
+>(({ className, path, children }) => {
+  const history = useHistory();
+  const active = history.location.pathname === path;
+  return (
+    <div
+      className={`${className} ${active ? 'active' : ''}`}
+      onClick={() => history.push(path)}
+    >
+      {children}
+    </div>
+  );
+})({
+  '&.active': {
+    borderBottom: '2px solid red',
+  },
+  '&:last-child': {
+    marginRight: 0,
+  },
+  height: '100%',
+  display: 'inline-block',
+  lineHeight: '96px',
+  fontWeight: 700,
+  fontSize: 18,
+  marginRight: 48,
+  cursor: 'pointer',
+});
 export default () => {
   const history = useHistory();
   const logoutApi = useApi(requests.logout);
-  const [user] = useActiveUserRecord();
+  useEffect(() => {
+    if (logoutApi.response) {
+      history.push('/');
+    }
+  }, [history, logoutApi]);
+  const [user] = useActiveUserRecord() as [User, never, never];
   return (
-    <Container fluid>
-      <Link to="/me">{user?.name}</Link>
-      <Button onClick={() => history.push('/lesson/new')}>
-        Add new lesson
-      </Button>
-      <Button onClick={() => logoutApi.fetch()}>Logout</Button>
+    <Container fluid className="h-100">
+      <Row className="h-100 align-items-center">
+        <Col
+          className="col-auto cursor-pointer"
+          onClick={() => history.push('/')}
+          xs={3}
+        >
+          <Headline4 className="m-0">CHESS TENT</Headline4>
+        </Col>
+        <Col className="h-100" xs={6}>
+          <TabButton path="/">Dashboard</TabButton>
+          <TabButton path="/lesson/new">Create Lesson</TabButton>
+        </Col>
+        <Col className="d-flex justify-content-end" xs={3}>
+          <Dropdown>
+            <Dropdown.Toggle id="header-user">
+              <UserAvatar size="small" user={user} />
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              <Dropdown.Item>
+                <Text onClick={() => history.push('./me')}>Profile</Text>
+              </Dropdown.Item>
+              <Dropdown.Item>
+                <Text onClick={() => logoutApi.fetch()}>Logout</Text>
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </Col>
+      </Row>
     </Container>
   );
 };

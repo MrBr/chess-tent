@@ -35,7 +35,13 @@ export const updateActivityStepState = <T>(
   activity: T extends Activity ? T : never,
   stepId: Step["id"],
   state: {}
-): T extends Activity ? T["state"] : never => ({
-  ...(activity.state[stepId] || {}),
-  ...state
+): T extends Activity ? T : never => ({
+  ...activity,
+  state: {
+    ...activity.state,
+    [stepId]: {
+      ...(activity.state[stepId] || {}),
+      ...state
+    }
+  }
 });

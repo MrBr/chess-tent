@@ -1,5 +1,5 @@
-import merge from "lodash.merge";
-import { Step, TYPE_STEP } from "./types";
+import mergeWith from "lodash.mergewith";
+import { Step, StepRoot, TYPE_STEP } from "./types";
 import {
   getSubjectValueAt,
   SubjectPath,
@@ -18,8 +18,11 @@ const isSameStep = (leftStep: Step | null, rightStep: Step | null) => {
   return leftStep?.id === rightStep?.id;
 };
 
-const getChildStep = (parentStep: Step, childId: Step["id"]): Step | null => {
-  if (parentStep.id === childId) {
+const getChildStep = (
+  parentStep: Step | StepRoot,
+  childId: Step["id"]
+): Step | null => {
+  if (isStep(parentStep) && parentStep.id === childId) {
     return parentStep;
   }
   for (const index in parentStep.state.steps) {
@@ -32,18 +35,22 @@ const getChildStep = (parentStep: Step, childId: Step["id"]): Step | null => {
   return null;
 };
 
-const getPreviousStep = (parentStep: Step, cursorStep: Step): Step | null => {
-  if (isSameStep(parentStep, cursorStep)) {
+const getPreviousStep = (
+  parent: Step | StepRoot,
+  cursorStep: Step
+): Step | null => {
+  if (isStep(parent) && isSameStep(parent, cursorStep)) {
     return null;
   }
   let index = 0;
-  while (index < parentStep.state.steps.length) {
-    const childStep = parentStep.state.steps[index];
+  while (index < parent.state.steps.length) {
+    const childStep = parent.state.steps[index];
     if (isSameStep(childStep, cursorStep)) {
       // Found searched step, returning previous.
       // If the first or the only returning null otherwise returning previous step.
-      const prevStep = parentStep.state.steps[index - 1];
-      return prevStep ? getLastStep(prevStep) : parentStep;
+      const prevStep = parent.state.steps[index - 1];
+      // Returning null if parent is StepRoot
+      return prevStep ? getLastStep(prevStep) : isStep(parent) ? parent : null;
     }
     const prevStep = getPreviousStep(childStep, cursorStep);
     if (prevStep) {
@@ -55,19 +62,22 @@ const getPreviousStep = (parentStep: Step, cursorStep: Step): Step | null => {
   return null;
 };
 
-const getNextStep = (parentStep: Step, cursorStep: Step): Step | null => {
-  if (isSameStep(parentStep, cursorStep)) {
-    return parentStep.state.steps[0];
+const getNextStep = (
+  parent: Step | StepRoot,
+  cursorStep: Step
+): Step | null => {
+  if (isStep(parent) && isSameStep(parent, cursorStep)) {
+    return parent.state.steps[0];
   }
   let index = 0;
-  while (index < parentStep.state.steps.length) {
-    const step = parentStep.state.steps[index];
+  while (index < parent.state.steps.length) {
+    const step = parent.state.steps[index];
     if (isSameStep(cursorStep, step)) {
       return (
         // Variation, dive in
         step.state.steps[0] ||
         // Next in a variation, continue
-        parentStep.state.steps[index + 1]
+        parent.state.steps[index + 1]
       );
     }
 
@@ -75,22 +85,25 @@ const getNextStep = (parentStep: Step, cursorStep: Step): Step | null => {
     if (nextStep) {
       return nextStep;
     } else if (nextStep === undefined) {
-      return parentStep.state.steps[index + 1];
+      return parent.state.steps[index + 1];
     }
     index += 1;
   }
   return null;
 };
 
-const getRightStep = (parentStep: Step, cursorStep: Step): Step | null => {
-  if (isSameStep(parentStep, cursorStep)) {
+const getRightStep = (
+  parent: Step | StepRoot,
+  cursorStep: Step
+): Step | null => {
+  if (isStep(parent) && isSameStep(parent, cursorStep)) {
     return null;
   }
   let index = 0;
-  while (index < parentStep.state.steps.length) {
-    const step = parentStep.state.steps[index];
+  while (index < parent.state.steps.length) {
+    const step = parent.state.steps[index];
     if (isSameStep(cursorStep, step)) {
-      return parentStep.state.steps[index + 1] || null;
+      return parent.state.steps[index + 1] || null;
     }
 
     const nextStep = getRightStep(step, cursorStep);
@@ -105,27 +118,30 @@ const getRightStep = (parentStep: Step, cursorStep: Step): Step | null => {
 /**
  * Get steps count including itself.
  */
-const getStepsCount = (step: Step) => {
-  let count = 1;
-  step.state.steps.forEach((childStep: Step) => {
+const getStepsCount = (parent: Step | StepRoot) => {
+  let count = 0;
+  parent.state.steps.forEach((childStep: Step) => {
+    count += 1;
     count += getStepsCount(childStep);
   });
   return count;
 };
 
+/**
+ * Index starts with 1
+ */
 const getStepIndex = (
-  parentStep: Step,
+  parent: Step | StepRoot,
   step: Step,
   indexSearch = { index: 0, end: false }
 ) => {
-  if (isSameStep(parentStep, step)) {
+  for (let i = 0; i < parent.state.steps.length; i++) {
+    const childStep = parent.state.steps[i];
     indexSearch.index += 1;
-    indexSearch.end = true;
-    return indexSearch.index;
-  }
-  indexSearch.index += 1;
-  for (let i = 0; i < parentStep.state.steps.length; i++) {
-    const childStep = parentStep.state.steps[i];
+    if (isSameStep(childStep, step)) {
+      indexSearch.end = true;
+      return indexSearch.index;
+    }
     getStepIndex(childStep, step, indexSearch);
     if (indexSearch.end) {
       return indexSearch.index;
@@ -148,13 +164,16 @@ const isLastStep = (parentStep: Step, step: Step, recursive = true) => {
   return isSameStep(getLastStep(parentStep, recursive), step);
 };
 
-const getParentStep = (parentStep: Step, step: Step): Step | null => {
+const getParentStep = (
+  parentStep: Step | StepRoot,
+  step: Step
+): Step | null => {
   let closestParentStep = null;
   for (const childStep of parentStep.state.steps) {
     if (isSameStep(childStep, step)) {
       // Found searched step, returning previous.
       // If the first or the only returning null otherwise returning previous step.
-      return parentStep;
+      return isStep(parentStep) ? parentStep : null;
     }
     closestParentStep = getParentStep(childStep, step);
     if (closestParentStep) {
@@ -165,7 +184,7 @@ const getParentStep = (parentStep: Step, step: Step): Step | null => {
   return closestParentStep;
 };
 
-const addStep = (parentStep: Step, step: Step): Step => {
+const addStep = <T extends Step | StepRoot>(parentStep: T, step: Step): T => {
   return {
     ...parentStep,
     state: {
@@ -185,9 +204,13 @@ const addStepToLeft = (parentStep: Step, step: Step): Step => {
 };
 
 /**
- * Remove all step and all adjacent steps
+ * Remove the step and all adjacent steps
  */
-const removeStep = (parentStep: Step, step: Step): Step => {
+const removeStep = <T extends Step | StepRoot>(
+  parentStep: T,
+  step: Step,
+  adjacent = true
+): T => {
   let removeStep = false;
   return {
     ...parentStep,
@@ -195,7 +218,8 @@ const removeStep = (parentStep: Step, step: Step): Step => {
       ...parentStep.state,
       steps: parentStep.state.steps.filter((childStep, index) => {
         if (isSameStep(childStep, step)) {
-          removeStep = true;
+          removeStep = adjacent;
+          return false;
         }
         return !removeStep;
       })
@@ -221,7 +245,10 @@ const addStepRightToSame = (step: Step, newStep: Step) => {
   };
 };
 
-const getStepPath = (parentStep: Step, step: Step): SubjectPath | null => {
+const getStepPath = (
+  parentStep: Step | StepRoot,
+  step: Step
+): SubjectPath | null => {
   for (let index = 0; index < parentStep.state.steps.length; index++) {
     const childStep = parentStep.state.steps[index];
     if (isSameStep(step, childStep)) {
@@ -235,24 +262,11 @@ const getStepPath = (parentStep: Step, step: Step): SubjectPath | null => {
   return null;
 };
 
-const getStepSequence = (parentStep: Step, step: Step): Step[] | null => {
-  const sequence = [];
-  for (let index = 0; index < parentStep.state.steps.length; index++) {
-    const childStep = parentStep.state.steps[index];
-    sequence.push(childStep);
-    if (isSameStep(step, childStep)) {
-      return sequence;
-    }
-    const path = getStepSequence(childStep, step);
-    if (path) {
-      return [...sequence, ...path];
-    }
-  }
-  return null;
-};
-
-const getStepAt = (parentStep: Step, path: SubjectPath): Step => {
-  return getSubjectValueAt(parentStep, path);
+const getStepAt = (
+  parent: Step | StepRoot,
+  path: SubjectPath
+): Step | StepRoot => {
+  return getSubjectValueAt(parent, path);
 };
 
 const updateStep = (step: Step, patch: Partial<Step>) => ({
@@ -260,12 +274,17 @@ const updateStep = (step: Step, patch: Partial<Step>) => ({
   ...patch
 });
 
+function omitArrayMerge(objValue: any, srcValue: any) {
+  if (Array.isArray(objValue)) {
+    return srcValue;
+  }
+}
 const updateStepState = <T extends Step>(
   step: T,
   state: Partial<T["state"]>
 ) => ({
   ...step,
-  state: merge({}, step.state, state)
+  state: mergeWith({}, step.state, state, omitArrayMerge)
 });
 
 const updateNestedStep = (
@@ -305,7 +324,6 @@ export {
   addStepRightToSame,
   getChildStep,
   getStepPath,
-  getStepSequence,
   updateNestedStep,
   updateStep,
   updateStepState,

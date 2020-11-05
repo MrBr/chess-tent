@@ -1,8 +1,8 @@
-import { State } from './state'
-import { setCheck, setSelected } from './board'
-import { read as fenRead } from './fen'
-import {DrawShape, DrawBrush, DrawCurrent} from './draw'
-import * as cg from './types'
+import { State } from "./state";
+import { setCheck, setSelected } from "./board";
+import { read as fenRead } from "./fen";
+import { DrawShape, DrawBrush, DrawCurrent } from "./draw";
+import * as cg from "./types";
 
 export interface Config {
   fen?: cg.FEN; // chess position in Forsyth notation
@@ -28,17 +28,21 @@ export interface Config {
   };
   movable?: {
     free?: boolean; // all moves are valid - board editor
-    color?: cg.Color | 'both'; // color that can move. white | black | both | undefined
+    color?: cg.Color | "both"; // color that can move. white | black | both | undefined
     dests?: {
-      [key: string]: cg.Key[]
+      [key: string]: cg.Key[];
     }; // valid moves. {"a2" ["a3" "a4"] "b1" ["a3" "c3"]}
     showDests?: boolean; // whether to add the move-dest class on squares
     events?: {
       after?: (orig: cg.Key, dest: cg.Key, metadata: cg.MoveMetadata) => void; // called after the move has been played
-      afterNewPiece?: (role: cg.Role, key: cg.Key, metadata: cg.MoveMetadata) => void; // called after a new piece is dropped on the board
+      afterNewPiece?: (
+        role: cg.Role,
+        key: cg.Key,
+        metadata: cg.MoveMetadata
+      ) => void; // called after a new piece is dropped on the board
     };
-    rookCastle?: boolean // castle by moving the king to the rook
-    validate?: (orig: cg.Key, dest: cg.Key) => boolean // custom move validation
+    rookCastle?: boolean; // castle by moving the king to the rook
+    validate?: (orig: cg.Key, dest: cg.Key) => boolean; // custom move validation
   };
   premovable?: {
     enabled?: boolean; // allow premoves for color that can not move
@@ -46,16 +50,20 @@ export interface Config {
     castle?: boolean; // whether to allow king castle premoves
     dests?: cg.Key[]; // premove destinations for the current selection
     events?: {
-      set?: (orig: cg.Key, dest: cg.Key, metadata?: cg.SetPremoveMetadata) => void; // called after the premove has been set
-      unset?: () => void;  // called after the premove has been unset
-    }
+      set?: (
+        orig: cg.Key,
+        dest: cg.Key,
+        metadata?: cg.SetPremoveMetadata
+      ) => void; // called after the premove has been set
+      unset?: () => void; // called after the premove has been unset
+    };
   };
   predroppable?: {
     enabled?: boolean; // allow predrops for color that can not move
     events?: {
       set?: (role: cg.Role, key: cg.Key) => void; // called after the predrop has been set
       unset?: () => void; // called after the predrop has been unset
-    }
+    };
   };
   draggable?: {
     enabled?: boolean; // allow moves & premoves to use drag'n drop
@@ -67,7 +75,7 @@ export interface Config {
   };
   selectable?: {
     // disable to enforce dragging over click-click move
-    enabled?: boolean
+    enabled?: boolean;
   };
   events?: {
     change?: () => void; // called after the situation changes on the board
@@ -75,13 +83,17 @@ export interface Config {
     // capturedPiece is undefined or like {color: 'white'; 'role': 'queen'}
     move?: (orig: cg.Key, dest: cg.Key, capturedPiece?: cg.Piece) => void;
     dropNewPiece?: (piece: cg.Piece, key: cg.Key) => void;
+    removePiece?: (piece: cg.Piece, key: cg.Key) => void;
     select?: (key: cg.Key) => void; // called when a square is selected
     insert?: (elements: cg.Elements) => void; // when the board DOM has been (re)inserted
   };
   drawable?: {
     enabled?: boolean; // can draw
     // called before drawing & updating a shape.
-    validate?: (newDrawShape: DrawCurrent, curDrawShape: DrawCurrent) => boolean;
+    validate?: (
+      newDrawShape: DrawCurrent,
+      curDrawShape: DrawCurrent
+    ) => boolean;
     visible?: boolean; // can view
     eraseOnClick?: boolean;
     shapes?: DrawShape[];
@@ -89,15 +101,14 @@ export interface Config {
     brushes?: DrawBrush[];
     pieces?: {
       baseUrl?: string;
-    }
+    };
     onChange?: (shapes: DrawShape[]) => void; // called after drawable shapes change
     onAdd?: (shape: DrawShape) => void; // called after drawable shape added
     onRemove?: (shape: DrawShape) => void; // called after drawable shape removed
-  }
+  };
 }
 
 export function configure(state: State, config: Config) {
-
   // don't merge destinations. Just override.
   if (config.movable && config.movable.dests) state.movable.dests = undefined;
 
@@ -110,8 +121,9 @@ export function configure(state: State, config: Config) {
   }
 
   // apply config values that could be undefined yet meaningful
-  if (config.hasOwnProperty('check')) setCheck(state, config.check || false);
-  if (config.hasOwnProperty('lastMove') && !config.lastMove) state.lastMove = undefined;
+  if (config.hasOwnProperty("check")) setCheck(state, config.check || false);
+  if (config.hasOwnProperty("lastMove") && !config.lastMove)
+    state.lastMove = undefined;
   // in case of ZH drop last move, there's a single square.
   // if the previous last move had two squares,
   // the merge algorithm will incorrectly keep the second square.
@@ -121,28 +133,31 @@ export function configure(state: State, config: Config) {
   if (state.selected) setSelected(state, state.selected);
 
   // no need for such short animations
-  if (!state.animation.duration || state.animation.duration < 100) state.animation.enabled = false;
+  if (!state.animation.duration || state.animation.duration < 100)
+    state.animation.enabled = false;
 
   if (!state.movable.rookCastle && state.movable.dests) {
-    const rank = state.movable.color === 'white' ? 1 : 8,
-    kingStartPos = 'e' + rank,
-    dests = state.movable.dests[kingStartPos],
-    king = state.pieces[kingStartPos];
-    if (!dests || !king || king.role !== 'king') return;
-    state.movable.dests[kingStartPos] = dests.filter(d =>
-      !((d === 'a' + rank) && dests.indexOf('c' + rank as cg.Key) !== -1) &&
-        !((d === 'h' + rank) && dests.indexOf('g' + rank as cg.Key) !== -1)
+    const rank = state.movable.color === "white" ? 1 : 8,
+      kingStartPos = "e" + rank,
+      dests = state.movable.dests[kingStartPos],
+      king = state.pieces[kingStartPos];
+    if (!dests || !king || king.role !== "king") return;
+    state.movable.dests[kingStartPos] = dests.filter(
+      d =>
+        !(d === "a" + rank && dests.indexOf(("c" + rank) as cg.Key) !== -1) &&
+        !(d === "h" + rank && dests.indexOf(("g" + rank) as cg.Key) !== -1)
     );
   }
-};
+}
 
 function merge(base: any, extend: any) {
   for (let key in extend) {
-    if (isObject(base[key]) && isObject(extend[key])) merge(base[key], extend[key]);
+    if (isObject(base[key]) && isObject(extend[key]))
+      merge(base[key], extend[key]);
     else base[key] = extend[key];
   }
 }
 
 function isObject(o: any): boolean {
-  return typeof o === 'object';
+  return typeof o === "object";
 }

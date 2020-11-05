@@ -15,12 +15,12 @@ const StepperVariation = styled.div({
 });
 
 const Stepper = ({
-  steps,
   activeStep,
   root,
   className,
   ...systemProps
 }: StepperProps) => {
+  const steps = systemProps.stepRoot.state.steps;
   if (!steps) {
     return null;
   }
@@ -29,7 +29,7 @@ const Stepper = ({
       {steps.map(child => {
         const stepper = (
           <StepRenderer
-            component="StepperStep"
+            component="EditorSidebar"
             key={`${child.id}-step`}
             activeStep={activeStep}
             {...systemProps}
@@ -38,7 +38,9 @@ const Stepper = ({
           />
         );
         return child.stepType === 'variation' && !root ? (
-          <StepperVariation>{stepper}</StepperVariation>
+          <StepperVariation key={`variation-${child.id}`}>
+            {stepper}
+          </StepperVariation>
         ) : (
           stepper
         );

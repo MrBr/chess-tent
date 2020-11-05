@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from 'react';
-import { hooks, requests, ui, utils } from '@application';
+import { components, hooks, requests, ui, utils } from '@application';
 import { createActivity, Lesson, User } from '@chess-tent/models';
 import * as yup from 'yup';
 import lessonThumbUrl from '../images/lesson.svg';
@@ -11,13 +11,13 @@ const {
   Button,
   Form,
   ModalBody,
-  Avatar,
   Thumbnail,
   Text,
   Modal,
 } = ui;
 const { useApi, useActiveUserRecord } = hooks;
 const { generateIndex } = utils;
+const { UserAvatar } = components;
 
 const TrainingSchema = yup.object().shape({
   user: yup.string().required(),
@@ -61,9 +61,10 @@ export default ({ close }: { close: () => void }) => {
               name="user"
               placeholder="test"
               options={users?.data}
-              formatOptionLabel={({ imageUrl, name }: User) => (
+              formatOptionLabel={(userOption: User) => (
                 <>
-                  <Avatar src={imageUrl} /> <Text inline>{name}</Text>
+                  <UserAvatar user={userOption} />
+                  <Text inline>{userOption.name}</Text>
                 </>
               )}
             />

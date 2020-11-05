@@ -1,13 +1,26 @@
 import {
   Component,
+  ComponentProps,
+  ComponentType,
   FunctionComponent,
   ReactElement,
+  ReactEventHandler,
   ReactNode,
   RefObject,
 } from 'react';
 import { DrawCurrent, DrawShape } from '@chess-tent/chessground/dist/draw';
 import { Api } from '@chess-tent/chessground/dist/api';
-import { Chapter, Lesson, Step } from '@chess-tent/models';
+import { LinkProps, RedirectProps, RouteProps } from 'react-router-dom';
+import { Requests } from '@chess-tent/types';
+import {
+  Activity,
+  Analysis,
+  Chapter,
+  Lesson,
+  Step,
+  StepType,
+  User,
+} from '@chess-tent/models';
 import {
   Move,
   NotableMove,
@@ -19,7 +32,16 @@ import {
   PieceRole,
   PieceRolePromotable,
 } from './chess';
-import { EditorProps, StepSystemProps } from './step';
+import {
+  EditorProps,
+  StepBoardComponentProps,
+  StepModule,
+  StepModuleComponentKey,
+  StepSystemProps,
+} from './step';
+import { ClassComponent } from './_helpers';
+import { UI } from './ui';
+import { LessonActivity, StepModules, Steps } from './index';
 
 export interface ChessboardState {
   renderPrompt?: (close: () => void) => ReactElement;
@@ -35,8 +57,7 @@ export interface ChessboardProps {
   footer?: ReactNode;
   onReset?: Function;
   evaluate?: boolean;
-  width?: string | number;
-  height?: string | number;
+  size?: string | number;
   // Chessground proxy props
   viewOnly?: boolean;
   selectablePieces?: boolean;
@@ -44,6 +65,8 @@ export interface ChessboardProps {
   fen: FEN;
   animation?: boolean;
   onChange?: (position: FEN) => void;
+  onPieceDrop?: (position: FEN, piece: Piece, key: Key) => void;
+  onPieceRemove?: (position: FEN, piece: Piece, key: Key) => void;
   onMove?: (
     position: FEN,
     lastMove: Move,
@@ -82,7 +105,6 @@ export interface ChessboardInterface
 }
 
 export type StepperProps = {
-  steps: Step[];
   className?: string;
   root?: boolean;
 } & StepSystemProps &
@@ -99,8 +121,8 @@ export type StepToolbox = FunctionComponent<{
 }>;
 
 export type LessonPlayground = FunctionComponent<{
-  board: ReactElement;
-  sidebar: ReactElement;
+  header: ReactElement;
+  tabs: { board: ReactElement; sidebar: ReactElement; title: string }[];
 }>;
 
 export type LessonToolboxText = FunctionComponent<{
@@ -128,16 +150,120 @@ export type StepTag = FunctionComponent<{
   move?: NotableMove | null;
 }>;
 
-export interface ActionProps {
-  onClick?: () => void;
-}
-
 export interface AuthorizedProps {
   children: ReactElement | ((authorized: boolean) => ReactElement);
 }
 
 export interface LessonPlaygroundSidebarProps {
-  lesson: Lesson;
-  chapter: Chapter;
-  step: Step;
+  header?: ReactElement;
 }
+
+export type ActivityComponent<T> = ComponentType<
+  T extends Activity<infer U, infer K> ? { activity: T } : never
+>;
+
+export interface AnalysisSystemProps {
+  analysis: Analysis;
+  updateAnalysis: (analysis: Analysis) => void;
+}
+
+export interface ActivityRendererProps {
+  activity: LessonActivity;
+  updateActivity: (activity: LessonActivity) => void;
+  updateActivityStepState: (
+    activity: LessonActivity,
+    step: Step,
+    state: {},
+  ) => void;
+  currentStepIndex: number;
+  stepsCount: number;
+  activeStep: Steps;
+  chapter: Chapter;
+  analysis: Analysis;
+  lesson: Lesson;
+  activityStepState: {};
+}
+
+export type Components = {
+  App: ComponentType;
+  Header: ComponentType;
+  Layout: ComponentType<{ className?: string }>;
+  Chessboard: ClassComponent<ChessboardInterface>;
+  Stepper: FunctionComponent<StepperProps>;
+  StepperStepContainer: ComponentType<{ onClick?: ReactEventHandler }>;
+  StepToolbox: StepToolbox;
+  LessonToolboxText: LessonToolboxText;
+  LessonPlayground: LessonPlayground;
+  LessonPlaygroundSidebar: ComponentType<LessonPlaygroundSidebarProps>;
+  StepTag: StepTag;
+  StepMove: StepMove;
+  Router: ComponentType;
+  Switch: ComponentType;
+  Redirect: ComponentType<RedirectProps>;
+  Route: ComponentType<RouteProps>;
+  Link: ComponentType<LinkProps>;
+  Authorized: ComponentType<AuthorizedProps>;
+  Provider: ComponentType;
+  StateProvider: ComponentType;
+  StepRenderer: <T extends StepModuleComponentKey, S extends Step>(
+    props: StepModule<
+      S,
+      S extends Step<infer U, infer K> ? K : never,
+      {},
+      S extends Step<infer U, infer K>
+        ? K extends StepType
+          ? StepModules[K] extends StepModule<
+              infer A,
+              infer B,
+              infer C,
+              infer D
+            >
+            ? D
+            : never
+          : never
+        : never
+    >[T] extends ComponentType<infer P>
+      ? P & { component: T; step: S }
+      : never,
+  ) => ReactElement;
+  Evaluator: ComponentType<{
+    position: FEN;
+    evaluate?: boolean;
+    depth?: number;
+    // Evaluator is making sure that updates are thrown for the latest position only
+    onEvaluationChange?: (
+      score: string,
+      isMate: boolean,
+      variation: Move[],
+      depth: number,
+    ) => void;
+    // Best move is not reliable in sense that
+    // after position changed it can still provide best move for the previous position
+    onBestMoveChange?: (bestMove: Move, ponder?: Move) => void;
+  }>;
+  Editor: ComponentType<{ lesson: Lesson; save: Requests['lessonUpdates'] }>;
+  Lessons: ComponentType<{ lessons: Lesson[] | null }>;
+  LessonChapters: ComponentType<{
+    chapters: Chapter[];
+    activeChapter: Chapter;
+    editable?: boolean;
+    onChange?: (chapter: Chapter) => void;
+    onEdit?: (title: string) => void;
+    onNew?: () => void;
+    onRemove?: (chapter: Chapter) => void;
+  }>;
+  EditBoardToggle: ComponentType<{
+    editing: boolean;
+    onChange: (editing: boolean) => void;
+  }>;
+  UserAvatar: ComponentType<
+    {
+      user: User;
+    } & Pick<ComponentProps<UI['Avatar']>, 'size' | 'onClick'>
+  >;
+  Coaches: ComponentType;
+  Activities: ComponentType<{ activities: Activity[] | null }>;
+  Conversations: ComponentType;
+  AnalysisBoard: ComponentType<AnalysisSystemProps & StepBoardComponentProps>;
+  AnalysisSidebar: ComponentType<AnalysisSystemProps>;
+};

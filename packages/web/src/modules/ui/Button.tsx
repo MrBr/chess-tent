@@ -87,12 +87,13 @@ Button.defaultProps = {
 };
 
 export const ToggleButton: UI['ToggleButton'] = styled(
-  ({ className, children, defaultChecked, onChange }) => (
+  ({ className, children, defaultChecked, onChange, checked }) => (
     <label className={className}>
       <input
         type="checkbox"
         defaultChecked={defaultChecked}
         onChange={onChange}
+        checked={checked}
       />
       <span className="toggle-button">{children}</span>
     </label>
@@ -103,7 +104,12 @@ export const ToggleButton: UI['ToggleButton'] = styled(
     width: 0,
     height: 0,
   },
-  '.toggle-button': buttonSizeEnhancer(props),
+  '.toggle-button': {
+    display: 'inline-block',
+    userSelect: 'none',
+    cursor: 'pointer',
+    ...buttonSizeEnhancer(props),
+  },
   'input:checked + .toggle-button': {
     ...buttonVariantEnhancer(props),
   },

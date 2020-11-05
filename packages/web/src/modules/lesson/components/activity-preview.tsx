@@ -1,22 +1,19 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { components, hooks, ui } from '@application';
+import { hooks, services, ui } from '@application';
 import {
+  Analysis,
   Chapter,
   createActivity,
-  getChapterNextStep,
-  getChapterPreviousStep,
-  getChapterStep,
-  getChapterStepIndex,
-  getChapterStepsCount,
+  getChildStep,
+  getStepIndex,
+  getStepsCount,
   Lesson,
-  markStepCompleted,
   Step,
   updateActivityStepState,
   User,
 } from '@chess-tent/models';
-import { ActivityFooterProps, ChessboardProps, LessonActivity } from '@types';
-import Footer from './activity-footer';
-import Header from './activity-header';
+import { LessonActivity, Steps } from '@types';
+import { ActivityRenderer } from './activity';
 
 interface PreviewProps {
   lesson: Lesson;
@@ -25,7 +22,7 @@ interface PreviewProps {
 }
 
 const { useActiveUserRecord, useComponentState } = hooks;
-const { StepRenderer, Chessboard } = components;
+
 const { Modal, Icon, Absolute } = ui;
 
 const Preview = ({ lesson, chapter, step }: PreviewProps) => {
@@ -36,90 +33,38 @@ const Preview = ({ lesson, chapter, step }: PreviewProps) => {
       activeChapterId: chapter.id,
     }),
   );
-  const activeStep = getChapterStep(chapter, activity.state.activeStepId);
+  const activeStep = getChildStep(
+    chapter,
+    activity.state.activeStepId,
+  ) as Steps;
   const activityStepState = activity.state[step.id] || {};
-  const stepsCount = useMemo(() => getChapterStepsCount(chapter), [chapter]);
-  const currentStepIndex = useMemo(
-    () => getChapterStepIndex(chapter, activeStep),
-    [chapter, activeStep],
+  const stepsCount = useMemo(() => getStepsCount(chapter), [chapter]);
+  const currentStepIndex = useMemo(() => getStepIndex(chapter, activeStep), [
+    chapter,
+    activeStep,
+  ]);
+  const updateStepState = useCallback(
+    (activity: LessonActivity, step: Step, state: {}) =>
+      updateActivity(updateActivityStepState(activity, step.id, state)),
+    [],
   );
-
-  const setStepActivityState = useCallback(
-    state => {
-      updateActivity({
-        ...activity,
-        state: {
-          ...activity.state,
-          [step.id]: updateActivityStepState(activity, step.id, state),
-        },
-      });
-    },
-    [step.id, activity, updateActivity],
-  );
-
-  const nextActivityStep = useCallback(() => {
-    const nextStep = getChapterNextStep(chapter, activeStep);
-    nextStep &&
-      updateActivity({
-        ...activity,
-        state: {
-          ...activity.state,
-          activeStepId: nextStep.id,
-        },
-      });
-  }, [activity, activeStep, updateActivity, chapter]);
-  const prevActivityStep = useCallback(() => {
-    const prevStep = getChapterPreviousStep(chapter, activeStep);
-    prevStep &&
-      updateActivity({
-        ...activity,
-        state: {
-          ...activity.state,
-          activeStepId: prevStep.id,
-        },
-      });
-  }, [activity, activeStep, updateActivity, chapter]);
-
-  const completeStep = useCallback(
-    (step: Step) => {
-      updateActivity({
-        ...activity,
-        completedSteps: markStepCompleted(activity, step),
-      });
-    },
-    [activity, updateActivity],
-  );
-
-  const footerRender = (props: Partial<ActivityFooterProps>) => (
-    <Footer
-      currentStep={currentStepIndex}
-      stepsCount={stepsCount}
-      prev={prevActivityStep}
-      next={nextActivityStep}
-      {...props}
-    />
-  );
-
-  const boardRender = (props: ChessboardProps) => (
-    <Chessboard header={<Header lesson={lesson} />} {...props} />
-  );
+  const analysis =
+    // TODO - Define activity step state analysis property
+    (activityStepState as { analysis: Analysis }).analysis ||
+    services.createAnalysis(services.getStepPosition(activeStep));
 
   return (
-    <StepRenderer
-      step={activeStep}
-      chapter={chapter}
-      component="Playground"
-      activeStep={activeStep}
-      lesson={lesson}
-      setActiveStep={() => {}}
-      setStepActivityState={setStepActivityState}
-      stepActivityState={activityStepState}
-      nextStep={() => {}}
-      prevStep={() => {}}
-      Chessboard={boardRender}
+    <ActivityRenderer
       activity={activity}
-      completeStep={completeStep}
-      Footer={footerRender}
+      lesson={lesson}
+      analysis={analysis}
+      activeStep={activeStep}
+      chapter={chapter}
+      updateActivity={updateActivity}
+      updateActivityStepState={updateStepState}
+      stepsCount={stepsCount}
+      currentStepIndex={currentStepIndex}
+      activityStepState={activityStepState}
     />
   );
 };

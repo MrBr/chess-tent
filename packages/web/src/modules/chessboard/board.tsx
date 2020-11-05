@@ -9,6 +9,7 @@ import {
   Key,
   ExtendedKey,
   PieceRolePromotable,
+  FEN,
 } from '@types';
 
 import { ChessInstance } from 'chess.js';
@@ -47,9 +48,10 @@ type ChessgroundMappedPropsType = Record<
     | 'validateMove'
     | 'validateDrawable'
     | 'evaluate'
-    | 'width'
-    | 'height'
+    | 'size'
     | 'sparePieces'
+    | 'onPieceDrop'
+    | 'onPieceRemove'
   >,
   string
 >;
@@ -89,8 +91,7 @@ const BoardFooter = styled.div<{
 
 const BoardContainer = styled<
   FunctionComponent<{
-    width: string | number;
-    height: string | number;
+    size: string | number;
     className?: string;
     boardRef: RefObject<any>;
   }>
@@ -99,22 +100,20 @@ const BoardContainer = styled<
     <div ref={props.boardRef} className="board" />
     {props.children}
   </div>
-))(({ width, height }) => ({
+))(({ size }) => ({
   '& > .board': {
     position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translateX(-50%) translateY(-50%)',
     width: '100%',
     height: '100%',
     maxWidth: 720,
     maxHeight: 720,
   },
   zIndex: 10, // important for dragged piece to cover spare piece base
-  width: width,
-  paddingBottom: height,
+  width: size,
+  height: size,
   position: 'relative',
   margin: 'auto',
+  boxSizing: 'content-box',
 }));
 
 // Chessground resizing expects custom event to be
@@ -140,8 +139,7 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
     resizable: true,
     selectablePieces: false,
     eraseDrawableOnClick: false,
-    width: '70%',
-    height: '70%',
+    size: 'calc(100vh - 40vh)',
     edit: false,
   };
 
@@ -170,6 +168,9 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
       viewOnly,
       fen,
       resizable,
+      draggable: {
+        deleteOnDropOff: true,
+      },
       selectable: { enabled: selectablePieces },
       animation: {
         enabled: animation,
@@ -193,6 +194,8 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
       },
       events: {
         change: this.onChange,
+        dropNewPiece: this.onPieceDrop,
+        removePiece: this.onPieceRemove,
       },
     });
   }
@@ -266,24 +269,39 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
     this.onReset();
   };
 
-  fen = (
-    move?: Move,
-    options?: { piece?: Piece; promoted?: PieceRolePromotable },
-  ) => {
-    const { edit } = this.props;
-    if (edit) {
-      this.chess.load(
-        // Update position and color who's turn is.
-        // Useful for variation to automatically start with a correct color.
-        replaceFENPosition(this.chess.fen(), this.api.getFen(), options?.piece),
-      );
-    } else if (move) {
-      const chessMove = createMoveShortObject(move, options?.promoted);
-      // Only valid moves are allowed in "play" mode
-      console.log(this.chess.move(chessMove));
-    }
-    return this.chess.fen();
-  };
+  fen = (() => {
+    // FEN Memoization
+    // Board fen can be requested by multiple methods on a single change (that triggers multiple events).
+    // This memoization prevents multiple calculations and potential fen overrides on a single change.
+    let lastFen: FEN;
+    return (
+      move?: Move,
+      options?: { piece?: Piece; promoted?: PieceRolePromotable },
+    ) => {
+      const { edit } = this.props;
+      const fen = this.api.getFen();
+      if (fen === lastFen) {
+        return this.chess.fen();
+      }
+      lastFen = fen;
+      if (edit) {
+        this.chess.load(
+          // Update position and color who's turn is.
+          // Useful for variation to automatically start with a correct color.
+          replaceFENPosition(
+            this.chess.fen(),
+            this.api.getFen(),
+            options?.piece,
+          ),
+        );
+      } else if (move) {
+        const chessMove = createMoveShortObject(move, options?.promoted);
+        // Only valid moves are allowed in "play" mode
+        this.chess.move(chessMove);
+      }
+      return this.chess.fen();
+    };
+  })();
 
   move(from: Key, to: Key) {
     this.api.move(from, to);
@@ -319,13 +337,28 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
     return this.props.onShapesChange(...args);
   };
 
-  // TODO - use move event?
   onChange = () => {
     if (!this.props.onChange) {
       return;
     }
     const fen = this.fen();
     this.props.onChange(fen);
+  };
+
+  onPieceDrop = (piece: Piece, key: ExtendedKey) => {
+    if (!this.props.onPieceDrop) {
+      return;
+    }
+    const fen = this.fen();
+    this.props.onPieceDrop(fen, piece, key as Key);
+  };
+
+  onPieceRemove = (piece: Piece, key: ExtendedKey) => {
+    if (!this.props.onPieceRemove) {
+      return;
+    }
+    const fen = this.fen();
+    this.props.onPieceRemove(fen, piece, key as Key);
   };
 
   onMove = (orig: ExtendedKey, dest: ExtendedKey, metadata: MoveMetadata) => {
@@ -374,15 +407,7 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
   };
 
   render() {
-    const {
-      header,
-      fen,
-      evaluate,
-      footer,
-      width,
-      height,
-      sparePieces,
-    } = this.props;
+    const { header, fen, evaluate, footer, size, sparePieces } = this.props;
     const { renderPrompt, promotion } = this.state;
     return (
       <>
@@ -394,12 +419,8 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
             onEvaluationChange={console.log}
           />
         )}
-        <BoardHeader width={width as string}>{header}</BoardHeader>
-        <BoardContainer
-          width={width as string}
-          height={height as string}
-          boardRef={this.boardHost}
-        >
+        <BoardHeader width={size as string}>{header}</BoardHeader>
+        <BoardContainer size={size as string} boardRef={this.boardHost}>
           {promotion && (
             <Promotion
               file={promotion.to}
@@ -409,7 +430,7 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
             />
           )}
         </BoardContainer>
-        <BoardFooter width={width as string}>{footer}</BoardFooter>
+        <BoardFooter width={size as string}>{footer}</BoardFooter>
         {sparePieces && <SparePieces onDragStart={this.onSparePieceDrag} />}
         <Modal
           container={this.boardHost}

@@ -16,6 +16,8 @@ import {
   ModalBody,
   ModalProps as BModalProps,
   RowProps,
+  Tabs,
+  Tab,
 } from 'react-bootstrap';
 import DropdownToggle from 'react-bootstrap/DropdownToggle';
 import { ErrorMessageProps, Formik } from 'formik';
@@ -62,7 +64,7 @@ export declare interface TextProps {
 export type UIComponent<T = {}> = ComponentType<
   T & { className?: string; defaultProps?: Partial<T & { className: string }> }
 >;
-class D extends Component<ComponentProps<typeof Dropdown>> {
+class DropdownClass extends Component<ComponentProps<typeof Dropdown>> {
   static Toggle: ComponentType<
     ComponentProps<typeof DropdownToggle> & {
       size?: 'regular' | 'small' | 'extra-small';
@@ -106,11 +108,12 @@ export type UI = {
     } & ImgHTMLAttributes<unknown>
   >;
   FramedProfile: ComponentType<{ src: string | undefined }>;
-  Dropdown: typeof D;
+  Dropdown: typeof DropdownClass;
   Avatar: ComponentType<{
     src: string | undefined;
     size?: 'regular' | 'small' | 'large' | 'extra-small';
     onClick?: ReactEventHandler;
+    name?: string;
   }>;
   Thumbnail: ComponentType<{
     src: string | undefined;
@@ -134,6 +137,8 @@ export type UI = {
     } & ClickProps
   >;
   Page: UIComponent<ContainerProps>;
+  Tabs: typeof Tabs;
+  Tab: typeof Tab;
   Row: UIComponent<RowProps & ClickProps>;
   Col: UIComponent<ColProps & ClickProps>;
   ErrorMessage: UIComponent<ErrorMessageProps>;

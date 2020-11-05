@@ -1,23 +1,18 @@
 import React from 'react';
-import { components, ui } from '@application';
+import { ui } from '@application';
 import { Components } from '@types';
-import styled from '@emotion/styled';
 
-const { LessonChapters } = components;
-const { Container } = ui;
+const { Container, Row, Col } = ui;
 
-export default styled(({ className, lesson, chapter, children }) => {
+export default (({ header, children }) => {
   return (
-    <div className={className}>
-      <LessonChapters
-        chapters={lesson.state.chapters}
-        activeChapter={chapter}
-      />
-      <Container className="step-content">{children}</Container>
-    </div>
+    <>
+      <Container className="mb-2">
+        <Row>
+          <Col>{header}</Col>
+        </Row>
+      </Container>
+      <Container className="mt-5">{children}</Container>
+    </>
   );
-})({
-  '.step-content': {
-    marginTop: '7em',
-  },
 }) as Components['LessonPlaygroundSidebar'];

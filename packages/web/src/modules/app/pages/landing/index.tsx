@@ -27,6 +27,16 @@ const Header = styled(Container)({
   width: '1180px',
   height: '1167px',
   right: 0,
+  '@media (max-width: 1199px)': {
+    height: '900px',
+    backgroundSize: '70% auto',
+  },
+  '@media (max-width: 991px)': {
+    backgroundSize: '686px 724px',
+  },
+  '@media (max-width: 776px)': {
+    backgroundSize: '486px 624px',
+  },
   '@media (max-width: 576px)': {
     backgroundSize: '286px 224px',
   },
@@ -48,6 +58,12 @@ const Lesson = styled.div({
 
 const SectionRow = styled(Row)({
   height: '1167px',
+  '@media (max-width: 1199px)': {
+    height: 'auto',
+  },
+  '@media (max-width: 991px)': {
+    height: 'auto',
+  },
   '@media (max-width: 576px)': {
     height: 'auto',
   },
@@ -55,6 +71,12 @@ const SectionRow = styled(Row)({
 
 const ContentRow = styled(Row)({
   marginTop: '10.0625em',
+  '@media (max-width: 1200px)': {
+    marginTop: '5em',
+  },
+  '@media (max-width: 991px)': {
+    marginTop: '1em',
+  },
 });
 
 const VerticalLine = styled.div({
@@ -70,7 +92,7 @@ export const LandingPage = () => (
   <Container fluid className="pb-5">
     <Header fluid />
     <SectionRow noGutters>
-      <Col md={{ span: 4, offset: 1 }} sm={12}>
+      <Col md={{ span: 5, offset: 1 }} lg={{ span: 6, offset: 1 }} sm={12}>
         <Row noGutters>
           <Headline3>CHESS TENT</Headline3>
         </Row>

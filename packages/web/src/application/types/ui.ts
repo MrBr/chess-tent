@@ -95,11 +95,13 @@ export type UI = {
   Headline4: UIComponent;
   Headline5: UIComponent;
   Headline6: UIComponent;
-  Icon: UIComponent<{
-    type: 'close' | 'comment';
-    textual?: boolean;
-    size?: 'large' | 'regular';
-  }>;
+  Icon: UIComponent<
+    {
+      type: 'close' | 'comment';
+      textual?: boolean;
+      size?: 'large' | 'regular';
+    } & ClickProps
+  >;
   Img: ComponentType<
     {
       src: string | undefined;

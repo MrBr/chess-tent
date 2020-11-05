@@ -34,7 +34,7 @@ const Header = styled(Container)({
   '@media (max-width: 991px)': {
     backgroundSize: '686px 724px',
   },
-  '@media (max-width: 776px)': {
+  '@media (max-width: 768px)': {
     backgroundSize: '486px 624px',
   },
   '@media (max-width: 576px)': {
@@ -44,13 +44,14 @@ const Header = styled(Container)({
 
 const Lesson = styled.div({
   background: `url(${lessonsUrl}) no-repeat top center`,
-  height: '869px',
+  height: '100%',
   backgroundSize: '100% auto',
   '@media (max-width: 1200px)': {
     backgroundPosition: 'center',
+    height: '100%',
   },
   '@media (max-width: 768px)': {
-    height: '309px',
+    height: '509px',
     backgroundSize: '100% auto',
     backgroundPosition: 'center',
   },
@@ -92,7 +93,12 @@ export const LandingPage = () => (
   <Container fluid className="pb-5">
     <Header fluid />
     <SectionRow noGutters>
-      <Col md={{ span: 5, offset: 1 }} lg={{ span: 6, offset: 1 }} sm={12}>
+      <Col
+        md={{ span: 5, offset: 1 }}
+        lg={{ span: 6, offset: 1 }}
+        sm={8}
+        xs={12}
+      >
         <Row noGutters>
           <Headline3>CHESS TENT</Headline3>
         </Row>
@@ -102,18 +108,22 @@ export const LandingPage = () => (
         >
           <Display2>Have serious skills and wish to teach chess?</Display2>
           <Headline3>
-            Create engaging chess lessons and build your <br />
-            audience. Join early beta and help us build flexible <br />
-            creator platform.
+            Create engaging chess lessons and build your audience. Join early
+            beta and help us build flexible creator platform.
           </Headline3>
-          <Button className="my-lg-4" size="large">
+          <Button className="my-md-4 my-lg-4 py-lg-4 px-lg-5">
             Get beta access
           </Button>
         </ContentRow>
       </Col>
     </SectionRow>
-    <Row>
-      <Col md={{ span: 5, offset: 1 }} lg={{ span: 5, offset: 1 }} sm={12}>
+    <Row className="my-sm-4 my-md-5 my-lg-5 my-xl-0">
+      <Col
+        md={{ span: 5, offset: 1 }}
+        lg={{ span: 5, offset: 1 }}
+        sm={12}
+        className="my-sm-4"
+      >
         <Img src={kingSrc} height="72px" />
         <Headline1>Create Engaging Lessons and Build Your Audience</Headline1>
         <Headline3>
@@ -127,16 +137,16 @@ export const LandingPage = () => (
           Create the most interactive online lessons and training. Become
           visible to chess players.
         </Text>
-        <Button className="my-lg-4" size="large">
+        <Button className="my-sm-4 my-md-4 my-lg-4 py-lg-4 px-lg-5">
           Become a Coach
         </Button>
       </Col>
-      <Col md={{ span: 6 }} lg={6} sm={12}>
+      <Col md={{ span: 6 }} lg={6} sm={12} className="mb-sm-0">
         <Lesson />
       </Col>
     </Row>
-    <Row noGutters className="mb-5">
-      <Col md={{ span: 3, offset: 1 }} lg={{ span: 4, offset: 1 }} sm={12}>
+    <Row noGutters className="mb-5 my-lg-5">
+      <Col md={{ span: 4, offset: 1 }} lg={{ span: 4, offset: 1 }} sm={12}>
         <Img src={brainSrc} height="72px" />
         <Headline1>Get a coach!</Headline1>
         <Headline3>
@@ -153,10 +163,10 @@ export const LandingPage = () => (
           will still guide you through your learning but with steady peace.
         </Text>
       </Col>
-      <Col md={4} xs={12} lg={2} sm={2} className="position-relative">
+      <Col md={2} xs={12} lg={2} sm={2} className="position-relative">
         <VerticalLine />
       </Col>
-      <Col md={3} lg={4} sm={12}>
+      <Col md={4} lg={4} sm={12} className="mt-xs-5 mt-sm-5">
         <Img src={boardSrc} height="72px" />
         <Headline1>Find a lesson</Headline1>
         <Headline3>

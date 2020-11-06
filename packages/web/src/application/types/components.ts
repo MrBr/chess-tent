@@ -123,6 +123,8 @@ export type StepToolbox = FunctionComponent<{
 export type LessonPlayground = FunctionComponent<{
   header: ReactElement;
   tabs: { board: ReactElement; sidebar: ReactElement; title: string }[];
+  activeTab: number;
+  setActiveTab: (activeTab: number) => void;
 }>;
 
 export type LessonToolboxText = FunctionComponent<{
@@ -182,6 +184,9 @@ export interface ActivityRendererProps {
   analysis: Analysis;
   lesson: Lesson;
   activityStepState: {};
+}
+export interface ActivityRendererState {
+  activeTab: number;
 }
 
 export type Components = {

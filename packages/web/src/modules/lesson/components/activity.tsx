@@ -3,6 +3,7 @@ import {
   ActivityComponent,
   ActivityFooterProps,
   ActivityRendererProps,
+  ActivityRendererState,
   ChessboardProps,
   FEN,
   LessonActivity,
@@ -42,13 +43,33 @@ const {
   actions: { updateActivity: updateActivityAction },
 } = state;
 
-export class ActivityRenderer extends React.Component<ActivityRendererProps> {
+export class ActivityRenderer extends React.Component<
+  ActivityRendererProps,
+  ActivityRendererState
+> {
+  constructor(props: Readonly<ActivityRendererProps>) {
+    super(props);
+    this.state = {
+      activeTab: 0,
+    };
+  }
+  isAnalysing() {
+    const { activeTab } = this.state;
+    // TODO - find a better way to render tabs and resolve which tab is active
+    return activeTab === 1;
+  }
+
+  updateActiveTab = (activeTab: number) => {
+    this.setState({ activeTab });
+  };
+
   setStepActivityState = (state: {}) => {
     const { updateActivityStepState, activity, activeStep } = this.props;
     updateActivityStepState(activity, activeStep, state);
   };
 
   setStepActivityAnalysisState = (analysis: Analysis) => {
+    !this.isAnalysing() && this.updateActiveTab(1);
     this.setStepActivityState({
       analysis,
     });
@@ -147,8 +168,11 @@ export class ActivityRenderer extends React.Component<ActivityRendererProps> {
       activeStep,
       activityStepState,
     } = this.props;
+    const { activeTab } = this.state;
     return (
       <LessonPlayground
+        activeTab={activeTab}
+        setActiveTab={this.updateActiveTab}
         header={
           <LessonChapters
             chapters={lesson.state.chapters}

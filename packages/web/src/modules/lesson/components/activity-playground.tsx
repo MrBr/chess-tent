@@ -1,4 +1,4 @@
-import React, { ComponentProps, useState } from 'react';
+import React, { ComponentProps } from 'react';
 import { Components } from '@types';
 import { components, ui } from '@application';
 
@@ -8,12 +8,14 @@ const { LessonPlaygroundSidebar } = components;
 export default ({
   header,
   tabs,
+  activeTab,
+  setActiveTab,
 }: ComponentProps<Components['LessonPlayground']>) => {
-  const [activeTab, setActiveTab] = useState(0);
+  const tab = tabs[activeTab];
   return (
     <Container fluid className="h-100">
       <Row className="h-100">
-        <Col className="pt-5">{tabs[activeTab].board}</Col>
+        <Col className="pt-5">{tab.board}</Col>
         <Col xs={5} xl={4} className="h-100 overflow-y-auto pt-4">
           <LessonPlaygroundSidebar header={header}>
             <Tabs

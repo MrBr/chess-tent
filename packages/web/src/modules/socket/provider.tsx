@@ -9,7 +9,9 @@ import {
 import { hooks } from '@application';
 
 const { useDispatchBatched } = hooks;
-const socket = io('ws://localhost:3007');
+const socket = io(`ws://${process.env.REACT_APP_DOMAIN}`, {
+  path: '/api/socket.io',
+});
 
 export const sendAction = (action: Actions) =>
   socket.emit(ACTION_EVENT, JSON.stringify(action));

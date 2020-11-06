@@ -42,7 +42,7 @@ const dispatch = (client: Socket, event: string, data: []) => {
 };
 
 const init: SocketService["init"] = server => {
-  io = socketIo(server);
+  io = socketIo(server, { path: process.env.SOCKET_BASE_PATH });
   io.on("connection", function(client) {
     client.on(SUBSCRIBE_EVENT, function(channel) {
       dispatch(client, SUBSCRIBE_EVENT, channel);

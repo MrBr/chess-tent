@@ -7,26 +7,26 @@ export const mediaQueryEnhancer: Utils['mediaQueryEnhancer'] = (
   let query;
   switch (screenSize) {
     case 'sm':
-      query = 'min-width: 575px';
+      query = '(min-width: 575px) and (max-width: 767px)';
       break;
     case 'md': {
-      query = 'min-width: 768x';
+      query = '(min-width: 768px) and (max-width: 991px)';
       break;
     }
     case 'lg': {
-      query = 'min-width: 992px';
+      query = '(min-width: 992px) and (max-width: 1199px)';
       break;
     }
     case 'xl': {
-      query = 'min-width: 1200px';
+      query = '(min-width: 1200px)';
       break;
     }
     case 'xs':
     default:
-      query = 'max-width: 575px';
+      query = '(max-width: 574px)';
       break;
   }
   return {
-    [`@media (${query})`]: style,
+    [`@media ${query}`]: style,
   };
 };

@@ -22,21 +22,27 @@ const {
 
 const { mediaQueryEnhancer } = utils;
 
-const Header = styled(Container)({
-  background: `url(${heroUrl}) no-repeat top right`,
-  position: 'absolute',
-  right: 0,
-  paddingTop: 'calc(100% * 0.99)',
-  '@media (max-width: 1199px)': {
+const Header = styled(Container)(
+  {
+    background: `url(${heroUrl}) no-repeat top right`,
+    position: 'absolute',
+    right: 0,
+    height: '100vh',
+    backgroundSize: 'auto 100%',
+  },
+  mediaQueryEnhancer('md', {
     backgroundSize: '70% auto',
-  },
-  '@media (max-width: 767px)': {
+  }),
+  mediaQueryEnhancer('lg', {
+    backgroundSize: '70% auto',
+  }),
+  mediaQueryEnhancer('sm', {
     backgroundSize: '80% auto',
-  },
-  '@media (max-width: 575px)': {
-    backgroundSize: '55% auto',
-  },
-});
+  }),
+  mediaQueryEnhancer('xs', {
+    backgroundSize: 'auto 250px',
+  }),
+);
 
 const Lesson = styled.div({
   background: `url(${lessonsUrl}) no-repeat center`,

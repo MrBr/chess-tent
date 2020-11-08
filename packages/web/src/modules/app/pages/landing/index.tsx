@@ -24,9 +24,17 @@ const {
 const Header = styled(Container)({
   background: `url(${heroUrl}) no-repeat top right`,
   position: 'absolute',
+  right: 0,
   paddingTop: 'calc(100% * 0.99)',
-  backgroundSize: '70% auto',
-  // right: 0,
+  '@media (max-width: 1199px)': {
+    backgroundSize: '70% auto',
+  },
+  '@media (max-width: 767px)': {
+    backgroundSize: '80% auto',
+  },
+  '@media (max-width: 575px)': {
+    backgroundSize: '55% auto',
+  },
 });
 
 const Lesson = styled.div({
@@ -36,19 +44,6 @@ const Lesson = styled.div({
   backgroundSize: '100% auto',
 });
 
-const SectionRow = styled(Row)({
-  height: '100vh',
-  '@media (max-width: 1199px)': {
-    height: 'auto',
-  },
-  '@media (max-width: 991px)': {
-    height: 'auto',
-  },
-  '@media (max-width: 576px)': {
-    height: 'auto',
-  },
-});
-
 const ContentRow = styled(Row)({
   marginTop: '10.0625em',
   '@media (max-width: 1200px)': {
@@ -56,6 +51,16 @@ const ContentRow = styled(Row)({
   },
   '@media (max-width: 991px)': {
     marginTop: '1em',
+  },
+  '@media (max-width: 575px)': {
+    marginTop: 0,
+  },
+});
+
+const SectionRow = styled(Row)({
+  height: '100vh',
+  '@media (max-width: 1199px)': {
+    height: 'auto',
   },
 });
 

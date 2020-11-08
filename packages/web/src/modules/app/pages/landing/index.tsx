@@ -1,5 +1,5 @@
 import React from 'react';
-import { components, ui } from '@application';
+import { ui } from '@application';
 import styled from '@emotion/styled';
 
 import heroUrl from '../../images/hero.png';
@@ -8,7 +8,6 @@ import boardSrc from '../../images/board.svg';
 import brainSrc from '../../images/brain.svg';
 import kingSrc from '../../images/king.svg';
 
-const { Link } = components;
 const {
   Display2,
   Headline3,
@@ -46,7 +45,7 @@ const Lesson = styled.div({
 
 const ContentRow = styled(Row)({
   marginTop: '10.0625em',
-  '@media (max-width: 1200px)': {
+  '@media (max-width: 1199px)': {
     marginTop: '5em',
   },
   '@media (max-width: 991px)': {
@@ -177,9 +176,6 @@ export const LandingPage = () => (
         </Text>
       </Col>
     </Row>
-    <Link style={{ position: 'fixed', top: 0 }} to="/login">
-      Login
-    </Link>
   </Container>
 );
 

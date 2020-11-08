@@ -27,6 +27,7 @@ export default styled<Components['Layout']>(({ className, children }) => (
     gridArea: 'content',
     padding: '0 5em',
     background: '#FAFBFB',
+    position: 'relative',
   },
   '.layout-sidebar': {
     gridArea: 'sidebar',

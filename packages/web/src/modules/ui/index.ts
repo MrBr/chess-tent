@@ -12,6 +12,7 @@ import {
   FormGroup,
   Label,
   File,
+  InputGroup,
 } from './Form';
 import { Container, Row, Col, Page } from './Grid';
 import { default as Select, Option } from './Select';
@@ -44,6 +45,7 @@ application.ui.Button = Button;
 application.ui.ToggleButton = ToggleButton;
 application.ui.Label = Label;
 application.ui.Input = Input;
+application.ui.InputGroup = InputGroup;
 application.ui.File = File;
 application.ui.Check = Check;
 application.ui.Select = Select;

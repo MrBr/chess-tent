@@ -16,6 +16,7 @@ import {
   RowProps,
   Tabs,
   Tab,
+  InputGroup,
 } from 'react-bootstrap';
 import DropdownToggle from 'react-bootstrap/DropdownToggle';
 import { ErrorMessageProps, Formik } from 'formik';
@@ -76,7 +77,7 @@ type D = ComponentType<ComponentProps<typeof Dropdown>> & {
 
 export type UI = {
   Form: typeof Formik & {
-    Input: UIComponent<FormControlProps & { name: string }>;
+    Input: UIComponent<FormControlProps & { rows?: number; name: string }>;
     Check: UIComponent<FormCheckInputProps & { name: string }>;
     Select: UIComponent<
       Omit<FormControlProps, 'value'> & {
@@ -121,6 +122,7 @@ export type UI = {
   Label: UIComponent<FormLabelProps>;
   FormGroup: UIComponent<FormGroupProps>;
   Input: typeof FormControl;
+  InputGroup: typeof InputGroup;
   Select: typeof Select;
   Option: ComponentType<OptionProps<any>>;
   Check: typeof FormCheck;

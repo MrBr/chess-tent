@@ -2,6 +2,7 @@ import React from 'react';
 import { Formik, ErrorMessage, useField } from 'formik';
 import { default as BFormGroup } from 'react-bootstrap/FormGroup';
 import { default as BForm } from 'react-bootstrap/Form';
+import { default as InputGroup } from 'react-bootstrap/InputGroup';
 import styled from '@emotion/styled';
 import { UI } from '@types';
 import { default as Select } from './Select';
@@ -16,6 +17,7 @@ const FormGroup = styled<UI['FormGroup']>(BFormGroup)({
 });
 const Label = BForm.Label;
 const Input = (styled(BForm.Control)({
+  border: 'none',
   '&:empty': {
     background: '#F3F4F5',
     color: 'rgba(47,56,73,0.4)',
@@ -32,9 +34,11 @@ const File = BForm.File;
 // Form connected components
 const Form: UI['Form'] = props => (
   <Formik {...props}>
-    {({ handleSubmit }) => (
-      <BForm noValidate onSubmit={handleSubmit}>
-        {props.children}
+    {formikProps => (
+      <BForm noValidate onSubmit={formikProps.handleSubmit}>
+        {typeof props.children === 'function'
+          ? props.children(formikProps)
+          : props.children}
       </BForm>
     )}
   </Formik>
@@ -85,4 +89,8 @@ Form.Input = FormInput;
 Form.Select = FormSelect;
 Form.Check = FormCheck;
 
-export { Form, Input, ErrorMessage, FormGroup, Label, Check, File };
+InputGroup.Text = styled(InputGroup.Text)({
+  border: 'none',
+});
+
+export { Form, Input, ErrorMessage, FormGroup, Label, Check, File, InputGroup };

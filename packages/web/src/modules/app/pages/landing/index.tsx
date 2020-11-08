@@ -1,5 +1,5 @@
 import React from 'react';
-import { ui } from '@application';
+import { ui, utils } from '@application';
 import styled from '@emotion/styled';
 
 import heroUrl from '../../images/hero.png';
@@ -19,6 +19,8 @@ const {
   Headline1,
   Img,
 } = ui;
+
+const { mediaQueryEnhancer } = utils;
 
 const Header = styled(Container)({
   background: `url(${heroUrl}) no-repeat top right`,

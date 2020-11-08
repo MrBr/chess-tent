@@ -24,41 +24,20 @@ const {
 const Header = styled(Container)({
   background: `url(${heroUrl}) no-repeat top right`,
   position: 'absolute',
-  width: '1180px',
-  height: '1167px',
-  right: 0,
-  '@media (max-width: 1199px)': {
-    height: '900px',
-    backgroundSize: '70% auto',
-  },
-  '@media (max-width: 991px)': {
-    backgroundSize: '686px 724px',
-  },
-  '@media (max-width: 768px)': {
-    backgroundSize: '486px 624px',
-  },
-  '@media (max-width: 576px)': {
-    backgroundSize: '286px 224px',
-  },
+  paddingTop: 'calc(100% * 0.99)',
+  backgroundSize: '70% auto',
+  // right: 0,
 });
 
 const Lesson = styled.div({
-  background: `url(${lessonsUrl}) no-repeat top center`,
-  height: '100%',
+  background: `url(${lessonsUrl}) no-repeat center`,
+  paddingTop: 'calc(100% * 0.63)',
+  minHeight: '100%',
   backgroundSize: '100% auto',
-  '@media (max-width: 1200px)': {
-    backgroundPosition: 'center',
-    height: '100%',
-  },
-  '@media (max-width: 768px)': {
-    height: '509px',
-    backgroundSize: '100% auto',
-    backgroundPosition: 'center',
-  },
 });
 
 const SectionRow = styled(Row)({
-  height: '1167px',
+  height: '100vh',
   '@media (max-width: 1199px)': {
     height: 'auto',
   },
@@ -99,21 +78,26 @@ export const LandingPage = () => (
         sm={8}
         xs={12}
       >
-        <Row noGutters>
+        <Row noGutters className="mt-4">
           <Headline3>CHESS TENT</Headline3>
         </Row>
+        <Col className="d-sm-none" xs={12}>
+          <Img src={heroUrl} height="160" className="invisible" />
+        </Col>
         <ContentRow
           noGutters
           className="flex-column align-items-start justify-content-md-between"
         >
-          <Display2>Have serious skills and wish to teach chess?</Display2>
-          <Headline3>
-            Create engaging chess lessons and build your audience. Join early
-            beta and help us build flexible creator platform.
-          </Headline3>
-          <Button className="my-md-4 my-lg-4 py-lg-4 px-lg-5">
-            Get beta access
-          </Button>
+          <Col xs={12}>
+            <Display2>Have serious skills and wish to teach chess?</Display2>
+            <Headline3>
+              Create engaging chess lessons and build your audience. Join early
+              beta and help us build flexible creator platform.
+            </Headline3>
+            <Button className="mt-4 py-4 px-5 my-md-4 my-lg-4 py-lg-4 px-lg-5">
+              Get beta access
+            </Button>
+          </Col>
         </ContentRow>
       </Col>
     </SectionRow>
@@ -122,7 +106,7 @@ export const LandingPage = () => (
         md={{ span: 5, offset: 1 }}
         lg={{ span: 5, offset: 1 }}
         sm={12}
-        className="my-sm-4"
+        className="my-4 my-sm-4 order-1 order-sm-0"
       >
         <Img src={kingSrc} height="72px" />
         <Headline1>Create Engaging Lessons and Build Your Audience</Headline1>
@@ -137,15 +121,20 @@ export const LandingPage = () => (
           Create the most interactive online lessons and training. Become
           visible to chess players.
         </Text>
-        <Button className="my-sm-4 my-md-4 my-lg-4 py-lg-4 px-lg-5">
+        <Button className="mt-5 py-4 px-5 my-sm-4 my-md-4 my-lg-4 py-lg-4 px-lg-5">
           Become a Coach
         </Button>
       </Col>
-      <Col md={{ span: 6 }} lg={6} sm={12} className="mb-sm-0">
+      <Col
+        md={{ span: 6 }}
+        lg={6}
+        sm={12}
+        className="my-5 mb-sm-0 order-0 order-sm-1"
+      >
         <Lesson />
       </Col>
     </Row>
-    <Row noGutters className="mb-5 my-lg-5">
+    <Row noGutters className="mt-5 mb-5 my-lg-5">
       <Col md={{ span: 4, offset: 1 }} lg={{ span: 4, offset: 1 }} sm={12}>
         <Img src={brainSrc} height="72px" />
         <Headline1>Get a coach!</Headline1>
@@ -166,7 +155,7 @@ export const LandingPage = () => (
       <Col md={2} xs={12} lg={2} sm={2} className="position-relative">
         <VerticalLine />
       </Col>
-      <Col md={4} lg={4} sm={12} className="mt-xs-5 mt-sm-5">
+      <Col md={4} lg={4} sm={12} className="mt-5 mt-sm-5">
         <Img src={boardSrc} height="72px" />
         <Headline1>Find a lesson</Headline1>
         <Headline3>

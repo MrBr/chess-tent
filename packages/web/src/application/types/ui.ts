@@ -1,5 +1,4 @@
 import {
-  Component,
   ComponentProps,
   ComponentType,
   ReactElement,
@@ -63,17 +62,17 @@ export declare interface TextProps {
 export type UIComponent<T = {}> = ComponentType<
   T & { className?: string; defaultProps?: Partial<T & { className: string }> }
 >;
-class DropdownClass extends Component<ComponentProps<typeof Dropdown>> {
-  static Toggle: ComponentType<
-    ComponentProps<typeof DropdownToggle> & {
+type D = ComponentType<ComponentProps<typeof Dropdown>> & {
+  Toggle: ComponentType<
+    Omit<ComponentProps<typeof DropdownToggle>, 'size'> & {
       size?: 'regular' | 'small' | 'extra-small';
     }
   >;
-  static Menu: typeof Dropdown['Menu'];
-  static Item: typeof Dropdown['Item'];
-  static Divider: typeof Dropdown['Divider'];
-  static Header: typeof Dropdown['Header'];
-}
+  Menu: typeof Dropdown['Menu'];
+  Item: typeof Dropdown['Item'];
+  Divider: typeof Dropdown['Divider'];
+  Header: typeof Dropdown['Header'];
+};
 
 export type UI = {
   Form: typeof Formik & {
@@ -107,7 +106,7 @@ export type UI = {
     style?: {};
   }>;
   FramedProfile: ComponentType<{ src: string | undefined }>;
-  Dropdown: typeof DropdownClass;
+  Dropdown: D;
   Avatar: ComponentType<{
     src: string | undefined;
     size?: 'regular' | 'small' | 'large' | 'extra-small';

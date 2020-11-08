@@ -120,7 +120,7 @@ const EditorSidebar: ExerciseModule['EditorSidebar'] = ({
         </Col>
         <Col>
           <Dropdown
-            onSelect={(exerciseType: string) => {
+            onSelect={exerciseType => {
               updateStep(
                 updateStepState(step, {
                   exerciseType,

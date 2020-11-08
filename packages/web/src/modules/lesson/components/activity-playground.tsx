@@ -21,10 +21,10 @@ export default ({
             <Tabs
               id="activity-tabs"
               activeKey={activeTab}
-              onSelect={(eventKey: string) => setActiveTab(parseInt(eventKey))}
+              onSelect={eventKey => setActiveTab(parseInt(eventKey as string))}
             >
               {tabs.map((tab, index) => (
-                <Tab eventKey={index} title={tab.title} className="mt-4">
+                <Tab eventKey={index + ''} title={tab.title} className="mt-4">
                   {tab.sidebar}
                 </Tab>
               ))}

@@ -15,7 +15,7 @@ import {
 } from './Form';
 import { Container, Row, Col, Page } from './Grid';
 import { default as Select, Option } from './Select';
-import { Dropdown } from './Dropdown';
+import Dropdown from './Dropdown';
 import {
   Display1,
   Display2,
@@ -28,7 +28,7 @@ import {
   Text,
 } from './Text';
 import { Avatar, FramedProfile, Img, Thumbnail } from './Img';
-import { Card, CardBody } from './Card';
+import { CardBody, CardComponent } from './Card';
 import { Tab, Tabs } from './Tab';
 import Icon from './Icon';
 import Absolute from './Absolute';
@@ -52,7 +52,7 @@ application.ui.ErrorMessage = ErrorMessage;
 
 application.ui.Dropdown = Dropdown;
 
-application.ui.Card = Card;
+application.ui.Card = CardComponent;
 application.ui.CardBody = CardBody;
 
 application.ui.Img = Img;

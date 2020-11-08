@@ -1,13 +1,15 @@
 import RBCard from 'react-bootstrap/Card';
 import styled from '@emotion/styled';
-import { ComponentType } from 'react';
-import { ClickProps } from '@types';
+import { ComponentProps, ComponentType } from 'react';
+import { ClickProps, UI } from '@types';
 
-const Card = styled<ComponentType<ClickProps>>(RBCard)({
+const CardComponent = styled<
+  ComponentType<ComponentProps<RBCard> & ClickProps>
+>(RBCard)({
   background: 'transparent',
   border: 0,
-});
+}) as UI['Card'];
 
 const CardBody = RBCard.Body;
 
-export { Card, CardBody };
+export { CardComponent, CardBody };

@@ -5,6 +5,7 @@ import {
   ReactElement,
   ReactEventHandler,
   ReactNode,
+  ImgHTMLAttributes,
 } from 'react';
 import {
   ColProps,
@@ -101,11 +102,13 @@ export type UI = {
       size?: 'large' | 'regular';
     } & ClickProps
   >;
-  Img: ComponentType<{
-    src: string | undefined;
-    className?: string;
-    style?: {};
-  }>;
+  Img: ComponentType<
+    {
+      src: string | undefined;
+      className?: string;
+      style?: {};
+    } & ImgHTMLAttributes<unknown>
+  >;
   FramedProfile: ComponentType<{ src: string | undefined }>;
   Dropdown: typeof DropdownClass;
   Avatar: ComponentType<{

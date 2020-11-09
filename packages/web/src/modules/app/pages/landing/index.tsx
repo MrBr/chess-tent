@@ -44,6 +44,12 @@ const Header = styled(Container)(
   }),
 );
 
+const FirstSectionTextCol = styled(Col)(
+  mediaQueryEnhancer('xl', {
+    marginTop: '10.0625em',
+  }),
+);
+
 const Lesson = styled.div({
   background: `url(${lessonsUrl}) no-repeat center`,
   paddingTop: 'calc(100% * 0.63)',
@@ -51,25 +57,12 @@ const Lesson = styled.div({
   backgroundSize: '100% auto',
 });
 
-const ContentRow = styled(Row)({
-  marginTop: '10.0625em',
-  '@media (max-width: 1199px)': {
-    marginTop: '5em',
-  },
-  '@media (max-width: 991px)': {
-    marginTop: '1em',
-  },
-  '@media (max-width: 575px)': {
-    marginTop: 0,
-  },
-});
-
-const SectionRow = styled(Row)({
-  height: '100vh',
-  '@media (max-width: 1199px)': {
-    height: 'auto',
-  },
-});
+const SectionRow = styled(Row)(
+  { height: 'auto' },
+  mediaQueryEnhancer('xl', {
+    height: '100vh',
+  }),
+);
 
 const VerticalLine = styled.div({
   borderRight: '1px solid #E4E4E4',
@@ -96,21 +89,16 @@ export const LandingPage = () => (
         <Col className="d-sm-none" xs={12}>
           <Img src={heroUrl} height="160" className="invisible" />
         </Col>
-        <ContentRow
-          noGutters
-          className="flex-column align-items-start justify-content-md-between"
-        >
-          <Col xs={12}>
-            <Display2>Have serious skills and wish to teach chess?</Display2>
-            <Headline3>
-              Create engaging chess lessons and build your audience. Join early
-              beta and help us build flexible creator platform.
-            </Headline3>
-            <Button className="mt-4 py-4 px-5 my-md-4 my-lg-4 py-lg-4 px-lg-5">
-              Get beta access
-            </Button>
-          </Col>
-        </ContentRow>
+        <FirstSectionTextCol xs={12}>
+          <Display2>Have serious skills and wish to teach chess?</Display2>
+          <Headline3>
+            Create engaging chess lessons and build your audience. Join early
+            beta and help us build flexible creator platform.
+          </Headline3>
+          <Button className="mt-4 py-4 px-5 my-md-4 my-lg-4 py-lg-4 px-lg-5">
+            Get beta access
+          </Button>
+        </FirstSectionTextCol>
       </Col>
     </SectionRow>
     <Row className="my-sm-4 my-md-5 my-lg-5 my-xl-0">

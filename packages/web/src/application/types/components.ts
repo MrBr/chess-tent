@@ -285,6 +285,9 @@ export type Components = {
     } & Pick<ComponentProps<UI['Avatar']>, 'size' | 'onClick'>
   >;
   Coaches: ComponentType;
+  CoachCard: ComponentType<{
+    coach: User
+  }>;
   Activities: ComponentType<{ activities: Activity[] | null }>;
   Conversations: ComponentType;
   MessageButton: ComponentType<{

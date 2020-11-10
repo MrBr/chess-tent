@@ -1,5 +1,5 @@
 import React from 'react';
-import { ui, utils } from '@application';
+import { ui, utils, components } from '@application';
 import styled from '@emotion/styled';
 
 import heroUrl from '../../images/hero.png';
@@ -7,6 +7,8 @@ import lessonsUrl from '../../images/lessons.png';
 import boardSrc from '../../images/board.svg';
 import brainSrc from '../../images/brain.svg';
 import kingSrc from '../../images/king.svg';
+
+const { Link } = components;
 
 const {
   Display2,
@@ -75,6 +77,9 @@ const VerticalLine = styled.div({
 
 export const LandingPage = () => (
   <Container fluid className="pb-5">
+    <Button>
+      <Link to={`/login`}>Login</Link>
+    </Button>
     <Header fluid />
     <SectionRow noGutters>
       <Col

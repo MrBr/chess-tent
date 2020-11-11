@@ -10,5 +10,5 @@ export default () => {
   const edit = new URLSearchParams(location.search).get('edit');
   const [user] = useActiveUserRecord() as [User, never, never];
 
-  return edit ? <ProfileEdit user={user} /> : <Profile user={user} />;
+  return edit ? <ProfileEdit user={user} /> : <Profile user={user} editable />;
 };

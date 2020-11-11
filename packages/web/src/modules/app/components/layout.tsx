@@ -28,13 +28,14 @@ export default styled<Components['Layout']>(({ className, children }) => (
     padding: '0 5em',
     background: '#FAFBFB',
     position: 'relative',
+    overflowY: 'scroll',
   },
   '.layout-sidebar': {
     gridArea: 'sidebar',
     position: 'relative',
   },
   display: 'grid',
-  gridTemplateRows: 'min-content auto',
+  gridTemplateRows: 'min-content calc(100vh - 96px)',
   gridTemplateColumns: '4fr 1fr',
   gridTemplateAreas: `
     "header header"

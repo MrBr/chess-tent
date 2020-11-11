@@ -61,7 +61,10 @@ export declare interface TextProps {
 }
 
 export type UIComponent<T = {}> = ComponentType<
-  T & { className?: string; defaultProps?: Partial<T & { className: string }> }
+  T & {
+    className?: string;
+    defaultProps?: Partial<T & { className: string }>;
+  } & ClickProps
 >;
 type D = ComponentType<ComponentProps<typeof Dropdown>> & {
   Toggle: ComponentType<
@@ -94,13 +97,11 @@ export type UI = {
   Headline4: UIComponent;
   Headline5: UIComponent;
   Headline6: UIComponent;
-  Icon: UIComponent<
-    {
-      type: 'close' | 'comment';
-      textual?: boolean;
-      size?: 'large' | 'regular';
-    } & ClickProps
-  >;
+  Icon: UIComponent<{
+    type: 'close' | 'comment';
+    textual?: boolean;
+    size?: 'large' | 'regular';
+  }>;
   Img: ComponentType<{
     src: string | undefined;
     className?: string;
@@ -126,21 +127,19 @@ export type UI = {
   Select: typeof Select;
   Option: ComponentType<OptionProps<any>>;
   Check: typeof FormCheck;
-  Container: UIComponent<ContainerProps & ClickProps>;
-  Absolute: UIComponent<
-    {
-      top?: number;
-      right?: number;
-      bottom?: number;
-      left?: number;
-      zIndex?: number;
-    } & ClickProps
-  >;
+  Container: UIComponent<ContainerProps>;
+  Absolute: UIComponent<{
+    top?: number;
+    right?: number;
+    bottom?: number;
+    left?: number;
+    zIndex?: number;
+  }>;
   Page: UIComponent<ContainerProps>;
   Tabs: typeof Tabs;
   Tab: typeof Tab;
-  Row: UIComponent<RowProps & ClickProps>;
-  Col: UIComponent<ColProps & ClickProps>;
+  Row: UIComponent<RowProps>;
+  Col: UIComponent<ColProps>;
   ErrorMessage: UIComponent<ErrorMessageProps>;
   Button: UIComponent<ButtonProps>;
   ToggleButton: UIComponent<

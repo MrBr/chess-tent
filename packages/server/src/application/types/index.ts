@@ -39,7 +39,7 @@ export type Service = {
   generateApiToken: (user: User) => string;
   verifyToken: (token?: string) => Auth["apiTokenPayload"] | null;
 
-  getUser: (userId: Partial<User>, projection?: string) => Promise<User | null>;
+  getUser: (user: Partial<User>, projection?: string) => Promise<User | null>;
 
   generateImgUrl: () => string;
   fileStorage: AWS.S3;

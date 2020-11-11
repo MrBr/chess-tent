@@ -3,7 +3,7 @@ import { components, hooks, ui, requests, hoc } from '@application';
 import { User } from '@chess-tent/models';
 import { FileUploaderProps } from '@types';
 
-const { useApi } = hooks;
+const { useApi, useHistory } = hooks;
 const { UserAvatar, Layout } = components;
 const { Absolute, Button } = ui;
 const { withFiles } = hoc;
@@ -20,6 +20,7 @@ const {
 
 export default withFiles(
   ({ files, openFileDialog, user }: FileUploaderProps & { user: User }) => {
+    const history = useHistory();
     const { fetch: signImage, response: signImageResponse } = useApi(
       requests.signImageUrl,
     );
@@ -46,23 +47,36 @@ export default withFiles(
 
     useEffect(() => {
       if (uploadImageResponse && signImageResponse) {
-        updateMe({ imageUrl: uploadImageResponse });
+        updateMe({ state: { imageUrl: uploadImageResponse } });
       }
     }, [uploadImageResponse, signImageResponse, updateMe]);
 
     return (
       <Layout>
         <Form initialValues={user} onSubmit={user => updateMe(user)}>
-          {({ dirty, handleSubmit }) => (
+          {({ dirty, handleSubmit, resetForm, values }) => (
             <>
               <Absolute bottom={25} right={25}>
-                {dirty ? (
-                  <Button variant="secondary" onClick={handleSubmit}>
-                    Save
-                  </Button>
-                ) : (
-                  <Button variant="regular">No changes</Button>
-                )}
+                <Button
+                  variant="regular"
+                  className="mr-4"
+                  onClick={() => {
+                    resetForm();
+                    history.goBack();
+                  }}
+                >
+                  {dirty ? 'Cancel' : 'Done'}
+                </Button>
+                <Button
+                  variant={dirty ? 'secondary' : 'regular'}
+                  disabled={!dirty}
+                  onClick={() => {
+                    handleSubmit();
+                    resetForm({ values });
+                  }}
+                >
+                  Save
+                </Button>
               </Absolute>
 
               <Row>
@@ -75,44 +89,54 @@ export default withFiles(
                 </Col>
                 <Col>
                   <Headline3>{user.name}</Headline3>
-                  <FormGroup>
-                    <Label>Punchline</Label>
-                    <Form.Input
-                      value={user.punchline}
-                      as="textarea"
-                      rows={2}
-                      name="punchline"
-                    />
-                  </FormGroup>
-                  <FormGroup>
-                    <Label>Preferred elo</Label>
-                    <Form.Input
-                      value={user.studentElo}
-                      name="studentElo"
-                      type="number"
-                    />
-                  </FormGroup>
-                  <FormGroup>
-                    <Label>Pricing</Label>
-                    <InputGroup>
-                      <Form.Input
-                        value={user.pricing}
-                        name="pricing"
-                        type="number"
-                      />
-                      <InputGroup.Append>
-                        <InputGroup.Text>$/hr</InputGroup.Text>
-                      </InputGroup.Append>
-                    </InputGroup>
-                  </FormGroup>
-                  <FormGroup>
-                    <Label>Availability</Label>
-                    <Form.Input value={user.availability} name="availability" />
-                  </FormGroup>
-                  <FormGroup>
-                    <Label>Speciality</Label>
-                    <Form.Input value={user.speciality} name="speciality" />
-                  </FormGroup>
+                  {user.coach && (
+                    <>
+                      <FormGroup>
+                        <Label>Punchline</Label>
+                        <Form.Input
+                          value={user.state.punchline}
+                          as="textarea"
+                          rows={2}
+                          name="punchline"
+                        />
+                      </FormGroup>
+                      <FormGroup>
+                        <Label>Preferred elo</Label>
+                        <Form.Input
+                          value={user.state.studentElo}
+                          name="state.studentElo"
+                          type="number"
+                        />
+                      </FormGroup>
+                      <FormGroup>
+                        <Label>Pricing</Label>
+                        <InputGroup>
+                          <Form.Input
+                            value={user.state.pricing}
+                            name="state.pricing"
+                            type="number"
+                          />
+                          <InputGroup.Append>
+                            <InputGroup.Text>$/hr</InputGroup.Text>
+                          </InputGroup.Append>
+                        </InputGroup>
+                      </FormGroup>
+                      <FormGroup>
+                        <Label>Availability</Label>
+                        <Form.Input
+                          value={user.state.availability}
+                          name="state.availability"
+                        />
+                      </FormGroup>
+                      <FormGroup>
+                        <Label>Speciality</Label>
+                        <Form.Input
+                          value={user.state.speciality}
+                          name="state.speciality"
+                        />
+                      </FormGroup>
+                    </>
+                  )}
                 </Col>
                 <Col>
                   <Headline4>About me</Headline4>
@@ -120,8 +144,8 @@ export default withFiles(
                     <Form.Input
                       as="textarea"
                       rows={5}
-                      value={user.about}
-                      name="about"
+                      value={user.state.about}
+                      name="state.about"
                     />
                   </FormGroup>
                 </Col>
@@ -131,31 +155,33 @@ export default withFiles(
                     <Form.Input
                       as="textarea"
                       rows={5}
-                      value={user.playingExperience}
-                      name="playingExperience"
+                      value={user.state.playingExperience}
+                      name="state.playingExperience"
                     />
                   </FormGroup>
                 </Col>
-                <Col>
-                  <Headline4>Teaching experience</Headline4>
-                  <FormGroup>
-                    <Form.Input
-                      as="textarea"
-                      rows={5}
-                      value={user.playingExperience}
-                      name="playingExperience"
-                    />
-                  </FormGroup>
-                  <Headline4>Teaching methodology</Headline4>
-                  <FormGroup>
-                    <Form.Input
-                      as="textarea"
-                      rows={5}
-                      value={user.teachingMethodology}
-                      name="teachingMethodology"
-                    />
-                  </FormGroup>
-                </Col>
+                {user.coach && (
+                  <Col>
+                    <Headline4>Teaching experience</Headline4>
+                    <FormGroup>
+                      <Form.Input
+                        as="textarea"
+                        rows={5}
+                        value={user.state.teachingExperience}
+                        name="state.teachingExperience"
+                      />
+                    </FormGroup>
+                    <Headline4>Teaching methodology</Headline4>
+                    <FormGroup>
+                      <Form.Input
+                        as="textarea"
+                        rows={5}
+                        value={user.state.teachingMethodology}
+                        name="state.teachingMethodology"
+                      />
+                    </FormGroup>
+                  </Col>
+                )}
               </Row>
             </>
           )}

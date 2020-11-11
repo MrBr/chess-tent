@@ -76,7 +76,7 @@ export default () => {
               <Text weight={700} className="m-0" fontSize="small">
                 {participant.name}
               </Text>
-              <Text className="m-0" fontSize="small">
+              <Text className="m-0 text-truncate" fontSize="small">
                 {conversation.messages[0]?.message}
               </Text>
             </Col>

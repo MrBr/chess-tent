@@ -25,10 +25,10 @@ export const updateUser = (userId: User["id"], user: Partial<User>) =>
     );
   });
 
-export const getUser: Service["getUser"] = (user, projection = "") =>
+export const getUser: Service["getUser"] = (userDescr, projection = "") =>
   new Promise(resolve => {
     UserModel.findOne(
-      UserModel.translateAliases(user),
+      UserModel.translateAliases(userDescr),
       projection,
       (err, user) => {
         if (err) {

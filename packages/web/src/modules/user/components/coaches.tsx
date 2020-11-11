@@ -2,7 +2,12 @@ import React, { useEffect } from 'react';
 import { requests, hooks, ui } from '@application';
 import styled from '@emotion/styled';
 
-const { useApi, useComponentStateSilent, useConversationParticipant } = hooks;
+const {
+  useApi,
+  useComponentStateSilent,
+  useConversationParticipant,
+  useHistory,
+} = hooks;
 const {
   Card,
   Container,
@@ -25,6 +30,7 @@ const CoachCard = styled(Card)({
 
 export default () => {
   const { mounted } = useComponentStateSilent();
+  const history = useHistory();
   const [, setConversationParticipant] = useConversationParticipant();
   const { fetch: fetchCoaches, response } = useApi(requests.users);
 
@@ -38,9 +44,14 @@ export default () => {
         {response?.data.map(coach => (
           <Col key={coach.id} className="col-auto">
             <CoachCard>
-              <FramedProfile src={coach.imageUrl} />
+              <FramedProfile src={coach.state.imageUrl} />
               <CardBody>
-                <Headline4 className="mt-1">{coach.name}</Headline4>
+                <Headline4
+                  className="mt-1 cursor-pointer"
+                  onClick={() => history.push(`/user/${coach.id}`)}
+                >
+                  {coach.name}
+                </Headline4>
                 <Text>Some cool phrase</Text>
                 <Text fontSize="small">Up to ELO</Text>
                 <Button

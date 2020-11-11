@@ -3,7 +3,13 @@ import { UI } from '@types';
 import React, { ComponentProps } from 'react';
 import { getBorderRadiusSize } from './enhancers';
 
-export const Img = styled.img({ width: '100%' }) as UI['Img'];
+export const Img = styled.img(
+  ({ width, height }) =>
+    !width &&
+    !height && {
+      width: '100%',
+    },
+) as UI['Img'];
 
 const sizeEnhancer = (props: ComponentProps<UI['Avatar']>) => {
   let size;

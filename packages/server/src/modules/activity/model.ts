@@ -1,4 +1,4 @@
-import { model, Schema, Document } from "mongoose";
+import { Schema } from "mongoose";
 import {
   Activity,
   NormalizedActivity,
@@ -18,9 +18,7 @@ export interface DepupulatedActivity {
   users: NormalizedActivity["users"];
 }
 
-export type ActivityDocument = DepupulatedActivity & Document;
-
-const activitySchema = db.createStandardSchema<DepupulatedActivity>(
+const activitySchema = db.createSchema<DepupulatedActivity>(
   {
     subject: ({
       type: String,
@@ -52,7 +50,10 @@ const activitySchema = db.createStandardSchema<DepupulatedActivity>(
   { minimize: false }
 );
 
-const ActivityModel = model<ActivityDocument>(TYPE_ACTIVITY, activitySchema);
+const ActivityModel = db.createModel<DepupulatedActivity>(
+  TYPE_ACTIVITY,
+  activitySchema
+);
 
 const depopulate = (activity: Activity<Subject>): DepupulatedActivity => {
   const users = activity.users.map(user => user.id);

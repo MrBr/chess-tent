@@ -1,8 +1,7 @@
-import { model, Document } from "mongoose";
 import { TYPE_TAG, NormalizedTag } from "@chess-tent/models";
 import { db } from "@application";
 
-const tagSchema = db.createStandardSchema<NormalizedTag>({
+const tagSchema = db.createSchema<NormalizedTag>({
   type: ({
     type: String,
     default: TYPE_TAG
@@ -14,6 +13,6 @@ const tagSchema = db.createStandardSchema<NormalizedTag>({
   } as unknown) as NormalizedTag["text"]
 });
 
-const TagModel = model<NormalizedTag & Document>(TYPE_TAG, tagSchema);
+const TagModel = db.createModel<NormalizedTag>(TYPE_TAG, tagSchema);
 
 export { tagSchema, TagModel };

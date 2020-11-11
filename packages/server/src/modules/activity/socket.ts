@@ -6,8 +6,7 @@ import {
   UPDATE_ACTIVITY,
   SET_ACTIVITY_ACTIVE_STEP
 } from "@chess-tent/types";
-import { canEditActivity, getActivity } from "./service";
-import { Auth } from "@types";
+import { canEditActivity } from "./service";
 
 socket.registerMiddleware(async (stream, next) => {
   // Handle activity channel subscription
@@ -20,7 +19,7 @@ socket.registerMiddleware(async (stream, next) => {
       console.log("Unauthorized socket subscribe");
       return;
     }
-    const [prefix, activityId] = stream.data.split("-");
+    const [, activityId] = stream.data.split("-");
     const canJoin = await canEditActivity(activityId, tokenData.user.id);
     if (canJoin) {
       console.log("Client joined to", stream.data);

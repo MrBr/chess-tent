@@ -1,4 +1,4 @@
-import { model, Schema, Document } from "mongoose";
+import { Schema } from "mongoose";
 import {
   TYPE_MENTORSHIP,
   TYPE_USER,
@@ -6,7 +6,7 @@ import {
 } from "@chess-tent/models";
 import { db } from "@application";
 
-const mentorshipSchema = db.createStandardSchema<NormalizedMentorship>(
+const mentorshipSchema = db.createSchema<NormalizedMentorship>(
   {
     type: ({
       type: String,
@@ -31,7 +31,7 @@ const mentorshipSchema = db.createStandardSchema<NormalizedMentorship>(
 );
 mentorshipSchema.index({ student: 1, coach: 1 }, { unique: true });
 
-const MentorshipModel = model<NormalizedMentorship & Document>(
+const MentorshipModel = db.createModel<NormalizedMentorship>(
   TYPE_MENTORSHIP,
   mentorshipSchema
 );

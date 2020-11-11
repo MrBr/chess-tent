@@ -35,7 +35,7 @@ export const findActivities: MiddlewareFunction = (req, res, next) => {
 
 export const canEditActivity: MiddlewareFunction = (req, res, next) => {
   service
-    .canEditActivity(res.locals.activity.id, res.locals.user.id)
+    .canEditActivity(res.locals.activity.id, res.locals.me.id)
     .then(canEdit => {
       if (canEdit) {
         next();

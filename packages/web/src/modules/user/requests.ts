@@ -29,9 +29,15 @@ const updateMe = services.createRequest<Partial<User>, UserResponse>(
   '/me',
 );
 
+const user = services.createRequest<User['id'], UserResponse>(
+  'GET',
+  userId => ({ url: `/user/${userId}` }),
+);
+
 requests.register = register;
 requests.login = login;
 requests.logout = logout;
 requests.me = me;
 requests.users = users;
+requests.user = user;
 requests.updateMe = updateMe;

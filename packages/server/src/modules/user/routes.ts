@@ -4,9 +4,9 @@ import {
   validateUser,
   verifyUser,
   hashPassword,
-  getActiveUser,
   updateUser,
-  findUsers
+  findUsers,
+  getUser
 } from "./middleware";
 
 const {
@@ -48,14 +48,23 @@ application.service.registerGetRoute("/logout", webLogout, sendStatusOk);
 application.service.registerGetRoute(
   "/me",
   identify,
-  getActiveUser,
+  toLocals("user", (req, res) => res.locals.me),
+  getUser,
+  sendData("user")
+);
+
+application.service.registerGetRoute(
+  "/user/:userId",
+  identify,
+  toLocals("user.id", req => req.params.userId),
+  getUser,
   sendData("user")
 );
 
 application.service.registerPutRoute(
   "/me",
   identify,
-  toLocals("user", (req, res) => ({ ...req.body, ...res.locals.user })),
+  toLocals("user", (req, res) => ({ ...req.body, ...res.locals.me })),
   updateUser,
   sendStatusOk
 );

@@ -67,6 +67,7 @@ export type Requests = {
   logout: RequestFetch<undefined, StatusResponse>;
   me: RequestFetch<undefined, UserResponse>;
   users: RequestFetch<{ coach?: boolean; name?: string }, UsersResponse>;
+  user: RequestFetch<User["id"], UserResponse>;
   updateMe: RequestFetch<Partial<User>, UserResponse>;
   lesson: RequestFetch<[string], LessonResponse>;
   lessonSave: RequestFetch<Lesson, StatusResponse>;

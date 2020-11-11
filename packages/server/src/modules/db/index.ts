@@ -1,7 +1,7 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose from "mongoose";
 import application from "@application";
 
-import { createStandardSchema } from "./utils";
+import { createModel, createSchema } from "./utils";
 
 // Connection URL
 const url = process.env.DB_URL;
@@ -24,6 +24,7 @@ application.db.connect = () => {
   });
 };
 
-application.db.createStandardSchema = createStandardSchema;
+application.db.createSchema = createSchema;
+application.db.createModel = createModel;
 
 export {};

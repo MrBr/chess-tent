@@ -13,12 +13,12 @@ export const identify: Middleware["identify"] = (req, res, next) => {
     throw new UnauthorizedError();
   }
 
-  res.locals.user = tokenPayload.user;
+  res.locals.me = tokenPayload.user;
   next();
 };
 
 export const webLogin: Middleware["webLogin"] = (req, res, next) => {
-  const token = application.service.generateApiToken(res.locals.user);
+  const token = application.service.generateApiToken(res.locals.me);
   res.cookie(COOKIE_TOKEN_KEY, token, { httpOnly: true });
   next();
 };

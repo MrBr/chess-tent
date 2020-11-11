@@ -54,7 +54,7 @@ export const canEditLesson: MiddlewareFunction = (req, res, next) => {
   service
     .getLesson(res.locals.lesson.id)
     .then(lesson => {
-      if (!lesson || lesson.owner.id === res.locals.user.id) {
+      if (!lesson || lesson.owner.id === res.locals.me.id) {
         next();
         return;
       }

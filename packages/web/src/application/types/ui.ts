@@ -1,5 +1,4 @@
 import {
-  Component,
   ComponentProps,
   ComponentType,
   ReactElement,
@@ -18,6 +17,7 @@ import {
   RowProps,
   Tabs,
   Tab,
+  InputGroup,
 } from 'react-bootstrap';
 import DropdownToggle from 'react-bootstrap/DropdownToggle';
 import { ErrorMessageProps, Formik } from 'formik';
@@ -62,23 +62,26 @@ export declare interface TextProps {
 }
 
 export type UIComponent<T = {}> = ComponentType<
-  T & { className?: string; defaultProps?: Partial<T & { className: string }> }
+  T & {
+    className?: string;
+    defaultProps?: Partial<T & { className: string }>;
+  } & ClickProps
 >;
-class DropdownClass extends Component<ComponentProps<typeof Dropdown>> {
-  static Toggle: ComponentType<
-    ComponentProps<typeof DropdownToggle> & {
+type D = ComponentType<ComponentProps<typeof Dropdown>> & {
+  Toggle: ComponentType<
+    Omit<ComponentProps<typeof DropdownToggle>, 'size'> & {
       size?: 'regular' | 'small' | 'extra-small';
     }
   >;
-  static Menu: typeof Dropdown['Menu'];
-  static Item: typeof Dropdown['Item'];
-  static Divider: typeof Dropdown['Divider'];
-  static Header: typeof Dropdown['Header'];
-}
+  Menu: typeof Dropdown['Menu'];
+  Item: typeof Dropdown['Item'];
+  Divider: typeof Dropdown['Divider'];
+  Header: typeof Dropdown['Header'];
+};
 
 export type UI = {
   Form: typeof Formik & {
-    Input: UIComponent<FormControlProps & { name: string }>;
+    Input: UIComponent<FormControlProps & { rows?: number; name: string }>;
     Check: UIComponent<FormCheckInputProps & { name: string }>;
     Select: UIComponent<
       Omit<FormControlProps, 'value'> & {
@@ -95,13 +98,11 @@ export type UI = {
   Headline4: UIComponent;
   Headline5: UIComponent;
   Headline6: UIComponent;
-  Icon: UIComponent<
-    {
-      type: 'close' | 'comment';
-      textual?: boolean;
-      size?: 'large' | 'regular';
-    } & ClickProps
-  >;
+  Icon: UIComponent<{
+    type: 'close' | 'comment';
+    textual?: boolean;
+    size?: 'large' | 'regular';
+  }>;
   Img: ComponentType<
     {
       src: string | undefined;
@@ -110,7 +111,7 @@ export type UI = {
     } & ImgHTMLAttributes<unknown>
   >;
   FramedProfile: ComponentType<{ src: string | undefined }>;
-  Dropdown: typeof DropdownClass;
+  Dropdown: D;
   Avatar: ComponentType<{
     src: string | undefined;
     size?: 'regular' | 'small' | 'large' | 'extra-small';
@@ -125,24 +126,23 @@ export type UI = {
   Label: UIComponent<FormLabelProps>;
   FormGroup: UIComponent<FormGroupProps>;
   Input: typeof FormControl;
+  InputGroup: typeof InputGroup;
   Select: typeof Select;
   Option: ComponentType<OptionProps<any>>;
   Check: typeof FormCheck;
-  Container: UIComponent<ContainerProps & ClickProps>;
-  Absolute: UIComponent<
-    {
-      top?: number;
-      right?: number;
-      bottom?: number;
-      left?: number;
-      zIndex?: number;
-    } & ClickProps
-  >;
+  Container: UIComponent<ContainerProps>;
+  Absolute: UIComponent<{
+    top?: number;
+    right?: number;
+    bottom?: number;
+    left?: number;
+    zIndex?: number;
+  }>;
   Page: UIComponent<ContainerProps>;
   Tabs: typeof Tabs;
   Tab: typeof Tab;
-  Row: UIComponent<RowProps & ClickProps>;
-  Col: UIComponent<ColProps & ClickProps>;
+  Row: UIComponent<RowProps>;
+  Col: UIComponent<ColProps>;
   ErrorMessage: UIComponent<ErrorMessageProps>;
   Button: UIComponent<ButtonProps>;
   ToggleButton: UIComponent<

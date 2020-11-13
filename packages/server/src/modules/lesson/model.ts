@@ -1,4 +1,4 @@
-import { model, Schema, Document } from "mongoose";
+import { Schema } from "mongoose";
 import {
   Difficulty,
   Lesson,
@@ -18,9 +18,7 @@ export interface DepupulatedLesson {
   tags: NormalizedLesson["tags"];
 }
 
-export type LessonDocument = DepupulatedLesson & Document;
-
-const lessonSchema = db.createStandardSchema<DepupulatedLesson>(
+const lessonSchema = db.createSchema<DepupulatedLesson>(
   {
     owner: ({
       type: String,
@@ -50,7 +48,10 @@ const lessonSchema = db.createStandardSchema<DepupulatedLesson>(
   { minimize: false }
 );
 
-const LessonModel = model<LessonDocument>(TYPE_LESSON, lessonSchema);
+const LessonModel = db.createModel<DepupulatedLesson>(
+  TYPE_LESSON,
+  lessonSchema
+);
 
 const depopulate = (lesson: Partial<Lesson>): DepupulatedLesson => {
   const owner = lesson.owner?.id;

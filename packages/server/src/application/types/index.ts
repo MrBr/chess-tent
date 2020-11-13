@@ -1,18 +1,18 @@
 import { register } from "core-module";
 import { ErrorRequestHandler, RequestHandler } from "express";
-import { Schema, SchemaOptions } from "mongoose";
+import { Schema, SchemaOptions, Document, Model } from "mongoose";
 import { NormalizedUser, User } from "@chess-tent/models";
 import { Socket } from "socket.io";
-import { Actions } from "@chess-tent/types";
 import { Server as HttpServer } from "http";
 
 export type DB = {
   connect: () => void;
-  createStandardSchema: <T extends {}>(
+  createSchema: <T extends {}>(
     definition: Omit<T, "id">,
     options?: SchemaOptions,
     useDefault?: boolean
   ) => Schema;
+  createModel: <T>(type: string, schema: Schema) => Model<Document & T>;
 };
 
 export type Auth = {
@@ -39,7 +39,7 @@ export type Service = {
   generateApiToken: (user: User) => string;
   verifyToken: (token?: string) => Auth["apiTokenPayload"] | null;
 
-  getUser: (userId: Partial<User>, projection?: string) => Promise<User | null>;
+  getUser: (user: Partial<User>, projection?: string) => Promise<User | null>;
 
   generateImgUrl: () => string;
   fileStorage: AWS.S3;

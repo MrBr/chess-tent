@@ -1,17 +1,17 @@
-import { Schema } from "mongoose";
+import { Document, model, Schema, SchemaOptions } from "mongoose";
 import { DB } from "@types";
 import { v4 as uuid } from "uuid";
-const transformRemove_id = <T>(
-  doc: unknown,
-  ret: T extends { _id: any } ? T : never
-) => {
+
+const createTransformRemove_id = <T>(
+  transform?: (doc: any, ret: any, options: any) => any
+) => (doc: unknown, ret: T extends { _id: any } ? T : never, options: any) => {
   delete ret._id;
-  return ret;
+  return transform ? transform(doc, ret, options) : ret;
 };
 
-export const createStandardSchema: DB["createStandardSchema"] = (
-  definition,
-  options = {},
+export const createSchema: DB["createSchema"] = <T extends {}>(
+  definition: T,
+  options: SchemaOptions = {},
   useDefault = true
 ) => {
   const defaultDefinition = {
@@ -28,15 +28,23 @@ export const createStandardSchema: DB["createStandardSchema"] = (
       ...options,
       toJSON: {
         virtuals: true,
-        transform: transformRemove_id,
-        ...(options.toJSON || {})
+        ...(options.toJSON || {}),
+        transform: createTransformRemove_id(options.toJSON?.transform)
       },
       toObject: {
         virtuals: true,
-        transform: transformRemove_id,
-        ...(options.toObject || {})
+        ...(options.toObject || {}),
+        transform: createTransformRemove_id(options.toObject?.transform)
       }
     }
   );
   return schema;
+};
+
+export const createModel: DB["createModel"] = <T>(
+  type: string,
+  schema: Schema
+) => {
+  const newModel = model<Document & T>(type, schema);
+  return newModel;
 };

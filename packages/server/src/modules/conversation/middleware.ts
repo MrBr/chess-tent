@@ -61,7 +61,7 @@ export const canEditConversation: MiddlewareFunction = (req, res, next) => {
     .then(conversation => {
       if (
         !conversation ||
-        conversation.users.some(user => user.id === res.locals.user.id)
+        conversation.users.some(user => user.id === res.locals.me.id)
       ) {
         next();
         return;

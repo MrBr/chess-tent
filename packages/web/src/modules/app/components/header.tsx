@@ -37,11 +37,12 @@ const TabButton = styled<
 export default () => {
   const history = useHistory();
   const logoutApi = useApi(requests.logout);
+  const [, , clear] = useActiveUserRecord();
   useEffect(() => {
     if (logoutApi.response) {
-      history.push('/');
+      clear();
     }
-  }, [history, logoutApi]);
+  }, [clear, logoutApi]);
   const [user] = useActiveUserRecord() as [User, never, never];
   return (
     <Container fluid className="h-100">

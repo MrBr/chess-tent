@@ -25,9 +25,9 @@ export const updateUser: MiddlewareFunction = (req, res, next) => {
     .catch(next);
 };
 
-export const getActiveUser: MiddlewareFunction = (req, res, next) => {
+export const getUser: MiddlewareFunction = (req, res, next) => {
   service
-    .getUser(res.locals.user as User)
+    .getUser(res.locals.user)
     .then(user => {
       res.locals.user = user;
       next();

@@ -13,7 +13,7 @@ class DifficultyDropdown extends React.Component<
   DifficultyDropdownProps,
   { editing: boolean }
 > {
-  onChange = (difficultyKey: string) => {
+  onChange = (difficultyKey: string | null) => {
     const { onChange } = this.props;
     onChange && onChange(Difficulty[difficultyKey as Difficulty]);
   };

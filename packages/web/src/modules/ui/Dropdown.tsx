@@ -49,4 +49,4 @@ BDropdown.Toggle.defaultProps = {
   as: Toggle,
 };
 
-export { BDropdown as Dropdown };
+export default BDropdown as UI['Dropdown'];

@@ -5,6 +5,11 @@ import { Components } from '@types';
 const { Avatar } = ui;
 
 const UserAvatar: Components['UserAvatar'] = ({ size, onClick, user }) => (
-  <Avatar size={size} onClick={onClick} src={user.imageUrl} name={user.name} />
+  <Avatar
+    size={size}
+    onClick={onClick}
+    src={user.state.imageUrl}
+    name={user.name}
+  />
 );
 export default UserAvatar;

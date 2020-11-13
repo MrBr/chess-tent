@@ -1,4 +1,4 @@
-import { model, Schema, Document } from "mongoose";
+import { Schema } from "mongoose";
 import {
   Conversation,
   NormalizedConversation,
@@ -7,7 +7,7 @@ import {
 } from "@chess-tent/models";
 import { db } from "@application";
 
-const conversationSchema = db.createStandardSchema<NormalizedConversation>({
+const conversationSchema = db.createSchema<NormalizedConversation>({
   type: ({
     type: String,
     default: TYPE_CONVERSATION
@@ -20,7 +20,7 @@ const conversationSchema = db.createStandardSchema<NormalizedConversation>({
   } as unknown) as NormalizedConversation["messages"]
 });
 
-const ConversationModel = model<NormalizedConversation & Document>(
+const ConversationModel = db.createModel<NormalizedConversation>(
   TYPE_CONVERSATION,
   conversationSchema
 );

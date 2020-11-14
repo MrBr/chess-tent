@@ -77,9 +77,7 @@ const VerticalLine = styled.div({
 
 export const LandingPage = () => (
   <Container fluid className="pb-5">
-    <Button>
-      <Link to={`/login`}>Login</Link>
-    </Button>
+    <Link to="/login">Login</Link>
     <Header fluid />
     <SectionRow noGutters>
       <Col

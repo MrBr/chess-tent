@@ -19,7 +19,6 @@ const {
   Row,
   Icon,
   Absolute,
-  Modal,
   Headline6,
 } = ui;
 
@@ -93,13 +92,21 @@ export default () => {
               validationSchema={LoginSchema}
               onSubmit={({ ...user }) => fetch(user)}
             >
-              <FormGroup>
-                <Label>Email</Label>
-                <Form.Input size="lg" type="email" name="email" />
+              <FormGroup className="pt-4">
+                <Form.Input
+                  size="lg"
+                  type="email"
+                  name="email"
+                  placeholder="Email address"
+                />
               </FormGroup>
-              <FormGroup>
-                <Label>Password</Label>
-                <Form.Input size="lg" type="password" name="password" />
+              <FormGroup className="pt-3">
+                <Form.Input
+                  size="lg"
+                  type="password"
+                  name="password"
+                  placeholder="Password"
+                />
               </FormGroup>
               <FormGroup className="w-100 d-flex justify-content-between align-items-center mt-4">
                 <Row className="w-100" noGutters>

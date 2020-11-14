@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import styled from '@emotion/styled';
-import { ui, hooks, requests, components } from '@application';
+import { ui, hooks, requests, components, utils } from '@application';
 import * as yup from 'yup';
 import { Link } from 'react-router-dom';
 
@@ -23,7 +23,7 @@ const {
   Headline6,
 } = ui;
 
-console.log({ Modal });
+const { mediaQueryEnhancer } = utils;
 
 const LoginSchema = yup.object().shape({
   password: yup.string().required(),
@@ -36,6 +36,12 @@ const LoginSchema = yup.object().shape({
 const NoWrapText = styled(Headline6)({
   whiteSpace: 'nowrap',
 });
+
+const LoginButton = styled(Button)(
+  mediaQueryEnhancer('xs', {
+    width: '100%',
+  }),
+);
 
 export default () => {
   const { fetch, loading, response } = useApi(requests.login);
@@ -97,19 +103,19 @@ export default () => {
               </FormGroup>
               <FormGroup className="w-100 d-flex justify-content-between align-items-center mt-4">
                 <Row className="w-100" noGutters>
-                  <Col className="col-12 col-sm-6 order-2 order-sm-1">
-                    <Text fontSize="small" className="text-center">
+                  <Col className="col-12 col-sm-6 order-2 order-sm-1 d-flex align-items-center justify-content-center justify-content-sm-start">
+                    <Text fontSize="small" className="text-center text-sm-left">
                       <u>Forgot password?</u>
                     </Text>
                   </Col>
-                  <Col className="col-12 col-sm-6 text-center order-1 order-sm-2">
-                    <Button
+                  <Col className="col-12 col-sm-6 order-1 order-sm-2 d-flex justify-content-center justify-content-sm-end">
+                    <LoginButton
                       type="submit"
                       disabled={loading}
-                      className="btn-block mb-3"
+                      className="mb-3"
                     >
                       Login
-                    </Button>
+                    </LoginButton>
                   </Col>
                 </Row>
               </FormGroup>

@@ -81,7 +81,9 @@ type D = ComponentType<ComponentProps<typeof Dropdown>> & {
 
 export type UI = {
   Form: typeof Formik & {
-    Input: UIComponent<FormControlProps & { rows?: number; name: string }>;
+    Input: UIComponent<
+      FormControlProps & { rows?: number; name: string; placeholder?: string }
+    >;
     Check: UIComponent<FormCheckInputProps & { name: string }>;
     Select: UIComponent<
       Omit<FormControlProps, 'value'> & {

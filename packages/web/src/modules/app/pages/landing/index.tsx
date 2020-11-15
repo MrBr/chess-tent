@@ -77,13 +77,18 @@ const VerticalLine = styled.div({
   width: 1,
 });
 
-const LoginButton = styled(Button)({
-  position: 'absolute',
-  right: '3rem',
-  // Headline3 margin top
-  top: '2.75rem',
-  zIndex: 2,
-});
+const LoginButton = styled(Button)(
+  {
+    position: 'absolute',
+    right: '3rem',
+    // Headline3 margin top
+    top: '2.75rem',
+    zIndex: 2,
+  },
+  mediaQueryEnhancer('xs', {
+    right: '1rem',
+  }),
+);
 
 export const LandingPage = () => {
   const history = useHistory();

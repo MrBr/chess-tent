@@ -56,6 +56,7 @@ export type EntitiesState = {
   activities: ActivityState;
   conversations: ConversationState;
   tags: TagState;
+  notifications: NotificationState;
 };
 /**
  * Records are used to store single entity reference
@@ -72,6 +73,7 @@ export type RecordType = {
 export type RecordState = Record<string, RecordType>;
 export type LessonState = EntityState<NormalizedLesson>;
 export type ConversationState = EntityState<NormalizedConversation>;
+export type NotificationState = EntityState<NormalizedNotification>;
 export type StepsState = EntityState<NormalizedStep>;
 export type ActivityState = EntityState<NormalizedActivity<Subject>>;
 export type UserState = EntityState<NormalizedUser>;
@@ -207,7 +209,7 @@ export type SendNotificationAction = Action<
   typeof SEND_NOTIFICATION,
   Notification
 >;
-export type NotificationUpdateAction = Action<
+export type UpdateNotificationAction = Action<
   typeof UPDATE_NOTIFICATION,
   NormalizedNotification,
   { id: Notification["id"] }
@@ -215,7 +217,7 @@ export type NotificationUpdateAction = Action<
 export type NotificationAction =
   | UpdateEntitiesAction
   | SendNotificationAction
-  | NotificationUpdateAction;
+  | UpdateNotificationAction;
 
 export type Actions =
   | MessageAction

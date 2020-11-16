@@ -59,11 +59,18 @@ const init: SocketService["init"] = server => {
 };
 
 const sendAction = (channel: string, stream: SocketStream) => {
-  // Using stream client to send action wont send it itself
+  // Using stream client wont send action to itself
   stream.client.in(channel).emit(ACTION_EVENT, stream.data);
+};
+
+const sendServerAction = (channel: string, data: SocketStream["data"]) => {
+  // Sending action to all the clients
+  // Be careful not to send action to the action owner
+  io.in(channel).emit(ACTION_EVENT, data);
 };
 
 application.socket.init = init;
 application.socket.sendAction = sendAction;
+application.socket.sendServerAction = sendServerAction;
 application.socket.identify = identify;
 application.socket.registerMiddleware = registerMiddleware;

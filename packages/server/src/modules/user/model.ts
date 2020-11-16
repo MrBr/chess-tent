@@ -30,6 +30,14 @@ const userSchema = db.createSchema<NormalizedUser>(
   },
   {
     minimize: false,
+    toJSON: {
+      transform: (doc, ret) => {
+        if (!ret.state) {
+          ret.state = {};
+        }
+        return ret;
+      }
+    },
     toObject: {
       transform: (doc, ret) => {
         if (!ret.state) {

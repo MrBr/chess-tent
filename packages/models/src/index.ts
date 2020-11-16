@@ -7,8 +7,10 @@ import { Chapter } from "./chapter";
 import { Message } from "./message";
 import { Tag } from "./tag";
 import { Analysis } from "./analysis";
+import { Notification } from "./notification";
 
 export * from "./analysis";
+export * from "./notification";
 export * from "./subject";
 export * from "./conversation";
 export * from "./message";
@@ -29,4 +31,5 @@ export type Entity =
   | Chapter
   | Message
   | Tag
-  | Analysis;
+  | Analysis
+  | Notification;

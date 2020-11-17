@@ -78,7 +78,8 @@ const initService = (schemaMap: { [key: string]: Schema }) => {
       entities
     );
 
-    cache[entity.type][entity.id] = entity;
+    // Can denormalized entity be cached here? How does it affect cachedEntities?
+    // cache[entity.type][entity.id] = entity;
     entities[type][normalizedEntity.id] = normalizedEntity;
 
     return { result: normalizedEntity, entities };
@@ -109,7 +110,7 @@ const initService = (schemaMap: { [key: string]: Schema }) => {
         );
       } else if (Array.isArray(relationshipValue)) {
         let collectionChanged =
-          cachedEntityState[attribute].length !== relationshipValue.length;
+          cachedEntityState[attribute]?.length !== relationshipValue.length;
         let index = 0;
         freshValue = [];
         while (index < relationshipValue.length) {
@@ -167,7 +168,7 @@ const initService = (schemaMap: { [key: string]: Schema }) => {
     );
     if (freshEntity !== cachedEntity) {
       cache[type][id] = freshEntity;
-      cacheEntities[type][id] = entities;
+      cacheEntities[type][id] = entities; // TODO - use entities version instead of entities to prevent memory leak
       prevEntities[type][id] = entity;
     }
     return freshEntity;

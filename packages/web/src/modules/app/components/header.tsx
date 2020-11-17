@@ -5,7 +5,7 @@ import { User } from '@chess-tent/models';
 
 const { Container, Headline4, Row, Col, Dropdown, Text } = ui;
 const { useHistory, useApi, useActiveUserRecord } = hooks;
-const { UserAvatar } = components;
+const { UserAvatar, NotificationStand } = components;
 const TabButton = styled<
   FunctionComponent<{ path: string; className?: string }>
 >(({ className, path, children }) => {
@@ -59,6 +59,7 @@ export default () => {
           <TabButton path="/lesson/new">Create Lesson</TabButton>
         </Col>
         <Col className="d-flex justify-content-end" xs={3}>
+          <NotificationStand />
           <Dropdown>
             <Dropdown.Toggle id="header-user">
               <UserAvatar size="small" user={user} />

@@ -271,4 +271,5 @@ export type Components = {
   Conversations: ComponentType;
   AnalysisBoard: ComponentType<AnalysisSystemProps & StepBoardComponentProps>;
   AnalysisSidebar: ComponentType<AnalysisSystemProps>;
+  NotificationStand: ComponentType;
 };

@@ -10,4 +10,10 @@ application.register(
       module.updateNotificationAction;
   },
 );
+application.register(
+  () => import('./components/stand'),
+  module => {
+    application.components.NotificationStand = module.default;
+  },
+);
 application.register(() => import('./requests'));

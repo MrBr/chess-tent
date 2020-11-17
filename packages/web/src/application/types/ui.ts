@@ -67,17 +67,6 @@ export type UIComponent<T = {}> = ComponentType<
     defaultProps?: Partial<T & { className: string }>;
   } & ClickProps
 >;
-type D = ComponentType<ComponentProps<typeof Dropdown>> & {
-  Toggle: ComponentType<
-    Omit<ComponentProps<typeof DropdownToggle>, 'size'> & {
-      size?: 'regular' | 'small' | 'extra-small';
-    }
-  >;
-  Menu: typeof Dropdown['Menu'];
-  Item: typeof Dropdown['Item'];
-  Divider: typeof Dropdown['Divider'];
-  Header: typeof Dropdown['Header'];
-};
 
 export type UI = {
   Form: typeof Formik & {
@@ -99,7 +88,7 @@ export type UI = {
   Headline5: UIComponent;
   Headline6: UIComponent;
   Icon: UIComponent<{
-    type: 'close' | 'comment';
+    type: 'close' | 'comment' | 'notification';
     textual?: boolean;
     size?: 'large' | 'regular';
   }>;
@@ -111,7 +100,18 @@ export type UI = {
     } & ImgHTMLAttributes<unknown>
   >;
   FramedProfile: ComponentType<{ src: string | undefined }>;
-  Dropdown: D;
+  Dropdown: ComponentType<ComponentProps<typeof Dropdown>> & {
+    Toggle: ComponentType<
+      Omit<ComponentProps<typeof DropdownToggle>, 'size'> & {
+        size?: 'regular' | 'small' | 'extra-small';
+        collapse?: boolean;
+      }
+    >;
+    Menu: typeof Dropdown['Menu'];
+    Item: typeof Dropdown['Item'];
+    Divider: typeof Dropdown['Divider'];
+    Header: typeof Dropdown['Header'];
+  };
   Avatar: ComponentType<{
     src: string | undefined;
     size?: 'regular' | 'small' | 'large' | 'extra-small';

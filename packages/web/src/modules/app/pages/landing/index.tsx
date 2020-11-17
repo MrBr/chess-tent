@@ -1,5 +1,5 @@
 import React from 'react';
-import { ui, utils, components, hooks } from '@application';
+import { ui, utils, hooks } from '@application';
 import styled from '@emotion/styled';
 
 import heroUrl from '../../images/hero.png';
@@ -7,8 +7,6 @@ import lessonsUrl from '../../images/lessons.png';
 import boardSrc from '../../images/board.svg';
 import brainSrc from '../../images/brain.svg';
 import kingSrc from '../../images/king.svg';
-
-const { Link } = components;
 
 const { useHistory } = hooks;
 

@@ -216,7 +216,7 @@ const removeStep = <T extends Step | StepRoot>(
     ...parentStep,
     state: {
       ...parentStep.state,
-      steps: parentStep.state.steps.filter((childStep, index) => {
+      steps: parentStep.state.steps.filter(childStep => {
         if (isSameStep(childStep, step)) {
           removeStep = adjacent;
           return false;

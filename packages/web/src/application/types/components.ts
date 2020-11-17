@@ -189,6 +189,13 @@ export interface ActivityRendererState {
   activeTab: number;
 }
 
+export enum LessonStatus {
+  SAVED,
+  ERROR,
+  DIRTY,
+  INITIAL,
+}
+
 export type Components = {
   App: ComponentType;
   Header: ComponentType;
@@ -246,7 +253,11 @@ export type Components = {
     // after position changed it can still provide best move for the previous position
     onBestMoveChange?: (bestMove: Move, ponder?: Move) => void;
   }>;
-  Editor: ComponentType<{ lesson: Lesson; save: Requests['lessonUpdates'] }>;
+  Editor: ComponentType<{
+    lesson: Lesson;
+    save: Requests['lessonUpdates'];
+    onStatusChange?: (status: LessonStatus) => void;
+  }>;
   Lessons: ComponentType<{ lessons: Lesson[] | null }>;
   LessonChapters: ComponentType<{
     chapters: Chapter[];

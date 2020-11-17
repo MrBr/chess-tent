@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import {
   components,
+  constants,
   hooks,
-  state,
-  utils,
   requests,
   services,
-  constants,
+  state,
+  utils,
 } from '@application';
 import {
   createChapter,
@@ -15,6 +15,7 @@ import {
   Step,
   User,
 } from '@chess-tent/models';
+import { LessonStatus } from '@types';
 
 const {
   useDispatchBatched,
@@ -60,20 +61,30 @@ export default () => {
     dispatch(updateEntities(newLesson));
   }, [dispatch, lessonId, user]);
 
-  const saveLesson = useCallback(() => {
-    const saveLessonPromise = requests.lessonSave(lesson);
-    saveLessonPromise.then(() => {
+  const saveLesson = useCallback(() => requests.lessonSave(lesson), [lesson]);
+
+  const handleStatusChange = useCallback(
+    (lessonStatus: LessonStatus) => {
+      if (lessonStatus !== LessonStatus.SAVED) {
+        return;
+      }
       const activeStep =
         new URLSearchParams(history.location.search).get('activeStep') ||
         lesson.state.chapters[0].state.steps[0].id;
       history.replace(`/lesson/${lesson.id}?activeStep=${activeStep}`);
-    });
-    return saveLessonPromise;
-  }, [history, lesson]);
+    },
+    [lesson, history],
+  );
 
   if (!lesson) {
     return null;
   }
 
-  return <Editor lesson={lesson} save={saveLesson} />;
+  return (
+    <Editor
+      lesson={lesson}
+      save={saveLesson}
+      onStatusChange={handleStatusChange}
+    />
+  );
 };

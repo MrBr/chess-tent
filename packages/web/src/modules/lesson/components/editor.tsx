@@ -19,7 +19,12 @@ import {
   Tag,
   getChildStep,
 } from '@chess-tent/models';
-import { Actions, Components, LessonUpdatableAction } from '@types';
+import {
+  Actions,
+  Components,
+  LessonStatus,
+  LessonUpdatableAction,
+} from '@types';
 import { debounce } from 'lodash';
 import { components, hooks, services, state, ui } from '@application';
 import TrainingModal from './trening-assign';
@@ -50,11 +55,6 @@ const {
   useTags,
 } = hooks;
 
-enum LessonStatus {
-  SAVED,
-  ERROR,
-  DIRTY,
-}
 type EditorRendererProps = ComponentProps<Components['Editor']> & {
   activeChapter: Chapter;
   activeStep: Step;
@@ -203,6 +203,7 @@ class EditorRenderer extends React.Component<
       case LessonStatus.ERROR:
         return 'Something went wrong, lesson not saved.';
       case LessonStatus.SAVED:
+      case LessonStatus.INITIAL:
       default:
         return 'Lesson saved';
     }
@@ -330,7 +331,7 @@ class EditorRenderer extends React.Component<
   }
 }
 
-const Editor: Components['Editor'] = ({ lesson, save }) => {
+const Editor: Components['Editor'] = ({ lesson, save, onStatusChange }) => {
   const dispatch = useDispatchBatched();
   const { chapters } = lesson.state;
   const location = useLocation();
@@ -343,7 +344,7 @@ const Editor: Components['Editor'] = ({ lesson, save }) => {
     reset: lessonUpdateReset,
   } = useApi(save);
   const [lessonStatus, setLessonStatus] = useState<LessonStatus>(
-    LessonStatus.SAVED,
+    LessonStatus.INITIAL,
   );
 
   const activeChapterId =
@@ -361,11 +362,16 @@ const Editor: Components['Editor'] = ({ lesson, save }) => {
   ]) as Step;
 
   useEffect(() => {
+    onStatusChange && onStatusChange(lessonStatus);
+  }, [lessonStatus, onStatusChange]);
+
+  useEffect(() => {
     if (lessonUpdateError && lessonStatus !== LessonStatus.ERROR) {
       setLessonStatus(LessonStatus.ERROR);
     } else if (lessonUpdateResponse && lessonStatus !== LessonStatus.SAVED) {
       setLessonStatus(LessonStatus.SAVED);
     } else {
+      // All saved, clear state for next change
       lessonUpdateReset();
     }
   }, [

@@ -14,7 +14,9 @@ import {
   User,
   Chapter,
   SubjectPath,
-  NormalizedTag
+  NormalizedTag,
+  Notification,
+  NormalizedNotification
 } from "@chess-tent/models";
 
 export const UPDATE_ENTITIES = "UPDATE_ENTITIES";
@@ -31,10 +33,13 @@ export const UPDATE_ACTIVITY_STATE = "UPDATE_ACTIVITY_STATE";
 
 export const UPDATE_USER = "UPDATE_USER";
 
+export const UPDATE_NOTIFICATION = "UPDATE_NOTIFICATION";
+
 export const UPDATE_RECORD = "UPDATE_RECORD";
 export const DELETE_RECORD = "DELETE_RECORD";
 
 export const SEND_MESSAGE = "SEND_MESSAGE";
+export const SEND_NOTIFICATION = "SEND_NOTIFICATION";
 
 export type Action<T, P, M = {}> = {
   type: T;
@@ -51,6 +56,7 @@ export type EntitiesState = {
   activities: ActivityState;
   conversations: ConversationState;
   tags: TagState;
+  notifications: NotificationState;
 };
 /**
  * Records are used to store single entity reference
@@ -67,6 +73,7 @@ export type RecordType = {
 export type RecordState = Record<string, RecordType>;
 export type LessonState = EntityState<NormalizedLesson>;
 export type ConversationState = EntityState<NormalizedConversation>;
+export type NotificationState = EntityState<NormalizedNotification>;
 export type StepsState = EntityState<NormalizedStep>;
 export type ActivityState = EntityState<NormalizedActivity<Subject>>;
 export type UserState = EntityState<NormalizedUser>;
@@ -182,21 +189,39 @@ export type RecordAction = RecordUpdateAction | RecordDeleteAction;
 /**
  * Message
  */
-export type MessageAction = SendMessageAction;
 
 export type SendMessageAction = Action<
   typeof SEND_MESSAGE,
   NormalizedMessage,
   { conversationId: Conversation["id"] }
 >;
+export type MessageAction = SendMessageAction;
 
 /**
  * Conversation
  */
 export type ConversationAction = UpdateEntitiesAction | SendMessageAction;
 
+/**
+ * Notification
+ */
+export type SendNotificationAction = Action<
+  typeof SEND_NOTIFICATION,
+  Notification
+>;
+export type UpdateNotificationAction = Action<
+  typeof UPDATE_NOTIFICATION,
+  NormalizedNotification,
+  { id: Notification["id"] }
+>;
+export type NotificationAction =
+  | UpdateEntitiesAction
+  | SendNotificationAction
+  | UpdateNotificationAction;
+
 export type Actions =
-  | SendMessageAction
+  | MessageAction
+  | NotificationAction
   | ConversationAction
   | LessonAction
   | UserAction

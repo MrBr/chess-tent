@@ -82,5 +82,6 @@ export type SocketService = {
   ) => void;
   registerMiddleware: (middleware: SocketService["middleware"]) => void;
   sendAction: (channel: string, stream: SocketStream) => void;
+  sendServerAction: (channel: string, data: SocketStream["data"]) => void;
   identify: (stream: SocketStream) => Auth["apiTokenPayload"] | null;
 };

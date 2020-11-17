@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react';
 import { hooks, requests } from '@application';
-import { User } from '@chess-tent/models';
-import { Profile, ProfileEdit } from './profile';
+import { Profile } from './profile';
 
-const { useActiveUserRecord, useLocation, useParams, useApi } = hooks;
+const { useParams, useApi } = hooks;
 
 export default () => {
   const { userId } = useParams();
@@ -13,7 +12,7 @@ export default () => {
       return;
     }
     fetch(userId);
-  }, []);
+  }, [error, fetch, loading, response, userId]);
 
   return response?.data ? <Profile user={response?.data} /> : null;
 };

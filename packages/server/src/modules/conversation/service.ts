@@ -10,7 +10,7 @@ export const saveConversation = (conversation: Conversation) =>
       {
         upsert: true
       }
-    ).exec((err, result) => {
+    ).exec(err => {
       if (err) {
         throw err;
       }

@@ -31,6 +31,7 @@ export type ConversationsResponse = DataResponse<Conversation[]>;
 export type ConversationResponse = DataResponse<Conversation>;
 export type ConversationMessagesResponse = DataResponse<NormalizedMessage[]>;
 export type CoachesResponse = DataResponse<User[]>;
+export type NotificationsResponse = DataResponse<Notification[]>;
 export type StudentsResponse = DataResponse<User[]>;
 export type TagsResponse = DataResponse<Tag[]>;
 
@@ -99,6 +100,7 @@ export type Requests = {
     StatusResponse
   >;
   coaches: RequestFetch<User, CoachesResponse>;
+  notifications: RequestFetch<boolean, NotificationsResponse>;
   students: RequestFetch<User, StudentsResponse>;
   findTags: RequestFetch<string, TagsResponse>;
   tags: RequestFetch<undefined, TagsResponse>;

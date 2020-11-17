@@ -37,6 +37,13 @@ const Toggle = styled.div(
     justifyContent: 'space-between',
   },
   sizeEnhancer,
+  ({ collapse }: ComponentProps<UI['Dropdown']['Toggle']>) =>
+    collapse && {
+      ':after': { display: 'none' },
+      background: 'transparent',
+      paddingLeft: 0,
+      paddingRight: 0,
+    },
 );
 
 // @ts-ignore

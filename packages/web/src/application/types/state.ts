@@ -15,6 +15,7 @@ import {
   Step,
   Subject,
   User,
+  Notification,
 } from '@chess-tent/models';
 import {
   AddLessonChapterAction,
@@ -28,6 +29,7 @@ import {
   UpdateLessonChapterAction,
   UpdateLessonPathAction,
   UpdateLessonStepAction,
+  UpdateNotificationAction,
 } from '@chess-tent/types';
 
 export type Middleware = ReduxMiddleware;
@@ -53,6 +55,9 @@ export type State = {
         | Partial<Omit<Lesson, 'state'>>
         | { state: Partial<Lesson['state']> },
     ) => UpdateLessonAction;
+    updateNotification: (
+      notification: Notification,
+    ) => UpdateNotificationAction;
     updateActivityState: <T extends Activity>(
       activity: T,
       state: Partial<T extends Activity<infer K, infer S> ? S : never>,

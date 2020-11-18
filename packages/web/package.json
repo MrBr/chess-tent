@@ -17,7 +17,7 @@
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
     "array-move": "^2.2.1",
-    "bootstrap": "^4.4.1",
+    "bootstrap": "^4.5.3",
     "chess.js": "^0.10.2",
     "chroma-js": "^2.0.3",
     "core-module": "2.0.0",

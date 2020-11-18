@@ -18,8 +18,8 @@ const ModalProviderContext = React.createContext<
 >(() => {});
 
 const Modal = BModal;
-// @ts-ignore
 Modal.defaultProps = {
+  ...Modal.defaultProps,
   onHide: () => {},
 };
 
@@ -50,7 +50,7 @@ const ModalProvider: ComponentType = ({ children }) => {
   return (
     <ModalProviderContext.Provider value={promptModal}>
       {children}
-      {modal && modal}
+      {modal}
     </ModalProviderContext.Provider>
   );
 };

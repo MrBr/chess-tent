@@ -120,7 +120,7 @@ const initService = (schemaMap: { [key: string]: Schema }) => {
             relationshipSchema.type,
             entities
           );
-          if (cachedEntityState[attribute][index] !== item) {
+          if (cachedEntityState[attribute]?.[index] !== item) {
             collectionChanged = true;
           }
           freshValue.push(item);

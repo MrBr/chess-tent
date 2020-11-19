@@ -1,7 +1,7 @@
 import application from '@application';
 
 import { createRecordHook } from './services';
-import { useRecord } from './state/hooks';
+import { useRecord } from './hooks';
 import { updateRecordEntitiesMiddleware } from './state/middleware';
 import { records } from './state/reducer';
 

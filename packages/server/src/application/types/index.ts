@@ -4,6 +4,12 @@ import { Schema, SchemaOptions, Document, Model } from "mongoose";
 import { NormalizedUser, User } from "@chess-tent/models";
 import { Socket } from "socket.io";
 import { Server as HttpServer } from "http";
+import {
+  ACTION_EVENT,
+  Actions,
+  SUBSCRIBE_EVENT,
+  UNSUBSCRIBE_EVENT
+} from "@chess-tent/types";
 
 export type DB = {
   connect: () => void;
@@ -39,8 +45,6 @@ export type Service = {
   generateApiToken: (user: User) => string;
   verifyToken: (token?: string) => Auth["apiTokenPayload"] | null;
 
-  getUser: (user: Partial<User>, projection?: string) => Promise<User | null>;
-
   generateImgUrl: () => string;
   fileStorage: AWS.S3;
 };
@@ -49,12 +53,29 @@ export type Middleware = {
   identify: (...args: Parameters<RequestHandler>) => void;
   errorHandler: ErrorRequestHandler;
   sendData: (localProp: string) => MiddlewareFunction;
+  logLocal: (
+    prefix: string,
+    localsKey:
+      | string
+      | ((
+          req: Parameters<MiddlewareFunction>[0],
+          res: Parameters<MiddlewareFunction>[1]
+        ) => any)
+  ) => MiddlewareFunction;
   webLogin: (...args: Parameters<RequestHandler>) => void;
   webLogout: (...args: Parameters<RequestHandler>) => void;
   sendStatusOk: (...args: Parameters<RequestHandler>) => void;
+  sendNotification: (...args: Parameters<RequestHandler>) => void;
+  createNotification: (...args: Parameters<RequestHandler>) => void;
+  getUser: (...args: Parameters<RequestHandler>) => void;
   toLocals: (
     localsKey: string,
-    func: (...args: Parameters<RequestHandler>) => void
+    func:
+      | string
+      | number
+      | object
+      | []
+      | ((...args: Parameters<RequestHandler>) => void)
   ) => (...args: Parameters<RequestHandler>) => void;
 };
 export type MiddlewareFunction = (...args: Parameters<RequestHandler>) => void;
@@ -69,19 +90,36 @@ export type Application = {
   start: () => void;
 };
 
-export interface SocketStream {
-  client: Socket;
-  event: string;
-  data: any;
-}
+export type SocketStream =
+  | {
+      client: Socket;
+      event: typeof ACTION_EVENT;
+      data: Actions;
+    }
+  | {
+      client: Socket;
+      event: typeof SUBSCRIBE_EVENT;
+      data: string;
+    }
+  | {
+      client: Socket;
+      event: typeof UNSUBSCRIBE_EVENT;
+      data: string;
+    };
+
 export type SocketService = {
   init: (server: HttpServer) => void;
   middleware: (
     stream: SocketStream,
     next: (stream: SocketStream) => void
   ) => void;
-  registerMiddleware: (middleware: SocketService["middleware"]) => void;
+  registerMiddleware: (
+    middleware: (
+      stream: SocketStream,
+      next: (stream: SocketStream) => void
+    ) => void
+  ) => void;
   sendAction: (channel: string, stream: SocketStream) => void;
-  sendServerAction: (channel: string, data: SocketStream["data"]) => void;
+  sendServerAction: (channel: string, action: Actions) => void;
   identify: (stream: SocketStream) => Auth["apiTokenPayload"] | null;
 };

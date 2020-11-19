@@ -55,7 +55,7 @@ export default () => {
   return (
     <Container className="h-100 d-flex justify-content-center align-items-center no-gutters mx-auto">
       <Card className="px-5 py-4 border rounded-lg">
-        <Headline1>Create your account</Headline1>
+        <Headline1 className="mb-4">Create your account</Headline1>
         <Form
           initialValues={{
             email: '',
@@ -113,11 +113,16 @@ export default () => {
               placeholder="Repeat password"
             />
           </FormGroup>
-          <FormGroup className="mt-4">
-            <Label htmlFor="pick-coach">Coach:</Label>
-            <Form.Check name="coach" id="pick-coach" />
+          <FormGroup className="mt-4 d-flex">
+            <Label htmlFor="pick-coach">Are you coach?</Label>
+            <Form.Check
+              size="sm"
+              className="w-25 shadow-none"
+              name="coach"
+              id="pick-coach"
+            />
           </FormGroup>
-          <FormGroup>
+          <FormGroup className="mt-4 d-flex justify-content-end">
             <Button type="submit" disabled={loading}>
               Submit
             </Button>

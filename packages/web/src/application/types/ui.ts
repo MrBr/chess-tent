@@ -84,7 +84,9 @@ export type UI = {
     Input: UIComponent<
       FormControlProps & { rows?: number; name: string; placeholder?: string }
     >;
-    Check: UIComponent<FormCheckInputProps & { name: string }>;
+    Check: UIComponent<
+      FormCheckInputProps & { name: string } & FormControlProps
+    >;
     Select: UIComponent<
       Omit<FormControlProps, 'value'> & {
         name: string;

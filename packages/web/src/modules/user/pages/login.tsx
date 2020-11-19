@@ -2,10 +2,9 @@ import React, { useEffect } from 'react';
 import styled from '@emotion/styled';
 import { ui, hooks, requests, components, utils } from '@application';
 import * as yup from 'yup';
-import { Link } from 'react-router-dom';
 
 const { useApi, useHistory } = hooks;
-const { Redirect } = components;
+const { Redirect, Link } = components;
 const {
   Form,
   Button,
@@ -122,7 +121,7 @@ export default () => {
           </Form>
         </Card>
       </Col>
-      <Absolute left={25} top={15} onClick={() => history.goBack()}>
+      <Absolute left={25} top={15} onClick={() => history.push('/')}>
         <Icon type="close" size="large" />
       </Absolute>
     </Container>

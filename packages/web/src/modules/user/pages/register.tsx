@@ -1,9 +1,12 @@
 import React from 'react';
-import { ui, hooks, requests, components } from '@application';
+import styled from '@emotion/styled';
+import { ui, hooks, requests, components, utils } from '@application';
 import * as yup from 'yup';
 
+const { mediaQueryEnhancer } = utils;
+
 const { useApi, useHistory } = hooks;
-const { Redirect } = components;
+const { Redirect, Link } = components;
 const {
   Form,
   Button,
@@ -14,6 +17,10 @@ const {
   Icon,
   Card,
   Headline1,
+  Text,
+  Headline6,
+  Col,
+  Row,
 } = ui;
 
 const SignupSchema = yup.object().shape({
@@ -45,6 +52,15 @@ const SignupSchema = yup.object().shape({
     .required(),
   coach: yup.boolean(),
 });
+
+const SubmitButton = styled(Button)(
+  mediaQueryEnhancer('sm', {
+    width: '100%',
+  }),
+  mediaQueryEnhancer('xs', {
+    width: '100%',
+  }),
+);
 
 export default () => {
   const { fetch, loading, response } = useApi(requests.register);
@@ -122,14 +138,26 @@ export default () => {
               id="pick-coach"
             />
           </FormGroup>
-          <FormGroup className="mt-4 d-flex justify-content-end">
-            <Button type="submit" disabled={loading}>
-              Submit
-            </Button>
+          <FormGroup className="mt-4 ">
+            <Row className="w-100" noGutters>
+              <Col className="col-12 col-sm-9 d-flex order-2 order-sm-1 justify-content-center align-items-center justify-content-sm-start">
+                <Text weight={700}>
+                  Have an account?
+                  <Link to="/login">
+                    <u> Sign in</u>
+                  </Link>
+                </Text>
+              </Col>
+              <Col className="col-12 col-sm-3 order-1 order-sm-2 mb-3 mb-sm-0">
+                <SubmitButton type="submit" disabled={loading}>
+                  Submit
+                </SubmitButton>
+              </Col>
+            </Row>
           </FormGroup>
         </Form>
       </Card>
-      <Absolute left={25} top={15} onClick={() => history.goBack()}>
+      <Absolute left={25} top={15} onClick={() => history.push('/')}>
         <Icon type="close" size="large" />
       </Absolute>
     </Container>

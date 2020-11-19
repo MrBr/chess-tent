@@ -1,5 +1,5 @@
 import { services, requests } from '@application';
-import { User } from '@chess-tent/models';
+import { Mentorship, NormalizedMentorship, User } from '@chess-tent/models';
 import { DataResponse, StatusResponse } from '@types';
 
 const mentorshipRequest = services.createRequest<
@@ -7,7 +7,7 @@ const mentorshipRequest = services.createRequest<
     studentId: User['id'];
     coachId: User['id'];
   },
-  StatusResponse
+  DataResponse<NormalizedMentorship>
 >('POST', '/mentorship');
 
 const mentorshipResolve = services.createRequest<
@@ -19,16 +19,16 @@ const mentorshipResolve = services.createRequest<
   StatusResponse
 >('PUT', '/mentorship');
 
-const coaches = services.createRequest<User, DataResponse<User[]>>(
+const coaches = services.createRequest<User, DataResponse<Mentorship[]>>(
   'GET',
   user => ({
-    url: `/mentorship/:${user.id}/coaches`,
+    url: `/mentorship/${user.id}/coaches`,
   }),
 );
-const students = services.createRequest<User, DataResponse<User[]>>(
+const students = services.createRequest<User, DataResponse<Mentorship[]>>(
   'GET',
   user => ({
-    url: `/mentorship/:${user.id}/students`,
+    url: `/mentorship/${user.id}/students`,
   }),
 );
 

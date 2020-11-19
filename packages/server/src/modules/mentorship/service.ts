@@ -1,11 +1,11 @@
-import { User } from "@chess-tent/models";
+import { Mentorship, NormalizedMentorship, User } from "@chess-tent/models";
 import { MentorshipModel } from "./model";
 
 export const requestMentorship = (student: User["id"], coach: User["id"]) =>
   new Promise(resolve => {
     MentorshipModel.create({ student, coach })
-      .then(() => {
-        resolve();
+      .then(result => {
+        resolve(result);
       })
       .catch(err => {
         throw err;
@@ -16,19 +16,19 @@ export const resolveMentorshipRequest = (
   student: User["id"],
   coach: User["id"],
   approved: boolean
-) =>
+): Promise<NormalizedMentorship> =>
   new Promise(resolve => {
     MentorshipModel.updateOne({ student, coach }, { approved }).exec(
       (err, result) => {
         if (err) {
           throw err;
         }
-        resolve();
+        resolve(result);
       }
     );
   });
 
-export const getStudents = (coach: User["id"]): Promise<User[]> =>
+export const getStudents = (coach: User["id"]): Promise<Mentorship[]> =>
   new Promise(resolve => {
     MentorshipModel.find({ coach })
       .populate("student")
@@ -36,11 +36,11 @@ export const getStudents = (coach: User["id"]): Promise<User[]> =>
         if (err) {
           throw err;
         }
-        resolve(result.map(item => item.toObject().student));
+        resolve(result.map(item => item.toObject()));
       });
   });
 
-export const getCoaches = (student: User["id"]): Promise<User[]> =>
+export const getCoaches = (student: User["id"]): Promise<Mentorship[]> =>
   new Promise(resolve => {
     MentorshipModel.find({ student })
       .populate("coach")
@@ -48,6 +48,6 @@ export const getCoaches = (student: User["id"]): Promise<User[]> =>
         if (err) {
           throw err;
         }
-        resolve(result.map(item => item.toObject().coach));
+        resolve(result.map(item => item.toObject()));
       });
   });

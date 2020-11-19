@@ -8,6 +8,7 @@ import { Message } from "./message";
 import { Tag } from "./tag";
 import { Analysis } from "./analysis";
 import { Notification } from "./notification";
+import { Mentorship } from "./mentorship";
 
 export * from "./analysis";
 export * from "./notification";
@@ -32,4 +33,5 @@ export type Entity =
   | Message
   | Tag
   | Analysis
-  | Notification;
+  | Notification
+  | Mentorship;

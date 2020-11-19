@@ -4,6 +4,10 @@ import * as service from "./service";
 export const requestMentorship: MiddlewareFunction = (req, res, next) => {
   service
     .requestMentorship(res.locals.studentId, res.locals.coachId)
+    .then(mentorship => {
+      res.locals.mentorship = mentorship;
+      next();
+    })
     .then(next)
     .catch(next);
 };

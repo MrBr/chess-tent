@@ -16,7 +16,8 @@ import {
   SubjectPath,
   NormalizedTag,
   Notification,
-  NormalizedNotification
+  NormalizedNotification,
+  NormalizedMentorship
 } from "@chess-tent/models";
 
 export const UPDATE_ENTITIES = "UPDATE_ENTITIES";
@@ -57,6 +58,7 @@ export type EntitiesState = {
   conversations: ConversationState;
   tags: TagState;
   notifications: NotificationState;
+  mentorship: MentorshipState;
 };
 /**
  * Records are used to store single entity reference
@@ -78,6 +80,7 @@ export type StepsState = EntityState<NormalizedStep>;
 export type ActivityState = EntityState<NormalizedActivity<Subject>>;
 export type UserState = EntityState<NormalizedUser>;
 export type TagState = EntityState<NormalizedTag>;
+export type MentorshipState = EntityState<NormalizedMentorship>;
 
 export interface AppState {
   entities: EntitiesState;

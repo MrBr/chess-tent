@@ -1,7 +1,14 @@
 // Hooks
 import { RecordValue, RequestFetch, StatusResponse } from '@chess-tent/types';
 import { ReactElement } from 'react';
-import { Activity, Lesson, Step, Tag, User } from '@chess-tent/models';
+import {
+  Activity,
+  Lesson,
+  Mentorship,
+  Step,
+  Tag,
+  User,
+} from '@chess-tent/models';
 import { Action as ReduxAction } from 'redux';
 import { useSelector, useDispatch } from 'react-redux';
 import { BatchAction } from 'redux-batched-actions';
@@ -47,6 +54,7 @@ export type Hooks = {
     reset: () => void;
   };
   useRecord: <T extends RecordValue>(recordKey: string) => RecordHookReturn<T>;
+  useCoaches: (user: User) => RecordHookReturn<Mentorship[]>;
   useDenormalize: <T extends RecordValue>(
     descriptor: string[] | string | null,
     type?: string,

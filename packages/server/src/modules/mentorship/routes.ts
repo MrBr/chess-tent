@@ -14,7 +14,7 @@ application.service.registerPostRoute(
   toLocals("studentId", req => req.body.studentId),
   toLocals("coachId", req => req.body.coachId),
   requestMentorship,
-  sendStatusOk
+  sendData("mentorship")
 );
 
 application.service.registerPutRoute(

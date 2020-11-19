@@ -283,4 +283,5 @@ export type Components = {
   AnalysisBoard: ComponentType<AnalysisSystemProps & StepBoardComponentProps>;
   AnalysisSidebar: ComponentType<AnalysisSystemProps>;
   NotificationStand: ComponentType;
+  MentorshipButton: ComponentType<{ user: User }>;
 };

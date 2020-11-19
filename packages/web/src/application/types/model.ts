@@ -14,4 +14,5 @@ export type Model = {
   userSchema: Schema;
   tagSchema: Schema;
   analysisSchema: Schema;
+  mentorshipSchema: Schema;
 };

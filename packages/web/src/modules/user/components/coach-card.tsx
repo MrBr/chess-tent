@@ -1,21 +1,11 @@
-import React from "react";
-import styled from "@emotion/styled";
-import { hooks, ui } from "@application";
-import { Components } from "@types";
+import React from 'react';
+import styled from '@emotion/styled';
+import { hooks, ui } from '@application';
+import { Components } from '@types';
 
-const {
-  Card,
-  CardBody,
-  FramedProfile,
-  Headline4,
-  Button,
-  Text
-} = ui;
+const { Card, CardBody, FramedProfile, Headline4, Button, Text } = ui;
 
-const {
-  useConversationParticipant,
-  useHistory
-} = hooks;
+const { useConversationParticipant, useHistory } = hooks;
 
 const CoachFrame = styled(Card)({
   margin: '0.5rem',
@@ -26,7 +16,7 @@ const CoachFrame = styled(Card)({
   boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
 });
 
-const CoachCard: Components["CoachCard"] = ({ coach }) => {
+const CoachCard: Components['CoachCard'] = ({ coach }) => {
   const [, setConversationParticipant] = useConversationParticipant();
   const history = useHistory();
 
@@ -42,10 +32,7 @@ const CoachCard: Components["CoachCard"] = ({ coach }) => {
         </Headline4>
         <Text>Some cool phrase</Text>
         <Text fontSize="small">Up to ELO</Text>
-        <Button
-          size="small"
-          onClick={() => setConversationParticipant(coach)}
-        >
+        <Button size="small" onClick={() => setConversationParticipant(coach)}>
           Message
         </Button>
       </CardBody>

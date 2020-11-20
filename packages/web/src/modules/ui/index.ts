@@ -28,7 +28,7 @@ import {
   Headline6,
   Text,
 } from './Text';
-import SearchBox from './SearchBox'
+import SearchBox from './SearchBox';
 import { Avatar, FramedProfile, Img, Thumbnail } from './Img';
 import { CardBody, CardComponent, CardHeader } from './Card';
 import { Tab, Tabs } from './Tab';

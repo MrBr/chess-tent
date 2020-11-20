@@ -4,7 +4,7 @@ import Register from './pages/register';
 import Login from './pages/login';
 import Me from './pages/me';
 import User from './pages/user';
-import CoachBrowser from "./pages/coach-browser";
+import CoachBrowser from './pages/coach-browser';
 
 const { Route, Authorized } = components;
 
@@ -40,4 +40,4 @@ application.services.addRoute(() => (
   <Route path="/coach" exact>
     <CoachBrowser />
   </Route>
-))
+));

@@ -2,7 +2,7 @@ import React, { FunctionComponent, useEffect } from 'react';
 import { ui, hooks, requests, components } from '@application';
 import styled from '@emotion/styled';
 import { User } from '@chess-tent/models';
-import { Components } from "@types";
+import { Components } from '@types';
 
 const { Container, Headline4, Row, Col, Dropdown, Text, SearchBox } = ui;
 const { useHistory, useApi, useActiveUserRecord } = hooks;
@@ -36,7 +36,7 @@ const TabButton = styled<
   cursor: 'pointer',
 });
 
-const Header: Components["Header"] = ({ onSearch }) => {
+const Header: Components['Header'] = ({ onSearch }) => {
   const history = useHistory();
   const logoutApi = useApi(requests.logout);
   const [, , clear] = useActiveUserRecord();
@@ -62,7 +62,7 @@ const Header: Components["Header"] = ({ onSearch }) => {
           <TabButton path="/coach">Find Coach</TabButton>
         </Col>
         <Col className="align-items-center" xs={2}>
-          { onSearch && <SearchBox onSearch={onSearch} debounce={500} /> }
+          {onSearch && <SearchBox onSearch={onSearch} debounce={500} />}
         </Col>
         <Col className="d-flex justify-content-end" xs={1}>
           <NotificationStand />

@@ -1,6 +1,6 @@
 export const nonNullOrUndefined = <T>(obj: T) => {
   const propNames = Object.getOwnPropertyNames(obj);
-  const result = {} as T
+  const result = {} as T;
   for (let i = 0; i < propNames.length; i++) {
     const propName = propNames[i];
     // @ts-ignore
@@ -11,4 +11,4 @@ export const nonNullOrUndefined = <T>(obj: T) => {
   }
 
   return result;
-}
+};

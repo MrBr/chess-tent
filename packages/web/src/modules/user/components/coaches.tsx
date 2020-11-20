@@ -1,13 +1,9 @@
 import React, { useEffect } from 'react';
 import { requests, hooks, ui } from '@application';
-import CoachCard from "./coach-card";
+import CoachCard from './coach-card';
 
 const { useApi, useComponentStateSilent } = hooks;
-const {
-  Container,
-  Row,
-  Col,
-} = ui;
+const { Container, Row, Col } = ui;
 
 export default () => {
   const { mounted } = useComponentStateSilent();

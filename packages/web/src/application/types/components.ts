@@ -205,7 +205,10 @@ export type NotificationComponent<T extends Notification> = ComponentType<{
 export type Components = {
   App: ComponentType;
   Header: ComponentType<{ onSearch?: (query: string) => void }>;
-  Layout: ComponentType<{ className?: string, onSearch?: (query: string) => void }>;
+  Layout: ComponentType<{
+    className?: string;
+    onSearch?: (query: string) => void;
+  }>;
   Chessboard: ClassComponent<ChessboardInterface>;
   Stepper: FunctionComponent<StepperProps>;
   StepperStepContainer: ComponentType<{ onClick?: ReactEventHandler }>;
@@ -286,7 +289,7 @@ export type Components = {
   >;
   Coaches: ComponentType;
   CoachCard: ComponentType<{
-    coach: User
+    coach: User;
   }>;
   Activities: ComponentType<{ activities: Activity[] | null }>;
   Conversations: ComponentType;

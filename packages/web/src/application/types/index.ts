@@ -29,6 +29,7 @@ export * from './state';
 export * from './service';
 export * from './utils';
 export * from './pages';
+export * from './notification';
 export * from './_helpers';
 
 export type Application = {

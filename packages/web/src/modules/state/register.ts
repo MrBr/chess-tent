@@ -10,6 +10,7 @@ const { normalize, denormalize, getId } = initService({
   tags: model.tagSchema,
   analyses: model.analysisSchema,
   mentorship: model.mentorshipSchema,
+  notifications: model.notificationsSchema,
 });
 
 application.utils.normalize = normalize;

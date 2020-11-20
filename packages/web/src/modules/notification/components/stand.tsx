@@ -1,10 +1,11 @@
 import React from 'react';
-import { hooks, ui } from '@application';
+import { components, hooks, ui } from '@application';
 import { User } from '@chess-tent/models';
 import styled from '@emotion/styled';
 import { selectUserNotifications } from '../state/selectors';
 
 const { Icon, Dropdown, Absolute } = ui;
+const { NotificationRender } = components;
 const { useActiveUserRecord, useSelector } = hooks;
 const UnreadMark = styled.span({
   borderRadius: '50%',
@@ -29,7 +30,9 @@ export default () => {
       </Dropdown.Toggle>
       <Dropdown.Menu>
         {notifications.length > 0 ? (
-          <></>
+          notifications.map(notification => (
+            <NotificationRender view="Dropdown" notification={notification} />
+          ))
         ) : (
           <Dropdown.Item>All read</Dropdown.Item>
         )}

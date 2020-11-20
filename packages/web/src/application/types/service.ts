@@ -1,7 +1,13 @@
 import { ChessInstance } from 'chess.js';
-import { ComponentType } from 'react';
+import { ComponentType, ReactElement } from 'react';
 import { API, ApiMethods, RecordValue } from '@chess-tent/types';
-import { Analysis, Chapter, Step, StepType } from '@chess-tent/models';
+import {
+  Analysis,
+  Chapter,
+  Step,
+  StepType,
+  Notification,
+} from '@chess-tent/models';
 import { History } from 'history';
 import {
   FEN,
@@ -18,7 +24,7 @@ import { MoveStep, Steps, VariationStep } from './steps';
 import { GenericArguments } from './_helpers';
 import { RecordHookReturn } from './hooks';
 import { StepModule } from './step';
-import { StepModules } from './index';
+import { NotificationRenderer, StepModules } from './index';
 
 export type Services = {
   Chess: {
@@ -74,4 +80,9 @@ export type Services = {
   history: History;
   createAnalysis: (param: [Step] | FEN) => Analysis;
   removeAnalysisStep: (analysis: Analysis, step: Step) => Analysis;
+  pushToast: (toast: ReactElement) => void;
+  registerNotificationRenderer: <T extends Notification>(
+    notificationType: Notification['notificationType'],
+    renderer: T extends Notification ? NotificationRenderer<T> : never,
+  ) => void;
 };

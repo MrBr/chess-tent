@@ -22,6 +22,15 @@ application.register(
     application.components.MentorshipButton = module.default;
   },
 );
+application.register(
+  () => import('./components/notification'),
+  module => {
+    application.services.registerNotificationRenderer(TYPE_MENTORSHIP, {
+      Toast: module.Toast,
+      Dropdown: module.Dropdown,
+    });
+  },
+);
 
 application.register(
   () => import('./model'),

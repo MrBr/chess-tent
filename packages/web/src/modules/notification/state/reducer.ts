@@ -16,7 +16,7 @@ export const reducer = (
         ...state,
         [action.payload.id]: {
           ...action.payload,
-          user: action.payload.id,
+          user: action.payload.user.id,
         },
       };
     }

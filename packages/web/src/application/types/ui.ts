@@ -18,6 +18,9 @@ import {
   Tabs,
   Tab,
   InputGroup,
+  ToastBody,
+  ToastProps,
+  ToastHeaderProps,
 } from 'react-bootstrap';
 import DropdownToggle from 'react-bootstrap/DropdownToggle';
 import { ErrorMessageProps, Formik } from 'formik';
@@ -160,4 +163,7 @@ export type UI = {
   Modal: UIComponent<ModalProps>;
   ModalBody: typeof ModalBody;
   Confirm: UIComponent<ConfirmProps>;
+  Toast: ComponentType<ToastProps>;
+  ToastBody: ComponentType<ComponentProps<typeof ToastBody>>;
+  ToastHeader: ComponentType<ToastHeaderProps>;
 };

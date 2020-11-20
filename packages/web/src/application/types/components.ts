@@ -17,6 +17,7 @@ import {
   Analysis,
   Chapter,
   Lesson,
+  Notification,
   Step,
   StepType,
   User,
@@ -41,7 +42,7 @@ import {
 } from './step';
 import { ClassComponent } from './_helpers';
 import { UI } from './ui';
-import { LessonActivity, StepModules, Steps } from './index';
+import { LessonActivity, NotificationView, StepModules, Steps } from './index';
 
 export interface ChessboardState {
   renderPrompt?: (close: () => void) => ReactElement;
@@ -196,6 +197,10 @@ export enum LessonStatus {
   INITIAL,
 }
 
+export type NotificationComponent<T extends Notification> = ComponentType<{
+  notification: T;
+}>;
+
 export type Components = {
   App: ComponentType;
   Header: ComponentType;
@@ -284,4 +289,8 @@ export type Components = {
   AnalysisSidebar: ComponentType<AnalysisSystemProps>;
   NotificationStand: ComponentType;
   MentorshipButton: ComponentType<{ user: User }>;
+  NotificationRender: ComponentType<{
+    notification: Notification;
+    view: NotificationView;
+  }>;
 };

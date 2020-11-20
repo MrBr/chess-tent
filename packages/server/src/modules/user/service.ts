@@ -5,7 +5,7 @@ import { MongooseFilterQuery } from "mongoose";
 import { nonNullOrUndefined } from "../utils/helpers";
 
 export const addUser = (user: User) =>
-  new Promise(resolve => {
+  new Promise((resolve) => {
     new UserModel(user).save((err, result) => {
       if (err) {
         throw err;
@@ -15,7 +15,7 @@ export const addUser = (user: User) =>
   });
 
 export const updateUser = (userId: User["id"], user: Partial<User>) =>
-  new Promise(resolve => {
+  new Promise((resolve) => {
     UserModel.updateOne({ _id: user.id }, { $set: user }).exec(
       (err, result) => {
         if (err) {
@@ -49,19 +49,19 @@ export const findUsers = (
 ): Promise<User[]> => {
   const query: MongooseFilterQuery<any> = nonNullOrUndefined({
     coach: filters.coach,
-    name: filters.name
+    name: filters.name,
   });
 
   if (filters.search) {
     query["$text"] = { $search: filters.search, $caseSensitive: false };
   }
 
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     UserModel.find(query).exec((err, result) => {
       if (err) {
         throw err;
       }
-      resolve(result.map(item => item.toObject()));
+      resolve(result.map((item) => item.toObject()));
     });
   });
 };

@@ -16,7 +16,7 @@ import {
   AddLessonChapterAction,
   UpdateLessonChapterAction,
   UpdateLessonPathAction,
-  UpdateLessonStepAction
+  UpdateLessonStepAction,
 } from "./actions";
 
 export type Pagination = [number, number];

@@ -222,9 +222,11 @@ export type Components = {
   Switch: ComponentType;
   Redirect: ComponentType<RedirectProps>;
   Route: ComponentType<RouteProps>;
+
   Link: ComponentType<LinkProps>;
   Authorized: ComponentType<AuthorizedProps>;
   Provider: ComponentType;
+
   StateProvider: ComponentType;
   StepRenderer: <T extends StepModuleComponentKey, S extends Step>(
     props: StepModule<

@@ -18,6 +18,7 @@ const {
 } = hooks;
 
 const CoachFrame = styled(Card)({
+  margin: '0.5rem',
   width: 300,
   display: 'inline-block',
   borderRadius: 16,
@@ -31,7 +32,7 @@ const CoachCard: Components["CoachCard"] = ({ coach }) => {
 
   return (
     <CoachFrame>
-      <FramedProfile src={coach.imageUrl} />
+      <FramedProfile src={coach.state.imageUrl} />
       <CardBody>
         <Headline4
           className="mt-1 cursor-pointer"

@@ -28,6 +28,7 @@ import {
   Headline6,
   Text,
 } from './Text';
+import SearchBox from './SearchBox'
 import { Avatar, FramedProfile, Img, Thumbnail } from './Img';
 import { CardBody, CardComponent, CardHeader } from './Card';
 import { Tab, Tabs } from './Tab';
@@ -86,5 +87,6 @@ application.ui.Headline4 = Headline4;
 application.ui.Headline5 = Headline5;
 application.ui.Headline6 = Headline6;
 application.ui.Text = Text;
+application.ui.SearchBox = SearchBox;
 
 application.ui.Icon = Icon;

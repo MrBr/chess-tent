@@ -13,7 +13,7 @@ const login = services.createRequest<
 >('POST', '/login');
 
 const users = services.createRequest<
-  { coach?: boolean; name?: string },
+  { coach?: boolean; name?: string, search?: string },
   UsersResponse
 >('POST', '/users');
 

@@ -4,6 +4,7 @@ import Register from './pages/register';
 import Login from './pages/login';
 import Me from './pages/me';
 import User from './pages/user';
+import CoachBrowser from "./pages/coach-browser";
 
 const { Route, Authorized } = components;
 
@@ -18,6 +19,7 @@ application.services.addRoute(() => (
     <Login />
   </Route>
 ));
+
 application.services.addRoute(() => (
   <Authorized>
     <Route exact path="/me">
@@ -25,6 +27,7 @@ application.services.addRoute(() => (
     </Route>
   </Authorized>
 ));
+
 application.services.addRoute(() => (
   <Authorized>
     <Route exact path="/user/:userId">
@@ -32,3 +35,9 @@ application.services.addRoute(() => (
     </Route>
   </Authorized>
 ));
+
+application.services.addRoute(() => (
+  <Route path="/coach" exact>
+    <CoachBrowser />
+  </Route>
+))

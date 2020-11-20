@@ -1,6 +1,8 @@
 import { UserModel } from "./model";
 import { User } from "@chess-tent/models";
 import { compare, hash } from "bcrypt";
+import { MongooseFilterQuery } from "mongoose";
+import { nonNullOrUndefined } from "../utils/helpers";
 
 export const addUser = (user: User) =>
   new Promise(resolve => {
@@ -43,16 +45,26 @@ export const getUser = (
 
 export const findUsers = (
   // TODO - validate filters (whole app)
-  filters: Partial<Pick<User, "coach" | "name">>
-): Promise<User[]> =>
-  new Promise(resolve => {
-    UserModel.find(filters).exec((err, result) => {
+  filters: Partial<{ coach?: string, name?: string, search?: string }>
+): Promise<User[]> => {
+  const query: MongooseFilterQuery<any> = nonNullOrUndefined({
+    coach: filters.coach,
+    name: filters.name
+  })
+
+  if (filters.search) {
+    query["$text"] = { $search: filters.search, $caseSensitive: false }
+  }
+
+  return new Promise(resolve => {
+    UserModel.find(query).exec((err, result) => {
       if (err) {
         throw err;
       }
       resolve(result.map(item => item.toObject()));
     });
-  });
+  })
+};
 
 export const validateUser = (user: unknown) => {
   return new UserModel(user).validateSync();

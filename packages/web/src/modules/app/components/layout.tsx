@@ -5,10 +5,10 @@ import { Components } from '@types';
 
 const { Header, Conversations } = components;
 
-export default styled<Components['Layout']>(({ className, children }) => (
+export default styled<Components['Layout']>(({ className, children, onSearch }) => (
   <div className={className}>
     <div className="layout-header">
-      <Header />
+      <Header onSearch={onSearch} />
     </div>
     <div className="layout-content">{children}</div>
     <div className="layout-sidebar">

@@ -64,6 +64,12 @@ export declare interface TextProps {
   contentEditable?: boolean;
 }
 
+export declare interface SearchBoxProps {
+  children?: never;
+  onSearch: (text: string) => void;
+  debounce: number;
+}
+
 export type UIComponent<T = {}> = ComponentType<
   T & {
     className?: string;
@@ -85,6 +91,7 @@ export type UI = {
       } & SelectComponentsProps
     >;
   };
+  SearchBox: UIComponent<SearchBoxProps>;
   Text: UIComponent<TextProps>;
   Display1: UIComponent;
   Display2: UIComponent;
@@ -95,7 +102,7 @@ export type UI = {
   Headline5: UIComponent;
   Headline6: UIComponent;
   Icon: UIComponent<{
-    type: 'close' | 'comment' | 'notification';
+    type: 'close' | 'comment' | 'notification' | 'search';
     textual?: boolean;
     size?: 'large' | 'regular';
   }>;

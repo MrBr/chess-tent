@@ -24,7 +24,8 @@ export default (({ user }) => {
     setCoaches([...(coaches || []), (response.data as unknown) as Mentorship]);
   }, [coaches, reset, response, setCoaches]);
 
-  if (!user.coach) {
+  if (!user.coach || user.id === me.id) {
+    // Prevent user from coaching himself
     return null;
   }
 

@@ -10,4 +10,5 @@ application.register(() => import("./auth"));
 application.register(() => import("./activity"));
 application.register(() => import("./aws"));
 application.register(() => import("./mentorship"));
+application.register(() => import("./notification"));
 application.register(() => import("./tag"));

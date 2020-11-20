@@ -8,7 +8,6 @@ export const requestMentorship: MiddlewareFunction = (req, res, next) => {
       res.locals.mentorship = mentorship;
       next();
     })
-    .then(next)
     .catch(next);
 };
 

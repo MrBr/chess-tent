@@ -1,4 +1,3 @@
-import { Service } from "@types";
 import { UserModel } from "./model";
 import { User } from "@chess-tent/models";
 import { compare, hash } from "bcrypt";
@@ -25,7 +24,10 @@ export const updateUser = (userId: User["id"], user: Partial<User>) =>
     );
   });
 
-export const getUser: Service["getUser"] = (userDescr, projection = "") =>
+export const getUser = (
+  userDescr: Partial<User>,
+  projection = ""
+): Promise<User | null> =>
   new Promise(resolve => {
     UserModel.findOne(
       UserModel.translateAliases(userDescr),

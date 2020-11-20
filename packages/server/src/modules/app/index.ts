@@ -2,7 +2,13 @@ import application, { db, socket } from "@application";
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
-import { errorHandler, sendData, sendStatusOk, toLocals } from "./middleware";
+import {
+  errorHandler,
+  logLocal,
+  sendData,
+  sendStatusOk,
+  toLocals
+} from "./middleware";
 import cookieParser from "cookie-parser";
 import { generateIndex } from "./service";
 
@@ -18,6 +24,7 @@ app.use(cookieParser(process.env.COOKIE_SECRET));
 application.middleware.errorHandler = errorHandler;
 application.middleware.sendData = sendData;
 application.middleware.sendStatusOk = sendStatusOk;
+application.middleware.logLocal = logLocal;
 application.middleware.toLocals = toLocals;
 application.service.registerGetRoute = (path, ...middlware) =>
   app.get(process.env.API_BASE_PATH + path, ...middlware);

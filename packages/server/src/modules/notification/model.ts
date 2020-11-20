@@ -12,6 +12,10 @@ const notificationSchema = db.createSchema<NormalizedNotification>({
     type: String,
     default: TYPE_NOTIFICATION
   } as unknown) as typeof TYPE_NOTIFICATION,
+  notificationType: ({
+    type: String,
+    required: true
+  } as unknown) as string,
   user: ({
     type: String,
     ref: TYPE_USER

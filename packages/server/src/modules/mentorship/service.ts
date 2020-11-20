@@ -5,7 +5,11 @@ export const requestMentorship = (student: User["id"], coach: User["id"]) =>
   new Promise(resolve => {
     MentorshipModel.create({ student, coach })
       .then(result => {
-        resolve(result);
+        result
+          .populate("student")
+          .populate("coach")
+          .execPopulate()
+          .then(resolve);
       })
       .catch(err => {
         throw err;

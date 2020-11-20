@@ -33,6 +33,7 @@ import { CardBody, CardComponent } from './Card';
 import { Tab, Tabs } from './Tab';
 import Icon from './Icon';
 import Absolute from './Absolute';
+import { Toast, ToastBody, ToastHeader } from './Toast';
 import { withFiles } from './hoc';
 
 application.hoc.withFiles = withFiles;
@@ -51,6 +52,10 @@ application.ui.Check = Check;
 application.ui.Select = Select;
 application.ui.Option = Option;
 application.ui.ErrorMessage = ErrorMessage;
+
+application.ui.Toast = Toast;
+application.ui.ToastHeader = ToastHeader;
+application.ui.ToastBody = ToastBody;
 
 application.ui.Dropdown = Dropdown;
 

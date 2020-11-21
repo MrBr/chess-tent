@@ -8,6 +8,7 @@ import {
   updateLessonStepAction,
 } from './state/actions';
 import { lessonSelector } from './state/selectors';
+import DifficultyDropdown from './components/difficulty-dropdown';
 
 application.register(() => import('./register'));
 application.register(() => import('./routes'));
@@ -19,6 +20,7 @@ application.state.actions.updateLessonChapter = updateLessonChapterAction;
 application.state.actions.addLessonChapter = addLessonChapterAction;
 application.state.actions.updateLesson = updateLessonAction;
 application.state.selectors.lessonSelector = lessonSelector;
+application.components.DifficultyDropdown = DifficultyDropdown;
 
 application.register(
   () => import('./model'),

@@ -1,4 +1,4 @@
-export const nonNullOrUndefined = <T>(obj: T) => {
+export default <T>(obj: T) => {
   const propNames = Object.getOwnPropertyNames(obj);
   const result = {} as T;
   for (let i = 0; i < propNames.length; i++) {

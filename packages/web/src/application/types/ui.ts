@@ -1,10 +1,10 @@
 import {
   ComponentProps,
   ComponentType,
+  ImgHTMLAttributes,
   ReactElement,
   ReactEventHandler,
   ReactNode,
-  ImgHTMLAttributes,
 } from 'react';
 import {
   ColProps,
@@ -12,12 +12,12 @@ import {
   FormControlProps,
   FormGroupProps,
   FormLabelProps,
+  InputGroup,
   ModalBody,
   ModalProps as BModalProps,
   RowProps,
-  Tabs,
   Tab,
-  InputGroup,
+  Tabs,
   ToastBody,
   ToastProps,
   ToastHeaderProps,
@@ -68,6 +68,20 @@ export declare interface SearchBoxProps {
   children?: never;
   onSearch: (text: string) => void;
   debounce: number;
+}
+
+export interface DropdownOption<T> {
+  value?: T;
+  label: string;
+}
+
+export interface TypedDropdownProps<T> {
+  className?: string;
+  children?: never;
+  label: string;
+  values: DropdownOption<T>[];
+  initial?: T;
+  onChange?: (value?: T) => void;
 }
 
 export type UIComponent<T = {}> = ComponentType<
@@ -130,6 +144,7 @@ export type UI = {
     Divider: typeof Dropdown['Divider'];
     Header: typeof Dropdown['Header'];
   };
+  TypedDropdown: ComponentType<TypedDropdownProps<any>>;
   Avatar: ComponentType<{
     src: string | undefined;
     size?: 'regular' | 'small' | 'large' | 'extra-small';

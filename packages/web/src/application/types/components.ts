@@ -16,6 +16,7 @@ import {
   Activity,
   Analysis,
   Chapter,
+  Difficulty,
   Lesson,
   Mentorship,
   Notification,
@@ -42,7 +43,7 @@ import {
   StepSystemProps,
 } from './step';
 import { ClassComponent } from './_helpers';
-import { ButtonProps, UI } from './ui';
+import { TypedDropdownProps, ButtonProps, UI } from './ui';
 import { LessonActivity, NotificationView, StepModules, Steps } from './index';
 
 export interface ChessboardState {
@@ -204,11 +205,8 @@ export type NotificationComponent<T extends Notification> = ComponentType<{
 
 export type Components = {
   App: ComponentType;
-  Header: ComponentType<{ onSearch?: (query: string) => void }>;
-  Layout: ComponentType<{
-    className?: string;
-    onSearch?: (query: string) => void;
-  }>;
+  Header: ComponentType;
+  Layout: ComponentType<{ className?: string }>;
   Chessboard: ClassComponent<ChessboardInterface>;
   Stepper: FunctionComponent<StepperProps>;
   StepperStepContainer: ComponentType<{ onClick?: ReactEventHandler }>;
@@ -305,6 +303,11 @@ export type Components = {
   AnalysisBoard: ComponentType<AnalysisSystemProps & StepBoardComponentProps>;
   AnalysisSidebar: ComponentType<AnalysisSystemProps>;
   NotificationStand: ComponentType;
+  DifficultyDropdown: ComponentType<
+    Omit<TypedDropdownProps<Difficulty>, 'values' | 'label'> & {
+      includeNullOption: boolean;
+    }
+  >;
   MentorshipButton: ComponentType<{ user: User }>;
   MentorshipAction: ComponentType<{
     mentorship: Mentorship;

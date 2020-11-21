@@ -36,6 +36,7 @@ import Icon from './Icon';
 import Absolute from './Absolute';
 import { Toast, ToastBody, ToastHeader } from './Toast';
 import { withFiles } from './hoc';
+import TypedDropdown from './TypedDropdown';
 
 application.hoc.withFiles = withFiles;
 
@@ -59,6 +60,7 @@ application.ui.ToastHeader = ToastHeader;
 application.ui.ToastBody = ToastBody;
 
 application.ui.Dropdown = Dropdown;
+application.ui.TypedDropdown = TypedDropdown;
 
 application.ui.Card = CardComponent;
 application.ui.CardBody = CardBody;

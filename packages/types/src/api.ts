@@ -7,6 +7,9 @@ import {
   NormalizedMessage,
   User,
   Tag,
+  Difficulty,
+  Speciality,
+  CoachEloRange,
   Mentorship,
   NormalizedMentorship,
   Notification
@@ -73,7 +76,13 @@ export type Requests = {
   logout: RequestFetch<undefined, StatusResponse>;
   me: RequestFetch<undefined, UserResponse>;
   users: RequestFetch<
-    { coach?: boolean; name?: string; search?: string },
+    {
+      coach?: boolean;
+      name?: string;
+      search?: string;
+      elo?: CoachEloRange;
+      speciality?: Speciality;
+    },
     UsersResponse
   >;
   user: RequestFetch<User["id"], UserResponse>;

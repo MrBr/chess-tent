@@ -80,11 +80,16 @@ export type Middleware = {
 };
 export type MiddlewareFunction = (...args: Parameters<RequestHandler>) => void;
 
+export type Utils = {
+  notNullOrUndefined: <T>(object: T) => T;
+};
+
 export type Application = {
   middleware: Middleware;
   db: DB;
   service: Service;
   socket: SocketService;
+  utils: Utils;
   register: typeof register;
   init: () => Promise<any>;
   start: () => void;

@@ -1,10 +1,10 @@
 import React, { FunctionComponent, useEffect } from 'react';
-import { ui, hooks, requests, components } from '@application';
+import { components, hooks, requests, ui } from '@application';
 import styled from '@emotion/styled';
 import { User } from '@chess-tent/models';
 import { Components } from '@types';
 
-const { Container, Headline4, Row, Col, Dropdown, Text, SearchBox } = ui;
+const { Container, Headline4, Row, Col, Dropdown, Text } = ui;
 const { useHistory, useApi, useActiveUserRecord } = hooks;
 const { UserAvatar, NotificationStand } = components;
 const TabButton = styled<
@@ -36,7 +36,7 @@ const TabButton = styled<
   cursor: 'pointer',
 });
 
-const Header: Components['Header'] = ({ onSearch }) => {
+const Header: Components['Header'] = () => {
   const history = useHistory();
   const logoutApi = useApi(requests.logout);
   const [, , clear] = useActiveUserRecord();
@@ -59,12 +59,9 @@ const Header: Components['Header'] = ({ onSearch }) => {
         <Col className="h-100" xs={6}>
           <TabButton path="/">Dashboard</TabButton>
           <TabButton path="/lesson/new">Create Lesson</TabButton>
-          <TabButton path="/coach">Find Coach</TabButton>
+          <TabButton path="/coaches">Find Coach</TabButton>
         </Col>
-        <Col className="align-items-center" xs={2}>
-          {onSearch && <SearchBox onSearch={onSearch} debounce={500} />}
-        </Col>
-        <Col className="d-flex justify-content-end" xs={1}>
+        <Col className="d-flex justify-content-end" xs={3}>
           <NotificationStand />
           <Dropdown>
             <Dropdown.Toggle id="header-user">

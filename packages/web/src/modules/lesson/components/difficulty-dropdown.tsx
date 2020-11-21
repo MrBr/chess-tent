@@ -2,37 +2,48 @@ import React from 'react';
 import { Difficulty } from '@chess-tent/models';
 
 import { ui } from '@application';
+import { Components, DropdownOption } from '@types';
 
-const { Dropdown } = ui;
-interface DifficultyDropdownProps {
-  difficulty: Difficulty;
-  onChange?: (difficulty: Difficulty) => void;
-}
+const { TypedDropdown } = ui;
 
-class DifficultyDropdown extends React.Component<
-  DifficultyDropdownProps,
-  { editing: boolean }
-> {
-  onChange = (difficultyKey: string | null) => {
-    const { onChange } = this.props;
-    onChange && onChange(Difficulty[difficultyKey as Difficulty]);
-  };
-  render() {
-    const { difficulty } = this.props;
-    return (
-      <Dropdown onSelect={this.onChange}>
-        <Dropdown.Toggle id="difficulty-dropdown" size="small">
-          {difficulty}
-        </Dropdown.Toggle>
-        <Dropdown.Menu>
-          {Object.keys(Difficulty).map(difficulty => (
-            <Dropdown.Item eventKey={difficulty} key={difficulty}>
-              {difficulty}
-            </Dropdown.Item>
-          ))}
-        </Dropdown.Menu>
-      </Dropdown>
-    );
-  }
-}
+const options: Array<DropdownOption<Difficulty>> = [
+  {
+    value: Difficulty.BEGINNER,
+    label: 'Beginner',
+  },
+  {
+    value: Difficulty.INTERMEDIATE,
+    label: 'Intermediate',
+  },
+  {
+    value: Difficulty.ADVANCED,
+    label: 'Advanced',
+  },
+  {
+    value: undefined,
+    label: 'Any',
+  },
+];
+
+const DifficultyDropdown: Components['DifficultyDropdown'] = ({
+  className,
+  onChange,
+  initial,
+  includeNullOption,
+}) => {
+  const values = includeNullOption
+    ? options
+    : options.filter(it => it.value !== undefined);
+
+  return (
+    <TypedDropdown
+      className={className}
+      values={values}
+      label={'Difficulty'}
+      initial={initial}
+      onChange={onChange}
+    />
+  );
+};
+
 export default DifficultyDropdown;

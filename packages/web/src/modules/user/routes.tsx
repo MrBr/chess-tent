@@ -37,7 +37,7 @@ application.services.addRoute(() => (
 ));
 
 application.services.addRoute(() => (
-  <Route path="/coach" exact>
+  <Route path="/coaches" exact>
     <CoachBrowser />
   </Route>
 ));

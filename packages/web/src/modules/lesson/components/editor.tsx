@@ -31,13 +31,12 @@ import TrainingModal from './training-assign';
 import Sidebar from './editor-sidebar';
 import { PreviewModal } from './activity-preview';
 import ChaptersDropdown from './chapters-dropdown';
-import DifficultyDropdown from './difficulty-dropdown';
 import TagsDropdown from './tags-dropdown';
 import { addLessonUpdate, getLessonUpdates } from '../service';
 
 const { Container, Row, Col, Headline2, Button, Absolute, Text } = ui;
 const { createChapter } = services;
-const { Stepper, StepRenderer, Chessboard } = components;
+const { Stepper, StepRenderer, Chessboard, DifficultyDropdown } = components;
 const {
   actions: {
     updateLessonStep,
@@ -122,7 +121,11 @@ class EditorRenderer extends React.Component<
     this.updateLessonTitleDebounced(elem.innerText);
   };
 
-  updateLessonDifficulty = (difficulty: Difficulty) => {
+  updateLessonDifficulty = (difficulty?: Difficulty) => {
+    if (difficulty === undefined) {
+      return;
+    }
+
     const { lesson } = this.props;
     const action = updateLessonPath(lesson, ['difficulty'], difficulty);
     this.addLessonUpdate(action);
@@ -273,7 +276,8 @@ class EditorRenderer extends React.Component<
                 <Row className="mt-3 mb-3">
                   <Col className="col-auto">
                     <DifficultyDropdown
-                      difficulty={lesson.difficulty}
+                      includeNullOption={false}
+                      initial={lesson.difficulty}
                       onChange={this.updateLessonDifficulty}
                     />
                   </Col>

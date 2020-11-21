@@ -5,19 +5,17 @@ import { Components } from '@types';
 
 const { Header, Conversations } = components;
 
-export default styled<Components['Layout']>(
-  ({ className, children, onSearch }) => (
-    <div className={className}>
-      <div className="layout-header">
-        <Header onSearch={onSearch} />
-      </div>
-      <div className="layout-content">{children}</div>
-      <div className="layout-sidebar">
-        <Conversations />
-      </div>
+export default styled<Components['Layout']>(({ className, children }) => (
+  <div className={className}>
+    <div className="layout-header">
+      <Header />
     </div>
-  ),
-)({
+    <div className="layout-content">{children}</div>
+    <div className="layout-sidebar">
+      <Conversations />
+    </div>
+  </div>
+))({
   '.layout-header': {
     gridArea: 'header',
     height: 96,

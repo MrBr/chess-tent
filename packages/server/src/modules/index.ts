@@ -1,6 +1,7 @@
 import application from "@application";
 
 application.register(() => import("./app"));
+application.register(() => import("./utils"));
 application.register(() => import("./lesson"));
 application.register(() => import("./conversation"));
 application.register(() => import("./socket"));

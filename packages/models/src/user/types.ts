@@ -25,6 +25,19 @@ export interface User extends Subject {
   };
 }
 
+export enum Speciality {
+  OPENING = "OPENING",
+  MIDGAME = "MIDGAME",
+  ENDGAME = "ENDGAME",
+}
+
+export interface CoachEloRange {
+  from: number;
+  to: number;
+  // Used to override default toString method for Bootstrap option eventKey
+  toString?: () => string;
+}
+
 export interface NormalizedUser {
   id: User["id"];
   type: User["type"];

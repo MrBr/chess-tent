@@ -5,14 +5,14 @@ import { ui } from '@application';
 import { ValueType } from 'react-select';
 
 const { Select } = ui;
-interface DifficultyDropdownProps {
+interface TagsDropdownProps {
   tags: Tag[];
   selected?: Tag[];
   onChange?: (tags: Tag['id'][]) => void;
 }
 
-class DifficultyDropdown extends React.Component<
-  DifficultyDropdownProps,
+class TagsDropdown extends React.Component<
+  TagsDropdownProps,
   { editing: boolean }
 > {
   onChange = (tags: ValueType<Tag>) => {
@@ -35,4 +35,4 @@ class DifficultyDropdown extends React.Component<
     );
   }
 }
-export default DifficultyDropdown;
+export default TagsDropdown;

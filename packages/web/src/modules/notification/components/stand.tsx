@@ -1,12 +1,10 @@
 import React from 'react';
 import { components, hooks, ui } from '@application';
-import { User } from '@chess-tent/models';
 import styled from '@emotion/styled';
-import { selectUserNotifications } from '../state/selectors';
 
 const { Icon, Dropdown, Absolute } = ui;
 const { NotificationRender } = components;
-const { useActiveUserRecord, useSelector } = hooks;
+const { useActiveUserNotifications } = hooks;
 const UnreadMark = styled.span({
   borderRadius: '50%',
   background: 'red',
@@ -15,9 +13,8 @@ const UnreadMark = styled.span({
   height: 7,
 });
 export default () => {
-  const [user] = useActiveUserRecord() as [User, never, never];
-  const notifications = useSelector(selectUserNotifications(user.id));
-  const unread = notifications.some(notification => notification.read);
+  const [notifications] = useActiveUserNotifications();
+  const unread = notifications?.some(notification => !notification.read);
   return (
     <Dropdown className="mr-4">
       <Dropdown.Toggle id="notification-stand" collapse>
@@ -28,14 +25,24 @@ export default () => {
         )}
         <Icon type="notification" />
       </Dropdown.Toggle>
-      <Dropdown.Menu>
-        {notifications.length > 0 ? (
-          notifications.map(notification => (
-            <NotificationRender view="Dropdown" notification={notification} />
+      <Dropdown.Menu width={250}>
+        {!!notifications ? (
+          notifications?.map(notification => (
+            <React.Fragment key={notification.id}>
+              <NotificationRender
+                view="DropdownItem"
+                notification={notification}
+              />
+              <Dropdown.Divider />
+            </React.Fragment>
           ))
         ) : (
-          <Dropdown.Item>All read</Dropdown.Item>
+          <React.Fragment key="all-read">
+            <Dropdown.Item>All read</Dropdown.Item>
+            <Dropdown.Divider />
+          </React.Fragment>
         )}
+        <Dropdown.Item>See all</Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>
   );

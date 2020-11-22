@@ -6,6 +6,7 @@ application.register(
   () => import('./hooks'),
   module => {
     application.hooks.useCoaches = module.useCoaches;
+    application.hooks.useStudents = module.useStudents;
   },
 );
 
@@ -17,9 +18,15 @@ application.register(
 );
 
 application.register(
-  () => import('./components/mentorship-button'),
+  () => import('./components/button/mentorship'),
   module => {
     application.components.MentorshipButton = module.default;
+  },
+);
+application.register(
+  () => import('./components/button/action'),
+  module => {
+    application.components.MentorshipAction = module.default;
   },
 );
 application.register(
@@ -27,7 +34,7 @@ application.register(
   module => {
     application.services.registerNotificationRenderer(TYPE_MENTORSHIP, {
       Toast: module.Toast,
-      Dropdown: module.Dropdown,
+      DropdownItem: module.DropdownItem,
     });
   },
 );
@@ -38,3 +45,4 @@ application.register(
     application.model.mentorshipSchema = module.mentorshipSchema;
   },
 );
+application.register(() => import('./routes'));

@@ -8,7 +8,8 @@ import {
   User,
   Tag,
   Mentorship,
-  NormalizedMentorship
+  NormalizedMentorship,
+  Notification
 } from "@chess-tent/models";
 import { GenericArguments } from "./_helpers";
 import {
@@ -103,7 +104,7 @@ export type Requests = {
     StatusResponse
   >;
   coaches: RequestFetch<User, CoachesResponse>;
-  notifications: RequestFetch<boolean, NotificationsResponse>;
+  notifications: RequestFetch<boolean | undefined, NotificationsResponse>;
   students: RequestFetch<User, StudentsResponse>;
   findTags: RequestFetch<string, TagsResponse>;
   tags: RequestFetch<undefined, TagsResponse>;

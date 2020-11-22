@@ -27,7 +27,7 @@ export const resolveMentorshipRequest = (
         if (err) {
           throw err;
         }
-        resolve(result);
+        resolve();
       }
     );
   });

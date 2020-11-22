@@ -47,9 +47,9 @@ const Toggle = styled.div(
 );
 
 // @ts-ignore
-BDropdown.Menu = styled(BDropdown.Menu)({
-  width: '100%',
-});
+BDropdown.Menu = styled(BDropdown.Menu)(({ width }) => ({
+  width: width || '100%',
+}));
 
 // @ts-ignore
 BDropdown.Toggle.defaultProps = {

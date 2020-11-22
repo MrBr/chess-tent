@@ -29,7 +29,7 @@ import {
   Text,
 } from './Text';
 import { Avatar, FramedProfile, Img, Thumbnail } from './Img';
-import { CardBody, CardComponent } from './Card';
+import { CardBody, CardComponent, CardHeader } from './Card';
 import { Tab, Tabs } from './Tab';
 import Icon from './Icon';
 import Absolute from './Absolute';
@@ -61,6 +61,7 @@ application.ui.Dropdown = Dropdown;
 
 application.ui.Card = CardComponent;
 application.ui.CardBody = CardBody;
+application.ui.CardHeader = CardHeader;
 
 application.ui.Img = Img;
 application.ui.FramedProfile = FramedProfile;

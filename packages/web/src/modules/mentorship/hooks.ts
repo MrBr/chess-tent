@@ -6,24 +6,31 @@ import { useApi } from '../api/hooks';
 
 const { useRecord } = hooks;
 
-const useCoaches = (user: User): RecordHookReturn<Mentorship[]> => {
-  const [coaches, setCoaches, resetCoaches] = useRecord<Mentorship[]>(
-    `coaches-${user.id}`,
+const createUseMentorship = (type: 'coaches' | 'students') => (
+  user: User,
+): RecordHookReturn<Mentorship[]> => {
+  const [mentorship, setMentorship, resetMentorship] = useRecord<Mentorship[]>(
+    `${type}-${user.id}`,
   );
-  const { fetch, response, loading, error, reset } = useApi(requests.coaches);
+  const { fetch, response, loading, error, reset } = useApi(
+    type === 'coaches' ? requests.coaches : requests.students,
+  );
   useEffect(() => {
-    if (!response || coaches) {
+    if (!response || mentorship) {
       return;
     }
-    setCoaches(response.data);
-  }, [reset, response, setCoaches, coaches]);
+    setMentorship(response.data);
+  }, [reset, response, setMentorship, mentorship]);
   useEffect(() => {
-    if (loading || response || error || coaches) {
+    if (loading || response || error || mentorship) {
       return;
     }
     fetch(user);
-  }, [fetch, loading, response, error, coaches, user]);
-  return [coaches, setCoaches, resetCoaches];
+  }, [fetch, loading, response, error, mentorship, user]);
+  return [mentorship, setMentorship, resetMentorship];
 };
 
-export { useCoaches };
+const useCoaches = createUseMentorship('coaches');
+const useStudents = createUseMentorship('students');
+
+export { useCoaches, useStudents };

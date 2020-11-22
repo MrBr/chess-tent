@@ -4,6 +4,13 @@ import { notificationsSchema } from './model';
 application.model.notificationsSchema = notificationsSchema;
 application.register(() => import('./register'));
 application.register(
+  () => import('./hooks'),
+  module => {
+    application.hooks.useActiveUserNotifications =
+      module.useActiveUserNotifications;
+  },
+);
+application.register(
   () => import('./state/actions'),
   module => {
     application.state.actions.updateNotification =

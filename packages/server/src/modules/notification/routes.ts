@@ -7,7 +7,7 @@ application.service.registerGetRoute(
   "/notifications",
   identify,
   toLocals("filters", (req, res) => ({
-    user: res.locals.user,
+    user: res.locals.me.id,
     read: !!req.query.read
   })),
   getNotifications,

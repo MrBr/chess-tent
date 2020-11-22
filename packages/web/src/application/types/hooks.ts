@@ -8,6 +8,7 @@ import {
   Step,
   Tag,
   User,
+  Notification,
 } from '@chess-tent/models';
 import { Action as ReduxAction } from 'redux';
 import { useSelector, useDispatch } from 'react-redux';
@@ -38,6 +39,7 @@ export type Hooks = {
   useTags: () => Tag[];
   useUser: (userId: User['id']) => User;
   useActiveUserRecord: () => RecordHookReturn<User>;
+  useActiveUserNotifications: () => RecordHookReturn<Notification[]>;
   useUserActivitiesRecord: (user: User) => RecordHookReturn<Activity[]>;
   useUserLessonsRecord: (user: User) => RecordHookReturn<Lesson[]>;
   useConversationParticipant: () => RecordHookReturn<User>;
@@ -55,6 +57,7 @@ export type Hooks = {
   };
   useRecord: <T extends RecordValue>(recordKey: string) => RecordHookReturn<T>;
   useCoaches: (user: User) => RecordHookReturn<Mentorship[]>;
+  useStudents: (user: User) => RecordHookReturn<Mentorship[]>;
   useDenormalize: <T extends RecordValue>(
     descriptor: string[] | string | null,
     type?: string,

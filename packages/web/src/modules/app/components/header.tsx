@@ -68,6 +68,18 @@ export default () => {
               <Dropdown.Item>
                 <Text onClick={() => history.push('./me')}>Profile</Text>
               </Dropdown.Item>
+              {user.coach && (
+                <Dropdown.Item>
+                  <Text onClick={() => history.push('./me/students')}>
+                    Students
+                  </Text>
+                </Dropdown.Item>
+              )}
+              <Dropdown.Item>
+                <Text onClick={() => history.push('./me/coaches')}>
+                  Coaches
+                </Text>
+              </Dropdown.Item>
               <Dropdown.Item>
                 <Text onClick={() => logoutApi.fetch()}>Logout</Text>
               </Dropdown.Item>

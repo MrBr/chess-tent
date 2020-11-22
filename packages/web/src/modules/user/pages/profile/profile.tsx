@@ -2,9 +2,18 @@ import React from 'react';
 import { components, hooks, ui } from '@application';
 import { User } from '@chess-tent/models';
 
-const { UserAvatar, Layout } = components;
+const { UserAvatar, Layout, MentorshipButton } = components;
 const { useHistory } = hooks;
-const { Col, Row, Headline3, Headline4, Text, Absolute, Button } = ui;
+const {
+  Col,
+  Row,
+  Headline3,
+  Headline4,
+  Text,
+  Absolute,
+  Button,
+  Container,
+} = ui;
 
 export default ({ user, editable }: { user: User; editable?: boolean }) => {
   const history = useHistory();
@@ -26,8 +35,13 @@ export default ({ user, editable }: { user: User; editable?: boolean }) => {
             </Button>
           </Absolute>
         )}
-        <Col className="col-auto mt-4">
-          <UserAvatar user={user} size="large" />
+        <Col className="col-auto mt-4 text-center">
+          <Container>
+            <UserAvatar user={user} size="large" />
+          </Container>
+          <Container className="mt-4">
+            <MentorshipButton user={user} />
+          </Container>
         </Col>
         <Col>
           <Headline3>{user.name}</Headline3>

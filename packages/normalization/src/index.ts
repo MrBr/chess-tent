@@ -1,10 +1,8 @@
 interface Entity {
-  id: string;
   type: string;
   [key: string]: any;
 }
 interface NormalizedEntity {
-  id: string;
   type: string;
 }
 interface Entities {
@@ -12,6 +10,7 @@ interface Entities {
 }
 interface Schema {
   type: string;
+  id?: string | ((entity: Entity) => string);
   relationships: {
     [key: string]: string | {};
   };
@@ -31,6 +30,15 @@ const initService = (schemaMap: { [key: string]: Schema }) => {
   //  Garbage collector wont clear old entities because of the references.
   const cacheEntities: { [key: string]: any } = entitiesEmptyMap(schemaMap);
   const prevEntities: { [key: string]: any } = entitiesEmptyMap(schemaMap);
+
+  const getId = (entity: Entity) => {
+    const schema = schemaMap[entity.type];
+    return !schema.id
+      ? entity.id
+      : typeof schema.id === "string"
+      ? entity[schema.id]
+      : schema.id(entity);
+  };
 
   const normalizeRelationships = (
     entityState: { [key: string]: any },
@@ -52,13 +60,15 @@ const initService = (schemaMap: { [key: string]: Schema }) => {
       } else if (Array.isArray(relationshipValue)) {
         normalizedRelationshipValue = [];
         for (let i = 0; i < relationshipValue.length; i++) {
-          const { result } = normalize(relationshipValue[i], entities);
-          normalizedRelationshipValue.push(result.id);
+          normalize(relationshipValue[i], entities);
+          normalizedRelationshipValue.push(getId(relationshipValue[i]));
         }
+      } else if (typeof relationshipValue === "string") {
+        normalizedRelationshipValue = relationshipValue;
       } else {
         // eslint-disable-next-line @typescript-eslint/no-use-before-define
-        const { result } = normalize(relationshipValue, entities);
-        normalizedRelationshipValue = result.id;
+        normalize(relationshipValue, entities);
+        normalizedRelationshipValue = getId(relationshipValue);
       }
       result[attribute] = normalizedRelationshipValue;
     }
@@ -80,7 +90,7 @@ const initService = (schemaMap: { [key: string]: Schema }) => {
 
     // Can denormalized entity be cached here? How does it affect cachedEntities?
     // cache[entity.type][entity.id] = entity;
-    entities[type][normalizedEntity.id] = normalizedEntity;
+    entities[type][getId(entity)] = normalizedEntity;
 
     return { result: normalizedEntity, entities };
   };
@@ -173,7 +183,7 @@ const initService = (schemaMap: { [key: string]: Schema }) => {
     }
     return freshEntity;
   }
-  return { normalize, denormalize };
+  return { normalize, denormalize, getId };
 };
 
 export default initService;

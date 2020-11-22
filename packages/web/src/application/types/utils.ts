@@ -9,6 +9,7 @@ export type Utils = {
   generateIndex: () => string;
   denormalize: (id: string, type: string, entities: {}) => any;
   normalize: (entity: Entity) => any;
+  getEntityId: (entity: Entity) => string;
   mediaQueryEnhancer: (
     screenSize: 'xs' | 'sm' | 'md' | 'lg' | 'xl',
     style: CSSObject,

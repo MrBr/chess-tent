@@ -55,7 +55,8 @@ const LessonModel = db.createModel<DepupulatedLesson>(
 
 const depopulate = (lesson: Partial<Lesson>): DepupulatedLesson => {
   const owner = lesson.owner?.id;
-  return (owner ? { ...lesson, owner } : lesson) as DepupulatedLesson;
+  const tags = lesson.tags?.map(tag => tag.id);
+  return (owner ? { ...lesson, owner, tags } : lesson) as DepupulatedLesson;
 };
 
 export { lessonSchema, LessonModel, depopulate };

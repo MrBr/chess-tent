@@ -7,6 +7,18 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   res.status(err.status || 500).json({ error: err.message });
 };
 
+export const logLocal: Middleware["logLocal"] = (prefix, log) => (
+  req,
+  res,
+  next
+) => {
+  console.log(
+    prefix,
+    typeof log === "string" ? res.locals[log] : log(req, res)
+  );
+  next();
+};
+
 export const sendData: Middleware["sendData"] = (localProp: string) => (
   req,
   res
@@ -18,9 +30,13 @@ export const sendStatusOk: Middleware["sendStatusOk"] = (req, res) => {
   res.json({ error: null });
 };
 
-export const toLocals: Middleware["toLocals"] = (localsKey, func) => (
+export const toLocals: Middleware["toLocals"] = (localsKey, value) => (
   ...args
 ) => {
-  set(args[1].locals, localsKey, func(...args));
+  set(
+    args[1].locals,
+    localsKey,
+    typeof value === "function" ? value(...args) : value
+  );
   args[2]();
 };

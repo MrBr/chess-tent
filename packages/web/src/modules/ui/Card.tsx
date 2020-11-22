@@ -6,10 +6,11 @@ import { ClickProps, UI } from '@types';
 const CardComponent = styled<
   ComponentType<ComponentProps<RBCard> & ClickProps>
 >(RBCard)({
-  background: 'transparent',
   border: 0,
+  boxShadow: '0px 4px 8px rgba(0,0,0,0.1)',
 }) as UI['Card'];
 
 const CardBody = RBCard.Body;
+const CardHeader = RBCard.Header;
 
-export { CardComponent, CardBody };
+export { CardComponent, CardBody, CardHeader };

@@ -5,8 +5,16 @@ import {
   resolveMentorshipRequest,
   requestMentorship
 } from "./middleware";
+import { TYPE_MENTORSHIP } from "@chess-tent/models";
 
-const { identify, sendData, sendStatusOk, toLocals } = middleware;
+const {
+  identify,
+  sendData,
+  sendStatusOk,
+  toLocals,
+  sendNotification,
+  createNotification
+} = middleware;
 
 application.service.registerPostRoute(
   "/mentorship",
@@ -14,7 +22,18 @@ application.service.registerPostRoute(
   toLocals("studentId", req => req.body.studentId),
   toLocals("coachId", req => req.body.coachId),
   requestMentorship,
-  sendStatusOk
+
+  // Notification flow
+  toLocals("user", (req, res) => res.locals.mentorship.coach),
+  toLocals("notificationType", TYPE_MENTORSHIP),
+  toLocals("state", (req, res) => ({
+    text: `${res.locals.mentorship.student.name} requested mentorship`,
+    student: res.locals.mentorship.student.id
+  })),
+  createNotification,
+  sendNotification,
+
+  sendData("mentorship")
 );
 
 application.service.registerPutRoute(

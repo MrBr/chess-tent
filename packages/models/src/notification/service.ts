@@ -7,11 +7,13 @@ const isNotification = (entity: unknown): entity is Notification =>
 const createNotification = (
   id: string,
   user: User,
+  notificationType: string,
   state = {}
 ): Notification => ({
   id,
   user,
   type: TYPE_NOTIFICATION,
+  notificationType,
   read: false,
   time: new Date(),
   state

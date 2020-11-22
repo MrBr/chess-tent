@@ -41,3 +41,9 @@ application.register(
     application.components.Conversations = module.default;
   },
 );
+application.register(
+  () => import('./components/message-button'),
+  module => {
+    application.components.MessageButton = module.default;
+  },
+);

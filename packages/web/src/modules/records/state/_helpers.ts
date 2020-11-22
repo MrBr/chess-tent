@@ -1,7 +1,10 @@
 import { RecordValue } from '@types';
+import { utils } from '@application';
 
 export const formatEntityValue = (value: RecordValue) => {
-  return Array.isArray(value) ? value.map(entity => entity.id) : value.id;
+  return Array.isArray(value)
+    ? value.map(utils.getEntityId)
+    : utils.getEntityId(value);
 };
 
 export const getEntityType = (value: RecordValue) => {

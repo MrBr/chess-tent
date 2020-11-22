@@ -1,5 +1,5 @@
 import { RecordValue } from '@chess-tent/types';
-import { useRecord } from './state/hooks';
+import { useRecord } from './hooks';
 
 export const createRecordHook = <T extends RecordValue>(
   recordKey: string,

@@ -7,11 +7,12 @@ export interface Schema {
 export type Model = {
   lessonSchema: Schema;
   activitySchema: Schema;
-  notificationSchema: Schema;
+  notificationsSchema: Schema;
   stepSchema: Schema;
   conversationSchema: Schema;
   messageSchema: Schema;
   userSchema: Schema;
   tagSchema: Schema;
   analysisSchema: Schema;
+  mentorshipSchema: Schema;
 };

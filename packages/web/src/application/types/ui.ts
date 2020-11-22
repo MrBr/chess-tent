@@ -18,6 +18,9 @@ import {
   Tabs,
   Tab,
   InputGroup,
+  ToastBody,
+  ToastProps,
+  ToastHeaderProps,
 } from 'react-bootstrap';
 import DropdownToggle from 'react-bootstrap/DropdownToggle';
 import { ErrorMessageProps, Formik } from 'formik';
@@ -111,7 +114,11 @@ export type UI = {
         collapse?: boolean;
       }
     >;
-    Menu: typeof Dropdown['Menu'];
+    Menu: ComponentType<
+      ComponentProps<typeof Dropdown['Menu']> & {
+        width?: string | number;
+      }
+    >;
     Item: typeof Dropdown['Item'];
     Divider: typeof Dropdown['Divider'];
     Header: typeof Dropdown['Header'];
@@ -159,7 +166,11 @@ export type UI = {
   >;
   Card: ComponentType<ClickProps & ClassNameProps>;
   CardBody: ComponentType;
+  CardHeader: ComponentType;
   Modal: UIComponent<ModalProps>;
   ModalBody: typeof ModalBody;
   Confirm: UIComponent<ConfirmProps>;
+  Toast: ComponentType<ToastProps>;
+  ToastBody: ComponentType<ComponentProps<typeof ToastBody>>;
+  ToastHeader: ComponentType<ToastHeaderProps>;
 };

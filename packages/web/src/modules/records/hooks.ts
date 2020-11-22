@@ -2,8 +2,8 @@ import { useCallback, useMemo } from 'react';
 import { RecordHookReturn, RecordValue } from '@types';
 import { useDispatch, useSelector } from 'react-redux';
 import { hooks } from '@application';
-import { selectRecord } from './selectors';
-import { deleteRecordAction, updateRecordAction } from './actions';
+import { selectRecord } from './state/selectors';
+import { deleteRecordAction, updateRecordAction } from './state/actions';
 
 export const useRecord = <T extends RecordValue>(
   recordKey: string,

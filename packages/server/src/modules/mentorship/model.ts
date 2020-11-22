@@ -15,18 +15,20 @@ const mentorshipSchema = db.createSchema<NormalizedMentorship>(
     student: ({
       type: String,
       ref: TYPE_USER,
-      required: true
+      required: true,
+      index: true
     } as unknown) as NormalizedMentorship["student"],
     coach: ({
       type: String,
       ref: TYPE_USER,
-      required: true
+      required: true,
+      index: true
     } as unknown) as NormalizedMentorship["coach"],
     approved: ({
       type: Schema.Types.Boolean
     } as unknown) as NormalizedMentorship["approved"]
   },
-  { id: false },
+  { id: false, _id: true },
   false
 );
 mentorshipSchema.index({ student: 1, coach: 1 }, { unique: true });

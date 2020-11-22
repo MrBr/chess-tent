@@ -6,7 +6,10 @@ import {
   Message,
   NormalizedMessage,
   User,
-  Tag
+  Tag,
+  Mentorship,
+  NormalizedMentorship,
+  Notification
 } from "@chess-tent/models";
 import { GenericArguments } from "./_helpers";
 import {
@@ -30,9 +33,10 @@ export type ActivitiesResponse = DataResponse<Activity[]>;
 export type ConversationsResponse = DataResponse<Conversation[]>;
 export type ConversationResponse = DataResponse<Conversation>;
 export type ConversationMessagesResponse = DataResponse<NormalizedMessage[]>;
-export type CoachesResponse = DataResponse<User[]>;
+export type CoachesResponse = DataResponse<Mentorship[]>;
+export type RequestMentorshipResponse = DataResponse<NormalizedMentorship>;
+export type StudentsResponse = DataResponse<Mentorship[]>;
 export type NotificationsResponse = DataResponse<Notification[]>;
-export type StudentsResponse = DataResponse<User[]>;
 export type TagsResponse = DataResponse<Tag[]>;
 
 export type ActivityFilters = {
@@ -93,14 +97,14 @@ export type Requests = {
   >;
   mentorshipRequest: RequestFetch<
     { studentId: User["id"]; coachId: User["id"] },
-    StatusResponse
+    RequestMentorshipResponse
   >;
   mentorshipResolve: RequestFetch<
     { studentId: User["id"]; coachId: User["id"]; approved: boolean },
     StatusResponse
   >;
   coaches: RequestFetch<User, CoachesResponse>;
-  notifications: RequestFetch<boolean, NotificationsResponse>;
+  notifications: RequestFetch<boolean | undefined, NotificationsResponse>;
   students: RequestFetch<User, StudentsResponse>;
   findTags: RequestFetch<string, TagsResponse>;
   tags: RequestFetch<undefined, TagsResponse>;

@@ -167,7 +167,7 @@ export type UI = {
   Card: ComponentType<ClickProps & ClassNameProps>;
   CardBody: ComponentType;
   CardHeader: ComponentType;
-  Modal: UIComponent<ModalProps>;
+  Modal: UIComponent<ModalProps & { close?: () => void; fullScreen?: boolean }>;
   ModalBody: typeof ModalBody;
   Confirm: UIComponent<ConfirmProps>;
   Toast: ComponentType<ToastProps>;

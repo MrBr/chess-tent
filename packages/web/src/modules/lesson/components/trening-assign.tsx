@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { components, hooks, requests, ui, utils } from '@application';
 import { createActivity, Lesson, User } from '@chess-tent/models';
 import * as yup from 'yup';
@@ -15,7 +15,7 @@ const {
   Text,
   Modal,
 } = ui;
-const { useApi, useActiveUserRecord } = hooks;
+const { useApi, useActiveUserRecord, useStudents } = hooks;
 const { generateIndex } = utils;
 const { UserAvatar } = components;
 
@@ -26,9 +26,13 @@ const TrainingSchema = yup.object().shape({
 
 export default ({ close }: { close: () => void }) => {
   const { fetch: saveActivity } = useApi(requests.activitySave);
-  const { fetch: getUsers, response: users } = useApi(requests.users);
   const [user] = useActiveUserRecord() as [User, never, never];
+  const [mentorship] = useStudents(user);
   const { fetch: fetchUserLessons, response } = useApi(requests.lessons);
+
+  const students = useMemo(() => mentorship?.map(({ student }) => student), [
+    mentorship,
+  ]);
 
   const assignTraining = useCallback(
     data => {
@@ -43,13 +47,12 @@ export default ({ close }: { close: () => void }) => {
 
   useEffect(() => {
     fetchUserLessons({ owner: user.id });
-    getUsers({});
-  }, [fetchUserLessons, user.id, getUsers]);
+  }, [fetchUserLessons, user.id]);
 
   return (
-    <Modal show onEscapeKeyDown={close}>
+    <Modal show close={close}>
       <ModalBody>
-        <Headline3>New Training</Headline3>
+        <Headline3 className="mt-0">New Training</Headline3>
         <Form
           initialValues={{ user: '', lesson: '' }}
           validationSchema={TrainingSchema}
@@ -59,11 +62,11 @@ export default ({ close }: { close: () => void }) => {
             <Label>Assign to</Label>
             <Form.Select
               name="user"
-              placeholder="test"
-              options={users?.data}
+              placeholder="Select student"
+              options={students}
               formatOptionLabel={(userOption: User) => (
                 <>
-                  <UserAvatar user={userOption} />
+                  <UserAvatar user={userOption} size="small" />
                   <Text inline>{userOption.name}</Text>
                 </>
               )}
@@ -77,7 +80,7 @@ export default ({ close }: { close: () => void }) => {
               formatOptionLabel={(lesson: Lesson) => (
                 <>
                   <Thumbnail src={lessonThumbUrl} />
-                  <Text inline>{lesson.id}</Text>
+                  <Text inline>{lesson.state.title}</Text>
                 </>
               )}
             />

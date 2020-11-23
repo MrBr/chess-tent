@@ -12,16 +12,40 @@ import ModalBody from 'react-bootstrap/ModalBody';
 import styled from '@emotion/styled';
 import { ConfirmProps } from '@types';
 import { Button } from './Button';
+import Absolute from './Absolute';
+import Icon from './Icon';
 
 const ModalProviderContext = React.createContext<
   (renderModal: (close: () => void) => ReactElement) => void
 >(() => {});
 
-const Modal = BModal;
+const Modal = (props =>
+  (
+    <BModal
+      onEscapeKeyDown={props.close}
+      {...props}
+      dialogClassName={props.fullScreen ? 'full-screen-dialog' : ''}
+    >
+      {props.children}
+      {props.close && (
+        <Absolute
+          {...{ [props.fullScreen ? 'left' : 'right']: 25 }}
+          top={15}
+          onClick={props.close}
+        >
+          <Icon type="close" size="large" />
+        </Absolute>
+      )}
+    </BModal>
+  ) as unknown) as BModal;
 Modal.defaultProps = {
-  ...Modal.defaultProps,
+  ...BModal.defaultProps,
   onHide: () => {},
 };
+Modal.Header = BModal.Header;
+Modal.Body = BModal.Body;
+Modal.Footer = BModal.Footer;
+Modal.Dialog = BModal.Dialog;
 
 const Confirm = styled<FunctionComponent<ConfirmProps>>(
   ({ title, message, okText, cancelText, onOk, onCancel }) => (

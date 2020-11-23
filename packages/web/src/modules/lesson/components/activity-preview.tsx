@@ -23,7 +23,7 @@ interface PreviewProps {
 
 const { useActiveUserRecord, useComponentState } = hooks;
 
-const { Modal, Icon, Absolute } = ui;
+const { Modal } = ui;
 
 const Preview = ({ lesson, chapter, step }: PreviewProps) => {
   const [user] = useActiveUserRecord() as [User, never, never];
@@ -75,11 +75,8 @@ const PreviewModal = ({
 }: PreviewProps & { close: () => void }) => {
   const { mounted } = useComponentState();
   return (
-    <Modal show onEscapeKeyDown={close} dialogClassName="full-screen-dialog">
+    <Modal show close={close} fullScreen>
       {mounted && <Preview {...props} />}
-      <Absolute left={25} top={15} onClick={close}>
-        <Icon type="close" size="large" />
-      </Absolute>
     </Modal>
   );
 };

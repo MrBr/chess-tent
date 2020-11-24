@@ -34,6 +34,31 @@ export const addMessageToConversation = (
     });
   });
 
+export const updateConversationMessage = (
+  conversationId: Conversation["id"],
+  messageId: NormalizedMessage["id"],
+  messagePatch: Partial<NormalizedMessage>
+) => {
+  const patch = Object.keys(messagePatch).reduce<Record<string, any>>(
+    (patch, key) => {
+      patch["messages.$." + key] = messagePatch[key as keyof NormalizedMessage];
+      return patch;
+    },
+    {}
+  );
+  new Promise(resolve => {
+    ConversationModel.updateOne(
+      { _id: conversationId, messages: { $elemMatch: { id: messageId } } },
+      { $set: patch }
+    ).exec((err, result) => {
+      if (err) {
+        throw err;
+      }
+      resolve();
+    });
+  });
+};
+
 export const findConversations = (
   users: User["id"][]
 ): Promise<Conversation[]> =>

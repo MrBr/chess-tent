@@ -76,6 +76,7 @@ export const findUsers = (
     }
   }
 
+  // TODO: connect tags to users
   if (filters.speciality) {
     query["state.speciality"] = { $eq: filters.speciality };
   }

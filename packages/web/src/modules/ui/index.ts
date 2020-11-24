@@ -15,8 +15,8 @@ import {
   InputGroup,
 } from './Form';
 import { Container, Row, Col, Page } from './Grid';
-import { default as Select, Option } from './Select';
-import Dropdown from './Dropdown';
+import { default as Select } from './Select';
+import Dropdown, { OptionsDropdown } from './Dropdown';
 import {
   Display1,
   Display2,
@@ -36,7 +36,6 @@ import Icon from './Icon';
 import Absolute from './Absolute';
 import { Toast, ToastBody, ToastHeader } from './Toast';
 import { withFiles } from './hoc';
-import TypedDropdown from './TypedDropdown';
 
 application.hoc.withFiles = withFiles;
 
@@ -51,16 +50,16 @@ application.ui.Input = Input;
 application.ui.InputGroup = InputGroup;
 application.ui.File = File;
 application.ui.Check = Check;
-application.ui.Select = Select;
-application.ui.Option = Option;
 application.ui.ErrorMessage = ErrorMessage;
+
+application.ui.Select = Select;
 
 application.ui.Toast = Toast;
 application.ui.ToastHeader = ToastHeader;
 application.ui.ToastBody = ToastBody;
 
 application.ui.Dropdown = Dropdown;
-application.ui.TypedDropdown = TypedDropdown;
+application.ui.OptionsDropdown = OptionsDropdown;
 
 application.ui.Card = CardComponent;
 application.ui.CardBody = CardBody;

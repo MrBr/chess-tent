@@ -8,7 +8,6 @@ import {
   User,
   Tag,
   Difficulty,
-  Speciality,
   CoachEloRange,
   Mentorship,
   NormalizedMentorship,
@@ -81,7 +80,7 @@ export type Requests = {
       name?: string;
       search?: string;
       elo?: CoachEloRange;
-      speciality?: Speciality;
+      specialities?: Tag["id"][];
     },
     UsersResponse
   >;

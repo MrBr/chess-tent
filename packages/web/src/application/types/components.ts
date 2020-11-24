@@ -22,6 +22,7 @@ import {
   Notification,
   Step,
   StepType,
+  Tag,
   User,
 } from '@chess-tent/models';
 import {
@@ -43,7 +44,7 @@ import {
   StepSystemProps,
 } from './step';
 import { ClassComponent } from './_helpers';
-import { TypedDropdownProps, ButtonProps, UI } from './ui';
+import { OptionsDropdownProps, ButtonProps, UI } from './ui';
 import { LessonActivity, NotificationView, StepModules, Steps } from './index';
 
 export interface ChessboardState {
@@ -188,8 +189,16 @@ export interface ActivityRendererProps {
   lesson: Lesson;
   activityStepState: {};
 }
+
 export interface ActivityRendererState {
   activeTab: number;
+}
+
+export interface TagsSelectProps {
+  className?: string;
+  tags: Tag[];
+  selected?: Tag[];
+  onChange?: (tags: Tag['id'][]) => void;
 }
 
 export enum LessonStatus {
@@ -304,10 +313,11 @@ export type Components = {
   AnalysisSidebar: ComponentType<AnalysisSystemProps>;
   NotificationStand: ComponentType;
   DifficultyDropdown: ComponentType<
-    Omit<TypedDropdownProps<Difficulty>, 'values' | 'label'> & {
+    Omit<OptionsDropdownProps<Difficulty>, 'values' | 'label'> & {
       includeNullOption: boolean;
     }
   >;
+  TagsSelect: ComponentType<TagsSelectProps>;
   MentorshipButton: ComponentType<{ user: User }>;
   MentorshipAction: ComponentType<{
     mentorship: Mentorship;

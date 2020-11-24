@@ -2,11 +2,11 @@ import React from 'react';
 import { Difficulty } from '@chess-tent/models';
 
 import { ui } from '@application';
-import { Components, DropdownOption } from '@types';
+import { Components, SelectOption } from '@types';
 
-const { TypedDropdown } = ui;
+const { OptionsDropdown } = ui;
 
-const options: Array<DropdownOption<Difficulty>> = [
+const options: Array<SelectOption<Difficulty>> = [
   {
     value: Difficulty.BEGINNER,
     label: 'Beginner',
@@ -26,6 +26,7 @@ const options: Array<DropdownOption<Difficulty>> = [
 ];
 
 const DifficultyDropdown: Components['DifficultyDropdown'] = ({
+  id,
   className,
   onChange,
   initial,
@@ -36,10 +37,11 @@ const DifficultyDropdown: Components['DifficultyDropdown'] = ({
     : options.filter(it => it.value !== undefined);
 
   return (
-    <TypedDropdown
+    <OptionsDropdown
+      id={id}
       className={className}
       values={values}
-      label={'Difficulty'}
+      label={'Difficulty:'}
       initial={initial}
       onChange={onChange}
     />

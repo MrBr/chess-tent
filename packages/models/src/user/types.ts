@@ -25,12 +25,6 @@ export interface User extends Subject {
   };
 }
 
-export enum Speciality {
-  OPENING = "OPENING",
-  MIDGAME = "MIDGAME",
-  ENDGAME = "ENDGAME",
-}
-
 export interface CoachEloRange {
   from: number;
   to: number;

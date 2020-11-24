@@ -2,11 +2,11 @@ import React from 'react';
 import { CoachEloRange } from '@chess-tent/models';
 
 import { ui } from '@application';
-import { DropdownOption, TypedDropdownProps } from '@types';
+import { SelectOption, OptionsDropdownProps } from '@types';
 
-const { TypedDropdown } = ui;
+const { OptionsDropdown } = ui;
 
-const options: Array<DropdownOption<CoachEloRange>> = [
+const options: Array<SelectOption<CoachEloRange>> = [
   {
     value: {
       from: 0,
@@ -46,15 +46,14 @@ const options: Array<DropdownOption<CoachEloRange>> = [
 ];
 
 const CoachLevelDropdown: React.FC<
-  Omit<TypedDropdownProps<CoachEloRange>, 'values' | 'label'> & {
-    includeNullOption: boolean;
-  }
-> = ({ className, onChange, initial, includeNullOption }) => {
+  Omit<OptionsDropdownProps<CoachEloRange>, 'values' | 'label'>
+> = ({ id, className, onChange, initial }) => {
   return (
-    <TypedDropdown
+    <OptionsDropdown
+      id={id}
       className={className}
       values={options}
-      label={'Level'}
+      label={'Level:'}
       initial={initial}
       onChange={onChange}
     />

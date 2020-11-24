@@ -27,7 +27,7 @@ import { ErrorMessageProps, Formik } from 'formik';
 import FormCheck from 'react-bootstrap/FormCheck';
 import FormControl from 'react-bootstrap/FormControl';
 import FormFile from 'react-bootstrap/FormFile';
-import Select, { OptionProps } from 'react-select';
+import Select from 'react-select';
 import { SelectComponentsProps } from 'react-select/base';
 import { FormCheckInputProps } from 'react-bootstrap/FormCheckInput';
 import Dropdown from 'react-bootstrap/Dropdown';
@@ -70,18 +70,20 @@ export declare interface SearchBoxProps {
   debounce: number;
 }
 
-export interface DropdownOption<T> {
+export interface SelectOption<T> {
   value?: T;
   label: string;
+  toString?: (value: T) => string;
 }
 
-export interface TypedDropdownProps<T> {
+export interface OptionsDropdownProps<T> {
+  id: string;
   className?: string;
   children?: never;
   label: string;
-  values: DropdownOption<T>[];
+  values: SelectOption<T>[];
   initial?: T;
-  onChange?: (value?: T) => void;
+  onChange: (value?: T) => void;
 }
 
 export type UIComponent<T = {}> = ComponentType<
@@ -144,7 +146,7 @@ export type UI = {
     Divider: typeof Dropdown['Divider'];
     Header: typeof Dropdown['Header'];
   };
-  TypedDropdown: ComponentType<TypedDropdownProps<any>>;
+  OptionsDropdown: ComponentType<OptionsDropdownProps<any>>;
   Avatar: ComponentType<{
     src: string | undefined;
     size?: 'regular' | 'small' | 'large' | 'extra-small';
@@ -161,7 +163,6 @@ export type UI = {
   Input: typeof FormControl;
   InputGroup: typeof InputGroup;
   Select: typeof Select;
-  Option: ComponentType<OptionProps<any>>;
   Check: typeof FormCheck;
   Container: UIComponent<ContainerProps>;
   Absolute: UIComponent<{

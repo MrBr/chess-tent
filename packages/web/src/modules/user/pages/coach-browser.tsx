@@ -1,24 +1,36 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { components, hooks, requests, ui } from '@application';
 import CoachCard from '../components/coach-card';
-import { CoachEloRange, Speciality } from '@chess-tent/models';
-import SpecialityDropdown from '../components/speciality-dropdown';
+import { CoachEloRange, Tag } from '@chess-tent/models';
 import CoachLevelDropdown from '../components/coach-level-dropdown';
 
-const { useApi } = hooks;
+const { useApi, useTags } = hooks;
 const { Container, Row, Col, SearchBox, Headline3 } = ui;
-const { Layout } = components;
+const { Layout, TagsSelect } = components;
 
 export default () => {
   const [filter, setFilter] = useState('');
-  const [speciality, setSpeciality] = useState<Speciality | undefined>();
+  const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
   const [elo, setElo] = useState<CoachEloRange | undefined>();
-
+  const tags = useTags();
   const { fetch: fetchCoaches, response } = useApi(requests.users);
 
   useEffect(() => {
-    fetchCoaches({ coach: true, search: filter, speciality, elo });
-  }, [fetchCoaches, filter, speciality, elo]);
+    fetchCoaches({
+      coach: true,
+      search: filter,
+      specialities: selectedTags.map(it => it.id),
+      elo,
+    });
+  }, [fetchCoaches, filter, selectedTags, elo]);
+
+  const onSelectedTagsChange = useCallback(
+    (tagIds: Tag['id'][]) => {
+      const selected = tags.filter(tag => tagIds.some(id => tag.id === id));
+      setSelectedTags(selected);
+    },
+    [setSelectedTags, tags],
+  );
 
   return (
     <Layout>
@@ -26,12 +38,16 @@ export default () => {
         <Row className="section-header">
           <Col className="d-flex flex-row align-items-center" xs={9}>
             <Headline3 className="m-0 mr-5">Browse coaches</Headline3>
-            <SpecialityDropdown
-              className="mr-4"
-              onChange={setSpeciality}
-              includeNullOption={true}
+            <CoachLevelDropdown
+              id="coach-browser-coach-level"
+              className="mr-2"
+              onChange={setElo}
             />
-            <CoachLevelDropdown onChange={setElo} includeNullOption={true} />
+            <TagsSelect
+              tags={tags}
+              selected={selectedTags}
+              onChange={onSelectedTagsChange}
+            />
           </Col>
           <Col className="d-flex align-items-center" xs={3}>
             <SearchBox onSearch={setFilter} debounce={500} />

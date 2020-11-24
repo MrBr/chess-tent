@@ -7,6 +7,8 @@ import {
   Step,
   StepType,
   Notification,
+  Activity,
+  User,
 } from '@chess-tent/models';
 import { History } from 'history';
 import {
@@ -75,6 +77,12 @@ export type Services = {
     stepType: T,
     initialState: Parameters<StepModules[T]['createStep']>[1],
   ) => StepModules[T] extends StepModule<infer S, infer K> ? S : never;
+  createActivity: <T extends Activity>(
+    subject: T extends Activity<infer S, infer K> ? S : never,
+    owner: User,
+    state: T extends Activity<infer S, infer K> ? K : never,
+    users: User[],
+  ) => T;
   getStepPosition: (step: Steps) => FEN;
   createChapter: (title?: string, steps?: Step[]) => Chapter;
   history: History;

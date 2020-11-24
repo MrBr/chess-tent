@@ -43,6 +43,7 @@ export type ActivityFilters = {
   owner?: User["id"];
   users?: User["id"] | User["id"][];
   subject?: Lesson["id"];
+  state?: {};
 };
 
 export type ApiMethods = "GET" | "POST" | "PUT";

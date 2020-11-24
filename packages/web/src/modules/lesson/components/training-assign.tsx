@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
-import { components, hooks, requests, ui, utils } from '@application';
-import { createActivity, Lesson, User } from '@chess-tent/models';
+import { components, hooks, requests, services, ui } from '@application';
+import { Lesson, User } from '@chess-tent/models';
+import { LessonActivity } from '@types';
 import * as yup from 'yup';
 import lessonThumbUrl from '../images/lesson.svg';
 
@@ -16,7 +17,7 @@ const {
   Modal,
 } = ui;
 const { useApi, useActiveUserRecord, useStudents } = hooks;
-const { generateIndex } = utils;
+const { createActivity } = services;
 const { UserAvatar } = components;
 
 const TrainingSchema = yup.object().shape({
@@ -25,7 +26,9 @@ const TrainingSchema = yup.object().shape({
 });
 
 export default ({ close }: { close: () => void }) => {
-  const { fetch: saveActivity } = useApi(requests.activitySave);
+  const { fetch: saveActivity, response: assignResponse, loading } = useApi(
+    requests.activitySave,
+  );
   const [user] = useActiveUserRecord() as [User, never, never];
   const [mentorship] = useStudents(user);
   const { fetch: fetchUserLessons, response } = useApi(requests.lessons);
@@ -36,10 +39,12 @@ export default ({ close }: { close: () => void }) => {
 
   const assignTraining = useCallback(
     data => {
-      const activityId = generateIndex();
-      const activity = createActivity(activityId, data.lesson, data.user, {}, [
-        user,
-      ]);
+      const activity = createActivity<LessonActivity>(
+        data.lesson,
+        data.user,
+        { training: true },
+        [user],
+      );
       saveActivity(activity);
     },
     [saveActivity, user],
@@ -48,6 +53,8 @@ export default ({ close }: { close: () => void }) => {
   useEffect(() => {
     fetchUserLessons({ owner: user.id });
   }, [fetchUserLessons, user.id]);
+
+  useEffect(() => {}, [response]);
 
   return (
     <Modal show close={close}>
@@ -85,7 +92,16 @@ export default ({ close }: { close: () => void }) => {
               )}
             />
           </FormGroup>
-          <Button type="submit">Assign</Button>
+          <Button type="submit" disabled={loading}>
+            Assign
+          </Button>
+          <Text inline fontSize="small" className="ml-4">
+            {loading
+              ? 'Assigning'
+              : !!assignResponse
+              ? 'Training assigned'
+              : null}
+          </Text>
         </Form>
       </ModalBody>
     </Modal>

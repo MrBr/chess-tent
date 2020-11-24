@@ -27,7 +27,7 @@ import {
 } from '@types';
 import { debounce } from 'lodash';
 import { components, hooks, services, state, ui } from '@application';
-import TrainingModal from './trening-assign';
+import TrainingModal from './training-assign';
 import Sidebar from './editor-sidebar';
 import { PreviewModal } from './activity-preview';
 import ChaptersDropdown from './chapters-dropdown';

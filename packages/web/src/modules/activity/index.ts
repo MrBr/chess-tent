@@ -26,6 +26,12 @@ application.register(
   },
 );
 application.register(
+  () => import('./service'),
+  module => {
+    application.services.createActivity = module.createActivity;
+  },
+);
+application.register(
   () => import('./state/hooks'),
   module => {
     application.hooks.useUserActivitiesRecord = module.useUserActivitiesRecord;

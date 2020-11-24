@@ -9,6 +9,7 @@ import {
 } from '@chess-tent/models';
 import styled from '@emotion/styled';
 import { DateTime } from 'luxon';
+import { updateMessage } from '../state/actions';
 
 const { Container, Headline3, Text, Row, Col, Input, Icon, Absolute } = ui;
 const { UserAvatar } = components;
@@ -35,9 +36,18 @@ const LoadMore = ({
   noMore: boolean;
 }) => {
   const { ref, inView } = useInView();
+  // Ready is used to debounce load more so that dom can actually rerender and hide "LoadMore"
+  const [ready, setReady] = useState<boolean>(false);
+
   useEffect(() => {
-    inView && !loading && !noMore && loadMore();
+    inView && !loading && !noMore && setTimeout(() => setReady(true), 50);
   }, [inView, loadMore, loading, noMore]);
+  useEffect(() => {
+    if (inView && !loading && !noMore && ready) {
+      setReady(false);
+      loadMore();
+    }
+  }, [inView, loadMore, loading, noMore, ready]);
   return <div ref={ref}>{loading ? 'Loading...' : ''}</div>;
 };
 
@@ -74,13 +84,13 @@ const useLoadMoreMessages = (
 export default styled(
   ({
     className,
-    owner,
+    activeUser, // active user
     participant,
     conversation,
     close,
   }: {
     className?: string;
-    owner: User;
+    activeUser: User;
     participant: User;
     conversation: Conversation;
     close: () => void;
@@ -91,6 +101,21 @@ export default styled(
     );
     const { messages } = conversation;
 
+    useEffect(() => {
+      if (
+        conversation.messages[0].read &&
+        conversation.messages[0].owner !== activeUser.id
+      ) {
+        dispatch(
+          updateMessage(
+            { read: true },
+            conversation.id,
+            conversation.messages[0].id,
+          ),
+        );
+      }
+    }, [activeUser.id, conversation, dispatch]);
+
     const handleEnter = useCallback(
       event => {
         if (event.key !== 'Enter' || event.shiftKey) {
@@ -100,25 +125,23 @@ export default styled(
         // conversation
         const message = createMessage(
           generateIndex(),
-          owner,
+          activeUser,
           event.target.value,
         );
         event.target.value = '';
-        dispatch(sendMessage(owner, conversation, message));
+        dispatch(sendMessage(activeUser, conversation, message));
       },
-      [conversation, dispatch, owner],
+      [conversation, dispatch, activeUser],
     );
 
     return (
-      <Container className={`${className} pl-5 pr-5 pb-3`}>
+      <Container className={`${className} pb-3`}>
         <Absolute top={10} right={20} zIndex={2}>
           <Icon type="close" onClick={close} />
         </Absolute>
-        <Row className="flex-grow-1">
+        <Row className="flex-grow-1 overflow-y-auto pl-3 pr-3 flex-column-reverse">
           <Col>
-            <Headline3 className="mb-5">
-              Conversation with {participant.name}
-            </Headline3>
+            <Headline3 className="mb-5">{participant.name}</Headline3>
             <LoadMore
               loadMore={loadMoreMessages}
               loading={loading}
@@ -126,7 +149,7 @@ export default styled(
             />
             {messages?.reduce<ReactElement[]>((result, message, index) => {
               const messageElement =
-                message.owner !== owner.id ? (
+                message.owner !== activeUser.id ? (
                   <Container key={message.id} className="pl-0">
                     {messages[index - 1]?.owner !== message.owner && (
                       <>
@@ -163,7 +186,7 @@ export default styled(
             }, [])}
           </Col>
         </Row>
-        <Row>
+        <Row className="pr-3 pl-3">
           <Col>
             <Input
               type="textarea"

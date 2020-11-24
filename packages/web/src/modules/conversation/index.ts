@@ -29,7 +29,7 @@ application.register(
 );
 
 application.register(
-  () => import('./state/hooks'),
+  () => import('./hooks'),
   module => {
     application.hooks.useConversationParticipant =
       module.useConversationParticipant;

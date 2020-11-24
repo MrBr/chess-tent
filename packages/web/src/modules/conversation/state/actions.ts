@@ -1,5 +1,15 @@
-import { SEND_MESSAGE, SendMessageAction } from '@types';
-import { Conversation, Message, User } from '@chess-tent/models';
+import {
+  SEND_MESSAGE,
+  SendMessageAction,
+  UPDATE_MESSAGE,
+  UpdateMessageAction,
+} from '@types';
+import {
+  Conversation,
+  Message,
+  NormalizedMessage,
+  User,
+} from '@chess-tent/models';
 
 export const sendMessage = (
   user: User,
@@ -10,5 +20,18 @@ export const sendMessage = (
   payload: message,
   meta: {
     conversationId: conversation.id,
+  },
+});
+
+export const updateMessage = (
+  message: Partial<NormalizedMessage>,
+  conversationId: Conversation['id'],
+  messageId: NormalizedMessage['id'],
+): UpdateMessageAction => ({
+  type: UPDATE_MESSAGE,
+  payload: message,
+  meta: {
+    conversationId,
+    messageId,
   },
 });

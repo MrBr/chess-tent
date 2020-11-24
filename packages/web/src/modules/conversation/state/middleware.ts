@@ -1,4 +1,4 @@
-import { Middleware, SEND_MESSAGE } from '@types';
+import { Middleware, SEND_MESSAGE, UPDATE_MESSAGE } from '@types';
 import { requests, state, socket, utils } from '@application';
 import { TYPE_CONVERSATION } from '@chess-tent/models';
 
@@ -28,6 +28,9 @@ export const middleware: Middleware = store => next => action => {
         store.dispatch(updateEntities(response.data));
       });
     }
+  }
+  if (action.type === UPDATE_MESSAGE && !action.meta.push) {
+    socket.sendAction(action);
   }
   next(action);
 };

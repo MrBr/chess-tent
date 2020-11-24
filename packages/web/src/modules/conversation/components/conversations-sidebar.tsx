@@ -1,8 +1,10 @@
-import React, { useEffect } from 'react';
-import { components, hooks, requests, state, ui, utils } from '@application';
+import React, { useEffect, useMemo } from 'react';
+import { components, hooks, state, ui, utils } from '@application';
 import { createConversation, User } from '@chess-tent/models';
+import { sortBy } from 'lodash';
 import Conversation from './conversation';
 import { selectConversationByUsers } from '../state/selectors';
+import { useUserConversations } from '../hooks';
 
 const { Container, Headline3, Text, Row, Col } = ui;
 const { UserAvatar } = components;
@@ -10,8 +12,6 @@ const {
   actions: { updateEntities },
 } = state;
 const {
-  useApi,
-  useComponentStateSilent,
   useActiveUserRecord,
   useConversationParticipant,
   useDispatchBatched,
@@ -21,14 +21,13 @@ const { generateIndex } = utils;
 
 export default () => {
   const dispatch = useDispatchBatched();
-  const { mounted } = useComponentStateSilent();
-  const { fetch: findConversations, response } = useApi(requests.conversations);
   const [activeUser] = useActiveUserRecord() as [User, never, never];
   const [
     participant,
     setParticipant,
     clearParticipant,
   ] = useConversationParticipant();
+  const [conversations] = useUserConversations(activeUser.id);
   const conversation = useSelector(
     selectConversationByUsers(activeUser, participant),
   );
@@ -44,39 +43,52 @@ export default () => {
     }
   }, [participant, conversation, activeUser, dispatch]);
 
-  useEffect(() => {
-    !mounted && findConversations(activeUser.id);
-  }, [mounted, findConversations, activeUser.id]);
-
-  useEffect(() => {
-    response && dispatch(updateEntities(response.data));
-  }, [dispatch, response]);
+  const sortedConversations = useMemo(
+    () =>
+      sortBy(conversations, ({ messages: { 0: message } }) =>
+        message.read || message.owner === activeUser.id ? 1 : 0,
+      ),
+    [activeUser.id, conversations],
+  );
 
   return (
     <Container className="h-100 overflow-y-auto pl-5 pr-5">
       <Headline3 className="mb-5">Messages</Headline3>
       {participant && conversation && (
         <Conversation
-          owner={activeUser}
+          activeUser={activeUser}
           close={clearParticipant}
           participant={participant}
           conversation={conversation}
         />
       )}
-      {response?.data.map(conversation => {
+      {sortedConversations.map(conversation => {
         const participant = conversation.users.find(
           user => user.id !== activeUser.id,
         ) as User;
         return (
-          <Row onClick={() => setParticipant(participant)} key={participant.id}>
-            <Col className="col-auto d-flex align-items-center">
+          <Row
+            onClick={() => setParticipant(participant)}
+            key={participant.id}
+            className="mb-4"
+          >
+            <Col className="col-auto d-flex align-items-center pr-0">
               <UserAvatar user={participant} />
             </Col>
-            <Col>
-              <Text weight={700} className="m-0" fontSize="small">
+            <Col className="text-truncate">
+              <Text weight={700} className="m-0 text-truncate" fontSize="small">
                 {participant.name}
               </Text>
-              <Text className="m-0 text-truncate" fontSize="small">
+              <Text
+                className="m-0 text-truncate"
+                fontSize="small"
+                weight={
+                  conversation.messages[0]?.read ||
+                  conversation.messages[0]?.owner === activeUser.id
+                    ? 400
+                    : 700
+                }
+              >
                 {conversation.messages[0]?.message}
               </Text>
             </Col>

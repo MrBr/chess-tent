@@ -34,13 +34,14 @@ export const UPDATE_ACTIVITY_STATE = "UPDATE_ACTIVITY_STATE";
 
 export const UPDATE_USER = "UPDATE_USER";
 
+export const SEND_NOTIFICATION = "SEND_NOTIFICATION";
 export const UPDATE_NOTIFICATION = "UPDATE_NOTIFICATION";
 
 export const UPDATE_RECORD = "UPDATE_RECORD";
 export const DELETE_RECORD = "DELETE_RECORD";
 
 export const SEND_MESSAGE = "SEND_MESSAGE";
-export const SEND_NOTIFICATION = "SEND_NOTIFICATION";
+export const UPDATE_MESSAGE = "UPDATE_MESSAGE";
 
 export type Action<T, P, M = {}> = {
   type: T;
@@ -198,7 +199,12 @@ export type SendMessageAction = Action<
   NormalizedMessage,
   { conversationId: Conversation["id"] }
 >;
-export type MessageAction = SendMessageAction;
+export type UpdateMessageAction = Action<
+  typeof UPDATE_MESSAGE,
+  Partial<NormalizedMessage>,
+  { conversationId: Conversation["id"]; messageId: NormalizedMessage["id"] }
+>;
+export type MessageAction = SendMessageAction | UpdateMessageAction;
 
 /**
  * Conversation

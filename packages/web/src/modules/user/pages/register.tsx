@@ -18,7 +18,6 @@ const {
   Card,
   Headline1,
   Text,
-  Headline6,
   Col,
   Row,
 } = ui;

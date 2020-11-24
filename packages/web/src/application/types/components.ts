@@ -265,6 +265,7 @@ export type Components = {
     onStatusChange?: (status: LessonStatus) => void;
   }>;
   Lessons: ComponentType<{ lessons: Lesson[] | null }>;
+  Trainings: ComponentType<{ user: User }>;
   LessonChapters: ComponentType<{
     chapters: Chapter[];
     activeChapter: Chapter;

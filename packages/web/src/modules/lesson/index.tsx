@@ -27,7 +27,7 @@ application.register(
   },
 );
 application.register(
-  () => import('./state/hooks'),
+  () => import('./hooks'),
   module => {
     application.hooks.useUpdateLessonStepState =
       module.useUpdateLessonStepState;
@@ -40,6 +40,12 @@ application.register(
   module => {
     application.components.Stepper = module.Stepper;
     application.components.StepperStepContainer = module.StepperStepContainer;
+  },
+);
+application.register(
+  () => import('./components/trainings'),
+  module => {
+    application.components.Trainings = module.default;
   },
 );
 application.register(

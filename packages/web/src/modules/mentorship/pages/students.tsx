@@ -13,7 +13,7 @@ const {
   MessageButton,
 } = components;
 
-const Coaches = () => {
+const Students = () => {
   const [user] = useActiveUserRecord() as [User, never, never];
   const [students] = useStudents(user);
   const result = useMemo(() => groupBy(students, student => student.approved), [
@@ -104,4 +104,4 @@ const Coaches = () => {
   );
 };
 
-export default Coaches;
+export default Students;

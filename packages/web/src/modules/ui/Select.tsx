@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
 import { default as RSelect, components } from 'react-select';
-// import { Select } from 'react-select/base';
 
 export const Option = components.Option;
 

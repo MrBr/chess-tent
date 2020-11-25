@@ -222,7 +222,7 @@ class EditorRenderer extends React.Component<
 
     return (
       <Container fluid className="px-0 h-100">
-        <Absolute left={15} top={15} zIndex={100}>
+        <Absolute left={15} top={15} zIndex={100} className="cursor-pointer">
           <Text onClick={history.goBack}>Back</Text>
         </Absolute>
         <Row noGutters className="h-100">

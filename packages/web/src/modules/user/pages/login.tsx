@@ -61,6 +61,14 @@ export default () => {
 
   return (
     <Container className="h-100 d-flex justify-content-center align-items-center no-gutters mx-auto">
+      <Absolute
+        left={25}
+        top={15}
+        onClick={() => history.push('/')}
+        className="cursor-pointer"
+      >
+        <Icon type="close" size="large" />
+      </Absolute>
       <Col className="col-xl-6 col-lg-8 col-md-10 col-sm-12">
         <Card className="px-5 py-4 border rounded-lg">
           <Row className="d-flex justify-content-between align-items-center">
@@ -121,9 +129,6 @@ export default () => {
           </Form>
         </Card>
       </Col>
-      <Absolute left={25} top={15} onClick={() => history.push('/')}>
-        <Icon type="close" size="large" />
-      </Absolute>
     </Container>
   );
 };

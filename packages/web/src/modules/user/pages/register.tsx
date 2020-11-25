@@ -69,6 +69,14 @@ export default () => {
   }
   return (
     <Container className="h-100 d-flex justify-content-center align-items-center no-gutters mx-auto">
+      <Absolute
+        left={25}
+        top={15}
+        onClick={() => history.push('/')}
+        className="cursor-pointer"
+      >
+        <Icon type="close" size="large" />
+      </Absolute>
       <Card className="px-5 py-4 border rounded-lg">
         <Headline1 className="mb-4">Create your account</Headline1>
         <Form
@@ -156,9 +164,6 @@ export default () => {
           </FormGroup>
         </Form>
       </Card>
-      <Absolute left={25} top={15} onClick={() => history.push('/')}>
-        <Icon type="close" size="large" />
-      </Absolute>
     </Container>
   );
 };

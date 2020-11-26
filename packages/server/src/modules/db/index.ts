@@ -13,13 +13,16 @@ application.db.connect = () => {
   mongoose.connect(`${url}/${dbName}`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    autoIndex: false
+    useCreateIndex: true,
+    // Usually a costly operation, but we have too little data right now for it to matter
+    // It makes dev's life easier by creating indexes automatically
+    autoIndex: true,
   });
 
   const db = mongoose.connection;
 
   db.on("error", console.error.bind(console, "connection error:"));
-  db.once("open", function() {
+  db.once("open", function () {
     console.log("DB connection open");
   });
 };

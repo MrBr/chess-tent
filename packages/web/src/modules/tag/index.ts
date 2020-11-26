@@ -11,9 +11,17 @@ application.register(
     application.hooks.useTags = module.useTags;
   },
 );
+
 application.register(
   () => import('./state/reducer'),
   module => {
     application.state.registerEntityReducer(TYPE_TAG, module.reducer);
+  },
+);
+
+application.register(
+  () => import('./components/tags-select'),
+  module => {
+    application.components.TagsSelect = module.default;
   },
 );

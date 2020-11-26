@@ -1,10 +1,10 @@
 import {
   ComponentProps,
   ComponentType,
+  ImgHTMLAttributes,
   ReactElement,
   ReactEventHandler,
   ReactNode,
-  ImgHTMLAttributes,
 } from 'react';
 import {
   ColProps,
@@ -12,12 +12,12 @@ import {
   FormControlProps,
   FormGroupProps,
   FormLabelProps,
+  InputGroup,
   ModalBody,
   ModalProps as BModalProps,
   RowProps,
-  Tabs,
   Tab,
-  InputGroup,
+  Tabs,
   ToastBody,
   ToastProps,
   ToastHeaderProps,
@@ -27,7 +27,7 @@ import { ErrorMessageProps, Formik } from 'formik';
 import FormCheck from 'react-bootstrap/FormCheck';
 import FormControl from 'react-bootstrap/FormControl';
 import FormFile from 'react-bootstrap/FormFile';
-import Select, { OptionProps } from 'react-select';
+import Select from 'react-select';
 import { SelectComponentsProps } from 'react-select/base';
 import { FormCheckInputProps } from 'react-bootstrap/FormCheckInput';
 import Dropdown from 'react-bootstrap/Dropdown';
@@ -64,6 +64,28 @@ export declare interface TextProps {
   contentEditable?: boolean;
 }
 
+export declare interface SearchBoxProps {
+  children?: never;
+  onSearch: (text: string) => void;
+  debounce: number;
+}
+
+export interface SelectOption<T> {
+  value?: T;
+  label: string;
+  toString?: (value: T) => string;
+}
+
+export interface OptionsDropdownProps<T> {
+  id: string;
+  className?: string;
+  children?: never;
+  label: string;
+  values: SelectOption<T>[];
+  initial?: T;
+  onChange: (value?: T) => void;
+}
+
 export type UIComponent<T = {}> = ComponentType<
   T & {
     className?: string;
@@ -85,6 +107,7 @@ export type UI = {
       } & SelectComponentsProps
     >;
   };
+  SearchBox: UIComponent<SearchBoxProps>;
   Text: UIComponent<TextProps>;
   Display1: UIComponent;
   Display2: UIComponent;
@@ -95,7 +118,7 @@ export type UI = {
   Headline5: UIComponent;
   Headline6: UIComponent;
   Icon: UIComponent<{
-    type: 'close' | 'comment' | 'notification';
+    type: 'close' | 'comment' | 'notification' | 'search';
     textual?: boolean;
     size?: 'large' | 'regular';
   }>;
@@ -123,6 +146,7 @@ export type UI = {
     Divider: typeof Dropdown['Divider'];
     Header: typeof Dropdown['Header'];
   };
+  OptionsDropdown: ComponentType<OptionsDropdownProps<any>>;
   Avatar: ComponentType<{
     src: string | undefined;
     size?: 'regular' | 'small' | 'large' | 'extra-small';
@@ -139,7 +163,6 @@ export type UI = {
   Input: typeof FormControl;
   InputGroup: typeof InputGroup;
   Select: typeof Select;
-  Option: ComponentType<OptionProps<any>>;
   Check: typeof FormCheck;
   Container: UIComponent<ContainerProps>;
   Absolute: UIComponent<{

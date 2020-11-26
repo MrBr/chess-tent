@@ -15,8 +15,8 @@ import {
   InputGroup,
 } from './Form';
 import { Container, Row, Col, Page } from './Grid';
-import { default as Select, Option } from './Select';
-import Dropdown from './Dropdown';
+import { default as Select } from './Select';
+import Dropdown, { OptionsDropdown } from './Dropdown';
 import {
   Display1,
   Display2,
@@ -28,6 +28,7 @@ import {
   Headline6,
   Text,
 } from './Text';
+import SearchBox from './SearchBox';
 import { Avatar, FramedProfile, Img, Thumbnail } from './Img';
 import { CardBody, CardComponent, CardHeader } from './Card';
 import { Tab, Tabs } from './Tab';
@@ -49,15 +50,16 @@ application.ui.Input = Input;
 application.ui.InputGroup = InputGroup;
 application.ui.File = File;
 application.ui.Check = Check;
-application.ui.Select = Select;
-application.ui.Option = Option;
 application.ui.ErrorMessage = ErrorMessage;
+
+application.ui.Select = Select;
 
 application.ui.Toast = Toast;
 application.ui.ToastHeader = ToastHeader;
 application.ui.ToastBody = ToastBody;
 
 application.ui.Dropdown = Dropdown;
+application.ui.OptionsDropdown = OptionsDropdown;
 
 application.ui.Card = CardComponent;
 application.ui.CardBody = CardBody;
@@ -86,5 +88,6 @@ application.ui.Headline4 = Headline4;
 application.ui.Headline5 = Headline5;
 application.ui.Headline6 = Headline6;
 application.ui.Text = Text;
+application.ui.SearchBox = SearchBox;
 
 application.ui.Icon = Icon;

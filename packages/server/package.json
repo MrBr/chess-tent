@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "preinstall": "node ./scripts/preinstall.js",
-    "start": "ts-node -r tsconfig-paths/register ./src/index.ts",
+    "start": "node -r ts-node/register -r tsconfig-paths/register --inspect=127.0.0.1:30001 ./src/index.ts",
     "build:dev": "echo no build",
     "build": "yarn run clean && yarn run compile",
     "clean": "rimraf -rf ./dist",
@@ -43,7 +43,7 @@
     "jsonwebtoken": "^8.5.1",
     "module-alias": "^2.2.2",
     "mongodb": "^3.5.7",
-    "mongoose": "^5.9.14",
+    "mongoose": "^5.10.13",
     "rxjs": "^6.5.5",
     "socket.io": "^2.3.0",
     "uuid": "^3.4.0",

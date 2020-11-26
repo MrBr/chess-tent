@@ -1,7 +1,8 @@
 import React, { FunctionComponent, useEffect } from 'react';
-import { ui, hooks, requests, components } from '@application';
+import { components, hooks, requests, ui } from '@application';
 import styled from '@emotion/styled';
 import { User } from '@chess-tent/models';
+import { Components } from '@types';
 
 const { Container, Headline4, Row, Col, Dropdown, Text } = ui;
 const { useHistory, useApi, useActiveUserRecord } = hooks;
@@ -34,7 +35,8 @@ const TabButton = styled<
   marginRight: 48,
   cursor: 'pointer',
 });
-export default () => {
+
+const Header: Components['Header'] = () => {
   const history = useHistory();
   const logoutApi = useApi(requests.logout);
   const [, , clear] = useActiveUserRecord();
@@ -57,6 +59,7 @@ export default () => {
         <Col className="h-100" xs={6}>
           <TabButton path="/">Dashboard</TabButton>
           <TabButton path="/lesson/new">Create Lesson</TabButton>
+          <TabButton path="/coaches">Find Coach</TabButton>
         </Col>
         <Col className="d-flex justify-content-end" xs={3}>
           <NotificationStand />
@@ -88,3 +91,5 @@ export default () => {
     </Container>
   );
 };
+
+export default Header;

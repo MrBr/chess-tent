@@ -1,6 +1,8 @@
-import { default as RSelect, components } from 'react-select';
+import { default as RSelect } from 'react-select';
+import styled from '@emotion/styled';
 
-export const Option = components.Option;
-const Select = RSelect;
+const Select = (styled(RSelect)({
+  minWidth: '220px',
+}) as unknown) as typeof RSelect;
 
 export default Select;

@@ -5,10 +5,12 @@
   "scripts": {
     "build:dev": "lerna exec \"yarn build:dev\"",
     "build": "lerna exec \"yarn build\"",
-    "postinstall": "lerna exec \"yarn install\""
+    "postinstall": "husky install && lerna exec \"yarn install\""
   },
   "devDependencies": {
-    "lerna": "^3.21.0"
+    "husky": "^5.0.1",
+    "lerna": "^3.21.0",
+    "prettier": "^2.2.0"
   },
   "workspaces": [
     "packages/*"

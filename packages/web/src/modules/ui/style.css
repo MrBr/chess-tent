@@ -46,6 +46,15 @@ body {
   cursor: pointer;
 }
 
+.unstyled-link .unstyled-link:focus,
+.unstyled-link:hover,
+.unstyled-link:visited,
+.unstyled-link:link,
+link:active {
+  color: inherit;
+  text-decoration: inherit;
+}
+
 .drop-shadow {
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }

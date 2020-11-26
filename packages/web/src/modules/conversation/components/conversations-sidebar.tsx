@@ -45,9 +45,13 @@ export default () => {
 
   const sortedConversations = useMemo(
     () =>
-      sortBy(conversations, ({ messages: { 0: message } }) =>
-        message.read || message.owner === activeUser.id ? 1 : 0,
-      ),
+      sortBy(conversations, ({ messages }) => {
+        if (messages.length === 0) {
+          return 0;
+        }
+
+        return messages[0].read || messages[0].owner === activeUser.id ? 1 : 0;
+      }),
     [activeUser.id, conversations],
   );
 

@@ -54,6 +54,6 @@ const userSchema = db.createSchema<NormalizedUser>(
 );
 
 const UserModel = db.createModel<NormalizedUser>(TYPE_USER, userSchema);
-userSchema.index({ name: "text", nickname: "text" });
+userSchema.index({ "state.title": "text", "state.description": "text" });
 
 export { userSchema, UserModel };

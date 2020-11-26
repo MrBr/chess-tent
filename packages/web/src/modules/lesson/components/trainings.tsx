@@ -9,7 +9,7 @@ const { Container, Row, Col } = ui;
 const Trainings: Components['Trainings'] = ({ user }) => {
   const [trainings] = useUserTrainings(user);
   return (
-    <Container>
+    <Container fluid>
       <Row>
         {trainings?.map(training => (
           <Col sm={3}>

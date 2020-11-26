@@ -5,7 +5,7 @@ import {
   saveLesson,
   findLessons,
   patchLesson,
-  updateLesson
+  updateLesson,
 } from "./middleware";
 
 const { identify, sendData, sendStatusOk, toLocals } = middleware;
@@ -13,7 +13,7 @@ const { identify, sendData, sendStatusOk, toLocals } = middleware;
 application.service.registerPostRoute(
   "/lesson/save",
   identify,
-  toLocals("lesson", req => req.body),
+  toLocals("lesson", (req) => req.body),
   canEditLesson,
   saveLesson,
   sendStatusOk
@@ -22,8 +22,8 @@ application.service.registerPostRoute(
 application.service.registerPutRoute(
   "/lesson/:lessonId",
   identify,
-  toLocals("lesson", req => req.body),
-  toLocals("lesson.id", req => req.params.lessonId),
+  toLocals("lesson", (req) => req.body),
+  toLocals("lesson.id", (req) => req.params.lessonId),
   canEditLesson,
   patchLesson,
   sendStatusOk
@@ -32,8 +32,8 @@ application.service.registerPutRoute(
 application.service.registerPutRoute(
   "/lesson-update/:lessonId",
   identify,
-  toLocals("update", req => req.body),
-  toLocals("lesson.id", req => req.params.lessonId),
+  toLocals("update", (req) => req.body),
+  toLocals("lesson.id", (req) => req.params.lessonId),
   canEditLesson,
   updateLesson,
   sendStatusOk
@@ -42,7 +42,7 @@ application.service.registerPutRoute(
 application.service.registerPostRoute(
   "/lessons",
   identify,
-  toLocals("filters", req => ({ owner: req.body.owner })),
+  toLocals("filters", (req) => req.body),
   findLessons,
   sendData("lessons")
 );
@@ -50,7 +50,7 @@ application.service.registerPostRoute(
 application.service.registerGetRoute(
   "/lesson/:lessonId",
   identify,
-  toLocals("lesson.id", req => req.params.lessonId),
+  toLocals("lesson.id", (req) => req.params.lessonId),
   getLesson,
   canEditLesson,
   sendData("lesson")

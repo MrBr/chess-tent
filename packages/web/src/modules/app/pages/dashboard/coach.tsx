@@ -1,29 +1,13 @@
-import React, { useEffect } from 'react';
-import { components, hooks, requests, ui } from '@application';
+import React from 'react';
+import { components, hooks, ui } from '@application';
 import { User } from '@chess-tent/models';
 
-const { Layout, Coaches, Activities, Lessons, Trainings } = components;
-const { useUserLessonsRecord, useUserActivitiesRecord, useApi } = hooks;
+const { Layout, Coaches, Activities, Trainings, LessonBrowser } = components;
+const { useUserActivitiesRecord } = hooks;
 const { Headline3 } = ui;
 
 export default ({ user }: { user: User }) => {
   const [activities] = useUserActivitiesRecord(user);
-  const [lessons, saveLessons] = useUserLessonsRecord(user);
-  const { fetch: getLessons, response: lessonsResponse } = useApi(
-    requests.lessons,
-  );
-
-  useEffect(() => {
-    if (!lessons) {
-      getLessons({ owner: user.id });
-    }
-  }, [getLessons, lessons, user.id]);
-
-  useEffect(() => {
-    if (lessonsResponse) {
-      saveLessons(lessonsResponse.data);
-    }
-  }, [saveLessons, lessonsResponse]);
 
   return (
     <Layout>
@@ -38,8 +22,7 @@ export default ({ user }: { user: User }) => {
           <Coaches />
         </>
       )}
-      <Headline3>My lessons</Headline3>
-      <Lessons lessons={lessons} />
+      <LessonBrowser user={user} />
       <Headline3>My trainings</Headline3>
       <Trainings user={user} />
     </Layout>

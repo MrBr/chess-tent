@@ -2,13 +2,12 @@ import React, { useEffect } from 'react';
 import { components, hooks, requests, ui } from '@application';
 import { User } from '@chess-tent/models';
 
-const { Layout, Coaches, Activities, Lessons } = components;
-const { useUserLessonsRecord, useUserActivitiesRecord, useApi } = hooks;
+const { Layout, Coaches, Activities, LessonBrowser } = components;
+const { useUserActivitiesRecord, useApi } = hooks;
 const { Row, Col } = ui;
 
 export default ({ user }: { user: User }) => {
   const [activities, saveActivities] = useUserActivitiesRecord(user);
-  const [lessons] = useUserLessonsRecord(user);
 
   const { fetch: getActivities, response: activitiesResponse } = useApi(
     requests.activities,
@@ -39,7 +38,7 @@ export default ({ user }: { user: User }) => {
       </Row>
       <Row noGutters>
         <Col>
-          <Lessons lessons={lessons} />
+          <LessonBrowser user={user} />
         </Col>
       </Row>
     </Layout>

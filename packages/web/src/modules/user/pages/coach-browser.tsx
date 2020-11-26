@@ -19,7 +19,7 @@ export default () => {
     fetchCoaches({
       coach: true,
       search: filter,
-      specialities: selectedTags.map(it => it.id),
+      tagIds: selectedTags.map(it => it.id),
       elo,
     });
   }, [fetchCoaches, filter, selectedTags, elo]);

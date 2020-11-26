@@ -1,18 +1,14 @@
 import React from 'react';
 import { Tag } from '@chess-tent/models';
+import { TagsSelectProps } from '@types';
 
 import { ui } from '@application';
 import { ValueType } from 'react-select';
 
 const { Select } = ui;
-interface DifficultyDropdownProps {
-  tags: Tag[];
-  selected?: Tag[];
-  onChange?: (tags: Tag['id'][]) => void;
-}
 
-class DifficultyDropdown extends React.Component<
-  DifficultyDropdownProps,
+class TagsSelect extends React.Component<
+  TagsSelectProps,
   { editing: boolean }
 > {
   onChange = (tags: ValueType<Tag>) => {
@@ -21,9 +17,10 @@ class DifficultyDropdown extends React.Component<
   };
 
   render() {
-    const { tags, selected } = this.props;
+    const { className, tags, selected } = this.props;
     return (
       <Select
+        className={className}
         value={selected}
         options={tags}
         getOptionValue={({ id }) => id}
@@ -35,4 +32,5 @@ class DifficultyDropdown extends React.Component<
     );
   }
 }
-export default DifficultyDropdown;
+
+export default TagsSelect;

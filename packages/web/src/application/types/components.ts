@@ -16,11 +16,13 @@ import {
   Activity,
   Analysis,
   Chapter,
+  Difficulty,
   Lesson,
   Mentorship,
   Notification,
   Step,
   StepType,
+  Tag,
   User,
 } from '@chess-tent/models';
 import {
@@ -42,7 +44,7 @@ import {
   StepSystemProps,
 } from './step';
 import { ClassComponent } from './_helpers';
-import { ButtonProps, UI } from './ui';
+import { OptionsDropdownProps, ButtonProps, UI } from './ui';
 import { LessonActivity, NotificationView, StepModules, Steps } from './index';
 
 export interface ChessboardState {
@@ -187,8 +189,16 @@ export interface ActivityRendererProps {
   lesson: Lesson;
   activityStepState: {};
 }
+
 export interface ActivityRendererState {
   activeTab: number;
+}
+
+export interface TagsSelectProps {
+  className?: string;
+  tags: Tag[];
+  selected?: Tag[];
+  onChange?: (tags: Tag['id'][]) => void;
 }
 
 export enum LessonStatus {
@@ -219,9 +229,11 @@ export type Components = {
   Switch: ComponentType;
   Redirect: ComponentType<RedirectProps>;
   Route: ComponentType<RouteProps>;
+
   Link: ComponentType<LinkProps & { ghost?: boolean }>;
   Authorized: ComponentType<AuthorizedProps>;
   Provider: ComponentType;
+
   StateProvider: ComponentType;
   StepRenderer: <T extends StepModuleComponentKey, S extends Step>(
     props: StepModule<
@@ -265,6 +277,7 @@ export type Components = {
     onStatusChange?: (status: LessonStatus) => void;
   }>;
   Lessons: ComponentType<{ lessons: Lesson[] | null }>;
+  Trainings: ComponentType<{ user: User }>;
   LessonChapters: ComponentType<{
     chapters: Chapter[];
     activeChapter: Chapter;
@@ -284,6 +297,9 @@ export type Components = {
     } & Pick<ComponentProps<UI['Avatar']>, 'size' | 'onClick'>
   >;
   Coaches: ComponentType;
+  CoachCard: ComponentType<{
+    coach: User;
+  }>;
   Activities: ComponentType<{ activities: Activity[] | null }>;
   Conversations: ComponentType;
   MessageButton: ComponentType<{
@@ -296,6 +312,12 @@ export type Components = {
   AnalysisBoard: ComponentType<AnalysisSystemProps & StepBoardComponentProps>;
   AnalysisSidebar: ComponentType<AnalysisSystemProps>;
   NotificationStand: ComponentType;
+  DifficultyDropdown: ComponentType<
+    Omit<OptionsDropdownProps<Difficulty>, 'values' | 'label'> & {
+      includeNullOption: boolean;
+    }
+  >;
+  TagsSelect: ComponentType<TagsSelectProps>;
   MentorshipButton: ComponentType<{ user: User }>;
   MentorshipAction: ComponentType<{
     mentorship: Mentorship;

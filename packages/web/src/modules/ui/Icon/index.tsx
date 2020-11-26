@@ -47,6 +47,8 @@ const Icon = styled<FunctionComponent<IconProps>>(
     },
     color: '#BABDC2',
     display: 'inline-block',
+    minWidth: '20px',
+    minHeight: '20px',
   },
   sizeEnhancer,
   textualEnhancer,

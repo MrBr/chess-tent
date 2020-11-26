@@ -21,6 +21,7 @@ application.register(
     application.components.UserAvatar = module.default;
   },
 );
+
 application.model.userSchema = userSchema;
 application.pages.Register = Register;
 application.hooks.useUser = useUser;

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { components, hooks, requests, ui } from '@application';
 import { User } from '@chess-tent/models';
 
-const { Layout, Coaches, Activities, Lessons } = components;
+const { Layout, Coaches, Activities, Lessons, Trainings } = components;
 const { useUserLessonsRecord, useUserActivitiesRecord, useApi } = hooks;
 const { Headline3 } = ui;
 
@@ -40,6 +40,8 @@ export default ({ user }: { user: User }) => {
       )}
       <Headline3>My lessons</Headline3>
       <Lessons lessons={lessons} />
+      <Headline3>My trainings</Headline3>
+      <Trainings user={user} />
     </Layout>
   );
 };

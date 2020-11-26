@@ -1,6 +1,10 @@
 import { socket } from "@application";
-import { ACTION_EVENT, SEND_MESSAGE } from "@chess-tent/types";
-import { addMessageToConversation, getConversation } from "./service";
+import { ACTION_EVENT, SEND_MESSAGE, UPDATE_MESSAGE } from "@chess-tent/types";
+import {
+  addMessageToConversation,
+  getConversation,
+  updateConversationMessage
+} from "./service";
 
 socket.registerMiddleware(async (stream, next) => {
   if (stream.event === ACTION_EVENT && stream.data.type === SEND_MESSAGE) {
@@ -11,6 +15,14 @@ socket.registerMiddleware(async (stream, next) => {
       user.id !== action.payload.owner &&
         socket.sendAction(`user-${user.id}`, stream);
     });
+  }
+  if (stream.event === ACTION_EVENT && stream.data.type === UPDATE_MESSAGE) {
+    const action = stream.data;
+    updateConversationMessage(
+      action.meta.conversationId,
+      action.meta.messageId,
+      action.payload
+    );
   }
   next(stream);
 });

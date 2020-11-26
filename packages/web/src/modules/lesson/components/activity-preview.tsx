@@ -31,11 +31,12 @@ const Preview = ({ lesson, chapter, step }: PreviewProps) => {
     createActivity('preview', lesson, user, {
       activeStepId: step.id,
       activeChapterId: chapter.id,
+      training: false,
     }),
   );
   const activeStep = getChildStep(
     chapter,
-    activity.state.activeStepId,
+    activity.state.activeStepId || step.id,
   ) as Steps;
   const activityStepState = activity.state[step.id] || {};
   const stepsCount = useMemo(() => getStepsCount(chapter), [chapter]);

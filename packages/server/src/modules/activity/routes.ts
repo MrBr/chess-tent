@@ -23,7 +23,8 @@ application.service.registerPostRoute(
   toLocals("filters", req => [
     { owner: req.body.owner },
     { users: req.body.users },
-    { subject: req.body.subject }
+    { subject: req.body.subject },
+    { state: req.body.state }
   ]),
   findActivities,
   sendData("activities")

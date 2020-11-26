@@ -7,6 +7,8 @@ import {
   NormalizedMessage,
   User,
   Tag,
+  Difficulty,
+  CoachEloRange,
   Mentorship,
   NormalizedMentorship,
   Notification
@@ -16,7 +18,7 @@ import {
   AddLessonChapterAction,
   UpdateLessonChapterAction,
   UpdateLessonPathAction,
-  UpdateLessonStepAction
+  UpdateLessonStepAction,
 } from "./actions";
 
 export type Pagination = [number, number];
@@ -43,6 +45,7 @@ export type ActivityFilters = {
   owner?: User["id"];
   users?: User["id"] | User["id"][];
   subject?: Lesson["id"];
+  state?: {};
 };
 
 export type ApiMethods = "GET" | "POST" | "PUT";
@@ -71,7 +74,16 @@ export type Requests = {
   login: RequestFetch<Pick<User, "email" | "password">, UserResponse>;
   logout: RequestFetch<undefined, StatusResponse>;
   me: RequestFetch<undefined, UserResponse>;
-  users: RequestFetch<{ coach?: boolean; name?: string }, UsersResponse>;
+  users: RequestFetch<
+    {
+      coach?: boolean;
+      name?: string;
+      search?: string;
+      elo?: CoachEloRange;
+      specialities?: Tag["id"][];
+    },
+    UsersResponse
+  >;
   user: RequestFetch<User["id"], UserResponse>;
   updateMe: RequestFetch<Partial<User>, UserResponse>;
   lesson: RequestFetch<[string], LessonResponse>;

@@ -8,7 +8,7 @@ export const TYPE_LESSON = "lessons";
 export enum Difficulty {
   BEGINNER = "BEGINNER",
   INTERMEDIATE = "INTERMEDIATE",
-  ADVANCED = "ADVANCED"
+  ADVANCED = "ADVANCED",
 }
 
 export interface Lesson extends Subject {

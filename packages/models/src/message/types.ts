@@ -7,6 +7,7 @@ export interface Message {
   message: string;
   owner: User["id"];
   timestamp: number;
+  read: boolean;
   type: typeof TYPE_MESSAGE;
 }
 
@@ -15,5 +16,6 @@ export interface NormalizedMessage {
   message: Message["message"];
   owner: User["id"];
   timestamp: Message["timestamp"];
+  read: Message["read"];
   type: typeof TYPE_MESSAGE;
 }

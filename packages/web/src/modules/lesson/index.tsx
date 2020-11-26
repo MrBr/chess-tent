@@ -8,6 +8,7 @@ import {
   updateLessonStepAction,
 } from './state/actions';
 import { lessonSelector } from './state/selectors';
+import DifficultyDropdown from './components/difficulty-dropdown';
 
 application.register(() => import('./register'));
 application.register(() => import('./routes'));
@@ -19,6 +20,7 @@ application.state.actions.updateLessonChapter = updateLessonChapterAction;
 application.state.actions.addLessonChapter = addLessonChapterAction;
 application.state.actions.updateLesson = updateLessonAction;
 application.state.selectors.lessonSelector = lessonSelector;
+application.components.DifficultyDropdown = DifficultyDropdown;
 
 application.register(
   () => import('./model'),
@@ -27,7 +29,7 @@ application.register(
   },
 );
 application.register(
-  () => import('./state/hooks'),
+  () => import('./hooks'),
   module => {
     application.hooks.useUpdateLessonStepState =
       module.useUpdateLessonStepState;
@@ -40,6 +42,12 @@ application.register(
   module => {
     application.components.Stepper = module.Stepper;
     application.components.StepperStepContainer = module.StepperStepContainer;
+  },
+);
+application.register(
+  () => import('./components/trainings'),
+  module => {
+    application.components.Trainings = module.default;
   },
 );
 application.register(

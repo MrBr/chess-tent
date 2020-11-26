@@ -1,5 +1,5 @@
 import { User } from "../user";
-import { Message, NormalizedMessage } from "../message";
+import { NormalizedMessage } from "../message";
 
 export const TYPE_CONVERSATION = "conversations";
 

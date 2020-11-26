@@ -219,7 +219,7 @@ export type Components = {
   Switch: ComponentType;
   Redirect: ComponentType<RedirectProps>;
   Route: ComponentType<RouteProps>;
-  Link: ComponentType<LinkProps>;
+  Link: ComponentType<LinkProps & { ghost?: boolean }>;
   Authorized: ComponentType<AuthorizedProps>;
   Provider: ComponentType;
   StateProvider: ComponentType;

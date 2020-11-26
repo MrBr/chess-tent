@@ -1,17 +1,18 @@
 import React, { ComponentType } from 'react';
 import application from '@application';
-import { Services } from '@types';
+import { Components, Services } from '@types';
 import {
   Switch,
   Route,
   Redirect,
-  Link,
+  Link as RLink,
   useHistory,
   useParams,
   useLocation,
   Router as BaseRouter,
 } from 'react-router-dom';
 import { createBrowserHistory, History, LocationState } from 'history';
+import styled from '@emotion/styled';
 
 const routes: ComponentType[] = [];
 const history = new Proxy(createBrowserHistory(), {
@@ -48,6 +49,18 @@ const Router: ComponentType = () => {
 const addRoute: Services['addRoute'] = Route => {
   routes.push(Route);
 };
+
+const Link = styled<Components['Link']>(RLink)(
+  ({ ghost }) =>
+    ghost && {
+      color: 'inherit',
+      textDecoration: 'inherit',
+      '&:hover, &:focus, &:visited, &:link, &:active': {
+        color: 'inherit',
+        textDecoration: 'inherit',
+      },
+    },
+);
 
 application.components.Router = Router;
 application.components.Switch = Switch;

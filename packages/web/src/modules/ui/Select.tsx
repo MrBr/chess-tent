@@ -14,6 +14,7 @@ const Select = (styled(RSelect)({
 }) as unknown) as typeof RSelect;
 
 Select.defaultProps = {
+  ...Select.defaultProps,
   //@ts-ignore
   classNamePrefix: 'select',
 };

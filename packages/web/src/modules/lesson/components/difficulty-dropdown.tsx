@@ -20,7 +20,7 @@ class DifficultyDropdown extends React.Component<
   render() {
     const { difficulty } = this.props;
     return (
-      <Dropdown onSelect={this.onChange}>
+      <Dropdown onSelect={this.onChange} className="cursor-pointer">
         <Dropdown.Toggle id="difficulty-dropdown" size="small">
           {difficulty}
         </Dropdown.Toggle>

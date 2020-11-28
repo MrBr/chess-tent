@@ -1,16 +1,15 @@
 import React from 'react';
 import { Components } from '@types';
-import { hooks } from '@application';
+import { hooks, components } from '@application';
+
+const { Redirect } = components;
 
 export const Authorized: Components['Authorized'] = ({ children }) => {
   const authorized = !!hooks.useActiveUserRecord()[0];
-  return (
-    <>
-      {typeof children === 'function'
-        ? children(authorized)
-        : authorized
-        ? children
-        : null}
-    </>
-  );
+
+  if (typeof children === 'function') {
+    return children(authorized);
+  }
+
+  return <>{authorized ? children : <Redirect to="/" />}</>;
 };

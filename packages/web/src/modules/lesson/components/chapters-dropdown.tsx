@@ -38,7 +38,7 @@ class ChaptersDropdown extends React.Component<
     }
     this.debouncedEdit((event.target as HTMLInputElement).value);
   };
-  changeHandle = (value: ValueType<Chapter, false>) => {
+  changeHandle = (value: ValueType<Chapter>) => {
     const { onChange } = this.props;
     if (!onChange || !value) {
       return;

@@ -11,7 +11,8 @@ import {
   CoachEloRange,
   Mentorship,
   NormalizedMentorship,
-  Notification
+  Notification,
+  SubjectPathUpdate,
 } from "@chess-tent/models";
 import { GenericArguments } from "./_helpers";
 import {
@@ -93,6 +94,10 @@ export type Requests = {
   lessons: RequestFetch<{ owner: User["id"] }, LessonsResponse>;
   activity: RequestFetch<[string], ActivityResponse>;
   activitySave: RequestFetch<Activity, StatusResponse>;
+  activityUpdate: RequestFetch<
+    [Activity["id"], SubjectPathUpdate[]],
+    StatusResponse
+  >;
   activities: RequestFetch<ActivityFilters, ActivitiesResponse>;
   uploadImage: RequestFetch<[string, File], any>;
   signImageUrl: RequestFetch<

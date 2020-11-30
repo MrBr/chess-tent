@@ -3,7 +3,6 @@ import {
   LessonAction,
   LessonState,
   UPDATE_ENTITIES,
-  UPDATE_LESSON,
   UPDATE_LESSON_CHAPTER,
   UPDATE_LESSON_PATH,
   UPDATE_LESSON_STEP,
@@ -59,18 +58,6 @@ export const reducer = (
         [lessonId]: {
           ...lesson,
           state: { ...lesson.state, chapters },
-        },
-      };
-    }
-    case UPDATE_LESSON: {
-      const lessonId = action.meta.id;
-      const patch = action.payload;
-      const lesson = state[lessonId];
-      return {
-        ...state,
-        [lessonId]: {
-          ...lesson,
-          ...patch,
         },
       };
     }

@@ -1,10 +1,10 @@
 import React from 'react';
-import { services } from '@application';
 import { AnalysisSystemProps } from '@types';
 import {
+  getParentStep,
+  getStepPath,
+  removeStep,
   Step,
-  updateAnalysisActiveStepId,
-  updateAnalysisStep,
 } from '@chess-tent/models';
 
 export default class Analysis<
@@ -12,14 +12,18 @@ export default class Analysis<
 > extends React.Component<T> {
   updateStep = (step: Step) => {
     const { updateAnalysis, analysis } = this.props;
-    updateAnalysis(updateAnalysisStep(analysis, step));
+    updateAnalysis(getStepPath(analysis, step), step);
   };
   removeStep = (step: Step) => {
     const { updateAnalysis, analysis } = this.props;
-    updateAnalysis(services.removeAnalysisStep(analysis, step));
+    const parentStep = getParentStep(analysis, step);
+    updateAnalysis(
+      getStepPath(analysis, parentStep),
+      removeStep(parentStep, step, true),
+    );
   };
   setActiveStep = (step: Step) => {
-    const { updateAnalysis, analysis } = this.props;
-    updateAnalysis(updateAnalysisActiveStepId(analysis, step.id));
+    const { updateAnalysis } = this.props;
+    updateAnalysis(['state', 'activeStepId'], step.id);
   };
 }

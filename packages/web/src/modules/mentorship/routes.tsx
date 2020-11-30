@@ -3,19 +3,15 @@ import application, { components } from '@application';
 import Coaches from './pages/coaches';
 import Students from './pages/students';
 
-const { Route, Authorized } = components;
+const { AuthorizedRoute } = components;
 
 application.services.addRoute(() => (
-  <Authorized>
-    <Route exact path="/me/coaches">
-      <Coaches />
-    </Route>
-  </Authorized>
+  <AuthorizedRoute exact path="/me/coaches">
+    <Coaches />
+  </AuthorizedRoute>
 ));
 application.services.addRoute(() => (
-  <Authorized>
-    <Route exact path="/me/students">
-      <Students />
-    </Route>
-  </Authorized>
+  <AuthorizedRoute exact path="/me/students">
+    <Students />
+  </AuthorizedRoute>
 ));

@@ -4,25 +4,21 @@ import Lesson from './pages/lesson';
 import NewLesson from './pages/new-lesson';
 import Playground from './pages/playground';
 
-const { Route, Switch, Authorized } = components;
+const { Switch, AuthorizedRoute } = components;
 
 application.services.addRoute(() => (
-  <Authorized>
-    <Switch>
-      <Route path="/lesson/new" exact>
-        <NewLesson />
-      </Route>
-      <Route path="/lesson/:lessonId" exact>
-        <Lesson />
-      </Route>
-    </Switch>
-  </Authorized>
+  <Switch>
+    <AuthorizedRoute path="/lesson/new" exact>
+      <NewLesson />
+    </AuthorizedRoute>
+    <AuthorizedRoute path="/lesson/:lessonId" exact>
+      <Lesson />
+    </AuthorizedRoute>
+  </Switch>
 ));
 
 application.services.addRoute(() => (
-  <Authorized>
-    <Route path="/activity/:activityId">
-      <Playground />
-    </Route>
-  </Authorized>
+  <AuthorizedRoute path="/activity/:activityId">
+    <Playground />
+  </AuthorizedRoute>
 ));

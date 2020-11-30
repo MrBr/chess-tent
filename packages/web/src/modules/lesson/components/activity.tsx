@@ -12,7 +12,7 @@ import {
   PieceRole,
   Steps,
 } from '@types';
-import { components, hooks, services, state } from '@application';
+import { components, hooks, requests, services, state } from '@application';
 import {
   Chapter,
   getNextStep,
@@ -23,9 +23,8 @@ import {
   getLessonChapter,
   markStepCompleted,
   Step,
-  updateActivityStepState,
-  Analysis,
-  addStep,
+  SubjectPath,
+  TYPE_ACTIVITY,
 } from '@chess-tent/models';
 import Footer from './activity-footer';
 import Header from './activity-header';
@@ -38,10 +37,8 @@ const {
   AnalysisSidebar,
   LessonChapters,
 } = components;
-const { useDispatchBatched, useLocation } = hooks;
-const {
-  actions: { updateActivity: updateActivityAction },
-} = state;
+const { useDispatchBatched, usePathUpdates, useApi } = hooks;
+const { actions } = state;
 
 export class ActivityRenderer extends React.Component<
   ActivityRendererProps,
@@ -65,14 +62,13 @@ export class ActivityRenderer extends React.Component<
 
   setStepActivityState = (state: {}) => {
     const { updateActivityStepState, activity, activeStep } = this.props;
-    updateActivityStepState(activity, activeStep, state);
+    updateActivityStepState(activity, activeStep.id, state);
   };
 
-  setStepActivityAnalysisState = (analysis: Analysis) => {
+  setStepActivityAnalysisState = (path: SubjectPath, state: any) => {
+    const { updateActivityStepAnalysis, activity, activeStep } = this.props;
     !this.isAnalysing() && this.updateActiveTab(1);
-    this.setStepActivityState({
-      analysis,
-    });
+    updateActivityStepAnalysis(activity, activeStep.id, path, state);
   };
 
   startAnalysingPosition = (
@@ -82,7 +78,6 @@ export class ActivityRenderer extends React.Component<
     captured?: boolean,
     promoted?: PieceRole,
   ) => {
-    const { analysis } = this.props;
     const notableMove = services.createNotableMove(
       position,
       move,
@@ -93,48 +88,38 @@ export class ActivityRenderer extends React.Component<
     );
 
     this.setStepActivityAnalysisState(
-      addStep(
-        analysis,
+      ['state', 'steps'],
+      [
         services.createStep('variation', {
           position: position,
           move: notableMove,
         }),
-      ),
+      ],
     );
   };
 
   completeStep = (step: Step) => {
     const { updateActivity, activity } = this.props;
-    updateActivity({
-      ...activity,
-      completedSteps: markStepCompleted(activity, step),
-    });
+    updateActivity(['completedSteps'], markStepCompleted(activity, step));
+  };
+
+  chapterChangeHandler = (chapter: Chapter) => {
+    const { updateActivity } = this.props;
+    updateActivity(['state', 'activeChapterId'], chapter.id);
   };
 
   nextActivityStep = () => {
-    const { activity, updateActivity, chapter, activeStep } = this.props;
+    const { updateActivity, chapter, activeStep } = this.props;
     const nextStep = getNextStep(chapter, activeStep);
-    nextStep &&
-      updateActivity({
-        ...activity,
-        state: {
-          ...activity.state,
-          activeStepId: nextStep.id,
-        },
-      });
+    nextStep && updateActivity(['state', 'activeStepId'], nextStep.id);
   };
+
   prevActivityStep = () => {
-    const { activity, updateActivity, chapter, activeStep } = this.props;
+    const { updateActivity, chapter, activeStep } = this.props;
     const prevStep = getPreviousStep(chapter, activeStep);
-    prevStep &&
-      updateActivity({
-        ...activity,
-        state: {
-          ...activity.state,
-          activeStepId: prevStep.id,
-        },
-      });
+    prevStep && updateActivity(['state', 'activeStepId'], prevStep.id);
   };
+
   renderFooter = (props: Partial<ActivityFooterProps>) => {
     const { stepsCount, currentStepIndex } = this.props;
     return (
@@ -177,6 +162,7 @@ export class ActivityRenderer extends React.Component<
           <LessonChapters
             chapters={lesson.state.chapters}
             activeChapter={chapter}
+            onChange={this.chapterChangeHandler}
           />
         }
         tabs={[
@@ -193,8 +179,8 @@ export class ActivityRenderer extends React.Component<
                 setActiveStep={() => {}}
                 setStepActivityState={this.setStepActivityState}
                 stepActivityState={activityStepState}
-                nextStep={() => {}}
-                prevStep={() => {}}
+                nextStep={this.nextActivityStep}
+                prevStep={this.prevActivityStep}
                 activity={activity}
                 completeStep={this.completeStep}
                 Chessboard={this.renderBoard}
@@ -212,8 +198,8 @@ export class ActivityRenderer extends React.Component<
                 setActiveStep={() => {}}
                 setStepActivityState={this.setStepActivityState}
                 stepActivityState={activityStepState}
-                nextStep={() => {}}
-                prevStep={() => {}}
+                nextStep={this.nextActivityStep}
+                prevStep={this.prevActivityStep}
                 activity={activity}
                 completeStep={this.completeStep}
                 Chessboard={this.renderBoard}
@@ -246,17 +232,24 @@ export class ActivityRenderer extends React.Component<
 const Activity: ActivityComponent<LessonActivity> = ({ activity }) => {
   const dispatch = useDispatchBatched();
   const lesson = activity.subject;
-  const location = useLocation();
   const activeChapterId =
-    new URLSearchParams(location.search).get('activeChapter') ||
-    activity.subject.state.chapters[0].id;
+    activity.state.activeChapterId || activity.subject.state.chapters[0].id;
   const activeChapter = getLessonChapter(lesson, activeChapterId) as Chapter;
   const activeStepId =
-    new URLSearchParams(location.search).get('activeStep') ||
-    activeChapter.state.steps[0].id;
+    activity.state.activeStepId || activeChapter.state.steps[0].id;
   const activeStep = getChildStep(activeChapter, activeStepId) as Steps;
-  const activeStepActivityState = activity.state[activeStep.id] || {};
-
+  const activeStepActivityState =
+    activity.state[activeStep.id] ||
+    services.createActivityStepState(activeStep);
+  const { fetch: saveActivity } = useApi(requests.activityUpdate);
+  const pushUpdate = usePathUpdates(
+    TYPE_ACTIVITY,
+    activity.id,
+    updates => {
+      saveActivity(activity.id, updates);
+    },
+    2000,
+  );
   const stepsCount = useMemo(() => getStepsCount(activeChapter), [
     activeChapter,
   ]);
@@ -266,28 +259,51 @@ const Activity: ActivityComponent<LessonActivity> = ({ activity }) => {
   );
 
   const updateActivity = useCallback(
-    (activity: LessonActivity) => {
+    (path, value) => {
       // TODO - implement logic similar to the lessonUpdates to reduce request payload
-      dispatch(updateActivityAction(activity, activity));
+      const action = actions.updateActivityProperty(activity, path, value);
+      pushUpdate(action);
+      dispatch(action);
     },
-    [dispatch],
+    [activity, dispatch, pushUpdate],
   );
   const updateStepActivityState = useCallback(
-    (activity: LessonActivity, step: Step, state: {}) => {
-      updateActivity(updateActivityStepState(activity, step.id, state));
+    (activity: LessonActivity, stepId: Step['id'], state: {}) => {
+      const action = actions.updateActivityStepState(activity, stepId, state);
+      pushUpdate(action);
+      dispatch(action);
     },
-    [updateActivity],
+    [dispatch, pushUpdate],
+  );
+  const updateStepActivityAnalysis = useCallback(
+    (
+      activity: LessonActivity,
+      stepId: Step['id'],
+      path: SubjectPath,
+      state: any,
+    ) => {
+      const action = actions.updateActivityStepAnalysis(
+        activity,
+        stepId,
+        path,
+        state,
+      );
+      pushUpdate(action);
+      dispatch(action);
+    },
+    [dispatch, pushUpdate],
   );
 
   return (
     <ActivityRenderer
       activity={activity}
       lesson={lesson}
-      analysis={{} as Analysis}
+      analysis={activeStepActivityState.analysis}
       activeStep={activeStep}
       chapter={activeChapter}
       updateActivity={updateActivity}
       updateActivityStepState={updateStepActivityState}
+      updateActivityStepAnalysis={updateStepActivityAnalysis}
       stepsCount={stepsCount}
       currentStepIndex={currentStepIndex}
       activityStepState={activeStepActivityState}

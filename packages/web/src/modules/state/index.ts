@@ -1,6 +1,6 @@
 import application from '@application';
 import logger from 'redux-logger';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector, useStore } from 'react-redux';
 import { batchDispatchMiddleware } from 'redux-batched-actions';
 import {
   registerEntityReducer,
@@ -18,6 +18,7 @@ application.state.middleware = middleware;
 application.hooks.useDispatchBatched = useDispatchBatched;
 application.hooks.useDispatch = useDispatch;
 application.hooks.useSelector = useSelector;
+application.hooks.useStore = useStore;
 application.hooks.useDenormalize = useDenormalize;
 application.register(() => import('./register'));
 application.register(

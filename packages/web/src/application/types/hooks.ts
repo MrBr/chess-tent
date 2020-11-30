@@ -1,5 +1,11 @@
 // Hooks
-import { RecordValue, RequestFetch, StatusResponse } from '@chess-tent/types';
+import {
+  EntitiesState,
+  PathAction,
+  RecordValue,
+  RequestFetch,
+  StatusResponse,
+} from '@chess-tent/types';
 import { ReactElement } from 'react';
 import {
   Activity,
@@ -9,9 +15,10 @@ import {
   Tag,
   User,
   Notification,
+  SubjectPathUpdate,
 } from '@chess-tent/models';
 import { Action as ReduxAction } from 'redux';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch, useStore } from 'react-redux';
 import { BatchAction } from 'redux-batched-actions';
 import { useParams, useLocation } from 'react-router-dom';
 import { History } from 'history';
@@ -36,6 +43,13 @@ export type Hooks = {
   useDispatchBatched: () => (...args: ReduxAction[]) => BatchAction;
   useDispatch: typeof useDispatch;
   useSelector: typeof useSelector;
+  useStore: typeof useStore;
+  usePathUpdates: (
+    type: keyof EntitiesState,
+    id: string,
+    save: (updates: SubjectPathUpdate[]) => void,
+    delay?: number,
+  ) => (action: PathAction<any, any, any>) => void;
   useTags: () => Tag[];
   useUser: (userId: User['id']) => User;
   useActiveUserRecord: () => RecordHookReturn<User>;

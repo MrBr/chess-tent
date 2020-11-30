@@ -1,7 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { hooks, services, ui } from '@application';
 import {
-  Analysis,
   Chapter,
   createActivity,
   getChildStep,
@@ -9,7 +8,9 @@ import {
   getStepsCount,
   Lesson,
   Step,
+  SubjectPath,
   updateActivityStepState,
+  updateSubjectValueAt,
   User,
 } from '@chess-tent/models';
 import { LessonActivity, Steps } from '@types';
@@ -38,31 +39,51 @@ const Preview = ({ lesson, chapter, step }: PreviewProps) => {
     chapter,
     activity.state.activeStepId || step.id,
   ) as Steps;
-  const activityStepState = activity.state[step.id] || {};
+  const activityStepState =
+    activity.state[step.id] || services.createActivityStepState(activeStep);
   const stepsCount = useMemo(() => getStepsCount(chapter), [chapter]);
   const currentStepIndex = useMemo(() => getStepIndex(chapter, activeStep), [
     chapter,
     activeStep,
   ]);
+  const updateActivityProperty = useCallback(
+    (path, value) => {
+      updateActivity(updateSubjectValueAt(activity, path, value));
+    },
+    [activity],
+  );
   const updateStepState = useCallback(
-    (activity: LessonActivity, step: Step, state: {}) =>
-      updateActivity(updateActivityStepState(activity, step.id, state)),
+    (activity: LessonActivity, stepId: Step['id'], state: {}) =>
+      updateActivity(updateActivityStepState(activity, stepId, state)),
     [],
   );
-  const analysis =
-    // TODO - Define activity step state analysis property
-    (activityStepState as { analysis: Analysis }).analysis ||
-    services.createAnalysis(services.getStepPosition(activeStep));
+  const updateStepAnalysis = useCallback(
+    (
+      activity: LessonActivity,
+      stepId: Step['id'],
+      path: SubjectPath,
+      state: {},
+    ) =>
+      updateActivity(
+        updateSubjectValueAt(
+          activity,
+          ['state', stepId, 'analysis', ...path],
+          state,
+        ),
+      ),
+    [],
+  );
 
   return (
     <ActivityRenderer
       activity={activity}
       lesson={lesson}
-      analysis={analysis}
+      analysis={activityStepState.analysis}
       activeStep={activeStep}
       chapter={chapter}
-      updateActivity={updateActivity}
+      updateActivity={updateActivityProperty}
       updateActivityStepState={updateStepState}
+      updateActivityStepAnalysis={updateStepAnalysis}
       stepsCount={stepsCount}
       currentStepIndex={currentStepIndex}
       activityStepState={activityStepState}

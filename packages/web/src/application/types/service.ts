@@ -25,7 +25,7 @@ import {
 import { MoveStep, Steps, VariationStep } from './steps';
 import { GenericArguments } from './_helpers';
 import { RecordHookReturn } from './hooks';
-import { StepModule } from './step';
+import { ActivityStepStateBase, StepModule } from './step';
 import { NotificationRenderer, StepModules } from './index';
 
 export type Services = {
@@ -83,6 +83,10 @@ export type Services = {
     state: T extends Activity<infer S, infer K> ? K : never,
     users: User[],
   ) => T;
+  createActivityStepState: (
+    activeStep: Steps,
+    initialState?: {},
+  ) => ActivityStepStateBase;
   getStepPosition: (step: Steps) => FEN;
   createChapter: (title?: string, steps?: Step[]) => Chapter;
   history: History;

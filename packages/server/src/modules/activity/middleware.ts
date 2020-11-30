@@ -10,10 +10,17 @@ export const saveActivity: MiddlewareFunction = (req, res, next) => {
     .catch(next);
 };
 
+export const updateActivity: MiddlewareFunction = (req, res, next) => {
+  service
+    .updateActivity(res.locals.activity.id, res.locals.updates)
+    .then(next)
+    .catch(next);
+};
+
 export const getActivity: MiddlewareFunction = (req, res, next) => {
   service
     .getActivity(res.locals.activity.id as Activity["id"])
-    .then(activity => {
+    .then((activity) => {
       if (!activity) {
         throw new ActivityNotFoundError();
       }
@@ -26,7 +33,7 @@ export const getActivity: MiddlewareFunction = (req, res, next) => {
 export const findActivities: MiddlewareFunction = (req, res, next) => {
   service
     .findActivities(res.locals.filters)
-    .then(activities => {
+    .then((activities) => {
       res.locals.activities = activities;
       next();
     })
@@ -36,7 +43,7 @@ export const findActivities: MiddlewareFunction = (req, res, next) => {
 export const canEditActivity: MiddlewareFunction = (req, res, next) => {
   service
     .canEditActivity(res.locals.activity.id, res.locals.me.id)
-    .then(canEdit => {
+    .then((canEdit) => {
       if (canEdit) {
         next();
         return;

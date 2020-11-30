@@ -12,18 +12,19 @@ import {
   getParentStep,
   getPreviousStep,
   getLessonChapter,
-  Lesson,
   NormalizedLesson,
   removeStep,
   Step,
   Tag,
   getChildStep,
+  TYPE_LESSON,
 } from '@chess-tent/models';
 import {
   Actions,
   Components,
   LessonStatus,
   LessonUpdatableAction,
+  LessonUpdates,
 } from '@types';
 import { debounce } from 'lodash';
 import { components, hooks, services, state, ui } from '@application';
@@ -31,7 +32,6 @@ import TrainingModal from './training-assign';
 import Sidebar from './editor-sidebar';
 import { PreviewModal } from './activity-preview';
 import ChaptersDropdown from './chapters-dropdown';
-import { addLessonUpdate, getLessonUpdates } from '../service';
 
 const { Container, Row, Col, Headline2, Button, Absolute, Text } = ui;
 const { createChapter } = services;
@@ -57,12 +57,12 @@ const {
   usePromptModal,
   useHistory,
   useTags,
+  usePathUpdates,
 } = hooks;
 
 type EditorRendererProps = ComponentProps<Components['Editor']> & {
   activeChapter: Chapter;
   activeStep: Step;
-  lessonUpdate: (lesson: Lesson) => void;
   dispatch: (action: Actions) => void;
   history: ReturnType<typeof useHistory>;
   location: ReturnType<typeof useLocation>;
@@ -81,13 +81,6 @@ class EditorRenderer extends React.Component<
   EditorRendererProps,
   EditorRendererState
 > {
-  componentDidUpdate(prevProps: EditorRendererProps) {
-    const { lesson, lessonUpdate } = this.props;
-    if (lesson !== prevProps.lesson) {
-      lessonUpdate(lesson);
-    }
-  }
-
   addLessonUpdate(action: LessonUpdatableAction) {
     const { addLessonUpdate } = this.props;
     addLessonUpdate(action);
@@ -356,6 +349,13 @@ const Editor: Components['Editor'] = ({ lesson, save, onStatusChange }) => {
   const [lessonStatus, setLessonStatus] = useState<LessonStatus>(
     LessonStatus.INITIAL,
   );
+  const pushUpdate = usePathUpdates(
+    TYPE_LESSON,
+    lesson.id,
+    (updates: LessonUpdates) => {
+      lessonUpdate(lesson.id, updates);
+    },
+  );
 
   const activeChapterId =
     new URLSearchParams(location.search).get('activeChapter') || chapters[0].id;
@@ -391,24 +391,13 @@ const Editor: Components['Editor'] = ({ lesson, save, onStatusChange }) => {
     lessonUpdateResponse,
   ]);
 
-  const lessonUpdateDebounced = useCallback(
-    debounce(
-      (lesson: Lesson) => lessonUpdate(lesson.id, getLessonUpdates(lesson)),
-      5000,
-      {
-        trailing: true,
-      },
-    ),
-    [lessonUpdate],
-  );
-
   const handleLessonUpdate = useCallback(
     action => {
       setLessonStatus(LessonStatus.DIRTY);
-      addLessonUpdate(action);
+      pushUpdate(action);
       dispatch(action);
     },
-    [dispatch, setLessonStatus],
+    [dispatch, pushUpdate],
   );
 
   const promptModal = usePromptModal();
@@ -416,7 +405,6 @@ const Editor: Components['Editor'] = ({ lesson, save, onStatusChange }) => {
   return (
     <EditorRenderer
       lesson={lesson}
-      lessonUpdate={lessonUpdateDebounced}
       lessonStatus={lessonStatus}
       activeChapter={activeChapter}
       activeStep={activeStep}

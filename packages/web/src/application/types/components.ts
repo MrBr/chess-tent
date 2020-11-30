@@ -22,6 +22,7 @@ import {
   Notification,
   Step,
   StepType,
+  SubjectPath,
   Tag,
   User,
 } from '@chess-tent/models';
@@ -37,6 +38,7 @@ import {
   PieceRolePromotable,
 } from './chess';
 import {
+  ActivityStepStateBase,
   EditorProps,
   StepBoardComponentProps,
   StepModule,
@@ -170,16 +172,25 @@ export type ActivityComponent<T> = ComponentType<
 
 export interface AnalysisSystemProps {
   analysis: Analysis;
-  updateAnalysis: (analysis: Analysis) => void;
+  updateAnalysis: (path: SubjectPath, value: any) => void;
 }
 
 export interface ActivityRendererProps {
   activity: LessonActivity;
-  updateActivity: (activity: LessonActivity) => void;
+  updateActivity: (
+    path: ['state', keyof LessonActivity['state']] | [keyof LessonActivity],
+    value: any,
+  ) => void;
   updateActivityStepState: (
     activity: LessonActivity,
-    step: Step,
+    stepId: Step['id'],
     state: {},
+  ) => void;
+  updateActivityStepAnalysis: (
+    activity: LessonActivity,
+    stepId: Step['id'],
+    path: SubjectPath,
+    state: any,
   ) => void;
   currentStepIndex: number;
   stepsCount: number;
@@ -187,7 +198,7 @@ export interface ActivityRendererProps {
   chapter: Chapter;
   analysis: Analysis;
   lesson: Lesson;
-  activityStepState: {};
+  activityStepState: ActivityStepStateBase;
 }
 
 export interface ActivityRendererState {

@@ -2,7 +2,7 @@ import React from 'react';
 import application, { components } from '@application';
 import Lesson from './pages/lesson';
 import NewLesson from './pages/new-lesson';
-import Playground from './pages/playground';
+import Activity from './pages/activity';
 
 const { Route, Switch } = components;
 
@@ -19,6 +19,6 @@ application.services.addRoute(() => (
 
 application.services.addRoute(() => (
   <Route path="/activity/:activityId">
-    <Playground />
+    <Activity />
   </Route>
 ));

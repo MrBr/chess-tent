@@ -17,7 +17,7 @@ import {
   NormalizedTag,
   Notification,
   NormalizedNotification,
-  NormalizedMentorship
+  NormalizedMentorship,
 } from "@chess-tent/models";
 
 export const UPDATE_ENTITIES = "UPDATE_ENTITIES";
@@ -26,11 +26,11 @@ export const UPDATE_LESSON_STEP = "UPDATE_LESSON_STEP";
 export const UPDATE_LESSON_CHAPTER = "UPDATE_LESSON_CHAPTER";
 export const ADD_LESSON_CHAPTER = "ADD_LESSON_CHAPTER";
 export const UPDATE_LESSON_PATH = "UPDATE_LESSON_PATH";
-export const UPDATE_LESSON = "UPDATE_LESSON";
 
-export const SET_ACTIVITY_ACTIVE_STEP = "SET_ACTIVITY_ACTIVE_STEP";
-export const UPDATE_ACTIVITY = "UPDATE_ACTIVITY";
-export const UPDATE_ACTIVITY_STATE = "UPDATE_ACTIVITY_STATE";
+export const UPDATE_ACTIVITY_STEP_STATE = "UPDATE_ACTIVITY_STEP_STATE";
+export const UPDATE_ACTIVITY_STEP_ANALYSIS =
+  "UPDATE_ACTIVITY_STEP_STATE_ANALYSIS";
+export const UPDATE_ACTIVITY_PROPERTY = "UPDATE_ACTIVITY_PROPERTY";
 
 export const UPDATE_USER = "UPDATE_USER";
 
@@ -49,6 +49,8 @@ export type Action<T, P, M = {}> = {
   // push property indicates that actions is pushed from the server
   meta: M & { push?: boolean };
 };
+
+export type PathAction<T, P, M extends { path: SubjectPath }> = Action<T, P, M>;
 
 export type EntityState<T> = { [key: string]: T };
 export type EntitiesState = {
@@ -96,17 +98,17 @@ export type UpdateEntitiesAction = Action<
 /**
  * Exercise
  */
-export type UpdateLessonChapterAction = Action<
+export type UpdateLessonChapterAction = PathAction<
   typeof UPDATE_LESSON_CHAPTER,
   Chapter,
   { lessonId: Lesson["id"]; chapterId: Chapter["id"]; path: SubjectPath }
 >;
-export type AddLessonChapterAction = Action<
+export type AddLessonChapterAction = PathAction<
   typeof ADD_LESSON_CHAPTER,
   Chapter,
   { lessonId: Lesson["id"]; path: SubjectPath }
 >;
-export type UpdateLessonStepAction = Action<
+export type UpdateLessonStepAction = PathAction<
   typeof UPDATE_LESSON_STEP,
   Step,
   { lessonId: Lesson["id"]; chapterId: Chapter["id"]; path: SubjectPath }
@@ -115,7 +117,7 @@ export type UpdateLessonStepAction = Action<
 export type UpdateLessonPathAction<
   T extends keyof NormalizedLesson = keyof NormalizedLesson,
   K extends keyof NormalizedLesson["state"] = keyof NormalizedLesson["state"]
-> = Action<
+> = PathAction<
   typeof UPDATE_LESSON_PATH,
   T extends "state" ? NormalizedLesson[T][K] : NormalizedLesson[T],
   {
@@ -123,15 +125,9 @@ export type UpdateLessonPathAction<
     path: T extends "state" ? [T, K] : [T];
   }
 >;
-export type UpdateLessonAction = Action<
-  typeof UPDATE_LESSON,
-  Omit<NormalizedLesson, "type" | "id">,
-  { id: Lesson["id"] }
->;
 
 export type LessonAction =
   | UpdateEntitiesAction
-  | UpdateLessonAction
   | UpdateLessonPathAction
   | UpdateLessonStepAction
   | UpdateLessonChapterAction
@@ -140,27 +136,32 @@ export type LessonAction =
 /**
  * Activity
  */
-export type SetActivityActiveStepAction = Action<
-  typeof SET_ACTIVITY_ACTIVE_STEP,
-  Step["id"],
-  { id: Activity["id"] }
+export type UpdateActivityStepAction = PathAction<
+  typeof UPDATE_ACTIVITY_STEP_STATE,
+  any,
+  { activityId: Activity["id"]; path: SubjectPath }
 >;
-export type UpdateActivityAction<T extends Subject> = Action<
-  typeof UPDATE_ACTIVITY,
-  NormalizedActivity<T>,
-  { id: Activity<never>["id"] }
+export type UpdateActivityStepAnalysisAction = PathAction<
+  typeof UPDATE_ACTIVITY_STEP_ANALYSIS,
+  any,
+  { activityId: Activity["id"]; path: SubjectPath }
 >;
-export type UpdateActivityStateAction = Action<
-  typeof UPDATE_ACTIVITY_STATE,
-  {},
-  { id: Activity<never>["id"] }
+export type UpdateActivityPropertyAction<
+  T extends keyof NormalizedActivity = keyof NormalizedActivity,
+  K extends keyof NormalizedActivity["state"] = keyof NormalizedActivity["state"]
+> = PathAction<
+  typeof UPDATE_ACTIVITY_PROPERTY,
+  T extends "state" ? NormalizedActivity[T][K] : NormalizedActivity[T],
+  {
+    activityId: NormalizedActivity["id"];
+    path: T extends "state" ? [T, K] : [T];
+  }
 >;
 
 export type ActivityAction<T extends Subject> =
   | UpdateEntitiesAction
-  | SetActivityActiveStepAction
-  | UpdateActivityAction<T>
-  | UpdateActivityStateAction;
+  | UpdateActivityStepAction
+  | UpdateActivityPropertyAction;
 
 /**
  * User

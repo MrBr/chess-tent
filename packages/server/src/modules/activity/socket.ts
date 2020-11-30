@@ -1,10 +1,9 @@
 import { socket } from "@application";
 import {
   ACTION_EVENT,
-  UPDATE_ACTIVITY_STATE,
   SUBSCRIBE_EVENT,
-  UPDATE_ACTIVITY,
-  SET_ACTIVITY_ACTIVE_STEP
+  UPDATE_ACTIVITY_PROPERTY,
+  UPDATE_ACTIVITY_STEP_STATE,
 } from "@chess-tent/types";
 import { canEditActivity } from "./service";
 
@@ -29,12 +28,11 @@ socket.registerMiddleware(async (stream, next) => {
   // Forward activity action
   if (
     stream.event === ACTION_EVENT &&
-    (stream.data.type === UPDATE_ACTIVITY_STATE ||
-      stream.data.type === SET_ACTIVITY_ACTIVE_STEP ||
-      stream.data.type === UPDATE_ACTIVITY)
+    (stream.data.type === UPDATE_ACTIVITY_STEP_STATE ||
+      stream.data.type === UPDATE_ACTIVITY_PROPERTY)
   ) {
     const action = stream.data;
-    socket.sendAction(`activity-${action.meta.id}`, stream);
+    socket.sendAction(`activity-${action.meta.activityId}`, stream);
   }
 
   next(stream);

@@ -1,43 +1,47 @@
-import { Activity, Step, Subject } from '@chess-tent/models';
 import {
-  SET_ACTIVITY_ACTIVE_STEP,
-  SetActivityActiveStepAction,
-  UPDATE_ACTIVITY,
-  UPDATE_ACTIVITY_STATE,
-  UpdateActivityAction,
-  UpdateActivityStateAction,
+  UPDATE_ACTIVITY_STEP_STATE,
+  UpdateActivityStepAction,
+  State,
+  UPDATE_ACTIVITY_PROPERTY,
+  UpdateActivityPropertyAction,
 } from '@types';
-import { utils } from '@application';
 
-export const updateActivityAction = <T extends Subject>(
-  activity: Activity<T>,
-  patch: Partial<Activity<T>>,
-): UpdateActivityAction<T> => ({
-  type: UPDATE_ACTIVITY,
-  payload: utils.normalize({ ...activity, ...patch }).result,
+export const updateActivityPropertyAction: State['actions']['updateActivityProperty'] = (
+  activity,
+  path,
+  payload,
+): UpdateActivityPropertyAction => ({
+  type: UPDATE_ACTIVITY_PROPERTY,
+  payload,
   meta: {
-    id: activity.id,
+    activityId: activity.id,
+    path,
   },
 });
 
-export const setActivityActiveStepAction = (
-  activity: Activity,
-  step: Step,
-): SetActivityActiveStepAction => ({
-  type: SET_ACTIVITY_ACTIVE_STEP,
-  payload: step.id,
+export const updateActivityStepAction: State['actions']['updateActivityStepState'] = (
+  activity,
+  stepId,
+  payload,
+): UpdateActivityStepAction => ({
+  type: UPDATE_ACTIVITY_STEP_STATE,
+  payload,
   meta: {
-    id: activity.id,
+    activityId: activity.id,
+    path: ['state', stepId],
   },
 });
 
-export const updateActivityStateAction = (
-  activity: Activity<Subject>,
-  statePatch: {},
-): UpdateActivityStateAction => ({
-  type: UPDATE_ACTIVITY_STATE,
-  payload: statePatch,
+export const updateActivityStepAnalysisAction: State['actions']['updateActivityStepAnalysis'] = (
+  activity,
+  stepId,
+  path,
+  payload,
+): UpdateActivityStepAction => ({
+  type: UPDATE_ACTIVITY_STEP_STATE,
+  payload,
   meta: {
-    id: activity.id,
+    activityId: activity.id,
+    path: ['state', stepId, 'analysis', ...path],
   },
 });

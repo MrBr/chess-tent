@@ -1,15 +1,12 @@
 import { LessonModel, depopulate } from "./model";
-import { Chapter, Lesson, SubjectPath, Step } from "@chess-tent/models";
+import { Lesson } from "@chess-tent/models";
 import { LessonUpdates } from "@chess-tent/types";
-
-const lessonValuePathToMongoosePath = (path: SubjectPath) => {
-  return path.join(".");
-};
+import { service } from "@application";
 
 export const saveLesson = (lesson: Lesson) =>
-  new Promise(resolve => {
+  new Promise((resolve) => {
     LessonModel.updateOne({ _id: lesson.id }, depopulate(lesson), {
-      upsert: true
+      upsert: true,
     }).exec((err, result) => {
       if (err) {
         throw err;
@@ -19,7 +16,7 @@ export const saveLesson = (lesson: Lesson) =>
   });
 
 export const patchLesson = (lessonId: Lesson["id"], lesson: Partial<Lesson>) =>
-  new Promise(resolve => {
+  new Promise((resolve) => {
     LessonModel.updateOne({ _id: lessonId }, { $set: depopulate(lesson) }).exec(
       (err, result) => {
         if (err) {
@@ -31,7 +28,7 @@ export const patchLesson = (lessonId: Lesson["id"], lesson: Partial<Lesson>) =>
   });
 
 export const getLesson = (lessonId: Lesson["id"]): Promise<Lesson | null> =>
-  new Promise(resolve => {
+  new Promise((resolve) => {
     LessonModel.findById(lessonId)
       .populate("owner")
       .populate("tags")
@@ -47,15 +44,8 @@ export const updateLessonSteps = (
   lessonId: Lesson["id"],
   updates: LessonUpdates
 ) => {
-  const $set = updates.reduce<Record<string, Step | Chapter>>(
-    (result, update) => {
-      const path = lessonValuePathToMongoosePath(update.path);
-      result[path] = update.value;
-      return result;
-    },
-    {}
-  );
-  return new Promise(resolve => {
+  const $set = service.subjectPathUpdatesToMongoose$set(updates);
+  return new Promise((resolve) => {
     LessonModel.updateOne({ _id: lessonId }, { $set }).exec((err, result) => {
       if (err) {
         throw err;
@@ -66,7 +56,7 @@ export const updateLessonSteps = (
 };
 
 export const findLessons = (lesson: Partial<Lesson>): Promise<Lesson[]> =>
-  new Promise(resolve => {
+  new Promise((resolve) => {
     LessonModel.find(LessonModel.translateAliases(lesson))
       .populate("owner")
       .populate("tags")
@@ -74,6 +64,6 @@ export const findLessons = (lesson: Partial<Lesson>): Promise<Lesson[]> =>
         if (err) {
           throw err;
         }
-        resolve(result.map(item => item.toObject()));
+        resolve(result.map((item) => item.toObject()));
       });
   });

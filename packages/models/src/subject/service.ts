@@ -7,8 +7,8 @@ export const updateSubjectState = <T extends Subject>(
   ...subject,
   state: {
     ...subject.state,
-    ...patch
-  }
+    ...patch,
+  },
 });
 
 export const getSubjectValueAt = <T extends Subject>(

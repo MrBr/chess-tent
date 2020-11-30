@@ -9,7 +9,6 @@ import {
   ADD_LESSON_CHAPTER,
   AddLessonChapterAction,
   State,
-  UPDATE_LESSON,
   UPDATE_LESSON_CHAPTER,
   UPDATE_LESSON_PATH,
   UPDATE_LESSON_STEP,
@@ -17,19 +16,6 @@ import {
   UpdateLessonPathAction,
   UpdateLessonStepAction,
 } from '@types';
-import { utils } from '@application';
-import { merge } from 'lodash';
-
-export const updateLessonAction: State['actions']['updateLesson'] = (
-  lesson,
-  patch,
-) => ({
-  type: UPDATE_LESSON,
-  payload: utils.normalize(merge({}, lesson, patch)).result,
-  meta: {
-    id: lesson.id,
-  },
-});
 
 export const updateLessonStepAction = <T extends Step>(
   lesson: Lesson,

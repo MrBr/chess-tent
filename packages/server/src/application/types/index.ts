@@ -1,14 +1,14 @@
 import { register } from "core-module";
 import { ErrorRequestHandler, RequestHandler } from "express";
 import { Schema, SchemaOptions, Document, Model } from "mongoose";
-import { NormalizedUser, User } from "@chess-tent/models";
+import { NormalizedUser, SubjectPathUpdate, User } from "@chess-tent/models";
 import { Socket } from "socket.io";
 import { Server as HttpServer } from "http";
 import {
   ACTION_EVENT,
   Actions,
   SUBSCRIBE_EVENT,
-  UNSUBSCRIBE_EVENT
+  UNSUBSCRIBE_EVENT,
 } from "@chess-tent/types";
 
 export type DB = {
@@ -47,6 +47,10 @@ export type Service = {
 
   generateImgUrl: () => string;
   fileStorage: AWS.S3;
+
+  subjectPathUpdatesToMongoose$set: (
+    updates: SubjectPathUpdate[]
+  ) => Record<string, any>;
 };
 
 export type Middleware = {

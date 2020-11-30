@@ -16,16 +16,16 @@ import {
   Subject,
   User,
   Notification,
+  NormalizedActivity,
+  SubjectPath,
 } from '@chess-tent/models';
 import {
   AddLessonChapterAction,
   AppState,
   SendMessageAction,
-  SetActivityActiveStepAction,
-  UpdateActivityAction,
-  UpdateActivityStateAction,
+  UpdateActivityPropertyAction,
+  UpdateActivityStepAction,
   UpdateEntitiesAction,
-  UpdateLessonAction,
   UpdateLessonChapterAction,
   UpdateLessonPathAction,
   UpdateLessonStepAction,
@@ -49,27 +49,31 @@ export type State = {
   getRootReducer: () => Reducer;
   actions: {
     updateEntities: (entity: Entity | Entity[]) => UpdateEntitiesAction;
-    updateLesson: (
-      lesson: Lesson,
-      patch:
-        | Partial<Omit<Lesson, 'state'>>
-        | { state: Partial<Lesson['state']> },
-    ) => UpdateLessonAction;
     updateNotification: (
       notification: Notification,
     ) => UpdateNotificationAction;
-    updateActivityState: <T extends Activity>(
-      activity: T,
-      state: Partial<T extends Activity<infer K, infer S> ? S : never>,
-    ) => UpdateActivityStateAction;
-    setActivityActiveStep: (
+    updateActivityStepState: (
       activity: Activity,
-      step: Step,
-    ) => SetActivityActiveStepAction;
-    updateActivity: <T extends Activity>(
-      activity: T,
-      patch: Partial<T>,
-    ) => UpdateActivityAction<T extends Activity<infer S> ? S : never>;
+      stepId: Step['id'],
+      // TODO - resolve payload type; something like recursive Partial<T extends {}>
+      payload: {},
+    ) => UpdateActivityStepAction;
+    updateActivityStepAnalysis: (
+      activity: Activity,
+      stepId: Step['id'],
+      path: SubjectPath,
+      payload: any,
+    ) => UpdateActivityStepAction;
+    updateActivityProperty: <
+      T extends keyof NormalizedActivity,
+      K extends keyof NormalizedActivity['state']
+    >(
+      activity: Activity,
+      path: T extends 'state' ? [T, K] : [T],
+      value: T extends 'state'
+        ? NormalizedActivity[T][K]
+        : NormalizedActivity[T],
+    ) => UpdateActivityPropertyAction;
     sendMessage: (
       user: User,
       conversation: Conversation,

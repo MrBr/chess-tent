@@ -13,6 +13,7 @@ import {
   createLesson,
   Lesson,
   Step,
+  TYPE_LESSON,
   User,
 } from '@chess-tent/models';
 import { LessonStatus } from '@types';
@@ -22,6 +23,7 @@ const {
   useActiveUserRecord,
   useSelector,
   useHistory,
+  useStore,
 } = hooks;
 const { Editor } = components;
 const { createStep } = services;
@@ -51,6 +53,7 @@ export default () => {
     lessonSelector((lessonId as unknown) as string),
   ) as Lesson;
   const history = useHistory();
+  const store = useStore();
 
   useEffect(() => {
     if (lessonId) {
@@ -61,7 +64,11 @@ export default () => {
     dispatch(updateEntities(newLesson));
   }, [dispatch, lessonId, user]);
 
-  const saveLesson = useCallback(() => requests.lessonSave(lesson), [lesson]);
+  const saveLesson = useCallback(
+    () =>
+      requests.lessonSave(store.getState().entities[TYPE_LESSON][lesson.id]),
+    [lesson.id, store],
+  );
 
   const handleStatusChange = useCallback(
     (lessonStatus: LessonStatus) => {

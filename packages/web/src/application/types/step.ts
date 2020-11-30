@@ -1,6 +1,7 @@
 import { ComponentType, FunctionComponent, ReactElement } from 'react';
 import {
   Activity,
+  Analysis,
   Chapter,
   Lesson,
   Step,
@@ -47,42 +48,35 @@ export type ActivityFooterProps = {
   currentStep: number;
   children?: ReactElement;
 };
+
+export type ActivityStepStateBase = {
+  analysis: Analysis;
+};
+
+export type ActivityStepState<T extends {}> = T & ActivityStepStateBase;
+export type ActivityProps<ACTIVITY_STATE> = {
+  // TODO - update name to updateStepActivityState
+  setStepActivityState: (state: {}) => void;
+  stepActivityState: ACTIVITY_STATE;
+  nextStep: () => void;
+  prevStep: () => void;
+  Footer: FunctionComponent<Partial<ActivityFooterProps>>;
+  activity: Activity;
+  completeStep: (step: Step) => void;
+  lesson: Lesson;
+  chapter: Chapter;
+} & StepBoardComponentProps;
+
 export type StepModule<
   STEP extends Step,
   STEP_TYPE extends StepType,
   REQUIRED_STATE extends {} = {},
-  ACTIVITY_STATE extends {} = {}
+  ACTIVITY_STATE extends ActivityStepStateBase = ActivityStepStateBase
 > = {
   EditorBoard: StepComponent<STEP, EditorProps & StepBoardComponentProps>;
   EditorSidebar: StepComponent<STEP, EditorProps>;
-  ActivityBoard: StepComponent<
-    STEP,
-    {
-      setStepActivityState: (state: {}) => void;
-      stepActivityState: ACTIVITY_STATE;
-      nextStep: () => void;
-      prevStep: () => void;
-      Footer: FunctionComponent<Partial<ActivityFooterProps>>;
-      activity: Activity;
-      completeStep: (step: Step) => void;
-      lesson: Lesson;
-      chapter: Chapter;
-    } & StepBoardComponentProps
-  >;
-  ActivitySidebar: StepComponent<
-    STEP,
-    {
-      setStepActivityState: (state: {}) => void;
-      stepActivityState: ACTIVITY_STATE;
-      nextStep: () => void;
-      prevStep: () => void;
-      Footer: FunctionComponent<Partial<ActivityFooterProps>>;
-      activity: Activity;
-      completeStep: (step: Step) => void;
-      lesson: Lesson;
-      chapter: Chapter;
-    } & StepBoardComponentProps
-  >;
+  ActivityBoard: StepComponent<STEP, ActivityProps<ACTIVITY_STATE>>;
+  ActivitySidebar: StepComponent<STEP, ActivityProps<ACTIVITY_STATE>>;
   stepType: STEP_TYPE;
   createStep: (
     id: string,

@@ -1,6 +1,6 @@
 import { Step, StepType } from '@chess-tent/models';
 import { FEN, Key, NotableMove, Shape } from './chess';
-import { StepModule } from './step';
+import { ActivityStepState, StepModule } from './step';
 
 // Move
 export type MoveStepState = {
@@ -50,18 +50,18 @@ export interface ExerciseVariationState {
   moves?: ExerciseMove[];
   activeMoveIndex?: number;
 }
-export interface ExerciseVariationActivityState {
+export type ExerciseVariationActivityState = ActivityStepState<{
   moves?: { [key: number]: NotableMove };
   activeMoveIndex?: number;
-}
+}>;
 
 export interface ExerciseSelectSquaresAndPiecesState {
   question?: string;
   explanation?: string;
 }
-export interface ExerciseActivitySelectSquaresAndPiecesState {
+export type ExerciseActivitySelectSquaresAndPiecesState = ActivityStepState<{
   selectedShapes: Shape[];
-}
+}>;
 
 export interface ExerciseArrangePiecesState {
   question?: string;
@@ -69,26 +69,26 @@ export interface ExerciseArrangePiecesState {
   moves?: NotableMove[];
   editing?: boolean;
 }
-export interface ExerciseActivityArrangePiecesState {
+export type ExerciseActivityArrangePiecesState = ActivityStepState<{
   moves?: NotableMove[];
   invalidPiece?: Key; // Piece at key
-}
+}>;
 export interface ExerciseQuestionState {
   question?: string;
   explanation?: string;
 }
-export interface ExerciseQuestionActivityState {
+export type ExerciseQuestionActivityState = ActivityStepState<{
   answer?: string;
-}
+}>;
 
 export interface ExerciseQuestionnaireState {
   question?: string;
   explanation?: string;
   options?: { correct: boolean; text: string }[];
 }
-export interface ExerciseQuestionnaireActivityState {
+export type ExerciseQuestionnaireActivityState = ActivityStepState<{
   selectedOptionIndex?: number;
-}
+}>;
 
 export type ExerciseActivityState =
   | ExerciseQuestionActivityState

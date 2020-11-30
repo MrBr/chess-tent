@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { hooks, state, requests, socket } from '@application';
 import { LessonActivity } from '@types';
 import { isLesson } from '@chess-tent/models';
-import LessonActivityPlayground from '../components/activity';
+import Activity from '../components/activity';
 
 const { useParams, useDispatchBatched, useSelector, useApi } = hooks;
 const {
@@ -57,5 +57,5 @@ export default () => {
     return <>Error - playground subject miss match</>;
   }
 
-  return <LessonActivityPlayground activity={activity} />;
+  return <Activity activity={activity} />;
 };

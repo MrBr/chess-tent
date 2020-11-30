@@ -12,11 +12,12 @@ application.register(() => import('./register'));
 application.register(
   () => import('./state/actions'),
   module => {
-    application.state.actions.updateActivity = module.updateActivityAction;
-    application.state.actions.setActivityActiveStep =
-      module.setActivityActiveStepAction;
-    application.state.actions.updateActivityState =
-      module.updateActivityStateAction;
+    application.state.actions.updateActivityProperty =
+      module.updateActivityPropertyAction;
+    application.state.actions.updateActivityStepState =
+      module.updateActivityStepAction;
+    application.state.actions.updateActivityStepAnalysis =
+      module.updateActivityStepAnalysisAction;
   },
 );
 application.register(
@@ -29,10 +30,12 @@ application.register(
   () => import('./service'),
   module => {
     application.services.createActivity = module.createActivity;
+    application.services.createActivityStepState =
+      module.createActivityStepState;
   },
 );
 application.register(
-  () => import('./state/hooks'),
+  () => import('./hooks'),
   module => {
     application.hooks.useUserActivitiesRecord = module.useUserActivitiesRecord;
   },

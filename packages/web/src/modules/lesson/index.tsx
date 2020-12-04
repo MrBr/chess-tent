@@ -92,12 +92,6 @@ application.register(
   },
 );
 application.register(
-  () => import('./components/activity-sidebar'),
-  module => {
-    application.components.LessonPlaygroundSidebar = module.default;
-  },
-);
-application.register(
   () => import('./components/step-move'),
   module => {
     application.components.StepMove = module.default;

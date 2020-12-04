@@ -32,6 +32,7 @@ application.register(
     application.services.createActivity = module.createActivity;
     application.services.createActivityStepState =
       module.createActivityStepState;
+    application.services.createActivityComment = module.createActivityComment;
   },
 );
 application.register(

@@ -1,13 +1,47 @@
-import { useEffect } from 'react';
-import { hooks, requests, services } from '@application';
+import { useCallback, useEffect, useState } from 'react';
+import { hooks, requests, services, state } from '@application';
 import { Conversation, User } from '@chess-tent/models';
 import { RecordHookReturn } from '@types';
 
-const { useApi, useRecord } = hooks;
+const { useApi, useRecord, useDispatch } = hooks;
+const {
+  actions: { updateEntities },
+} = state;
 
 export const useConversationParticipant = services.createRecordHook<User>(
   'conversationParticipant',
 );
+
+export const useLoadMoreMessages = (
+  conversation: Conversation,
+  pageSize: number,
+): [() => void, boolean, boolean] => {
+  const dispatch = useDispatch();
+  const [noMore, setNoMore] = useState(conversation.messages.length === 0);
+  const { fetch, response, loading, reset } = useApi(requests.messages);
+  useEffect(() => {
+    if (response) {
+      reset();
+      if (response.data.length < pageSize) {
+        setNoMore(true);
+      }
+      dispatch(
+        updateEntities({
+          ...conversation,
+          messages: [...conversation.messages, ...response.data],
+        }),
+      );
+    }
+  }, [response, dispatch, conversation, reset, pageSize]);
+  const messageCount = conversation.messages.length;
+  const loadMore = useCallback(() => {
+    if (noMore || loading) {
+      return;
+    }
+    fetch(conversation.id, [messageCount + 1, pageSize]);
+  }, [noMore, loading, fetch, conversation.id, messageCount, pageSize]);
+  return [loadMore, loading || !!response, noMore];
+};
 
 export const useUserConversations = (
   userId: User['id'],

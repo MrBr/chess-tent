@@ -7,6 +7,7 @@ import {
   Step,
   StepRoot,
   StepType,
+  User,
 } from '@chess-tent/models';
 import { ChessboardInterface, ChessboardProps } from './components';
 import { ClassComponent } from './_helpers';
@@ -48,9 +49,14 @@ export type ActivityFooterProps = {
   currentStep: number;
   children?: ReactElement;
 };
-
+export type ActivityComment = {
+  userId: User['id'];
+  text: string;
+  id: string;
+};
 export type ActivityStepStateBase = {
   analysis: Analysis;
+  comments?: ActivityComment[];
 };
 
 export type ActivityStepState<T extends {}> = T & ActivityStepStateBase;

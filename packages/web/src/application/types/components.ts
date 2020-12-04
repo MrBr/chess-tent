@@ -131,6 +131,8 @@ export type LessonPlayground = FunctionComponent<{
   tabs: { board: ReactElement; sidebar: ReactElement; title: string }[];
   activeTab: number;
   setActiveTab: (activeTab: number) => void;
+  updateActivityStepState: (state: {}) => void;
+  activeStepActivityState: ActivityStepStateBase;
 }>;
 
 export type LessonToolboxText = FunctionComponent<{
@@ -160,10 +162,6 @@ export type StepTag = FunctionComponent<{
 
 export interface AuthorizedProps {
   children: ReactElement | ((authorized: boolean) => ReactElement);
-}
-
-export interface LessonPlaygroundSidebarProps {
-  header?: ReactElement;
 }
 
 export type ActivityComponent<T> = ComponentType<
@@ -233,7 +231,6 @@ export type Components = {
   StepToolbox: StepToolbox;
   LessonToolboxText: LessonToolboxText;
   LessonPlayground: LessonPlayground;
-  LessonPlaygroundSidebar: ComponentType<LessonPlaygroundSidebarProps>;
   StepTag: StepTag;
   StepMove: StepMove;
   Router: ComponentType;

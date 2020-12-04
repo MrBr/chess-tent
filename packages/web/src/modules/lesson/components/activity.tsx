@@ -61,8 +61,16 @@ export class ActivityRenderer extends React.Component<
   };
 
   setStepActivityState = (state: {}) => {
-    const { updateActivityStepState, activity, activeStep } = this.props;
-    updateActivityStepState(activity, activeStep.id, state);
+    const {
+      updateActivityStepState,
+      activity,
+      activeStep,
+      activityStepState,
+    } = this.props;
+    updateActivityStepState(activity, activeStep.id, {
+      ...activityStepState,
+      ...state,
+    });
   };
 
   setStepActivityAnalysisState = (path: SubjectPath, state: any) => {
@@ -158,6 +166,8 @@ export class ActivityRenderer extends React.Component<
       <LessonPlayground
         activeTab={activeTab}
         setActiveTab={this.updateActiveTab}
+        updateActivityStepState={this.setStepActivityState}
+        activeStepActivityState={activityStepState}
         header={
           <LessonChapters
             chapters={lesson.state.chapters}

@@ -63,9 +63,9 @@ export default () => {
         />
       )}
       {sortedConversations.map(conversation => {
-        const participant = conversation.users.find(
-          user => user.id !== activeUser.id,
-        ) as User;
+        const participant =
+          conversation.users.find(user => user.id !== activeUser.id) ||
+          (conversation.users[0] as User); // User sends messages to himself
         return (
           <Row
             onClick={() => setParticipant(participant)}

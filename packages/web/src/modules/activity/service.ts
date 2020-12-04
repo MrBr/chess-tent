@@ -16,3 +16,12 @@ export const createActivityStepState = (
   analysis: services.createAnalysis(services.getStepPosition(activeStep)),
   ...(initialState || {}),
 });
+
+export const createActivityComment: Services['createActivityComment'] = (
+  user,
+  text,
+) => ({
+  userId: user.id,
+  text,
+  id: utils.generateIndex(),
+});

@@ -103,8 +103,8 @@ export default styled(
 
     useEffect(() => {
       if (
-        conversation.messages[0].read &&
-        conversation.messages[0].owner !== activeUser.id
+        conversation.messages[0]?.read &&
+        conversation.messages[0]?.owner !== activeUser.id
       ) {
         dispatch(
           updateMessage(

@@ -1,6 +1,6 @@
 import React, { ReactElement, useCallback, useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
-import { components, hooks, requests, state, ui, utils } from '@application';
+import { components, hooks, state, ui, utils } from '@application';
 import {
   Conversation,
   createMessage,
@@ -10,14 +10,15 @@ import {
 import styled from '@emotion/styled';
 import { DateTime } from 'luxon';
 import { updateMessage } from '../state/actions';
+import { useLoadMoreMessages } from '../hooks';
 
 const { Container, Headline3, Text, Row, Col, Input, Icon, Absolute } = ui;
 const { UserAvatar } = components;
 const { generateIndex } = utils;
 const {
-  actions: { updateEntities, sendMessage },
+  actions: { sendMessage },
 } = state;
-const { useApi, useDispatchBatched } = hooks;
+const { useDispatchBatched } = hooks;
 
 const ActiveUserMessages = styled(Text)({
   background: '#F3F4F5',
@@ -51,40 +52,10 @@ const LoadMore = ({
   return <div ref={ref}>{loading ? 'Loading...' : ''}</div>;
 };
 
-const useLoadMoreMessages = (
-  conversation: Conversation,
-): [() => void, boolean, boolean] => {
-  const dispatch = useDispatchBatched();
-  const [noMore, setNoMore] = useState(conversation.messages.length === 0);
-  const { fetch, response, loading, reset } = useApi(requests.messages);
-  useEffect(() => {
-    if (response) {
-      reset();
-      if (response.data.length < 10) {
-        setNoMore(true);
-      }
-      dispatch(
-        updateEntities({
-          ...conversation,
-          messages: [...conversation.messages, ...response.data],
-        }),
-      );
-    }
-  }, [response, dispatch, conversation, reset]);
-  const messageCount = conversation.messages.length;
-  const loadMore = useCallback(() => {
-    if (noMore || loading) {
-      return;
-    }
-    fetch(conversation.id, [messageCount + 1, 10]);
-  }, [conversation.id, messageCount, fetch, noMore, loading]);
-  return [loadMore, loading || !!response, noMore];
-};
-
 export default styled(
   ({
     className,
-    activeUser, // active user
+    activeUser,
     participant,
     conversation,
     close,
@@ -98,23 +69,17 @@ export default styled(
     const dispatch = useDispatchBatched();
     const [loadMoreMessages, loading, noMore] = useLoadMoreMessages(
       conversation,
+      10,
     );
     const { messages } = conversation;
 
     useEffect(() => {
-      if (
-        conversation.messages[0]?.read &&
-        conversation.messages[0]?.owner !== activeUser.id
-      ) {
+      if (messages[0]?.read && messages[0]?.owner !== activeUser.id) {
         dispatch(
-          updateMessage(
-            { read: true },
-            conversation.id,
-            conversation.messages[0].id,
-          ),
+          updateMessage({ read: true }, conversation.id, messages[0].id),
         );
       }
-    }, [activeUser.id, conversation, dispatch]);
+    }, [activeUser.id, conversation, dispatch, messages]);
 
     const handleEnter = useCallback(
       event => {

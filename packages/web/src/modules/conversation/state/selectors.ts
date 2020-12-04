@@ -16,7 +16,7 @@ export const selectConversationByUsers = (...users: (User | null)[]) => (
   const conversation = Object.values(
     state.entities.conversations,
   ).find(conversation =>
-    conversation.users.every(userId => users.some(user => user?.id === userId)),
+    users.every(user => conversation.users.some(userId => user?.id === userId)),
   );
   return conversation
     ? utils.denormalize(conversation.id, TYPE_CONVERSATION, state.entities)

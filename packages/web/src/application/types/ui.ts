@@ -59,6 +59,7 @@ export declare interface TextProps {
   inline?: boolean;
   weight?: number;
   align?: 'center' | 'left' | 'right';
+  color?: 'title' | 'subtitle';
   fontSize?: FontSize;
   onClick?: ReactEventHandler;
   contentEditable?: boolean;

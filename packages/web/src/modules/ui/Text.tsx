@@ -7,6 +7,7 @@ const headingStyle = {
   fontFamily: 'Inter, sans-serif',
   fontWeight: 700,
   lineHeight: 1.21,
+  color: '#182235',
 };
 
 const fontSize = (props: TextProps) => {
@@ -21,10 +22,23 @@ const fontSize = (props: TextProps) => {
   }
 };
 
+const fontColor = (props: TextProps) => {
+  switch (props.color) {
+    case 'title':
+      return '#182235';
+    case 'subtitle':
+      return '#2F3849';
+    default:
+      // base
+      return '#747A86';
+  }
+};
+
 const textDynamicStyle = (props: TextProps): CSSObject => ({
   fontWeight: props.weight || 400,
   textAlign: props.align || 'left',
   fontSize: fontSize(props),
+  color: fontColor(props),
 });
 
 const Text = styled<FunctionComponent<TextProps>>(

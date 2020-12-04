@@ -1,10 +1,17 @@
 import React, { useEffect } from 'react';
-import { hooks, state, requests, socket } from '@application';
+import { hooks, state, requests, socket, ui } from '@application';
 import { LessonActivity } from '@types';
 import { isLesson } from '@chess-tent/models';
 import Activity from '../components/activity';
 
-const { useParams, useDispatchBatched, useSelector, useApi } = hooks;
+const {
+  useParams,
+  useDispatchBatched,
+  useSelector,
+  useApi,
+  useHistory,
+} = hooks;
+const { Absolute, Icon } = ui;
 const {
   selectors: { activitySelector },
   actions: { updateEntities },
@@ -19,6 +26,7 @@ export default () => {
   } = useApi(requests.activity);
   const dispatch = useDispatchBatched();
   const activity = useSelector(activitySelector(activityId)) as LessonActivity;
+  const history = useHistory();
 
   useEffect(() => {
     return () => {
@@ -57,5 +65,12 @@ export default () => {
     return <>Error - playground subject miss match</>;
   }
 
-  return <Activity activity={activity} />;
+  return (
+    <>
+      <Activity activity={activity} />
+      <Absolute left={25} top={25} onClick={() => history.goBack()}>
+        <Icon type="close" size="large" />
+      </Absolute>
+    </>
+  );
 };

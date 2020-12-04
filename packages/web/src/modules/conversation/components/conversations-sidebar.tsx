@@ -76,12 +76,18 @@ export default () => {
               <UserAvatar user={participant} />
             </Col>
             <Col className="text-truncate">
-              <Text weight={700} className="m-0 text-truncate" fontSize="small">
+              <Text
+                weight={700}
+                className="m-0 text-truncate"
+                fontSize="small"
+                color="title"
+              >
                 {participant.name}
               </Text>
               <Text
                 className="m-0 text-truncate"
                 fontSize="small"
+                color="title"
                 weight={
                   conversation.messages[0]?.read ||
                   conversation.messages[0]?.owner === activeUser.id

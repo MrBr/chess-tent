@@ -66,8 +66,10 @@ export default () => {
 
   const saveLesson = useCallback(
     () =>
-      requests.lessonSave(store.getState().entities[TYPE_LESSON][lesson.id]),
-    [lesson.id, store],
+      requests.lessonSave(
+        store.getState().entities[TYPE_LESSON][lessonId as string],
+      ),
+    [lessonId, store],
   );
 
   const handleStatusChange = useCallback(

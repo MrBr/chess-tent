@@ -4,11 +4,12 @@ import { Schema, SchemaOptions, Document, Model } from "mongoose";
 import { NormalizedUser, SubjectPathUpdate, User } from "@chess-tent/models";
 import { Socket } from "socket.io";
 import { Server as HttpServer } from "http";
+import { Messages } from "mailgun-js";
 import {
   ACTION_EVENT,
   Actions,
   SUBSCRIBE_EVENT,
-  UNSUBSCRIBE_EVENT,
+  UNSUBSCRIBE_EVENT
 } from "@chess-tent/types";
 
 export type DB = {
@@ -53,10 +54,17 @@ export type Service = {
   ) => Record<string, any>;
 };
 
+export type MailData = Parameters<Messages["send"]>[0];
 export type Middleware = {
   identify: (...args: Parameters<RequestHandler>) => void;
   errorHandler: ErrorRequestHandler;
   sendData: (localProp: string) => MiddlewareFunction;
+  sendMail: (
+    formatData: (
+      req: Parameters<RequestHandler>[0],
+      res: Parameters<RequestHandler>[1]
+    ) => MailData
+  ) => MiddlewareFunction;
   logLocal: (
     prefix: string,
     localsKey:

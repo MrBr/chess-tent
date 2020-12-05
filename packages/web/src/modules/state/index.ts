@@ -9,12 +9,14 @@ import {
 } from './reducer';
 import { useDenormalize, useDispatchBatched } from './hooks';
 import { middleware, registerMiddleware } from './middleware';
+import { selectNormalizedEntities } from './selectors';
 
 application.state.getRootReducer = getRootReducer;
 application.state.registerEntityReducer = registerEntityReducer;
 application.state.registerReducer = registerReducer;
 application.state.registerMiddleware = registerMiddleware;
 application.state.middleware = middleware;
+application.state.selectors.selectNormalizedEntities = selectNormalizedEntities;
 application.hooks.useDispatchBatched = useDispatchBatched;
 application.hooks.useDispatch = useDispatch;
 application.hooks.useSelector = useSelector;

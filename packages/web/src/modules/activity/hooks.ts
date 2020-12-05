@@ -1,5 +1,5 @@
 import { hooks } from '@application';
-import { Activity, User } from '@chess-tent/models';
+import { Activity, TYPE_ACTIVITY, User } from '@chess-tent/models';
 
 export const useUserActivitiesRecord = (user: User) =>
-  hooks.useRecord<Activity[]>(`${user.id}-activities`);
+  hooks.useRecord<Activity[]>(`${user.id}-activities`, TYPE_ACTIVITY);

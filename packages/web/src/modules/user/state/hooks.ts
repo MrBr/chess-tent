@@ -1,5 +1,5 @@
 import { services } from '@application';
-import { User } from '@chess-tent/models';
+import { TYPE_USER, User } from '@chess-tent/models';
 import { useSelector } from 'react-redux';
 import { userSelector } from './selectors';
 
@@ -9,4 +9,5 @@ export const useUser = (userId: User['id']) => {
 
 export const useActiveUserRecord = services.createRecordHook<User>(
   'activeUser',
+  TYPE_USER,
 );

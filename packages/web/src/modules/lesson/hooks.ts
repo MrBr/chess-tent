@@ -1,4 +1,11 @@
-import { Step, updateStepState, User, Lesson } from '@chess-tent/models';
+import {
+  Step,
+  updateStepState,
+  User,
+  Lesson,
+  TYPE_LESSON,
+  TYPE_ACTIVITY,
+} from '@chess-tent/models';
 import { hooks, requests } from '@application';
 import { useCallback, useEffect } from 'react';
 import { LessonActivity, RecordHookReturn } from '@types';
@@ -16,13 +23,14 @@ export const useUpdateLessonStepState = <T extends Step>(
 };
 
 export const useUserLessonRecord = (user: User) =>
-  hooks.useRecord<Lesson[]>(`${user.id}-lessons`);
+  hooks.useRecord<Lesson[]>(`${user.id}-lessons`, TYPE_LESSON);
 
 export const useUserTrainings = (
   user: User,
 ): RecordHookReturn<LessonActivity[]> => {
   const [trainings, setTrainings, resetTrainings] = useRecord<LessonActivity[]>(
     `trainings-${user.id}`,
+    TYPE_ACTIVITY,
   );
   const { fetch, response, loading, error, reset } = useApi(
     requests.activities,

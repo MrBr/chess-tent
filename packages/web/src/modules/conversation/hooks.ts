@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
 import { hooks, requests, services, state } from '@application';
-import { Conversation, User } from '@chess-tent/models';
+import {
+  Conversation,
+  TYPE_CONVERSATION,
+  TYPE_USER,
+  User,
+} from '@chess-tent/models';
 import { RecordHookReturn } from '@types';
 
 const { useApi, useRecord, useDispatch } = hooks;
@@ -10,6 +15,7 @@ const {
 
 export const useConversationParticipant = services.createRecordHook<User>(
   'conversationParticipant',
+  TYPE_USER,
 );
 
 export const useLoadMoreMessages = (
@@ -48,7 +54,7 @@ export const useUserConversations = (
 ): RecordHookReturn<Conversation[]> => {
   const [conversations, setConversations, resetConversations] = useRecord<
     Conversation[]
-  >(`conversations`);
+  >('conversations', TYPE_CONVERSATION);
   const { fetch, response, loading, error, reset } = useApi(
     requests.conversations,
   );

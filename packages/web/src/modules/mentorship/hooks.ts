@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Mentorship, User } from '@chess-tent/models';
+import { Mentorship, TYPE_MENTORSHIP, User } from '@chess-tent/models';
 import { hooks, requests } from '@application';
 import { RecordHookReturn } from '@types';
 import { useApi } from '../api/hooks';
@@ -11,6 +11,7 @@ const createUseMentorship = (type: 'coaches' | 'students') => (
 ): RecordHookReturn<Mentorship[]> => {
   const [mentorship, setMentorship, resetMentorship] = useRecord<Mentorship[]>(
     `${type}-${user.id}`,
+    TYPE_MENTORSHIP,
   );
   const { fetch, response, loading, error, reset } = useApi(
     type === 'coaches' ? requests.coaches : requests.students,

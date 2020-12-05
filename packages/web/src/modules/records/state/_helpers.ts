@@ -1,5 +1,6 @@
 import { RecordValue } from '@types';
 import { utils } from '@application';
+import { Entity } from '@chess-tent/models';
 
 export const formatEntityValue = (value: RecordValue) => {
   return Array.isArray(value)
@@ -7,6 +8,6 @@ export const formatEntityValue = (value: RecordValue) => {
     : utils.getEntityId(value);
 };
 
-export const getEntityType = (value: RecordValue) => {
+export const getEntityType = (value: RecordValue): Entity['type'] => {
   return Array.isArray(value) ? value[0]?.type : value.type;
 };

@@ -8,8 +8,14 @@ import {
   Conversation,
   Message,
   NormalizedMessage,
+  TYPE_CONVERSATION,
   User,
 } from '@chess-tent/models';
+import { state } from '@application';
+
+const {
+  actions: { updateRecordValue },
+} = state;
 
 export const sendMessage = (
   user: User,
@@ -35,3 +41,7 @@ export const updateMessage = (
     messageId,
   },
 });
+
+export const updateActiveUserConversations = (
+  conversations: Conversation['id'][],
+) => updateRecordValue('conversations', conversations, TYPE_CONVERSATION);

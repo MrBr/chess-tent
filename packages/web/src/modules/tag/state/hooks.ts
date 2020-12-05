@@ -1,12 +1,12 @@
 import { hooks, requests } from '@application';
 import { useEffect } from 'react';
-import { Tag } from '@chess-tent/models';
+import { Tag, TYPE_TAG } from '@chess-tent/models';
 
 const { useRecord, useApi } = hooks;
 
 export const useTags = () => {
   const { fetch, response, loading, error, reset } = useApi(requests.tags);
-  const [tags, setTags] = useRecord<Tag[]>('tags');
+  const [tags, setTags] = useRecord<Tag[]>('tags', TYPE_TAG);
   useEffect(() => {
     if (!response || tags) {
       return;

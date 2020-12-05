@@ -1,15 +1,17 @@
 import { hooks, requests } from '@application';
-import { Notification } from '@chess-tent/models';
+import { Notification, TYPE_NOTIFICATION } from '@chess-tent/models';
 import { useEffect } from 'react';
 import { RecordHookReturn } from '@types';
 import { useApi } from '../api/hooks';
 
 const { useRecord } = hooks;
 
-export const useActiveUserNotifications = (): RecordHookReturn<Notification[]> => {
+export const useActiveUserNotifications = (): RecordHookReturn<
+  Notification[]
+> => {
   const [notifications, setNotifications, resetNotifications] = useRecord<
     Notification[]
-  >(`notifications`);
+  >('notifications', TYPE_NOTIFICATION);
   const { fetch, response, loading, error, reset } = useApi(
     requests.notifications,
   );

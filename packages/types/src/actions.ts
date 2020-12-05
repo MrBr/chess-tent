@@ -37,6 +37,7 @@ export const UPDATE_USER = "UPDATE_USER";
 export const SEND_NOTIFICATION = "SEND_NOTIFICATION";
 export const UPDATE_NOTIFICATION = "UPDATE_NOTIFICATION";
 
+export const UPDATE_RECORD_VALUE = "UPDATE_RECORD_VALUE";
 export const UPDATE_RECORD = "UPDATE_RECORD";
 export const DELETE_RECORD = "DELETE_RECORD";
 
@@ -70,7 +71,7 @@ export type EntitiesState = {
  * both data and metadata about the record.
  */
 export type RecordValue = Entity | Entity[];
-export type RecordMeta = { type?: string };
+export type RecordMeta = { type: Entity["type"] };
 export type RecordType = {
   value: string | string[];
   meta: RecordMeta;
@@ -182,6 +183,11 @@ export type RecordUpdateAction = Action<
   { value: RecordValue; meta: RecordMeta },
   { key: string }
 >;
+export type RecordUpdateValueAction = Action<
+  typeof UPDATE_RECORD_VALUE,
+  RecordType["value"],
+  { key: string; type: RecordMeta["type"] }
+>;
 
 export type RecordDeleteAction = Action<
   typeof DELETE_RECORD,
@@ -189,7 +195,10 @@ export type RecordDeleteAction = Action<
   { key: string }
 >;
 
-export type RecordAction = RecordUpdateAction | RecordDeleteAction;
+export type RecordAction =
+  | RecordUpdateAction
+  | RecordDeleteAction
+  | RecordUpdateValueAction;
 
 /**
  * Message

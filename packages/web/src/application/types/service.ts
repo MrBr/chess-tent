@@ -1,6 +1,6 @@
 import { ChessInstance } from 'chess.js';
 import { ComponentType, ReactElement } from 'react';
-import { API, ApiMethods, RecordValue } from '@chess-tent/types';
+import { API, ApiMethods, RecordMeta, RecordValue } from '@chess-tent/types';
 import {
   Analysis,
   Chapter,
@@ -71,6 +71,7 @@ export type Services = {
   ) => (...args: GenericArguments<K>) => Promise<U>;
   createRecordHook: <T extends RecordValue>(
     recordKey: string,
+    type: RecordMeta['type'],
   ) => () => RecordHookReturn<T>;
   isStepType: <T extends Steps>(step: Step, stepType: StepType) => step is T;
   createStep: <T extends StepType>(

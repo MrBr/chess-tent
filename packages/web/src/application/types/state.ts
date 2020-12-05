@@ -22,6 +22,13 @@ import {
 import {
   AddLessonChapterAction,
   AppState,
+  EntitiesState,
+  EntityState,
+  RecordMeta,
+  RecordType,
+  RecordUpdateAction,
+  RecordUpdateValueAction,
+  RecordValue,
   SendMessageAction,
   UpdateActivityPropertyAction,
   UpdateActivityStepAction,
@@ -48,6 +55,16 @@ export type State = {
   registerMiddleware: (middleware: Middleware) => void;
   getRootReducer: () => Reducer;
   actions: {
+    updateRecord: <T extends RecordValue>(
+      recordKey: string,
+      entity: T,
+      meta?: RecordMeta,
+    ) => RecordUpdateAction;
+    updateRecordValue: (
+      recordKey: string,
+      recordValue: RecordType['value'],
+      type: RecordMeta['type'],
+    ) => RecordUpdateValueAction;
     updateEntities: (entity: Entity | Entity[]) => UpdateEntitiesAction;
     updateNotification: (
       notification: Notification,
@@ -125,5 +142,21 @@ export type State = {
     activitySelector: <T extends Subject>(
       activityId: Activity<T>['id'],
     ) => (state: AppState) => Activity<T>;
+    selectRecord: (recordKey: string) => (state: AppState) => RecordType;
+    selectNormalizedEntities: <
+      T extends string | string[],
+      K extends keyof EntitiesState
+    >(
+      entityDescriptor: T,
+      type: keyof EntitiesState,
+    ) => (
+      state: AppState,
+    ) => K extends keyof EntitiesState
+      ? EntitiesState[K] extends EntityState<infer U>
+        ? T extends []
+          ? U[]
+          : U
+        : never
+      : never;
   };
 };

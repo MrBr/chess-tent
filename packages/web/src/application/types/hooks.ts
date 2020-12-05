@@ -2,6 +2,7 @@
 import {
   EntitiesState,
   PathAction,
+  RecordType,
   RecordValue,
   RequestFetch,
   StatusResponse,
@@ -69,7 +70,10 @@ export type Hooks = {
     error: null | string | {};
     reset: () => void;
   };
-  useRecord: <T extends RecordValue>(recordKey: string) => RecordHookReturn<T>;
+  useRecord: <T extends RecordValue>(
+    recordKey: string,
+    type: RecordType['meta']['type'],
+  ) => RecordHookReturn<T>;
   useCoaches: (user: User) => RecordHookReturn<Mentorship[]>;
   useStudents: (user: User) => RecordHookReturn<Mentorship[]>;
   useDenormalize: <T extends RecordValue>(

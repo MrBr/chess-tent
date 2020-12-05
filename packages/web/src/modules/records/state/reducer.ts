@@ -3,8 +3,9 @@ import {
   RecordAction,
   RecordState,
   UPDATE_RECORD,
+  UPDATE_RECORD_VALUE,
 } from '@types';
-import { formatEntityValue, getEntityType } from './_helpers';
+import { formatEntityValue } from './_helpers';
 
 export const records = (state: RecordState = {}, action: RecordAction) => {
   switch (action.type) {
@@ -16,7 +17,18 @@ export const records = (state: RecordState = {}, action: RecordAction) => {
           meta: {
             ...state[action.meta.key]?.meta,
             ...action.payload.meta,
-            type: getEntityType(action.payload.value),
+          },
+        },
+      };
+    }
+    case UPDATE_RECORD_VALUE: {
+      return {
+        ...state,
+        [action.meta.key]: {
+          value: action.payload,
+          meta: {
+            ...state[action.meta.key]?.meta,
+            type: action.meta.type,
           },
         },
       };

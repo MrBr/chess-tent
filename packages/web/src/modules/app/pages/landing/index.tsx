@@ -135,11 +135,9 @@ export const LandingPage = () => {
         >
           <Img src={kingSrc} height="72px" />
           <Headline1>Create Engaging Lessons and Build Your Audience</Headline1>
-          <Headline3>
-            Full express yourself in the context of online chess teaching.
-          </Headline3>
+          <Headline3>Express yourself as if the board is real!</Headline3>
           <Text>
-            Anyone who trained a chess know how much questions needs to be asked
+            Anyone who trained chess knows how much questions needs to be asked
             in a lesson or a training and for the first time you can do it.
           </Text>
           <Text>
@@ -167,29 +165,28 @@ export const LandingPage = () => {
           <Img src={brainSrc} height="72px" />
           <Headline1>Get a coach!</Headline1>
           <Headline3>
-            Unique lessons editor provides students and coaches simple way to
-            create custom tailored trainings and lessons.
+            Unique lessons editor provides a simple way to create custom
+            tailored trainings and lessons.
           </Headline3>
           <Text>
             <b>Live training</b> - the best way to improve your chess skills.
-            Coach guides and tailors training that fits your skill. Train in
+            Coach guides and tailors training that fits your skill. Train in the
             real time online.
           </Text>
           <Text>
-            <b>Solo training</b> - live experience for those with less time.
-            Coach will still guide you through your learning but with steady
-            peace.
+            <b>Solo training</b> - practice when you can. Solve standalone
+            lessons or get custom tailored training by your new mentor.
           </Text>
         </Col>
         <Col md={2} xs={12} lg={2} sm={2} className="position-relative">
           <VerticalLine />
         </Col>
-        <Col md={4} lg={4} sm={12} className="mt-5 mt-sm-5">
+        <Col md={4} lg={4} sm={12}>
           <Img src={boardSrc} height="72px" />
           <Headline1>Find a lesson</Headline1>
           <Headline3>
-            Interactive chess lessons designed to help you learn how to adopt
-            chess thinking.
+            Interactive chess lessons designed to help you learn to adopt chess
+            thinking.
           </Headline3>
           <Text>
             Alongside with step by step explanation, lessons are composed of

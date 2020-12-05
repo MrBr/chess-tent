@@ -10,6 +10,7 @@ export interface User extends Subject {
   type: typeof TYPE_USER;
   password: string;
   coach?: boolean;
+  active?: boolean;
   state: {
     imageUrl?: string;
     elo?: number;
@@ -36,6 +37,7 @@ export interface NormalizedUser {
   id: User["id"];
   type: User["type"];
   name: User["name"];
+  active: User["active"];
   nickname: User["nickname"];
   email: User["email"];
   password: User["password"];

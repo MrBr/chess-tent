@@ -15,7 +15,8 @@ const {
   webLogin,
   webLogout,
   toLocals,
-  sendStatusOk
+  sendStatusOk,
+  sendMail
 } = middleware;
 
 application.service.registerPostRoute(
@@ -24,6 +25,14 @@ application.service.registerPostRoute(
   validateUser,
   hashPassword,
   addUser,
+  sendMail((req, res) => ({
+    from: "Chess Tent <noreply@chesstent.com>",
+    to: res.locals.user.email,
+    subject: "Beta Registration",
+    html: `<p>Dear ${res.locals.user.name},</p> 
+      <p>Thank you for registering for Chess Tent private beta. Due to limited resources users are activated with a delay. We are still in very early phase and kindly ask for patience and understanding.</p>
+      <p>Best Regards, <br/>Chess Tent Team</p>`
+  })),
   sendData("user")
 );
 

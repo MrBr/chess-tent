@@ -9,24 +9,28 @@ const userSchema = db.createSchema<NormalizedUser>(
     nickname: ({
       type: String,
       required: true,
-      unique: true,
+      unique: true
     } as unknown) as string,
     email: ({
       type: String,
       required: true,
-      unique: true,
+      unique: true
     } as unknown) as string,
     password: ({
       type: String,
       required: true,
-      select: false,
+      select: false
     } as unknown) as string,
     coach: (Schema.Types.Boolean as unknown) as boolean,
+    active: ({
+      type: Schema.Types.Boolean,
+      default: false
+    } as unknown) as boolean,
     state: ({
       type: Schema.Types.Mixed,
       required: true,
-      default: {},
-    } as unknown) as NormalizedUser["state"],
+      default: {}
+    } as unknown) as NormalizedUser["state"]
   },
   {
     minimize: false,
@@ -36,7 +40,7 @@ const userSchema = db.createSchema<NormalizedUser>(
           ret.state = {};
         }
         return ret;
-      },
+      }
     },
     toObject: {
       transform: (doc, ret) => {
@@ -44,8 +48,8 @@ const userSchema = db.createSchema<NormalizedUser>(
           ret.state = {};
         }
         return ret;
-      },
-    },
+      }
+    }
   }
 );
 

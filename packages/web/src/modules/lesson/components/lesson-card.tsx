@@ -3,7 +3,7 @@ import { hooks, ui } from '@application';
 import { Lesson } from '@chess-tent/models';
 import LessonThumbnail from './thumbnail';
 
-const { Headline5, Text, Card } = ui;
+const { Headline5, Text, Card, Container } = ui;
 const { useHistory } = hooks;
 
 const LessonCard: React.FC<{ lesson: Lesson }> = ({ lesson }) => {
@@ -19,13 +19,13 @@ const LessonCard: React.FC<{ lesson: Lesson }> = ({ lesson }) => {
       <Text fontSize="extra-small" weight={700} className="mb-1">
         {lesson.difficulty}
       </Text>
-      <div>
+      <Container>
         {lesson.tags?.map(({ text }) => (
           <Text fontSize="extra-small" inline className="mr-1" weight={700}>
             {text}
           </Text>
         ))}
-      </div>
+      </Container>
     </Card>
   );
 };

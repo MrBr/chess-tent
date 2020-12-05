@@ -93,7 +93,7 @@ export const findLessons = (
       query["$text"] = { $search: filters.search, $caseSensitive: false };
     }
 
-    LessonModel.find(filters)
+    LessonModel.find(query)
       .populate("owner")
       .populate("tags")
       .exec((err, result) => {

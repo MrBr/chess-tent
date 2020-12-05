@@ -3,11 +3,12 @@ import { components, hooks, ui } from '@application';
 import { User } from '@chess-tent/models';
 
 const { Layout, Coaches, Activities, Trainings, LessonBrowser } = components;
-const { useUserActivitiesRecord } = hooks;
+const { useUserActivitiesRecord, useUserLessonsRecord } = hooks;
 const { Headline3 } = ui;
 
 export default ({ user }: { user: User }) => {
   const [activities] = useUserActivitiesRecord(user);
+  const [lessons] = useUserLessonsRecord(user);
 
   return (
     <Layout>
@@ -22,7 +23,7 @@ export default ({ user }: { user: User }) => {
           <Coaches />
         </>
       )}
-      <LessonBrowser user={user} />
+      <LessonBrowser lessons={lessons} />
       <Headline3>My trainings</Headline3>
       <Trainings user={user} />
     </Layout>

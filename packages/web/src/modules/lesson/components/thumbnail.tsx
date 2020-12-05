@@ -37,8 +37,8 @@ export default styled(
       };
     case 'large':
       return {
-        width: 300,
-        height: 168,
+        width: '100%',
+        height: 'auto',
         objectFit: 'cover',
         borderRadius: 16,
       };

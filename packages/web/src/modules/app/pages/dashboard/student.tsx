@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { components, hooks, requests, ui } from '@application';
-import { User } from '@chess-tent/models';
+import { Tag, User } from '@chess-tent/models';
 
 const { Layout, Coaches, Activities, LessonBrowser } = components;
-const { useUserActivitiesRecord, useApi } = hooks;
+const { useUserActivitiesRecord, useApi, useUserLessonsRecord } = hooks;
 const { Row, Col } = ui;
 
 export default ({ user }: { user: User }) => {
@@ -25,6 +25,29 @@ export default ({ user }: { user: User }) => {
     }
   }, [saveActivities, activitiesResponse]);
 
+  const { fetch: fetchLessons, response: lessonsResponse } = useApi(
+    requests.lessons,
+  );
+  const [lessons, saveLessons] = useUserLessonsRecord(user);
+
+  const handleFilterChange = useCallback(
+    (search, difficulty, tags) => {
+      fetchLessons({
+        owner: user.id,
+        search,
+        tagIds: tags.map((it: Tag) => it.id),
+        difficulty,
+      });
+    },
+    [fetchLessons, user.id],
+  );
+
+  useEffect(() => {
+    if (lessonsResponse) {
+      saveLessons(lessonsResponse.data);
+    }
+  }, [saveLessons, lessonsResponse]);
+
   return (
     <Layout>
       <Row noGutters>
@@ -38,7 +61,10 @@ export default ({ user }: { user: User }) => {
       </Row>
       <Row noGutters>
         <Col>
-          <LessonBrowser user={user} />
+          <LessonBrowser
+            lessons={lessons}
+            onFiltersChange={handleFilterChange}
+          />
         </Col>
       </Row>
     </Layout>

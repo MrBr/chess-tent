@@ -48,12 +48,12 @@ const lessonSchema = db.createSchema<DepupulatedLesson>(
   { minimize: false }
 );
 
+lessonSchema.index({ "state.title": "text", "state.description": "text" });
+
 const LessonModel = db.createModel<DepupulatedLesson>(
   TYPE_LESSON,
   lessonSchema
 );
-
-lessonSchema.index({ name: "text", nickname: "text" });
 
 const depopulate = (lesson: Partial<Lesson>): DepupulatedLesson => {
   const owner = lesson.owner?.id;

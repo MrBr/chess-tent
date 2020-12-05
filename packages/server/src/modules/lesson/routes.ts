@@ -42,7 +42,12 @@ application.service.registerPutRoute(
 application.service.registerPostRoute(
   "/lessons",
   identify,
-  toLocals("filters", (req) => req.body),
+  toLocals("filters", (req) => ({
+    owner: req.body.owner,
+    search: req.body.search,
+    difficulty: req.body.difficulty,
+    tagIds: req.body.tagIds,
+  })),
   findLessons,
   sendData("lessons")
 );

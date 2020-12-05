@@ -6,21 +6,31 @@ import { MongooseFilterQuery } from "mongoose";
 import { utils } from "@application";
 
 export const addUser = (user: User) =>
-  new Promise((resolve) => {
+  new Promise((resolve, reject) => {
     new UserModel(user).save((err, result) => {
       if (err) {
-        throw err;
+        const error =
+          err.code === 11000
+            ? {
+                message: `Field(s): ${Object.keys(err.keyValue).join(
+                  ","
+                )} are already taken.`
+              }
+            : "Failed to create user";
+        reject(error);
+        return;
       }
       resolve(result.toObject() as typeof user);
     });
   });
 
 export const updateUser = (userId: User["id"], user: Partial<User>) =>
-  new Promise((resolve) => {
+  new Promise((resolve, reject) => {
     UserModel.updateOne({ _id: user.id }, { $set: user }).exec(
       (err, result) => {
         if (err) {
-          throw err;
+          reject(err);
+          return;
         }
         resolve();
       }
@@ -31,13 +41,14 @@ export const getUser = (
   userDescr: Partial<User>,
   projection = ""
 ): Promise<User | null> =>
-  new Promise((resolve) => {
+  new Promise((resolve, reject) => {
     UserModel.findOne(
       UserModel.translateAliases(userDescr),
       projection,
       (err, user) => {
         if (err) {
-          throw err;
+          reject(err);
+          return;
         }
         resolve(user ? user.toObject() : null);
       }
@@ -59,7 +70,7 @@ export const findUsers = (
 ): Promise<User[]> => {
   const query: MongooseFilterQuery<any> = utils.notNullOrUndefined({
     coach: filters.coach,
-    name: filters.name,
+    name: filters.name
   });
 
   if (filters.elo) {
@@ -86,12 +97,13 @@ export const findUsers = (
     query["$text"] = { $search: filters.search, $caseSensitive: false };
   }
 
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     UserModel.find(query).exec((err, result) => {
       if (err) {
-        throw err;
+        reject(err);
+        return;
       }
-      resolve(result.map((item) => item.toObject()));
+      resolve(result.map(item => item.toObject()));
     });
   });
 };

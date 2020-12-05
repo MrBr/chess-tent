@@ -20,7 +20,12 @@ export const useApi: Hooks['useApi'] = <T, U extends StatusResponse>(
       request(...args)
         .then(response => {
           if (response.error) {
-            throw new Error(response.error);
+            setApiRequestState({
+              response: null,
+              loading: false,
+              error: response.error,
+            });
+            return;
           }
           setApiRequestState({ error: null, loading: false, response });
         })

@@ -8,6 +8,6 @@ export const sendMail: Middleware["sendMail"] = formatData => (
 ) => {
   const data = formatData(res, req);
   sendMailService(data)
-    .then(next)
+    .then(() => next())
     .catch(next);
 };

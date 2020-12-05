@@ -117,7 +117,10 @@ export const LandingPage = () => {
               Create engaging chess lessons and build your audience. Join early
               beta and help us build flexible creator platform.
             </Headline3>
-            <Button className="mt-4 py-4 px-5 my-md-4 my-lg-4 py-lg-4 px-lg-5">
+            <Button
+              className="mt-4 py-4 px-5 my-md-4 my-lg-4 py-lg-4 px-lg-5"
+              onClick={() => history.push('/register')}
+            >
               Get beta access
             </Button>
           </FirstSectionTextCol>
@@ -143,7 +146,10 @@ export const LandingPage = () => {
             Create the most interactive online lessons and training. Become
             visible to chess players.
           </Text>
-          <Button className="mt-5 py-4 px-5 my-sm-4 my-md-4 my-lg-4 py-lg-4 px-lg-5">
+          <Button
+            className="mt-5 py-4 px-5 my-sm-4 my-md-4 my-lg-4 py-lg-4 px-lg-5"
+            onClick={() => history.push('/register')}
+          >
             Become a Coach
           </Button>
         </Col>

@@ -59,7 +59,7 @@ export const validateUser: MiddlewareFunction = (req, res, next) => {
 export const verifyUser: MiddlewareFunction = async (req, res, next) => {
   // Clearing projection to get password for verification
   const user = await service.getUser(
-    { email: res.locals.user.email },
+    { email: res.locals.user.email, active: true },
     "+password"
   );
 

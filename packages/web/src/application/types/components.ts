@@ -237,6 +237,9 @@ export type Components = {
   Switch: ComponentType;
   Redirect: ComponentType<RedirectProps>;
   Route: ComponentType<RouteProps>;
+  AuthorizedRoute: ComponentType<
+    RouteProps & { children: ReactElement; redirectRoute?: string }
+  >;
 
   Link: ComponentType<LinkProps & { ghost?: boolean }>;
   Authorized: ComponentType<AuthorizedProps>;

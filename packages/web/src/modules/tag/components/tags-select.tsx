@@ -11,7 +11,7 @@ class TagsSelect extends React.Component<
   TagsSelectProps,
   { editing: boolean }
 > {
-  onChange = (tags: ValueType<Tag>) => {
+  onChange = (tags: ValueType<Tag, boolean>) => {
     const { onChange } = this.props;
     onChange && onChange(tags ? (tags as Tag[]).map(({ id }) => id) : []);
   };

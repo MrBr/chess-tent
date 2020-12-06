@@ -105,6 +105,7 @@ export type Application = {
   register: typeof register;
   init: () => Promise<any>;
   start: () => void;
+  errors: Errors;
 };
 
 export type SocketStream =
@@ -139,4 +140,13 @@ export type SocketService = {
   sendAction: (channel: string, stream: SocketStream) => void;
   sendServerAction: (channel: string, action: Actions) => void;
   identify: (stream: SocketStream) => Auth["apiTokenPayload"] | null;
+};
+
+export class AppError extends Error {
+  constructor() {
+    super();
+  }
+}
+export type Errors = {
+  BadRequest: typeof AppError;
 };

@@ -11,6 +11,7 @@ const LessonCard: React.FC<{ lesson: Lesson }> = ({ lesson }) => {
 
   return (
     <Card
+      key={lesson.id}
       onClick={() => history.push(`/lesson/${lesson.id}`)}
       className="cursor-pointer mb-4 shadow-none"
     >

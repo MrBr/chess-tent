@@ -30,6 +30,7 @@ export interface NormalizedLesson {
   owner: User["id"];
   difficulty: Lesson["difficulty"];
   tags?: Tag["id"][];
+  published: boolean;
   state: {
     chapters: Chapter[];
     title: Lesson["state"]["title"];

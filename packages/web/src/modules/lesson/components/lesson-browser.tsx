@@ -32,28 +32,30 @@ const LessonBrowser: Components['LessonBrowser'] = ({
 
   return (
     <Container fluid>
-      {onFiltersChange && (
-        <Row className="section-header">
-          <Col className="d-flex flex-row align-items-center" xs={9}>
-            <Headline3 className="m-0 mr-5">Browse lessons</Headline3>
-            <DifficultyDropdown
-              id="lessons-difficulty"
-              className="mr-2"
-              onChange={setDifficulty}
-              initial={difficulty}
-              includeNullOption={true}
-            />
-            <TagsSelect
-              tags={tags}
-              onChange={onSelectedTagsChange}
-              selected={selectedTags}
-            />
-          </Col>
-          <Col className="d-flex align-items-center" xs={3}>
-            <SearchBox onSearch={setSearch} debounce={500} />
-          </Col>
-        </Row>
-      )}
+      <Row className="section-header">
+        <Col className="d-flex flex-row align-items-center" xs={9}>
+          <Headline3 className="m-0 mr-5">Browse lessons</Headline3>
+          {onFiltersChange && (
+            <>
+              <DifficultyDropdown
+                id="lessons-difficulty"
+                className="mr-2"
+                onChange={setDifficulty}
+                initial={difficulty}
+                includeNullOption={true}
+              />
+              <TagsSelect
+                tags={tags}
+                onChange={onSelectedTagsChange}
+                selected={selectedTags}
+              />
+            </>
+          )}
+        </Col>
+        <Col className="d-flex align-items-center" xs={3}>
+          {onFiltersChange && <SearchBox onSearch={setSearch} debounce={500} />}
+        </Col>
+      </Row>
       <Row>
         {lessons?.map(lesson => (
           <Col key={lesson.id} className="col-auto">

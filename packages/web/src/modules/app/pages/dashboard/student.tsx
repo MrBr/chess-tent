@@ -1,9 +1,10 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { components, hooks, requests, ui } from '@application';
 import { Tag, User } from '@chess-tent/models';
+import { LessonsRequest } from '@chess-tent/types';
 
 const { Layout, Coaches, Activities, LessonBrowser } = components;
-const { useUserActivitiesRecord, useApi, useUserLessonsRecord } = hooks;
+const { useUserActivitiesRecord, useApi, useLessons } = hooks;
 const { Row, Col } = ui;
 
 export default ({ user }: { user: User }) => {
@@ -25,28 +26,23 @@ export default ({ user }: { user: User }) => {
     }
   }, [saveActivities, activitiesResponse]);
 
-  const { fetch: fetchLessons, response: lessonsResponse } = useApi(
-    requests.lessons,
-  );
-  const [lessons, saveLessons] = useUserLessonsRecord(user);
+  const [lessonsFilter, setLessonsFilter] = useState<LessonsRequest>({
+    owner: user.id,
+  });
+  const [lessons] = useLessons(`own-lessons-${user.id}`, lessonsFilter);
 
   const handleFilterChange = useCallback(
     (search, difficulty, tags) => {
-      fetchLessons({
+      setLessonsFilter({
         owner: user.id,
         search,
         tagIds: tags.map((it: Tag) => it.id),
         difficulty,
+        published: true,
       });
     },
-    [fetchLessons, user.id],
+    [setLessonsFilter, user.id],
   );
-
-  useEffect(() => {
-    if (lessonsResponse) {
-      saveLessons(lessonsResponse.data);
-    }
-  }, [saveLessons, lessonsResponse]);
 
   return (
     <Layout>

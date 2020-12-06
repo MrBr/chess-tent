@@ -12,7 +12,7 @@ const Trainings: Components['Trainings'] = ({ user }) => {
     <Container fluid>
       <Row>
         {trainings?.map(training => (
-          <Col sm={3}>
+          <Col key={training.id} sm={3}>
             <TrainingCard key={training.id} training={training} />
           </Col>
         ))}

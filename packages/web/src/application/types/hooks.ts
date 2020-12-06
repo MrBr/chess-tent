@@ -1,6 +1,7 @@
 // Hooks
 import {
   EntitiesState,
+  LessonsRequest,
   PathAction,
   RecordType,
   RecordValue,
@@ -74,6 +75,10 @@ export type Hooks = {
     recordKey: string,
     type: RecordType['meta']['type'],
   ) => RecordHookReturn<T>;
+  useLessons: (
+    key: string,
+    filters: LessonsRequest,
+  ) => RecordHookReturn<Lesson[]>;
   useCoaches: (user: User) => RecordHookReturn<Mentorship[]>;
   useStudents: (user: User) => RecordHookReturn<Mentorship[]>;
   useDenormalize: <T extends RecordValue>(

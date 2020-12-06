@@ -24,7 +24,7 @@ const CoachCard: Components['CoachCard'] = ({ coach }) => {
   const history = useHistory();
 
   return (
-    <CoachFrame>
+    <CoachFrame key={coach.id}>
       <FramedProfile src={coach.state.imageUrl || defaultAvatarSrc} />
       <CardBody>
         <Row className="flex-column h-100" noGutters>

@@ -7,7 +7,7 @@ import {
   Step,
   Difficulty,
 } from "@chess-tent/models";
-import { LessonUpdates } from "@chess-tent/types";
+import { LessonsRequest, LessonUpdates } from "@chess-tent/types";
 import { service } from "@application";
 import { MongooseFilterQuery } from "mongoose";
 import { utils } from "@application";
@@ -69,16 +69,12 @@ export const updateLessonSteps = (
 };
 
 export const findLessons = (
-  filters: Partial<{
-    owner?: string;
-    search?: string;
-    difficulty?: Difficulty;
-    tagIds?: string[];
-  }>
+  filters: Partial<LessonsRequest>
 ): Promise<Lesson[]> =>
   new Promise((resolve) => {
     const query: MongooseFilterQuery<any> = utils.notNullOrUndefined({
       owner: filters.owner,
+      published: filters.published,
     });
 
     if (filters.difficulty) {

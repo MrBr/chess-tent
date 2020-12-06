@@ -1,6 +1,7 @@
 import React, { ComponentType } from 'react';
 import application from '@application';
 import { Components, Services } from '@types';
+import isPropValid from '@emotion/is-prop-valid';
 import {
   Switch,
   Route,
@@ -50,7 +51,10 @@ const addRoute: Services['addRoute'] = Route => {
   routes.push(Route);
 };
 
-const Link = styled<Components['Link']>(RLink)(
+const Link = styled<Components['Link']>(RLink, {
+  shouldForwardProp: (propName: string) =>
+    isPropValid(propName) && propName !== 'ghost',
+})(
   ({ ghost }) =>
     ghost && {
       color: 'inherit',

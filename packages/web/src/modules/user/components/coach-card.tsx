@@ -2,6 +2,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { hooks, ui } from '@application';
 import { Components } from '@types';
+import defaultAvatarSrc from '../images/default-avatar.svg';
 
 const { Card, CardBody, FramedProfile, Headline4, Button, Text } = ui;
 
@@ -22,7 +23,7 @@ const CoachCard: Components['CoachCard'] = ({ coach }) => {
 
   return (
     <CoachFrame>
-      <FramedProfile src={coach.state.imageUrl} />
+      <FramedProfile src={coach.state.imageUrl || defaultAvatarSrc} />
       <CardBody>
         <Headline4
           className="mt-1 cursor-pointer"

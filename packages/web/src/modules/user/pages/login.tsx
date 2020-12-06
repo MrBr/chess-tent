@@ -24,7 +24,10 @@ const { mediaQueryEnhancer } = utils;
 
 const LoginSchema = yup.object().shape({
   password: yup.string().required(),
-  email: yup.string().email('Invalid email').required(),
+  email: yup
+    .string()
+    .email('Invalid email')
+    .required(),
 });
 
 const NoWrapText = styled(Headline6)({

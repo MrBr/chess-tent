@@ -32,6 +32,7 @@ application.register(
     application.hooks.useUpdateLessonStepState =
       module.useUpdateLessonStepState;
     application.hooks.useUserLessonsRecord = module.useUserLessonRecord;
+    application.hooks.useLessons = module.useLessons;
   },
 );
 
@@ -67,9 +68,9 @@ application.register(
   },
 );
 application.register(
-  () => import('./components/lessons'),
+  () => import('./components/lesson-browser'),
   module => {
-    application.components.Lessons = module.default;
+    application.components.LessonBrowser = module.default;
   },
 );
 application.register(

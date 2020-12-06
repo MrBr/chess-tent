@@ -287,8 +287,15 @@ export type Components = {
     save: Requests['lessonUpdates'];
     onStatusChange?: (status: LessonStatus) => void;
   }>;
-  Lessons: ComponentType<{ lessons: Lesson[] | null }>;
   Trainings: ComponentType<{ user: User }>;
+  LessonBrowser: ComponentType<{
+    lessons: Lesson[] | null;
+    onFiltersChange?: (
+      search?: string,
+      difficulty?: Difficulty,
+      tags?: Tag[],
+    ) => void;
+  }>;
   LessonChapters: ComponentType<{
     chapters: Chapter[];
     activeChapter: Chapter;

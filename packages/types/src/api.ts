@@ -22,6 +22,14 @@ import {
   UpdateLessonStepAction,
 } from "./actions";
 
+export type LessonsRequest = {
+  owner?: User["id"];
+  search?: string;
+  tagIds?: Tag["id"][];
+  difficulty?: Difficulty;
+  published?: boolean;
+};
+
 export type Pagination = [number, number];
 
 export type StatusResponse = { error: string | null };
@@ -81,7 +89,7 @@ export type Requests = {
       name?: string;
       search?: string;
       elo?: CoachEloRange;
-      specialities?: Tag["id"][];
+      tagIds?: Tag["id"][];
     },
     UsersResponse
   >;
@@ -91,7 +99,7 @@ export type Requests = {
   lessonSave: RequestFetch<Lesson, StatusResponse>;
   lessonPatch: RequestFetch<[Lesson["id"], Partial<Lesson>], StatusResponse>;
   lessonUpdates: RequestFetch<[Lesson["id"], LessonUpdates], StatusResponse>;
-  lessons: RequestFetch<{ owner: User["id"] }, LessonsResponse>;
+  lessons: RequestFetch<LessonsRequest, LessonsResponse>;
   activity: RequestFetch<[string], ActivityResponse>;
   activitySave: RequestFetch<Activity, StatusResponse>;
   activityUpdate: RequestFetch<

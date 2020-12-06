@@ -22,17 +22,27 @@ export default styled(
   }: {
     className?: string;
     difficulty: Difficulty;
-    size?: 'small';
+    size?: 'small' | 'large';
   }) => {
     return <Img className={className} src={difficultyImages[difficulty]} />;
   },
-)(({ size }) =>
-  size
-    ? {
+)(({ size }) => {
+  switch (size) {
+    case 'small':
+      return {
         width: 64,
         height: 64,
         objectFit: 'cover',
         borderRadius: 16,
-      }
-    : undefined,
-);
+      };
+    case 'large':
+      return {
+        width: '100%',
+        height: 'auto',
+        objectFit: 'cover',
+        borderRadius: 16,
+      };
+    default:
+      return undefined;
+  }
+});

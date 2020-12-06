@@ -5,7 +5,7 @@ import {
   NormalizedLesson,
   TYPE_LESSON,
   TYPE_TAG,
-  TYPE_USER
+  TYPE_USER,
 } from "@chess-tent/models";
 import { db } from "@application";
 
@@ -22,31 +22,33 @@ const lessonSchema = db.createSchema<DepupulatedLesson>(
   {
     owner: ({
       type: String,
-      ref: TYPE_USER
+      ref: TYPE_USER,
     } as unknown) as DepupulatedLesson["owner"],
     state: ({
       type: Schema.Types.Mixed,
-      required: true
+      required: true,
     } as unknown) as DepupulatedLesson["state"],
     difficulty: ({
       type: String,
       enum: Object.keys(Difficulty),
       required: true,
-      index: true
+      index: true,
     } as unknown) as DepupulatedLesson["difficulty"],
     tags: [
       {
         type: String,
-        ref: TYPE_TAG
-      } as unknown
+        ref: TYPE_TAG,
+      } as unknown,
     ] as DepupulatedLesson["tags"],
     type: ({
       type: String,
-      default: TYPE_LESSON
-    } as unknown) as typeof TYPE_LESSON
+      default: TYPE_LESSON,
+    } as unknown) as typeof TYPE_LESSON,
   },
   { minimize: false }
 );
+
+lessonSchema.index({ "state.title": "text", "state.description": "text" });
 
 const LessonModel = db.createModel<DepupulatedLesson>(
   TYPE_LESSON,
@@ -55,7 +57,7 @@ const LessonModel = db.createModel<DepupulatedLesson>(
 
 const depopulate = (lesson: Partial<Lesson>): DepupulatedLesson => {
   const owner = lesson.owner?.id;
-  const tags = lesson.tags?.map(tag => tag.id);
+  const tags = lesson.tags?.map((tag) => tag.id);
   return (owner ? { ...lesson, owner, tags } : lesson) as DepupulatedLesson;
 };
 

@@ -1,29 +1,31 @@
-import React, { useEffect } from 'react';
-import { components, hooks, requests, ui } from '@application';
-import { User } from '@chess-tent/models';
+import React, { useCallback, useState } from 'react';
+import { components, hooks, ui } from '@application';
+import { Tag, User } from '@chess-tent/models';
+import { LessonsRequest } from '@chess-tent/types';
 
-const { Layout, Coaches, Activities, Lessons, Trainings } = components;
-const { useUserLessonsRecord, useUserActivitiesRecord, useApi } = hooks;
+const { Layout, Coaches, Activities, Trainings, LessonBrowser } = components;
+const { useUserActivitiesRecord, useLessons } = hooks;
 const { Headline3 } = ui;
 
 export default ({ user }: { user: User }) => {
   const [activities] = useUserActivitiesRecord(user);
-  const [lessons, saveLessons] = useUserLessonsRecord(user);
-  const { fetch: getLessons, response: lessonsResponse } = useApi(
-    requests.lessons,
+  const [lessonsFilter, setLessonsFilter] = useState<LessonsRequest>({
+    owner: user.id,
+  });
+  const [lessons] = useLessons(`own-lessons-${user.id}`, lessonsFilter);
+
+  const handleFilterChange = useCallback(
+    (search, difficulty, tags) => {
+      setLessonsFilter({
+        owner: user.id,
+        search,
+        tagIds: tags.map((it: Tag) => it.id),
+        difficulty,
+        published: true,
+      });
+    },
+    [setLessonsFilter, user.id],
   );
-
-  useEffect(() => {
-    if (!lessons) {
-      getLessons({ owner: user.id });
-    }
-  }, [getLessons, lessons, user.id]);
-
-  useEffect(() => {
-    if (lessonsResponse) {
-      saveLessons(lessonsResponse.data);
-    }
-  }, [saveLessons, lessonsResponse]);
 
   return (
     <Layout>
@@ -38,8 +40,7 @@ export default ({ user }: { user: User }) => {
           <Coaches />
         </>
       )}
-      <Headline3>My lessons</Headline3>
-      <Lessons lessons={lessons} />
+      <LessonBrowser lessons={lessons} onFiltersChange={handleFilterChange} />
       <Headline3>My trainings</Headline3>
       <Trainings user={user} />
     </Layout>

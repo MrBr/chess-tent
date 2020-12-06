@@ -51,19 +51,29 @@ export interface ConfirmProps {
   onCancel: () => void;
 }
 
-type FontSize = 'base' | 'small' | 'extra-small';
+type FontSize =
+  | 'base'
+  | 'small'
+  | 'extra-small'
+  | 'display1'
+  | 'display2'
+  | 'headline1'
+  | 'headline2'
+  | 'headline3'
+  | 'headline4'
+  | 'headline5'
+  | 'headline6';
 
-export declare interface TextProps {
-  children: ReactNode | ReactElement[];
+export type TextProps = {
+  children?: ReactNode | ReactElement[];
   className?: string;
   inline?: boolean;
   weight?: number;
   align?: 'center' | 'left' | 'right';
-  color?: 'title' | 'subtitle';
+  color?: 'title' | 'subtitle' | 'alt' | 'alt-title' | 'alt-subtitle';
   fontSize?: FontSize;
   onClick?: ReactEventHandler;
-  contentEditable?: boolean;
-}
+} & ContentEditableProps;
 
 export declare interface SearchBoxProps {
   children?: never;
@@ -110,14 +120,14 @@ export type UI = {
   };
   SearchBox: UIComponent<SearchBoxProps>;
   Text: UIComponent<TextProps>;
-  Display1: UIComponent;
-  Display2: UIComponent;
-  Headline1: UIComponent;
-  Headline2: UIComponent<ContentEditableProps>;
-  Headline3: UIComponent;
-  Headline4: UIComponent;
-  Headline5: UIComponent;
-  Headline6: UIComponent;
+  Display1: UIComponent<TextProps>;
+  Display2: UIComponent<TextProps>;
+  Headline1: UIComponent<TextProps>;
+  Headline2: UIComponent<TextProps>;
+  Headline3: UIComponent<TextProps>;
+  Headline4: UIComponent<TextProps>;
+  Headline5: UIComponent<TextProps>;
+  Headline6: UIComponent<TextProps>;
   Icon: UIComponent<{
     type: 'close' | 'comment' | 'notification' | 'search';
     textual?: boolean;

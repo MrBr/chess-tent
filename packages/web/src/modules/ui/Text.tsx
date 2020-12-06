@@ -1,6 +1,6 @@
-import React, { ComponentProps, FunctionComponent } from 'react';
+import React, { FunctionComponent } from 'react';
 import styled, { CSSObject } from '@emotion/styled';
-import { TextProps, UI } from '@types';
+import { TextProps } from '@types';
 
 const headingStyle = {
   margin: '2.75rem 0 1.05rem',

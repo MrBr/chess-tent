@@ -11,6 +11,7 @@ import { hooks } from '@application';
 const { useDispatchBatched } = hooks;
 const socket = io(`ws://${process.env.REACT_APP_DOMAIN}`, {
   path: '/api/socket.io',
+  secure: process.env.REACT_APP_PROTOCOL === 'https://',
 });
 
 export const sendAction = (action: Actions) =>

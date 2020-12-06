@@ -24,8 +24,9 @@ const Lessons: Components['Lessons'] = ({ lessons }) => {
               {lesson.difficulty}
             </Text>
             <div>
-              {lesson.tags?.map(({ text }) => (
+              {lesson.tags?.map(({ text, id }) => (
                 <Text
+                  key={id}
                   fontSize="extra-small"
                   inline
                   className="mr-1"

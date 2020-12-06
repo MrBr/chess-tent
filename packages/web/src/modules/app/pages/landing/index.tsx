@@ -1,5 +1,5 @@
 import React from 'react';
-import { ui, utils, hooks } from '@application';
+import { ui, utils, components } from '@application';
 import styled from '@emotion/styled';
 
 import heroUrl from '../../images/hero.png';
@@ -7,8 +7,6 @@ import lessonsUrl from '../../images/lessons.png';
 import boardSrc from '../../images/board.svg';
 import brainSrc from '../../images/brain.svg';
 import kingSrc from '../../images/king.svg';
-
-const { useHistory } = hooks;
 
 const {
   Display2,
@@ -21,6 +19,7 @@ const {
   Headline1,
   Img,
 } = ui;
+const { Link } = components;
 
 const { mediaQueryEnhancer } = utils;
 
@@ -89,12 +88,11 @@ const LoginButton = styled(Button)(
 );
 
 export const LandingPage = () => {
-  const history = useHistory();
   return (
     <Container fluid className="pb-5">
-      <LoginButton className="py-3 px-5" onClick={() => history.push('/login')}>
-        Login
-      </LoginButton>
+      <Link to="/login" ghost>
+        <LoginButton className="py-3 px-5">Login</LoginButton>
+      </Link>
       <Header fluid />
       <SectionRow noGutters>
         <Col
@@ -117,12 +115,11 @@ export const LandingPage = () => {
               Create engaging chess lessons and build your audience. Join early
               beta and help us build flexible creator platform.
             </Headline3>
-            <Button
-              className="mt-4 py-4 px-5 my-md-4 my-lg-4 py-lg-4 px-lg-5"
-              onClick={() => history.push('/register')}
-            >
-              Get beta access
-            </Button>
+            <Link to="/register" ghost>
+              <Button className="mt-4 py-4 px-5 my-md-4 my-lg-4 py-lg-4 px-lg-5">
+                Get beta access
+              </Button>
+            </Link>
           </FirstSectionTextCol>
         </Col>
       </SectionRow>
@@ -144,12 +141,11 @@ export const LandingPage = () => {
             Create the most interactive online lessons and training. Become
             visible to chess players.
           </Text>
-          <Button
-            className="mt-5 py-4 px-5 my-sm-4 my-md-4 my-lg-4 py-lg-4 px-lg-5"
-            onClick={() => history.push('/register')}
-          >
-            Become a Coach
-          </Button>
+          <Link to="/register" ghost>
+            <Button className="mt-5 py-4 px-5 my-sm-4 my-md-4 my-lg-4 py-lg-4 px-lg-5">
+              Become a Coach
+            </Button>
+          </Link>
         </Col>
         <Col
           md={{ span: 6 }}

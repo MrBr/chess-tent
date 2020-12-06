@@ -11,6 +11,7 @@ import {
 } from "./middleware";
 import cookieParser from "cookie-parser";
 import { generateIndex } from "./service";
+import { BadRequest } from "./errors";
 
 const { connect } = db;
 
@@ -21,6 +22,7 @@ app.use(bodyParser.json());
 app.use(cors({ origin: process.env.APP_DOMAIN, credentials: true }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
+application.errors.BadRequest = BadRequest;
 application.middleware.errorHandler = errorHandler;
 application.middleware.sendData = sendData;
 application.middleware.sendStatusOk = sendStatusOk;

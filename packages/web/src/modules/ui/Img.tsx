@@ -113,7 +113,7 @@ export const FramedProfile = ({ src }: { src?: string }) => (
         <feColorMatrix
           in="SourceAlpha"
           type="matrix"
-          values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+          values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0"
         />
         <feOffset dy="4" />
         <feGaussianBlur stdDeviation="4" />

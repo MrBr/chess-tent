@@ -8,6 +8,7 @@
     "@chess-tent/normalization": "1.0.0",
     "@chess-tent/types": "1.0.0",
     "@emotion/core": "^10.0.10",
+    "@emotion/is-prop-valid": "^1.0.0",
     "@emotion/styled": "^10.0.10",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
@@ -43,7 +44,8 @@
     "build:dev": "echo no build",
     "build": "craco build",
     "test": "craco test",
-    "analyze": "source-map-explorer 'build/static/js/*.js'"
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
+    "postbuild": "react-snap"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -61,14 +63,14 @@
     ]
   },
   "devDependencies": {
-    "@types/jest": "^24.0.0",
-    "@types/node": "^12.0.0",
-    "@types/react": "^16.9.0",
-    "@types/react-dom": "^16.9.0",
     "@types/chess.js": "^0.10.1",
+    "@types/jest": "^24.0.0",
     "@types/lodash": "^4.14.149",
     "@types/luxon": "^1.25.0",
+    "@types/node": "^12.0.0",
     "@types/normalizr": "^2.0.18",
+    "@types/react": "^16.9.0",
+    "@types/react-dom": "^16.9.0",
     "@types/react-redux": "^7.1.7",
     "@types/react-router-dom": "^5.1.5",
     "@types/react-select": "^3.0.26",
@@ -87,6 +89,7 @@
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-react": "7.x",
     "prettier": "^1.19.1",
+    "react-snap": "^1.23.0",
     "source-map-explorer": "^2.5.0",
     "tsconfig-paths-webpack-plugin": "^3.2.0"
   }

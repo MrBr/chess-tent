@@ -24,3 +24,9 @@ export class LoginFailedError extends Error {
     super("Invalid user credentials.");
   }
 }
+export class AccountNotActivatedError extends Error {
+  status = 400;
+  constructor() {
+    super("Account not activated.");
+  }
+}

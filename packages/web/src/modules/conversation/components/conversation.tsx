@@ -13,7 +13,7 @@ import { updateMessage } from '../state/actions';
 import { useLoadMoreMessages } from '../hooks';
 
 const { Container, Headline3, Text, Row, Col, Input, Icon, Absolute } = ui;
-const { UserAvatar } = components;
+const { UserAvatar, MentorshipButton } = components;
 const { generateIndex } = utils;
 const {
   actions: { sendMessage },
@@ -106,7 +106,8 @@ export default styled(
         </Absolute>
         <Row className="flex-grow-1 overflow-y-auto pl-3 pr-3 flex-column-reverse">
           <Col>
-            <Headline3 className="mb-5">{participant.name}</Headline3>
+            <MentorshipButton user={participant} className="mt-3" />
+            <Headline3 className="mb-5 mt-3">{participant.name}</Headline3>
             <LoadMore
               loadMore={loadMoreMessages}
               loading={loading}

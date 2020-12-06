@@ -6,7 +6,7 @@ import { Mentorship, User } from '@chess-tent/models';
 const { useActiveUserRecord, useCoaches, useApi } = hooks;
 const { Button } = ui;
 
-export default (({ user }) => {
+export default (({ user, className }) => {
   const [me] = useActiveUserRecord() as [User, never, never];
   const [coaches, setCoaches] = useCoaches(me);
   const { fetch: requestMentorship, response, loading, reset } = useApi(
@@ -36,15 +36,16 @@ export default (({ user }) => {
       size="extra-small"
       onClick={requestMentorshipHandle}
       disabled={loading}
+      className={className}
     >
       Request mentorship
     </Button>
   ) : !coach.approved ? (
-    <Button size="extra-small" variant="regular">
+    <Button size="extra-small" variant="regular" className={className}>
       Mentorship requested
     </Button>
   ) : (
-    <Button size="extra-small" variant="secondary">
+    <Button size="extra-small" variant="secondary" className={className}>
       Your mentor
     </Button>
   );

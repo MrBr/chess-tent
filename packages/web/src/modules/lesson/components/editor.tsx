@@ -21,6 +21,7 @@ import {
 } from '@chess-tent/models';
 import {
   Actions,
+  ChessboardProps,
   Components,
   LessonStatus,
   LessonUpdatableAction,
@@ -71,7 +72,10 @@ type EditorRendererProps = ComponentProps<Components['Editor']> & {
   tags: Tag[];
   addLessonUpdate: (action: LessonUpdatableAction) => void;
 };
-type EditorRendererState = {};
+type EditorRendererState = {
+  // Previous step and chapter instances
+  history: { step: Step; chapter: Chapter }[];
+};
 
 /**
  * EditorRenderer is used to save handlers to the component instance.
@@ -81,10 +85,39 @@ class EditorRenderer extends React.Component<
   EditorRendererProps,
   EditorRendererState
 > {
+  state: EditorRendererState = {
+    history: [],
+  };
+  updateHistory(history: EditorRendererState['history']) {
+    this.setState({ history });
+  }
   addLessonUpdate(action: LessonUpdatableAction) {
     const { addLessonUpdate } = this.props;
     addLessonUpdate(action);
   }
+
+  undoUpdate = () => {
+    const { lesson, activeStep, activeChapter } = this.props;
+    const [prev, ...prevUpdates] = this.state.history;
+
+    if (!prev) {
+      return;
+    }
+    this.updateHistory(prevUpdates || []);
+
+    const newStep = getChildStep(activeChapter, prev.step.id);
+    if (
+      getChildStep(newStep, activeStep.id) &&
+      !getChildStep(prev.step, activeStep.id)
+    ) {
+      const prevStep = getPreviousStep(activeChapter, activeStep);
+      this.setActiveStepHandler(prevStep);
+    }
+
+    const prevStep = getChildStep(prev.chapter, prev.step.id);
+    const undoAction = updateLessonStep(lesson, prev.chapter, prevStep);
+    this.addLessonUpdate(undoAction);
+  };
 
   setActiveStepHandler = (step: Step) => {
     const { history, activeChapter } = this.props;
@@ -96,6 +129,7 @@ class EditorRenderer extends React.Component<
 
   setActiveChapterHandler = (chapter: Chapter) => {
     const { history } = this.props;
+    this.updateHistory([]);
     history.replace({
       ...services.history.location,
       search: `?activeChapter=${chapter.id}`,
@@ -131,7 +165,15 @@ class EditorRenderer extends React.Component<
 
   updateStep = (step: Step) => {
     const { lesson, activeChapter } = this.props;
+    const { history } = this.state;
+    const prevStep = getChildStep(activeChapter, step.id);
+    this.updateHistory([
+      { step: prevStep, chapter: activeChapter },
+      ...history,
+    ]);
+
     const action = updateLessonStep(lesson, activeChapter, step);
+
     this.addLessonUpdate(action);
   };
 
@@ -158,14 +200,11 @@ class EditorRenderer extends React.Component<
     this.addLessonUpdate(action);
   };
   addNewChapter = () => {
-    const { history, lesson, location } = this.props;
+    const { lesson } = this.props;
     const newChapter = createChapter();
     const action = addLessonChapter(lesson, newChapter);
     this.addLessonUpdate(action);
-    history.push({
-      pathname: location.pathname,
-      search: 'activeChapter=' + newChapter.id,
-    });
+    this.setActiveChapterHandler(newChapter);
   };
   removeChapter = (chapter: Chapter) => {
     const { history, lesson, location } = this.props;
@@ -210,6 +249,22 @@ class EditorRenderer extends React.Component<
     }
   }
 
+  renderChessboard = (props: ChessboardProps) => {
+    return (
+      <Chessboard
+        {...props}
+        header={
+          <>
+            {props.header}
+            <Absolute right={20} top={20} onClick={this.undoUpdate}>
+              Undo
+            </Absolute>
+          </>
+        }
+      />
+    );
+  };
+
   render() {
     const {
       activeStep,
@@ -235,7 +290,7 @@ class EditorRenderer extends React.Component<
               setActiveStep={this.setActiveStepHandler}
               stepRoot={activeChapter}
               status={lessonStatusText}
-              Chessboard={Chessboard}
+              Chessboard={this.renderChessboard}
               updateStep={this.updateStep}
               removeStep={this.deleteStep}
             />

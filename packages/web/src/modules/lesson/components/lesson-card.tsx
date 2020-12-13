@@ -21,8 +21,14 @@ const LessonCard: React.FC<{ lesson: Lesson }> = ({ lesson }) => {
         {lesson.difficulty}
       </Text>
       <Container>
-        {lesson.tags?.map(({ text }) => (
-          <Text fontSize="extra-small" inline className="mr-1" weight={700}>
+        {lesson.tags?.map(({ text, id }) => (
+          <Text
+            key={id}
+            fontSize="extra-small"
+            inline
+            className="mr-1"
+            weight={700}
+          >
             {text}
           </Text>
         ))}

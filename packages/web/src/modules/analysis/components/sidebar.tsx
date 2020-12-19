@@ -20,6 +20,7 @@ class AnalysisSidebar extends Analysis<
         activeStep={step}
         updateStep={this.updateStep}
         removeStep={this.removeStep}
+        renderToolbox={this.renderToolbox}
       />
     );
   }

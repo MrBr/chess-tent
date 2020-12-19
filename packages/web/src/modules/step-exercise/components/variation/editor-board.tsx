@@ -10,7 +10,7 @@ import {
 } from '@types';
 import { useUpdateExerciseStep } from '../../hooks';
 
-const { Chessboard, EditBoardToggle } = components;
+const { EditBoardToggle } = components;
 const { getPiece, getTurnColor, setTurnColor, createNotableMove } = services;
 
 const updateMoveShapes = (
@@ -50,7 +50,7 @@ const removeOldLineMoves = (index: number, moves?: ExerciseMove[]) =>
 
 const EditorBoard: FunctionComponent<ComponentProps<
   ExerciseModule['EditorBoard']
->> = ({ step, status, updateStep }) => {
+>> = ({ step, Chessboard, status, updateStep }) => {
   const { position, shapes } = step.state;
   const { editing, moves, activeMoveIndex } = step.state
     .exerciseState as ExerciseVariationState;

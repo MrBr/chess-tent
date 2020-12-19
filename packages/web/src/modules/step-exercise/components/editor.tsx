@@ -26,7 +26,7 @@ import SelectSquaresPiecesEditorSidebar from './select-squares-pieces/editor-sid
 import ArrangePiecesEditorSidebar from './arrange-pieces/editor-sidebar';
 
 const { Col, Row, Container, Dropdown } = ui;
-const { StepTag, StepToolbox } = components;
+const { StepTag } = components;
 const { START_FEN } = constants;
 
 const EditorBoard: FunctionComponent<ComponentProps<
@@ -76,17 +76,14 @@ const EditorSidebar: ExerciseModule['EditorSidebar'] = ({
   step,
   setActiveStep,
   activeStep,
-  stepRoot,
-  removeStep,
   updateStep,
+  stepRoot,
+  renderToolbox: StepToolbox,
 }) => {
   const selectedTypeDescriptor = useMemo(
     () => exerciseTypes.find(({ type }) => type === step.state.exerciseType),
     [step.state.exerciseType],
   );
-  const removeExerciseStep = useCallback(() => {
-    removeStep(step);
-  }, [step, removeStep]);
   const addExerciseStep = useCallback(() => {
     const parentStep = getParentStep(stepRoot, step) as
       | VariationStep
@@ -145,9 +142,11 @@ const EditorSidebar: ExerciseModule['EditorSidebar'] = ({
           </Dropdown>
           {TypeEditor && <TypeEditor step={step} updateStep={updateStep} />}
           <StepToolbox
-            deleteStepHandler={removeExerciseStep}
-            addExerciseHandler={addExerciseStep}
+            add={false}
             active={activeStep === step}
+            step={step}
+            exercise={addExerciseStep}
+            comment={false}
             showInput={false}
           />
         </Col>

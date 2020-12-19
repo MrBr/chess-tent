@@ -4,7 +4,6 @@ import {
   addStep,
   Step,
   updateStepState,
-  addStepToLeft,
   getRightStep,
   getParentStep,
   StepRoot,
@@ -14,7 +13,7 @@ import { services, components, ui } from '@application';
 
 const { Col, Row, Container } = ui;
 const { getPiece, createNotableMove } = services;
-const { StepTag, StepToolbox, Stepper, StepMove } = components;
+const { StepTag, Stepper, StepMove } = components;
 
 const boardChange = (
   stepRoot: StepRoot,
@@ -156,24 +155,13 @@ const EditorBoard: MoveModule['EditorBoard'] = ({
 };
 
 const EditorSidebar: MoveModule['EditorSidebar'] = props => {
-  const { step, setActiveStep, activeStep, updateStep, removeStep } = props;
-  const addDescriptionStep = useCallback(() => {
-    const descriptionStep = services.createStep('description', {
-      position: step.state.move.position,
-    });
-    updateStep(addStepToLeft(step, descriptionStep));
-    setActiveStep(descriptionStep);
-  }, [setActiveStep, step, updateStep]);
-  const removeMoveStep = useCallback(() => {
-    removeStep(step);
-  }, [step, removeStep]);
-  const addExerciseStep = useCallback(() => {
-    const exerciseStep = services.createStep('exercise', {
-      position: step.state.move.position,
-    });
-    updateStep(addStep(step, exerciseStep));
-    setActiveStep(exerciseStep);
-  }, [setActiveStep, step, updateStep]);
+  const {
+    step,
+    setActiveStep,
+    activeStep,
+    updateStep,
+    renderToolbox: StepToolbox,
+  } = props;
 
   const handleStepClick = useCallback(
     event => {
@@ -202,9 +190,7 @@ const EditorSidebar: MoveModule['EditorSidebar'] = props => {
             textChangeHandler={description =>
               updateStep(updateStepState(step, { description }))
             }
-            addStepHandler={addDescriptionStep}
-            addExerciseHandler={addExerciseStep}
-            deleteStepHandler={removeMoveStep}
+            step={step}
           />
         </Col>
       </Row>

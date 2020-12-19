@@ -9,3 +9,9 @@ application.register(
     application.components.Chessboard = module.default;
   },
 );
+application.register(
+  () => import('./footer'),
+  module => {
+    application.components.ChessboardFooter = module.default;
+  },
+);

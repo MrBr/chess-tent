@@ -1,4 +1,9 @@
-import { ComponentType, FunctionComponent, ReactElement } from 'react';
+import {
+  ComponentProps,
+  ComponentType,
+  FunctionComponent,
+  ReactElement,
+} from 'react';
 import {
   Activity,
   Analysis,
@@ -9,7 +14,11 @@ import {
   StepType,
   User,
 } from '@chess-tent/models';
-import { ChessboardInterface, ChessboardProps } from './components';
+import {
+  ChessboardInterface,
+  ChessboardProps,
+  StepToolbox,
+} from './components';
 import { ClassComponent } from './_helpers';
 
 export type StepSystemProps = {
@@ -28,9 +37,26 @@ export type StepProps<S extends Step, P = {}> = {
 } & StepSystemProps &
   P;
 export interface EditorProps {
+  setActiveStep: StepSystemProps['setActiveStep'];
   updateStep: (step: Step) => void;
   removeStep: (step: Step) => void;
 }
+export type EditorSidebarProps = {
+  renderToolbox: (
+    props: Pick<
+      ComponentProps<StepToolbox>,
+      | 'comment'
+      | 'remove'
+      | 'exercise'
+      | 'step'
+      | 'active'
+      | 'text'
+      | 'textChangeHandler'
+      | 'add'
+      | 'showInput'
+    >,
+  ) => ReactElement;
+} & EditorProps;
 
 export type StepComponent<S extends Step, P extends {} = {}> = ComponentType<
   StepProps<S, P>
@@ -80,7 +106,7 @@ export type StepModule<
   ACTIVITY_STATE extends ActivityStepStateBase = ActivityStepStateBase
 > = {
   EditorBoard: StepComponent<STEP, EditorProps & StepBoardComponentProps>;
-  EditorSidebar: StepComponent<STEP, EditorProps>;
+  EditorSidebar: StepComponent<STEP, EditorSidebarProps>;
   ActivityBoard: StepComponent<STEP, ActivityProps<ACTIVITY_STATE>>;
   ActivitySidebar: StepComponent<STEP, ActivityProps<ACTIVITY_STATE>>;
   stepType: STEP_TYPE;

@@ -40,6 +40,7 @@ import {
 import {
   ActivityStepStateBase,
   EditorProps,
+  EditorSidebarProps,
   StepBoardComponentProps,
   StepModule,
   StepModuleComponentKey,
@@ -109,22 +110,31 @@ export interface ChessboardInterface
   ) => FEN;
   move: (from: Key, to: Key) => void;
 }
+export interface ChessboardFooterProps {
+  updateEditing?: (editing: boolean) => void;
+  editing: boolean;
+  onReset?: () => void;
+}
 
 export type StepperProps = {
   className?: string;
   root?: boolean;
 } & StepSystemProps &
-  EditorProps;
+  EditorSidebarProps;
 
-export type StepToolbox = FunctionComponent<{
-  active: boolean;
-  addStepHandler?: () => void;
-  addExerciseHandler?: () => void;
-  deleteStepHandler?: () => void;
-  textChangeHandler?: (text: string) => void;
-  text?: string;
-  showInput?: boolean;
-}>;
+export type StepToolbox = FunctionComponent<
+  {
+    active?: boolean | (() => void);
+    comment?: boolean | (() => void);
+    exercise?: boolean | (() => void);
+    remove?: boolean | (() => void);
+    add?: boolean | (() => void);
+    textChangeHandler?: (text: string) => void;
+    text?: string;
+    showInput?: boolean;
+    step: Step;
+  } & EditorProps
+>;
 
 export type LessonPlayground = FunctionComponent<{
   header: ReactElement;
@@ -226,6 +236,7 @@ export type Components = {
   Header: ComponentType;
   Layout: ComponentType<{ className?: string }>;
   Chessboard: ClassComponent<ChessboardInterface>;
+  ChessboardFooter: ComponentType<ChessboardFooterProps>;
   Stepper: FunctionComponent<StepperProps>;
   StepperStepContainer: ComponentType<{ onClick?: ReactEventHandler }>;
   StepToolbox: StepToolbox;

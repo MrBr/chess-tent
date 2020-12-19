@@ -1,13 +1,10 @@
 import React, { ComponentProps, FunctionComponent } from 'react';
-import { components } from '@application';
 import { ExerciseModule } from '@types';
 import { updateStepState } from '@chess-tent/models';
 
-const { Chessboard } = components;
-
 const Editor: FunctionComponent<ComponentProps<
   ExerciseModule['EditorBoard']
->> = ({ step, status, updateStep }) => {
+>> = ({ step, Chessboard, status, updateStep }) => {
   const { position, shapes } = step.state;
 
   return (

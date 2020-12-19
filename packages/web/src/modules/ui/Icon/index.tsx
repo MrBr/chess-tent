@@ -7,6 +7,9 @@ import * as iconsMap from './iconMap';
 type IconProps = ComponentProps<UI['Icon']>;
 
 const sizeEnhancer = (props: IconProps) => {
+  if (props.textual) {
+    return;
+  }
   switch (props.size) {
     case 'large':
       return {
@@ -24,6 +27,10 @@ const sizeEnhancer = (props: IconProps) => {
 
 const textualEnhancer = (props: IconProps) =>
   props.textual && {
+    '.svg-icon': {
+      width: 'auto',
+      height: 'auto',
+    },
     fontSize: 'inherit',
     color: 'inherit',
     lineHeight: 'inherit',

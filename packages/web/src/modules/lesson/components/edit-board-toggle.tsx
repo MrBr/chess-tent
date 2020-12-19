@@ -10,8 +10,7 @@ export default ({
 }: ComponentProps<Components['EditBoardToggle']>) => (
   <ToggleButton
     value={1}
-    defaultChecked={editing}
-    checked={editing}
+    checked={!!editing}
     size="extra-small"
     onChange={() => onChange(!editing)}
   >

@@ -1,16 +1,16 @@
 import React, { useCallback } from 'react';
 import { DrawShape } from '@chess-tent/chessground/dist/draw';
 import {
-  getParentStep,
   addStepRightToSame,
+  getParentStep,
   updateStepState,
 } from '@chess-tent/models';
 import { DescriptionModule, VariationStep } from '@types';
-import { components, services, ui, stepModules } from '@application';
+import { components, ui, stepModules, services } from '@application';
 import Comment from './comment';
 
 const { Col, Row, Container } = ui;
-const { StepTag, StepToolbox } = components;
+const { StepTag } = components;
 
 export const EditorBoard: DescriptionModule['EditorBoard'] = ({
   Chessboard,
@@ -48,9 +48,9 @@ export const EditorSidebar: DescriptionModule['EditorSidebar'] = ({
   step,
   setActiveStep,
   activeStep,
-  stepRoot,
   updateStep,
-  removeStep,
+  stepRoot,
+  renderToolbox: StepToolbox,
 }) => {
   const addDescriptionStep = useCallback(() => {
     const parentStep = getParentStep(stepRoot, step);
@@ -60,10 +60,6 @@ export const EditorSidebar: DescriptionModule['EditorSidebar'] = ({
     updateStep(addStepRightToSame(parentStep, newDescriptionStep));
     setActiveStep(newDescriptionStep);
   }, [stepRoot, step, updateStep, setActiveStep]);
-  const removeDescriptionStep = useCallback(() => {
-    removeStep(step);
-  }, [step, removeStep]);
-
   const handleStepClick = useCallback(
     event => {
       event.stopPropagation();
@@ -87,8 +83,8 @@ export const EditorSidebar: DescriptionModule['EditorSidebar'] = ({
             textChangeHandler={description =>
               updateStep(updateStepState(step, { description }))
             }
-            addStepHandler={addDescriptionStep}
-            deleteStepHandler={removeDescriptionStep}
+            step={step}
+            comment={addDescriptionStep}
           />
         </Col>
       </Row>

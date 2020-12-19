@@ -1,10 +1,16 @@
 import React, { useCallback, useRef } from 'react';
-import { Components, StepToolbox } from '@types';
-import { ui } from '@application';
+import { Components, Steps } from '@types';
+import { services, ui } from '@application';
 import styled from '@emotion/styled';
 import { debounce } from 'lodash';
+import { addStepToLeft } from '@chess-tent/models';
+import { getStepPosition } from '../../step/service';
 
-const { Container, Button } = ui;
+const { Container, Button, Icon } = ui;
+
+function pickFunction(...funcs: any[]) {
+  return funcs.find(f => typeof f === 'function');
+}
 
 export const ToolboxText: Components['LessonToolboxText'] = styled(
   ({ defaultText, onChange, ...props }) => {
@@ -60,15 +66,49 @@ const ToolboxActions = styled.div({
   zIndex: 10,
 });
 
-export default (({
+const StepToolbox: Components['StepToolbox'] = ({
   textChangeHandler,
   active,
   text,
-  addStepHandler,
-  addExerciseHandler,
-  deleteStepHandler,
   showInput = true,
+  updateStep,
+  removeStep,
+  step,
+  setActiveStep,
+  comment,
+  remove,
+  add,
+  exercise,
 }) => {
+  const addDescriptionStep = useCallback(() => {
+    const position = getStepPosition(step as Steps);
+    const descriptionStep = services.createStep('description', {
+      position,
+    });
+    updateStep(addStepToLeft(step, descriptionStep));
+    setActiveStep(descriptionStep);
+  }, [step, updateStep, setActiveStep]);
+  const addVariationStep = useCallback(() => {
+    const position = getStepPosition(step as Steps);
+    const variationStep = services.createStep('variation', {
+      position,
+      editing: true,
+    });
+    updateStep(addStepToLeft(step, variationStep));
+    setActiveStep(variationStep);
+  }, [step, updateStep, setActiveStep]);
+  const addExerciseStep = useCallback(() => {
+    const position = getStepPosition(step as Steps);
+    const exerciseStep = services.createStep('exercise', {
+      position,
+    });
+    updateStep(addStepToLeft(step, exerciseStep));
+    setActiveStep(exerciseStep);
+  }, [setActiveStep, step, updateStep]);
+  const removeStepCB = useCallback(() => {
+    removeStep(step);
+  }, [removeStep, step]);
+
   return (
     <Container className="d-flex align-items-center h-100 pr-0">
       {(text || active) && showInput && (
@@ -80,29 +120,38 @@ export default (({
       )}
       {active && (
         <ToolboxActions>
-          {addExerciseHandler && (
+          {exercise && (
             <Button
               variant="regular"
               size="extra-small"
-              onClick={addExerciseHandler}
+              onClick={pickFunction(exercise, addExerciseStep)}
             >
               Q
             </Button>
           )}
-          {addStepHandler && (
+          {add && (
             <Button
               size="extra-small"
               variant="regular"
-              onClick={addStepHandler}
+              onClick={pickFunction(add, addVariationStep)}
             >
               +
             </Button>
           )}
-          {deleteStepHandler && (
+          {comment && (
             <Button
               size="extra-small"
               variant="regular"
-              onClick={deleteStepHandler}
+              onClick={pickFunction(comment, addDescriptionStep)}
+            >
+              <Icon type="comment" textual />
+            </Button>
+          )}
+          {remove && (
+            <Button
+              size="extra-small"
+              variant="regular"
+              onClick={pickFunction(remove, removeStepCB)}
             >
               x
             </Button>
@@ -111,4 +160,13 @@ export default (({
       )}
     </Container>
   );
-}) as StepToolbox;
+};
+
+StepToolbox.defaultProps = {
+  add: true,
+  remove: true,
+  exercise: true,
+  comment: true,
+};
+
+export default StepToolbox;

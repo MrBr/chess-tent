@@ -16,12 +16,12 @@ import {
   VariationModule,
   VariationStep,
 } from '@types';
-import { components, services, ui } from '@application';
-import Footer from './footer';
+import { components, constants, services, ui } from '@application';
 import BoardSrc from '../images/board.svg';
 
 const { Col, Row, Container, Img } = ui;
-const { Stepper, StepTag, StepToolbox, StepMove } = components;
+const { Stepper, StepTag, StepMove, ChessboardFooter } = components;
+const { START_FEN } = constants;
 
 const boardChange = (
   step: VariationStep,
@@ -47,7 +47,7 @@ const boardChange = (
     return;
   }
 
-  if (editing || !newMove || !movedPiece) {
+  if (!newMove || !movedPiece) {
     const newVariationStep = services.createStep('variation', {
       position: newPosition,
       editing: true,
@@ -113,6 +113,17 @@ const EditorBoard: VariationModule['EditorBoard'] = ({
     (editing: boolean) => updateStep(updateStepState(step, { editing })),
     [updateStep, step],
   );
+  const resetHandle = useCallback(() => {
+    if (editing) {
+      updateStep(updateStepState(step, { position: START_FEN }));
+    } else {
+      const variationStep = services.createStep('variation', {
+        position: START_FEN,
+      });
+      updateStep(addStep(step, variationStep));
+      setActiveStep(variationStep);
+    }
+  }, [editing, updateStep, step, setActiveStep]);
 
   const updateShapes = useCallback(
     (shapes: DrawShape[]) => updateStep(updateStepState(step, { shapes })),
@@ -148,32 +159,25 @@ const EditorBoard: VariationModule['EditorBoard'] = ({
       onPieceRemove={onPieceAddRemove}
       shapes={shapes}
       header={status}
-      footer={<Footer updateEditing={updateEditing} editing={!!editing} />}
+      footer={
+        <ChessboardFooter
+          updateEditing={updateEditing}
+          editing={!!editing}
+          onReset={resetHandle}
+        />
+      }
     />
   );
 };
 
 const EditorSidebar: VariationModule['EditorSidebar'] = props => {
-  const { step, setActiveStep, activeStep, updateStep, removeStep } = props;
-  const position = step.state.move
-    ? step.state.move.position
-    : (step.state.position as FEN);
-  const addDescriptionStep = useCallback(() => {
-    const descriptionStep = services.createStep('description', {
-      position,
-    });
-    updateStep(addStepToLeft(step, descriptionStep));
-  }, [position, step, updateStep]);
-  const removeVariationStep = useCallback(() => {
-    removeStep(step);
-  }, [step, removeStep]);
-  const addExerciseStep = useCallback(() => {
-    const exerciseStep = services.createStep('exercise', {
-      position,
-    });
-    updateStep(addStepToLeft(step, exerciseStep));
-    setActiveStep(exerciseStep);
-  }, [position, setActiveStep, step, updateStep]);
+  const {
+    step,
+    setActiveStep,
+    activeStep,
+    updateStep,
+    renderToolbox: StepToolbox,
+  } = props;
   const handleStepClick = useCallback(
     event => {
       event.stopPropagation();
@@ -205,9 +209,7 @@ const EditorSidebar: VariationModule['EditorSidebar'] = props => {
             textChangeHandler={description =>
               updateStep(updateStepState(step, { description }))
             }
-            addStepHandler={addDescriptionStep}
-            deleteStepHandler={removeVariationStep}
-            addExerciseHandler={addExerciseStep}
+            step={step}
           />
         </Col>
       </Row>

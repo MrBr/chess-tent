@@ -13,12 +13,12 @@ import {
 } from '@types';
 import { useUpdateExerciseStep } from '../../hooks';
 
-const { Chessboard, EditBoardToggle } = components;
+const { EditBoardToggle } = components;
 const { createFenForward, createNotableMove } = services;
 
 const Editor: FunctionComponent<ComponentProps<
   ExerciseModule['EditorBoard']
->> = ({ step, status, updateStep }) => {
+>> = ({ step, Chessboard, status, updateStep }) => {
   const { position, shapes } = step.state;
   const { moves, editing } = step.state
     .exerciseState as ExerciseArrangePiecesState;

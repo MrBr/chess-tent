@@ -23,6 +23,7 @@ import {
   Actions,
   ChessboardProps,
   Components,
+  EditorSidebarProps,
   LessonStatus,
   LessonUpdatableAction,
   LessonUpdates,
@@ -42,6 +43,7 @@ const {
   Chessboard,
   DifficultyDropdown,
   TagsSelect,
+  StepToolbox,
 } = components;
 const {
   actions: {
@@ -265,6 +267,17 @@ class EditorRenderer extends React.Component<
     );
   };
 
+  renderToolbox: EditorSidebarProps['renderToolbox'] = props => {
+    return (
+      <StepToolbox
+        setActiveStep={this.setActiveStepHandler}
+        updateStep={this.updateStep}
+        removeStep={this.deleteStep}
+        {...props}
+      />
+    );
+  };
+
   render() {
     const {
       activeStep,
@@ -380,6 +393,7 @@ class EditorRenderer extends React.Component<
                 updateStep={this.updateStep}
                 removeStep={this.deleteStep}
                 root
+                renderToolbox={this.renderToolbox}
               />
             </Sidebar>
           </Col>

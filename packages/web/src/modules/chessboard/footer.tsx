@@ -11,7 +11,7 @@ export default ({ updateEditing, editing, onReset }: ChessboardFooterProps) => (
       <EditBoardToggle editing={editing} onChange={updateEditing} />
     )}
     {onReset && (
-      <Button size="extra-small" onClick={onReset}>
+      <Button size="extra-small" variant="regular" onClick={onReset}>
         Reset
       </Button>
     )}

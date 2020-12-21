@@ -74,7 +74,7 @@ export default styled(
     const { messages } = conversation;
 
     useEffect(() => {
-      if (messages[0]?.read && messages[0]?.owner !== activeUser.id) {
+      if (!messages[0]?.read && messages[0]?.owner !== activeUser.id) {
         dispatch(
           updateMessage({ read: true }, conversation.id, messages[0].id),
         );
@@ -104,10 +104,14 @@ export default styled(
         <Absolute top={10} right={20} zIndex={2}>
           <Icon type="close" onClick={close} />
         </Absolute>
-        <Row className="flex-grow-1 overflow-y-auto pl-3 pr-3 flex-column-reverse">
+        <Row>
           <Col>
             <MentorshipButton user={participant} className="mt-3" />
             <Headline3 className="mb-5 mt-3">{participant.name}</Headline3>
+          </Col>
+        </Row>
+        <Row className="flex-grow-1 overflow-y-auto pl-3 pr-3 pb-3 flex-column-reverse">
+          <Col>
             <LoadMore
               loadMore={loadMoreMessages}
               loading={loading}

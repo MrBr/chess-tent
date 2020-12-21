@@ -7,8 +7,8 @@ export const updateSubjectState = <T extends Subject>(
   ...subject,
   state: {
     ...subject.state,
-    ...patch,
-  },
+    ...patch
+  }
 });
 
 export const getSubjectValueAt = <T extends Subject>(
@@ -26,22 +26,25 @@ export const getSubjectValueAt = <T extends Subject>(
 export const updateSubjectValueAt = <
   T extends { [key: string]: any } | Array<any>
 >(
-  subject: T,
+  subject: T | undefined,
   valuePath: SubjectPath,
   value: any
 ): T => {
   const [key, ...nestedPath] = valuePath;
+  const shouldBeArray =
+    Array.isArray(subject) ||
+    (subject === undefined && typeof key === "number");
   let updatedSubject;
-  if (Array.isArray(subject)) {
+  if (shouldBeArray) {
     const index = typeof key === "number" ? key : parseInt(key);
-    updatedSubject = [...subject];
+    updatedSubject = [...((subject as Array<any>) || [])];
     updatedSubject[index] =
       nestedPath.length === 0
         ? value
         : updateSubjectValueAt(updatedSubject[index], nestedPath, value);
   } else {
     const propName = key + "";
-    updatedSubject = { ...subject } as { [key: string]: any };
+    updatedSubject = { ...(subject || {}) } as { [key: string]: any };
     updatedSubject[propName] =
       nestedPath.length === 0
         ? value

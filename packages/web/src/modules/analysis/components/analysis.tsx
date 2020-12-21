@@ -3,6 +3,7 @@ import { AnalysisSystemProps, EditorSidebarProps } from '@types';
 import {
   getParentStep,
   getStepPath,
+  isStep,
   removeStep,
   Step,
 } from '@chess-tent/models';
@@ -20,6 +21,9 @@ export default class Analysis<
   removeStep = (step: Step) => {
     const { updateAnalysis, analysis } = this.props;
     const parentStep = getParentStep(analysis, step);
+    if (!isStep(parentStep)) {
+      return;
+    }
     updateAnalysis(
       getStepPath(analysis, parentStep),
       removeStep(parentStep, step, true),
@@ -35,6 +39,10 @@ export default class Analysis<
         setActiveStep={this.setActiveStep}
         updateStep={this.updateStep}
         removeStep={this.removeStep}
+        add={false}
+        comment={false}
+        exercise={false}
+        showInput={false}
         {...props}
       />
     );

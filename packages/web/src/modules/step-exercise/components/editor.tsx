@@ -6,8 +6,10 @@ import React, {
 } from 'react';
 
 import {
-  addStepRightToSame,
+  addStepToRightOf,
+  Chapter,
   getParentStep,
+  isStep,
   updateStepState,
 } from '@chess-tent/models';
 import { ExerciseModule, ExerciseTypes, MoveStep, VariationStep } from '@types';
@@ -25,7 +27,7 @@ import VariationEditorSidebar from './variation/editor-sidebar';
 import SelectSquaresPiecesEditorSidebar from './select-squares-pieces/editor-sidebar';
 import ArrangePiecesEditorSidebar from './arrange-pieces/editor-sidebar';
 
-const { Col, Row, Container, Dropdown } = ui;
+const { Col, Row, Dropdown } = ui;
 const { StepTag } = components;
 const { START_FEN } = constants;
 
@@ -78,6 +80,7 @@ const EditorSidebar: ExerciseModule['EditorSidebar'] = ({
   activeStep,
   updateStep,
   stepRoot,
+  updateChapter,
   renderToolbox: StepToolbox,
 }) => {
   const selectedTypeDescriptor = useMemo(
@@ -85,30 +88,32 @@ const EditorSidebar: ExerciseModule['EditorSidebar'] = ({
     [step.state.exerciseType],
   );
   const addExerciseStep = useCallback(() => {
-    const parentStep = getParentStep(stepRoot, step) as
+    const parent = getParentStep(stepRoot, step) as
       | VariationStep
-      | MoveStep;
-    const exerciseStep = services.createStep('exercise', {
-      position:
-        parentStep.state.move?.position ||
-        (parentStep as VariationStep).state.position ||
-        START_FEN,
-    });
-    updateStep(addStepRightToSame(parentStep, exerciseStep));
+      | MoveStep
+      | Chapter;
+    let exerciseStep;
+    if (isStep(parent)) {
+      exerciseStep = services.createStep('exercise', {
+        position:
+          parent.state.move?.position ||
+          (parent as VariationStep).state.position ||
+          START_FEN,
+      });
+      updateStep(addStepToRightOf(parent, step, exerciseStep));
+    } else {
+      exerciseStep = services.createStep('exercise', {
+        position: step.state.position,
+      });
+      updateChapter(addStepToRightOf(parent, step, exerciseStep));
+    }
     setActiveStep(exerciseStep);
-  }, [stepRoot, setActiveStep, step, updateStep]);
-  const handleStepClick = useCallback(
-    event => {
-      event.stopPropagation();
-      activeStep !== step && setActiveStep(step);
-    },
-    [step, activeStep, setActiveStep],
-  );
+  }, [stepRoot, setActiveStep, step, updateStep, updateChapter]);
 
   const TypeEditor = getEditorSidebar(step.state.exerciseType);
 
   return (
-    <Container onClick={handleStepClick} fluid className="p-0">
+    <>
       <Row>
         <Col className="col-auto">
           <StepTag step={step} active={activeStep === step}>
@@ -151,7 +156,7 @@ const EditorSidebar: ExerciseModule['EditorSidebar'] = ({
           />
         </Col>
       </Row>
-    </Container>
+    </>
   );
 };
 

@@ -19,7 +19,7 @@ import {
 import { components, constants, services, ui } from '@application';
 import BoardSrc from '../images/board.svg';
 
-const { Col, Row, Container, Img } = ui;
+const { Col, Row, Img } = ui;
 const { Stepper, StepTag, StepMove, ChessboardFooter } = components;
 const { START_FEN, KINGS_FEN } = constants;
 
@@ -184,23 +184,10 @@ const EditorBoard: VariationModule['EditorBoard'] = ({
 };
 
 const EditorSidebar: VariationModule['EditorSidebar'] = props => {
-  const {
-    step,
-    setActiveStep,
-    activeStep,
-    updateStep,
-    renderToolbox: StepToolbox,
-  } = props;
-  const handleStepClick = useCallback(
-    event => {
-      event.stopPropagation();
-      activeStep !== step && setActiveStep(step);
-    },
-    [step, activeStep, setActiveStep],
-  );
+  const { step, activeStep, updateStep, renderToolbox: StepToolbox } = props;
 
   return (
-    <Container onClick={handleStepClick} fluid className="p-0">
+    <>
       <Row className="no-gutters">
         <Col className="col-auto">
           <StepTag
@@ -227,7 +214,7 @@ const EditorSidebar: VariationModule['EditorSidebar'] = props => {
         </Col>
       </Row>
       <Stepper {...props} stepRoot={step} />
-    </Container>
+    </>
   );
 };
 

@@ -7,4 +7,6 @@ export default styled.div({
   overflowY: 'auto',
   padding: 24,
   paddingRight: 40,
+  display: 'flex',
+  flexDirection: 'column',
 });

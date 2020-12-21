@@ -4,7 +4,6 @@ import {
   ComponentType,
   FunctionComponent,
   ReactElement,
-  ReactEventHandler,
   ReactNode,
   RefObject,
 } from 'react';
@@ -134,7 +133,7 @@ export type StepToolbox = FunctionComponent<
     text?: string;
     showInput?: boolean;
     step: Step;
-  } & EditorProps
+  } & Omit<EditorProps, 'updateChapter'>
 >;
 
 export type LessonPlayground = FunctionComponent<{
@@ -239,7 +238,6 @@ export type Components = {
   Chessboard: ClassComponent<ChessboardInterface>;
   ChessboardFooter: ComponentType<ChessboardFooterProps>;
   Stepper: FunctionComponent<StepperProps>;
-  StepperStepContainer: ComponentType<{ onClick?: ReactEventHandler }>;
   StepToolbox: StepToolbox;
   LessonToolboxText: LessonToolboxText;
   LessonPlayground: LessonPlayground;

@@ -3,6 +3,7 @@ import {
   createAnalysis,
   getParentStep,
   getPreviousStep,
+  isStep,
   removeStep,
   Step,
   updateAnalysisActiveStepId,
@@ -17,6 +18,9 @@ export const removeAnalysisStep = (
 ): Analysis => {
   const newActiveStep = getPreviousStep(analysis, step);
   const parentStep = getParentStep(analysis, step);
+  if (!isStep(parentStep)) {
+    return analysis;
+  }
   return updateAnalysisActiveStepId(
     updateAnalysisStep(
       analysis,

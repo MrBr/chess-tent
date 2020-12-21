@@ -37,10 +37,9 @@ application.register(
 );
 
 application.register(
-  () => import('./components/stepper'),
+  () => import('./components/editor-sidebar-stepper'),
   module => {
     application.components.Stepper = module.Stepper;
-    application.components.StepperStepContainer = module.StepperStepContainer;
   },
 );
 application.register(

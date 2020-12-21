@@ -6,6 +6,8 @@ import Analysis from './analysis';
 
 const { Stepper } = components;
 
+const updateChapter = () => {}; // NOOP
+
 class AnalysisSidebar extends Analysis<
   ComponentProps<Components['AnalysisSidebar']>
 > {
@@ -21,6 +23,7 @@ class AnalysisSidebar extends Analysis<
         updateStep={this.updateStep}
         removeStep={this.removeStep}
         renderToolbox={this.renderToolbox}
+        updateChapter={updateChapter}
       />
     );
   }

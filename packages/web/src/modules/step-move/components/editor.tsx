@@ -11,7 +11,7 @@ import {
 import { FEN, Move, MoveModule, MoveStep, Piece, VariationStep } from '@types';
 import { services, components, ui } from '@application';
 
-const { Col, Row, Container } = ui;
+const { Col, Row } = ui;
 const { getPiece, createNotableMove } = services;
 const { StepTag, Stepper, StepMove } = components;
 
@@ -155,24 +155,10 @@ const EditorBoard: MoveModule['EditorBoard'] = ({
 };
 
 const EditorSidebar: MoveModule['EditorSidebar'] = props => {
-  const {
-    step,
-    setActiveStep,
-    activeStep,
-    updateStep,
-    renderToolbox: StepToolbox,
-  } = props;
-
-  const handleStepClick = useCallback(
-    event => {
-      event.stopPropagation();
-      activeStep !== step && setActiveStep(step);
-    },
-    [step, activeStep, setActiveStep],
-  );
+  const { step, activeStep, updateStep, renderToolbox: StepToolbox } = props;
 
   return (
-    <Container fluid onClick={handleStepClick} className="p-0">
+    <>
       <Row noGutters>
         <Col className="col-auto">
           <StepTag
@@ -195,7 +181,7 @@ const EditorSidebar: MoveModule['EditorSidebar'] = props => {
         </Col>
       </Row>
       <Stepper {...props} stepRoot={step} />
-    </Container>
+    </>
   );
 };
 

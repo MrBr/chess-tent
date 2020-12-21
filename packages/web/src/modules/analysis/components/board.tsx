@@ -6,6 +6,8 @@ import Analysis from './analysis';
 
 const { StepRenderer } = components;
 
+const updateChapter = () => {}; // NOOP
+
 class AnalysisBoard extends Analysis<
   ComponentProps<Components['AnalysisBoard']>
 > {
@@ -23,6 +25,7 @@ class AnalysisBoard extends Analysis<
         setActiveStep={this.setActiveStep}
         updateStep={this.updateStep}
         removeStep={this.removeStep}
+        updateChapter={updateChapter}
       />
     );
   }

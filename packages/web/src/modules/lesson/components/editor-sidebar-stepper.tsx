@@ -1,18 +1,11 @@
-import styled from '@emotion/styled';
 import React from 'react';
 import { components } from '@application';
 import { StepperProps } from '@types';
 
-const { StepRenderer } = components;
+import RootStepContainer from './editor-sidebar-root-step-container';
+import StepperVariation from './editor-sidebar-variation-container';
 
-const StepperVariation = styled.div({
-  paddingLeft: 10,
-  marginLeft: 10,
-  marginTop: 10,
-  marginBottom: 10,
-  borderLeft: '1px solid #D1D3D7',
-  position: 'relative',
-});
+const { StepRenderer } = components;
 
 const Stepper = ({
   activeStep,
@@ -26,11 +19,10 @@ const Stepper = ({
   }
   return (
     <>
-      {steps.map(child => {
+      {steps.map((child, index) => {
         const stepper = (
           <StepRenderer
             component="EditorSidebar"
-            key={`${child.id}-step`}
             activeStep={activeStep}
             {...systemProps}
             // Override current step
@@ -39,14 +31,27 @@ const Stepper = ({
         );
         return child.stepType === 'variation' && !root ? (
           <StepperVariation key={`variation-${child.id}`}>
-            {stepper}
+            <RootStepContainer
+              setActiveStep={systemProps.setActiveStep}
+              step={child}
+              className={root && index > 0 ? 'mt-4' : ''}
+            >
+              {stepper}
+            </RootStepContainer>
           </StepperVariation>
         ) : (
-          stepper
+          <RootStepContainer
+            setActiveStep={systemProps.setActiveStep}
+            step={child}
+            className={root && index > 0 ? 'mt-4' : ''}
+            key={`step-${child.id}`}
+          >
+            {stepper}
+          </RootStepContainer>
         );
       })}
     </>
   );
 };
 
-export { Stepper, StepperVariation as StepperStepContainer };
+export { Stepper };

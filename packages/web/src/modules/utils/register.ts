@@ -7,6 +7,7 @@ import { mediaQueryEnhancer } from './enhancers';
 application.utils.generateIndex = uuid;
 application.utils.rightMouse = (f: Function) => (e: MouseEvent) =>
   e.button === 2 && f(e);
+application.utils.stopPropagation = e => e.stopPropagation();
 
 application.utils.getEntitySchema = getEntitySchema;
 application.utils.getTypeSchema = getTypeSchema;

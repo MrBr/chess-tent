@@ -18,6 +18,7 @@ import {
   Tag,
   getChildStep,
   TYPE_LESSON,
+  isStep,
 } from '@chess-tent/models';
 import {
   Actions,
@@ -34,6 +35,7 @@ import TrainingModal from './training-assign';
 import Sidebar from './editor-sidebar';
 import { PreviewModal } from './activity-preview';
 import ChaptersDropdown from './chapters-dropdown';
+import RootStepButton from './editor-sidebar-root-step-button';
 
 const { Container, Row, Col, Headline2, Button, Absolute, Text } = ui;
 const { createChapter } = services;
@@ -187,9 +189,17 @@ class EditorRenderer extends React.Component<
       // Don't allow deleting first step (for now)
       return;
     }
-    this.updateStep(
-      removeStep(parentStep, step, step.stepType !== 'variation'),
-    );
+    if (isStep(parentStep)) {
+      const updatedParent = removeStep(
+        parentStep,
+        step,
+        step.stepType !== 'variation',
+      );
+      this.updateStep(updatedParent as Step);
+    } else {
+      const updatedParent = removeStep(parentStep, step);
+      this.updateChapter(updatedParent as Chapter);
+    }
     history.replace({
       pathname: history.location.pathname,
       search: `?activeStep=${newActiveStep.id}`,
@@ -304,6 +314,7 @@ class EditorRenderer extends React.Component<
               stepRoot={activeChapter}
               status={lessonStatusText}
               Chessboard={this.renderChessboard}
+              updateChapter={this.updateChapter}
               updateStep={this.updateStep}
               removeStep={this.deleteStep}
             />
@@ -386,14 +397,22 @@ class EditorRenderer extends React.Component<
                   </Col>
                 </Row>
               </Container>
-              <Stepper
-                activeStep={activeStep}
-                setActiveStep={this.setActiveStepHandler}
-                stepRoot={activeChapter}
-                updateStep={this.updateStep}
-                removeStep={this.deleteStep}
-                root
-                renderToolbox={this.renderToolbox}
+              <Col>
+                <Stepper
+                  activeStep={activeStep}
+                  setActiveStep={this.setActiveStepHandler}
+                  stepRoot={activeChapter}
+                  updateChapter={this.updateChapter}
+                  updateStep={this.updateStep}
+                  removeStep={this.deleteStep}
+                  root
+                  renderToolbox={this.renderToolbox}
+                />
+              </Col>
+              <RootStepButton
+                updateChapter={this.updateChapter}
+                chapter={activeChapter}
+                className="mt-4"
               />
             </Sidebar>
           </Col>

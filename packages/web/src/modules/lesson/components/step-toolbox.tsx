@@ -1,6 +1,6 @@
 import React, { useCallback, useRef } from 'react';
 import { Components, Steps } from '@types';
-import { services, ui } from '@application';
+import { services, ui, utils } from '@application';
 import styled from '@emotion/styled';
 import { debounce } from 'lodash';
 import { addStepToLeft } from '@chess-tent/models';
@@ -110,7 +110,10 @@ const StepToolbox: Components['StepToolbox'] = ({
   }, [removeStep, step]);
 
   return (
-    <Container className="d-flex align-items-center h-100 pr-0">
+    <Container
+      className="d-flex align-items-center h-100 pr-0"
+      onClick={utils.stopPropagation}
+    >
       {(text || active) && showInput && (
         <ToolboxText
           onChange={textChangeHandler}

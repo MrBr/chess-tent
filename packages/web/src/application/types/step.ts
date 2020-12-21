@@ -39,6 +39,7 @@ export type StepProps<S extends Step, P = {}> = {
 export interface EditorProps {
   setActiveStep: StepSystemProps['setActiveStep'];
   updateStep: (step: Step) => void;
+  updateChapter: (chapter: Chapter) => void;
   removeStep: (step: Step) => void;
 }
 export type EditorSidebarProps = {

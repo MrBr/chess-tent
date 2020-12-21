@@ -5,11 +5,11 @@ import {
   getParentStep,
   updateStepState,
 } from '@chess-tent/models';
-import { DescriptionModule, VariationStep } from '@types';
+import { DescriptionModule, DescriptionStep, VariationStep } from '@types';
 import { components, ui, stepModules, services } from '@application';
 import Comment from './comment';
 
-const { Col, Row, Container } = ui;
+const { Col, Row } = ui;
 const { StepTag } = components;
 
 export const EditorBoard: DescriptionModule['EditorBoard'] = ({
@@ -53,23 +53,16 @@ export const EditorSidebar: DescriptionModule['EditorSidebar'] = ({
   renderToolbox: StepToolbox,
 }) => {
   const addDescriptionStep = useCallback(() => {
-    const parentStep = getParentStep(stepRoot, step);
+    const parentStep = getParentStep(stepRoot, step) as DescriptionStep;
     const newDescriptionStep = services.createStep('description', {
       position: step.state.position,
     });
     updateStep(addStepRightToSame(parentStep, newDescriptionStep));
     setActiveStep(newDescriptionStep);
   }, [stepRoot, step, updateStep, setActiveStep]);
-  const handleStepClick = useCallback(
-    event => {
-      event.stopPropagation();
-      activeStep !== step && setActiveStep(step);
-    },
-    [step, activeStep, setActiveStep],
-  );
 
   return (
-    <Container onClick={handleStepClick} fluid className="p-0">
+    <>
       <Row noGutters>
         <Col className="col-auto">
           <StepTag step={step} active={activeStep === step}>
@@ -88,6 +81,6 @@ export const EditorSidebar: DescriptionModule['EditorSidebar'] = ({
           />
         </Col>
       </Row>
-    </Container>
+    </>
   );
 };

@@ -121,7 +121,7 @@ export default styled(
               const messageElement =
                 message.owner !== activeUser.id ? (
                   <Container key={message.id} className="pl-0">
-                    {messages[index - 1]?.owner !== message.owner && (
+                    {messages[index + 1]?.owner !== message.owner && (
                       <>
                         <UserAvatar
                           size="small"

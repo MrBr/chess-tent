@@ -3,17 +3,34 @@ import { components, ui } from '@application';
 import { ChessboardFooterProps } from '@types';
 
 const { EditBoardToggle } = components;
-const { Button } = ui;
+const { Button, Col } = ui;
 
-export default ({ updateEditing, editing, onReset }: ChessboardFooterProps) => (
+export default ({
+  updateEditing,
+  editing,
+  onReset,
+  onClear,
+}: ChessboardFooterProps) => (
   <>
     {updateEditing && (
       <EditBoardToggle editing={editing} onChange={updateEditing} />
     )}
-    {onReset && (
-      <Button size="extra-small" variant="regular" onClick={onReset}>
-        Reset
-      </Button>
-    )}
+    <Col className="col-auto">
+      {onReset && (
+        <Button
+          size="extra-small"
+          variant="regular"
+          onClick={onReset}
+          className="mr-3"
+        >
+          Reset
+        </Button>
+      )}
+      {onClear && (
+        <Button size="extra-small" variant="regular" onClick={onClear}>
+          Clear
+        </Button>
+      )}
+    </Col>
   </>
 );

@@ -21,7 +21,7 @@ import BoardSrc from '../images/board.svg';
 
 const { Col, Row, Container, Img } = ui;
 const { Stepper, StepTag, StepMove, ChessboardFooter } = components;
-const { START_FEN } = constants;
+const { START_FEN, KINGS_FEN } = constants;
 
 const boardChange = (
   step: VariationStep,
@@ -124,6 +124,18 @@ const EditorBoard: VariationModule['EditorBoard'] = ({
       setActiveStep(variationStep);
     }
   }, [editing, updateStep, step, setActiveStep]);
+  const clearHandle = useCallback(() => {
+    if (editing) {
+      updateStep(updateStepState(step, { position: KINGS_FEN }));
+    } else {
+      const variationStep = services.createStep('variation', {
+        position: KINGS_FEN,
+        editing: true,
+      });
+      updateStep(addStep(step, variationStep));
+      setActiveStep(variationStep);
+    }
+  }, [editing, updateStep, step, setActiveStep]);
 
   const updateShapes = useCallback(
     (shapes: DrawShape[]) => updateStep(updateStepState(step, { shapes })),
@@ -164,6 +176,7 @@ const EditorBoard: VariationModule['EditorBoard'] = ({
           updateEditing={updateEditing}
           editing={!!editing}
           onReset={resetHandle}
+          onClear={clearHandle}
         />
       }
     />

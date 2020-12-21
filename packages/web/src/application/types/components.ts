@@ -114,6 +114,7 @@ export interface ChessboardFooterProps {
   updateEditing?: (editing: boolean) => void;
   editing: boolean;
   onReset?: () => void;
+  onClear?: () => void;
 }
 
 export type StepperProps = {

@@ -164,16 +164,15 @@ const isLastStep = (parentStep: Step, step: Step, recursive = true) => {
   return isSameStep(getLastStep(parentStep, recursive), step);
 };
 
-const getParentStep = (
-  parentStep: Step | StepRoot,
+const getParentStep = <T extends Step | StepRoot>(
+  parent: T,
   step: Step
-): Step | null => {
+): Step | StepRoot | null => {
   let closestParentStep = null;
-  for (const childStep of parentStep.state.steps) {
+  for (const childStep of parent.state.steps) {
     if (isSameStep(childStep, step)) {
-      // Found searched step, returning previous.
-      // If the first or the only returning null otherwise returning previous step.
-      return isStep(parentStep) ? parentStep : null;
+      // Found searched step, returning parent.
+      return parent;
     }
     closestParentStep = getParentStep(childStep, step);
     if (closestParentStep) {
@@ -202,6 +201,27 @@ const addStepToLeft = (parentStep: Step, step: Step): Step => {
     }
   };
 };
+const addStepToRightOf = <T extends Step | StepRoot>(
+  parent: T,
+  leftStep: Step,
+  newStep: Step
+): T => {
+  const newStepIndex = parent.state.steps.findIndex(childStep =>
+    isSameStep(childStep, leftStep)
+  );
+  const steps = [...parent.state.steps];
+
+  newStepIndex >= 0
+    ? steps.splice(newStepIndex + 1, 0, newStep)
+    : steps.push(newStep);
+  return {
+    ...parent,
+    state: {
+      ...parent.state,
+      steps
+    }
+  };
+};
 
 /**
  * Remove the step and all adjacent steps
@@ -227,9 +247,12 @@ const removeStep = <T extends Step | StepRoot>(
   };
 };
 
-const addStepRightToSame = (step: Step, newStep: Step) => {
+const addStepRightToSame = <T extends Step | StepRoot>(
+  step: T,
+  newStep: Step
+): T => {
   const newStepIndex = step.state.steps.findIndex(
-    childStep => childStep.stepType !== newStep.stepType
+    childStep => childStep.stepType === newStep.stepType
   );
   const steps = [...step.state.steps];
 
@@ -322,6 +345,7 @@ export {
   getParentStep,
   isLastStep,
   addStepRightToSame,
+  addStepToRightOf,
   getChildStep,
   getStepPath,
   updateNestedStep,

@@ -44,7 +44,7 @@ export const useLoadMoreMessages = (
     if (noMore || loading) {
       return;
     }
-    fetch(conversation.id, [messageCount + 1, pageSize]);
+    fetch(conversation.id, [messageCount, pageSize]);
   }, [noMore, loading, fetch, conversation.id, messageCount, pageSize]);
   return [loadMore, loading || !!response, noMore];
 };

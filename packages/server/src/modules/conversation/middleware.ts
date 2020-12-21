@@ -1,5 +1,5 @@
 import { MiddlewareFunction } from "@types";
-import { Conversation, Lesson } from "@chess-tent/models";
+import { Conversation } from "@chess-tent/models";
 import * as service from "./service";
 import { UnauthorizedConversationEditError } from "./errors";
 import { Pagination } from "@chess-tent/types";

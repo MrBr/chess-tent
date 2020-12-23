@@ -1,8 +1,6 @@
 import React, { useCallback } from 'react';
 import { DrawShape } from '@chess-tent/chessground/dist/draw';
 import {
-  addStep,
-  addStepRightToSame,
   addStepToRightOf,
   getParentStep,
   updateStepState,

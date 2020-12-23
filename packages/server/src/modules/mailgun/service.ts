@@ -5,7 +5,7 @@ import { FailedToSendMAil } from "./errors";
 const mg = mailgun({
   apiKey: process.env.MAILGUN_API_KEY as string,
   domain: process.env.MAILGUN_DOMAIN as string,
-  endpoint: process.env.MAILGUN_API_ENDPOINT as string
+  host: process.env.MAILGUN_API_HOST as string
 });
 
 export const sendMail = (data: MailData) =>

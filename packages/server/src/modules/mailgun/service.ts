@@ -1,5 +1,6 @@
 import mailgun from "mailgun-js";
 import { MailData } from "@types";
+import { FailedToSendMAil } from "./errors";
 
 const mg = mailgun({
   apiKey: process.env.MAILGUN_API_KEY as string,
@@ -12,6 +13,8 @@ export const sendMail = (data: MailData) =>
     mg.messages().send(data, function(error, body) {
       if (error) {
         reject(error);
+      } else if (!body) {
+        reject(new FailedToSendMAil());
       } else {
         resolve(body);
       }

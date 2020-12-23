@@ -74,7 +74,11 @@ export default styled(
     const { messages } = conversation;
 
     useEffect(() => {
-      if (!messages[0]?.read && messages[0]?.owner !== activeUser.id) {
+      if (
+        messages[0] &&
+        !messages[0].read &&
+        messages[0].owner !== activeUser.id
+      ) {
         dispatch(
           updateMessage({ read: true }, conversation.id, messages[0].id),
         );

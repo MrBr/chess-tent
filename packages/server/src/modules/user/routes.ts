@@ -8,6 +8,7 @@ import {
   findUsers,
   getUser
 } from "./middleware";
+import { UserAlreadyActivated } from "./errors";
 
 const {
   sendData,
@@ -16,7 +17,9 @@ const {
   webLogout,
   toLocals,
   sendStatusOk,
-  sendMail
+  sendMail,
+  validate,
+  logLocal
 } = middleware;
 
 application.service.registerPostRoute(
@@ -34,6 +37,32 @@ application.service.registerPostRoute(
       <p>Best Regards, <br/>Chess Tent Team</p>`
   })),
   sendData("user")
+);
+
+application.service.registerGetRoute(
+  "/user-activate/:id",
+  identify,
+  toLocals("user.id", req => req.params.id),
+  getUser,
+  validate((req, res) => {
+    if (res.locals.user.active) {
+      throw new UserAlreadyActivated();
+    }
+  }),
+  toLocals("user", (req, res) => ({
+    ...res.locals.user,
+    active: true
+  })),
+  updateUser,
+  sendMail((req, res) => ({
+    from: "Chess Tent <noreply@chesstent.com>",
+    to: res.locals.user.email,
+    subject: "Beta Account Activated",
+    html: `<p>Dear ${res.locals.user.name},</p> 
+      <p>Great news! Your account for Chess Tent has been activated. You can now log in with your credentials by visiting link <a href="https://chestent.com/login">chesstent.com</a>.</p>
+      <p>Best Regards, <br/>Chess Tent Team</p>`
+  })),
+  sendStatusOk
 );
 
 application.service.registerPostRoute(

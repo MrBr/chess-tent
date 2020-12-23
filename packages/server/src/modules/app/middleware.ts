@@ -27,6 +27,16 @@ export const sendData: Middleware["sendData"] = (localProp: string) => (
   res.json({ data: res.locals[localProp] });
 };
 
+export const validate: Middleware["validate"] = validate => (...args) => {
+  const next = args[2];
+  try {
+    validate(...args);
+    next();
+  } catch (e) {
+    next(e);
+  }
+};
+
 export const sendStatusOk: Middleware["sendStatusOk"] = (req, res) => {
   res.json({ error: null });
 };

@@ -7,7 +7,8 @@ import {
   logLocal,
   sendData,
   sendStatusOk,
-  toLocals
+  toLocals,
+  validate
 } from "./middleware";
 import cookieParser from "cookie-parser";
 import { generateIndex } from "./service";
@@ -27,6 +28,7 @@ application.middleware.errorHandler = errorHandler;
 application.middleware.sendData = sendData;
 application.middleware.sendStatusOk = sendStatusOk;
 application.middleware.logLocal = logLocal;
+application.middleware.validate = validate;
 application.middleware.toLocals = toLocals;
 application.service.registerGetRoute = (path, ...middlware) =>
   app.get(process.env.API_BASE_PATH + path, ...middlware);

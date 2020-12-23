@@ -59,6 +59,9 @@ export type Middleware = {
   identify: (...args: Parameters<RequestHandler>) => void;
   errorHandler: ErrorRequestHandler;
   sendData: (localProp: string) => MiddlewareFunction;
+  validate: (
+    validateFunction: (...args: Parameters<RequestHandler>) => void | never
+  ) => MiddlewareFunction;
   sendMail: (
     formatData: (
       req: Parameters<RequestHandler>[0],

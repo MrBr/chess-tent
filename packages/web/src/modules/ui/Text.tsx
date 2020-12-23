@@ -62,21 +62,13 @@ const textDynamicStyle = (props: TextProps): CSSObject => ({
 });
 
 const Text = styled<FunctionComponent<TextProps>>(
-  ({ children, className, onClick, inline, contentEditable }) =>
+  ({ children, className, onClick, inline, ...textProps }) =>
     inline ? (
-      <span
-        className={className}
-        onClick={onClick}
-        contentEditable={contentEditable}
-      >
+      <span className={className} onClick={onClick} {...textProps}>
         {children}
       </span>
     ) : (
-      <p
-        className={className}
-        onClick={onClick}
-        contentEditable={contentEditable}
-      >
+      <p className={className} onClick={onClick} {...textProps}>
         {children}
       </p>
     ),

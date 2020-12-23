@@ -42,7 +42,7 @@ const createNewLesson = (user: User) => {
   const defaultChapter = createChapter(generateIndex(), 'Chapter', [
     defaultStep,
   ]);
-  return createLesson(newLessonId, [defaultChapter], user);
+  return createLesson(newLessonId, [defaultChapter], user, 'Lesson');
 };
 
 export default () => {

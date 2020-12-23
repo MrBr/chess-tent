@@ -257,7 +257,7 @@ const addStepRightToSame = <T extends Step | StepRoot>(
   const steps = [...step.state.steps];
 
   newStepIndex >= 0
-    ? steps.splice(newStepIndex, 0, newStep)
+    ? steps.splice(newStepIndex + 1, 0, newStep)
     : steps.push(newStep);
   return {
     ...step,

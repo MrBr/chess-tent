@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import { DrawShape } from '@chess-tent/chessground/dist/draw';
 import {
   addStepRightToSame,
+  addStepToRightOf,
   getParentStep,
   updateStepState,
 } from '@chess-tent/models';
@@ -57,7 +58,7 @@ export const EditorSidebar: DescriptionModule['EditorSidebar'] = ({
     const newDescriptionStep = services.createStep('description', {
       position: step.state.position,
     });
-    updateStep(addStepRightToSame(parentStep, newDescriptionStep));
+    updateStep(addStepToRightOf(parentStep, step, newDescriptionStep));
     setActiveStep(newDescriptionStep);
   }, [stepRoot, step, updateStep, setActiveStep]);
 

@@ -12,7 +12,13 @@ import {
   isStep,
   updateStepState,
 } from '@chess-tent/models';
-import { ExerciseModule, ExerciseTypes, MoveStep, VariationStep } from '@types';
+import {
+  DescriptionStep,
+  ExerciseModule,
+  ExerciseTypes,
+  MoveStep,
+  VariationStep,
+} from '@types';
 import { components, constants, services, ui } from '@application';
 
 import QuestionnaireEditorBoard from './questionnaire/editor-board';
@@ -87,6 +93,22 @@ const EditorSidebar: ExerciseModule['EditorSidebar'] = ({
     () => exerciseTypes.find(({ type }) => type === step.state.exerciseType),
     [step.state.exerciseType],
   );
+  const addDescriptionStep = useCallback(() => {
+    const parentStep = getParentStep(stepRoot, step) as DescriptionStep;
+    const newDescriptionStep = services.createStep('description', {
+      position: step.state.position,
+    });
+    updateStep(addStepToRightOf(parentStep, step, newDescriptionStep));
+    setActiveStep(newDescriptionStep);
+  }, [stepRoot, step, updateStep, setActiveStep]);
+  const addVariationStep = useCallback(() => {
+    const parentStep = getParentStep(stepRoot, step) as DescriptionStep;
+    const newVariationStep = services.createStep('variation', {
+      position: step.state.position,
+    });
+    updateStep(addStepToRightOf(parentStep, step, newVariationStep));
+    setActiveStep(newVariationStep);
+  }, [stepRoot, step, updateStep, setActiveStep]);
   const addExerciseStep = useCallback(() => {
     const parent = getParentStep(stepRoot, step) as
       | VariationStep
@@ -147,11 +169,11 @@ const EditorSidebar: ExerciseModule['EditorSidebar'] = ({
           </Dropdown>
           {TypeEditor && <TypeEditor step={step} updateStep={updateStep} />}
           <StepToolbox
-            add={false}
+            add={addVariationStep}
             active={activeStep === step}
             step={step}
             exercise={addExerciseStep}
-            comment={false}
+            comment={addDescriptionStep}
             showInput={false}
           />
         </Col>

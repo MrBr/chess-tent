@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import { DrawShape } from '@chess-tent/chessground/dist/draw';
 import {
+  addStep,
   addStepRightToSame,
   addStepToRightOf,
   getParentStep,
@@ -61,6 +62,22 @@ export const EditorSidebar: DescriptionModule['EditorSidebar'] = ({
     updateStep(addStepToRightOf(parentStep, step, newDescriptionStep));
     setActiveStep(newDescriptionStep);
   }, [stepRoot, step, updateStep, setActiveStep]);
+  const addVariationStep = useCallback(() => {
+    const parentStep = getParentStep(stepRoot, step) as DescriptionStep;
+    const newVariationStep = services.createStep('variation', {
+      position: step.state.position,
+    });
+    updateStep(addStepToRightOf(parentStep, step, newVariationStep));
+    setActiveStep(newVariationStep);
+  }, [stepRoot, step, updateStep, setActiveStep]);
+  const addExerciseStep = useCallback(() => {
+    const parentStep = getParentStep(stepRoot, step) as DescriptionStep;
+    const newExerciseStep = services.createStep('exercise', {
+      position: step.state.position,
+    });
+    updateStep(addStepToRightOf(parentStep, step, newExerciseStep));
+    setActiveStep(newExerciseStep);
+  }, [stepRoot, step, updateStep, setActiveStep]);
 
   return (
     <>
@@ -78,7 +95,9 @@ export const EditorSidebar: DescriptionModule['EditorSidebar'] = ({
               updateStep(updateStepState(step, { description }))
             }
             step={step}
+            add={addVariationStep}
             comment={addDescriptionStep}
+            exercise={addExerciseStep}
           />
         </Col>
       </Row>

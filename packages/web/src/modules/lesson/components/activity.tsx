@@ -12,7 +12,7 @@ import {
   PieceRole,
   Steps,
 } from '@types';
-import { components, hooks, requests, services, state } from '@application';
+import { components, hooks, requests, services, state, ui } from '@application';
 import {
   Chapter,
   getNextStep,
@@ -39,6 +39,7 @@ const {
 } = components;
 const { useDispatchBatched, usePathUpdates, useApi } = hooks;
 const { actions } = state;
+const { Button, Absolute } = ui;
 
 export class ActivityRenderer extends React.Component<
   ActivityRendererProps,
@@ -220,11 +221,22 @@ export class ActivityRenderer extends React.Component<
           {
             title: 'Analysis',
             board: (
-              <AnalysisBoard
-                analysis={analysis}
-                updateAnalysis={this.setStepActivityAnalysisState}
-                Chessboard={this.renderBoard}
-              />
+              <>
+                <Absolute right={25} top={25}>
+                  <Button
+                    variant="regular"
+                    size="extra-small"
+                    onClick={() => this.updateActiveTab(0)}
+                  >
+                    Stop analysing
+                  </Button>
+                </Absolute>
+                <AnalysisBoard
+                  analysis={analysis}
+                  updateAnalysis={this.setStepActivityAnalysisState}
+                  Chessboard={this.renderBoard}
+                />
+              </>
             ),
             sidebar: (
               <AnalysisSidebar

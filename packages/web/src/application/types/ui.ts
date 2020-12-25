@@ -21,6 +21,9 @@ import {
   ToastBody,
   ToastProps,
   ToastHeaderProps,
+  Nav,
+  Navbar,
+  NavDropdown,
 } from 'react-bootstrap';
 import DropdownToggle from 'react-bootstrap/DropdownToggle';
 import { ErrorMessageProps, Formik } from 'formik';
@@ -209,4 +212,7 @@ export type UI = {
   Toast: ComponentType<ToastProps>;
   ToastBody: ComponentType<ComponentProps<typeof ToastBody>>;
   ToastHeader: ComponentType<ToastHeaderProps>;
+  Nav: typeof Nav;
+  Navbar: typeof Navbar;
+  NavDropdown: typeof NavDropdown;
 };

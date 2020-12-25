@@ -36,6 +36,7 @@ import Icon from './Icon';
 import Absolute from './Absolute';
 import { Toast, ToastBody, ToastHeader } from './Toast';
 import { withFiles } from './hoc';
+import { NavDropdown, Nav, Navbar } from './Navigation';
 
 application.hoc.withFiles = withFiles;
 
@@ -51,8 +52,11 @@ application.ui.InputGroup = InputGroup;
 application.ui.File = File;
 application.ui.Check = Check;
 application.ui.ErrorMessage = ErrorMessage;
-
 application.ui.Select = Select;
+
+application.ui.Nav = Nav;
+application.ui.Navbar = Navbar;
+application.ui.NavDropdown = NavDropdown;
 
 application.ui.Toast = Toast;
 application.ui.ToastHeader = ToastHeader;

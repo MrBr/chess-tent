@@ -4,7 +4,17 @@ import styled from '@emotion/styled';
 import { User } from '@chess-tent/models';
 import { Components } from '@types';
 
-const { Container, Headline4, Row, Col, Dropdown, Text } = ui;
+const {
+  Container,
+  Headline4,
+  Row,
+  Col,
+  Dropdown,
+  Text,
+  Navbar,
+  Nav,
+  NavDropdown,
+} = ui;
 const { useHistory, useApi, useActiveUserRecord } = hooks;
 const { UserAvatar, NotificationStand } = components;
 const TabButton = styled<
@@ -28,8 +38,8 @@ const TabButton = styled<
     marginRight: 0,
   },
   height: '100%',
-  display: 'inline-block',
-  lineHeight: '96px',
+  display: 'flex',
+  alignItems: 'center',
   fontWeight: 700,
   fontSize: 18,
   marginRight: 48,
@@ -57,9 +67,16 @@ const Header: Components['Header'] = () => {
           <Headline4 className="m-0">CHESS TENT</Headline4>
         </Col>
         <Col className="h-100" xs={6}>
-          <TabButton path="/">Dashboard</TabButton>
-          <TabButton path="/lesson/new">Create Lesson</TabButton>
-          <TabButton path="/coaches">Find Coach</TabButton>
+          <Navbar collapseOnSelect expand="lg" className="h-100 p-0">
+            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+            <Navbar.Collapse id="responsive-navbar-nav" className="h-100">
+              <Nav>
+                <TabButton path="/">Dashboard</TabButton>
+                <TabButton path="/lesson/new">Create Lesson</TabButton>
+                <TabButton path="/coaches">Find Coach</TabButton>
+              </Nav>
+            </Navbar.Collapse>
+          </Navbar>
         </Col>
         <Col className="d-flex justify-content-end" xs={3}>
           <NotificationStand />

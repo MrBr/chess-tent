@@ -9,13 +9,10 @@ import {
   ExerciseModule,
   ExerciseVariationActivityState,
   ExerciseVariationState,
-  Move,
 } from '@types';
+import { isCorrectActivityMove } from './utils';
 
 const { createFenForward } = services;
-
-const isCorrectActivityMove = (activityMove: Move, stepMove: Move) =>
-  stepMove[0] === activityMove[0] && stepMove[1] === activityMove[1];
 
 const Playground: FunctionComponent<ComponentProps<
   ExerciseModule['ActivityBoard']
@@ -46,7 +43,7 @@ const Playground: FunctionComponent<ComponentProps<
           position,
           activeMoves
             .slice(0, activeMoveIndex + 1)
-            .map(notableMove => notableMove.move as Move),
+            .map(notableMove => notableMove.move),
         )
       : position;
   }, [position, activeMoveIndex, activeMoves]);
@@ -57,10 +54,7 @@ const Playground: FunctionComponent<ComponentProps<
           ...activityMoves,
           [moveToPlayIndex]: { move, piece, captured },
         },
-        activeMoveIndex: isCorrectActivityMove(
-          move,
-          stepToPlayMove?.move as Move,
-        )
+        activeMoveIndex: isCorrectActivityMove(move, stepToPlayMove?.move)
           ? moveToPlayIndex + 1
           : moveToPlayIndex,
       });

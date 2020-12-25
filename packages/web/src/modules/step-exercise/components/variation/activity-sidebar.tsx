@@ -6,11 +6,9 @@ import {
   ExerciseVariationState,
   Move,
 } from '@types';
+import { isCorrectActivityMove } from './utils';
 
 const { Text } = ui;
-
-const isCorrectActivityMove = (activityMove: Move, stepMove: Move) =>
-  stepMove[0] === activityMove[0] && stepMove[1] === activityMove[1];
 
 const Playground: FunctionComponent<ComponentProps<
   ExerciseModule['ActivitySidebar']

@@ -4,17 +4,7 @@ import styled from '@emotion/styled';
 import { User } from '@chess-tent/models';
 import { Components } from '@types';
 
-const {
-  Container,
-  Headline4,
-  Row,
-  Col,
-  Dropdown,
-  Text,
-  Navbar,
-  Nav,
-  NavDropdown,
-} = ui;
+const { Container, Headline4, Row, Col, Dropdown, Text, Navbar, Nav } = ui;
 const { useHistory, useApi, useActiveUserRecord } = hooks;
 const { UserAvatar, NotificationStand } = components;
 const TabButton = styled<

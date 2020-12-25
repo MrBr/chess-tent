@@ -4,10 +4,10 @@ import { ActivityFilters } from "@chess-tent/types";
 import { service } from "@application";
 
 export const saveActivity = (activity: Activity) =>
-  new Promise((resolve) => {
+  new Promise(resolve => {
     ActivityModel.updateOne({ _id: activity.id }, depopulate(activity), {
-      upsert: true,
-    }).exec((err) => {
+      upsert: true
+    }).exec(err => {
       if (err) {
         throw err;
       }
@@ -20,14 +20,14 @@ export const updateActivity = (
   updates: SubjectPathUpdate[]
 ) => {
   const $set = service.subjectPathUpdatesToMongoose$set(updates);
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     ActivityModel.updateOne(
       { _id: activityId },
       { $set },
       {
-        upsert: true,
+        upsert: true
       }
-    ).exec((err) => {
+    ).exec(err => {
       if (err) {
         throw err;
       }
@@ -39,13 +39,13 @@ export const updateActivity = (
 export const getActivity = (
   activityId: Activity["id"]
 ): Promise<Activity | null> =>
-  new Promise((resolve) => {
+  new Promise(resolve => {
     ActivityModel.findById(activityId)
       .populate("owner")
       .populate("users")
       .populate({
         path: "subject",
-        populate: "owner",
+        populate: "owner"
       })
       .exec((err, result) => {
         if (err) {
@@ -58,19 +58,19 @@ export const getActivity = (
 export const findActivities = (
   activityFilters: ActivityFilters[]
 ): Promise<Activity[]> =>
-  new Promise((resolve) => {
+  new Promise(resolve => {
     ActivityModel.find({ $or: activityFilters })
       .populate("owner")
       .populate("users")
       .populate({
         path: "subject",
-        populate: "owner",
+        populate: "owner"
       })
       .exec((err, result) => {
         if (err) {
           throw err;
         }
-        resolve(result.map((item) => item.toObject()));
+        resolve(result.map(item => item.toObject()));
       });
   });
 
@@ -78,9 +78,9 @@ export const canEditActivity = (
   activityId: Activity["id"],
   userId: User["id"]
 ) =>
-  new Promise((resolve) => {
+  new Promise(resolve => {
     ActivityModel.findOne({
-      _id: activityId,
+      _id: activityId
     }).exec((err, result) => {
       if (err) {
         throw err;
@@ -88,7 +88,7 @@ export const canEditActivity = (
       resolve(
         !result ||
           result?.owner === userId ||
-          result?.users.some((user) => user === userId)
+          result?.users.some(user => user === userId)
       );
     });
   });

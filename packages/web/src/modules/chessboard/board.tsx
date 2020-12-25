@@ -13,7 +13,12 @@ import {
 } from '@types';
 
 import { ChessInstance } from 'chess.js';
-import React, { Component, FunctionComponent, RefObject } from 'react';
+import React, {
+  Component,
+  FunctionComponent,
+  ReactElement,
+  RefObject,
+} from 'react';
 import styled from '@emotion/styled';
 import { Chessground } from '@chess-tent/chessground';
 import _ from 'lodash';
@@ -72,6 +77,7 @@ const BoardHeader = styled.div<{
 }>(
   {
     margin: '1em auto',
+    maxWidth: 720,
   },
   ({ width }) => ({ width }),
 );
@@ -83,8 +89,8 @@ const BoardFooter = styled.div<{
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    maxWidth: 720,
     margin: '1em auto',
+    maxWidth: 720,
   },
   ({ width }) => ({ width }),
 );
@@ -94,25 +100,44 @@ const BoardContainer = styled<
     size: string | number;
     className?: string;
     boardRef: RefObject<any>;
+    boardExtras?: ReactElement | null;
   }>
 >(props => (
   <div className={props.className}>
-    <div ref={props.boardRef} className="board" />
+    <div className="board-height">
+      {props.boardExtras}
+      <div ref={props.boardRef} className="board" />
+    </div>
     {props.children}
   </div>
 ))(({ size }) => ({
-  '& > .board': {
+  '& > .board-height': {
+    paddingTop: '100%',
+  },
+  '& .board-height > .board': {
     position: 'absolute',
     width: '100%',
-    height: '100%',
-    maxWidth: 720,
-    maxHeight: 720,
+  },
+  '.spare-pieces': {
+    '.piece': {
+      width: '6%',
+      paddingTop: '6%',
+      marginBottom: '2%',
+      backgroundPosition: 'center',
+      backgroundSize: 'cover',
+    },
+    width: '100%',
+    position: 'absolute',
+    left: 0,
+    top: '50%',
+    transform: 'translateX(calc(-6% - 20px)) translateY(-50%)',
   },
   zIndex: 10, // important for dragged piece to cover spare piece base
   width: size,
-  height: size,
   position: 'relative',
   margin: 'auto',
+  maxWidth: 720,
+  maxHeight: 720,
   boxSizing: 'content-box',
 }));
 
@@ -139,7 +164,7 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
     resizable: true,
     selectablePieces: false,
     eraseDrawableOnClick: false,
-    size: 'calc(100vh - 40vh)',
+    size: '80%',
     edit: false,
   };
 
@@ -409,6 +434,12 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
   render() {
     const { header, fen, evaluate, footer, size, sparePieces } = this.props;
     const { renderPrompt, promotion } = this.state;
+    const sparePiecesElement = sparePieces ? (
+      <SparePieces
+        onDragStart={this.onSparePieceDrag}
+        className="spare-pieces"
+      />
+    ) : null;
     return (
       <>
         {false && (
@@ -420,7 +451,11 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
           />
         )}
         <BoardHeader width={size as string}>{header}</BoardHeader>
-        <BoardContainer size={size as string} boardRef={this.boardHost}>
+        <BoardContainer
+          size={size as string}
+          boardRef={this.boardHost}
+          boardExtras={sparePiecesElement}
+        >
           {promotion && (
             <Promotion
               file={promotion.to}
@@ -431,7 +466,6 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
           )}
         </BoardContainer>
         <BoardFooter width={size as string}>{footer}</BoardFooter>
-        {sparePieces && <SparePieces onDragStart={this.onSparePieceDrag} />}
         <Modal
           container={this.boardHost}
           show={!!renderPrompt}

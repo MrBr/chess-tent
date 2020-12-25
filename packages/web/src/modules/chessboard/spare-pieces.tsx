@@ -6,7 +6,6 @@ import React, {
 } from 'react';
 import { MouchEvent } from '@chess-tent/chessground/dist/types';
 import { Piece, PieceColor, PieceRole } from '@types';
-import styled from '@emotion/styled';
 
 interface SparePiecesProps {
   onDragStart: (piece: Piece, event: MouchEvent) => void;
@@ -23,60 +22,55 @@ const roles: PieceRole[] = [
   'queen',
 ];
 
-const SparePieces: FunctionComponent<SparePiecesProps> = styled(
-  ({ onDragStart, className }) => {
-    const preventSelection = useCallback((e: React.MouseEvent) => {
-      e.preventDefault();
-      return false;
-    }, []);
+const SparePieces: FunctionComponent<SparePiecesProps> = ({
+  onDragStart,
+  className,
+}) => {
+  const preventSelection = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    return false;
+  }, []);
 
-    const onPieceDrag: React.MouseEventHandler<HTMLDivElement> = useCallback(
-      event => {
-        const role = (event.target as HTMLDivElement).dataset.role as PieceRole;
-        const color = (event.target as HTMLDivElement).dataset
-          .color as PieceColor;
-        onDragStart(
-          {
-            role,
-            color,
-          },
-          (event as unknown) as MouseEvent & TouchEvent,
+  const onPieceDrag: React.MouseEventHandler<HTMLDivElement> = useCallback(
+    event => {
+      const role = (event.target as HTMLDivElement).dataset.role as PieceRole;
+      const color = (event.target as HTMLDivElement).dataset
+        .color as PieceColor;
+      onDragStart(
+        {
+          role,
+          color,
+        },
+        (event as unknown) as MouseEvent & TouchEvent,
+      );
+    },
+    [onDragStart],
+  );
+
+  const sparePieces = useMemo(() => {
+    return colors.reduce<ReactElement[][]>((result, color) => {
+      const pieces = roles.reduce<ReactElement[]>((pieceElements, role) => {
+        pieceElements.push(
+          <div
+            key={`${color}-${role}`}
+            onMouseDown={onPieceDrag}
+            data-role={role}
+            data-color={color}
+            className={`piece ${color} ${role}`}
+          />,
         );
-      },
-      [onDragStart],
-    );
-
-    const sparePieces = useMemo(() => {
-      return colors.reduce<ReactElement[][]>((result, color) => {
-        const pieces = roles.reduce<ReactElement[]>((pieceElements, role) => {
-          pieceElements.push(
-            <div
-              key={`${color}-${role}`}
-              onMouseDown={onPieceDrag}
-              data-role={role}
-              data-color={color}
-              className={`piece ${color} ${role}`}
-              style={{ width: 32, height: 32, marginBottom: 24 }}
-            />,
-          );
-          return pieceElements;
-        }, []);
-        result.push(pieces);
-        return result;
+        return pieceElements;
       }, []);
-    }, [onPieceDrag]);
+      result.push(pieces);
+      return result;
+    }, []);
+  }, [onPieceDrag]);
 
-    return (
-      <div className={className} onMouseDown={preventSelection}>
-        {sparePieces}
-      </div>
-    );
-  },
-)({
-  position: 'absolute',
-  top: '50%',
-  left: 24,
-  transform: 'translateY(-50%)',
-});
+  return (
+    <div className={className} onMouseDown={preventSelection}>
+      {sparePieces}
+    </div>
+  );
+};
 
 export { SparePieces };

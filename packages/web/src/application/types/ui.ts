@@ -87,6 +87,7 @@ export interface SelectOption<T> {
   toString?: (value: T) => string;
 }
 
+export type DropdownSize = 'regular' | 'small' | 'extra-small';
 export interface OptionsDropdownProps<T> {
   id: string;
   className?: string;
@@ -95,6 +96,7 @@ export interface OptionsDropdownProps<T> {
   values: SelectOption<T>[];
   initial?: T;
   onChange: (value?: T) => void;
+  size?: DropdownSize;
 }
 
 export type UIComponent<T = {}> = ComponentType<
@@ -144,7 +146,7 @@ export type UI = {
   Dropdown: ComponentType<ComponentProps<typeof Dropdown>> & {
     Toggle: ComponentType<
       Omit<ComponentProps<typeof DropdownToggle>, 'size'> & {
-        size?: 'regular' | 'small' | 'extra-small';
+        size?: DropdownSize;
         collapse?: boolean;
       }
     >;

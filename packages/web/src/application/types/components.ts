@@ -133,6 +133,8 @@ export type StepToolbox = FunctionComponent<
     text?: string;
     showInput?: boolean;
     step: Step;
+    className?: string;
+    actionsClassName?: string;
   } & Omit<EditorProps, 'updateChapter'>
 >;
 

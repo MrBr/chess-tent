@@ -60,7 +60,7 @@ const ToolboxActions = styled.div({
   display: 'flex',
   flexDirection: 'column',
   position: 'absolute',
-  right: -16,
+  right: 0,
   top: '50%',
   transform: 'translateY(-50%)',
   zIndex: 10,
@@ -79,6 +79,8 @@ const StepToolbox: Components['StepToolbox'] = ({
   remove,
   add,
   exercise,
+  className,
+  actionsClassName,
 }) => {
   const addDescriptionStep = useCallback(() => {
     const position = getStepPosition(step as Steps);
@@ -111,7 +113,7 @@ const StepToolbox: Components['StepToolbox'] = ({
 
   return (
     <Container
-      className="d-flex align-items-center h-100 pr-0"
+      className={`d-flex align-items-center h-100 pr-0 ${className}`}
       onClick={utils.stopPropagation}
     >
       {(text || active) && showInput && (
@@ -122,7 +124,7 @@ const StepToolbox: Components['StepToolbox'] = ({
         />
       )}
       {active && (
-        <ToolboxActions>
+        <ToolboxActions className={actionsClassName}>
           {exercise && (
             <Button
               variant="regular"

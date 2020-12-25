@@ -31,6 +31,7 @@ const DifficultyDropdown: Components['DifficultyDropdown'] = ({
   onChange,
   initial,
   includeNullOption,
+  size,
 }) => {
   const values = includeNullOption
     ? options
@@ -39,6 +40,7 @@ const DifficultyDropdown: Components['DifficultyDropdown'] = ({
   return (
     <OptionsDropdown
       id={id}
+      size={size}
       className={className}
       values={values}
       label={'Difficulty:'}

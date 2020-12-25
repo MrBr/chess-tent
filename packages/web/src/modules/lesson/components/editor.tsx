@@ -280,6 +280,7 @@ class EditorRenderer extends React.Component<
   renderToolbox: EditorSidebarProps['renderToolbox'] = props => {
     return (
       <StepToolbox
+        actionsClassName="mr-n5"
         setActiveStep={this.setActiveStepHandler}
         updateStep={this.updateStep}
         removeStep={this.deleteStep}
@@ -319,7 +320,7 @@ class EditorRenderer extends React.Component<
               removeStep={this.deleteStep}
             />
           </Col>
-          <Col sm={5} xl={4} className="mh-100">
+          <Col md={6} xl={4} className="mh-100">
             <Sidebar>
               <Container>
                 <Row>
@@ -353,6 +354,7 @@ class EditorRenderer extends React.Component<
                 <Row className="mt-3 mb-3">
                   <Col className="col-auto">
                     <DifficultyDropdown
+                      size="small"
                       id="editor-difficulty"
                       includeNullOption={false}
                       initial={lesson.difficulty}

@@ -56,11 +56,11 @@ export default ({
     [activeStepActivityState.comments, activeUser, updateActivityStepState],
   );
   return (
-    <Container fluid className="h-100">
+    <Container fluid className="h-100 overflow-y-auto">
       <Row className="h-100">
         <Col className="pt-5">{tab.board}</Col>
-        <Col xs={5} xl={4} className="h-100 pr-5">
-          <Row className="h-100 d-flex flex-column">
+        <Col md={5} xl={4} className="h-100 pr-5 pl-5 ">
+          <Row className="h-100 d-flex flex-column" noGutters>
             <Col className="col-auto mt-5">{header}</Col>
             <Col xs={4} className="mt-5 mw-100 overflow-y-auto">
               <Tabs

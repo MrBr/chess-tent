@@ -82,6 +82,7 @@ export const OptionsDropdown: UI['OptionsDropdown'] = ({
   values,
   initial,
   onChange,
+  size,
 }) => {
   const [selectedOption, setSelectedOption] = useState(
     pickInitialOption(values, initial),
@@ -113,7 +114,7 @@ export const OptionsDropdown: UI['OptionsDropdown'] = ({
 
   return (
     <Dropdown className={className} onSelect={onSelect}>
-      <Dropdown.Toggle id={id}>
+      <Dropdown.Toggle id={id} size={size}>
         <Text className="m-0 mr-1">{label}</Text>
         <Headline6 className="m-0 ml-1 mr-1">{selectedOption.label}</Headline6>
       </Dropdown.Toggle>

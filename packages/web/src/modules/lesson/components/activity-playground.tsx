@@ -11,8 +11,8 @@ const { createActivityComment } = services;
 const Comment = ({ comment }: { comment: ActivityComment }) => {
   const user = useUser(comment.userId);
   return (
-    <Row className="mt-2">
-      <Col className="col-auto pr-0">
+    <Row className="mt-2" noGutters>
+      <Col className="col-auto pr-0 mr-2">
         <UserAvatar user={user} />
       </Col>
       <Col className="justify-content-center d-flex flex-column">
@@ -60,7 +60,7 @@ export default ({
       <Row className="h-100">
         <Col className="pt-5">{tab.board}</Col>
         <Col md={5} xl={4} className="h-100 pr-5 pl-5 ">
-          <Row className="h-100 d-flex flex-column" noGutters>
+          <Row className="h-100 d-flex flex-column flex-nowrap" noGutters>
             <Col className="col-auto mt-5">{header}</Col>
             <Col xs={4} className="mt-5 mw-100 overflow-y-auto">
               <Tabs
@@ -82,17 +82,17 @@ export default ({
                 ))}
               </Tabs>
             </Col>
-            <Col className="overflow-y-auto pt-1">
+            <Col className="pt-1 col-auto">
               <Input
                 as="textarea"
                 placeholder="Add comment"
                 onKeyDown={handleCommentSubmit}
               />
-              <Container className="mt-3 p-0">
-                {activeStepActivityState.comments?.map(comment => (
-                  <Comment comment={comment} key={comment.id} />
-                ))}
-              </Container>
+            </Col>
+            <Col className="mt-3 h-100 p-0 overflow-y-auto">
+              {activeStepActivityState.comments?.map(comment => (
+                <Comment comment={comment} key={comment.id} />
+              ))}
             </Col>
           </Row>
         </Col>

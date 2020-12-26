@@ -9,4 +9,8 @@ export interface HOC {
   withFiles: <P extends FileUploaderProps>(
     WrappedComponent: ComponentType<P>,
   ) => FunctionComponent<Omit<P, keyof FileUploaderProps>>;
+  withMobile: <P extends {}>(
+    DesktopComponent: ComponentType<P>,
+    MobileComponent: ComponentType<P>,
+  ) => ComponentType<P>;
 }

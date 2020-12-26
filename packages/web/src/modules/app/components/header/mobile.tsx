@@ -1,40 +1,11 @@
-import React, { FunctionComponent, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { components, hooks, requests, ui } from '@application';
-import styled from '@emotion/styled';
 import { User } from '@chess-tent/models';
 import { Components } from '@types';
 
 const { Container, Headline4, Row, Col, Dropdown, Text } = ui;
 const { useHistory, useApi, useActiveUserRecord } = hooks;
 const { UserAvatar, NotificationStand } = components;
-const TabButton = styled<
-  FunctionComponent<{ path: string; className?: string }>
->(({ className, path, children }) => {
-  const history = useHistory();
-  const active = history.location.pathname === path;
-  return (
-    <div
-      className={`${className} ${active ? 'active' : ''}`}
-      onClick={() => history.push(path)}
-    >
-      {children}
-    </div>
-  );
-})({
-  '&.active': {
-    borderBottom: '2px solid red',
-  },
-  '&:last-child': {
-    marginRight: 0,
-  },
-  height: '100%',
-  display: 'flex',
-  alignItems: 'center',
-  fontWeight: 700,
-  fontSize: 18,
-  marginRight: 48,
-  cursor: 'pointer',
-});
 
 const Header: Components['Header'] = () => {
   const history = useHistory();
@@ -52,16 +23,11 @@ const Header: Components['Header'] = () => {
         <Col
           className="col-auto cursor-pointer"
           onClick={() => history.push('/')}
-          xs={3}
+          xs={6}
         >
           <Headline4 className="m-0">CHESS TENT</Headline4>
         </Col>
-        <Col className="h-100 d-flex" xs={6}>
-          <TabButton path="/">Dashboard</TabButton>
-          <TabButton path="/lesson/new">Create Lesson</TabButton>
-          <TabButton path="/coaches">Find Coach</TabButton>
-        </Col>
-        <Col className="d-flex justify-content-end" xs={3}>
+        <Col className="d-flex justify-content-end" xs={6}>
           <NotificationStand />
           <Dropdown>
             <Dropdown.Toggle id="header-user">

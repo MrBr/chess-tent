@@ -1,5 +1,6 @@
 import React from 'react';
 import { components } from '@application';
+import TabBar from '../tabBar';
 import styled from '@emotion/styled';
 import { Components } from '@types';
 
@@ -11,7 +12,9 @@ export default styled<Components['Layout']>(({ className, children }) => (
       <Header />
     </div>
     <div className="layout-content">{children}</div>
-    <div className="layout-footer">Tabbarrr rr brrr</div>
+    <div className="layout-footer">
+      <TabBar />
+    </div>
   </div>
 ))({
   '.layout-header': {

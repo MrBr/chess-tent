@@ -134,7 +134,14 @@ export type UI = {
   Headline5: UIComponent<TextProps>;
   Headline6: UIComponent<TextProps>;
   Icon: UIComponent<{
-    type: 'close' | 'comment' | 'notification' | 'search';
+    type:
+      | 'close'
+      | 'comment'
+      | 'notification'
+      | 'search'
+      | 'home'
+      | 'crown'
+      | 'chess';
     textual?: boolean;
     size?: 'large' | 'regular';
   }>;

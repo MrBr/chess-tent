@@ -2,7 +2,7 @@ import React, { FunctionComponent } from 'react';
 import { hooks } from '@application';
 import styled from '@emotion/styled';
 
-const { useHistory, useApi, useActiveUserRecord } = hooks;
+const { useHistory } = hooks;
 
 const TabButton = styled<
   FunctionComponent<{ path: string; className?: string }>

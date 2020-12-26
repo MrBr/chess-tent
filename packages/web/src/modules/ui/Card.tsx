@@ -8,6 +8,7 @@ const CardComponent = styled<
 >(RBCard)({
   border: 0,
   boxShadow: '0px 4px 8px rgba(0,0,0,0.1)',
+  backgroundColor: 'transparent',
 }) as UI['Card'];
 
 const CardBody = RBCard.Body;

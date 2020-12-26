@@ -6,6 +6,10 @@ const Select = (styled(RSelect)({
   '.select__control': {
     backgroundColor: '#F3F4F5',
     borderRadius: 10,
+    borderColor: 'transparent',
+    borderWidth: 0,
+    fontWeight: 400,
+    fontSize: 14,
   },
   '.select__indicator-separator': {
     display: 'none',

@@ -36,7 +36,7 @@ application.register(
   },
 );
 application.register(
-  () => import('./components/conversations-sidebar'),
+  () => import('./components/conversations'),
   module => {
     application.components.Conversations = module.default;
   },
@@ -47,3 +47,4 @@ application.register(
     application.components.MessageButton = module.default;
   },
 );
+application.register(() => import('./routes'));

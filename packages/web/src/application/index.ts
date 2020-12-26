@@ -34,6 +34,7 @@ const stepModules = createNamespace({}) as StepModules;
 const constants = createNamespace({
   START_FEN: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
   KINGS_FEN: '4k3/8/8/8/8/8/8/4K3 w - - 0 1',
+  MOBILE_ROOT_KEY: 'mobile-root',
 }) as Constants;
 
 const application: Application = createNamespace({

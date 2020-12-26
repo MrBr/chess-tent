@@ -33,6 +33,7 @@ export type RecordHookReturn<T extends RecordValue> = [
 ];
 
 export type Hooks = {
+  useIsMobile: () => boolean;
   useComponentStateSilent: () => { mounted: boolean };
   useComponentState: () => { mounted: boolean };
   usePromptModal: () => (

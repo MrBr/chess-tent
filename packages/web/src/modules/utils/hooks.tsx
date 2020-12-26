@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { defer } from 'lodash';
+import { isTablet, isMobile } from 'react-device-detect';
 
 export const useComponentStateSilent = () => {
   const ref = useRef<{ mounted: boolean }>({ mounted: false });
@@ -20,3 +21,7 @@ export const useComponentState = () => {
   }, [setState]);
   return state;
 };
+
+// TODO - change on redsize?
+export const useIsMobile = () =>
+  isTablet || isMobile || window.innerWidth < 769;

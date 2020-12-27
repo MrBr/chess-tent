@@ -1,12 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { components, hooks, requests, ui } from '@application';
-import CoachCard from '../components/coach-card';
 import { CoachEloRange, Tag } from '@chess-tent/models';
+
+import CoachCard from '../components/coach-card';
 import CoachLevelDropdown from '../components/coach-level-dropdown';
 
 const { useApi, useTags } = hooks;
 const { Container, Row, Col, SearchBox, Headline3 } = ui;
-const { Layout, TagsSelect } = components;
+const { Page, TagsSelect } = components;
 
 export default () => {
   const [filter, setFilter] = useState('');
@@ -33,7 +34,7 @@ export default () => {
   );
 
   return (
-    <Layout>
+    <Page>
       <Container fluid>
         <Row className="section-header">
           <Col className="d-flex flex-row align-items-center" xs={9}>
@@ -61,6 +62,6 @@ export default () => {
           ))}
         </Row>
       </Container>
-    </Layout>
+    </Page>
   );
 };

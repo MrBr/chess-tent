@@ -1,11 +1,11 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { components, hooks, requests } from '@application';
-import LessonBrowser from '../components/lesson-browser';
+import React, { useCallback, useState } from 'react';
+import { components, hooks } from '@application';
 import { Tag, User } from '@chess-tent/models';
 import { LessonsRequest } from '@chess-tent/types';
+import LessonBrowser from '../components/lesson-browser';
 
-const { Layout } = components;
-const { useActiveUserRecord, useUserLessonsRecord, useApi, useLessons } = hooks;
+const { Page } = components;
+const { useActiveUserRecord, useLessons } = hooks;
 
 const BrowseLessonsPage: React.FC = () => {
   const [activeUser] = useActiveUserRecord() as [User, never, never];
@@ -26,9 +26,9 @@ const BrowseLessonsPage: React.FC = () => {
   );
 
   return (
-    <Layout>
+    <Page>
       <LessonBrowser lessons={lessons} onFiltersChange={handleFilterChange} />
-    </Layout>
+    </Page>
   );
 };
 

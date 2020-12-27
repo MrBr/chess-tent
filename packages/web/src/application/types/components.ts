@@ -238,6 +238,9 @@ export type Components = {
   MobileRoot: ComponentType;
   MobilePortal: ComponentType;
   Header: ComponentType;
+  TabBar: ComponentType;
+  // Page with common layout setup
+  Page: ComponentType;
   Layout: ComponentType<{
     className?: string;
     footer?: ReactElement | null;
@@ -338,6 +341,7 @@ export type Components = {
       user: User;
     } & Pick<ComponentProps<UI['Avatar']>, 'size' | 'onClick'>
   >;
+  UserSettings: ComponentType;
   Coaches: ComponentType;
   CoachCard: ComponentType<{
     coach: User;

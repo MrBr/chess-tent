@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { hooks, requests } from '@application';
 import { TYPE_USER, User } from '@chess-tent/models';
-import { Profile } from './profile';
+import { Profile } from '../components/profile';
 
 const { useParams, useApi, useRecord } = hooks;
 

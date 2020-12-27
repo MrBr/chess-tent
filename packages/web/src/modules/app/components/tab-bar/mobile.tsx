@@ -2,7 +2,7 @@ import React, { FunctionComponent } from 'react';
 import { hooks, ui } from '@application';
 import styled from '@emotion/styled';
 
-const { Icon } = ui;
+const { Icon, Container } = ui;
 
 const { useHistory } = hooks;
 
@@ -29,7 +29,7 @@ const TabButton = styled<
   height: '100%',
   display: 'flex',
   alignItems: 'center',
-  flex: '1 1 30%' /*grow | shrink | basis */,
+  flex: '1 1 30%',
   flexDirection: 'column',
   justifyContent: 'center',
   fontWeight: 700,
@@ -39,14 +39,9 @@ const TabButton = styled<
   textTransform: 'uppercase',
 });
 
-const TabBarWrapper = styled.div({
-  display: 'flex',
-  height: '100%',
-});
-
 export default function TabBar() {
   return (
-    <TabBarWrapper>
+    <Container className="p-0 d-flex h-100 drop-shadow">
       <TabButton path="/">
         <Icon type="home" textual />
         Dashboard
@@ -59,6 +54,6 @@ export default function TabBar() {
         <Icon type="crown" textual />
         Find Coach
       </TabButton>
-    </TabBarWrapper>
+    </Container>
   );
 }

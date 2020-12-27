@@ -1,7 +1,7 @@
 import React from 'react';
 import { hooks } from '@application';
 import { User } from '@chess-tent/models';
-import { Profile, ProfileEdit } from './profile';
+import { Profile, ProfileEdit } from '../components/profile';
 
 const { useActiveUserRecord, useLocation } = hooks;
 

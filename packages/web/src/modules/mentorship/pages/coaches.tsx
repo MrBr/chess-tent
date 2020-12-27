@@ -4,13 +4,13 @@ import { User } from '@chess-tent/models';
 
 const { useActiveUserRecord, useCoaches } = hooks;
 const { Container, Row, Col, Text, Headline2, Card, CardBody } = ui;
-const { MentorshipAction, Layout, MessageButton, UserAvatar } = components;
+const { MentorshipAction, Page, MessageButton, UserAvatar } = components;
 
 const Coaches = () => {
   const [user] = useActiveUserRecord() as [User, never, never];
   const [coaches] = useCoaches(user);
   return (
-    <Layout>
+    <Page>
       <Headline2>My coaches</Headline2>
       <Container>
         <Row>
@@ -44,7 +44,7 @@ const Coaches = () => {
           ))}
         </Row>
       </Container>
-    </Layout>
+    </Page>
   );
 };
 

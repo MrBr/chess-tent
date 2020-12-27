@@ -1,20 +1,13 @@
 import React from 'react';
-import { components } from '@application';
 import styled from '@emotion/styled';
 import { Components } from '@types';
-
-const { Header } = components;
 
 export default styled<Components['Layout']>(
   ({ className, children, footer, header }) => (
     <div className={className}>
-      <div className="layout-header">
-        {header === undefined ? <Header /> : header}
-      </div>
+      <div className="layout-header">{header}</div>
       <div className="layout-content">{children}</div>
-      <div className="layout-footer">
-        {footer === undefined ? 'TabBar' : footer}
-      </div>
+      <div className="layout-footer">{footer}</div>
     </div>
   ),
 )({

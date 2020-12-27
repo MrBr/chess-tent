@@ -2,7 +2,7 @@ import React from 'react';
 import { components, hooks, ui } from '@application';
 import { User } from '@chess-tent/models';
 
-const { UserAvatar, Layout, MentorshipButton } = components;
+const { UserAvatar, Page, MentorshipButton } = components;
 const { useHistory } = hooks;
 const {
   Col,
@@ -18,7 +18,7 @@ const {
 export default ({ user, editable }: { user: User; editable?: boolean }) => {
   const history = useHistory();
   return (
-    <Layout>
+    <Page>
       <Row>
         {editable && (
           <Absolute bottom={25} right={25}>
@@ -81,6 +81,6 @@ export default ({ user, editable }: { user: User; editable?: boolean }) => {
           </Col>
         )}
       </Row>
-    </Layout>
+    </Page>
   );
 };

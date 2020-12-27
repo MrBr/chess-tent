@@ -4,7 +4,7 @@ import { User } from '@chess-tent/models';
 import { FileUploaderProps } from '@types';
 
 const { useApi, useHistory } = hooks;
-const { UserAvatar, Layout } = components;
+const { UserAvatar, Page } = components;
 const { Absolute, Button } = ui;
 const { withFiles } = hoc;
 const {
@@ -52,7 +52,7 @@ export default withFiles(
     }, [uploadImageResponse, signImageResponse, updateMe]);
 
     return (
-      <Layout>
+      <Page>
         <Form initialValues={user} onSubmit={user => updateMe(user)}>
           {({ dirty, handleSubmit, resetForm, values }) => (
             <>
@@ -186,7 +186,7 @@ export default withFiles(
             </>
           )}
         </Form>
-      </Layout>
+      </Page>
     );
   },
 );

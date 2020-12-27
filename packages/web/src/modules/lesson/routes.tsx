@@ -3,6 +3,7 @@ import application, { components } from '@application';
 import Lesson from './pages/lesson';
 import NewLesson from './pages/new-lesson';
 import Activity from './pages/activity';
+import Lessons from './pages/browse-lessons';
 
 const { Switch, AuthorizedRoute } = components;
 
@@ -20,5 +21,10 @@ application.services.addRoute(() => (
 application.services.addRoute(() => (
   <AuthorizedRoute path="/activity/:activityId">
     <Activity />
+  </AuthorizedRoute>
+));
+application.services.addRoute(() => (
+  <AuthorizedRoute path="/lessons">
+    <Lessons />
   </AuthorizedRoute>
 ));

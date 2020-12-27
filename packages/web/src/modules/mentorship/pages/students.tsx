@@ -5,13 +5,7 @@ import { groupBy } from 'lodash';
 
 const { useActiveUserRecord, useStudents } = hooks;
 const { Container, Row, Col, Headline3, Text, Headline2, Card, CardBody } = ui;
-const {
-  Link,
-  MentorshipAction,
-  Layout,
-  UserAvatar,
-  MessageButton,
-} = components;
+const { Link, MentorshipAction, Page, UserAvatar, MessageButton } = components;
 
 const Students = () => {
   const [user] = useActiveUserRecord() as [User, never, never];
@@ -21,7 +15,7 @@ const Students = () => {
   ]);
 
   return (
-    <Layout>
+    <Page>
       <Headline2>My students</Headline2>
       <Container>
         <Headline3>Pending approval</Headline3>
@@ -100,7 +94,7 @@ const Students = () => {
           ))}
         </Row>
       </Container>
-    </Layout>
+    </Page>
   );
 };
 

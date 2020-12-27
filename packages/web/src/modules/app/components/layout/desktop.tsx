@@ -1,22 +1,19 @@
 import React from 'react';
-import { components, utils } from '@application';
+import { utils } from '@application';
 import styled from '@emotion/styled';
 import { Components } from '@types';
 
-const { Header, Conversations } = components;
 const { mediaQueryEnhancer } = utils;
 
-export default styled<Components['Layout']>(({ className, children }) => (
-  <div className={className}>
-    <div className="layout-header">
-      <Header />
+export default styled<Components['Layout']>(
+  ({ className, children, header, sidebar }) => (
+    <div className={className}>
+      <div className="layout-header">{header}</div>
+      <div className="layout-content">{children}</div>
+      <div className="layout-sidebar">{sidebar}</div>
     </div>
-    <div className="layout-content">{children}</div>
-    <div className="layout-sidebar">
-      <Conversations />
-    </div>
-  </div>
-))(
+  ),
+)(
   {
     '.layout-header': {
       gridArea: 'header',

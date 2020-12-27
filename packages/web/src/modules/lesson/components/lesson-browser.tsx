@@ -1,13 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { hooks, ui, components } from '@application';
 import { Components } from '@types';
-import LessonCard from '../components/lesson-card';
 import { Difficulty, Tag } from '@chess-tent/models';
+import LessonCard from '../components/lesson-card';
 import DifficultyDropdown from './difficulty-dropdown';
 
 const { Container, Headline3, Row, Col, SearchBox } = ui;
 const { useTags } = hooks;
-const { TagsSelect } = components;
+const { TagsSelect, Filters } = components;
 
 const LessonBrowser: Components['LessonBrowser'] = ({
   lessons,
@@ -32,29 +32,41 @@ const LessonBrowser: Components['LessonBrowser'] = ({
 
   return (
     <Container fluid>
-      <Row className="section-header">
-        <Col className="d-flex flex-row align-items-center" xs={9}>
-          <Headline3 className="m-0 mr-5">Browse lessons</Headline3>
-          {onFiltersChange && (
-            <>
-              <DifficultyDropdown
-                id="lessons-difficulty"
-                className="mr-2"
-                onChange={setDifficulty}
-                initial={difficulty}
-                includeNullOption={true}
-                size="small"
-              />
-              <TagsSelect
-                tags={tags}
-                onChange={onSelectedTagsChange}
-                selected={selectedTags}
-              />
-            </>
-          )}
+      <Row className="mt-5 mb-4">
+        <Col className="text-wrap" md={2} xs={8}>
+          <Headline3 className="m-0">Browse lessons</Headline3>
         </Col>
-        <Col className="d-flex align-items-center" xs={3}>
-          {onFiltersChange && <SearchBox onSearch={setSearch} debounce={500} />}
+        <Col>
+          <Filters>
+            {onFiltersChange && (
+              <Row className="align-items-center">
+                <Col
+                  className="d-flex flex-row align-items-center"
+                  xs={12}
+                  md={3}
+                >
+                  <DifficultyDropdown
+                    id="lessons-difficulty"
+                    className="mr-2"
+                    onChange={setDifficulty}
+                    initial={difficulty}
+                    includeNullOption={true}
+                    size="small"
+                  />
+                </Col>
+                <Col xs={12} md={5}>
+                  <TagsSelect
+                    tags={tags}
+                    onChange={onSelectedTagsChange}
+                    selected={selectedTags}
+                  />
+                </Col>
+                <Col className="d-flex align-items-center" xs={12} md={4}>
+                  <SearchBox onSearch={setSearch} debounce={500} />
+                </Col>
+              </Row>
+            )}
+          </Filters>
         </Col>
       </Row>
       <Row>

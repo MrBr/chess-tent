@@ -45,9 +45,10 @@ const options: Array<SelectOption<CoachEloRange>> = [
   },
 ];
 
-const CoachLevelDropdown: React.FC<
-  Omit<OptionsDropdownProps<CoachEloRange>, 'values' | 'label'>
-> = ({ id, className, onChange, initial }) => {
+const CoachLevelDropdown: React.FC<Omit<
+  OptionsDropdownProps<CoachEloRange>,
+  'values' | 'label'
+>> = ({ id, className, onChange, initial, size }) => {
   return (
     <OptionsDropdown
       id={id}
@@ -56,6 +57,7 @@ const CoachLevelDropdown: React.FC<
       label={'Level:'}
       initial={initial}
       onChange={onChange}
+      size={size}
     />
   );
 };

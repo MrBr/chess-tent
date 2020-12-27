@@ -1,6 +1,12 @@
 import application from '@application';
 
 application.register(
+  () => import('./filters'),
+  module => {
+    application.components.Filters = module.default;
+  },
+);
+application.register(
   () => import('./tab-bar'),
   module => {
     application.components.TabBar = module.default;

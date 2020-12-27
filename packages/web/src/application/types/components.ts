@@ -237,6 +237,7 @@ export type Components = {
   App: ComponentType;
   MobileRoot: ComponentType;
   MobilePortal: ComponentType;
+  Filters: ComponentType<{ children?: ReactElement }>;
   Header: ComponentType;
   TabBar: ComponentType;
   // Page with common layout setup

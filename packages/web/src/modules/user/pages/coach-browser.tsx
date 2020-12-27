@@ -7,7 +7,7 @@ import CoachLevelDropdown from '../components/coach-level-dropdown';
 
 const { useApi, useTags } = hooks;
 const { Container, Row, Col, SearchBox, Headline3 } = ui;
-const { Page, TagsSelect } = components;
+const { Page, TagsSelect, Filters } = components;
 
 export default () => {
   const [filter, setFilter] = useState('');
@@ -36,22 +36,37 @@ export default () => {
   return (
     <Page>
       <Container fluid>
-        <Row className="section-header">
-          <Col className="d-flex flex-row align-items-center" xs={9}>
+        <Row className="mt-5 mb-4 align-items-center">
+          <Col className="col-auto">
             <Headline3 className="m-0 mr-5">Browse coaches</Headline3>
-            <CoachLevelDropdown
-              id="coach-browser-coach-level"
-              className="mr-2"
-              onChange={setElo}
-            />
-            <TagsSelect
-              tags={tags}
-              selected={selectedTags}
-              onChange={onSelectedTagsChange}
-            />
           </Col>
-          <Col className="d-flex align-items-center" xs={3}>
-            <SearchBox onSearch={setFilter} debounce={500} />
+          <Col>
+            <Filters>
+              <Row className="align-items-center">
+                <Col
+                  className="d-flex flex-row align-items-center"
+                  xs={12}
+                  md={3}
+                >
+                  <CoachLevelDropdown
+                    id="coach-browser-coach-level"
+                    className="mr-2"
+                    onChange={setElo}
+                    size="small"
+                  />
+                </Col>
+                <Col xs={12} md={5}>
+                  <TagsSelect
+                    tags={tags}
+                    selected={selectedTags}
+                    onChange={onSelectedTagsChange}
+                  />
+                </Col>
+                <Col className="d-flex align-items-center" xs={12} md={4}>
+                  <SearchBox onSearch={setFilter} debounce={500} />
+                </Col>
+              </Row>
+            </Filters>
           </Col>
         </Row>
         <Row>

@@ -141,6 +141,7 @@ export type UI = {
       | 'search'
       | 'home'
       | 'crown'
+      | 'plus'
       | 'chess';
     textual?: boolean;
     size?: 'large' | 'regular';

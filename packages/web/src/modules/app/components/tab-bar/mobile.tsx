@@ -25,6 +25,7 @@ const TabButton = styled<
   },
   svg: {
     opacity: 0.4,
+    marginBottom: '0.4em',
   },
   height: '100%',
   display: 'flex',
@@ -49,6 +50,10 @@ export default function TabBar() {
       <TabButton path="/lessons">
         <Icon type="chess" textual />
         Browse Lessons
+      </TabButton>
+      <TabButton path="/lesson/new">
+        <Icon type="plus" textual />
+        Create Lesson
       </TabButton>
       <TabButton path="/coaches">
         <Icon type="crown" textual />

@@ -1,5 +1,5 @@
 import React, { ComponentType } from 'react';
-import application from '@application';
+import application, { ui } from '@application';
 import { Components, Services } from '@types';
 import isPropValid from '@emotion/is-prop-valid';
 import {
@@ -14,6 +14,8 @@ import {
 } from 'react-router-dom';
 import { createBrowserHistory, History, LocationState } from 'history';
 import styled from '@emotion/styled';
+
+const { Icon } = ui;
 
 const routes: ComponentType[] = [];
 const history = new Proxy(createBrowserHistory(), {
@@ -47,6 +49,11 @@ const Router: ComponentType = () => {
   );
 };
 
+const Back = () => {
+  const history = useHistory();
+  return <Icon onClick={() => history.go(1)} type="close" />;
+};
+
 const addRoute: Services['addRoute'] = Route => {
   routes.push(Route);
 };
@@ -70,6 +77,7 @@ application.components.Router = Router;
 application.components.Switch = Switch;
 application.components.Route = Route;
 application.components.Link = Link;
+application.components.Back = Back;
 application.components.Redirect = Redirect;
 application.services.addRoute = addRoute;
 application.services.history = history;

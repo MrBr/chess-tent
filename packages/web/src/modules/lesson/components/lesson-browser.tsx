@@ -43,6 +43,7 @@ const LessonBrowser: Components['LessonBrowser'] = ({
                 onChange={setDifficulty}
                 initial={difficulty}
                 includeNullOption={true}
+                size="small"
               />
               <TagsSelect
                 tags={tags}

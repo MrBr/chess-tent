@@ -235,8 +235,15 @@ export type NotificationComponent<T extends Notification> = ComponentType<{
 
 export type Components = {
   App: ComponentType;
+  MobileRoot: ComponentType;
+  MobilePortal: ComponentType;
   Header: ComponentType;
-  Layout: ComponentType<{ className?: string }>;
+  Layout: ComponentType<{
+    className?: string;
+    footer?: ReactElement | null;
+    header?: ReactElement | null;
+    sidebar?: ReactElement | null;
+  }>;
   Chessboard: ClassComponent<ChessboardInterface>;
   ChessboardFooter: ComponentType<ChessboardFooterProps>;
   Stepper: FunctionComponent<StepperProps>;
@@ -252,8 +259,13 @@ export type Components = {
   AuthorizedRoute: ComponentType<
     RouteProps & { children: ReactElement; redirectRoute?: string }
   >;
+  MobileRoute: ComponentType<
+    RouteProps & { children: ReactElement; redirectRoute?: string }
+  >;
+  MobileScreen: ComponentType;
 
   Link: ComponentType<LinkProps & { ghost?: boolean }>;
+  Back: ComponentType;
   Authorized: ComponentType<AuthorizedProps>;
   Provider: ComponentType;
 
@@ -330,7 +342,6 @@ export type Components = {
   CoachCard: ComponentType<{
     coach: User;
   }>;
-  Activities: ComponentType<{ activities: Activity[] | null }>;
   Conversations: ComponentType;
   MessageButton: ComponentType<{
     size?: ButtonProps['size'];

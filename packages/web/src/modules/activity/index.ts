@@ -2,12 +2,6 @@ import application from '@application';
 import { activitySchema } from './model';
 
 application.model.activitySchema = activitySchema;
-application.register(
-  () => import('./components/activities'),
-  module => {
-    application.components.Activities = module.default;
-  },
-);
 application.register(() => import('./register'));
 application.register(
   () => import('./state/actions'),

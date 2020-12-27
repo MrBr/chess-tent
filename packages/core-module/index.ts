@@ -90,7 +90,7 @@ const resolveDeferredModules = () => {
       moduleCursor = null;
     })
     .catch(e => {
-      moduleCursor.error = e;
+      moduleCursor.error = e.message;
       deferredModules.push(registerParams);
     })
     .finally(resolveDeferredModules);

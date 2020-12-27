@@ -1,32 +1,34 @@
 import React from 'react';
 import { components } from '@application';
-import TabBar from '../tabBar';
 import styled from '@emotion/styled';
 import { Components } from '@types';
+import TabBar from '../tabBar';
 
 const { Header } = components;
 
-export default styled<Components['Layout']>(({ className, children }) => (
-  <div className={className}>
-    <div className="layout-header">
-      <Header />
+export default styled<Components['Layout']>(
+  ({ className, children, footer, header }) => (
+    <div className={className}>
+      <div className="layout-header">
+        {header === undefined ? <Header /> : header}
+      </div>
+      <div className="layout-content">{children}</div>
+      <div className="layout-footer">
+        {footer === undefined ? 'TabBar' : <TabBar />}
+      </div>
     </div>
-    <div className="layout-content">{children}</div>
-    <div className="layout-footer">
-      <TabBar />
-    </div>
-  </div>
-))({
+  ),
+)({
   '.layout-header': {
     gridArea: 'header',
     height: 54,
     boxShadow: '0px 1px 0px #ECECEC',
     zIndex: 10,
-    padding: '0 5em',
+    padding: '0 3em',
   },
   '.layout-content': {
     gridArea: 'content',
-    padding: '0 5em',
+    padding: '0 3em',
     background: '#FAFBFB',
     position: 'relative',
     overflowY: 'scroll',

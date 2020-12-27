@@ -3,7 +3,7 @@ import { components, hooks, requests, ui } from '@application';
 import { Tag, User } from '@chess-tent/models';
 import { LessonsRequest } from '@chess-tent/types';
 
-const { Layout, Coaches, Activities, LessonBrowser } = components;
+const { Layout, Coaches, LessonBrowser } = components;
 const { useUserActivitiesRecord, useApi, useLessons } = hooks;
 const { Row, Col } = ui;
 
@@ -47,13 +47,7 @@ export default ({ user }: { user: User }) => {
   return (
     <Layout>
       <Row noGutters>
-        <Col>
-          {activities && activities.length > 0 ? (
-            <Activities activities={activities} />
-          ) : (
-            <Coaches />
-          )}
-        </Col>
+        <Col>{activities && activities.length > 0 ? null : <Coaches />}</Col>
       </Row>
       <Row noGutters>
         <Col>

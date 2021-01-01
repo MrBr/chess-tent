@@ -42,7 +42,7 @@ const TabButton = styled<
 
 export default function TabBar() {
   return (
-    <Container className="p-0 d-flex h-100 drop-shadow">
+    <Container className="p-0 d-flex h-100 up-shadow" fluid>
       <TabButton path="/">
         <Icon type="home" textual />
         Dashboard

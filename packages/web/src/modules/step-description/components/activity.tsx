@@ -1,8 +1,9 @@
 import React from 'react';
 import { DescriptionModule } from '@types';
-import { ui } from '@application';
+import { components, ui } from '@application';
 
-const { Icon, Text } = ui;
+const { Icon } = ui;
+const { LessonToolboxText } = components;
 
 export const ActivityBoard: DescriptionModule['ActivityBoard'] = ({
   Chessboard,
@@ -24,7 +25,7 @@ export const ActivitySidebar: DescriptionModule['ActivitySidebar'] = ({
   return (
     <>
       <Icon type="comment" textual />
-      <Text>{description}</Text>
+      <LessonToolboxText defaultText={description} />
     </>
   );
 };

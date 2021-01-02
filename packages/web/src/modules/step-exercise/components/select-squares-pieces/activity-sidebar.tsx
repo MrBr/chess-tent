@@ -1,9 +1,10 @@
 import React, { ComponentProps, FunctionComponent } from 'react';
-import { ui } from '@application';
+import { components, ui } from '@application';
 import { ExerciseModule, ExerciseSelectSquaresAndPiecesState } from '@types';
 import { isStepCompleted } from '@chess-tent/models';
 
-const { Headline4, Text } = ui;
+const { Headline4 } = ui;
+const { LessonToolboxText } = components;
 
 const Playground: FunctionComponent<ComponentProps<
   ExerciseModule['ActivitySidebar']
@@ -15,8 +16,8 @@ const Playground: FunctionComponent<ComponentProps<
   return (
     <>
       <Headline4>Select the squares and pieces</Headline4>
-      <Text>{question}</Text>
-      {completed && <Text>{explanation}</Text>}
+      <LessonToolboxText defaultText={question} />
+      {completed && <LessonToolboxText defaultText={explanation} />}
     </>
   );
 };

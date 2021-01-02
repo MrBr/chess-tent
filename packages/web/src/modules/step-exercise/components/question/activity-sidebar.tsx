@@ -8,7 +8,7 @@ import {
 import { isStepCompleted } from '@chess-tent/models';
 
 const { LessonToolboxText } = components;
-const { Headline4, Text, Button } = ui;
+const { Headline4, Button } = ui;
 
 const Playground: FunctionComponent<ComponentProps<
   ExerciseModule['ActivitySidebar']
@@ -38,9 +38,10 @@ const Playground: FunctionComponent<ComponentProps<
   return (
     <>
       <Headline4>Answer the question</Headline4>
-      <Text>{question}</Text>
+      <LessonToolboxText defaultText={question} />
+
       <LessonToolboxText defaultText={answer} onChange={handleAnswerChange} />
-      {completed && <Text>{explanation}</Text>}
+      {completed && <LessonToolboxText defaultText={explanation} />}
       <Button onClick={handleSubmit} size="extra-small">
         Submit
       </Button>

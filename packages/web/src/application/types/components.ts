@@ -316,6 +316,8 @@ export type Components = {
     onStatusChange?: (status: LessonStatus) => void;
   }>;
   Trainings: ComponentType<{ user: User }>;
+  TrainingCard: ComponentType<{ training: LessonActivity }>;
+  StudentTrainings: ComponentType<{ trainings: LessonActivity[] }>;
   LessonBrowser: ComponentType<{
     lessons: Lesson[] | null;
     onFiltersChange?: (

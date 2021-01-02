@@ -19,6 +19,7 @@ import {
   Notification,
   SubjectPathUpdate,
 } from '@chess-tent/models';
+import { LessonActivity } from './activity';
 import { Action as ReduxAction } from 'redux';
 import { useSelector, useDispatch, useStore } from 'react-redux';
 import { BatchAction } from 'redux-batched-actions';
@@ -58,6 +59,7 @@ export type Hooks = {
   useActiveUserRecord: () => RecordHookReturn<User>;
   useActiveUserNotifications: () => RecordHookReturn<Notification[]>;
   useUserActivitiesRecord: (user: User) => RecordHookReturn<Activity[]>;
+  useUserTrainings: (user: User) => RecordHookReturn<LessonActivity[]>;
   useUserLessonsRecord: (user: User) => RecordHookReturn<Lesson[]>;
   useConversationParticipant: () => RecordHookReturn<User>;
   useHistory: () => History;

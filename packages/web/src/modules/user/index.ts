@@ -16,6 +16,12 @@ application.register(
   },
 );
 application.register(
+  () => import('./components/coach-card'),
+  module => {
+    application.components.CoachCard = module.default;
+  },
+);
+application.register(
   () => import('./components/user-avatar'),
   module => {
     application.components.UserAvatar = module.default;

@@ -33,6 +33,7 @@ application.register(
       module.useUpdateLessonStepState;
     application.hooks.useUserLessonsRecord = module.useUserLessonRecord;
     application.hooks.useLessons = module.useLessons;
+    application.hooks.useUserTrainings = module.useUserTrainings;
   },
 );
 

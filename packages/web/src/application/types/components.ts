@@ -317,7 +317,7 @@ export type Components = {
   }>;
   Trainings: ComponentType<{ user: User }>;
   TrainingCard: ComponentType<{ training: LessonActivity }>;
-  StudentTrainings: ComponentType<{ trainings: Activity[] }>;
+  StudentTrainings: ComponentType<{ trainings: LessonActivity[] }>;
   LessonBrowser: ComponentType<{
     lessons: Lesson[] | null;
     onFiltersChange?: (

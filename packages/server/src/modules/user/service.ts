@@ -1,9 +1,9 @@
-import _ from "lodash";
-import { UserModel } from "./model";
-import { User } from "@chess-tent/models";
-import { compare, hash } from "bcrypt";
-import { MongooseFilterQuery } from "mongoose";
-import { utils } from "@application";
+import _ from 'lodash';
+import { UserModel } from './model';
+import { User } from '@chess-tent/models';
+import { compare, hash } from 'bcrypt';
+import { MongooseFilterQuery } from 'mongoose';
+import { utils } from '@application';
 
 export const addUser = (user: User) =>
   new Promise((resolve, reject) => {
@@ -13,10 +13,10 @@ export const addUser = (user: User) =>
           err.code === 11000
             ? {
                 message: `Field(s): ${Object.keys(err.keyValue).join(
-                  ","
+                  ',',
                 )} are already taken.`,
               }
-            : "Failed to create user";
+            : 'Failed to create user';
         reject(error);
         return;
       }
@@ -24,7 +24,7 @@ export const addUser = (user: User) =>
     });
   });
 
-export const updateUser = (userId: User["id"], user: Partial<User>) =>
+export const updateUser = (userId: User['id'], user: Partial<User>) =>
   new Promise((resolve, reject) => {
     UserModel.updateOne({ _id: user.id }, { $set: user }).exec(
       (err, result) => {
@@ -33,13 +33,13 @@ export const updateUser = (userId: User["id"], user: Partial<User>) =>
           return;
         }
         resolve();
-      }
+      },
     );
   });
 
 export const getUser = (
   userDescr: Partial<User>,
-  projection = ""
+  projection = '',
 ): Promise<User | null> =>
   new Promise((resolve, reject) => {
     UserModel.findOne(
@@ -51,7 +51,7 @@ export const getUser = (
           return;
         }
         resolve(user ? user.toObject() : null);
-      }
+      },
     );
   });
 
@@ -66,7 +66,7 @@ export const findUsers = (
       to?: number;
     };
     speciality?: string;
-  }>
+  }>,
 ): Promise<User[]> => {
   const query: MongooseFilterQuery<any> = utils.notNullOrUndefined({
     coach: filters.coach,
@@ -76,25 +76,25 @@ export const findUsers = (
   if (filters.elo) {
     const eloFilter: { $gt?: number; $lte?: number } = {};
     if (filters.elo.from) {
-      eloFilter["$gt"] = filters.elo.from;
+      eloFilter['$gt'] = filters.elo.from;
     }
 
     if (filters.elo.to) {
-      eloFilter["$lte"] = filters.elo.to;
+      eloFilter['$lte'] = filters.elo.to;
     }
 
     if (!_.isEmpty(eloFilter)) {
-      query["state.elo"] = eloFilter;
+      query['state.elo'] = eloFilter;
     }
   }
 
   // TODO: connect tags to users
   if (filters.speciality) {
-    query["state.speciality"] = { $eq: filters.speciality };
+    query['state.speciality'] = { $eq: filters.speciality };
   }
 
   if (filters.search) {
-    query["$text"] = { $search: filters.search, $caseSensitive: false };
+    query['$text'] = { $search: filters.search, $caseSensitive: false };
   }
 
   return new Promise((resolve, reject) => {
@@ -103,7 +103,7 @@ export const findUsers = (
         reject(err);
         return;
       }
-      resolve(result.map((item) => item.toObject()));
+      resolve(result.map(item => item.toObject()));
     });
   });
 };

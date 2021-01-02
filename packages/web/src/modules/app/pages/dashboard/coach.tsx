@@ -3,39 +3,29 @@ import { components, hooks, ui } from '@application';
 import { Tag, User } from '@chess-tent/models';
 import { LessonsRequest } from '@chess-tent/types';
 
-const { Page, Coaches, Trainings, LessonBrowser } = components;
-const { useUserActivitiesRecord, useLessons } = hooks;
+const { Page, Trainings, LessonBrowser } = components;
+const { useLessons } = hooks;
 const { Headline3 } = ui;
 
 export default ({ user }: { user: User }) => {
-  const [activities] = useUserActivitiesRecord(user);
-  const [lessonsFilter, setLessonsFilter] = useState<LessonsRequest>({
-    owner: user.id,
+  const [lessonsFilter, setLessonsFilter] = useState<LessonsRequest>({});
+  const [lessons] = useLessons(`own-lessons-${user.id}`, lessonsFilter, {
+    my: true,
   });
-  const [lessons] = useLessons(`own-lessons-${user.id}`, lessonsFilter);
 
   const handleFilterChange = useCallback(
     (search, difficulty, tags) => {
       setLessonsFilter({
-        owner: user.id,
         search,
         tagIds: tags.map((it: Tag) => it.id),
         difficulty,
-        published: true,
       });
     },
-    [setLessonsFilter, user.id],
+    [setLessonsFilter],
   );
 
   return (
     <Page>
-      {activities && activities.length > 0 ? (
-        <>
-          <Headline3>My activities</Headline3>
-        </>
-      ) : (
-        <Coaches />
-      )}
       <LessonBrowser lessons={lessons} onFiltersChange={handleFilterChange} />
       <Headline3>My trainings</Headline3>
       <Trainings user={user} />

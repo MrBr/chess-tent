@@ -6,7 +6,7 @@ import CoachLevelDropdown from './coach-level-dropdown';
 
 const { useApi, useComponentStateSilent, useIsMobile, useTags } = hooks;
 const { Container, Row, Col, Headline3, SearchBox } = ui;
-const { Page, Filters, TagsSelect } = components;
+const { Filters, TagsSelect } = components;
 
 export default () => {
   const { mounted } = useComponentStateSilent();

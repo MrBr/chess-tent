@@ -1,4 +1,4 @@
-import { Schema } from "mongoose";
+import { Schema } from 'mongoose';
 import {
   Difficulty,
   Lesson,
@@ -6,17 +6,17 @@ import {
   TYPE_LESSON,
   TYPE_TAG,
   TYPE_USER,
-} from "@chess-tent/models";
-import { db } from "@application";
+} from '@chess-tent/models';
+import { db } from '@application';
 
 export interface DepupulatedLesson {
-  id: NormalizedLesson["id"];
-  type: NormalizedLesson["type"];
-  owner: NormalizedLesson["owner"];
-  state: NormalizedLesson["state"];
-  difficulty: NormalizedLesson["difficulty"];
-  tags: NormalizedLesson["tags"];
-  users: NormalizedLesson["users"];
+  id: NormalizedLesson['id'];
+  type: NormalizedLesson['type'];
+  owner: NormalizedLesson['owner'];
+  state: NormalizedLesson['state'];
+  difficulty: NormalizedLesson['difficulty'];
+  tags: NormalizedLesson['tags'];
+  users: NormalizedLesson['users'];
 }
 
 const lessonSchema = db.createSchema<DepupulatedLesson>(
@@ -24,47 +24,47 @@ const lessonSchema = db.createSchema<DepupulatedLesson>(
     owner: ({
       type: String,
       ref: TYPE_USER,
-    } as unknown) as DepupulatedLesson["owner"],
+    } as unknown) as DepupulatedLesson['owner'],
     users: [
       {
         type: String,
         ref: TYPE_USER,
       } as unknown,
-    ] as DepupulatedLesson["users"],
+    ] as DepupulatedLesson['users'],
     state: ({
       type: Schema.Types.Mixed,
       required: true,
-    } as unknown) as DepupulatedLesson["state"],
+    } as unknown) as DepupulatedLesson['state'],
     difficulty: ({
       type: String,
       enum: Object.keys(Difficulty),
       required: true,
       index: true,
-    } as unknown) as DepupulatedLesson["difficulty"],
+    } as unknown) as DepupulatedLesson['difficulty'],
     tags: [
       {
         type: String,
         ref: TYPE_TAG,
       } as unknown,
-    ] as DepupulatedLesson["tags"],
+    ] as DepupulatedLesson['tags'],
     type: ({
       type: String,
       default: TYPE_LESSON,
     } as unknown) as typeof TYPE_LESSON,
   },
-  { minimize: false }
+  { minimize: false },
 );
 
-lessonSchema.index({ "state.title": "text" });
+lessonSchema.index({ 'state.title': 'text' });
 
 const LessonModel = db.createModel<DepupulatedLesson>(
   TYPE_LESSON,
-  lessonSchema
+  lessonSchema,
 );
 
 const depopulate = (lesson: Partial<Lesson>): DepupulatedLesson => {
   const owner = lesson.owner?.id;
-  const tags = lesson.tags?.map((tag) => tag.id);
+  const tags = lesson.tags?.map(tag => tag.id);
   return (owner ? { ...lesson, owner, tags } : lesson) as DepupulatedLesson;
 };
 

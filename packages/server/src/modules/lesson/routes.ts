@@ -1,4 +1,4 @@
-import application, { middleware } from "@application";
+import application, { middleware } from '@application';
 import {
   canEditLesson,
   getLesson,
@@ -6,71 +6,73 @@ import {
   findLessons,
   patchLesson,
   updateLesson,
-} from "./middleware";
+} from './middleware';
 
 const { identify, sendData, sendStatusOk, toLocals } = middleware;
 
 application.service.registerPostRoute(
-  "/lesson/save",
+  '/lesson/save',
   identify,
-  toLocals("lesson", (req) => req.body),
+  toLocals('lesson', req => req.body),
   canEditLesson,
   saveLesson,
-  sendStatusOk
+  sendStatusOk,
 );
 
 application.service.registerPutRoute(
-  "/lesson/:lessonId",
+  '/lesson/:lessonId',
   identify,
-  toLocals("lesson", (req) => req.body),
-  toLocals("lesson.id", (req) => req.params.lessonId),
+  toLocals('lesson', req => req.body),
+  toLocals('lesson.id', req => req.params.lessonId),
   canEditLesson,
   patchLesson,
-  sendStatusOk
+  sendStatusOk,
 );
 
 application.service.registerPutRoute(
-  "/lesson-update/:lessonId",
+  '/lesson-update/:lessonId',
   identify,
-  toLocals("update", (req) => req.body),
-  toLocals("lesson.id", (req) => req.params.lessonId),
+  toLocals('update', req => req.body),
+  toLocals('lesson.id', req => req.params.lessonId),
   canEditLesson,
   updateLesson,
-  sendStatusOk
+  sendStatusOk,
 );
 
 application.service.registerPostRoute(
-  "/lessons",
+  '/lessons',
   identify,
-  toLocals("filters", (req) => ({
+  toLocals('filters', req => ({
     owner: req.body.owner,
     search: req.body.search,
     difficulty: req.body.difficulty,
     tagIds: req.body.tagIds,
+    published: true,
   })),
   findLessons,
-  sendData("lessons")
+  sendData('lessons'),
 );
 
 application.service.registerPostRoute(
-  "/my-lessons",
+  '/my-lessons',
   identify,
-  toLocals("filters", (req, res) => ({
+  toLocals('filters', (req, res) => ({
     owner: res.locals.me.id,
     users: [res.locals.me.id],
     search: req.body.search,
     difficulty: req.body.difficulty,
     tagIds: req.body.tagIds,
+    published: req.body.published,
   })),
   findLessons,
-  sendData("lessons")
+  sendData('lessons'),
 );
 
 application.service.registerGetRoute(
-  "/lesson/:lessonId",
+  '/lesson/:lessonId',
   identify,
-  toLocals("lesson.id", (req) => req.params.lessonId),
+  toLocals('lesson.id', req => req.params.lessonId),
   getLesson,
   canEditLesson,
-  sendData("lesson")
+  sendData('lesson'),
 );

@@ -6,10 +6,9 @@ import {
   TYPE_LESSON,
   TYPE_ACTIVITY,
 } from '@chess-tent/models';
-import { LessonsRequest } from '@chess-tent/types';
 import { hooks, requests } from '@application';
 import { useCallback, useEffect } from 'react';
-import { LessonActivity, RecordHookReturn } from '@types';
+import { Hooks, LessonActivity, RecordHookReturn } from '@types';
 
 const { useApi, useRecord } = hooks;
 
@@ -51,15 +50,18 @@ export const useUserTrainings = (
   return [trainings, setTrainings, resetTrainings];
 };
 
-export const useLessons = (
+export const useLessons: Hooks['useLessons'] = (
   key: string,
-  filters: LessonsRequest,
-): RecordHookReturn<Lesson[]> => {
+  filters,
+  options,
+) => {
   const [lessons, setLessons, resetLessons] = useRecord<Lesson[]>(
     key,
     TYPE_LESSON,
   );
-  const { fetch, response, loading, error } = useApi(requests.lessons);
+  const { fetch, response, loading, error } = useApi(
+    options?.my ? requests.myLessons : requests.lessons,
+  );
   useEffect(() => {
     if (!response || error) {
       return;

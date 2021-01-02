@@ -13,24 +13,24 @@ import {
   NormalizedMentorship,
   Notification,
   SubjectPathUpdate,
-} from "@chess-tent/models";
-import { GenericArguments } from "./_helpers";
+} from '@chess-tent/models';
+import { GenericArguments } from './_helpers';
 import {
   AddLessonChapterAction,
   UpdateLessonChapterAction,
   UpdateLessonPathAction,
   UpdateLessonStepAction,
-} from "./actions";
+} from './actions';
 
 export type LessonsRequest = {
-  owner?: User["id"];
-  users?: User["id"][];
+  owner?: User['id'];
+  users?: User['id'][];
   search?: string;
-  tagIds?: Tag["id"][];
+  tagIds?: Tag['id'][];
   difficulty?: Difficulty;
   published?: boolean;
 };
-export type MyLessonsRequest = Omit<LessonsRequest, "users" | "owner">;
+export type MyLessonsRequest = Omit<LessonsRequest, 'users' | 'owner'>;
 
 export type Pagination = [number, number];
 
@@ -53,13 +53,13 @@ export type NotificationsResponse = DataResponse<Notification[]>;
 export type TagsResponse = DataResponse<Tag[]>;
 
 export type ActivityFilters = {
-  owner?: User["id"];
-  users?: User["id"] | User["id"][];
-  subject?: Lesson["id"];
+  owner?: User['id'];
+  users?: User['id'] | User['id'][];
+  subject?: Lesson['id'];
   state?: {};
 };
 
-export type ApiMethods = "GET" | "POST" | "PUT";
+export type ApiMethods = 'GET' | 'POST' | 'PUT';
 export interface Request<T> {
   url: string;
   method: ApiMethods;
@@ -82,7 +82,7 @@ export type LessonUpdates = { path: SubjectPath; value: any }[];
 
 export type Requests = {
   register: RequestFetch<Partial<User>, StatusResponse>;
-  login: RequestFetch<Pick<User, "email" | "password">, UserResponse>;
+  login: RequestFetch<Pick<User, 'email' | 'password'>, UserResponse>;
   logout: RequestFetch<undefined, StatusResponse>;
   me: RequestFetch<undefined, UserResponse>;
   users: RequestFetch<
@@ -91,22 +91,22 @@ export type Requests = {
       name?: string;
       search?: string;
       elo?: CoachEloRange;
-      tagIds?: Tag["id"][];
+      tagIds?: Tag['id'][];
     },
     UsersResponse
   >;
-  user: RequestFetch<User["id"], UserResponse>;
+  user: RequestFetch<User['id'], UserResponse>;
   updateMe: RequestFetch<Partial<User>, UserResponse>;
   lesson: RequestFetch<[string], LessonResponse>;
   lessonSave: RequestFetch<Lesson, StatusResponse>;
-  lessonPatch: RequestFetch<[Lesson["id"], Partial<Lesson>], StatusResponse>;
-  lessonUpdates: RequestFetch<[Lesson["id"], LessonUpdates], StatusResponse>;
+  lessonPatch: RequestFetch<[Lesson['id'], Partial<Lesson>], StatusResponse>;
+  lessonUpdates: RequestFetch<[Lesson['id'], LessonUpdates], StatusResponse>;
   lessons: RequestFetch<LessonsRequest, LessonsResponse>;
   myLessons: RequestFetch<MyLessonsRequest, LessonsResponse>;
   activity: RequestFetch<[string], ActivityResponse>;
   activitySave: RequestFetch<Activity, StatusResponse>;
   activityUpdate: RequestFetch<
-    [Activity["id"], SubjectPathUpdate[]],
+    [Activity['id'], SubjectPathUpdate[]],
     StatusResponse
   >;
   activities: RequestFetch<ActivityFilters, ActivitiesResponse>;
@@ -115,20 +115,20 @@ export type Requests = {
     { contentType: string; key: string },
     SignedImageResponse
   >;
-  conversations: RequestFetch<User["id"][] | User["id"], ConversationsResponse>;
-  messageSend: RequestFetch<[Conversation["id"], Message], StatusResponse>;
+  conversations: RequestFetch<User['id'][] | User['id'], ConversationsResponse>;
+  messageSend: RequestFetch<[Conversation['id'], Message], StatusResponse>;
   conversationSave: RequestFetch<Conversation, StatusResponse>;
-  conversation: RequestFetch<Conversation["id"], ConversationResponse>;
+  conversation: RequestFetch<Conversation['id'], ConversationResponse>;
   messages: RequestFetch<
-    [Conversation["id"], Pagination],
+    [Conversation['id'], Pagination],
     ConversationMessagesResponse
   >;
   mentorshipRequest: RequestFetch<
-    { studentId: User["id"]; coachId: User["id"] },
+    { studentId: User['id']; coachId: User['id'] },
     RequestMentorshipResponse
   >;
   mentorshipResolve: RequestFetch<
-    { studentId: User["id"]; coachId: User["id"]; approved: boolean },
+    { studentId: User['id']; coachId: User['id']; approved: boolean },
     StatusResponse
   >;
   coaches: RequestFetch<User, CoachesResponse>;

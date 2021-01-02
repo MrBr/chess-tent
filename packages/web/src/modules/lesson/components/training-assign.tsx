@@ -38,7 +38,7 @@ export default ({ close }: { close: () => void }) => {
   ]);
 
   const assignTraining = useCallback(
-    data => {
+    (data, helpers) => {
       const activity = createActivity<LessonActivity>(
         data.lesson,
         data.user,
@@ -46,6 +46,7 @@ export default ({ close }: { close: () => void }) => {
         [user],
       );
       saveActivity(activity);
+      helpers.resetForm();
     },
     [saveActivity, user],
   );
@@ -53,8 +54,6 @@ export default ({ close }: { close: () => void }) => {
   useEffect(() => {
     fetchUserLessons({ owner: user.id });
   }, [fetchUserLessons, user.id]);
-
-  useEffect(() => {}, [response]);
 
   return (
     <Modal show close={close}>

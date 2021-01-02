@@ -1,15 +1,15 @@
 import _ from "lodash";
 import { LessonModel, depopulate } from "./model";
-import { Lesson } from "@chess-tent/models";
+import { Lesson, User } from "@chess-tent/models";
 import { LessonsRequest, LessonUpdates } from "@chess-tent/types";
 import { service } from "@application";
 import { MongooseFilterQuery } from "mongoose";
 import { utils } from "@application";
 
 export const saveLesson = (lesson: Lesson) =>
-  new Promise(resolve => {
+  new Promise((resolve) => {
     LessonModel.updateOne({ _id: lesson.id }, depopulate(lesson), {
-      upsert: true
+      upsert: true,
     }).exec((err, result) => {
       if (err) {
         throw err;
@@ -19,7 +19,7 @@ export const saveLesson = (lesson: Lesson) =>
   });
 
 export const patchLesson = (lessonId: Lesson["id"], lesson: Partial<Lesson>) =>
-  new Promise(resolve => {
+  new Promise((resolve) => {
     LessonModel.updateOne({ _id: lessonId }, { $set: depopulate(lesson) }).exec(
       (err, result) => {
         if (err) {
@@ -31,10 +31,11 @@ export const patchLesson = (lessonId: Lesson["id"], lesson: Partial<Lesson>) =>
   });
 
 export const getLesson = (lessonId: Lesson["id"]): Promise<Lesson | null> =>
-  new Promise(resolve => {
+  new Promise((resolve) => {
     LessonModel.findById(lessonId)
       .populate("owner")
       .populate("tags")
+      .populate("users")
       .exec((err, result) => {
         if (err) {
           throw err;
@@ -48,7 +49,7 @@ export const updateLessonSteps = (
   updates: LessonUpdates
 ) => {
   const $set = service.subjectPathUpdatesToMongoose$set(updates);
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     LessonModel.updateOne({ _id: lessonId }, { $set }).exec((err, result) => {
       if (err) {
         throw err;
@@ -61,10 +62,10 @@ export const updateLessonSteps = (
 export const findLessons = (
   filters: Partial<LessonsRequest>
 ): Promise<Lesson[]> =>
-  new Promise(resolve => {
+  new Promise((resolve) => {
     const query: MongooseFilterQuery<any> = utils.notNullOrUndefined({
       owner: filters.owner,
-      published: filters.published
+      published: filters.published,
     });
 
     if (filters.difficulty) {
@@ -82,10 +83,24 @@ export const findLessons = (
     LessonModel.find(query)
       .populate("owner")
       .populate("tags")
+      .populate("users")
       .exec((err, result) => {
         if (err) {
           throw err;
         }
-        resolve(result.map(item => item.toObject()));
+        resolve(result.map((item) => item.toObject()));
       });
+  });
+
+export const canEditLesson = (lessonId: Lesson["id"], userId: User["id"]) =>
+  new Promise((resolve, reject) => {
+    getLesson(lessonId)
+      .then((lesson) =>
+        resolve(
+          !lesson ||
+            lesson.owner.id === userId ||
+            lesson.users?.some(({ id }) => id === userId)
+        )
+      )
+      .catch(reject);
   });

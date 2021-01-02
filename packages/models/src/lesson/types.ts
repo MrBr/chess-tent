@@ -17,6 +17,7 @@ export interface Lesson extends Subject {
   type: typeof TYPE_LESSON;
   difficulty: Difficulty;
   tags?: Tag[];
+  users?: User[];
   state: {
     chapters: Chapter[];
     title: string;
@@ -31,6 +32,7 @@ export interface NormalizedLesson {
   difficulty: Lesson["difficulty"];
   tags?: Tag["id"][];
   published: boolean;
+  users?: User["id"][];
   state: {
     chapters: Chapter[];
     title: Lesson["state"]["title"];

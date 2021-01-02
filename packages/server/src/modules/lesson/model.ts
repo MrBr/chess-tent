@@ -16,6 +16,7 @@ export interface DepupulatedLesson {
   state: NormalizedLesson["state"];
   difficulty: NormalizedLesson["difficulty"];
   tags: NormalizedLesson["tags"];
+  users: NormalizedLesson["users"];
 }
 
 const lessonSchema = db.createSchema<DepupulatedLesson>(
@@ -24,6 +25,12 @@ const lessonSchema = db.createSchema<DepupulatedLesson>(
       type: String,
       ref: TYPE_USER,
     } as unknown) as DepupulatedLesson["owner"],
+    users: [
+      {
+        type: String,
+        ref: TYPE_USER,
+      } as unknown,
+    ] as DepupulatedLesson["users"],
     state: ({
       type: Schema.Types.Mixed,
       required: true,
@@ -48,7 +55,7 @@ const lessonSchema = db.createSchema<DepupulatedLesson>(
   { minimize: false }
 );
 
-lessonSchema.index({ "state.title": "text", "state.description": "text" });
+lessonSchema.index({ "state.title": "text" });
 
 const LessonModel = db.createModel<DepupulatedLesson>(
   TYPE_LESSON,

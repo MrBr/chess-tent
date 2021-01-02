@@ -14,7 +14,7 @@ export const addUser = (user: User) =>
             ? {
                 message: `Field(s): ${Object.keys(err.keyValue).join(
                   ","
-                )} are already taken.`
+                )} are already taken.`,
               }
             : "Failed to create user";
         reject(error);
@@ -70,7 +70,7 @@ export const findUsers = (
 ): Promise<User[]> => {
   const query: MongooseFilterQuery<any> = utils.notNullOrUndefined({
     coach: filters.coach,
-    name: filters.name
+    name: filters.name,
   });
 
   if (filters.elo) {
@@ -103,7 +103,7 @@ export const findUsers = (
         reject(err);
         return;
       }
-      resolve(result.map(item => item.toObject()));
+      resolve(result.map((item) => item.toObject()));
     });
   });
 };

@@ -34,10 +34,7 @@ export default ({ user }: { user: User }) => {
           <Headline3>My activities</Headline3>
         </>
       ) : (
-        <>
-          <Headline3>Coaches</Headline3>
-          <Coaches />
-        </>
+        <Coaches />
       )}
       <LessonBrowser lessons={lessons} onFiltersChange={handleFilterChange} />
       <Headline3>My trainings</Headline3>

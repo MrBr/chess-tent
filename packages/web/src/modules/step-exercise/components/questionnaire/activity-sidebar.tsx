@@ -10,9 +10,9 @@ import { isStepCompleted } from '@chess-tent/models';
 const { Headline4, Text, Button, Row, Col, Check } = ui;
 const { LessonToolboxText } = components;
 
-const Playground: FunctionComponent<ComponentProps<
-  ExerciseModule['ActivitySidebar']
->> = ({
+const Playground: FunctionComponent<
+  ComponentProps<ExerciseModule['ActivitySidebar']>
+> = ({
   step,
   stepActivityState,
   setStepActivityState,

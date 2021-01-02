@@ -6,9 +6,9 @@ import { isStepCompleted } from '@chess-tent/models';
 const { Headline4 } = ui;
 const { LessonToolboxText } = components;
 
-const Playground: FunctionComponent<ComponentProps<
-  ExerciseModule['ActivitySidebar']
->> = ({ step, activity }) => {
+const Playground: FunctionComponent<
+  ComponentProps<ExerciseModule['ActivitySidebar']>
+> = ({ step, activity }) => {
   const { question, explanation } = step.state
     .exerciseState as ExerciseSelectSquaresAndPiecesState;
   const completed = isStepCompleted(activity, step);

@@ -1,10 +1,18 @@
 import React from 'react';
 import { components, ui } from '@application';
 import groupBy from 'lodash/groupBy';
-import { Components } from '@types';
+import { Components, LessonActivity } from '@types';
 
 const { CoachCard, TrainingCard } = components;
 const { Headline3, Container, Row, Col } = ui;
+
+const StudentActivity = ({ activity }: { activity: LessonActivity }) => {
+  return (
+    <Col md={6} xs={12} className="mb-4" key={activity.id}>
+      <TrainingCard training={activity} />
+    </Col>
+  );
+};
 
 const StudentTrainings: Components['StudentTrainings'] = ({ trainings }) => {
   const groupByMentor = groupBy(
@@ -23,13 +31,9 @@ const StudentTrainings: Components['StudentTrainings'] = ({ trainings }) => {
             </Col>
             <Col md={8} xs={12} className="mt-4">
               <Row>
-                {activities.map(activity => {
-                  return (
-                    <Col md={6} xs={12} className="mb-4" key={activity.id}>
-                      <TrainingCard key={activity.id} training={activity} />
-                    </Col>
-                  );
-                })}
+                {activities.map(activity => (
+                  <StudentActivity key={activity.id} activity={activity} />
+                ))}
               </Row>
             </Col>
           </Row>

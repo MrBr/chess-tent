@@ -1,9 +1,8 @@
 import React from 'react';
 import { FEN, VariationModule } from '@types';
-import { components, ui } from '@application';
+import { components } from '@application';
 
-const { Text } = ui;
-const { StepMove } = components;
+const { StepMove, LessonToolboxText } = components;
 
 const ActivityBoard: VariationModule['ActivityBoard'] = ({
   Chessboard,
@@ -21,7 +20,7 @@ const ActivitySidebar: VariationModule['ActivitySidebar'] = ({ step }) => {
   return (
     <>
       {step.state.move && <StepMove move={step.state.move} />}
-      <Text>{step.state.description}</Text>
+      <LessonToolboxText defaultText={step.state.description} />
     </>
   );
 };

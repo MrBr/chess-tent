@@ -1,5 +1,5 @@
 import React, { ComponentProps, FunctionComponent, useCallback } from 'react';
-import { ui } from '@application';
+import { components, ui } from '@application';
 import {
   ExerciseModule,
   ExerciseQuestionnaireActivityState,
@@ -8,6 +8,7 @@ import {
 import { isStepCompleted } from '@chess-tent/models';
 
 const { Headline4, Text, Button, Row, Col, Check } = ui;
+const { LessonToolboxText } = components;
 
 const Playground: FunctionComponent<ComponentProps<
   ExerciseModule['ActivitySidebar']
@@ -39,7 +40,7 @@ const Playground: FunctionComponent<ComponentProps<
   return (
     <>
       <Headline4>Select the answer</Headline4>
-      <Text>{question}</Text>
+      <LessonToolboxText defaultText={question} />
       {options?.map(({ text, correct }, index) => (
         <Row key={index}>
           <Col xs={0}>
@@ -53,7 +54,7 @@ const Playground: FunctionComponent<ComponentProps<
           </Col>
         </Row>
       ))}
-      {completed && <Text>{explanation}</Text>}
+      {completed && <LessonToolboxText defaultText={explanation} />}
       <Button onClick={handleSubmit} size="extra-small">
         Submit
       </Button>

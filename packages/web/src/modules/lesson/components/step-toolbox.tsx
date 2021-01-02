@@ -1,57 +1,16 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback } from 'react';
 import { Components, Steps } from '@types';
-import { services, ui, utils } from '@application';
+import { components, services, ui, utils } from '@application';
 import styled from '@emotion/styled';
-import { debounce } from 'lodash';
 import { addStepToLeft } from '@chess-tent/models';
 import { getStepPosition } from '../../step/service';
 
 const { Container, Button, Icon } = ui;
+const { LessonToolboxText } = components;
 
 function pickFunction(...funcs: any[]) {
   return funcs.find(f => typeof f === 'function');
 }
-
-export const ToolboxText: Components['LessonToolboxText'] = styled(
-  ({ defaultText, onChange, ...props }) => {
-    // Updating div html resets the cursor so ToolboxText can't be controlled.
-    // Ref is used to set static default value which won't change on props update.
-    const defaultValueRef = useRef(defaultText);
-    const debouncedTextChange =
-      onChange &&
-      useCallback(debounce(onChange, 500, { trailing: true }), [onChange]);
-    const onTextChange = useCallback(
-      e => {
-        onChange && debouncedTextChange(e.target.innerText);
-      },
-      [onChange, debouncedTextChange],
-    );
-
-    return (
-      <div
-        contentEditable
-        dangerouslySetInnerHTML={{ __html: defaultValueRef.current }}
-        {...props}
-        onInput={onTextChange}
-      />
-    );
-  },
-)(
-  {
-    '&:focus': {
-      outline: 0,
-    },
-    color: '#2F3849',
-    fontSize: 13 / 16 + 'em',
-    cursor: 'pointer',
-  },
-  ({ placeholder }) => ({
-    '&:empty:before': {
-      content: `"${placeholder || 'Type here..'}"`,
-      color: '#A3A7AE',
-    },
-  }),
-);
 
 const ToolboxActions = styled.div({
   '> button': {
@@ -117,7 +76,7 @@ const StepToolbox: Components['StepToolbox'] = ({
       onClick={utils.stopPropagation}
     >
       {(text || active) && showInput && (
-        <ToolboxText
+        <LessonToolboxText
           onChange={textChangeHandler}
           defaultText={text}
           placeholder="Add comment"

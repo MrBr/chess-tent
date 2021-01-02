@@ -8,7 +8,7 @@ const { useLessons, useUserTrainings } = hooks;
 const { Row, Col } = ui;
 
 export default ({ user }: { user: User }) => {
-  const [activities, saveActivities] = useUserTrainings(user);
+  const [activities] = useUserTrainings(user);
 
   const [lessonsFilter, setLessonsFilter] = useState<LessonsRequest>({
     owner: user.id,

@@ -3,7 +3,7 @@ import { LessonActivity } from '@types';
 import { hooks, ui } from '@application';
 import LessonThumbnail from './thumbnail';
 
-const { Row, Col, Headline6 } = ui;
+const { Row, Col, Headline6, Text } = ui;
 const { useHistory } = hooks;
 
 export default (props: { training: LessonActivity }) => {
@@ -19,7 +19,10 @@ export default (props: { training: LessonActivity }) => {
         <LessonThumbnail difficulty={lesson.difficulty} size="small" />
       </Col>
       <Col>
-        <Headline6 className="mt-0">{lesson.state.title}</Headline6>
+        <Headline6 className="mt-2 ml-2 m-0">{lesson.state.title}</Headline6>
+        <Text className="ml-2" fontSize="extra-small">
+          {lesson.difficulty}
+        </Text>
       </Col>
     </Row>
   );

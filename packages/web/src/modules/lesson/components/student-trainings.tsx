@@ -12,13 +12,12 @@ const StudentTrainings: Components['StudentTrainings'] = ({ trainings }) => {
     activity => activity?.subject?.owner.id,
   );
 
-  console.log({ groupByMentor });
   return (
     <Container fluid>
       <Headline3 className="ml-3">My trainings</Headline3>
-      {Object.values(groupByMentor).map(activities => {
+      {Object.values(groupByMentor).map((activities, index) => {
         return (
-          <Row>
+          <Row key={index}>
             <Col md={4}>
               <CoachCard coach={activities[0].subject.owner} />
             </Col>
@@ -26,7 +25,7 @@ const StudentTrainings: Components['StudentTrainings'] = ({ trainings }) => {
               <Row>
                 {activities.map(activity => {
                   return (
-                    <Col md={6} className="mb-4">
+                    <Col md={6} className="mb-4" key={activity.id}>
                       <TrainingCard key={activity.id} training={activity} />
                     </Col>
                   );

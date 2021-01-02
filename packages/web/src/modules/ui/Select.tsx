@@ -1,7 +1,8 @@
 import { default as RSelect } from 'react-select';
+import { default as RSAsync } from 'react-select/async';
 import styled from '@emotion/styled';
 
-const Select = (styled(RSelect)({
+const selectStyle = {
   minWidth: '220px',
   '.select__control': {
     backgroundColor: '#F3F4F5',
@@ -14,7 +15,9 @@ const Select = (styled(RSelect)({
   '.select__indicator-separator': {
     display: 'none',
   },
-}) as unknown) as typeof RSelect;
+};
+const Select = (styled(RSelect)(selectStyle) as unknown) as typeof RSelect;
+const AsyncSelect = (styled(RSAsync)(selectStyle) as unknown) as typeof RSelect;
 
 Select.defaultProps = {
   ...Select.defaultProps,
@@ -22,4 +25,10 @@ Select.defaultProps = {
   classNamePrefix: 'select',
 };
 
-export default Select;
+AsyncSelect.defaultProps = {
+  ...RSAsync.defaultProps,
+  //@ts-ignore
+  classNamePrefix: 'select',
+};
+
+export { Select, AsyncSelect };

@@ -30,10 +30,7 @@ export default ({ user }: { user: User }) => {
 
   return (
     <Page>
-      {!!activities && <StudentTrainings trainings={activities} />}
-      <Row noGutters>
-        <Col>{activities && activities.length > 0 ? null : <Coaches />}</Col>
-      </Row>
+      {!!activities ? <StudentTrainings trainings={activities} /> : <Coaches />}
       <Row noGutters>
         <Col>
           <LessonBrowser

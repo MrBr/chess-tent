@@ -18,14 +18,14 @@ const StudentTrainings: Components['StudentTrainings'] = ({ trainings }) => {
       {Object.values(groupByMentor).map((activities, index) => {
         return (
           <Row key={index}>
-            <Col md={4}>
+            <Col md={4} xs={12}>
               <CoachCard coach={activities[0].subject.owner} />
             </Col>
-            <Col md={8} className="mt-4">
+            <Col md={8} xs={12} className="mt-4">
               <Row>
                 {activities.map(activity => {
                   return (
-                    <Col md={6} className="mb-4" key={activity.id}>
+                    <Col md={6} xs={12} className="mb-4" key={activity.id}>
                       <TrainingCard key={activity.id} training={activity} />
                     </Col>
                   );

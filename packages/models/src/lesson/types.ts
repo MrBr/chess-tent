@@ -18,6 +18,7 @@ export interface Lesson extends Subject {
   difficulty: Difficulty;
   tags?: Tag[];
   users?: User[];
+  published: boolean;
   state: {
     chapters: Chapter[];
     title: string;

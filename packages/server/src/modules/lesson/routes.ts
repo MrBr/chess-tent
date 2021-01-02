@@ -52,6 +52,20 @@ application.service.registerPostRoute(
   sendData("lessons")
 );
 
+application.service.registerPostRoute(
+  "/my-lessons",
+  identify,
+  toLocals("filters", (req, res) => ({
+    owner: res.locals.me.id,
+    users: [res.locals.me.id],
+    search: req.body.search,
+    difficulty: req.body.difficulty,
+    tagIds: req.body.tagIds,
+  })),
+  findLessons,
+  sendData("lessons")
+);
+
 application.service.registerGetRoute(
   "/lesson/:lessonId",
   identify,

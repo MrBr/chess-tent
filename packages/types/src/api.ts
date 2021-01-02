@@ -24,11 +24,13 @@ import {
 
 export type LessonsRequest = {
   owner?: User["id"];
+  users?: User["id"][];
   search?: string;
   tagIds?: Tag["id"][];
   difficulty?: Difficulty;
   published?: boolean;
 };
+export type MyLessonsRequest = Omit<LessonsRequest, "users" | "owner">;
 
 export type Pagination = [number, number];
 
@@ -100,6 +102,7 @@ export type Requests = {
   lessonPatch: RequestFetch<[Lesson["id"], Partial<Lesson>], StatusResponse>;
   lessonUpdates: RequestFetch<[Lesson["id"], LessonUpdates], StatusResponse>;
   lessons: RequestFetch<LessonsRequest, LessonsResponse>;
+  myLessons: RequestFetch<MyLessonsRequest, LessonsResponse>;
   activity: RequestFetch<[string], ActivityResponse>;
   activitySave: RequestFetch<Activity, StatusResponse>;
   activityUpdate: RequestFetch<

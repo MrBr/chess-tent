@@ -5,6 +5,7 @@ import {
   LessonsResponse,
   LessonUpdates,
   StatusResponse,
+  MyLessonsRequest,
 } from '@types';
 import { Lesson } from '@chess-tent/models';
 
@@ -32,9 +33,14 @@ const lessons = services.createRequest<LessonsRequest, LessonsResponse>(
   'POST',
   '/lessons',
 );
+const myLessons = services.createRequest<MyLessonsRequest, LessonsResponse>(
+  'POST',
+  '/my-lessons',
+);
 
 requests.lesson = lesson;
 requests.lessonSave = lessonSave;
 requests.lessons = lessons;
+requests.myLessons = myLessons;
 requests.lessonPatch = lessonPatch;
 requests.lessonUpdates = lessonUpdates;

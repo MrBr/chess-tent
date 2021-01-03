@@ -34,8 +34,9 @@ import Select from 'react-select';
 import { SelectComponentsProps } from 'react-select/base';
 import { FormCheckInputProps } from 'react-bootstrap/FormCheckInput';
 import Dropdown from 'react-bootstrap/Dropdown';
-import { ClassNameProps, ClickProps, ContentEditableProps } from './_helpers';
+import { ClassNameProps, ClickProps } from './_helpers';
 import { AsyncSelect } from '../../modules/ui/Select';
+import { HtmlProps } from './hoc';
 
 export type ButtonProps = {
   variant?: 'primary' | 'secondary' | 'regular' | 'danger' | 'ghost';
@@ -77,7 +78,7 @@ export type TextProps = {
   color?: 'title' | 'subtitle' | 'alt' | 'alt-title' | 'alt-subtitle';
   fontSize?: FontSize;
   onClick?: ReactEventHandler;
-} & ContentEditableProps;
+} & HtmlProps;
 
 export declare interface SearchBoxProps {
   children?: never;

@@ -35,9 +35,10 @@ import { Tab, Tabs } from './Tab';
 import Icon from './Icon';
 import Absolute from './Absolute';
 import { Toast, ToastBody, ToastHeader } from './Toast';
-import { withFiles } from './hoc';
+import { withFiles, withHtml } from './hoc';
 
 application.hoc.withFiles = withFiles;
+application.hoc.withHtml = withHtml;
 
 application.register(() => import('./Modal'));
 

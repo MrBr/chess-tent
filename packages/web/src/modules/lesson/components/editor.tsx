@@ -214,7 +214,7 @@ class EditorRenderer extends React.Component<
   };
   addNewChapter = () => {
     const { lesson } = this.props;
-    const newChapter = createChapter();
+    const newChapter = createChapter(`Chapter ${lesson.state.chapters.length}`);
     const action = addLessonChapter(lesson, newChapter);
     this.addLessonUpdate(action);
     this.setActiveChapterHandler(newChapter);
@@ -392,9 +392,7 @@ class EditorRenderer extends React.Component<
                   <Col>
                     <Headline2
                       contentEditable
-                      dangerouslySetInnerHTML={{
-                        __html: lesson.state.title,
-                      }}
+                      initialHtml={lesson.state.title}
                       onInput={this.updateLessonTitle}
                       className="mt-4"
                     />

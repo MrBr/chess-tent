@@ -1,13 +1,15 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback } from 'react';
 import { Components } from '@types';
 import styled from '@emotion/styled';
 import { debounce } from 'lodash';
+import { ui } from '@application';
+
+const { Text } = ui;
 
 export const ToolboxText: Components['LessonToolboxText'] = styled(
   ({ defaultText, onChange, ...props }) => {
     // Updating div html resets the cursor so ToolboxText can't be controlled.
     // Ref is used to set static default value which won't change on props update.
-    const defaultValueRef = useRef(defaultText);
     const debouncedTextChange =
       onChange &&
       useCallback(debounce(onChange, 500, { trailing: true }), [onChange]);
@@ -19,10 +21,10 @@ export const ToolboxText: Components['LessonToolboxText'] = styled(
     );
 
     return (
-      <div
+      <Text
         contentEditable
-        dangerouslySetInnerHTML={{ __html: defaultValueRef.current }}
         {...props}
+        initialHtml={defaultText}
         onInput={onTextChange}
       />
     );

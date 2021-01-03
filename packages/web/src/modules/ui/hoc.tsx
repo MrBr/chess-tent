@@ -6,7 +6,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { FileUploaderProps } from '@types';
+import { FileUploaderProps, HOC } from '@types';
 import { File } from './Form';
 
 export const withFiles = <P extends FileUploaderProps>(
@@ -44,4 +44,20 @@ export const withFiles = <P extends FileUploaderProps>(
       />
     </>
   );
+};
+
+export const withHtml: HOC['withHtml'] = WrappedComponent => props => {
+  const defaultValueRef = useRef(props.initialHtml);
+  if (props.contentEditable) {
+    //children aren't actually used here
+    return (
+      // eslint-disable-next-line
+      <WrappedComponent
+        {...props}
+        dangerouslySetInnerHTML={{ __html: defaultValueRef.current }}
+        children={undefined}
+      />
+    );
+  }
+  return <WrappedComponent {...props} />;
 };

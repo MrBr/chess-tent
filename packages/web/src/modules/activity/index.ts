@@ -29,10 +29,4 @@ application.register(
     application.services.createActivityComment = module.createActivityComment;
   },
 );
-application.register(
-  () => import('./hooks'),
-  module => {
-    application.hooks.useUserActivitiesRecord = module.useUserActivitiesRecord;
-  },
-);
 application.register(() => import('./requests'));

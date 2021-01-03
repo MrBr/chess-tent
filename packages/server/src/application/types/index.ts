@@ -1,25 +1,34 @@
-import { register } from "core-module";
-import { ErrorRequestHandler, RequestHandler } from "express";
-import { Schema, SchemaOptions, Document, Model } from "mongoose";
-import { NormalizedUser, SubjectPathUpdate, User } from "@chess-tent/models";
-import { Socket } from "socket.io";
-import { Server as HttpServer } from "http";
-import { Messages } from "mailgun-js";
+import { register } from 'core-module';
+import { ErrorRequestHandler, RequestHandler } from 'express';
+import {
+  Schema,
+  SchemaOptions,
+  Document,
+  Model,
+  MongooseFilterQuery,
+} from 'mongoose';
+import { NormalizedUser, SubjectPathUpdate, User } from '@chess-tent/models';
+import { Socket } from 'socket.io';
+import { Server as HttpServer } from 'http';
+import { Messages } from 'mailgun-js';
 import {
   ACTION_EVENT,
   Actions,
   SUBSCRIBE_EVENT,
-  UNSUBSCRIBE_EVENT
-} from "@chess-tent/types";
+  UNSUBSCRIBE_EVENT,
+} from '@chess-tent/types';
 
 export type DB = {
   connect: () => void;
   createSchema: <T extends {}>(
-    definition: Omit<T, "id">,
+    definition: Omit<T, 'id'>,
     options?: SchemaOptions,
-    useDefault?: boolean
+    useDefault?: boolean,
   ) => Schema;
   createModel: <T>(type: string, schema: Schema) => Model<Document & T>;
+  orQueries: (
+    ...args: MongooseFilterQuery<any>[]
+  ) => { $or: MongooseFilterQuery<any>[] | undefined };
 };
 
 export type Auth = {
@@ -44,29 +53,29 @@ export type Service = {
   ) => void;
 
   generateApiToken: (user: User) => string;
-  verifyToken: (token?: string) => Auth["apiTokenPayload"] | null;
+  verifyToken: (token?: string) => Auth['apiTokenPayload'] | null;
 
   generateImgUrl: () => string;
   fileStorage: AWS.S3;
 
   subjectPathUpdatesToMongoose$set: (
-    updates: SubjectPathUpdate[]
+    updates: SubjectPathUpdate[],
   ) => Record<string, any>;
 };
 
-export type MailData = Parameters<Messages["send"]>[0];
+export type MailData = Parameters<Messages['send']>[0];
 export type Middleware = {
   identify: (...args: Parameters<RequestHandler>) => void;
   errorHandler: ErrorRequestHandler;
   sendData: (localProp: string) => MiddlewareFunction;
   validate: (
-    validateFunction: (...args: Parameters<RequestHandler>) => void | never
+    validateFunction: (...args: Parameters<RequestHandler>) => void | never,
   ) => MiddlewareFunction;
   sendMail: (
     formatData: (
       req: Parameters<RequestHandler>[0],
-      res: Parameters<RequestHandler>[1]
-    ) => MailData
+      res: Parameters<RequestHandler>[1],
+    ) => MailData,
   ) => MiddlewareFunction;
   logLocal: (
     prefix: string,
@@ -74,8 +83,8 @@ export type Middleware = {
       | string
       | ((
           req: Parameters<MiddlewareFunction>[0],
-          res: Parameters<MiddlewareFunction>[1]
-        ) => any)
+          res: Parameters<MiddlewareFunction>[1],
+        ) => any),
   ) => MiddlewareFunction;
   webLogin: (...args: Parameters<RequestHandler>) => void;
   webLogout: (...args: Parameters<RequestHandler>) => void;
@@ -90,7 +99,7 @@ export type Middleware = {
       | number
       | object
       | []
-      | ((...args: Parameters<RequestHandler>) => void)
+      | ((...args: Parameters<RequestHandler>) => void),
   ) => (...args: Parameters<RequestHandler>) => void;
 };
 export type MiddlewareFunction = (...args: Parameters<RequestHandler>) => void;
@@ -132,17 +141,17 @@ export type SocketService = {
   init: (server: HttpServer) => void;
   middleware: (
     stream: SocketStream,
-    next: (stream: SocketStream) => void
+    next: (stream: SocketStream) => void,
   ) => void;
   registerMiddleware: (
     middleware: (
       stream: SocketStream,
-      next: (stream: SocketStream) => void
-    ) => void
+      next: (stream: SocketStream) => void,
+    ) => void,
   ) => void;
   sendAction: (channel: string, stream: SocketStream) => void;
   sendServerAction: (channel: string, action: Actions) => void;
-  identify: (stream: SocketStream) => Auth["apiTokenPayload"] | null;
+  identify: (stream: SocketStream) => Auth['apiTokenPayload'] | null;
 };
 
 export class AppError extends Error {

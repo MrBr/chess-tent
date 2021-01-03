@@ -32,6 +32,7 @@ import {
 import { debounce } from 'lodash';
 import { components, hooks, services, state, ui } from '@application';
 import TrainingModal from './training-assign';
+import CollaboratorModal from './lesson-users';
 import Sidebar from './editor-sidebar';
 import { PreviewModal } from './activity-preview';
 import ChaptersDropdown from './chapters-dropdown';
@@ -328,6 +329,7 @@ class EditorRenderer extends React.Component<
                     <Button
                       size="extra-small"
                       className="mr-3"
+                      variant="regular"
                       onClick={() =>
                         promptModal(close => <TrainingModal close={close} />)
                       }
@@ -336,6 +338,19 @@ class EditorRenderer extends React.Component<
                     </Button>
                     <Button
                       size="extra-small"
+                      className="mr-3"
+                      variant="regular"
+                      onClick={() =>
+                        promptModal(close => (
+                          <CollaboratorModal close={close} lesson={lesson} />
+                        ))
+                      }
+                    >
+                      Collaborators
+                    </Button>
+                    <Button
+                      size="extra-small"
+                      variant="regular"
                       onClick={() =>
                         promptModal(close => (
                           <PreviewModal

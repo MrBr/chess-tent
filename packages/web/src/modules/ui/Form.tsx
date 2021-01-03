@@ -1,11 +1,11 @@
 import React from 'react';
-import { Formik, ErrorMessage, useField } from 'formik';
-import { default as BFormGroup } from 'react-bootstrap/FormGroup';
-import { default as BForm } from 'react-bootstrap/Form';
-import { default as InputGroup } from 'react-bootstrap/InputGroup';
-import styled from '@emotion/styled';
 import { UI } from '@types';
-import { default as Select } from './Select';
+import { Formik, ErrorMessage, useField } from 'formik';
+import BFormGroup from 'react-bootstrap/FormGroup';
+import BForm from 'react-bootstrap/Form';
+import InputGroup from 'react-bootstrap/InputGroup';
+import styled from '@emotion/styled';
+import { Select } from './Select';
 
 // There are 2 type of Form components.
 // Standalone component that can be use without Form parent.

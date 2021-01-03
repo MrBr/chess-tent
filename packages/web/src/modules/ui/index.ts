@@ -15,7 +15,7 @@ import {
   InputGroup,
 } from './Form';
 import { Container, Row, Col, Page } from './Grid';
-import { default as Select } from './Select';
+import { Select, AsyncSelect } from './Select';
 import Dropdown, { OptionsDropdown } from './Dropdown';
 import {
   Display1,
@@ -52,6 +52,7 @@ application.ui.File = File;
 application.ui.Check = Check;
 application.ui.ErrorMessage = ErrorMessage;
 application.ui.Select = Select;
+application.ui.AsyncSelect = AsyncSelect;
 
 application.ui.Toast = Toast;
 application.ui.ToastHeader = ToastHeader;

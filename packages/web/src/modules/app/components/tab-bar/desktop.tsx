@@ -37,8 +37,9 @@ export default function TabBar() {
   return (
     <>
       <TabButton path="/">Dashboard</TabButton>
-      <TabButton path="/lesson/new">Create Lesson</TabButton>
       <TabButton path="/coaches">Find Coach</TabButton>
+      <TabButton path="/lesson/new">Create Lesson</TabButton>
+      <TabButton path="/lessons">Browse Lessons</TabButton>
     </>
   );
 }

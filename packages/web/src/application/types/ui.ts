@@ -35,6 +35,7 @@ import { SelectComponentsProps } from 'react-select/base';
 import { FormCheckInputProps } from 'react-bootstrap/FormCheckInput';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { ClassNameProps, ClickProps, ContentEditableProps } from './_helpers';
+import { AsyncSelect } from '../../modules/ui/Select';
 
 export type ButtonProps = {
   variant?: 'primary' | 'secondary' | 'regular' | 'danger' | 'ghost';
@@ -187,6 +188,7 @@ export type UI = {
   Input: typeof FormControl;
   InputGroup: typeof InputGroup;
   Select: typeof Select;
+  AsyncSelect: typeof AsyncSelect;
   Check: typeof FormCheck;
   Container: UIComponent<ContainerProps>;
   Absolute: UIComponent<{

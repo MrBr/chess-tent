@@ -1,7 +1,7 @@
-import { MiddlewareFunction } from "@types";
-import { Lesson } from "@chess-tent/models";
-import { LessonNotFoundError, UnauthorizedLessonEditError } from "./errors";
-import * as service from "./service";
+import { MiddlewareFunction } from '@types';
+import { Lesson } from '@chess-tent/models';
+import { LessonNotFoundError, UnauthorizedLessonEditError } from './errors';
+import * as service from './service';
 
 export const saveLesson: MiddlewareFunction = (req, res, next) => {
   service
@@ -26,7 +26,7 @@ export const updateLesson: MiddlewareFunction = (req, res, next) => {
 
 export const getLesson: MiddlewareFunction = (req, res, next) => {
   service
-    .getLesson(res.locals.lesson.id as Lesson["id"])
+    .getLesson(res.locals.lesson.id as Lesson['id'])
     .then(lesson => {
       if (!lesson) {
         throw new LessonNotFoundError();
@@ -52,9 +52,9 @@ export const findLessons: MiddlewareFunction = (req, res, next) => {
 
 export const canEditLesson: MiddlewareFunction = (req, res, next) => {
   service
-    .getLesson(res.locals.lesson.id)
-    .then(lesson => {
-      if (!lesson || lesson.owner.id === res.locals.me.id) {
+    .canEditLesson(res.locals.lesson.id, res.locals.me.id)
+    .then(canEdit => {
+      if (canEdit) {
         next();
         return;
       }

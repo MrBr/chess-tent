@@ -1,7 +1,7 @@
-import mongoose from "mongoose";
-import application from "@application";
+import mongoose from 'mongoose';
+import application from '@application';
 
-import { createModel, createSchema } from "./utils";
+import { createModel, createSchema, orQueries } from './utils';
 
 // Connection URL
 const url = process.env.DB_URL;
@@ -21,13 +21,14 @@ application.db.connect = () => {
 
   const db = mongoose.connection;
 
-  db.on("error", console.error.bind(console, "connection error:"));
-  db.once("open", function () {
-    console.log("DB connection open");
+  db.on('error', console.error.bind(console, 'connection error:'));
+  db.once('open', function () {
+    console.log('DB connection open');
   });
 };
 
 application.db.createSchema = createSchema;
 application.db.createModel = createModel;
+application.db.orQueries = orQueries;
 
 export {};

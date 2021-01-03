@@ -3,8 +3,8 @@ import { ExerciseToolboxProps, ExerciseVariationState } from '@types';
 import { components, ui } from '@application';
 import { useUpdateExerciseStateProp } from '../../hooks';
 
-const { Text, Container } = ui;
-const { LessonToolboxText, StepMove } = components;
+const { Text, Container, Row } = ui;
+const { LessonToolboxText, StepMove, StepTag } = components;
 
 export default ({ step, updateStep }: ExerciseToolboxProps) => {
   const { question, explanation, moves, activeMoveIndex } = step.state
@@ -32,28 +32,29 @@ export default ({ step, updateStep }: ExerciseToolboxProps) => {
         placeholder="Describe the task.."
         onChange={updateQuestion}
       />
-      <Container className="p-0">
-        <Text inline fontSize="small">
-          Moves:
-        </Text>
-        <Text
-          inline
-          fontSize="small"
-          onClick={() => updateActiveMoveIndex(undefined)}
-        >
-          FEN
-        </Text>
-        {moves?.map((move, index) => (
-          <Text
-            fontSize="small"
-            inline
-            weight={activeMoveIndex === index ? 700 : 500}
-            onClick={() => updateActiveMoveIndex(index)}
-            key={index}
+      <Container className="p-0 mt-2">
+        <Text fontSize="small">Moves:</Text>
+        <Row className="align-items-center m-0">
+          <StepTag
+            active={activeMoveIndex === -1}
+            collapse
+            onClick={() => updateActiveMoveIndex(-1)}
           >
-            <StepMove move={move} suffix=" " prefix=" " blackIndexSign=" " />
-          </Text>
-        ))}
+            <Text className="mb-0" fontSize="small" color="title">
+              FEN
+            </Text>
+          </StepTag>
+          {moves?.map((move, index) => (
+            <StepTag
+              active={activeMoveIndex === index}
+              collapse
+              onClick={() => updateActiveMoveIndex(index)}
+              key={index}
+            >
+              <StepMove move={move} suffix=" " prefix=" " blackIndexSign=" " />
+            </StepTag>
+          ))}
+        </Row>
       </Container>
       <LessonToolboxText
         defaultText={explanation}

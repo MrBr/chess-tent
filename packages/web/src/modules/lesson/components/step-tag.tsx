@@ -2,11 +2,11 @@ import styled from '@emotion/styled';
 import React from 'react';
 import { StepTag } from '@types';
 
-export default styled(({ children, className, move }) => (
-  <span className={className}>
+export default styled(({ children, className, onClick }) => (
+  <span className={className} onClick={onClick}>
     <span>{children}</span>
   </span>
-))(({ active }) => ({
+))(({ active, collapse }) => ({
   '& > span': {
     background: active
       ? 'linear-gradient(90deg, #F46F24 0%, #F44D24 100%)'
@@ -17,7 +17,7 @@ export default styled(({ children, className, move }) => (
   },
   color: '#2F3849',
   display: 'inline-block',
-  width: 58,
+  width: collapse ? undefined : 58,
   overflow: 'hidden',
   fontSize: 11 / 16 + 'em',
   fontWeight: 700,

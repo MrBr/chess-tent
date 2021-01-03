@@ -4,6 +4,7 @@ import {
   ComponentType,
   FunctionComponent,
   ReactElement,
+  ReactEventHandler,
   ReactNode,
   RefObject,
 } from 'react';
@@ -167,9 +168,9 @@ export type StepMove = FunctionComponent<{
 export type StepTag = FunctionComponent<{
   children: ReactNode;
   active: boolean;
-  step: Step;
   className?: string;
-  move?: NotableMove | null;
+  collapse?: boolean;
+  onClick?: ReactEventHandler;
 }>;
 
 export interface AuthorizedProps {

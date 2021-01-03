@@ -144,9 +144,10 @@ export type UI = {
       | 'home'
       | 'crown'
       | 'plus'
+      | 'board'
       | 'chess';
     textual?: boolean;
-    size?: 'large' | 'regular';
+    size?: 'large' | 'regular' | 'small' | 'extra-small';
   }>;
   Img: ComponentType<
     {

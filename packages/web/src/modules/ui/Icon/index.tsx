@@ -16,6 +16,16 @@ const sizeEnhancer = (props: IconProps) => {
         width: 36,
         height: 36,
       };
+    case 'small':
+      return {
+        width: 16,
+        height: 16,
+      };
+    case 'extra-small':
+      return {
+        width: 10,
+        height: 10,
+      };
     case 'regular':
     default:
       return {
@@ -35,6 +45,8 @@ const textualEnhancer = (props: IconProps) =>
     color: 'inherit',
     lineHeight: 'inherit',
     verticalAlign: 'sub',
+    minWidth: '20px',
+    minHeight: '20px',
   };
 
 const Icon = styled<FunctionComponent<IconProps>>(
@@ -54,8 +66,6 @@ const Icon = styled<FunctionComponent<IconProps>>(
     },
     color: '#BABDC2',
     display: 'inline-block',
-    minWidth: '20px',
-    minHeight: '20px',
   },
   sizeEnhancer,
   textualEnhancer,

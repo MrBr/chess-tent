@@ -48,9 +48,9 @@ const removeOldLineMoves = (index: number, moves?: ExerciseMove[]) =>
     ? moves.slice(0, moves.length - (moves.length - index) + 1)
     : moves;
 
-const EditorBoard: FunctionComponent<ComponentProps<
-  ExerciseModule['EditorBoard']
->> = ({ step, Chessboard, status, updateStep }) => {
+const EditorBoard: FunctionComponent<
+  ComponentProps<ExerciseModule['EditorBoard']>
+> = ({ step, Chessboard, status, updateStep }) => {
   const { position, shapes } = step.state;
   const { editing, moves, activeMoveIndex } = step.state
     .exerciseState as ExerciseVariationState;

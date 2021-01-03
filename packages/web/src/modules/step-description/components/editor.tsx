@@ -81,7 +81,7 @@ export const EditorSidebar: DescriptionModule['EditorSidebar'] = ({
     <>
       <Row noGutters>
         <Col className="col-auto">
-          <StepTag step={step} active={activeStep === step}>
+          <StepTag active={activeStep === step}>
             <Comment active={step === activeStep} />
           </StepTag>
         </Col>

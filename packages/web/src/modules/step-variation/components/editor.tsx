@@ -190,11 +190,7 @@ const EditorSidebar: VariationModule['EditorSidebar'] = props => {
     <>
       <Row className="no-gutters">
         <Col className="col-auto">
-          <StepTag
-            step={step}
-            active={activeStep === step}
-            move={step.state.move}
-          >
+          <StepTag active={activeStep === step}>
             {step.state.move ? (
               <StepMove move={step.state.move} />
             ) : (

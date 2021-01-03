@@ -37,9 +37,9 @@ const { Col, Row, Dropdown } = ui;
 const { StepTag } = components;
 const { START_FEN } = constants;
 
-const EditorBoard: FunctionComponent<ComponentProps<
-  ExerciseModule['EditorBoard']
->> = props => {
+const EditorBoard: FunctionComponent<
+  ComponentProps<ExerciseModule['EditorBoard']>
+> = props => {
   switch (props.step.state.exerciseType) {
     case 'variation':
       return <VariationEditorBoard {...props} />;
@@ -138,9 +138,7 @@ const EditorSidebar: ExerciseModule['EditorSidebar'] = ({
     <>
       <Row>
         <Col className="col-auto">
-          <StepTag step={step} active={activeStep === step}>
-            E
-          </StepTag>
+          <StepTag active={activeStep === step}>E</StepTag>
         </Col>
         <Col>
           <Dropdown

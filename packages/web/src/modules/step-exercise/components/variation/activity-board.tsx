@@ -10,18 +10,19 @@ import {
   ExerciseVariationActivityState,
   ExerciseVariationState,
 } from '@types';
-import { isCorrectActivityMove } from './utils';
+import { isCorrectActivityMove, isVariationCompleted } from './utils';
 
 const { createFenForward } = services;
 
-const Playground: FunctionComponent<ComponentProps<
-  ExerciseModule['ActivityBoard']
->> = ({
+const Playground: FunctionComponent<
+  ComponentProps<ExerciseModule['ActivityBoard']>
+> = ({
   step,
   stepActivityState,
   setStepActivityState,
   Footer,
   Chessboard,
+  completeStep,
 }) => {
   const { position, shapes } = step.state;
   const {
@@ -49,17 +50,34 @@ const Playground: FunctionComponent<ComponentProps<
   }, [position, activeMoveIndex, activeMoves]);
   const handleMove = useCallback(
     (position, move, piece, captured) => {
+      const correctMove = isCorrectActivityMove(move, stepToPlayMove?.move);
+      const activeMoveIndex = correctMove
+        ? moveToPlayIndex + 1
+        : moveToPlayIndex;
+      // Skipping next move from the variation as it's played by the "computer"
+      const nextUSerMove = activeMoves?.[activeMoveIndex + 1];
+
+      if (isVariationCompleted(correctMove, nextUSerMove)) {
+        completeStep(step);
+      }
+
       setStepActivityState({
         moves: {
           ...activityMoves,
           [moveToPlayIndex]: { move, piece, captured },
         },
-        activeMoveIndex: isCorrectActivityMove(move, stepToPlayMove?.move)
-          ? moveToPlayIndex + 1
-          : moveToPlayIndex,
+        activeMoveIndex,
       });
     },
-    [activityMoves, moveToPlayIndex, setStepActivityState, stepToPlayMove],
+    [
+      activeMoves,
+      activityMoves,
+      completeStep,
+      moveToPlayIndex,
+      setStepActivityState,
+      step,
+      stepToPlayMove,
+    ],
   );
 
   return (

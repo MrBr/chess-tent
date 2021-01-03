@@ -7,7 +7,7 @@ import {
 } from '@types';
 import { isStepCompleted } from '@chess-tent/models';
 
-const { Headline4, Text, Button, Row, Col, Check } = ui;
+const { Headline4, Button, Row, Col, Check, Container } = ui;
 const { LessonToolboxText } = components;
 
 const Playground: FunctionComponent<
@@ -41,19 +41,21 @@ const Playground: FunctionComponent<
     <>
       <Headline4>Select the answer</Headline4>
       <LessonToolboxText defaultText={question} />
-      {options?.map(({ text, correct }, index) => (
-        <Row key={index}>
-          <Col xs={0}>
-            <Check
-              isInvalid={!!(selectedOptionIndex && correct && completed)}
-              onChange={() => handleAnswerChange(index)}
-            />
-          </Col>
-          <Col>
-            <Text>{text}</Text>
-          </Col>
-        </Row>
-      ))}
+      <Container>
+        {options?.map(({ text, correct }, index) => (
+          <Row key={index} className="align-items-center">
+            <Col className="col-auto pr-0">
+              <Check
+                isInvalid={!!(selectedOptionIndex && correct && completed)}
+                onChange={() => handleAnswerChange(index)}
+              />
+            </Col>
+            <Col className="pl-0">
+              <LessonToolboxText defaultText={text} />
+            </Col>
+          </Row>
+        ))}
+      </Container>
       {completed && <LessonToolboxText defaultText={explanation} />}
       <Button onClick={handleSubmit} size="extra-small">
         Submit

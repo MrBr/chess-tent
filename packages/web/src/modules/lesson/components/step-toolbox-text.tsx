@@ -37,10 +37,11 @@ export const ToolboxText: Components['LessonToolboxText'] = styled(
     color: '#2F3849',
     fontSize: 13 / 16 + 'em',
     cursor: 'pointer',
+    margin: 0,
   },
   ({ placeholder }) => ({
     '&:empty:before': {
-      content: `"${placeholder || 'Type here..'}"`,
+      content: `"${placeholder || ''}"`,
       color: '#A3A7AE',
     },
   }),

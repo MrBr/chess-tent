@@ -10,18 +10,22 @@ const { LessonToolboxText } = components;
 
 export default ({ step, updateStep }: ExerciseToolboxProps) => {
   const state = step.state.exerciseState as ExerciseSelectSquaresAndPiecesState;
-  const updateQuestion = useUpdateExerciseStateProp<
-    ExerciseSelectSquaresAndPiecesState
-  >(updateStep, step, 'question');
-  const updateExplanation = useUpdateExerciseStateProp<
-    ExerciseSelectSquaresAndPiecesState
-  >(updateStep, step, 'explanation');
+  const updateQuestion = useUpdateExerciseStateProp<ExerciseSelectSquaresAndPiecesState>(
+    updateStep,
+    step,
+    'question',
+  );
+  const updateExplanation = useUpdateExerciseStateProp<ExerciseSelectSquaresAndPiecesState>(
+    updateStep,
+    step,
+    'explanation',
+  );
 
   return (
     <>
       <LessonToolboxText
         defaultText={state.question}
-        placeholder="Describe what should user select.."
+        placeholder="Write question.."
         onChange={updateQuestion}
       />
       <LessonToolboxText

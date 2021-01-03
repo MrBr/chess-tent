@@ -13,9 +13,9 @@ import QuestionnaireActivitySidebar from './questionnaire/activity-sidebar';
 import SelectSquaresPiecesActivitySidebar from './select-squares-pieces/activity-sidebar';
 import ArrangePiecesActivitySidebar from './arrange-pieces/activity-sidebar';
 
-const ActivityBoard: FunctionComponent<ComponentProps<
-  ExerciseModule['ActivityBoard']
->> = props => {
+const ActivityBoard: FunctionComponent<
+  ComponentProps<ExerciseModule['ActivityBoard']>
+> = props => {
   switch (props.step.state.exerciseType) {
     case 'variation':
       return <VariationActivityBoard {...props} />;
@@ -32,9 +32,9 @@ const ActivityBoard: FunctionComponent<ComponentProps<
   }
 };
 
-const ActivitySidebar: FunctionComponent<ComponentProps<
-  ExerciseModule['ActivitySidebar']
->> = props => {
+const ActivitySidebar: FunctionComponent<
+  ComponentProps<ExerciseModule['ActivitySidebar']>
+> = props => {
   switch (props.step.state.exerciseType) {
     case 'variation':
       return <VariationActivitySidebar {...props} />;

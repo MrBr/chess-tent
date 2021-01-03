@@ -19,20 +19,22 @@ export default ({ step, updateStep }: ExerciseToolboxProps) => {
     step,
     'explanation',
   );
-  const updateActiveMoveIndex = useUpdateExerciseStateProp<
-    ExerciseVariationState
-  >(updateStep, step, 'activeMoveIndex');
+  const updateActiveMoveIndex = useUpdateExerciseStateProp<ExerciseVariationState>(
+    updateStep,
+    step,
+    'activeMoveIndex',
+  );
 
   return (
     <>
       <LessonToolboxText
         defaultText={question}
-        placeholder="The task.."
+        placeholder="Describe the task.."
         onChange={updateQuestion}
       />
       <Container className="p-0">
         <Text inline fontSize="small">
-          Moves:{' '}
+          Moves:
         </Text>
         <Text
           inline

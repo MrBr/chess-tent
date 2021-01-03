@@ -18,7 +18,7 @@ export interface Lesson extends Subject {
   difficulty: Difficulty;
   tags?: Tag[];
   users?: User[];
-  published: boolean;
+  published?: boolean;
   state: {
     chapters: Chapter[];
     title: string;
@@ -32,7 +32,7 @@ export interface NormalizedLesson {
   owner: User['id'];
   difficulty: Lesson['difficulty'];
   tags?: Tag['id'][];
-  published: boolean;
+  published?: boolean;
   users?: User['id'][];
   state: {
     chapters: Chapter[];

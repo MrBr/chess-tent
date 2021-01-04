@@ -4,10 +4,11 @@ import {
   ExerciseModule,
   Shape,
 } from '@types';
+import { isSelectionCorrect } from './utils';
 
-const Playground: FunctionComponent<ComponentProps<
-  ExerciseModule['ActivityBoard']
->> = ({
+const Playground: FunctionComponent<
+  ComponentProps<ExerciseModule['ActivityBoard']>
+> = ({
   step,
   stepActivityState,
   setStepActivityState,
@@ -22,7 +23,7 @@ const Playground: FunctionComponent<ComponentProps<
   const handleShapesChange = useCallback(
     (newSelectedShapes: Shape[]) => {
       const selectedShapes = newSelectedShapes.map(selectedShape => {
-        return shapes.some(shape => shape.orig === selectedShape.orig)
+        return isSelectionCorrect(shapes, selectedShape)
           ? selectedShape
           : {
               ...selectedShape,

@@ -1,50 +1,50 @@
-import application, { middleware } from "@application";
+import application, { middleware } from '@application';
 import {
   canEditActivity,
   getActivity,
   saveActivity,
   findActivities,
   updateActivity,
-} from "./middleware";
+} from './middleware';
 
 const { identify, sendData, sendStatusOk, toLocals } = middleware;
 
 application.service.registerPostRoute(
-  "/activity/save",
+  '/activity/save',
   identify,
-  toLocals("activity", (req) => req.body),
+  toLocals('activity', req => req.body),
   canEditActivity,
   saveActivity,
-  sendStatusOk
+  sendStatusOk,
 );
 application.service.registerPostRoute(
-  "/activity-update/:activityId",
+  '/activity-update/:activityId',
   identify,
-  toLocals("activity.id", (req) => req.params.activityId),
-  toLocals("updates", (req) => req.body),
+  toLocals('activity.id', req => req.params.activityId),
+  toLocals('updates', req => req.body),
   canEditActivity,
   updateActivity,
-  sendStatusOk
+  sendStatusOk,
 );
 
 application.service.registerPostRoute(
-  "/activities",
+  '/activities',
   identify,
-  toLocals("filters", (req) => [
-    { owner: req.body.owner },
-    { users: req.body.users },
-    { subject: req.body.subject },
-    { state: req.body.state },
-  ]),
+  toLocals('filters', req => ({
+    owner: req.body.owner,
+    users: req.body.users,
+    subject: req.body.subject,
+    state: req.body.state,
+  })),
   findActivities,
-  sendData("activities")
+  sendData('activities'),
 );
 
 application.service.registerGetRoute(
-  "/activity/:activityId",
+  '/activity/:activityId',
   identify,
-  toLocals("activity.id", (req) => req.params.activityId),
+  toLocals('activity.id', req => req.params.activityId),
   getActivity,
   canEditActivity,
-  sendData("activity")
+  sendData('activity'),
 );

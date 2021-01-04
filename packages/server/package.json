@@ -6,6 +6,7 @@
   "scripts": {
     "preinstall": "node ./scripts/preinstall.js",
     "start": "node -r ts-node/register -r tsconfig-paths/register --inspect=127.0.0.1:30001 ./src/index.ts",
+    "start:nodemon": "nodemon -r ts-node/register -r tsconfig-paths/register --inspect=127.0.0.1:30001 ./src/index.ts",
     "build:dev": "echo no build",
     "build": "yarn run clean && yarn run compile",
     "clean": "rimraf -rf ./dist",

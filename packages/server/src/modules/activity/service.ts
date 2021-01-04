@@ -1,12 +1,14 @@
-import { ActivityModel, depopulate } from "./model";
-import { Activity, SubjectPathUpdate, User } from "@chess-tent/models";
-import { ActivityFilters } from "@chess-tent/types";
-import { service } from "@application";
+import { orQueries } from './../db/utils';
+import { MongooseFilterQuery } from 'mongoose';
+import { service, db, utils } from '@application';
+import { Activity, SubjectPathUpdate, User } from '@chess-tent/models';
+import { ActivityFilters } from '@chess-tent/types';
+import { ActivityModel, depopulate } from './model';
 
 export const saveActivity = (activity: Activity) =>
   new Promise(resolve => {
     ActivityModel.updateOne({ _id: activity.id }, depopulate(activity), {
-      upsert: true
+      upsert: true,
     }).exec(err => {
       if (err) {
         throw err;
@@ -16,8 +18,8 @@ export const saveActivity = (activity: Activity) =>
   });
 
 export const updateActivity = (
-  activityId: Activity["id"],
-  updates: SubjectPathUpdate[]
+  activityId: Activity['id'],
+  updates: SubjectPathUpdate[],
 ) => {
   const $set = service.subjectPathUpdatesToMongoose$set(updates);
   return new Promise(resolve => {
@@ -25,8 +27,8 @@ export const updateActivity = (
       { _id: activityId },
       { $set },
       {
-        upsert: true
-      }
+        upsert: true,
+      },
     ).exec(err => {
       if (err) {
         throw err;
@@ -37,15 +39,15 @@ export const updateActivity = (
 };
 
 export const getActivity = (
-  activityId: Activity["id"]
+  activityId: Activity['id'],
 ): Promise<Activity | null> =>
   new Promise(resolve => {
     ActivityModel.findById(activityId)
-      .populate("owner")
-      .populate("users")
+      .populate('owner')
+      .populate('users')
       .populate({
-        path: "subject",
-        populate: "owner"
+        path: 'subject',
+        populate: 'owner',
       })
       .exec((err, result) => {
         if (err) {
@@ -56,15 +58,27 @@ export const getActivity = (
   });
 
 export const findActivities = (
-  activityFilters: ActivityFilters[]
+  activityFilters: ActivityFilters,
 ): Promise<Activity[]> =>
   new Promise(resolve => {
-    ActivityModel.find({ $or: activityFilters })
-      .populate("owner")
-      .populate("users")
+    const owner = utils.notNullOrUndefined({
+      owner: activityFilters.owner,
+    });
+    const users = utils.notNullOrUndefined({
+      users: activityFilters.users,
+    });
+    const query: MongooseFilterQuery<any> = utils.notNullOrUndefined({
+      state: activityFilters.state,
+      subject: activityFilters.subject,
+      ...db.orQueries(owner, users),
+    });
+
+    ActivityModel.find(query)
+      .populate('owner')
+      .populate('users')
       .populate({
-        path: "subject",
-        populate: "owner"
+        path: 'subject',
+        populate: 'owner',
       })
       .exec((err, result) => {
         if (err) {
@@ -75,12 +89,12 @@ export const findActivities = (
   });
 
 export const canEditActivity = (
-  activityId: Activity["id"],
-  userId: User["id"]
+  activityId: Activity['id'],
+  userId: User['id'],
 ) =>
   new Promise(resolve => {
     ActivityModel.findOne({
-      _id: activityId
+      _id: activityId,
     }).exec((err, result) => {
       if (err) {
         throw err;
@@ -88,7 +102,7 @@ export const canEditActivity = (
       resolve(
         !result ||
           result?.owner === userId ||
-          result?.users.some(user => user === userId)
+          result?.users.some(user => user === userId),
       );
     });
   });

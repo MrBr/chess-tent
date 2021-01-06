@@ -1,34 +1,33 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import { components, hooks, requests, ui } from '@application';
 import { Lesson, User } from '@chess-tent/models';
 import { debounce } from 'lodash';
 
-const { Label, Headline3, Button, ModalBody, Text, Modal, AsyncSelect } = ui;
+const { Label, Headline3, ModalBody, Text, Modal, AsyncSelect } = ui;
 const { useApi } = hooks;
 const { UserAvatar } = components;
 
 const searchUsers = debounce((name, callback) => {
-  requests.users({ search: name }).then(({ data }) => callback(data));
+  requests.users({ search: name }).then(({ data }) => {
+    console.log(data);
+    callback(data);
+  });
 }, 500);
 
 export default ({ close, lesson }: { close: () => void; lesson: Lesson }) => {
   const users = lesson.users || [];
-  const [newUsers, setNewUsers] = useState([]);
   const { fetch: saveLesson, response: assignResponse, loading } = useApi(
     requests.lessonPatch,
   );
 
-  const saveCollaborators = useCallback(() => {
-    saveLesson(lesson.id, { users: newUsers });
-  }, [lesson.id, newUsers, saveLesson]);
-
   const onUsersChange = useCallback(
     selectOptions => {
-      setNewUsers(
-        selectOptions ? selectOptions.map(({ id }: { id: string }) => id) : [],
-      );
+      const newUsers = selectOptions
+        ? selectOptions.map(({ id }: { id: string }) => id)
+        : [];
+      saveLesson(lesson.id, { users: newUsers });
     },
-    [setNewUsers],
+    [lesson.id, saveLesson],
   );
 
   return (
@@ -38,11 +37,14 @@ export default ({ close, lesson }: { close: () => void; lesson: Lesson }) => {
         <Label>Sharing with</Label>
         <AsyncSelect
           name="user"
+          cacheOptions
           placeholder="Find collaborator"
           loadOptions={searchUsers}
           isMulti
           onChange={onUsersChange}
           defaultValue={users}
+          getOptionValue={({ id }) => id}
+          className="mb-3"
           formatOptionLabel={(userOption: User) => (
             <>
               <UserAvatar user={userOption} size="small" />
@@ -50,20 +52,8 @@ export default ({ close, lesson }: { close: () => void; lesson: Lesson }) => {
             </>
           )}
         />
-        <Button
-          type="submit"
-          disabled={loading}
-          onClick={saveCollaborators}
-          className="mt-3"
-        >
-          Assign
-        </Button>
-        <Text inline fontSize="small" className="ml-4">
-          {loading
-            ? 'Assigning'
-            : !!assignResponse
-            ? 'Collaborators assigned'
-            : null}
+        <Text inline fontSize="small" className="mt-3">
+          {loading ? 'Saving' : !!assignResponse ? 'Collaborators saved' : null}
         </Text>
       </ModalBody>
     </Modal>

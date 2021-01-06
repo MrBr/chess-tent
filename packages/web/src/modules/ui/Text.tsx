@@ -1,6 +1,7 @@
 import React, { ComponentType } from 'react';
 import styled, { CSSObject } from '@emotion/styled';
 import { TextProps } from '@types';
+import isPropValid from '@emotion/is-prop-valid';
 import { withHtml } from './hoc';
 
 const fontSize = (props: TextProps) => {
@@ -66,16 +67,23 @@ const headingStyle = [
 ];
 
 const BaseText: ComponentType<TextProps> = withHtml<TextProps>(
-  ({ children, className, onClick, inline, ...textProps }) =>
-    inline ? (
-      <span className={className} onClick={onClick} {...textProps}>
-        {children}
-      </span>
-    ) : (
-      <p className={className} onClick={onClick} {...textProps}>
-        {children}
-      </p>
-    ),
+  ({
+    children,
+    className,
+    onClick,
+    inline,
+    contentEditable,
+    dangerouslySetInnerHTML,
+  }) => {
+    const textProps = {
+      className,
+      contentEditable,
+      onClick,
+      dangerouslySetInnerHTML,
+      children,
+    };
+    return inline ? <span {...textProps} /> : <p {...textProps} />;
+  },
 );
 const StyledBaseText = styled(BaseText);
 

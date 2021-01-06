@@ -45,7 +45,7 @@ export const useUserTrainings = (
     if (loading || response || error || trainings) {
       return;
     }
-    fetch({ owner: user.id, state: { training: true } });
+    fetch({ owner: user.id, users: user.id, state: { training: true } });
   }, [fetch, loading, response, error, trainings, user]);
   return [trainings, setTrainings, resetTrainings];
 };

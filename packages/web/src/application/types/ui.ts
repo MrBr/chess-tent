@@ -24,6 +24,7 @@ import {
   Nav,
   Navbar,
   NavDropdown,
+  CardProps,
 } from 'react-bootstrap';
 import DropdownToggle from 'react-bootstrap/DropdownToggle';
 import { ErrorMessageProps, Formik } from 'formik';
@@ -215,7 +216,7 @@ export type UI = {
       onChange?: ReactEventHandler;
     }
   >;
-  Card: ComponentType<ClickProps & ClassNameProps>;
+  Card: ComponentType<ClickProps & ClassNameProps & CardProps>;
   CardBody: ComponentType;
   CardHeader: ComponentType;
   Modal: UIComponent<ModalProps & { close?: () => void; fullScreen?: boolean }>;

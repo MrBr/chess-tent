@@ -12,15 +12,9 @@ const isPieceToMove = (
 ): boolean =>
   !!exerciseMoves?.some(exerciseMove => exerciseMove.move?.[0] === orig);
 
-const Playground: FunctionComponent<ComponentProps<
-  ExerciseModule['ActivityBoard']
->> = ({
-  step,
-  stepActivityState,
-  setStepActivityState,
-  Footer,
-  Chessboard,
-}) => {
+const Playground: FunctionComponent<
+  ComponentProps<ExerciseModule['ActivityBoard']>
+> = ({ step, stepActivityState, setStepActivityState, Footer, Chessboard }) => {
   const { position, shapes } = step.state;
   const {
     moves: activityMoves,
@@ -69,7 +63,7 @@ const Playground: FunctionComponent<ComponentProps<
       validateMove={validateMove}
       animation
       footer={<Footer />}
-      edit
+      allowAllMoves
     />
   );
 };

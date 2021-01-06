@@ -4,7 +4,7 @@ import React, {
   useCallback,
   useMemo,
 } from 'react';
-import { components, services } from '@application';
+import { services } from '@application';
 import {
   ExerciseModule,
   ExerciseArrangePiecesState,
@@ -13,7 +13,6 @@ import {
 } from '@types';
 import { useUpdateExerciseStep } from '../../hooks';
 
-const { ChessboardFooter } = components;
 const { createFenForward, createNotableMove } = services;
 
 const Editor: FunctionComponent<
@@ -66,7 +65,7 @@ const Editor: FunctionComponent<
 
   return (
     <Chessboard
-      edit
+      allowAllMoves
       sparePieces
       fen={activePosition}
       onMove={handleChange}
@@ -75,12 +74,7 @@ const Editor: FunctionComponent<
       header={status}
       onShapesChange={handleShapes}
       shapes={shapes}
-      footer={
-        <ChessboardFooter
-          editing={!!editing}
-          updateEditing={editing => updateExerciseStep({ editing })}
-        />
-      }
+      onUpdateEditing={editing => updateExerciseStep({ editing })}
     />
   );
 };

@@ -2,13 +2,13 @@ import React, { ComponentProps, FunctionComponent } from 'react';
 import { ExerciseModule } from '@types';
 import { updateStepState } from '@chess-tent/models';
 
-const Editor: FunctionComponent<ComponentProps<
-  ExerciseModule['EditorBoard']
->> = ({ step, Chessboard, status, updateStep }) => {
+const Editor: FunctionComponent<
+  ComponentProps<ExerciseModule['EditorBoard']>
+> = ({ step, Chessboard, status, updateStep }) => {
   const { position, shapes } = step.state;
   return (
     <Chessboard
-      edit
+      allowAllMoves
       sparePieces
       fen={position}
       onPieceDrop={position => updateStep(updateStepState(step, { position }))}

@@ -146,7 +146,7 @@ export class ActivityRenderer extends React.Component<
     return (
       <Chessboard
         onMove={this.startAnalysingPosition}
-        edit
+        allowAllMoves
         {...props}
         header={<Header lesson={lesson} />}
       />

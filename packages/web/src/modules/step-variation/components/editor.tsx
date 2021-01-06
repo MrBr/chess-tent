@@ -20,7 +20,7 @@ import { components, constants, services, ui } from '@application';
 import BoardSrc from '../images/board.svg';
 
 const { Col, Row, Img } = ui;
-const { Stepper, StepTag, StepMove, ChessboardFooter } = components;
+const { Stepper, StepTag, StepMove } = components;
 const { START_FEN, KINGS_FEN } = constants;
 
 const boardChange = (
@@ -154,7 +154,7 @@ const EditorBoard: VariationModule['EditorBoard'] = ({
       ),
     [step, updateStep, setActiveStep],
   );
-  const onPieceAddRemove = useCallback(
+  const onFENChange = useCallback(
     (newPosition: FEN) =>
       boardChange(step, updateStep, setActiveStep, newPosition),
     [step, updateStep, setActiveStep],
@@ -162,23 +162,20 @@ const EditorBoard: VariationModule['EditorBoard'] = ({
 
   return (
     <Chessboard
-      edit
+      allowAllMoves
       sparePieces
       fen={position}
       onMove={onChangeHandle}
       onShapesChange={updateShapes}
-      onPieceDrop={onPieceAddRemove}
-      onPieceRemove={onPieceAddRemove}
+      onPieceDrop={onFENChange}
+      onPieceRemove={onFENChange}
+      onFENSet={onFENChange}
       shapes={shapes}
       header={status}
-      footer={
-        <ChessboardFooter
-          updateEditing={updateEditing}
-          editing={!!editing}
-          onReset={resetHandle}
-          onClear={clearHandle}
-        />
-      }
+      onUpdateEditing={updateEditing}
+      editing={!!editing}
+      onReset={resetHandle}
+      onClear={clearHandle}
     />
   );
 };

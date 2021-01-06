@@ -30,10 +30,11 @@ import { Config } from '@chess-tent/chessground/dist/config';
 
 import { SparePieces } from './spare-pieces';
 import Promotion from './promotion';
+import Footer from './footer';
 import { replaceFENPosition, updateMovable } from './_helpers';
 
 const { Evaluator } = components;
-const { START_FEN } = constants;
+const { START_FEN, MAX_BOARD_SIZE } = constants;
 const { Modal } = ui;
 const { Chess, createMoveShortObject } = services;
 
@@ -57,6 +58,10 @@ type ChessgroundMappedPropsType = Record<
     | 'sparePieces'
     | 'onPieceDrop'
     | 'onPieceRemove'
+    | 'onClear'
+    | 'onUpdateEditing'
+    | 'onFENSet'
+    | 'editing'
   >,
   string
 >;
@@ -69,7 +74,7 @@ const ChessgroundMappedProps: ChessgroundMappedPropsType = {
   resizable: 'resizable',
   eraseDrawableOnClick: 'drawable.eraseOnClick',
   animation: 'animation.enabled',
-  edit: 'movable.free',
+  allowAllMoves: 'movable.free',
 };
 
 const BoardHeader = styled.div<{
@@ -77,20 +82,7 @@ const BoardHeader = styled.div<{
 }>(
   {
     margin: '1em auto',
-    maxWidth: 720,
-  },
-  ({ width }) => ({ width }),
-);
-
-const BoardFooter = styled.div<{
-  width: string | number;
-}>(
-  {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    margin: '1em auto',
-    maxWidth: 720,
+    maxWidth: MAX_BOARD_SIZE,
   },
   ({ width }) => ({ width }),
 );
@@ -136,8 +128,8 @@ const BoardContainer = styled<
   width: size,
   position: 'relative',
   margin: 'auto',
-  maxWidth: 720,
-  maxHeight: 720,
+  maxWidth: MAX_BOARD_SIZE,
+  maxHeight: MAX_BOARD_SIZE,
   boxSizing: 'content-box',
 }));
 
@@ -147,7 +139,8 @@ window.addEventListener('resize', () =>
   document.body.dispatchEvent(new Event('chessground.resize')),
 );
 
-class Chessboard extends Component<ChessboardProps, ChessboardState>
+class Chessboard
+  extends Component<ChessboardProps, ChessboardState>
   implements ChessboardInterface {
   boardHost: RefObject<HTMLDivElement> = React.createRef();
   api: Api = new Proxy({}, {}) as Api;
@@ -181,7 +174,7 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
       eraseDrawableOnClick,
       selectablePieces,
       resizable,
-      edit,
+      allowAllMoves,
     } = this.props;
 
     if (!this.boardHost.current) {
@@ -202,7 +195,7 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
         duration: 0,
       },
       movable: {
-        free: edit,
+        free: allowAllMoves,
         validate: this.validateMove,
         events: {
           after: this.onMove,
@@ -230,7 +223,7 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
    * @param config
    */
   setConfig(config: Partial<Config>) {
-    const finalConfig = this.props.edit
+    const finalConfig = this.props.allowAllMoves
       ? config
       : updateMovable(config, config.fen || this.props.fen);
     this.api.set(finalConfig);
@@ -303,13 +296,13 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
       move?: Move,
       options?: { piece?: Piece; promoted?: PieceRolePromotable },
     ) => {
-      const { edit } = this.props;
+      const { allowAllMoves } = this.props;
       const fen = this.api.getFen();
       if (fen === lastFen) {
         return this.chess.fen();
       }
       lastFen = fen;
-      if (edit) {
+      if (allowAllMoves) {
         this.chess.load(
           // Update position and color who's turn is.
           // Useful for variation to automatically start with a correct color.
@@ -349,6 +342,21 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
   onReset = () => {
     const { onReset } = this.props;
     onReset && onReset();
+  };
+
+  onClear = () => {
+    const { onClear } = this.props;
+    onClear && onClear();
+  };
+
+  onUpdateEditing = (editing: boolean) => {
+    const { onUpdateEditing } = this.props;
+    onUpdateEditing && onUpdateEditing(editing);
+  };
+
+  onFENSet = (FEN: string) => {
+    const { onFENSet } = this.props;
+    onFENSet && onFENSet(FEN);
   };
 
   onShapeAdd = (shape: DrawShape) => {};
@@ -432,7 +440,15 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
   };
 
   render() {
-    const { header, fen, evaluate, footer, size, sparePieces } = this.props;
+    const {
+      header,
+      fen,
+      evaluate,
+      editing,
+      size,
+      sparePieces,
+      footer,
+    } = this.props;
     const { renderPrompt, promotion } = this.state;
     const sparePiecesElement = sparePieces ? (
       <SparePieces
@@ -465,7 +481,18 @@ class Chessboard extends Component<ChessboardProps, ChessboardState>
             />
           )}
         </BoardContainer>
-        <BoardFooter width={size as string}>{footer}</BoardFooter>
+        {footer || (
+          <Footer
+            width={size as number}
+            editing={!!editing}
+            onReset={this.onReset}
+            onClear={this.onClear}
+            updateEditing={this.onUpdateEditing}
+            onFENSet={this.onFENSet}
+            position={fen}
+            className="mt-4"
+          />
+        )}
         <Modal
           container={this.boardHost}
           show={!!renderPrompt}

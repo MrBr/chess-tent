@@ -8,13 +8,13 @@ export default ({
   editing,
 }: {
   editing: boolean;
-  onChange: (editing: boolean) => void;
+  onChange?: (editing: boolean) => void;
 }) => (
   <ToggleButton
     value={1}
     checked={!!editing}
     size="extra-small"
-    onChange={() => onChange(!editing)}
+    onChange={() => onChange && onChange(!editing)}
   >
     {editing ? 'Done editing' : 'Edit board'}
   </ToggleButton>

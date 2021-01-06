@@ -127,7 +127,7 @@ const EditorBoard: MoveModule['EditorBoard'] = ({
       ),
     [stepRoot, step, updateStep, setActiveStep],
   );
-  const onPieceAddRemove = useCallback(
+  const onFENChange = useCallback(
     (position: FEN) => {
       const newVariation = services.createStep('variation', {
         position,
@@ -141,12 +141,13 @@ const EditorBoard: MoveModule['EditorBoard'] = ({
 
   return (
     <Chessboard
-      edit
+      allowAllMoves
       sparePieces
       fen={position}
       onMove={onChangeHandle}
-      onPieceRemove={onPieceAddRemove}
-      onPieceDrop={onPieceAddRemove}
+      onPieceRemove={onFENChange}
+      onPieceDrop={onFENChange}
+      onFENSet={onFENChange}
       header={status}
       onShapesChange={updateShapes}
       shapes={shapes}

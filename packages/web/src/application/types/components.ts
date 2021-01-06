@@ -59,6 +59,17 @@ export interface ChessboardState {
   };
 }
 
+export interface ChessboardFooterProps {
+  editing: boolean;
+  width: number | string;
+  position: FEN;
+  className?: string;
+  updateEditing: (editing: boolean) => void;
+  onReset: () => void;
+  onClear: () => void;
+  onFENSet: (FEN: string) => void;
+}
+
 export interface ChessboardProps {
   header?: ReactNode;
   footer?: ReactNode;
@@ -92,7 +103,13 @@ export interface ChessboardProps {
   eraseDrawableOnClick?: boolean;
   shapes?: Shape[];
   sparePieces?: boolean;
-  edit?: boolean;
+  editing?: boolean;
+  allowAllMoves?: boolean;
+
+  // Footer props
+  onUpdateEditing?: (editing: boolean) => void;
+  onClear?: () => void;
+  onFENSet?: (FEN: string) => void;
 }
 
 export interface ChessboardInterface
@@ -109,12 +126,6 @@ export interface ChessboardInterface
     options?: { piece?: Piece; promoted?: PieceRolePromotable },
   ) => FEN;
   move: (from: Key, to: Key) => void;
-}
-export interface ChessboardFooterProps {
-  updateEditing?: (editing: boolean) => void;
-  editing: boolean;
-  onReset?: () => void;
-  onClear?: () => void;
 }
 
 export type StepperProps = {
@@ -335,10 +346,6 @@ export type Components = {
     onEdit?: (title: string) => void;
     onNew?: () => void;
     onRemove?: (chapter: Chapter) => void;
-  }>;
-  EditBoardToggle: ComponentType<{
-    editing: boolean;
-    onChange: (editing: boolean) => void;
   }>;
   UserAvatar: ComponentType<
     {

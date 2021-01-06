@@ -1,5 +1,5 @@
 import React, { ComponentProps, FunctionComponent, useCallback } from 'react';
-import { components, services } from '@application';
+import { services } from '@application';
 import {
   ExerciseModule,
   ExerciseMove,
@@ -10,7 +10,6 @@ import {
 } from '@types';
 import { useUpdateExerciseStep } from '../../hooks';
 
-const { EditBoardToggle } = components;
 const { getPiece, getTurnColor, setTurnColor, createNotableMove } = services;
 
 const updateMoveShapes = (
@@ -118,7 +117,7 @@ const EditorBoard: FunctionComponent<
 
   return (
     <Chessboard
-      edit
+      allowAllMoves
       sparePieces
       fen={activePosition}
       onMove={handleChange}
@@ -128,14 +127,8 @@ const EditorBoard: FunctionComponent<
       onShapesChange={handleShapes}
       shapes={activeShapes}
       validateMove={validateMove}
-      footer={
-        <>
-          <EditBoardToggle
-            onChange={editing => updateExerciseStep({ editing })}
-            editing={!!editing}
-          />
-        </>
-      }
+      editing={!!editing}
+      onUpdateEditing={editing => updateExerciseStep({ editing })}
     />
   );
 };

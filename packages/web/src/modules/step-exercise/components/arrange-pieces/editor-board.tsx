@@ -4,7 +4,7 @@ import React, {
   useCallback,
   useMemo,
 } from 'react';
-import { components, services } from '@application';
+import { services } from '@application';
 import {
   ExerciseModule,
   ExerciseArrangePiecesState,
@@ -13,12 +13,11 @@ import {
 } from '@types';
 import { useUpdateExerciseStep } from '../../hooks';
 
-const { EditBoardToggle } = components;
 const { createFenForward, createNotableMove } = services;
 
-const Editor: FunctionComponent<ComponentProps<
-  ExerciseModule['EditorBoard']
->> = ({ step, Chessboard, status, updateStep }) => {
+const Editor: FunctionComponent<
+  ComponentProps<ExerciseModule['EditorBoard']>
+> = ({ step, Chessboard, status, updateStep }) => {
   const { position, shapes } = step.state;
   const { moves, editing } = step.state
     .exerciseState as ExerciseArrangePiecesState;
@@ -66,7 +65,7 @@ const Editor: FunctionComponent<ComponentProps<
 
   return (
     <Chessboard
-      edit
+      allowAllMoves
       sparePieces
       fen={activePosition}
       onMove={handleChange}
@@ -75,12 +74,7 @@ const Editor: FunctionComponent<ComponentProps<
       header={status}
       onShapesChange={handleShapes}
       shapes={shapes}
-      footer={
-        <EditBoardToggle
-          editing={!!editing}
-          onChange={editing => updateExerciseStep({ editing })}
-        />
-      }
+      onUpdateEditing={editing => updateExerciseStep({ editing })}
     />
   );
 };

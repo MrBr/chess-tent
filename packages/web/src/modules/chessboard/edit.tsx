@@ -1,18 +1,20 @@
-import React, { ComponentProps } from 'react';
+import React from 'react';
 import { ui } from '@application';
-import { Components } from '@types';
 
 const { ToggleButton } = ui;
 
 export default ({
   onChange,
   editing,
-}: ComponentProps<Components['EditBoardToggle']>) => (
+}: {
+  editing: boolean;
+  onChange?: (editing: boolean) => void;
+}) => (
   <ToggleButton
     value={1}
     checked={!!editing}
     size="extra-small"
-    onChange={() => onChange(!editing)}
+    onChange={() => onChange && onChange(!editing)}
   >
     {editing ? 'Done editing' : 'Edit board'}
   </ToggleButton>

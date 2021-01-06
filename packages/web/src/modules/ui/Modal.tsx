@@ -19,25 +19,26 @@ const ModalProviderContext = React.createContext<
   (renderModal: (close: () => void) => ReactElement) => void
 >(() => {});
 
-const Modal = (props =>
+const Modal = (({ close, ...props }) =>
   (
     <BModal
-      onEscapeKeyDown={props.close}
+      onEscapeKeyDown={close}
       {...props}
       dialogClassName={props.fullScreen ? 'full-screen-dialog' : ''}
     >
       {props.children}
-      {props.close && (
+      {close && (
         <Absolute
           {...{ [props.fullScreen ? 'left' : 'right']: 25 }}
           top={15}
-          onClick={props.close}
+          onClick={close}
         >
           <Icon type="close" size="large" />
         </Absolute>
       )}
     </BModal>
   ) as unknown) as BModal;
+
 Modal.defaultProps = {
   ...BModal.defaultProps,
   onHide: () => {},

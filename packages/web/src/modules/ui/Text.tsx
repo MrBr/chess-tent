@@ -66,16 +66,8 @@ const headingStyle = [
 ];
 
 const BaseText: ComponentType<TextProps> = withHtml<TextProps>(
-  ({ children, className, onClick, inline, ...textProps }) =>
-    inline ? (
-      <span className={className} onClick={onClick} {...textProps}>
-        {children}
-      </span>
-    ) : (
-      <p className={className} onClick={onClick} {...textProps}>
-        {children}
-      </p>
-    ),
+  ({ inline, initialHtml, ...textProps }) =>
+    inline ? <span {...textProps} /> : <p {...textProps} />,
 );
 const StyledBaseText = styled(BaseText);
 

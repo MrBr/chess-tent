@@ -6,10 +6,7 @@ export interface FileUploaderProps {
   files: File[];
 }
 
-export type HtmlProps = Omit<
-  ContentEditableProps,
-  'dangerouslySetInnerHTML'
-> & {
+export type HtmlProps = ContentEditableProps & {
   initialHtml?: string;
 };
 

@@ -6,7 +6,7 @@ import TrainingCard from './training-card';
 
 const { Container, Row, Col } = ui;
 
-const Trainings: Components['Trainings'] = ({ user }) => {
+const CoachTrainings: Components['CoachTrainings'] = ({ user }) => {
   const [trainings] = useUserTrainings(user);
   return (
     <Container fluid>
@@ -21,4 +21,4 @@ const Trainings: Components['Trainings'] = ({ user }) => {
   );
 };
 
-export default Trainings;
+export default CoachTrainings;

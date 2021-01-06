@@ -3,7 +3,7 @@ import { components, hooks, ui } from '@application';
 import { Tag, User } from '@chess-tent/models';
 import { LessonsRequest } from '@chess-tent/types';
 
-const { Page, Trainings, LessonBrowser } = components;
+const { Page, CoachTrainings, LessonBrowser } = components;
 const { useLessons } = hooks;
 const { Headline3 } = ui;
 
@@ -28,7 +28,7 @@ export default ({ user }: { user: User }) => {
     <Page>
       <LessonBrowser lessons={lessons} onFiltersChange={handleFilterChange} />
       <Headline3>My trainings</Headline3>
-      <Trainings user={user} />
+      <CoachTrainings user={user} />
     </Page>
   );
 };

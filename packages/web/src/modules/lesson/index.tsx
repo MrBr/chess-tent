@@ -44,9 +44,9 @@ application.register(
   },
 );
 application.register(
-  () => import('./components/trainings'),
+  () => import('./components/coach-trainings'),
   module => {
-    application.components.Trainings = module.default;
+    application.components.CoachTrainings = module.default;
   },
 );
 

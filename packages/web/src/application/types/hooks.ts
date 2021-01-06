@@ -25,6 +25,7 @@ import { useParams, useLocation } from 'react-router-dom';
 import { History } from 'history';
 import { LessonActivity } from './activity';
 import { GenericArguments } from './_helpers';
+import { Steps } from './steps';
 
 export type RecordHookReturn<T extends RecordValue> = [
   T | null,
@@ -76,6 +77,13 @@ export type Hooks = {
     recordKey: string,
     type: RecordType['meta']['type'],
   ) => RecordHookReturn<T>;
+  useMeta: <T>(metaKey: string) => [T, (meta: T) => void, () => void];
+  useCopyStep: () => [
+    boolean,
+    (meta: Step) => void,
+    () => Step | null,
+    () => void,
+  ];
   useLessons: (
     key: string,
     filters: LessonsRequest,

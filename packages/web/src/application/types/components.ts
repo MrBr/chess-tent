@@ -141,6 +141,7 @@ export type StepToolbox = FunctionComponent<
     exercise?: boolean | (() => void);
     remove?: boolean | (() => void);
     add?: boolean | (() => void);
+    paste?: boolean | (() => void);
     textChangeHandler?: (text: string) => void;
     text?: string;
     showInput?: boolean;

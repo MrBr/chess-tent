@@ -17,3 +17,10 @@ application.services.isSameStepMove = isSameStepMove;
 application.services.getSameMoveVariationStep = getSameMoveVariationStep;
 application.services.getStepPosition = getStepPosition;
 application.components.StepRenderer = StepComponentRenderer;
+
+application.register(
+  () => import('./hooks'),
+  module => {
+    application.hooks.useCopyStep = module.useCopyStep;
+  },
+);

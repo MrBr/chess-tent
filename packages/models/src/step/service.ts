@@ -1,14 +1,14 @@
-import mergeWith from "lodash.mergewith";
-import { Step, StepRoot, TYPE_STEP } from "./types";
+import mergeWith from 'lodash.mergewith';
+import { Step, StepRoot, TYPE_STEP } from './types';
 import {
   getSubjectValueAt,
   SubjectPath,
-  updateSubjectValueAt
-} from "../subject";
+  updateSubjectValueAt,
+} from '../subject';
 
 // Step
 const isStep = (entity: unknown): entity is Step =>
-  Object.getOwnPropertyDescriptor(entity, "type")?.value === TYPE_STEP;
+  Object.getOwnPropertyDescriptor(entity, 'type')?.value === TYPE_STEP;
 
 /**
  * Unfortunately there is no guaranteed that single step will
@@ -20,7 +20,7 @@ const isSameStep = (leftStep: Step | null, rightStep: Step | null) => {
 
 const getChildStep = (
   parentStep: Step | StepRoot,
-  childId: Step["id"]
+  childId: Step['id'],
 ): Step | null => {
   if (isStep(parentStep) && parentStep.id === childId) {
     return parentStep;
@@ -37,7 +37,7 @@ const getChildStep = (
 
 const getPreviousStep = (
   parent: Step | StepRoot,
-  cursorStep: Step
+  cursorStep: Step,
 ): Step | null => {
   if (isStep(parent) && isSameStep(parent, cursorStep)) {
     return null;
@@ -64,7 +64,7 @@ const getPreviousStep = (
 
 const getNextStep = (
   parent: Step | StepRoot,
-  cursorStep: Step
+  cursorStep: Step,
 ): Step | null => {
   if (isStep(parent) && isSameStep(parent, cursorStep)) {
     return parent.state.steps[0];
@@ -94,7 +94,7 @@ const getNextStep = (
 
 const getRightStep = (
   parent: Step | StepRoot,
-  cursorStep: Step
+  cursorStep: Step,
 ): Step | null => {
   if (isStep(parent) && isSameStep(parent, cursorStep)) {
     return null;
@@ -133,7 +133,7 @@ const getStepsCount = (parent: Step | StepRoot) => {
 const getStepIndex = (
   parent: Step | StepRoot,
   step: Step,
-  indexSearch = { index: 0, end: false }
+  indexSearch = { index: 0, end: false },
 ) => {
   for (let i = 0; i < parent.state.steps.length; i++) {
     const childStep = parent.state.steps[i];
@@ -166,7 +166,7 @@ const isLastStep = (parentStep: Step, step: Step, recursive = true) => {
 
 const getParentStep = <T extends Step | StepRoot>(
   parent: T,
-  step: Step
+  step: Step,
 ): Step | StepRoot | null => {
   let closestParentStep = null;
   for (const childStep of parent.state.steps) {
@@ -188,8 +188,8 @@ const addStep = <T extends Step | StepRoot>(parentStep: T, step: Step): T => {
     ...parentStep,
     state: {
       ...parentStep.state,
-      steps: [...parentStep.state.steps, step]
-    }
+      steps: [...parentStep.state.steps, step],
+    },
   };
 };
 const addStepToLeft = (parentStep: Step, step: Step): Step => {
@@ -197,17 +197,17 @@ const addStepToLeft = (parentStep: Step, step: Step): Step => {
     ...parentStep,
     state: {
       ...parentStep.state,
-      steps: [step, ...parentStep.state.steps]
-    }
+      steps: [step, ...parentStep.state.steps],
+    },
   };
 };
 const addStepToRightOf = <T extends Step | StepRoot>(
   parent: T,
   leftStep: Step,
-  newStep: Step
+  newStep: Step,
 ): T => {
   const newStepIndex = parent.state.steps.findIndex(childStep =>
-    isSameStep(childStep, leftStep)
+    isSameStep(childStep, leftStep),
   );
   const steps = [...parent.state.steps];
 
@@ -218,8 +218,8 @@ const addStepToRightOf = <T extends Step | StepRoot>(
     ...parent,
     state: {
       ...parent.state,
-      steps
-    }
+      steps,
+    },
   };
 };
 
@@ -229,7 +229,7 @@ const addStepToRightOf = <T extends Step | StepRoot>(
 const removeStep = <T extends Step | StepRoot>(
   parentStep: T,
   step: Step,
-  adjacent = true
+  adjacent = true,
 ): T => {
   let removeStep = false;
   return {
@@ -242,17 +242,17 @@ const removeStep = <T extends Step | StepRoot>(
           return false;
         }
         return !removeStep;
-      })
-    }
+      }),
+    },
   };
 };
 
 const addStepRightToSame = <T extends Step | StepRoot>(
   step: T,
-  newStep: Step
+  newStep: Step,
 ): T => {
   const newStepIndex = step.state.steps.findIndex(
-    childStep => childStep.stepType === newStep.stepType
+    childStep => childStep.stepType === newStep.stepType,
   );
   const steps = [...step.state.steps];
 
@@ -263,23 +263,23 @@ const addStepRightToSame = <T extends Step | StepRoot>(
     ...step,
     state: {
       ...step.state,
-      steps
-    }
+      steps,
+    },
   };
 };
 
 const getStepPath = (
   parentStep: Step | StepRoot,
-  step: Step
+  step: Step,
 ): SubjectPath | null => {
   for (let index = 0; index < parentStep.state.steps.length; index++) {
     const childStep = parentStep.state.steps[index];
     if (isSameStep(step, childStep)) {
-      return ["state", "steps", index];
+      return ['state', 'steps', index];
     }
     const path = getStepPath(childStep, step);
     if (path) {
-      return ["state", "steps", index, ...path];
+      return ['state', 'steps', index, ...path];
     }
   }
   return null;
@@ -287,14 +287,14 @@ const getStepPath = (
 
 const getStepAt = (
   parent: Step | StepRoot,
-  path: SubjectPath
+  path: SubjectPath,
 ): Step | StepRoot => {
   return getSubjectValueAt(parent, path);
 };
 
 const updateStep = (step: Step, patch: Partial<Step>) => ({
   ...step,
-  ...patch
+  ...patch,
 });
 
 function omitArrayMerge(objValue: any, srcValue: any) {
@@ -304,30 +304,30 @@ function omitArrayMerge(objValue: any, srcValue: any) {
 }
 const updateStepState = <T extends Step>(
   step: T,
-  state: Partial<T["state"]>
+  state: Partial<T['state']>,
 ) => ({
   ...step,
-  state: mergeWith({}, step.state, state, omitArrayMerge)
+  state: mergeWith({}, step.state, state, omitArrayMerge),
 });
 
 const updateNestedStep = (
   parentStep: Step,
   patch: Partial<Step>,
-  path: SubjectPath
+  path: SubjectPath,
 ): Step => updateSubjectValueAt(parentStep, path, patch);
 
 const createStep = <T>(
   id: string,
   stepType: T extends Step<infer U, infer K> ? K : never,
-  state: T extends Step<infer U, infer K> ? U : never
+  state: T extends Step<infer U, infer K> ? U : never,
 ): Step<typeof state, typeof stepType> => ({
   id,
   stepType,
   type: TYPE_STEP,
   state: {
     steps: [],
-    ...state
-  }
+    ...state,
+  },
 });
 
 export {
@@ -352,5 +352,5 @@ export {
   updateStep,
   updateStepState,
   getStepAt,
-  addStepToLeft
+  addStepToLeft,
 };

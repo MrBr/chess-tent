@@ -1,22 +1,37 @@
 import React from 'react';
-import { ui } from '@application';
-import { Components } from '@types';
-import { useUserTrainings } from '../hooks';
-import TrainingCard from './training-card';
+import groupBy from 'lodash/groupBy';
+import { ui, components } from '@application';
+import { Components, LessonActivity } from '@types';
 
-const { Container, Row, Col } = ui;
+const { TrainingCard } = components;
 
-const CoachTrainings: Components['CoachTrainings'] = ({ user }) => {
-  const [trainings] = useUserTrainings(user);
+const { Container, Row, Col, Card } = ui;
+
+const CoachTrainings: Components['CoachTrainings'] = ({ trainings }) => {
+  const groupByOwner = groupBy(trainings, activity => activity?.owner.id);
+
+  const renderActivities = (activities: LessonActivity[], index: number) => {
+    return (
+      <Row key={index}>
+        <Col md={4} xs={12}>
+          <Card>{activities[0].owner.name}</Card>
+        </Col>
+        <Col md={8} xs={12} className="mt-4">
+          <Row>
+            {activities.map(activity => (
+              <Col key={activity.id} sm={3}>
+                <TrainingCard training={activity} />
+              </Col>
+            ))}
+          </Row>
+        </Col>
+      </Row>
+    );
+  };
+
   return (
     <Container fluid>
-      <Row>
-        {trainings?.map(training => (
-          <Col key={training.id} sm={3}>
-            <TrainingCard key={training.id} training={training} />
-          </Col>
-        ))}
-      </Row>
+      <Row>{Object.values(groupByOwner).map(renderActivities)}</Row>
     </Container>
   );
 };

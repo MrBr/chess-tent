@@ -10,7 +10,7 @@ import {
 } from '@types';
 import { useUpdateExerciseStep } from '../../hooks';
 
-const { EditBoardToggle } = components;
+const { ChessboardFooter } = components;
 const { getPiece, getTurnColor, setTurnColor, createNotableMove } = services;
 
 const updateMoveShapes = (
@@ -129,12 +129,10 @@ const EditorBoard: FunctionComponent<
       shapes={activeShapes}
       validateMove={validateMove}
       footer={
-        <>
-          <EditBoardToggle
-            onChange={editing => updateExerciseStep({ editing })}
-            editing={!!editing}
-          />
-        </>
+        <ChessboardFooter
+          updateEditing={editing => updateExerciseStep({ editing })}
+          editing={!!editing}
+        />
       }
     />
   );

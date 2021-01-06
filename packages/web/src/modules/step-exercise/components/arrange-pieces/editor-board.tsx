@@ -13,12 +13,12 @@ import {
 } from '@types';
 import { useUpdateExerciseStep } from '../../hooks';
 
-const { EditBoardToggle } = components;
+const { ChessboardFooter } = components;
 const { createFenForward, createNotableMove } = services;
 
-const Editor: FunctionComponent<ComponentProps<
-  ExerciseModule['EditorBoard']
->> = ({ step, Chessboard, status, updateStep }) => {
+const Editor: FunctionComponent<
+  ComponentProps<ExerciseModule['EditorBoard']>
+> = ({ step, Chessboard, status, updateStep }) => {
   const { position, shapes } = step.state;
   const { moves, editing } = step.state
     .exerciseState as ExerciseArrangePiecesState;
@@ -76,9 +76,9 @@ const Editor: FunctionComponent<ComponentProps<
       onShapesChange={handleShapes}
       shapes={shapes}
       footer={
-        <EditBoardToggle
+        <ChessboardFooter
           editing={!!editing}
-          onChange={editing => updateExerciseStep({ editing })}
+          updateEditing={editing => updateExerciseStep({ editing })}
         />
       }
     />

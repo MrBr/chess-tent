@@ -1,8 +1,8 @@
 import React from 'react';
-import { components, ui } from '@application';
+import { ui } from '@application';
 import { ChessboardFooterProps } from '@types';
+import EditBoardToggle from './edit';
 
-const { EditBoardToggle } = components;
 const { Button, Col } = ui;
 
 export default ({

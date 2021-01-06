@@ -336,10 +336,6 @@ export type Components = {
     onNew?: () => void;
     onRemove?: (chapter: Chapter) => void;
   }>;
-  EditBoardToggle: ComponentType<{
-    editing: boolean;
-    onChange: (editing: boolean) => void;
-  }>;
   UserAvatar: ComponentType<
     {
       user: User;

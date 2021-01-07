@@ -292,6 +292,15 @@ const getStepAt = (
   return getSubjectValueAt(parent, path);
 };
 
+const replaceStep = <T extends Step | StepRoot>(
+  stepRoot: T,
+  step: Step,
+  newStep: Step,
+): T => {
+  const stepPath = getStepPath(stepRoot, step) as SubjectPath;
+  return updateSubjectValueAt(stepRoot, stepPath, newStep);
+};
+
 const updateStep = (step: Step, patch: Partial<Step>) => ({
   ...step,
   ...patch,
@@ -353,4 +362,5 @@ export {
   updateStepState,
   getStepAt,
   addStepToLeft,
+  replaceStep,
 };

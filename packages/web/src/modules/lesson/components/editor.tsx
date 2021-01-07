@@ -24,6 +24,7 @@ import {
   Actions,
   ChessboardProps,
   Components,
+  EditorContext,
   EditorSidebarProps,
   LessonStatus,
   LessonUpdatableAction,
@@ -232,6 +233,21 @@ class EditorRenderer extends React.Component<
     this.addLessonUpdate(action);
     history.replace(location.pathname);
   };
+
+  resolveEditorContext = (): EditorContext => ({
+    lesson: this.props.lesson,
+    chapter: this.props.activeChapter,
+    step: this.props.activeStep,
+
+    updateChapter: this.updateChapter,
+    removeChapter: this.removeChapter,
+    setActiveChapter: this.setActiveChapterHandler,
+
+    updateStep: this.updateStep,
+    removeStep: this.deleteStep,
+    setActiveStep: this.setActiveStepHandler,
+  });
+
   updateChapterTitle = (title: string) => {
     const { activeChapter } = this.props;
     this.updateChapter({
@@ -279,12 +295,15 @@ class EditorRenderer extends React.Component<
   };
 
   renderToolbox: EditorSidebarProps['renderToolbox'] = props => {
+    const { activeChapter } = this.props;
     return (
       <StepToolbox
         actionsClassName="mr-n5"
         setActiveStep={this.setActiveStepHandler}
         updateStep={this.updateStep}
         removeStep={this.deleteStep}
+        stepRoot={activeChapter}
+        updateChapter={this.updateChapter}
         {...props}
       />
     );

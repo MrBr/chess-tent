@@ -12,10 +12,12 @@ import { Services } from './service';
 import { Utils } from './utils';
 import { Pages } from './pages';
 import { Constants } from './constants';
+import { Context } from './context';
 
 export * from '@chess-tent/types';
 export * from './activity';
 export * from './hoc';
+export * from './context';
 export * from './chess';
 export * from './step';
 export * from './steps';
@@ -49,4 +51,5 @@ export type Application = {
   model: Model;
   stepModules: StepModules;
   hoc: HOC;
+  context: Context;
 };

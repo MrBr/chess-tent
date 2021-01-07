@@ -76,6 +76,13 @@ export type Hooks = {
     recordKey: string,
     type: RecordType['meta']['type'],
   ) => RecordHookReturn<T>;
+  useMeta: <T>(metaKey: string) => [T, (meta: T) => void, () => void];
+  useCopyStep: () => [
+    boolean,
+    (meta: Step) => void,
+    () => Step | null,
+    () => void,
+  ];
   useLessons: (
     key: string,
     filters: LessonsRequest,

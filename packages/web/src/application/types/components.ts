@@ -21,6 +21,7 @@ import {
   Mentorship,
   Notification,
   Step,
+  StepRoot,
   StepType,
   SubjectPath,
   Tag,
@@ -141,13 +142,15 @@ export type StepToolbox = FunctionComponent<
     exercise?: boolean | (() => void);
     remove?: boolean | (() => void);
     add?: boolean | (() => void);
+    paste?: boolean | (() => void);
     textChangeHandler?: (text: string) => void;
     text?: string;
     showInput?: boolean;
     step: Step;
     className?: string;
     actionsClassName?: string;
-  } & Omit<EditorProps, 'updateChapter'>
+    stepRoot: StepRoot;
+  } & EditorProps
 >;
 
 export type LessonPlayground = FunctionComponent<{

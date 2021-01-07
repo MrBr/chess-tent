@@ -34,6 +34,7 @@ export default class Analysis<
     updateAnalysis(['state', 'activeStepId'], step.id);
   };
   renderToolbox: EditorSidebarProps['renderToolbox'] = props => {
+    const { analysis } = this.props;
     return (
       <StepToolbox
         setActiveStep={this.setActiveStep}
@@ -43,6 +44,8 @@ export default class Analysis<
         comment={false}
         exercise={false}
         showInput={false}
+        stepRoot={analysis}
+        updateChapter={() => {}}
         {...props}
       />
     );

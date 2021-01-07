@@ -1,12 +1,20 @@
 import React, { useCallback } from 'react';
 import { Components, Steps } from '@types';
-import { components, services, ui, utils } from '@application';
+import { components, hooks, services, ui, utils } from '@application';
 import styled from '@emotion/styled';
-import { addStepToLeft } from '@chess-tent/models';
-import { getStepPosition } from '../../step/service';
+import {
+  addStepToLeft,
+  getParentStep,
+  isChapter,
+  isStep,
+  replaceStep,
+} from '@chess-tent/models';
+import { over } from 'lodash';
 
-const { Container, Button, Icon } = ui;
+const { Container, Button, Icon, Modal, ModalBody, Headline4 } = ui;
 const { LessonToolboxText } = components;
+const { useCopyStep, usePromptModal } = hooks;
+const { getStepPosition } = services;
 
 function pickFunction(...funcs: any[]) {
   return funcs.find(f => typeof f === 'function');
@@ -40,7 +48,12 @@ const StepToolbox: Components['StepToolbox'] = ({
   exercise,
   className,
   actionsClassName,
+  paste,
+  stepRoot,
+  updateChapter,
 }) => {
+  const [hasStepCopy, copy, getCopiedStep] = useCopyStep();
+  const promptModal = usePromptModal();
   const addDescriptionStep = useCallback(() => {
     const position = getStepPosition(step as Steps);
     const descriptionStep = services.createStep('description', {
@@ -58,6 +71,54 @@ const StepToolbox: Components['StepToolbox'] = ({
     updateStep(addStepToLeft(step, variationStep));
     setActiveStep(variationStep);
   }, [step, updateStep, setActiveStep]);
+  const pasteStep = useCallback(() => {
+    const copiedStep = getCopiedStep();
+    if (!copiedStep) {
+      return;
+    }
+    const replace = () => {
+      const parent = getParentStep(stepRoot, step);
+      const updatedParent = replaceStep(parent, step, copiedStep);
+      if (isChapter(updatedParent)) {
+        updateChapter(updatedParent);
+      } else if (isStep(updatedParent)) {
+        updateStep(updatedParent);
+      }
+      setActiveStep(copiedStep);
+    };
+    const add = () => {
+      updateStep(addStepToLeft(step, copiedStep));
+      setActiveStep(copiedStep);
+    };
+
+    promptModal(close => (
+      <Modal close={close} show>
+        <ModalBody>
+          <Headline4>
+            Replace current step with copied step or add as child?
+          </Headline4>
+          <Button
+            size="extra-small"
+            className="mr-3"
+            onClick={over(replace, close)}
+          >
+            Replace
+          </Button>
+          <Button size="extra-small" onClick={over(add, close)}>
+            Add
+          </Button>
+        </ModalBody>
+      </Modal>
+    ));
+  }, [
+    getCopiedStep,
+    promptModal,
+    stepRoot,
+    step,
+    setActiveStep,
+    updateChapter,
+    updateStep,
+  ]);
   const addExerciseStep = useCallback(() => {
     const position = getStepPosition(step as Steps);
     const exerciseStep = services.createStep('exercise', {
@@ -120,6 +181,25 @@ const StepToolbox: Components['StepToolbox'] = ({
               x
             </Button>
           )}
+          {paste && (
+            <Button
+              size="extra-small"
+              variant="regular"
+              onClick={() => copy(step)}
+            >
+              C
+            </Button>
+          )}
+          {paste && (
+            <Button
+              size="extra-small"
+              variant="regular"
+              onClick={pickFunction(paste, pasteStep)}
+              disabled={!hasStepCopy}
+            >
+              P
+            </Button>
+          )}
         </ToolboxActions>
       )}
     </Container>
@@ -131,6 +211,7 @@ StepToolbox.defaultProps = {
   remove: true,
   exercise: true,
   comment: true,
+  paste: true,
 };
 
 export default StepToolbox;

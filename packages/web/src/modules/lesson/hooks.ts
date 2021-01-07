@@ -7,8 +7,9 @@ import {
   TYPE_ACTIVITY,
 } from '@chess-tent/models';
 import { hooks, requests } from '@application';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useContext, useEffect } from 'react';
 import { Hooks, LessonActivity, RecordHookReturn } from '@types';
+import { editorContext } from './context';
 
 const { useApi, useRecord } = hooks;
 
@@ -72,4 +73,12 @@ export const useLessons: Hooks['useLessons'] = (
     fetch(filters);
   }, [filters, fetch]);
   return [lessons, setLessons, resetLessons];
+};
+
+export const useEditor = () => {
+  const context = useContext(editorContext);
+  if (!context) {
+    throw new Error('Component using Editor context not in the Editor scope.');
+  }
+  return context;
 };

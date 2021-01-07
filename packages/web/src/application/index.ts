@@ -14,9 +14,11 @@ import {
   Requests,
   Socket,
   HOC,
+  Context,
 } from '@types';
 
 const services = createNamespace({}) as Services;
+const context = createNamespace({}) as Context;
 const components = createNamespace({}) as Components;
 const pages = createNamespace({}) as Pages;
 const requests = createNamespace({}) as Requests;
@@ -39,6 +41,7 @@ const constants = createNamespace({
 }) as Constants;
 
 const application: Application = createNamespace({
+  context,
   services,
   ui,
   components,
@@ -71,4 +74,5 @@ export {
   model,
   stepModules,
   pages,
+  context,
 };

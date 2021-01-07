@@ -25,7 +25,6 @@ import { useParams, useLocation } from 'react-router-dom';
 import { History } from 'history';
 import { LessonActivity } from './activity';
 import { GenericArguments } from './_helpers';
-import { Steps } from './steps';
 
 export type RecordHookReturn<T extends RecordValue> = [
   T | null,

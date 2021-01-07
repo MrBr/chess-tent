@@ -21,6 +21,7 @@ import {
   Mentorship,
   Notification,
   Step,
+  StepRoot,
   StepType,
   SubjectPath,
   Tag,
@@ -148,7 +149,8 @@ export type StepToolbox = FunctionComponent<
     step: Step;
     className?: string;
     actionsClassName?: string;
-  } & Omit<EditorProps, 'updateChapter'>
+    stepRoot: StepRoot;
+  } & EditorProps
 >;
 
 export type LessonPlayground = FunctionComponent<{

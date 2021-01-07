@@ -66,7 +66,7 @@ export const findLessons = (
       owner: filters.owner,
     });
     const users = utils.notNullOrUndefined({
-      users: filters.users,
+      users: { $in: filters.users },
     });
     const query: MongooseFilterQuery<any> = utils.notNullOrUndefined({
       published: filters.published,

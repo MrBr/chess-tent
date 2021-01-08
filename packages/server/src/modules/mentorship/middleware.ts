@@ -1,5 +1,5 @@
-import { MiddlewareFunction } from "@types";
-import * as service from "./service";
+import { MiddlewareFunction } from '@types';
+import * as service from './service';
 
 export const requestMentorship: MiddlewareFunction = (req, res, next) => {
   service
@@ -14,13 +14,13 @@ export const requestMentorship: MiddlewareFunction = (req, res, next) => {
 export const resolveMentorshipRequest: MiddlewareFunction = (
   req,
   res,
-  next
+  next,
 ) => {
   service
     .resolveMentorshipRequest(
       res.locals.studentId,
       res.locals.coachId,
-      res.locals.approved
+      res.locals.approved,
     )
     .then(next)
     .catch(next);

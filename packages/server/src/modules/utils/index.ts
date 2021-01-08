@@ -1,5 +1,5 @@
-import application from "@application";
+import application from '@application';
 
-import notNullOrUndefined from "./notNullOrUndefined";
+import notNullOrUndefined from './notNullOrUndefined';
 
 application.utils.notNullOrUndefined = notNullOrUndefined;

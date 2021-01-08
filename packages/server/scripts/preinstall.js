@@ -1,12 +1,12 @@
-const fs = require("fs");
+const fs = require('fs');
 
-console.log("Running preinstall script for server...");
+console.log('Running preinstall script for server...');
 
-const envPath = "./.env";
-const envTemplatePath = "./template.env";
+const envPath = './.env';
+const envTemplatePath = './template.env';
 
 if (!fs.existsSync(envPath)) {
-  let tempFile = fs.readFileSync(envTemplatePath, "utf8");
+  let tempFile = fs.readFileSync(envTemplatePath, 'utf8');
   const re = /(\$[A-Z_]*)/g;
   let matcher;
 
@@ -14,9 +14,9 @@ if (!fs.existsSync(envPath)) {
     matcher = re.exec(tempFile);
     if (matcher) {
       let envVarName = matcher[0].substr(1);
-      let envVar = process.env[envVarName] || "";
+      let envVar = process.env[envVarName] || '';
 
-      if (envVar === "") {
+      if (envVar === '') {
         console.log(`Variable ${envVarName} is not defined!`);
       }
 
@@ -27,4 +27,4 @@ if (!fs.existsSync(envPath)) {
   fs.writeFileSync(envPath, tempFile);
 }
 
-console.log("Preinstall script done!");
+console.log('Preinstall script done!');

@@ -35,7 +35,7 @@ const initService = (schemaMap: { [key: string]: Schema }) => {
     const schema = schemaMap[entity.type];
     return !schema.id
       ? entity.id
-      : typeof schema.id === "string"
+      : typeof schema.id === 'string'
       ? entity[schema.id]
       : schema.id(entity);
   };
@@ -43,19 +43,19 @@ const initService = (schemaMap: { [key: string]: Schema }) => {
   const normalizeRelationships = (
     entityState: { [key: string]: any },
     relationships: { [key: string]: any },
-    entities: Entities
+    entities: Entities,
   ) => {
     const result = { ...entityState } as Record<string, any>;
     for (const attribute in relationships) {
       const relationshipType = relationships[attribute];
       let normalizedRelationshipValue;
       const relationshipValue = entityState[attribute];
-      if (typeof relationshipType === "object") {
+      if (typeof relationshipType === 'object') {
         // Nested relationships normalization
         normalizedRelationshipValue = normalizeRelationships(
           entityState[attribute],
           relationshipType,
-          entities
+          entities,
         );
       } else if (Array.isArray(relationshipValue)) {
         normalizedRelationshipValue = [];
@@ -63,7 +63,7 @@ const initService = (schemaMap: { [key: string]: Schema }) => {
           normalize(relationshipValue[i], entities);
           normalizedRelationshipValue.push(getId(relationshipValue[i]));
         }
-      } else if (typeof relationshipValue === "string") {
+      } else if (typeof relationshipValue === 'string') {
         normalizedRelationshipValue = relationshipValue;
       } else {
         // eslint-disable-next-line @typescript-eslint/no-use-before-define
@@ -77,7 +77,7 @@ const initService = (schemaMap: { [key: string]: Schema }) => {
 
   const normalize = (
     entity: Entity,
-    entities: { [key: string]: any } = entitiesEmptyMap(schemaMap)
+    entities: { [key: string]: any } = entitiesEmptyMap(schemaMap),
   ) => {
     const type = entity.type;
     const schema = schemaMap[type];
@@ -85,7 +85,7 @@ const initService = (schemaMap: { [key: string]: Schema }) => {
     const normalizedEntity = normalizeRelationships(
       entity,
       schema.relationships,
-      entities
+      entities,
     );
 
     // Can denormalized entity be cached here? How does it affect cachedEntities?
@@ -100,7 +100,7 @@ const initService = (schemaMap: { [key: string]: Schema }) => {
     cachedEntityState: { [key: string]: any },
     prevEntityState: { [key: string]: any },
     relationships: Record<string, any>,
-    entities: Entities
+    entities: Entities,
   ) => {
     let changed = entityState !== prevEntityState;
     const relationshipEntities = {} as Record<string, any>;
@@ -109,14 +109,14 @@ const initService = (schemaMap: { [key: string]: Schema }) => {
       const relationshipSchema = schemaMap[type];
       const relationshipValue = entityState[attribute];
       let freshValue;
-      if (typeof type === "object") {
+      if (typeof type === 'object') {
         // Nested relationships denormalization
         freshValue = denormalizeState(
           entityState[attribute],
           cachedEntityState[attribute],
           prevEntityState?.[attribute],
           type,
-          entities
+          entities,
         );
       } else if (Array.isArray(relationshipValue)) {
         let collectionChanged =
@@ -128,7 +128,7 @@ const initService = (schemaMap: { [key: string]: Schema }) => {
           const item = denormalize(
             relationshipValue[index],
             relationshipSchema.type,
-            entities
+            entities,
           );
           if (cachedEntityState[attribute]?.[index] !== item) {
             collectionChanged = true;
@@ -145,7 +145,7 @@ const initService = (schemaMap: { [key: string]: Schema }) => {
         freshValue = denormalize(
           relationshipValue,
           relationshipSchema.type,
-          entities
+          entities,
         );
       }
       if (cachedEntityState[attribute] !== freshValue) {
@@ -174,7 +174,7 @@ const initService = (schemaMap: { [key: string]: Schema }) => {
       cachedEntity,
       prevEntity,
       schema.relationships,
-      entities
+      entities,
     );
     if (freshEntity !== cachedEntity) {
       cache[type][id] = freshEntity;

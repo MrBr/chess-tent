@@ -1,2 +1,2 @@
-import "./routes";
-import "./defaults";
+import './routes';
+import './defaults';

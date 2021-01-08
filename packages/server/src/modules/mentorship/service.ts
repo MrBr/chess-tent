@@ -1,13 +1,13 @@
-import { Mentorship, NormalizedMentorship, User } from "@chess-tent/models";
-import { MentorshipModel } from "./model";
+import { Mentorship, NormalizedMentorship, User } from '@chess-tent/models';
+import { MentorshipModel } from './model';
 
-export const requestMentorship = (student: User["id"], coach: User["id"]) =>
+export const requestMentorship = (student: User['id'], coach: User['id']) =>
   new Promise(resolve => {
     MentorshipModel.create({ student, coach })
       .then(result => {
         result
-          .populate("student")
-          .populate("coach")
+          .populate('student')
+          .populate('coach')
           .execPopulate()
           .then(resolve);
       })
@@ -17,9 +17,9 @@ export const requestMentorship = (student: User["id"], coach: User["id"]) =>
   });
 
 export const resolveMentorshipRequest = (
-  student: User["id"],
-  coach: User["id"],
-  approved: boolean
+  student: User['id'],
+  coach: User['id'],
+  approved: boolean,
 ): Promise<NormalizedMentorship> =>
   new Promise(resolve => {
     MentorshipModel.updateOne({ student, coach }, { approved }).exec(
@@ -28,14 +28,14 @@ export const resolveMentorshipRequest = (
           throw err;
         }
         resolve();
-      }
+      },
     );
   });
 
-export const getStudents = (coach: User["id"]): Promise<Mentorship[]> =>
+export const getStudents = (coach: User['id']): Promise<Mentorship[]> =>
   new Promise(resolve => {
     MentorshipModel.find({ coach })
-      .populate("student")
+      .populate('student')
       .exec((err, result) => {
         if (err) {
           throw err;
@@ -44,10 +44,10 @@ export const getStudents = (coach: User["id"]): Promise<Mentorship[]> =>
       });
   });
 
-export const getCoaches = (student: User["id"]): Promise<Mentorship[]> =>
+export const getCoaches = (student: User['id']): Promise<Mentorship[]> =>
   new Promise(resolve => {
     MentorshipModel.find({ student })
-      .populate("coach")
+      .populate('coach')
       .exec((err, result) => {
         if (err) {
           throw err;

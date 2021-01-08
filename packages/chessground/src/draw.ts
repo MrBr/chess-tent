@@ -1,7 +1,7 @@
-import { State } from './state'
-import { unselect, cancelMove, getKeyAtDomPos, whitePov } from './board'
-import { eventPosition, isRightButton } from './util'
-import * as cg from './types'
+import { State } from './state';
+import { unselect, cancelMove, getKeyAtDomPos, whitePov } from './board';
+import { eventPosition, isRightButton } from './util';
+import * as cg from './types';
 
 export interface DrawShape {
   orig: cg.Key;
@@ -21,7 +21,7 @@ export interface DrawBrush {
   key: string;
   color: string;
   opacity: number;
-  lineWidth: number
+  lineWidth: number;
 }
 
 export interface DrawBrushes {
@@ -46,9 +46,9 @@ export interface Drawable {
   brushes: DrawBrushes;
   // drawable SVG pieces; used for crazyhouse drop
   pieces: {
-    baseUrl: string
-  },
-  prevSvgHash: string
+    baseUrl: string;
+  };
+  prevSvgHash: string;
 }
 
 export interface DrawCurrent {
@@ -67,12 +67,12 @@ export function start(state: State, e: cg.MouchEvent): void {
   e.preventDefault();
   e.ctrlKey ? unselect(state) : cancelMove(state);
   const pos = eventPosition(e) as cg.NumberPair,
-  orig = getKeyAtDomPos(pos, whitePov(state), state.dom.bounds());
+    orig = getKeyAtDomPos(pos, whitePov(state), state.dom.bounds());
   if (!orig) return;
   const drawShape = {
     orig,
     pos,
-    brush: eventBrush(e)
+    brush: eventBrush(e),
   };
   if (!validate(state, drawShape)) {
     return;
@@ -87,13 +87,23 @@ export function processDraw(state: State): void {
     if (!cur) {
       return;
     }
-    const mouseSq = getKeyAtDomPos(cur.pos, whitePov(state), state.dom.bounds());
+    const mouseSq = getKeyAtDomPos(
+      cur.pos,
+      whitePov(state),
+      state.dom.bounds(),
+    );
     const dest = mouseSq !== cur.orig ? mouseSq : undefined;
-    const isValid = mouseSq !== cur.mouseSq &&  validate(state,{
-      ...cur,
-      mouseSq,
-      dest
-    }, cur);
+    const isValid =
+      mouseSq !== cur.mouseSq &&
+      validate(
+        state,
+        {
+          ...cur,
+          mouseSq,
+          dest,
+        },
+        cur,
+      );
     if (isValid) {
       cur.mouseSq = mouseSq;
       cur.dest = mouseSq !== cur.orig ? mouseSq : undefined;
@@ -104,11 +114,18 @@ export function processDraw(state: State): void {
 }
 
 export function move(state: State, e: cg.MouchEvent): void {
-  if (state.drawable.current) state.drawable.current.pos = eventPosition(e) as cg.NumberPair;
+  if (state.drawable.current)
+    state.drawable.current.pos = eventPosition(e) as cg.NumberPair;
 }
 
-export function validate(state: State, newDrawShape: DrawCurrent, curDrawShape?: DrawCurrent): boolean {
-  return state.drawable.validate ? state.drawable.validate(newDrawShape, curDrawShape) : true;
+export function validate(
+  state: State,
+  newDrawShape: DrawCurrent,
+  curDrawShape?: DrawCurrent,
+): boolean {
+  return state.drawable.validate
+    ? state.drawable.validate(newDrawShape, curDrawShape)
+    : true;
 }
 
 export function end(state: State): void {
@@ -140,8 +157,12 @@ function eventBrush(e: cg.MouchEvent): string {
   return brushes[(modA ? 1 : 0) + (modB ? 2 : 0)];
 }
 
-export function toggleShape(drawable: Drawable, shape: DrawCurrent | DrawShape): void {
-  const sameShape = (s: DrawShape) => s.orig === shape.orig && s.dest === shape.dest;
+export function toggleShape(
+  drawable: Drawable,
+  shape: DrawCurrent | DrawShape,
+): void {
+  const sameShape = (s: DrawShape) =>
+    s.orig === shape.orig && s.dest === shape.dest;
   const similar = drawable.shapes.filter(sameShape)[0];
   if (similar) {
     drawable.shapes = drawable.shapes.filter(s => !sameShape(s));

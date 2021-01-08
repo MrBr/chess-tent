@@ -1,13 +1,13 @@
-import { User, Notification } from "@chess-tent/models";
-import { depopulate, NotificationModel } from "./model";
+import { User, Notification } from '@chess-tent/models';
+import { depopulate, NotificationModel } from './model';
 
 export const getNotifications = (filters: {
-  user?: User["id"];
+  user?: User['id'];
   read?: boolean;
 }): Promise<Notification[]> =>
   new Promise(resolve => {
     NotificationModel.find(filters)
-      .populate("user")
+      .populate('user')
       .then(notifications => {
         resolve(notifications.map(notification => notification.toObject()));
       })
@@ -22,8 +22,8 @@ export const saveNotification = (notification: Notification) =>
       { _id: notification.id },
       depopulate(notification),
       {
-        upsert: true
-      }
+        upsert: true,
+      },
     ).exec(err => {
       if (err) {
         throw err;

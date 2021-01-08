@@ -1,14 +1,14 @@
-import { MiddlewareFunction } from "@types";
-import { User } from "@chess-tent/models";
-import { errors } from "@application";
-import * as service from "./service";
+import { MiddlewareFunction } from '@types';
+import { User } from '@chess-tent/models';
+import { errors } from '@application';
+import * as service from './service';
 import {
   AccountNotActivatedError,
   InvalidUserFiltersError,
   LoginFailedError,
-  PasswordEncryptionError
-} from "./errors";
-import { validateUserPassword } from "./service";
+  PasswordEncryptionError,
+} from './errors';
+import { validateUserPassword } from './service';
 export const addUser: MiddlewareFunction = (req, res, next) => {
   service
     .addUser(res.locals.user as User)
@@ -60,12 +60,12 @@ export const validateUser: MiddlewareFunction = (req, res, next) => {
 export const verifyUser: MiddlewareFunction = async (req, res, next) => {
   // Clearing projection to get password for verification
   try {
-    if (typeof res.locals.user !== "object") {
+    if (typeof res.locals.user !== 'object') {
       throw new errors.BadRequest();
     }
     const user = await service.getUser(
       { email: res.locals.user.email },
-      "+password"
+      '+password',
     );
 
     if (!user?.active) {

@@ -1,19 +1,19 @@
-import application, { middleware } from "@application";
-import { findTags, getAll } from "./middleware";
+import application, { middleware } from '@application';
+import { findTags, getAll } from './middleware';
 
 const { identify, sendData, toLocals } = middleware;
 
 application.service.registerGetRoute(
-  "/tags",
+  '/tags',
   identify,
   getAll,
-  sendData("tags")
+  sendData('tags'),
 );
 
 application.service.registerPostRoute(
-  "/tags",
+  '/tags',
   identify,
-  toLocals("startsWith", req => req.body),
+  toLocals('startsWith', req => req.body),
   findTags,
-  sendData("tags")
+  sendData('tags'),
 );

@@ -1,11 +1,14 @@
-import { State } from './state'
-import { colors, setVisible, createEl } from './util'
-import { files, ranks } from './types'
-import { createElement as createSVG } from './svg'
-import { Elements } from './types'
+import { State } from './state';
+import { colors, setVisible, createEl } from './util';
+import { files, ranks } from './types';
+import { createElement as createSVG } from './svg';
+import { Elements } from './types';
 
-export default function wrap(element: HTMLElement, s: State, relative: boolean): Elements {
-
+export default function wrap(
+  element: HTMLElement,
+  s: State,
+  relative: boolean,
+): Elements {
   // .cg-wrap (element passed to Chessground)
   //   cg-helper (12.5%)
   //     cg-container (800%)
@@ -23,7 +26,9 @@ export default function wrap(element: HTMLElement, s: State, relative: boolean):
   // for a slight performance improvement! (avoids recomputing style)
   element.classList.add('cg-wrap');
 
-  colors.forEach(c => element.classList.toggle('orientation-' + c, s.orientation === c));
+  colors.forEach(c =>
+    element.classList.toggle('orientation-' + c, s.orientation === c),
+  );
   element.classList.toggle('manipulable', !s.viewOnly);
 
   const helper = createEl('cg-helper');
@@ -58,7 +63,7 @@ export default function wrap(element: HTMLElement, s: State, relative: boolean):
     board,
     container,
     ghost,
-    svg
+    svg,
   };
 }
 

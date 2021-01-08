@@ -1,19 +1,19 @@
-import { State } from './state'
-import * as util from './util'
-import * as cg from './types'
+import { State } from './state';
+import * as util from './util';
+import * as cg from './types';
 
 export type Mutation<A> = (state: State) => A;
 
 // 0,1 animation goal
 // 2,3 animation current status
-export type AnimVector = cg.NumberQuad
+export type AnimVector = cg.NumberQuad;
 
 export interface AnimVectors {
-  [key: string]: AnimVector
+  [key: string]: AnimVector;
 }
 
 export interface AnimFadings {
-  [key: string]: cg.Piece
+  [key: string]: cg.Piece;
 }
 
 export interface AnimPlan {
@@ -28,7 +28,9 @@ export interface AnimCurrent {
 }
 
 export function anim<A>(mutation: Mutation<A>, state: State): A {
-  return state.animation.enabled ? animate(mutation, state) : render(mutation, state);
+  return state.animation.enabled
+    ? animate(mutation, state)
+    : render(mutation, state);
 }
 
 export function render<A>(mutation: Mutation<A>, state: State): A {
@@ -43,31 +45,36 @@ interface AnimPiece {
   piece: cg.Piece;
 }
 interface AnimPieces {
-  [key: string]: AnimPiece
+  [key: string]: AnimPiece;
 }
 
 function makePiece(key: cg.Key, piece: cg.Piece): AnimPiece {
   return {
     key: key,
     pos: util.key2pos(key),
-    piece: piece
+    piece: piece,
   };
 }
 
 function closer(piece: AnimPiece, pieces: AnimPiece[]): AnimPiece {
   return pieces.sort((p1, p2) => {
-    return util.distanceSq(piece.pos, p1.pos) - util.distanceSq(piece.pos, p2.pos);
+    return (
+      util.distanceSq(piece.pos, p1.pos) - util.distanceSq(piece.pos, p2.pos)
+    );
   })[0];
 }
 
 function computePlan(prevPieces: cg.Pieces, current: State): AnimPlan {
   const anims: AnimVectors = {},
-  animedOrigs: cg.Key[] = [],
-  fadings: AnimFadings = {},
-  missings: AnimPiece[] = [],
-  news: AnimPiece[] = [],
-  prePieces: AnimPieces = {};
-  let curP: cg.Piece | undefined, preP: AnimPiece | undefined, i: any, vector: cg.NumberPair;
+    animedOrigs: cg.Key[] = [],
+    fadings: AnimFadings = {},
+    missings: AnimPiece[] = [],
+    news: AnimPiece[] = [],
+    prePieces: AnimPieces = {};
+  let curP: cg.Piece | undefined,
+    preP: AnimPiece | undefined,
+    i: any,
+    vector: cg.NumberPair;
   for (i in prevPieces) {
     prePieces[i] = makePiece(i as cg.Key, prevPieces[i]!);
   }
@@ -84,7 +91,10 @@ function computePlan(prevPieces: cg.Pieces, current: State): AnimPlan {
     } else if (preP) missings.push(preP);
   }
   news.forEach(newP => {
-    preP = closer(newP, missings.filter(p => util.samePiece(newP.piece, p.piece)));
+    preP = closer(
+      newP,
+      missings.filter(p => util.samePiece(newP.piece, p.piece)),
+    );
     if (preP) {
       vector = [preP.pos[0] - newP.pos[0], preP.pos[1] - newP.pos[1]];
       anims[newP.key] = vector.concat(vector) as AnimVector;
@@ -97,13 +107,14 @@ function computePlan(prevPieces: cg.Pieces, current: State): AnimPlan {
 
   return {
     anims: anims,
-    fadings: fadings
+    fadings: fadings,
   };
 }
 
 function step(state: State, now: DOMHighResTimeStamp): void {
   const cur = state.animation.current;
-  if (cur === undefined) { // animation was canceled :(
+  if (cur === undefined) {
+    // animation was canceled :(
     if (!state.dom.destroyed) state.dom.redrawNow();
     return;
   }
@@ -125,16 +136,17 @@ function step(state: State, now: DOMHighResTimeStamp): void {
 
 function animate<A>(mutation: Mutation<A>, state: State): A {
   // clone state before mutating it
-  const prevPieces: cg.Pieces = {...state.pieces};
+  const prevPieces: cg.Pieces = { ...state.pieces };
 
   const result = mutation(state);
   const plan = computePlan(prevPieces, state);
   if (!isObjectEmpty(plan.anims) || !isObjectEmpty(plan.fadings)) {
-    const alreadyRunning = state.animation.current && state.animation.current.start;
+    const alreadyRunning =
+      state.animation.current && state.animation.current.start;
     state.animation.current = {
       start: performance.now(),
       frequency: 1 / state.animation.duration,
-      plan: plan
+      plan: plan,
     };
     if (!alreadyRunning) step(state, performance.now());
   } else {

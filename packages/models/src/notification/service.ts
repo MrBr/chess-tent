@@ -1,14 +1,14 @@
-import { Notification, TYPE_NOTIFICATION } from "./types";
-import { User } from "../user";
+import { Notification, TYPE_NOTIFICATION } from './types';
+import { User } from '../user';
 
 const isNotification = (entity: unknown): entity is Notification =>
-  Object.getOwnPropertyDescriptor(entity, "type")?.value === TYPE_NOTIFICATION;
+  Object.getOwnPropertyDescriptor(entity, 'type')?.value === TYPE_NOTIFICATION;
 
 const createNotification = (
   id: string,
   user: User,
   notificationType: string,
-  state = {}
+  state = {},
 ): Notification => ({
   id,
   user,
@@ -16,7 +16,7 @@ const createNotification = (
   notificationType,
   read: false,
   time: new Date(),
-  state
+  state,
 });
 
 export { isNotification, createNotification };

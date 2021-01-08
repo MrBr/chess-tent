@@ -1,6 +1,6 @@
-import { Schema } from "mongoose";
-import { NormalizedUser, TYPE_USER } from "@chess-tent/models";
-import { db } from "@application";
+import { Schema } from 'mongoose';
+import { NormalizedUser, TYPE_USER } from '@chess-tent/models';
+import { db } from '@application';
 
 const userSchema = db.createSchema<NormalizedUser>(
   {
@@ -9,28 +9,28 @@ const userSchema = db.createSchema<NormalizedUser>(
     nickname: ({
       type: String,
       required: true,
-      unique: true
+      unique: true,
     } as unknown) as string,
     email: ({
       type: String,
       required: true,
-      unique: true
+      unique: true,
     } as unknown) as string,
     password: ({
       type: String,
       required: true,
-      select: false
+      select: false,
     } as unknown) as string,
     coach: (Schema.Types.Boolean as unknown) as boolean,
     active: ({
       type: Schema.Types.Boolean,
-      default: false
+      default: false,
     } as unknown) as boolean,
     state: ({
       type: Schema.Types.Mixed,
       required: true,
-      default: {}
-    } as unknown) as NormalizedUser["state"]
+      default: {},
+    } as unknown) as NormalizedUser['state'],
   },
   {
     minimize: false,
@@ -40,7 +40,7 @@ const userSchema = db.createSchema<NormalizedUser>(
           ret.state = {};
         }
         return ret;
-      }
+      },
     },
     toObject: {
       transform: (doc, ret) => {
@@ -48,12 +48,12 @@ const userSchema = db.createSchema<NormalizedUser>(
           ret.state = {};
         }
         return ret;
-      }
-    }
-  }
+      },
+    },
+  },
 );
 
-userSchema.index({ name: "text", nickname: "text" });
+userSchema.index({ name: 'text', nickname: 'text' });
 
 const UserModel = db.createModel<NormalizedUser>(TYPE_USER, userSchema);
 

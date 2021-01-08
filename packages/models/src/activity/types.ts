@@ -1,7 +1,7 @@
-import { Subject } from "../subject";
-import { User } from "../user";
+import { Subject } from '../subject';
+import { User } from '../user';
 
-export const TYPE_ACTIVITY = "activities";
+export const TYPE_ACTIVITY = 'activities';
 
 export interface Activity<
   T extends Subject = Subject,
@@ -21,10 +21,10 @@ export interface NormalizedActivity<
   T extends Subject = Subject,
   S extends {} = {}
 > {
-  id: Activity<T>["id"];
-  type: Activity<T>["type"];
-  state: Activity<T, S>["state"];
+  id: Activity<T>['id'];
+  type: Activity<T>['type'];
+  state: Activity<T, S>['state'];
   subject: Subject;
-  owner: User["id"];
-  users: User["id"][];
+  owner: User['id'];
+  users: User['id'][];
 }

@@ -1,4 +1,4 @@
-import application from "@application";
-import "./routes";
+import application from '@application';
+import './routes';
 
-application.register(() => import("./socket"));
+application.register(() => import('./socket'));

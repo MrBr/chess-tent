@@ -1,5 +1,5 @@
-import { MiddlewareFunction } from "@types";
-import * as service from "./service";
+import { MiddlewareFunction } from '@types';
+import * as service from './service';
 
 export const getAll: MiddlewareFunction = (req, res, next) => {
   service

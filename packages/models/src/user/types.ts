@@ -1,6 +1,6 @@
-import { Subject } from "../subject";
+import { Subject } from '../subject';
 
-export const TYPE_USER = "users";
+export const TYPE_USER = 'users';
 
 export interface User extends Subject {
   id: string;
@@ -34,13 +34,13 @@ export interface CoachEloRange {
 }
 
 export interface NormalizedUser {
-  id: User["id"];
-  type: User["type"];
-  name: User["name"];
-  active: User["active"];
-  nickname: User["nickname"];
-  email: User["email"];
-  password: User["password"];
-  coach?: User["coach"];
-  state: User["state"];
+  id: User['id'];
+  type: User['type'];
+  name: User['name'];
+  active: User['active'];
+  nickname: User['nickname'];
+  email: User['email'];
+  password: User['password'];
+  coach?: User['coach'];
+  state: User['state'];
 }

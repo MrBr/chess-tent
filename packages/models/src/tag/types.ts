@@ -1,4 +1,4 @@
-export const TYPE_TAG = "tags";
+export const TYPE_TAG = 'tags';
 
 export interface Tag {
   id: string;
@@ -7,7 +7,7 @@ export interface Tag {
 }
 
 export interface NormalizedTag {
-  id: Tag["id"];
-  text: Tag["text"];
-  type: Tag["type"];
+  id: Tag['id'];
+  text: Tag['text'];
+  type: Tag['type'];
 }

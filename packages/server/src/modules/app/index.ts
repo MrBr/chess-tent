@@ -1,18 +1,18 @@
-import application, { db, socket } from "@application";
-import express from "express";
-import bodyParser from "body-parser";
-import cors from "cors";
+import application, { db, socket } from '@application';
+import express from 'express';
+import bodyParser from 'body-parser';
+import cors from 'cors';
 import {
   errorHandler,
   logLocal,
   sendData,
   sendStatusOk,
   toLocals,
-  validate
-} from "./middleware";
-import cookieParser from "cookie-parser";
-import { generateIndex } from "./service";
-import { BadRequest } from "./errors";
+  validate,
+} from './middleware';
+import cookieParser from 'cookie-parser';
+import { generateIndex } from './service';
+import { BadRequest } from './errors';
 
 const { connect } = db;
 
@@ -44,7 +44,7 @@ application.start = () => {
   app.use(application.middleware.errorHandler);
 
   const server = app.listen(process.env.PORT, () =>
-    console.log(`Application started at port: ${process.env.PORT}`)
+    console.log(`Application started at port: ${process.env.PORT}`),
   );
   socket.init(server);
 };

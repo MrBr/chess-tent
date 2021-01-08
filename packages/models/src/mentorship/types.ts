@@ -1,6 +1,6 @@
-import { User } from "../user";
+import { User } from '../user';
 
-export const TYPE_MENTORSHIP = "mentorship";
+export const TYPE_MENTORSHIP = 'mentorship';
 
 export interface Mentorship {
   student: User;
@@ -10,8 +10,8 @@ export interface Mentorship {
 }
 
 export interface NormalizedMentorship {
-  student: User["id"];
-  coach: User["id"];
-  approved?: Mentorship["approved"];
-  type: Mentorship["type"];
+  student: User['id'];
+  coach: User['id'];
+  approved?: Mentorship['approved'];
+  type: Mentorship['type'];
 }

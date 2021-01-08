@@ -20,9 +20,9 @@ const getPieceStatus = (
   return move.move?.[1] === destMove?.[1] ? 'Correct' : 'Wrong square';
 };
 
-const Playground: FunctionComponent<ComponentProps<
-  ExerciseModule['ActivitySidebar']
->> = ({ step, stepActivityState }) => {
+const Playground: FunctionComponent<
+  ComponentProps<ExerciseModule['ActivitySidebar']>
+> = ({ step, stepActivityState }) => {
   const {
     moves: activityMoves,
     invalidPiece,

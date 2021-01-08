@@ -1,8 +1,8 @@
-import { MiddlewareFunction } from "@types";
-import { Conversation } from "@chess-tent/models";
-import * as service from "./service";
-import { UnauthorizedConversationEditError } from "./errors";
-import { Pagination } from "@chess-tent/types";
+import { MiddlewareFunction } from '@types';
+import { Conversation } from '@chess-tent/models';
+import * as service from './service';
+import { UnauthorizedConversationEditError } from './errors';
+import { Pagination } from '@chess-tent/types';
 
 export const saveConversation: MiddlewareFunction = (req, res, next) => {
   service
@@ -14,7 +14,7 @@ export const saveConversation: MiddlewareFunction = (req, res, next) => {
 export const addMessageToConversation: MiddlewareFunction = (
   req,
   res,
-  next
+  next,
 ) => {
   service
     .addMessageToConversation(res.locals.conversation.id, res.locals.message)
@@ -24,7 +24,7 @@ export const addMessageToConversation: MiddlewareFunction = (
 
 export const getConversation: MiddlewareFunction = (req, res, next) => {
   service
-    .getConversation(res.locals.conversation.id as Conversation["id"])
+    .getConversation(res.locals.conversation.id as Conversation['id'])
     .then(conversation => {
       res.locals.conversation = conversation;
       next();
@@ -35,8 +35,8 @@ export const getConversation: MiddlewareFunction = (req, res, next) => {
 export const getConversationMessages: MiddlewareFunction = (req, res, next) => {
   service
     .getConversationMessages(
-      res.locals.conversation.id as Conversation["id"],
-      res.locals.pagination as Pagination
+      res.locals.conversation.id as Conversation['id'],
+      res.locals.pagination as Pagination,
     )
     .then(messages => {
       res.locals.messages = messages;

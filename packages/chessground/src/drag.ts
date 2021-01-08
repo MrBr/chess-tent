@@ -1,9 +1,9 @@
-import { State } from "./state";
-import * as board from "./board";
-import * as util from "./util";
-import { clear as drawClear } from "./draw";
-import * as cg from "./types";
-import { anim } from "./anim";
+import { State } from './state';
+import * as board from './board';
+import * as util from './util';
+import { clear as drawClear } from './draw';
+import * as cg from './types';
+import { anim } from './anim';
 
 export interface DragCurrent {
   orig: cg.Key; // orig key of dragging piece
@@ -71,23 +71,23 @@ export function start(s: State, e: cg.MouchEvent): void {
       dec: s.draggable.centerPiece
         ? [
             position[0] - (squareBounds.left + squareBounds.width / 2),
-            position[1] - (squareBounds.top + squareBounds.height / 2)
+            position[1] - (squareBounds.top + squareBounds.height / 2),
           ]
         : [0, 0],
       started: s.draggable.autoDistance && s.stats.dragged,
       element,
       previouslySelected,
-      originTarget: e.target
+      originTarget: e.target,
     };
     element.cgDragging = true;
-    element.classList.add("dragging");
+    element.classList.add('dragging');
     // place ghost
     const ghost = s.dom.elements.ghost;
     if (ghost) {
       ghost.className = `ghost ${piece.color} ${piece.role}`;
       util.translateAbs(
         ghost,
-        util.posToTranslateAbs(bounds)(util.key2pos(orig), board.whitePov(s))
+        util.posToTranslateAbs(bounds)(util.key2pos(orig), board.whitePov(s)),
       );
       util.setVisible(ghost, true);
     }
@@ -107,7 +107,7 @@ export function pieceCloseTo(s: State, pos: cg.NumberPair): boolean {
     const squareBounds = computeSquareBounds(key as cg.Key, asWhite, bounds),
       center: cg.NumberPair = [
         squareBounds.left + squareBounds.width / 2,
-        squareBounds.top + squareBounds.height / 2
+        squareBounds.top + squareBounds.height / 2,
       ];
     if (util.distanceSq(center, pos) <= radiusSq) return true;
   }
@@ -118,9 +118,9 @@ export function dragNewPiece(
   s: State,
   piece: cg.Piece,
   e: cg.MouchEvent,
-  force?: boolean
+  force?: boolean,
 ): void {
-  const key: cg.Key = "a0";
+  const key: cg.Key = 'a0';
 
   s.pieces[key] = piece;
 
@@ -133,7 +133,7 @@ export function dragNewPiece(
 
   const rel: cg.NumberPair = [
     (asWhite ? 0 : 7) * squareBounds.width + bounds.left,
-    (asWhite ? 8 : -1) * squareBounds.height + bounds.top
+    (asWhite ? 8 : -1) * squareBounds.height + bounds.top,
   ];
 
   s.draggable.current = {
@@ -148,7 +148,7 @@ export function dragNewPiece(
     element: () => pieceElementByKey(s, key),
     originTarget: e.target,
     newPiece: true,
-    force: !!force
+    force: !!force,
   };
   processDrag(s);
 }
@@ -171,11 +171,11 @@ function processDrag(s: State): void {
         cur.started = true;
       if (cur.started) {
         // support lazy elements
-        if (typeof cur.element === "function") {
+        if (typeof cur.element === 'function') {
           const found = cur.element();
           if (!found) return;
           found.cgDragging = true;
-          found.classList.add("dragging");
+          found.classList.add('dragging');
           cur.element = found;
         }
 
@@ -184,7 +184,7 @@ function processDrag(s: State): void {
         // move piece
         const translation = util.posToTranslateAbs(s.dom.bounds())(
           cur.origPos,
-          board.whitePov(s)
+          board.whitePov(s),
         );
         translation[0] += cur.pos[0] + cur.dec[0];
         translation[1] += cur.pos[1] + cur.dec[1];
@@ -206,11 +206,11 @@ export function end(s: State, e: cg.MouchEvent): void {
   const cur = s.draggable.current;
   if (!cur) return;
   // create no corresponding mouse event
-  if (e.type === "touchend" && e.cancelable !== false) e.preventDefault();
+  if (e.type === 'touchend' && e.cancelable !== false) e.preventDefault();
   // comparing with the origin target is an easy way to test that the end event
   // has the same touch origin
   if (
-    e.type === "touchend" &&
+    e.type === 'touchend' &&
     cur &&
     cur.originTarget !== e.target &&
     !cur.newPiece
@@ -225,7 +225,7 @@ export function end(s: State, e: cg.MouchEvent): void {
   const dest = board.getKeyAtDomPos(
     eventPos,
     board.whitePov(s),
-    s.dom.bounds()
+    s.dom.bounds(),
   );
   if (dest && cur.started && cur.orig !== dest) {
     if (cur.newPiece) board.dropNewPiece(s, cur.orig, dest, cur.force);
@@ -274,7 +274,7 @@ function removeDragElements(s: State) {
 function computeSquareBounds(
   key: cg.Key,
   asWhite: boolean,
-  bounds: ClientRect
+  bounds: ClientRect,
 ) {
   const pos = util.key2pos(key);
   if (!asWhite) {
@@ -285,14 +285,14 @@ function computeSquareBounds(
     left: bounds.left + (bounds.width * (pos[0] - 1)) / 8,
     top: bounds.top + (bounds.height * (8 - pos[1])) / 8,
     width: bounds.width / 8,
-    height: bounds.height / 8
+    height: bounds.height / 8,
   };
 }
 
 function pieceElementByKey(s: State, key: cg.Key): cg.PieceNode | undefined {
   let el = s.dom.elements.board.firstChild as cg.PieceNode;
   while (el) {
-    if (el.cgKey === key && el.tagName === "PIECE") return el;
+    if (el.cgKey === key && el.tagName === 'PIECE') return el;
     el = el.nextSibling as cg.PieceNode;
   }
   return undefined;

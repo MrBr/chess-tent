@@ -8,6 +8,6 @@ export class UnauthorizedActivityEditError extends Error {
 export class ActivityNotFoundError extends Error {
   status = 400;
   constructor() {
-    super("Activity not found.");
+    super('Activity not found.');
   }
 }

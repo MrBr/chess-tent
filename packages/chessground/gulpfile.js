@@ -9,40 +9,45 @@ const terser = require('gulp-terser');
 const size = require('gulp-size');
 const tsify = require('tsify');
 
-const browserifyOpts = (debug) => ({
+const browserifyOpts = debug => ({
   entries: ['src/index.js'],
   standalone: 'Chessground',
-  debug: debug
+  debug: debug,
 });
 const destination = () => gulp.dest('./dist');
 
-const prod = () => browserify(browserifyOpts(false))
-  .plugin(tsify)
-  .bundle()
-  .pipe(source('chessground.min.js'))
-  .pipe(buffer())
-  .pipe(terser({safari10: true}))
-  .pipe(size())
-  .pipe(destination());
-
-const dev = () => browserify(browserifyOpts(true))
-  .plugin(tsify)
-  .bundle()
-  .pipe(source('chessground.js'))
-  .pipe(destination());
-
-const watch = () => {
-
-  const bundle = () => bundler
+const prod = () =>
+  browserify(browserifyOpts(false))
+    .plugin(tsify)
     .bundle()
-    .on('error', error => logger.error(colors.red(error.message)))
+    .pipe(source('chessground.min.js'))
+    .pipe(buffer())
+    .pipe(terser({ safari10: true }))
+    .pipe(size())
+    .pipe(destination());
+
+const dev = () =>
+  browserify(browserifyOpts(true))
+    .plugin(tsify)
+    .bundle()
     .pipe(source('chessground.js'))
     .pipe(destination());
 
+const watch = () => {
+  const bundle = () =>
+    bundler
+      .bundle()
+      .on('error', error => logger.error(colors.red(error.message)))
+      .pipe(source('chessground.js'))
+      .pipe(destination());
+
   const bundler = watchify(
-    browserify(Object.assign({}, watchify.args, browserifyOpts(true)))
-      .plugin(tsify)
-  ).on('update', bundle).on('log', logger.info);
+    browserify(Object.assign({}, watchify.args, browserifyOpts(true))).plugin(
+      tsify,
+    ),
+  )
+    .on('update', bundle)
+    .on('log', logger.info);
 
   return bundle();
 };

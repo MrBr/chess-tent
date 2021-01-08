@@ -1,8 +1,8 @@
-import { Subject } from "../subject";
+import { Subject } from '../subject';
 
-export type StepType = "description" | "variation" | "move" | "exercise";
+export type StepType = 'description' | 'variation' | 'move' | 'exercise';
 
-export const TYPE_STEP = "steps";
+export const TYPE_STEP = 'steps';
 
 export interface Step<T extends {} = {}, K extends StepType = StepType> {
   id: string;
@@ -12,11 +12,11 @@ export interface Step<T extends {} = {}, K extends StepType = StepType> {
 }
 
 export interface NormalizedStep {
-  id: Step["id"];
-  type: Step["type"];
-  stepType: Step["stepType"];
-  state: Step["state"] & {
-    steps: Step["id"][];
+  id: Step['id'];
+  type: Step['type'];
+  stepType: Step['stepType'];
+  state: Step['state'] & {
+    steps: Step['id'][];
   };
 }
 

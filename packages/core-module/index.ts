@@ -13,22 +13,22 @@ let moduleCursor: {
 class DependencyError extends Error {
   constructor(message) {
     super(message);
-    this.name = "DependencyError";
+    this.name = 'DependencyError';
   }
 }
 export const createNamespace = (initialNamespace = {}) =>
   new Proxy(initialNamespace, {
     get(target, prop, receiver) {
-      if (prop === "__esModule" || prop === "then") {
+      if (prop === '__esModule' || prop === 'then') {
         // Lol
         return target;
       } else if (target[prop]) {
         return target[prop];
       }
       throw new DependencyError(
-        `Namespace export ${String(prop)} not defined.`
+        `Namespace export ${String(prop)} not defined.`,
       );
-    }
+    },
   });
 
 const resolveModule = (loadModule: () => Promise<any>, cb?: Function) => {
@@ -39,7 +39,7 @@ const resolveModule = (loadModule: () => Promise<any>, cb?: Function) => {
         resolve(module);
       })
       .catch(e => {
-        if (e.name === "DependencyError") {
+        if (e.name === 'DependencyError') {
           Object.values(require.cache).forEach(cachedRequire => {
             // For some reason, require.cache doesn't have the same shape in every browser?!
             // Sometimes `id` is replaced with `i` and `loaded` with `l`
@@ -73,7 +73,7 @@ const resolveDeferredModules = () => {
   if (!moduleCursor) {
     moduleCursor = {
       deferredCount: deferredModules.length,
-      registerParams
+      registerParams,
     };
   } else if (
     moduleCursor.registerParams === registerParams &&
@@ -81,7 +81,7 @@ const resolveDeferredModules = () => {
   ) {
     throw Error(
       `Can't resolve module: ${registerParams[0]} (usually sing of a missing or a circular dependency).` +
-        `\nFailed with error: ${moduleCursor.error}`
+        `\nFailed with error: ${moduleCursor.error}`,
     );
   }
 
@@ -98,7 +98,7 @@ const resolveDeferredModules = () => {
 
 export const register = <T>(
   loadModule: () => T extends Promise<infer K> ? T : never,
-  cb?: (module: T extends Promise<infer K> ? K : never) => void
+  cb?: (module: T extends Promise<infer K> ? K : never) => void,
 ) => {
   deferredModules.push([loadModule, cb]);
 };

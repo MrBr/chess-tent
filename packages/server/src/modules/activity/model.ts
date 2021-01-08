@@ -1,58 +1,58 @@
-import { Schema } from "mongoose";
+import { Schema } from 'mongoose';
 import {
   Activity,
   NormalizedActivity,
   Subject,
   TYPE_ACTIVITY,
-  TYPE_USER
-} from "@chess-tent/models";
-import { db } from "@application";
+  TYPE_USER,
+} from '@chess-tent/models';
+import { db } from '@application';
 
 export interface DepupulatedActivity {
-  id: Activity["id"];
-  type: Activity["type"];
-  state: Activity["state"];
-  subject: NormalizedActivity["subject"]["id"];
-  subjectType: NormalizedActivity["subject"]["type"];
-  owner: NormalizedActivity["owner"];
-  users: NormalizedActivity["users"];
+  id: Activity['id'];
+  type: Activity['type'];
+  state: Activity['state'];
+  subject: NormalizedActivity['subject']['id'];
+  subjectType: NormalizedActivity['subject']['type'];
+  owner: NormalizedActivity['owner'];
+  users: NormalizedActivity['users'];
 }
 
 const activitySchema = db.createSchema<DepupulatedActivity>(
   {
     subject: ({
       type: String,
-      refPath: "subjectType"
-    } as unknown) as DepupulatedActivity["subject"],
+      refPath: 'subjectType',
+    } as unknown) as DepupulatedActivity['subject'],
     subjectType: ({
-      type: String
-    } as unknown) as DepupulatedActivity["subjectType"],
+      type: String,
+    } as unknown) as DepupulatedActivity['subjectType'],
     owner: ({
       type: String,
-      ref: TYPE_USER
-    } as unknown) as DepupulatedActivity["owner"],
+      ref: TYPE_USER,
+    } as unknown) as DepupulatedActivity['owner'],
     users: [
       {
         type: String,
-        ref: TYPE_USER
-      } as unknown
-    ] as DepupulatedActivity["users"],
+        ref: TYPE_USER,
+      } as unknown,
+    ] as DepupulatedActivity['users'],
     state: ({
       type: Schema.Types.Mixed,
       required: true,
-      default: {}
-    } as unknown) as DepupulatedActivity["state"],
+      default: {},
+    } as unknown) as DepupulatedActivity['state'],
     type: ({
       type: String,
-      default: TYPE_ACTIVITY
-    } as unknown) as typeof TYPE_ACTIVITY
+      default: TYPE_ACTIVITY,
+    } as unknown) as typeof TYPE_ACTIVITY,
   },
-  { minimize: false }
+  { minimize: false },
 );
 
 const ActivityModel = db.createModel<DepupulatedActivity>(
   TYPE_ACTIVITY,
-  activitySchema
+  activitySchema,
 );
 
 const depopulate = (activity: Activity<Subject>): DepupulatedActivity => {
@@ -62,7 +62,7 @@ const depopulate = (activity: Activity<Subject>): DepupulatedActivity => {
     owner: activity.owner.id,
     users,
     subject: activity.subject.id,
-    subjectType: activity.subject.type
+    subjectType: activity.subject.type,
   };
 };
 

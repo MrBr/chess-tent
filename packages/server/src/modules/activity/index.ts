@@ -1,2 +1,2 @@
-import "./routes";
-import "./socket";
+import './routes';
+import './socket';

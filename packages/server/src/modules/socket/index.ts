@@ -1,37 +1,37 @@
-import { SocketService, SocketStream } from "@types";
-import application, { service } from "@application";
-import socketIo, { Server, Socket } from "socket.io";
+import { SocketService, SocketStream } from '@types';
+import application, { service } from '@application';
+import socketIo, { Server, Socket } from 'socket.io';
 import {
   ACTION_EVENT,
   Actions,
   SocketEvents,
   SUBSCRIBE_EVENT,
-  UNSUBSCRIBE_EVENT
-} from "@chess-tent/types";
+  UNSUBSCRIBE_EVENT,
+} from '@chess-tent/types';
 
 let io: Server;
 
-const middleware: SocketService["middleware"][] = [];
+const middleware: SocketService['middleware'][] = [];
 const getTokenFromCookie = (cookie: string | undefined) => {
   if (!cookie) {
     return;
   }
-  const params = cookie.split(";");
+  const params = cookie.split(';');
   for (const index in params) {
-    if (params[index].startsWith("token")) {
+    if (params[index].startsWith('token')) {
       // @ts-ignore
-      return params[index].split("=")[1];
+      return params[index].split('=')[1];
     }
   }
 };
 
-const identify: SocketService["identify"] = stream => {
+const identify: SocketService['identify'] = stream => {
   const token = getTokenFromCookie(stream.client.request.headers.cookie);
   return service.verifyToken(token);
 };
 
-const registerMiddleware: SocketService["registerMiddleware"] = socketMiddleware => {
-  middleware.push(socketMiddleware as SocketService["middleware"]);
+const registerMiddleware: SocketService['registerMiddleware'] = socketMiddleware => {
+  middleware.push(socketMiddleware as SocketService['middleware']);
 };
 
 const dispatch = (client: Socket, event: SocketEvents, data: any) => {
@@ -43,18 +43,18 @@ const dispatch = (client: Socket, event: SocketEvents, data: any) => {
   middleware[index]?.({ client, data, event }, next);
 };
 
-const init: SocketService["init"] = server => {
+const init: SocketService['init'] = server => {
   io = socketIo(server, { path: process.env.SOCKET_BASE_PATH });
-  io.on("connection", function(client) {
-    client.on(SUBSCRIBE_EVENT, function(channel) {
+  io.on('connection', function (client) {
+    client.on(SUBSCRIBE_EVENT, function (channel) {
       dispatch(client, SUBSCRIBE_EVENT, channel);
     });
 
-    client.on(UNSUBSCRIBE_EVENT, function(channel) {
+    client.on(UNSUBSCRIBE_EVENT, function (channel) {
       dispatch(client, UNSUBSCRIBE_EVENT, channel);
     });
 
-    client.on(ACTION_EVENT, function(data) {
+    client.on(ACTION_EVENT, function (data) {
       dispatch(client, ACTION_EVENT, JSON.parse(data));
     });
   });

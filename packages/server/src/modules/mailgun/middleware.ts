@@ -1,10 +1,10 @@
-import { Middleware } from "@types";
-import { sendMail as sendMailService } from "./service";
+import { Middleware } from '@types';
+import { sendMail as sendMailService } from './service';
 
-export const sendMail: Middleware["sendMail"] = formatData => (
+export const sendMail: Middleware['sendMail'] = formatData => (
   res,
   req,
-  next
+  next,
 ) => {
   const data = formatData(res, req);
   sendMailService(data)

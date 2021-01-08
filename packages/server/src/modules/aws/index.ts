@@ -1,5 +1,5 @@
-import application from "@application";
-import AWS from "aws-sdk";
+import application from '@application';
+import AWS from 'aws-sdk';
 
 // Initialize the Amazon Cognito credentials provider
 AWS.config.region = process.env.AWS_REGION; // Region
@@ -8,4 +8,4 @@ AWS.config.secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
 
 application.service.fileStorage = new AWS.S3();
 
-application.register(() => import("./routes"));
+application.register(() => import('./routes'));

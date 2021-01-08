@@ -1,7 +1,7 @@
-import { Subject } from "../subject";
-import { User } from "../user";
+import { Subject } from '../subject';
+import { User } from '../user';
 
-export const TYPE_NOTIFICATION = "notifications";
+export const TYPE_NOTIFICATION = 'notifications';
 
 export interface Notification extends Subject {
   id: string;
@@ -14,11 +14,11 @@ export interface Notification extends Subject {
 }
 
 export interface NormalizedNotification {
-  id: Notification["id"];
-  user: User["id"];
-  notificationType: Notification["notificationType"];
-  type: Notification["type"];
-  time: Notification["time"];
-  read: Notification["read"];
-  state: Notification["state"];
+  id: Notification['id'];
+  user: User['id'];
+  notificationType: Notification['notificationType'];
+  type: Notification['type'];
+  time: Notification['time'];
+  read: Notification['read'];
+  state: Notification['state'];
 }

@@ -1,11 +1,11 @@
-import application, { middleware } from "@application";
+import application, { middleware } from '@application';
 import {
   getCoaches,
   getStudents,
   resolveMentorshipRequest,
-  requestMentorship
-} from "./middleware";
-import { TYPE_MENTORSHIP } from "@chess-tent/models";
+  requestMentorship,
+} from './middleware';
+import { TYPE_MENTORSHIP } from '@chess-tent/models';
 
 const {
   identify,
@@ -13,51 +13,51 @@ const {
   sendStatusOk,
   toLocals,
   sendNotification,
-  createNotification
+  createNotification,
 } = middleware;
 
 application.service.registerPostRoute(
-  "/mentorship",
+  '/mentorship',
   identify,
-  toLocals("studentId", req => req.body.studentId),
-  toLocals("coachId", req => req.body.coachId),
+  toLocals('studentId', req => req.body.studentId),
+  toLocals('coachId', req => req.body.coachId),
   requestMentorship,
 
   // Notification flow
-  toLocals("user", (req, res) => res.locals.mentorship.coach),
-  toLocals("notificationType", TYPE_MENTORSHIP),
-  toLocals("state", (req, res) => ({
+  toLocals('user', (req, res) => res.locals.mentorship.coach),
+  toLocals('notificationType', TYPE_MENTORSHIP),
+  toLocals('state', (req, res) => ({
     text: `${res.locals.mentorship.student.name} requested mentorship`,
-    student: res.locals.mentorship.student.id
+    student: res.locals.mentorship.student.id,
   })),
   createNotification,
   sendNotification,
 
-  sendData("mentorship")
+  sendData('mentorship'),
 );
 
 application.service.registerPutRoute(
-  "/mentorship",
+  '/mentorship',
   identify,
-  toLocals("studentId", req => req.body.studentId),
-  toLocals("coachId", req => req.body.coachId),
-  toLocals("approved", req => req.body.approved),
+  toLocals('studentId', req => req.body.studentId),
+  toLocals('coachId', req => req.body.coachId),
+  toLocals('approved', req => req.body.approved),
   resolveMentorshipRequest,
-  sendStatusOk
+  sendStatusOk,
 );
 
 application.service.registerGetRoute(
-  "/mentorship/:userId/coaches",
+  '/mentorship/:userId/coaches',
   identify,
-  toLocals("studentId", req => req.params.userId),
+  toLocals('studentId', req => req.params.userId),
   getCoaches,
-  sendData("coaches")
+  sendData('coaches'),
 );
 
 application.service.registerGetRoute(
-  "/mentorship/:userId/students",
+  '/mentorship/:userId/students',
   identify,
-  toLocals("coachId", req => req.params.userId),
+  toLocals('coachId', req => req.params.userId),
   getStudents,
-  sendData("students")
+  sendData('students'),
 );

@@ -1,7 +1,7 @@
-import { Subject } from "../subject";
-import { Step, StepRoot } from "../step";
+import { Subject } from '../subject';
+import { Step, StepRoot } from '../step';
 
-export const TYPE_CHAPTER = "chapters";
+export const TYPE_CHAPTER = 'chapters';
 
 export interface Chapter extends Subject, StepRoot {
   id: string;
@@ -14,11 +14,11 @@ export interface Chapter extends Subject, StepRoot {
 }
 
 export interface NormalizedChapter {
-  id: Chapter["id"];
-  type: Chapter["type"];
+  id: Chapter['id'];
+  type: Chapter['type'];
   state: {
-    title: Chapter["state"]["title"];
+    title: Chapter['state']['title'];
     steps: Step[];
-    description?: Chapter["state"]["description"];
+    description?: Chapter['state']['description'];
   };
 }

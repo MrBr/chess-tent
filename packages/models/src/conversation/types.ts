@@ -1,7 +1,7 @@
-import { User } from "../user";
-import { NormalizedMessage } from "../message";
+import { User } from '../user';
+import { NormalizedMessage } from '../message';
 
-export const TYPE_CONVERSATION = "conversations";
+export const TYPE_CONVERSATION = 'conversations';
 
 export interface Conversation {
   id: string;
@@ -11,8 +11,8 @@ export interface Conversation {
 }
 
 export interface NormalizedConversation {
-  id: Conversation["id"];
-  users: User["id"][];
+  id: Conversation['id'];
+  users: User['id'][];
   messages: NormalizedMessage[];
-  type: Conversation["type"];
+  type: Conversation['type'];
 }

@@ -1,8 +1,8 @@
-import application from "@application";
+import application from '@application';
 
 application.register(
-  () => import("./middleware"),
+  () => import('./middleware'),
   module => {
     application.middleware.sendMail = module.sendMail;
-  }
+  },
 );

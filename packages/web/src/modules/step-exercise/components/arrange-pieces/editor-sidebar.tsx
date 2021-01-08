@@ -13,9 +13,11 @@ export default ({ step, updateStep }: ExerciseToolboxProps) => {
     step,
     'question',
   );
-  const updateExplanation = useUpdateExerciseStateProp<
-    ExerciseArrangePiecesState
-  >(updateStep, step, 'explanation');
+  const updateExplanation = useUpdateExerciseStateProp<ExerciseArrangePiecesState>(
+    updateStep,
+    step,
+    'explanation',
+  );
 
   return (
     <>

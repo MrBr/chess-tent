@@ -1,4 +1,4 @@
-import { register, createNamespace, init } from "core-module";
+import { register, createNamespace, init } from 'core-module';
 import {
   Application,
   DB,
@@ -6,8 +6,8 @@ import {
   Middleware,
   Service,
   SocketService,
-  Utils
-} from "@types";
+  Utils,
+} from '@types';
 
 const db = createNamespace({}) as DB;
 const service = createNamespace({}) as Service;
@@ -24,7 +24,7 @@ const application = createNamespace({
   middleware,
   socket,
   utils,
-  errors
+  errors,
 }) as Application;
 
 export {
@@ -34,5 +34,5 @@ export {
   middleware,
   socket,
   utils,
-  errors
+  errors,
 };

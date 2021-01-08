@@ -1,22 +1,22 @@
-import { Subject } from "../subject";
-import { Step } from "../step";
+import { Subject } from '../subject';
+import { Step } from '../step';
 
-export const TYPE_ANALYSIS = "analyses";
+export const TYPE_ANALYSIS = 'analyses';
 
 export interface Analysis extends Subject {
   id: string;
   type: typeof TYPE_ANALYSIS;
   state: {
-    activeStepId?: Step["id"];
+    activeStepId?: Step['id'];
     steps: { 0: Step } & Array<Step>;
   };
 }
 
 export interface NormalizedAnalysis {
-  id: Analysis["id"];
-  type: Analysis["type"];
+  id: Analysis['id'];
+  type: Analysis['type'];
   state: {
-    activeStepId?: Analysis["state"]["activeStepId"];
-    steps: Analysis["state"]["steps"];
+    activeStepId?: Analysis['state']['activeStepId'];
+    steps: Analysis['state']['steps'];
   };
 }

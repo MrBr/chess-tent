@@ -1,6 +1,6 @@
-import { ErrorRequestHandler } from "express";
-import { Middleware } from "@types";
-import { set } from "lodash";
+import { ErrorRequestHandler } from 'express';
+import { Middleware } from '@types';
+import { set } from 'lodash';
 
 export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   console.error(err.stack);
@@ -8,26 +8,26 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   res.status(err.status || 500).json({ error: err.message });
 };
 
-export const logLocal: Middleware["logLocal"] = (prefix, log) => (
+export const logLocal: Middleware['logLocal'] = (prefix, log) => (
   req,
   res,
-  next
+  next,
 ) => {
   console.log(
     prefix,
-    typeof log === "string" ? res.locals[log] : log(req, res)
+    typeof log === 'string' ? res.locals[log] : log(req, res),
   );
   next();
 };
 
-export const sendData: Middleware["sendData"] = (localProp: string) => (
+export const sendData: Middleware['sendData'] = (localProp: string) => (
   req,
-  res
+  res,
 ) => {
   res.json({ data: res.locals[localProp] });
 };
 
-export const validate: Middleware["validate"] = validate => (...args) => {
+export const validate: Middleware['validate'] = validate => (...args) => {
   const next = args[2];
   try {
     validate(...args);
@@ -37,17 +37,17 @@ export const validate: Middleware["validate"] = validate => (...args) => {
   }
 };
 
-export const sendStatusOk: Middleware["sendStatusOk"] = (req, res) => {
+export const sendStatusOk: Middleware['sendStatusOk'] = (req, res) => {
   res.json({ error: null });
 };
 
-export const toLocals: Middleware["toLocals"] = (localsKey, value) => (
+export const toLocals: Middleware['toLocals'] = (localsKey, value) => (
   ...args
 ) => {
   set(
     args[1].locals,
     localsKey,
-    typeof value === "function" ? value(...args) : value
+    typeof value === 'function' ? value(...args) : value,
   );
   args[2]();
 };

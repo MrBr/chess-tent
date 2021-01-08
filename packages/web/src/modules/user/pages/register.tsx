@@ -24,16 +24,8 @@ const {
 } = ui;
 
 const SignupSchema = yup.object().shape({
-  name: yup
-    .string()
-    .min(2, 'Too Short!')
-    .max(70, 'Too Long!')
-    .required(),
-  password: yup
-    .string()
-    .min(8, 'Too Short!')
-    .max(24, 'Too Long!')
-    .required(),
+  name: yup.string().min(2, 'Too Short!').max(70, 'Too Long!').required(),
+  password: yup.string().min(8, 'Too Short!').max(24, 'Too Long!').required(),
   passwordConfirmation: yup.string().when('password', {
     is: val => val && val.length > 0,
     then: yup
@@ -41,15 +33,8 @@ const SignupSchema = yup.object().shape({
       .oneOf([yup.ref('password')], 'Both passwords need to be the same')
       .required(),
   }),
-  nickname: yup
-    .string()
-    .min(4, 'Too Short!')
-    .max(16, 'Too Long!')
-    .required(),
-  email: yup
-    .string()
-    .email('Invalid email')
-    .required(),
+  nickname: yup.string().min(4, 'Too Short!').max(16, 'Too Long!').required(),
+  email: yup.string().email('Invalid email').required(),
   coach: yup.boolean(),
 });
 

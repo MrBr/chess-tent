@@ -1,11 +1,11 @@
-var path = require("path");
+var path = require('path');
 
 module.exports = {
-  entry: "./",
+  entry: './',
   devServer: {
-    contentBase: path.join(__dirname, "../packages/web/build/"),
+    contentBase: path.join(__dirname, '../packages/web/build/'),
     compress: true,
     port: 3000,
-    historyApiFallback: true
-  }
+    historyApiFallback: true,
+  },
 };

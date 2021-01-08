@@ -6,9 +6,11 @@ import { hooks, ui } from '@application';
 const { ToastHeader, ToastBody, Button, Text, Dropdown } = ui;
 const { useHistory } = hooks;
 
-export const Toast: NotificationComponent<Notification & {
-  state: { text: string };
-}> = ({ notification }) => {
+export const Toast: NotificationComponent<
+  Notification & {
+    state: { text: string };
+  }
+> = ({ notification }) => {
   return (
     <>
       <ToastHeader>
@@ -29,9 +31,11 @@ export const Toast: NotificationComponent<Notification & {
   );
 };
 
-export const DropdownItem: NotificationComponent<Notification & {
-  state: { text: string };
-}> = ({ notification }) => {
+export const DropdownItem: NotificationComponent<
+  Notification & {
+    state: { text: string };
+  }
+> = ({ notification }) => {
   const history = useHistory();
   return (
     <Dropdown.Item onClick={() => history.push('/me/students')}>

@@ -1,57 +1,57 @@
-import application, { middleware } from "@application";
+import application, { middleware } from '@application';
 import {
   canEditConversation,
   getConversation,
   saveConversation,
   findConversations,
   addMessageToConversation,
-  getConversationMessages
-} from "./middleware";
+  getConversationMessages,
+} from './middleware';
 
 const { identify, sendData, sendStatusOk, toLocals } = middleware;
 
 application.service.registerPostRoute(
-  "/conversation/save",
+  '/conversation/save',
   identify,
-  toLocals("conversation", req => req.body),
+  toLocals('conversation', req => req.body),
   canEditConversation,
   saveConversation,
-  sendStatusOk
+  sendStatusOk,
 );
 
 application.service.registerPutRoute(
-  "/conversation/:conversationId/message",
+  '/conversation/:conversationId/message',
   identify,
-  toLocals("message", req => req.body),
-  toLocals("conversation.id", req => req.params.conversationId),
+  toLocals('message', req => req.body),
+  toLocals('conversation.id', req => req.params.conversationId),
   canEditConversation,
   addMessageToConversation,
-  sendStatusOk
+  sendStatusOk,
 );
 
 application.service.registerPostRoute(
-  "/conversations",
+  '/conversations',
   identify,
-  toLocals("filters", req => ({ users: req.body.users })),
+  toLocals('filters', req => ({ users: req.body.users })),
   findConversations,
-  sendData("conversations")
+  sendData('conversations'),
 );
 
 application.service.registerGetRoute(
-  "/conversation/:conversationId",
+  '/conversation/:conversationId',
   identify,
-  toLocals("conversation.id", req => req.params.conversationId),
+  toLocals('conversation.id', req => req.params.conversationId),
   canEditConversation,
   getConversation,
-  sendData("conversation")
+  sendData('conversation'),
 );
 
 application.service.registerPostRoute(
-  "/conversation/:conversationId/messages",
+  '/conversation/:conversationId/messages',
   identify,
-  toLocals("conversation.id", req => req.params.conversationId),
-  toLocals("pagination", req => req.body),
+  toLocals('conversation.id', req => req.params.conversationId),
+  toLocals('pagination', req => req.body),
   canEditConversation,
   getConversationMessages,
-  sendData("messages")
+  sendData('messages'),
 );

@@ -8,6 +8,6 @@ export class UnauthorizedLessonEditError extends Error {
 export class LessonNotFoundError extends Error {
   status = 400;
   constructor() {
-    super("Lesson not found.");
+    super('Lesson not found.');
   }
 }

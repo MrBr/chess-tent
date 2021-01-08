@@ -1,15 +1,15 @@
-import { Analysis, TYPE_ANALYSIS } from "./types";
-import { getChildStep, getStepPath, Step } from "../step";
-import { SubjectPath, updateSubjectValueAt } from "../subject";
+import { Analysis, TYPE_ANALYSIS } from './types';
+import { getChildStep, getStepPath, Step } from '../step';
+import { SubjectPath, updateSubjectValueAt } from '../subject';
 
 const updateAnalysisPath = (
   analysis: Analysis,
   path: SubjectPath,
-  patch: Step["id"] | Step | Step[]
+  patch: Step['id'] | Step | Step[],
 ) => updateSubjectValueAt(analysis, path, patch);
 
-const updateAnalysisActiveStepId = (analysis: Analysis, stepId: Step["id"]) =>
-  updateAnalysisPath(analysis, ["state", "activeStepId"], stepId);
+const updateAnalysisActiveStepId = (analysis: Analysis, stepId: Step['id']) =>
+  updateAnalysisPath(analysis, ['state', 'activeStepId'], stepId);
 
 const getAnalysisActiveStep = (analysis: Analysis): Step => {
   const activeStep =
@@ -20,16 +20,16 @@ const getAnalysisActiveStep = (analysis: Analysis): Step => {
 
 const getAnalysisStepPath = (
   analysis: Analysis,
-  step: Step
+  step: Step,
 ): SubjectPath | null => {
   for (let index = 0; index < analysis.state.steps.length; index++) {
     const childStep = analysis.state.steps[index];
     if (childStep.id === step.id) {
-      return ["state", "steps", index];
+      return ['state', 'steps', index];
     }
     const path = getStepPath(childStep, step);
     if (path) {
-      return ["state", "steps", index, ...path];
+      return ['state', 'steps', index, ...path];
     }
   }
   return null;
@@ -45,11 +45,11 @@ const updateAnalysisStep = (analysis: Analysis, step: Step) => {
 
 const createAnalysis = (
   id: string,
-  steps: Analysis["state"]["steps"]
+  steps: Analysis['state']['steps'],
 ): Analysis => ({
   id,
   type: TYPE_ANALYSIS,
-  state: { steps }
+  state: { steps },
 });
 
 export {
@@ -58,5 +58,5 @@ export {
   updateAnalysisPath,
   getAnalysisStepPath,
   createAnalysis,
-  updateAnalysisActiveStepId
+  updateAnalysisActiveStepId,
 };

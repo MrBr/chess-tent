@@ -1,8 +1,8 @@
-import { State } from "./state";
-import { setCheck, setSelected } from "./board";
-import { read as fenRead } from "./fen";
-import { DrawShape, DrawBrush, DrawCurrent } from "./draw";
-import * as cg from "./types";
+import { State } from './state';
+import { setCheck, setSelected } from './board';
+import { read as fenRead } from './fen';
+import { DrawShape, DrawBrush, DrawCurrent } from './draw';
+import * as cg from './types';
 
 export interface Config {
   fen?: cg.FEN; // chess position in Forsyth notation
@@ -28,7 +28,7 @@ export interface Config {
   };
   movable?: {
     free?: boolean; // all moves are valid - board editor
-    color?: cg.Color | "both"; // color that can move. white | black | both | undefined
+    color?: cg.Color | 'both'; // color that can move. white | black | both | undefined
     dests?: {
       [key: string]: cg.Key[];
     }; // valid moves. {"a2" ["a3" "a4"] "b1" ["a3" "c3"]}
@@ -38,7 +38,7 @@ export interface Config {
       afterNewPiece?: (
         role: cg.Role,
         key: cg.Key,
-        metadata: cg.MoveMetadata
+        metadata: cg.MoveMetadata,
       ) => void; // called after a new piece is dropped on the board
     };
     rookCastle?: boolean; // castle by moving the king to the rook
@@ -53,7 +53,7 @@ export interface Config {
       set?: (
         orig: cg.Key,
         dest: cg.Key,
-        metadata?: cg.SetPremoveMetadata
+        metadata?: cg.SetPremoveMetadata,
       ) => void; // called after the premove has been set
       unset?: () => void; // called after the premove has been unset
     };
@@ -92,7 +92,7 @@ export interface Config {
     // called before drawing & updating a shape.
     validate?: (
       newDrawShape: DrawCurrent,
-      curDrawShape: DrawCurrent
+      curDrawShape: DrawCurrent,
     ) => boolean;
     visible?: boolean; // can view
     eraseOnClick?: boolean;
@@ -121,8 +121,8 @@ export function configure(state: State, config: Config) {
   }
 
   // apply config values that could be undefined yet meaningful
-  if (config.hasOwnProperty("check")) setCheck(state, config.check || false);
-  if (config.hasOwnProperty("lastMove") && !config.lastMove)
+  if (config.hasOwnProperty('check')) setCheck(state, config.check || false);
+  if (config.hasOwnProperty('lastMove') && !config.lastMove)
     state.lastMove = undefined;
   // in case of ZH drop last move, there's a single square.
   // if the previous last move had two squares,
@@ -137,15 +137,15 @@ export function configure(state: State, config: Config) {
     state.animation.enabled = false;
 
   if (!state.movable.rookCastle && state.movable.dests) {
-    const rank = state.movable.color === "white" ? 1 : 8,
-      kingStartPos = "e" + rank,
+    const rank = state.movable.color === 'white' ? 1 : 8,
+      kingStartPos = 'e' + rank,
       dests = state.movable.dests[kingStartPos],
       king = state.pieces[kingStartPos];
-    if (!dests || !king || king.role !== "king") return;
+    if (!dests || !king || king.role !== 'king') return;
     state.movable.dests[kingStartPos] = dests.filter(
       d =>
-        !(d === "a" + rank && dests.indexOf(("c" + rank) as cg.Key) !== -1) &&
-        !(d === "h" + rank && dests.indexOf(("g" + rank) as cg.Key) !== -1)
+        !(d === 'a' + rank && dests.indexOf(('c' + rank) as cg.Key) !== -1) &&
+        !(d === 'h' + rank && dests.indexOf(('g' + rank) as cg.Key) !== -1),
     );
   }
 }
@@ -159,5 +159,5 @@ function merge(base: any, extend: any) {
 }
 
 function isObject(o: any): boolean {
-  return typeof o === "object";
+  return typeof o === 'object';
 }

@@ -185,26 +185,26 @@ class EditorRenderer extends React.Component<
 
   deleteStep = (step: Step) => {
     const { activeChapter, history } = this.props;
-    const parentStep = getParentStep(activeChapter, step);
+    const parent = getParentStep(activeChapter, step);
     const newActiveStep = getPreviousStep(activeChapter, step);
     if (!newActiveStep) {
       // Don't allow deleting first step (for now)
       return;
     }
-    if (isStep(parentStep)) {
+    if (isStep(parent)) {
       const updatedParent = removeStep(
-        parentStep,
+        parent,
         step,
         step.stepType !== 'variation',
       );
       this.updateStep(updatedParent as Step);
     } else {
-      const updatedParent = removeStep(parentStep, step);
+      const updatedParent = removeStep(parent, step);
       this.updateChapter(updatedParent as Chapter);
     }
     history.replace({
       pathname: history.location.pathname,
-      search: `?activeStep=${newActiveStep.id}`,
+      search: `?activeChapter=${activeChapter.id}&activeStep=${newActiveStep.id}`,
     });
   };
 

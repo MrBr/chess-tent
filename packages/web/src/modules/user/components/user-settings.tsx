@@ -38,7 +38,7 @@ export default () => {
           <Text onClick={() => history.push('/me/coaches')}>Coaches</Text>
         </Dropdown.Item>
         <Dropdown.Item>
-          <Text onClick={logout}>Logout</Text>
+          <Text onClick={() => logout()}>Logout</Text>
         </Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>

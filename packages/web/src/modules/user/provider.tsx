@@ -13,6 +13,7 @@ const Provider: ComponentType = ({ children }) => {
   useEffect(() => {
     fetch();
   }, [fetch]);
+
   useEffect(() => {
     if (response) {
       socket.subscribe(`user-${response.data.id}`);
@@ -20,7 +21,7 @@ const Provider: ComponentType = ({ children }) => {
     }
   }, [dispatch, response, updateActiveUser]);
 
-  if (!user && !error) {
+  if (!user && !error && !response) {
     return <>Loading</>;
   }
 

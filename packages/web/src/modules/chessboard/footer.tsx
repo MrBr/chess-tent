@@ -28,8 +28,8 @@ export default styled<FunctionComponent<ChessboardFooterProps>>(
     const [fen, setFen] = useState<string>(position);
 
     useEffect(() => {
-      position !== fen && setFen(position);
-    }, [fen, position]);
+      setFen(position);
+    }, [position]);
 
     const handleFenEnterKeypress = useCallback(
       event => {

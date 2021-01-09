@@ -55,3 +55,9 @@ export const orQueries: DB['orQueries'] = (...queries) => {
   );
   return { $or: filteredQueries?.length > 0 ? filteredQueries : undefined };
 };
+export const inQuery: DB['inQuery'] = (field, value) => {
+  if (!value) {
+    return {};
+  }
+  return { [field]: { $in: value } };
+};

@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import application from '@application';
 
-import { createModel, createSchema, orQueries } from './utils';
+import { createModel, createSchema, inQuery, orQueries } from './utils';
 
 // Connection URL
 const url = process.env.DB_URL;
@@ -30,5 +30,4 @@ application.db.connect = () => {
 application.db.createSchema = createSchema;
 application.db.createModel = createModel;
 application.db.orQueries = orQueries;
-
-export {};
+application.db.inQuery = inQuery;

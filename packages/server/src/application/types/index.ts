@@ -29,6 +29,10 @@ export type DB = {
   orQueries: (
     ...args: MongooseFilterQuery<any>[]
   ) => { $or: MongooseFilterQuery<any>[] | undefined };
+  inQuery: <T, F extends string>(
+    field: F,
+    value: T[] | T,
+  ) => Record<F, { $in: T[] | undefined }> | {};
 };
 
 export type Auth = {

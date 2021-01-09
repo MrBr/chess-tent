@@ -31,7 +31,7 @@ export default ({ close }: { close: () => void }) => {
   );
   const [user] = useActiveUserRecord() as [User, never, never];
   const [mentorship] = useStudents(user);
-  const { fetch: fetchUserLessons, response } = useApi(requests.lessons);
+  const { fetch: fetchUserLessons, response } = useApi(requests.myLessons);
 
   const students = useMemo(() => mentorship?.map(({ student }) => student), [
     mentorship,
@@ -52,7 +52,7 @@ export default ({ close }: { close: () => void }) => {
   );
 
   useEffect(() => {
-    fetchUserLessons({ owner: user.id });
+    fetchUserLessons({});
   }, [fetchUserLessons, user.id]);
 
   return (

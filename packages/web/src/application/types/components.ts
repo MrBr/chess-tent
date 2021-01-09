@@ -62,9 +62,7 @@ export interface ChessboardState {
 
 export interface ChessboardFooterProps {
   editing: boolean;
-  width: number | string;
   position: FEN;
-  className?: string;
   updateEditing: (editing: boolean) => void;
   onReset: () => void;
   onClear: () => void;

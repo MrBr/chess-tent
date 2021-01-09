@@ -7,7 +7,7 @@ import {
 } from '@types';
 import { isStepCompleted } from '@chess-tent/models';
 
-const { Headline4, Button, Row, Col, Check, Container } = ui;
+const { Headline4, Button, Row, Col, Check, Container, Text } = ui;
 const { LessonToolboxText } = components;
 
 const Playground: FunctionComponent<
@@ -20,7 +20,7 @@ const Playground: FunctionComponent<
   completeStep,
 }) => {
   const {
-    selectedOptionIndex,
+    selectedOptions,
   } = stepActivityState as ExerciseQuestionnaireActivityState;
   const { question, explanation, options } = step.state
     .exerciseState as ExerciseQuestionnaireState;
@@ -28,36 +28,54 @@ const Playground: FunctionComponent<
   const handleAnswerChange = useCallback(
     (optionIndex: number) => {
       setStepActivityState({
-        selectedOptionIndex: optionIndex,
+        selectedOptions: {
+          ...selectedOptions,
+          [optionIndex]: !selectedOptions?.[optionIndex],
+        },
       });
     },
-    [setStepActivityState],
+    [selectedOptions, setStepActivityState],
   );
   const handleSubmit = useCallback(() => {
     completeStep(step);
   }, [completeStep, step]);
+  const correctSubmission = options?.every(
+    ({ correct }, index) => !!selectedOptions?.[index] === correct,
+  );
 
   return (
     <>
-      <Headline4>Select the answer</Headline4>
+      <Headline4>
+        {completed
+          ? correctSubmission
+            ? 'Correct'
+            : 'Incorrect'
+          : 'Select the answer'}
+      </Headline4>
       <LessonToolboxText defaultText={question} />
-      <Container>
+      <Container className="mt-2">
         {options?.map(({ text, correct }, index) => (
           <Row key={index} className="align-items-center">
             <Col className="col-auto pr-0">
               <Check
-                isInvalid={!!(selectedOptionIndex && correct && completed)}
+                isInvalid={
+                  !!(selectedOptions?.[index] && !correct && completed)
+                }
+                isValid={!!(correct && completed)}
                 onChange={() => handleAnswerChange(index)}
+                label={text}
               />
-            </Col>
-            <Col className="pl-0">
-              <LessonToolboxText defaultText={text} />
             </Col>
           </Row>
         ))}
       </Container>
-      {completed && <LessonToolboxText defaultText={explanation} />}
-      <Button onClick={handleSubmit} size="extra-small">
+      {completed && (
+        <>
+          <Text className="mt-2 mb-0">Explanation:</Text>
+          <LessonToolboxText defaultText={explanation} />
+        </>
+      )}
+      <Button onClick={handleSubmit} size="extra-small" className="mt-2">
         Submit
       </Button>
     </>

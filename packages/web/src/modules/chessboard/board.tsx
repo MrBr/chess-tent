@@ -133,6 +133,16 @@ const BoardContainer = styled<
   boxSizing: 'content-box',
 }));
 
+const BoardFooter = styled.div<{
+  width: string | number;
+}>(
+  {
+    margin: '1em auto',
+    maxWidth: MAX_BOARD_SIZE,
+  },
+  ({ width }) => ({ width }),
+);
+
 // Chessground resizing expects custom event to be
 // triggered on the document.body once resizing occur.
 window.addEventListener('resize', () =>
@@ -481,18 +491,18 @@ class Chessboard
             />
           )}
         </BoardContainer>
-        {footer || (
-          <Footer
-            width={size as number}
-            editing={!!editing}
-            onReset={this.onReset}
-            onClear={this.onClear}
-            updateEditing={this.onUpdateEditing}
-            onFENSet={this.onFENSet}
-            position={fen}
-            className="mt-4"
-          />
-        )}
+        <BoardFooter className="mt-4" width={size as number}>
+          {footer || (
+            <Footer
+              editing={!!editing}
+              onReset={this.onReset}
+              onClear={this.onClear}
+              updateEditing={this.onUpdateEditing}
+              onFENSet={this.onFENSet}
+              position={fen}
+            />
+          )}
+        </BoardFooter>
         <Modal
           container={this.boardHost}
           show={!!renderPrompt}

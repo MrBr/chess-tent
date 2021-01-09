@@ -87,7 +87,7 @@ export interface ExerciseQuestionnaireState {
   options?: { correct: boolean; text: string }[];
 }
 export type ExerciseQuestionnaireActivityState = ActivityStepState<{
-  selectedOptionIndex?: number;
+  selectedOptions?: { [key: number]: boolean };
 }>;
 
 export type ExerciseActivityState =

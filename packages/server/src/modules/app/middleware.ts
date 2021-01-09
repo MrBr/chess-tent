@@ -44,10 +44,11 @@ export const sendStatusOk: Middleware['sendStatusOk'] = (req, res) => {
 export const toLocals: Middleware['toLocals'] = (localsKey, value) => (
   ...args
 ) => {
+  const next = args[2];
   set(
     args[1].locals,
     localsKey,
     typeof value === 'function' ? value(...args) : value,
   );
-  args[2]();
+  next();
 };

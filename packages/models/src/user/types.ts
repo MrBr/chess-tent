@@ -23,6 +23,7 @@ export interface User extends Subject {
     teachingExperience?: string;
     teachingMethodology?: string;
     punchline?: string;
+    lastActivity?: Date;
   };
 }
 

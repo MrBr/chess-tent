@@ -87,6 +87,8 @@ application.service.registerGetRoute(
   '/me',
   identify,
   toLocals('user', (req, res) => res.locals.me),
+  toLocals('user.state.lastActivity', () => new Date()),
+  updateUser,
   getUser,
   sendData('user'),
 );

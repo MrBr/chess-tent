@@ -7,7 +7,12 @@ import {
   Model,
   MongooseFilterQuery,
 } from 'mongoose';
-import { NormalizedUser, SubjectPathUpdate, User } from '@chess-tent/models';
+import {
+  NormalizedUser,
+  SubjectPathUpdate,
+  User,
+  Subject,
+} from '@chess-tent/models';
 import { Socket } from 'socket.io';
 import { Server as HttpServer } from 'http';
 import { Messages } from 'mailgun-js';
@@ -65,6 +70,9 @@ export type Service = {
   subjectPathUpdatesToMongoose$set: (
     updates: SubjectPathUpdate[],
   ) => Record<string, any>;
+  flattenStateToMongoose$set: <T extends Subject>(
+    subject: Partial<T>,
+  ) => Partial<T>;
 };
 
 export type MailData = Parameters<Messages['send']>[0];

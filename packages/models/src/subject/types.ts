@@ -1,6 +1,6 @@
 export interface Subject {
   id: string;
-  state: {};
+  state: Record<string, any>;
   type: string;
 }
 

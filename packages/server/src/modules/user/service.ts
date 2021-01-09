@@ -3,7 +3,7 @@ import { UserModel } from './model';
 import { User } from '@chess-tent/models';
 import { compare, hash } from 'bcrypt';
 import { MongooseFilterQuery } from 'mongoose';
-import { utils } from '@application';
+import { utils, service } from '@application';
 
 export const addUser = (user: User) =>
   new Promise((resolve, reject) => {
@@ -24,9 +24,13 @@ export const addUser = (user: User) =>
     });
   });
 
-export const updateUser = (userId: User['id'], user: Partial<User>) =>
+export const updateUser = (
+  userId: User['id'],
+  user: Partial<User>,
+): Promise<void> =>
   new Promise((resolve, reject) => {
-    UserModel.updateOne({ _id: user.id }, { $set: user }).exec(
+    const userPatch = service.flattenStateToMongoose$set(user);
+    UserModel.updateOne({ _id: userId }, { $set: userPatch }).exec(
       (err, result) => {
         if (err) {
           reject(err);

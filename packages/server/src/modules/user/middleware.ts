@@ -57,6 +57,15 @@ export const validateUser: MiddlewareFunction = (req, res, next) => {
   next();
 };
 
+export const updateUserActivity: MiddlewareFunction = (req, res, next) => {
+  service
+    .updateUser(res.locals.user.id, {
+      state: { lastActivity: new Date() },
+    })
+    .then(next)
+    .catch(next);
+};
+
 export const verifyUser: MiddlewareFunction = async (req, res, next) => {
   // Clearing projection to get password for verification
   try {

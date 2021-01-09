@@ -1,4 +1,4 @@
-import { SubjectPath } from '@chess-tent/models';
+import { SubjectPath, Subject } from '@chess-tent/models';
 import { Service } from '@types';
 
 export const subjectPathToMongoosePath = (path: SubjectPath) => {
@@ -11,4 +11,19 @@ export const subjectPathUpdatesToMongoose$set: Service['subjectPathUpdatesToMong
     result[path] = update.value;
     return result;
   }, {});
+};
+
+export const flattenStateToMongoose$set: Service['flattenStateToMongoose$set'] = subject => {
+  if (subject.state) {
+    const flattenedSubject = {
+      ...subject,
+      ...Object.keys(subject.state).reduce((res, key) => {
+        res[`state.${key}`] = subject.state?.[key];
+        return res;
+      }, {} as Record<string, any>),
+    };
+    delete flattenedSubject.state;
+    return flattenedSubject;
+  }
+  return subject;
 };

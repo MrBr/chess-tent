@@ -7,6 +7,7 @@ import {
   updateUser,
   findUsers,
   getUser,
+  updateUserActivity,
 } from './middleware';
 import { UserAlreadyActivated } from './errors';
 
@@ -19,7 +20,6 @@ const {
   sendStatusOk,
   sendMail,
   validate,
-  logLocal,
 } = middleware;
 
 application.service.registerPostRoute(
@@ -70,6 +70,7 @@ application.service.registerPostRoute(
   toLocals('user', req => req.body),
   verifyUser,
   webLogin,
+  updateUserActivity,
   sendData('user'),
 );
 
@@ -87,8 +88,7 @@ application.service.registerGetRoute(
   '/me',
   identify,
   toLocals('user', (req, res) => res.locals.me),
-  toLocals('user.state.lastActivity', () => new Date()),
-  updateUser,
+  updateUserActivity,
   getUser,
   sendData('user'),
 );

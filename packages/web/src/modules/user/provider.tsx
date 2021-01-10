@@ -1,12 +1,13 @@
 import React, { ComponentType, ReactElement, useEffect } from 'react';
 import { hooks, requests, services, socket } from '@application';
 
-const { useApi, useDispatch, useActiveUserRecord } = hooks;
+const { useApi, useDispatch, useActiveUserRecord, useComponentState } = hooks;
 
 const { addProvider } = services;
 
 const Provider: ComponentType = ({ children }) => {
-  const { fetch, response, error } = useApi(requests.me);
+  const { mounted } = useComponentState();
+  const { fetch, response, loading, reset } = useApi(requests.me);
   const dispatch = useDispatch();
   const [user, updateActiveUser] = useActiveUserRecord();
 
@@ -19,9 +20,17 @@ const Provider: ComponentType = ({ children }) => {
       socket.subscribe(`user-${response.data.id}`);
       updateActiveUser(response.data);
     }
+    return;
   }, [dispatch, response, updateActiveUser]);
 
-  if (!user && !error && !response) {
+  useEffect(() => {
+    if (user) {
+      // Once logged in clear the state
+      reset();
+    }
+  }, [user, response]);
+
+  if (!mounted || loading || (response && !user)) {
     return <>Loading</>;
   }
 

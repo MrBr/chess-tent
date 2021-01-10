@@ -192,15 +192,19 @@ const addStep = <T extends Step | StepRoot>(parentStep: T, step: Step): T => {
     },
   };
 };
-const addStepToLeft = (parentStep: Step, step: Step): Step => {
+
+const addStepToLeft = (parentStep: Step, step: Step, skip = 0): Step => {
+  const steps = [...parentStep.state.steps];
+  steps.splice(skip, 0, step);
   return {
     ...parentStep,
     state: {
       ...parentStep.state,
-      steps: [step, ...parentStep.state.steps],
+      steps,
     },
   };
 };
+
 const addStepToRightOf = <T extends Step | StepRoot>(
   parent: T,
   leftStep: Step,

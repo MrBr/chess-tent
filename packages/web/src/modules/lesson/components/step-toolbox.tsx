@@ -14,7 +14,7 @@ import { over } from 'lodash';
 const { Container, Button, Icon, Modal, ModalBody, Headline4 } = ui;
 const { LessonToolboxText } = components;
 const { useCopyStep, usePromptModal } = hooks;
-const { getStepPosition } = services;
+const { getStepPosition, addStepNextToTheComments } = services;
 
 function pickFunction(...funcs: any[]) {
   return funcs.find(f => typeof f === 'function');
@@ -68,7 +68,7 @@ const StepToolbox: Components['StepToolbox'] = ({
       position,
       editing: true,
     });
-    updateStep(addStepToLeft(step, variationStep));
+    updateStep(addStepNextToTheComments(step as Steps, variationStep));
     setActiveStep(variationStep);
   }, [step, updateStep, setActiveStep]);
   const pasteStep = useCallback(() => {
@@ -87,7 +87,7 @@ const StepToolbox: Components['StepToolbox'] = ({
       setActiveStep(copiedStep);
     };
     const add = () => {
-      updateStep(addStepToLeft(step, copiedStep));
+      updateStep(addStepNextToTheComments(step as Steps, copiedStep as Steps));
       setActiveStep(copiedStep);
     };
 
@@ -124,7 +124,7 @@ const StepToolbox: Components['StepToolbox'] = ({
     const exerciseStep = services.createStep('exercise', {
       position,
     });
-    updateStep(addStepToLeft(step, exerciseStep));
+    updateStep(addStepNextToTheComments(step as Steps, exerciseStep));
     setActiveStep(exerciseStep);
   }, [setActiveStep, step, updateStep]);
   const removeStepCB = useCallback(() => {

@@ -4,9 +4,7 @@ import {
   addStep,
   updateStepState,
   Step,
-  addStepToLeft,
   getNextStep,
-  addStepRightToSame,
 } from '@chess-tent/models';
 import {
   FEN,
@@ -21,6 +19,12 @@ import BoardSrc from '../images/board.svg';
 
 const { Col, Row, Img } = ui;
 const { Stepper, StepTag, StepMove } = components;
+const {
+  addStepNextToTheComments,
+  createStep,
+  getSameMoveVariationStep,
+  createNotableMove,
+} = services;
 const { START_FEN, KINGS_FEN } = constants;
 
 const boardChange = (
@@ -48,12 +52,13 @@ const boardChange = (
   }
 
   if (!newMove || !movedPiece) {
-    const newVariationStep = services.createStep('variation', {
+    // New piece dropped or removed
+    const newVariationStep = createStep('variation', {
       position: newPosition,
       editing: true,
     });
     const updatedStep = updateStepState(
-      addStepRightToSame(step, newVariationStep) as VariationStep,
+      addStepNextToTheComments(step, newVariationStep) as VariationStep,
       {
         editing: false,
       },
@@ -63,7 +68,7 @@ const boardChange = (
     return;
   }
 
-  const notableMove = services.createNotableMove(
+  const notableMove = createNotableMove(
     newPosition,
     newMove,
     move ? move.index + 1 : 1,
@@ -73,7 +78,7 @@ const boardChange = (
   const nextStep = getNextStep(step, step) as MoveStep;
 
   // Move that possibly already exists in the chapter
-  const sameMoveStep = services.getSameMoveVariationStep(step, notableMove);
+  const sameMoveStep = getSameMoveVariationStep(step, notableMove);
 
   if (sameMoveStep) {
     setActiveStep(sameMoveStep);
@@ -81,15 +86,15 @@ const boardChange = (
   }
 
   if (nextStep) {
-    const newMoveStep = services.createStep('variation', {
+    const newMoveStep = createStep('variation', {
       move: notableMove,
     });
-    updateStep(addStepToLeft(step, newMoveStep));
+    updateStep(addStepNextToTheComments(step, newMoveStep));
     setActiveStep(newMoveStep);
     return;
   }
 
-  const newMoveStep = services.createStep('move', {
+  const newMoveStep = createStep('move', {
     move: notableMove,
   });
   updateStep(addStep(step, newMoveStep));
@@ -117,7 +122,7 @@ const EditorBoard: VariationModule['EditorBoard'] = ({
     if (editing) {
       updateStep(updateStepState(step, { position: START_FEN }));
     } else {
-      const variationStep = services.createStep('variation', {
+      const variationStep = createStep('variation', {
         position: START_FEN,
       });
       updateStep(addStep(step, variationStep));
@@ -128,7 +133,7 @@ const EditorBoard: VariationModule['EditorBoard'] = ({
     if (editing) {
       updateStep(updateStepState(step, { position: KINGS_FEN }));
     } else {
-      const variationStep = services.createStep('variation', {
+      const variationStep = createStep('variation', {
         position: KINGS_FEN,
         editing: true,
       });

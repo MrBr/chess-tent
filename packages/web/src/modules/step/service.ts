@@ -1,4 +1,5 @@
 import { FEN, Steps } from '@types';
+import { addStepToLeft } from '@chess-tent/models';
 
 export const getStepPosition = (step: Steps): FEN => {
   if (step.stepType === 'variation') {
@@ -8,4 +9,11 @@ export const getStepPosition = (step: Steps): FEN => {
     return step.state.move.position;
   }
   return step.state.position;
+};
+
+export const addStepNextToTheComments = (parentStep: Steps, step: Steps) => {
+  const commentsCount = parentStep.state.steps.filter(
+    ({ stepType }) => stepType === 'description',
+  ).length;
+  return addStepToLeft(parentStep, step, commentsCount) as Steps;
 };

@@ -28,7 +28,7 @@ const Provider: ComponentType = ({ children }) => {
       // Once logged in clear the state
       reset();
     }
-  }, [user, response]);
+  }, [user, response, reset]);
 
   if (!mounted || loading || (response && !user)) {
     return <>Loading</>;

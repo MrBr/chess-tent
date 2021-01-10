@@ -90,6 +90,7 @@ export type Services = {
     initialState?: {},
   ) => ActivityStepStateBase;
   getStepPosition: (step: Steps) => FEN;
+  addStepNextToTheComments: (parentStep: Steps, step: Steps) => Steps;
   createChapter: (title?: string, steps?: Step[]) => Chapter;
   history: History;
   createAnalysis: (param: [Step] | FEN) => Analysis;

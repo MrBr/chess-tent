@@ -51,6 +51,7 @@ export const EditorSidebar: DescriptionModule['EditorSidebar'] = ({
   updateStep,
   stepRoot,
   renderToolbox: StepToolbox,
+  removeStep,
 }) => {
   const addDescriptionStep = useCallback(() => {
     const parentStep = getParentStep(stepRoot, step) as DescriptionStep;
@@ -76,6 +77,9 @@ export const EditorSidebar: DescriptionModule['EditorSidebar'] = ({
     updateStep(addStepToRightOf(parentStep, step, newExerciseStep));
     setActiveStep(newExerciseStep);
   }, [stepRoot, step, updateStep, setActiveStep]);
+  const removeDescriptionStep = useCallback(() => {
+    removeStep(step, false);
+  }, [removeStep, step]);
 
   return (
     <>
@@ -96,6 +100,7 @@ export const EditorSidebar: DescriptionModule['EditorSidebar'] = ({
             add={addVariationStep}
             comment={addDescriptionStep}
             exercise={addExerciseStep}
+            remove={removeDescriptionStep}
           />
         </Col>
       </Row>

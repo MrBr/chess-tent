@@ -87,6 +87,7 @@ const EditorSidebar: ExerciseModule['EditorSidebar'] = ({
   updateStep,
   stepRoot,
   updateChapter,
+  removeStep,
   renderToolbox: StepToolbox,
 }) => {
   const selectedTypeDescriptor = useMemo(
@@ -109,6 +110,9 @@ const EditorSidebar: ExerciseModule['EditorSidebar'] = ({
     updateStep(addStepToRightOf(parentStep, step, newVariationStep));
     setActiveStep(newVariationStep);
   }, [stepRoot, step, updateStep, setActiveStep]);
+  const removeExerciseStep = useCallback(() => {
+    removeStep(step, false);
+  }, [removeStep, step]);
   const addExerciseStep = useCallback(() => {
     const parent = getParentStep(stepRoot, step) as
       | VariationStep
@@ -172,6 +176,7 @@ const EditorSidebar: ExerciseModule['EditorSidebar'] = ({
             step={step}
             exercise={addExerciseStep}
             comment={addDescriptionStep}
+            remove={removeExerciseStep}
             showInput={false}
           />
         </Col>

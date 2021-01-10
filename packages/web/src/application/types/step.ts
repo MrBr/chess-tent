@@ -40,7 +40,7 @@ export interface EditorProps {
   setActiveStep: StepSystemProps['setActiveStep'];
   updateStep: (step: Step) => void;
   updateChapter: (chapter: Chapter) => void;
-  removeStep: (step: Step) => void;
+  removeStep: (step: Step, adjacent?: boolean) => void;
 }
 export type EditorSidebarProps = {
   renderToolbox: (

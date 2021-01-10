@@ -183,7 +183,7 @@ class EditorRenderer extends React.Component<
     this.addLessonUpdate(action);
   };
 
-  deleteStep = (step: Step) => {
+  deleteStep = (step: Step, adjacent?: boolean) => {
     const { activeChapter, history } = this.props;
     const parent = getParentStep(activeChapter, step);
     const newActiveStep = getPreviousStep(activeChapter, step);
@@ -195,11 +195,11 @@ class EditorRenderer extends React.Component<
       const updatedParent = removeStep(
         parent,
         step,
-        step.stepType !== 'variation',
+        adjacent === undefined ? step.stepType !== 'variation' : adjacent,
       );
       this.updateStep(updatedParent as Step);
     } else {
-      const updatedParent = removeStep(parent, step);
+      const updatedParent = removeStep(parent, step, adjacent);
       this.updateChapter(updatedParent as Chapter);
     }
     history.replace({

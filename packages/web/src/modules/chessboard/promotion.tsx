@@ -59,6 +59,8 @@ export default styled<
     width: '100%',
     height: '100%',
     background: 'rgba(255,255,255,0.5)',
+    zIndex: 100,
+    top: 0,
   },
   ({ file }) => ({
     '.promotion-pieces': {

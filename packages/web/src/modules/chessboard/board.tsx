@@ -312,7 +312,21 @@ class Chessboard
         return this.chess.fen();
       }
       lastFen = fen;
-      if (allowAllMoves) {
+      if (move && allowAllMoves && options?.promoted) {
+        const { promotion } = createMoveShortObject(move, options?.promoted);
+        const piece = this.chess.get(move[0]);
+        if (!piece || !promotion) {
+          return lastFen;
+        }
+        this.chess.remove(move[0]);
+        this.chess.put(
+          {
+            type: promotion,
+            color: piece.color,
+          },
+          move[1],
+        );
+      } else if (allowAllMoves) {
         this.chess.load(
           // Update position and color who's turn is.
           // Useful for variation to automatically start with a correct color.

@@ -99,7 +99,7 @@ export type UpdateEntitiesAction = Action<
 >;
 
 /**
- * Exercise
+ * Lesson
  */
 export type UpdateLessonChapterAction = PathAction<
   typeof UPDATE_LESSON_CHAPTER,

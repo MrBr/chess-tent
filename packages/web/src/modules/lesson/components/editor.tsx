@@ -80,7 +80,11 @@ type EditorRendererProps = ComponentProps<Components['Editor']> & {
 };
 type EditorRendererState = {
   // Previous step and chapter instances
-  history: { step: Step; chapter: Chapter }[];
+  history: {
+    undoAction: LessonUpdatableAction;
+    activeStepId: Step['id'];
+    activeChapterId: Chapter['id'];
+  }[];
 };
 
 /**
@@ -94,51 +98,61 @@ class EditorRenderer extends React.Component<
   state: EditorRendererState = {
     history: [],
   };
+
+  recordHistoryChange(undoAction: LessonUpdatableAction) {
+    const { activeStep, activeChapter } = this.props;
+    this.updateHistory([
+      {
+        undoAction,
+        activeStepId: activeStep.id,
+        activeChapterId: activeChapter.id,
+      },
+      ...this.state.history,
+    ]);
+  }
+
   updateHistory(history: EditorRendererState['history']) {
     this.setState({ history });
   }
-  addLessonUpdate(action: LessonUpdatableAction) {
+
+  addLessonUpdate(
+    action: LessonUpdatableAction,
+    undoAction?: LessonUpdatableAction,
+  ) {
     const { addLessonUpdate } = this.props;
+    undoAction && this.recordHistoryChange(undoAction);
     addLessonUpdate(action);
   }
 
   undoUpdate = () => {
-    const { lesson, activeStep, activeChapter } = this.props;
-    const [prev, ...prevUpdates] = this.state.history;
+    const { history } = this.state;
+    const [prev, ...newHistory] = history;
 
     if (!prev) {
       return;
     }
-    this.updateHistory(prevUpdates || []);
 
-    const newStep = getChildStep(activeChapter, prev.step.id);
-    if (
-      getChildStep(newStep, activeStep.id) &&
-      !getChildStep(prev.step, activeStep.id)
-    ) {
-      const prevStep = getPreviousStep(activeChapter, activeStep);
-      this.setActiveStepHandler(prevStep);
-    }
+    this.updateHistory(newHistory); // Update history stash
 
-    const prevStep = getChildStep(prev.chapter, prev.step.id);
-    const undoAction = updateLessonStep(lesson, prev.chapter, prevStep);
-    this.addLessonUpdate(undoAction);
+    this.setActiveChapterHandler(
+      { id: prev.activeChapterId } as Chapter,
+      prev.activeStepId,
+    );
+    this.addLessonUpdate(prev.undoAction);
   };
 
   setActiveStepHandler = (step: Step) => {
-    const { history, activeChapter } = this.props;
-    history.replace({
-      ...services.history.location,
-      search: `?activeStep=${step.id}&activeChapter=${activeChapter.id}`,
-    });
+    const { activeChapter } = this.props;
+    this.setActiveChapterHandler(activeChapter, step.id);
   };
 
-  setActiveChapterHandler = (chapter: Chapter) => {
+  setActiveChapterHandler = (chapter: Chapter, activeStepId?: Step['id']) => {
     const { history } = this.props;
-    this.updateHistory([]);
     history.replace({
       ...services.history.location,
-      search: `?activeChapter=${chapter.id}`,
+      search: `?activeChapter=${chapter.id}${
+        activeStepId ? `&activeStep=${activeStepId}` : ''
+      }`,
     });
   };
 
@@ -171,19 +185,16 @@ class EditorRenderer extends React.Component<
 
   updateStep = (step: Step) => {
     const { lesson, activeChapter } = this.props;
-    const { history } = this.state;
-    const prevStep = getChildStep(activeChapter, step.id);
-    this.updateHistory([
-      { step: prevStep, chapter: activeChapter },
-      ...history,
-    ]);
 
     const action = updateLessonStep(lesson, activeChapter, step);
+    const undoAction = updateLessonChapter(lesson, activeChapter);
 
-    this.addLessonUpdate(action);
+    this.addLessonUpdate(action, undoAction);
   };
 
   deleteStep = (step: Step, adjacent?: boolean) => {
+    // It's very helpful behavior that only selected step can be deleted
+    // It makes undo action much simpler regarding setting new active step
     const { activeChapter, history } = this.props;
     const parent = getParentStep(activeChapter, step);
     const newActiveStep = getPreviousStep(activeChapter, step);
@@ -213,6 +224,7 @@ class EditorRenderer extends React.Component<
     const action = updateLessonChapter(lesson, chapter);
     this.addLessonUpdate(action);
   };
+
   addNewChapter = () => {
     const { lesson } = this.props;
     const newChapter = createChapter(`Chapter ${lesson.state.chapters.length}`);
@@ -220,6 +232,7 @@ class EditorRenderer extends React.Component<
     this.addLessonUpdate(action);
     this.setActiveChapterHandler(newChapter);
   };
+
   removeChapter = (chapter: Chapter) => {
     const { history, lesson, location } = this.props;
     const newChapters = lesson.state.chapters.filter(
@@ -230,7 +243,12 @@ class EditorRenderer extends React.Component<
       return;
     }
     const action = updateLessonPath(lesson, ['state', 'chapters'], newChapters);
-    this.addLessonUpdate(action);
+    const undoAction = updateLessonPath(
+      lesson,
+      ['state', 'chapters'],
+      lesson.state.chapters,
+    );
+    this.addLessonUpdate(action, undoAction);
     history.replace(location.pathname);
   };
 

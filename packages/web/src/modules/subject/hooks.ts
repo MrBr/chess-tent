@@ -6,7 +6,7 @@ import {
   SubjectPathUpdate,
 } from '@chess-tent/models';
 import { hooks } from '@application';
-import { debounce } from 'lodash';
+import { throttle } from 'lodash';
 
 const { useStore } = hooks;
 
@@ -43,7 +43,7 @@ export const usePathUpdates = (
   const [updates, setUpdates] = useState<SubjectPath[]>([]);
 
   const entityUpdated = useCallback(
-    debounce(
+    throttle(
       (updates: SubjectPath[]) => {
         const normalizedEntity = store.getState().entities[type][id];
         save(
@@ -57,6 +57,7 @@ export const usePathUpdates = (
       delay,
       {
         trailing: true,
+        leading: false,
       },
     ),
     [],

@@ -44,7 +44,6 @@ const boardChange = (
       updateStepState(step, {
         position: newPosition,
         editing: true,
-        steps: [],
         move: null,
       }),
     );
@@ -118,29 +117,14 @@ const EditorBoard: VariationModule['EditorBoard'] = ({
     (editing: boolean) => updateStep(updateStepState(step, { editing })),
     [updateStep, step],
   );
+
   const resetHandle = useCallback(() => {
-    if (editing) {
-      updateStep(updateStepState(step, { position: START_FEN }));
-    } else {
-      const variationStep = createStep('variation', {
-        position: START_FEN,
-      });
-      updateStep(addStep(step, variationStep));
-      setActiveStep(variationStep);
-    }
-  }, [editing, updateStep, step, setActiveStep]);
+    updateStep(updateStepState(step, { position: START_FEN, editing: true }));
+  }, [updateStep, step]);
+
   const clearHandle = useCallback(() => {
-    if (editing) {
-      updateStep(updateStepState(step, { position: KINGS_FEN }));
-    } else {
-      const variationStep = createStep('variation', {
-        position: KINGS_FEN,
-        editing: true,
-      });
-      updateStep(addStep(step, variationStep));
-      setActiveStep(variationStep);
-    }
-  }, [editing, updateStep, step, setActiveStep]);
+    updateStep(updateStepState(step, { position: KINGS_FEN, editing: true }));
+  }, [updateStep, step]);
 
   const updateShapes = useCallback(
     (shapes: DrawShape[]) => updateStep(updateStepState(step, { shapes })),

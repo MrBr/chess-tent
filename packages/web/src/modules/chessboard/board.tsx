@@ -59,6 +59,7 @@ type ChessgroundMappedPropsType = Record<
     | 'onPieceDrop'
     | 'onPieceRemove'
     | 'onClear'
+    | 'onOrientationChange'
     | 'onUpdateEditing'
     | 'onFENSet'
     | 'editing'
@@ -75,6 +76,7 @@ const ChessgroundMappedProps: ChessgroundMappedPropsType = {
   eraseDrawableOnClick: 'drawable.eraseOnClick',
   animation: 'animation.enabled',
   allowAllMoves: 'movable.free',
+  orientation: 'orientation',
 };
 
 const BoardHeader = styled.div<{
@@ -169,6 +171,7 @@ class Chessboard
     eraseDrawableOnClick: false,
     size: '80%',
     edit: false,
+    orientation: 'white',
   };
 
   constructor(props: ChessboardProps) {
@@ -185,6 +188,7 @@ class Chessboard
       selectablePieces,
       resizable,
       allowAllMoves,
+      orientation,
     } = this.props;
 
     if (!this.boardHost.current) {
@@ -196,6 +200,7 @@ class Chessboard
       viewOnly,
       fen,
       resizable,
+      orientation,
       draggable: {
         deleteOnDropOff: true,
       },
@@ -363,6 +368,12 @@ class Chessboard
     return this.props.validateDrawable(...args);
   };
 
+  onRotate = () => {
+    const { onOrientationChange } = this.props;
+    this.api.toggleOrientation();
+    onOrientationChange && onOrientationChange(this.api.state.orientation);
+  };
+
   onReset = () => {
     const { onReset } = this.props;
     onReset && onReset();
@@ -514,6 +525,7 @@ class Chessboard
               updateEditing={this.onUpdateEditing}
               onFENSet={this.onFENSet}
               position={fen}
+              onRotate={this.onRotate}
             />
           )}
         </BoardFooter>

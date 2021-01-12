@@ -36,7 +36,7 @@ const boardChange = (
   movedPiece?: Piece,
 ) => {
   const {
-    state: { editing, move, position },
+    state: { editing, move, position, orientation },
   } = step;
 
   if (editing && position) {
@@ -55,6 +55,7 @@ const boardChange = (
     const newVariationStep = createStep('variation', {
       position: newPosition,
       editing: true,
+      orientation,
     });
     const updatedStep = updateStepState(
       addStepNextToTheComments(step, newVariationStep) as VariationStep,
@@ -87,6 +88,7 @@ const boardChange = (
   if (nextStep) {
     const newMoveStep = createStep('variation', {
       move: notableMove,
+      orientation,
     });
     updateStep(addStepNextToTheComments(step, newMoveStep));
     setActiveStep(newMoveStep);
@@ -95,6 +97,7 @@ const boardChange = (
 
   const newMoveStep = createStep('move', {
     move: notableMove,
+    orientation,
   });
   updateStep(addStep(step, newMoveStep));
   setActiveStep(newMoveStep);

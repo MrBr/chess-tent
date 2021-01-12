@@ -26,7 +26,7 @@ const boardChange = (
   captured?: boolean,
 ) => {
   const {
-    state: { move },
+    state: { move, orientation },
   } = step;
   const { position } = move;
 
@@ -42,6 +42,7 @@ const boardChange = (
       editing: true,
       moveIndex,
       position: newPosition,
+      orientation,
     });
 
     updateStep(addStep(step, newVariationStep));
@@ -75,6 +76,7 @@ const boardChange = (
   if (rightStep) {
     const newMoveStep = services.createStep('variation', {
       move: notableMove,
+      orientation,
     });
     updateStep(addStep(step, newMoveStep));
     setActiveStep(newMoveStep);
@@ -83,6 +85,7 @@ const boardChange = (
 
   const newMoveStep = services.createStep('move', {
     move: notableMove,
+    orientation,
   });
   // Continuing the current variation
   updateStep(addStep(variationStep, newMoveStep));

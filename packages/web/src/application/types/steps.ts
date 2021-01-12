@@ -1,15 +1,15 @@
-import { Step, StepType } from '@chess-tent/models';
-import { FEN, Key, NotableMove, Shape } from './chess';
-import { ActivityStepState, StepModule } from './step';
+import { StepType } from '@chess-tent/models';
+import { FEN, Key, NotableMove, PieceColor, Shape } from './chess';
+import { ActivityStepState, StepModule, AppStep } from './step';
 
 // Move
 export type MoveStepState = {
   shapes: Shape[];
   description?: string;
   move: NotableMove;
-  steps: Step[];
+  steps: AppStep[];
 };
-export type MoveStep = Step<MoveStepState, 'move'>;
+export type MoveStep = AppStep<MoveStepState, 'move'>;
 export type MoveModule = StepModule<MoveStep, 'move', { move: NotableMove }>;
 
 // Variation
@@ -24,7 +24,7 @@ export type VariationStepState = {
   // Editing position for specific variation from unrelated position (line) will clear move.
   move?: NotableMove | null;
 };
-export type VariationStep = Step<VariationStepState, 'variation'>;
+export type VariationStep = AppStep<VariationStepState, 'variation'>;
 export type VariationModule = StepModule<VariationStep, 'variation'>;
 
 // Description
@@ -32,13 +32,13 @@ export type DescriptionStepState = {
   shapes: Shape[];
   position: FEN; // Step end position - position once step is finished
   description?: string;
-  steps: Step[]; // Dead end - description step shouldn't have children
+  steps: AppStep[]; // Dead end - description step shouldn't have children
 };
-export type DescriptionStep = Step<DescriptionStepState, 'description'>;
+export type DescriptionStep = AppStep<DescriptionStepState, 'description'>;
 export type DescriptionModule = StepModule<
   DescriptionStep,
   'description',
-  { position: DescriptionStepState['position'] }
+  { position: DescriptionStepState['position']; orientation?: PieceColor }
 >;
 
 // Exercise
@@ -115,13 +115,13 @@ export type ExerciseStepState = {
   position: FEN; // Step end position - position once step is finished
   exerciseState: ExerciseState;
   exerciseType: ExerciseTypes;
-  steps: Step[];
+  steps: AppStep[];
 };
 export type ExerciseToolboxProps = {
   step: ExerciseStep;
-  updateStep: (step: Step<ExerciseStepState>) => void;
+  updateStep: (step: AppStep<ExerciseStepState>) => void;
 };
-export type ExerciseStep = Step<ExerciseStepState, 'exercise'>;
+export type ExerciseStep = AppStep<ExerciseStepState, 'exercise'>;
 export type ExerciseModule = StepModule<
   ExerciseStep,
   'exercise',

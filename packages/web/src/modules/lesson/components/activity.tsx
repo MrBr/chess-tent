@@ -141,12 +141,14 @@ export class ActivityRenderer extends React.Component<
       />
     );
   };
+
   renderBoard = (props: ChessboardProps) => {
-    const { lesson } = this.props;
+    const { lesson, activeStep } = this.props;
     return (
       <Chessboard
         onMove={this.startAnalysingPosition}
         allowAllMoves
+        orientation={activeStep.state.orientation}
         {...props}
         header={<Header lesson={lesson} />}
       />

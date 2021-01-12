@@ -37,6 +37,7 @@ import {
   ExtendedKey,
   PieceRole,
   PieceRolePromotable,
+  PieceColor,
 } from './chess';
 import {
   ActivityStepStateBase,
@@ -66,6 +67,7 @@ export interface ChessboardFooterProps {
   updateEditing: (editing: boolean) => void;
   onReset: () => void;
   onClear: () => void;
+  onRotate: () => void;
   onFENSet: (FEN: string) => void;
 }
 
@@ -77,6 +79,7 @@ export interface ChessboardProps {
   size?: string | number;
   // Chessground proxy props
   viewOnly?: boolean;
+  orientation?: PieceColor;
   selectablePieces?: boolean;
   resizable?: boolean;
   fen: FEN;
@@ -109,6 +112,7 @@ export interface ChessboardProps {
   onUpdateEditing?: (editing: boolean) => void;
   onClear?: () => void;
   onFENSet?: (FEN: string) => void;
+  onOrientationChange?: (orientation: ChessboardProps['orientation']) => void;
 }
 
 export interface ChessboardInterface

@@ -98,6 +98,7 @@ const EditorSidebar: ExerciseModule['EditorSidebar'] = ({
     const parentStep = getParentStep(stepRoot, step) as DescriptionStep;
     const newDescriptionStep = services.createStep('description', {
       position: step.state.position,
+      orientation: step.state.orientation,
     });
     updateStep(addStepToRightOf(parentStep, step, newDescriptionStep));
     setActiveStep(newDescriptionStep);
@@ -106,6 +107,7 @@ const EditorSidebar: ExerciseModule['EditorSidebar'] = ({
     const parentStep = getParentStep(stepRoot, step) as DescriptionStep;
     const newVariationStep = services.createStep('variation', {
       position: step.state.position,
+      orientation: step.state.orientation,
     });
     updateStep(addStepToRightOf(parentStep, step, newVariationStep));
     setActiveStep(newVariationStep);
@@ -125,6 +127,7 @@ const EditorSidebar: ExerciseModule['EditorSidebar'] = ({
           parent.state.move?.position ||
           (parent as VariationStep).state.position ||
           START_FEN,
+        orientation: step.state.orientation,
       });
       updateStep(addStepToRightOf(parent, step, exerciseStep));
     } else {

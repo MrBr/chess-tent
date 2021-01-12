@@ -20,10 +20,16 @@ import {
   StepToolbox,
 } from './components';
 import { ClassComponent } from './_helpers';
+import { PieceColor } from './chess';
+
+export type AppStep<S extends {} = {}, T extends StepType = StepType> = Step<
+  S & { orientation?: PieceColor },
+  T
+>;
 
 export type StepSystemProps = {
-  setActiveStep: (step: Step) => void;
-  activeStep: Step;
+  setActiveStep: (step: AppStep) => void;
+  activeStep: AppStep;
   stepRoot: StepRoot;
 };
 export type StepBoardComponentProps = {
@@ -32,15 +38,15 @@ export type StepBoardComponentProps = {
     | ClassComponent<ChessboardInterface>;
   status?: string;
 };
-export type StepProps<S extends Step, P = {}> = {
+export type StepProps<S extends AppStep, P = {}> = {
   step: S;
 } & StepSystemProps &
   P;
 export interface EditorProps {
   setActiveStep: StepSystemProps['setActiveStep'];
-  updateStep: (step: Step) => void;
+  updateStep: (step: AppStep) => void;
   updateChapter: (chapter: Chapter) => void;
-  removeStep: (step: Step, adjacent?: boolean) => void;
+  removeStep: (step: AppStep, adjacent?: boolean) => void;
 }
 export type EditorSidebarProps = {
   renderToolbox: (
@@ -59,7 +65,7 @@ export type EditorSidebarProps = {
   ) => ReactElement;
 } & EditorProps;
 
-export type StepComponent<S extends Step, P extends {} = {}> = ComponentType<
+export type StepComponent<S extends AppStep, P extends {} = {}> = ComponentType<
   StepProps<S, P>
 >;
 
@@ -95,13 +101,13 @@ export type ActivityProps<ACTIVITY_STATE> = {
   prevStep: () => void;
   Footer: FunctionComponent<Partial<ActivityFooterProps>>;
   activity: Activity;
-  completeStep: (step: Step) => void;
+  completeStep: (step: AppStep) => void;
   lesson: Lesson;
   chapter: Chapter;
 } & StepBoardComponentProps;
 
 export type StepModule<
-  STEP extends Step,
+  STEP extends AppStep,
   STEP_TYPE extends StepType,
   REQUIRED_STATE extends {} = {},
   ACTIVITY_STATE extends ActivityStepStateBase = ActivityStepStateBase

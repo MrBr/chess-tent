@@ -57,6 +57,7 @@ export const EditorSidebar: DescriptionModule['EditorSidebar'] = ({
     const parentStep = getParentStep(stepRoot, step) as DescriptionStep;
     const newDescriptionStep = services.createStep('description', {
       position: step.state.position,
+      orientation: step.state.orientation,
     });
     updateStep(addStepToRightOf(parentStep, step, newDescriptionStep));
     setActiveStep(newDescriptionStep);
@@ -65,6 +66,7 @@ export const EditorSidebar: DescriptionModule['EditorSidebar'] = ({
     const parentStep = getParentStep(stepRoot, step) as DescriptionStep;
     const newVariationStep = services.createStep('variation', {
       position: step.state.position,
+      orientation: step.state.orientation,
     });
     updateStep(addStepToRightOf(parentStep, step, newVariationStep));
     setActiveStep(newVariationStep);
@@ -73,6 +75,7 @@ export const EditorSidebar: DescriptionModule['EditorSidebar'] = ({
     const parentStep = getParentStep(stepRoot, step) as DescriptionStep;
     const newExerciseStep = services.createStep('exercise', {
       position: step.state.position,
+      orientation: step.state.orientation,
     });
     updateStep(addStepToRightOf(parentStep, step, newExerciseStep));
     setActiveStep(newExerciseStep);

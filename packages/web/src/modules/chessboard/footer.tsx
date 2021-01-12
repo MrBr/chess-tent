@@ -19,6 +19,7 @@ const Footer: FunctionComponent<ChessboardFooterProps> = ({
   onReset,
   onClear,
   onFENSet,
+  onRotate,
   position,
 }) => {
   const [fen, setFen] = useState<string>(position);
@@ -62,8 +63,16 @@ const Footer: FunctionComponent<ChessboardFooterProps> = ({
           >
             Reset
           </Button>
-          <Button size="extra-small" variant="regular" onClick={onClear}>
+          <Button
+            size="extra-small"
+            variant="regular"
+            onClick={onClear}
+            className="mr-3"
+          >
             Clear
+          </Button>
+          <Button size="extra-small" variant="regular" onClick={onRotate}>
+            Rotate
           </Button>
         </Col>
       </Row>

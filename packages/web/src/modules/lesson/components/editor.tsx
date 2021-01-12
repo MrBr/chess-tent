@@ -19,9 +19,11 @@ import {
   getChildStep,
   TYPE_LESSON,
   isStep,
+  updateStepState,
 } from '@chess-tent/models';
 import {
   Actions,
+  AppStep,
   ChessboardProps,
   Components,
   EditorContext,
@@ -29,6 +31,7 @@ import {
   LessonStatus,
   LessonUpdatableAction,
   LessonUpdates,
+  PieceColor,
 } from '@types';
 import { debounce } from 'lodash';
 import { components, hooks, services, state, ui } from '@application';
@@ -69,7 +72,7 @@ const {
 
 type EditorRendererProps = ComponentProps<Components['Editor']> & {
   activeChapter: Chapter;
-  activeStep: Step;
+  activeStep: AppStep;
   dispatch: (action: Actions) => void;
   history: ReturnType<typeof useHistory>;
   location: ReturnType<typeof useLocation>;
@@ -192,6 +195,11 @@ class EditorRenderer extends React.Component<
     this.addLessonUpdate(action, undoAction);
   };
 
+  updateStepRotation = (orientation?: PieceColor) => {
+    const { activeStep } = this.props;
+    this.updateStep(updateStepState(activeStep, { orientation }));
+  };
+
   deleteStep = (step: Step, adjacent?: boolean) => {
     // It's very helpful behavior that only selected step can be deleted
     // It makes undo action much simpler regarding setting new active step
@@ -276,6 +284,7 @@ class EditorRenderer extends React.Component<
       },
     });
   };
+
   updateTags = (tags: NormalizedLesson['tags']) => {
     const { lesson } = this.props;
     const action = updateLessonPath(lesson, ['tags'], tags);
@@ -297,8 +306,11 @@ class EditorRenderer extends React.Component<
   }
 
   renderChessboard = (props: ChessboardProps) => {
+    const { activeStep } = this.props;
     return (
       <Chessboard
+        orientation={activeStep.state.orientation}
+        onOrientationChange={this.updateStepRotation}
         {...props}
         header={
           <>

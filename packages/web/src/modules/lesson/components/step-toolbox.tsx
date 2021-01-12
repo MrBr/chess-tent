@@ -14,7 +14,11 @@ import { over } from 'lodash';
 const { Container, Button, Icon, Modal, ModalBody, Headline4 } = ui;
 const { LessonToolboxText } = components;
 const { useCopyStep, usePromptModal } = hooks;
-const { getStepPosition, addStepNextToTheComments } = services;
+const {
+  getStepPosition,
+  addStepNextToTheComments,
+  getStepBoardOrientation,
+} = services;
 
 function pickFunction(...funcs: any[]) {
   return funcs.find(f => typeof f === 'function');
@@ -56,17 +60,21 @@ const StepToolbox: Components['StepToolbox'] = ({
   const promptModal = usePromptModal();
   const addDescriptionStep = useCallback(() => {
     const position = getStepPosition(step as Steps);
+    const orientation = getStepBoardOrientation(step as Steps);
     const descriptionStep = services.createStep('description', {
       position,
+      orientation,
     });
     updateStep(addStepToLeft(step, descriptionStep));
     setActiveStep(descriptionStep);
   }, [step, updateStep, setActiveStep]);
   const addVariationStep = useCallback(() => {
     const position = getStepPosition(step as Steps);
+    const orientation = getStepBoardOrientation(step as Steps);
     const variationStep = services.createStep('variation', {
       position,
       editing: true,
+      orientation,
     });
     updateStep(addStepNextToTheComments(step as Steps, variationStep));
     setActiveStep(variationStep);
@@ -121,8 +129,10 @@ const StepToolbox: Components['StepToolbox'] = ({
   ]);
   const addExerciseStep = useCallback(() => {
     const position = getStepPosition(step as Steps);
+    const orientation = getStepBoardOrientation(step as Steps);
     const exerciseStep = services.createStep('exercise', {
       position,
+      orientation,
     });
     updateStep(addStepNextToTheComments(step as Steps, exerciseStep));
     setActiveStep(exerciseStep);

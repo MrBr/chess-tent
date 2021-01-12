@@ -1,5 +1,6 @@
 import application from '@application';
 import { v4 as uuid } from 'uuid';
+import { saveAs } from 'file-saver';
 import { useComponentState, useComponentStateSilent } from './hooks';
 import { getEntitySchema, getTypeSchema } from './model';
 import { mediaQueryEnhancer } from './enhancers';
@@ -11,6 +12,8 @@ application.utils.stopPropagation = e => e.stopPropagation();
 
 application.utils.getEntitySchema = getEntitySchema;
 application.utils.getTypeSchema = getTypeSchema;
+
+application.utils.downloadAs = saveAs;
 
 application.utils.mediaQueryEnhancer = mediaQueryEnhancer;
 

@@ -1,7 +1,8 @@
 import { CSSObject } from '@emotion/styled';
 import { Entity } from '@chess-tent/models';
-import { Schema } from './model';
 import { ReactEventHandler } from 'react';
+import { saveAs } from 'file-saver';
+import { Schema } from './model';
 
 export type Utils = {
   getEntitySchema: (entity: unknown) => Schema;
@@ -16,4 +17,5 @@ export type Utils = {
     screenSize: 'xs' | 'sm' | 'md' | 'lg' | 'xl',
     style: CSSObject,
   ) => CSSObject;
+  downloadAs: typeof saveAs;
 };

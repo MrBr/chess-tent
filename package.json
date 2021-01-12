@@ -4,8 +4,7 @@
   "private": true,
   "scripts": {
     "build:dev": "lerna exec \"yarn build:dev\"",
-    "build": "lerna exec \"yarn build\"",
-    "postinstall": "husky install && lerna exec \"yarn install\""
+    "build": "lerna exec \"yarn build\""
   },
   "devDependencies": {
     "husky": "^5.0.1",
@@ -16,7 +15,9 @@
     "eslint-plugin-import": "2.x",
     "eslint-plugin-jsx-a11y": "6.x",
     "eslint-plugin-prettier": "^3.1.2",
-    "eslint-plugin-react": "7.x"
+    "eslint-plugin-react": "7.x",
+    "@typescript-eslint/eslint-plugin": "^2.13.0",
+    "@typescript-eslint/parser": "^2.13.0"
   },
   "workspaces": [
     "packages/*"

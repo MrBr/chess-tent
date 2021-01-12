@@ -34,7 +34,7 @@ import {
   PieceColor,
 } from '@types';
 import { debounce } from 'lodash';
-import { components, hooks, services, state, ui } from '@application';
+import { components, hooks, services, state, ui, utils } from '@application';
 import TrainingModal from './training-assign';
 import CollaboratorModal from './lesson-users';
 import Sidebar from './editor-sidebar';
@@ -44,6 +44,7 @@ import RootStepButton from './editor-sidebar-root-step-button';
 
 const { Container, Row, Col, Headline2, Button, Absolute, Text } = ui;
 const { createChapter } = services;
+const { downloadAs } = utils;
 const {
   Stepper,
   StepRenderer,
@@ -400,6 +401,7 @@ class EditorRenderer extends React.Component<
                     <Button
                       size="extra-small"
                       variant="regular"
+                      className="mr-3"
                       onClick={() =>
                         promptModal(close => (
                           <PreviewModal
@@ -412,6 +414,20 @@ class EditorRenderer extends React.Component<
                       }
                     >
                       Preview
+                    </Button>
+                    <Button
+                      size="extra-small"
+                      variant="regular"
+                      onClick={() =>
+                        downloadAs(
+                          new Blob([JSON.stringify(lesson)], {
+                            type: 'text/plain;charset=utf-8',
+                          }),
+                          lesson.state.title + '.json',
+                        )
+                      }
+                    >
+                      Download
                     </Button>
                   </Col>
                 </Row>

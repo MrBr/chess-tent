@@ -1,4 +1,4 @@
-import { SubjectPath, Subject } from '@chess-tent/models';
+import { SubjectPath } from '@chess-tent/models';
 import { Service } from '@types';
 
 export const subjectPathToMongoosePath = (path: SubjectPath) => {
@@ -26,4 +26,29 @@ export const flattenStateToMongoose$set: Service['flattenStateToMongoose$set'] =
     return flattenedSubject;
   }
   return subject;
+};
+
+export const getDiff: Service['getDiff'] = (
+  oldSubject,
+  newSubject,
+  result,
+  path = '',
+) => {
+  for (const key in newSubject) {
+    const newValue = newSubject[key];
+    const oldValue = oldSubject[key];
+    const newPath = path + key;
+    if (
+      (Array.isArray(newValue) && !Array.isArray(oldValue)) ||
+      typeof newValue === 'object' ||
+      typeof oldValue === 'object' ||
+      Array.isArray(oldValue)
+    ) {
+      //@ts-ignore
+      getDiff(oldValue, newValue, result, newPath + '.');
+    } else if (newValue !== oldValue) {
+      result[newPath] = newValue;
+    }
+  }
+  return result;
 };

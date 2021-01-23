@@ -73,12 +73,6 @@ export type Service = {
   flattenStateToMongoose$set: <T extends Subject>(
     subject: Partial<T>,
   ) => Partial<T>;
-  getDiff: <T extends Subject>(
-    oldSubject: T,
-    newSubject: T,
-    result: { [key: string]: unknown },
-    path?: string,
-  ) => unknown;
 };
 
 export type MailData = Parameters<Messages['send']>[0];

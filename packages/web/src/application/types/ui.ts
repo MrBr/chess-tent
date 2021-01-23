@@ -172,7 +172,7 @@ export type UI = {
   Dropdown: ComponentType<ComponentProps<typeof Dropdown>> & {
     Toggle: ComponentType<
       Omit<ComponentProps<typeof DropdownToggle>, 'size'> & {
-        size?: FormElementsSize;
+        size?: Omit<FormElementsSize, 'large'>;
         collapse?: boolean;
       }
     >;

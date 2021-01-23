@@ -7,8 +7,7 @@
     "build:dev": "tsc -p tsconfig.build.json",
     "build": "yarn run clean && yarn run compile",
     "clean": "rimraf -rf ./dist",
-    "compile": "tsc -p tsconfig.build.json",
-    "test:dev": "jest"
+    "compile": "tsc -p tsconfig.build.json"
   },
   "dependencies": {
     "lodash.mergewith": "^4.6.2"

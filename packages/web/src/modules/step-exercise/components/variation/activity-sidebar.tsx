@@ -3,26 +3,25 @@ import { components, ui } from '@application';
 import {
   ExerciseModule,
   ExerciseVariationActivityState,
-  ExerciseVariationState,
+  ExerciseVariationStep,
   Move,
 } from '@types';
-import { isCorrectActivityMove } from './utils';
 import { isStepCompleted } from '@chess-tent/models';
+import { isCorrectActivityMove } from './utils';
 
 const { Text } = ui;
 const { LessonToolboxText } = components;
 
 const Playground: FunctionComponent<
-  ComponentProps<ExerciseModule['ActivitySidebar']>
+  ComponentProps<ExerciseModule<ExerciseVariationStep>['ActivitySidebar']>
 > = ({ step, stepActivityState, activity }) => {
   const {
     activeMoveIndex,
     moves: activityMoves,
   } = stepActivityState as ExerciseVariationActivityState;
-  const { moves: exerciseMoves, explanation, question } = step.state
-    .exerciseState as ExerciseVariationState;
+  const { explanation, task } = step.state;
   const moveToPlayIndex = activeMoveIndex ? activeMoveIndex + 1 : 0;
-  const stepToPlayMove = exerciseMoves?.[moveToPlayIndex];
+  const stepToPlayMove = task.moves?.[moveToPlayIndex];
   const activityActiveMove =
     activeMoveIndex !== undefined ? activityMoves?.[activeMoveIndex] : null;
   const isCorrectActiveMove = activityActiveMove?.move
@@ -34,7 +33,7 @@ const Playground: FunctionComponent<
   const completed = isStepCompleted(activity, step);
   return (
     <>
-      <LessonToolboxText defaultText={question} />
+      <LessonToolboxText defaultText={task.text} />
       <Text>
         {isCorrectActiveMove
           ? 'Excellent, continue..'
@@ -44,7 +43,7 @@ const Playground: FunctionComponent<
           ? stepToPlayMove.piece?.color + ' to play'
           : 'Done!'}
       </Text>
-      {completed && <LessonToolboxText defaultText={explanation} />}
+      {completed && <LessonToolboxText defaultText={explanation?.text} />}
     </>
   );
 };

@@ -42,11 +42,11 @@ export type StepProps<S extends AppStep, P = {}> = {
   step: S;
 } & StepSystemProps &
   P;
-export interface EditorProps {
+export interface EditorProps<T extends AppStep = AppStep> {
   setActiveStep: StepSystemProps['setActiveStep'];
-  updateStep: (step: AppStep) => void;
+  updateStep: (step: T) => void;
   updateChapter: (chapter: Chapter) => void;
-  removeStep: (step: AppStep, adjacent?: boolean) => void;
+  removeStep: (step: T, adjacent?: boolean) => void;
 }
 export type EditorSidebarProps = {
   renderToolbox: (
@@ -112,7 +112,7 @@ export type StepModule<
   REQUIRED_STATE extends {} = {},
   ACTIVITY_STATE extends ActivityStepStateBase = ActivityStepStateBase
 > = {
-  EditorBoard: StepComponent<STEP, EditorProps & StepBoardComponentProps>;
+  EditorBoard: StepComponent<STEP, EditorProps<STEP> & StepBoardComponentProps>;
   EditorSidebar: StepComponent<STEP, EditorSidebarProps>;
   ActivityBoard: StepComponent<STEP, ActivityProps<ACTIVITY_STATE>>;
   ActivitySidebar: StepComponent<STEP, ActivityProps<ACTIVITY_STATE>>;

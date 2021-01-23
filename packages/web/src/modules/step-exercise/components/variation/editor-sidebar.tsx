@@ -1,38 +1,27 @@
 import React from 'react';
-import { ExerciseToolboxProps, ExerciseVariationState } from '@types';
+import { ExerciseToolboxProps, ExerciseVariationStep } from '@types';
 import { components, ui } from '@application';
+import { SegmentSidebar } from '../segment';
 import { useUpdateExerciseStateProp } from '../../hooks';
 
-const { Text, Container, Row } = ui;
-const { LessonToolboxText, StepMove, StepTag } = components;
+const { Text, Row } = ui;
+const { StepMove, StepTag } = components;
 
-export default ({ step, updateStep }: ExerciseToolboxProps) => {
-  const { question, explanation, moves, activeMoveIndex } = step.state
-    .exerciseState as ExerciseVariationState;
-  const updateQuestion = useUpdateExerciseStateProp<ExerciseVariationState>(
-    updateStep,
-    step,
-    'question',
-  );
-  const updateExplanation = useUpdateExerciseStateProp<ExerciseVariationState>(
-    updateStep,
-    step,
-    'explanation',
-  );
-  const updateActiveMoveIndex = useUpdateExerciseStateProp<ExerciseVariationState>(
-    updateStep,
-    step,
+export default ({
+  step,
+  updateStep,
+}: ExerciseToolboxProps<ExerciseVariationStep>) => {
+  const {
+    task: { moves, activeMoveIndex },
+  } = step.state;
+  const updateActiveMoveIndex = useUpdateExerciseStateProp(updateStep, step, [
+    'task',
     'activeMoveIndex',
-  );
+  ]);
 
   return (
-    <>
-      <LessonToolboxText
-        defaultText={question}
-        placeholder="Describe the task.."
-        onChange={updateQuestion}
-      />
-      <Container className="p-0 mt-2">
+    <SegmentSidebar step={step} updateStep={updateStep}>
+      <>
         <Text fontSize="small">Moves:</Text>
         <Row className="align-items-center m-0">
           <StepTag
@@ -55,12 +44,7 @@ export default ({ step, updateStep }: ExerciseToolboxProps) => {
             </StepTag>
           ))}
         </Row>
-      </Container>
-      <LessonToolboxText
-        defaultText={explanation}
-        placeholder="Explanation.."
-        onChange={updateExplanation}
-      />
-    </>
+      </>
+    </SegmentSidebar>
   );
 };

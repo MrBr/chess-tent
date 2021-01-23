@@ -310,8 +310,8 @@ const updateStep = (step: Step, patch: Partial<Step>) => ({
   ...patch,
 });
 
-function omitArrayMerge(objValue: any, srcValue: any) {
-  if (Array.isArray(objValue)) {
+function omitSteps(objValue: any, srcValue: any, key: string) {
+  if (key === 'steps') {
     return srcValue;
   }
 }
@@ -320,7 +320,7 @@ const updateStepState = <T extends Step>(
   state: Partial<T['state']>,
 ) => ({
   ...step,
-  state: mergeWith({}, step.state, state, omitArrayMerge),
+  state: mergeWith({}, step.state, state, omitSteps),
 });
 
 const updateNestedStep = (

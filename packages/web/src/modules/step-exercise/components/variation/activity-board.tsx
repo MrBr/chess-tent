@@ -8,14 +8,14 @@ import { services } from '@application';
 import {
   ExerciseModule,
   ExerciseVariationActivityState,
-  ExerciseVariationState,
+  ExerciseVariationStep,
 } from '@types';
 import { isCorrectActivityMove, isVariationCompleted } from './utils';
 
 const { createFenForward } = services;
 
 const Playground: FunctionComponent<
-  ComponentProps<ExerciseModule['ActivityBoard']>
+  ComponentProps<ExerciseModule<ExerciseVariationStep>['ActivityBoard']>
 > = ({
   step,
   stepActivityState,
@@ -24,13 +24,12 @@ const Playground: FunctionComponent<
   Chessboard,
   completeStep,
 }) => {
-  const { position, shapes } = step.state;
+  const { position, shapes } = step.state.task;
   const {
     activeMoveIndex,
     moves: activityMoves,
   } = stepActivityState as ExerciseVariationActivityState;
-  const { moves: exerciseMoves } = step.state
-    .exerciseState as ExerciseVariationState;
+  const { moves: exerciseMoves } = step.state.task;
   const moveToPlayIndex = activeMoveIndex ? activeMoveIndex + 1 : 0;
   const stepToPlayMove = exerciseMoves?.[moveToPlayIndex];
   const stepActiveMove = exerciseMoves?.[activeMoveIndex as number];

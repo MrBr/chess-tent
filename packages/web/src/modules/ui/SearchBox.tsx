@@ -26,6 +26,7 @@ const SearchBox: UI['SearchBox'] = styled(
     return (
       <div className={className}>
         <Input
+          size="small"
           placeholder="Search"
           onKeyPress={handleEnter}
           onChange={handleChange}
@@ -38,25 +39,12 @@ const SearchBox: UI['SearchBox'] = styled(
   display: 'flex',
   maxWidth: '240px',
   justifyContent: 'space-between',
-  overflow: 'hidden',
-  padding: '0.5rem',
   background: '#F3F4F5',
   borderRadius: '10px',
   fontFamily: 'Inter, sans-serif',
   fontWeight: 700,
-  lineHeight: 1.21,
-  fontSize: '1.444em',
-  input: {
-    flex: 1,
-    maxWidth: '200px',
-    '&:focus': {
-      border: 0,
-      boxShadow: 'none',
-      background: 'inherit',
-    },
-  },
   span: {
-    margin: '0.3rem 0.8rem 0 0',
+    margin: '0.2rem 0.8rem 0 0',
   },
 });
 

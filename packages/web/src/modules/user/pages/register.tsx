@@ -101,7 +101,7 @@ export default () => {
           <FormGroup>
             <Form.Input
               className="mt-4"
-              size="lg"
+              size="large"
               type="text"
               name="name"
               placeholder="Name"
@@ -110,7 +110,7 @@ export default () => {
           <FormGroup>
             <Form.Input
               className="mt-4"
-              size="lg"
+              size="large"
               type="text"
               name="nickname"
               placeholder="Nickname"
@@ -119,7 +119,7 @@ export default () => {
           <FormGroup>
             <Form.Input
               className="mt-4"
-              size="lg"
+              size="large"
               type="email"
               name="email"
               placeholder="Email"
@@ -128,7 +128,7 @@ export default () => {
           <FormGroup>
             <Form.Input
               className="mt-4"
-              size="lg"
+              size="large"
               type="password"
               name="password"
               placeholder="Password"
@@ -137,7 +137,7 @@ export default () => {
           <FormGroup>
             <Form.Input
               className="mt-4"
-              size="lg"
+              size="large"
               type="password"
               name="passwordConfirmation"
               placeholder="Repeat password"

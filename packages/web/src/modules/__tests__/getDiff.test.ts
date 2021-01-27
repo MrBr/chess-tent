@@ -56,11 +56,15 @@ describe('getDiff', () => {
   });
   test('should return {} ', () => {
     const newSubject: TestSubject = {
-      sameInOldAndNew: 'same',
+      sameStringInOldAndNew: 'same',
+      sameObjectInOldAndNew: {},
+      sameArrayInOldAndNew: [],
     };
 
     const oldSubject: TestSubject = {
-      sameInOldAndNew: 'same',
+      sameStringInOldAndNew: 'same',
+      sameObjectInOldAndNew: {},
+      sameArrayInOldAndNew: [],
       oldNotExistInNew: 'old',
     };
     expect(getDiff(oldSubject, newSubject, {})).toStrictEqual({});

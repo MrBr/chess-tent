@@ -3,7 +3,7 @@ import { getDiff } from '../utils/utils';
 type TestSubject = { [key: string]: unknown };
 
 describe('getDiff', () => {
-  test("should return { 'newObjectOldString:{} 'newArrayOldNumber: []' } ", () => {
+  test('diff between object and array vs string and number', () => {
     const newSubject: TestSubject = {
       newObjectOldString: {},
       newArrayOldNumber: [],
@@ -19,7 +19,7 @@ describe('getDiff', () => {
       newArrayOldNumber: [],
     });
   });
-  test('should return { newStringOldObject: string, newStringOldArray: string }', () => {
+  test('diff between strings vs object and array', () => {
     const newSubject: TestSubject = {
       newStringOldObject: 'string',
       newStringOldArray: 'string',
@@ -34,7 +34,7 @@ describe('getDiff', () => {
       newStringOldArray: 'string',
     });
   });
-  test('should return { newObjectNotExistInOld: {} }', () => {
+  test('comparison between two objects', () => {
     const newSubject: TestSubject = {
       newObjectNotExistInOld: {},
     };
@@ -44,7 +44,7 @@ describe('getDiff', () => {
     };
     expect(getDiff(oldSubject, newSubject, {})).toStrictEqual(newSubject);
   });
-  test('should return { newArrayNotExistInOld: [] }', () => {
+  test('comparison between two arrays', () => {
     const newSubject: TestSubject = {
       newArrayNotExistInOld: [],
     };
@@ -54,7 +54,7 @@ describe('getDiff', () => {
     };
     expect(getDiff(oldSubject, newSubject, {})).toStrictEqual(newSubject);
   });
-  test('should return {} ', () => {
+  test('comparison between same props ', () => {
     const newSubject: TestSubject = {
       sameStringInOldAndNew: 'same',
       sameObjectInOldAndNew: {},
@@ -69,7 +69,7 @@ describe('getDiff', () => {
     };
     expect(getDiff(oldSubject, newSubject, {})).toStrictEqual({});
   });
-  test('should return { newObjectOldUndefined: { something: "something" }}', () => {
+  test('comparison between object and undefined', () => {
     const newSubject: TestSubject = {
       newObjectOldUndefined: {
         something: 'something',
@@ -82,7 +82,7 @@ describe('getDiff', () => {
 
     expect(getDiff(oldSubject, newSubject, {})).toStrictEqual(newSubject);
   });
-  test('should return { newUndefinedOldObject: undefined}', () => {
+  test('comparison between undefined and object', () => {
     const newSubject: TestSubject = {
       newUndefinedOldObject: undefined,
     };

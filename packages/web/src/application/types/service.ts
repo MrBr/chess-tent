@@ -2,7 +2,6 @@ import { ChessInstance } from 'chess.js';
 import { ComponentType, ReactElement } from 'react';
 import { API, ApiMethods, RecordMeta, RecordValue } from '@chess-tent/types';
 import {
-  Analysis,
   Chapter,
   Step,
   StepType,
@@ -26,7 +25,7 @@ import { MoveStep, Steps, VariationStep } from './steps';
 import { GenericArguments } from './_helpers';
 import { RecordHookReturn } from './hooks';
 import { ActivityComment, ActivityStepStateBase, StepModule } from './step';
-import { NotificationRenderer, StepModules } from './index';
+import { AppAnalysis, NotificationRenderer, StepModules } from './index';
 
 export type Services = {
   Chess: {
@@ -91,11 +90,11 @@ export type Services = {
   ) => ActivityStepStateBase;
   getStepPosition: (step: Steps) => FEN;
   getStepBoardOrientation: (step: Steps) => PieceColor;
-  addStepNextToTheComments: (parentStep: Steps, step: Steps) => Steps;
+  addStepNextToTheComments: <T extends Steps>(parentStep: T, step: Steps) => T;
   createChapter: (title?: string, steps?: Step[]) => Chapter;
   history: History;
-  createAnalysis: (param: [Step] | FEN) => Analysis;
-  removeAnalysisStep: (analysis: Analysis, step: Step) => Analysis;
+  createAnalysis: (param: [Step] | FEN) => AppAnalysis;
+  removeAnalysisStep: (analysis: AppAnalysis, step: Step) => AppAnalysis;
   pushToast: (toast: ReactElement) => void;
   registerNotificationRenderer: <T extends Notification>(
     notificationType: Notification['notificationType'],

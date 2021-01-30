@@ -32,6 +32,6 @@ export type Entity =
   | Chapter
   | Message
   | Tag
-  | Analysis
+  | Analysis<any> // :o
   | Notification
   | Mentorship;

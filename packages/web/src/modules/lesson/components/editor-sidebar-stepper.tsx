@@ -1,6 +1,6 @@
 import React from 'react';
 import { components } from '@application';
-import { StepperProps } from '@types';
+import { StepperProps, Steps } from '@types';
 
 import RootStepContainer from './editor-sidebar-root-step-container';
 import StepperVariation from './editor-sidebar-variation-container';
@@ -26,7 +26,7 @@ const Stepper = ({
             activeStep={activeStep}
             {...systemProps}
             // Override current step
-            step={child}
+            step={child as Steps}
           />
         );
         return child.stepType === 'variation' && !root ? (

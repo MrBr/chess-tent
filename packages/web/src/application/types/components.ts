@@ -14,13 +14,11 @@ import { LinkProps, RedirectProps, RouteProps } from 'react-router-dom';
 import { Requests } from '@chess-tent/types';
 import {
   Activity,
-  Analysis,
   Chapter,
   Difficulty,
   Lesson,
   Mentorship,
   Notification,
-  Step,
   StepRoot,
   StepType,
   SubjectPath,
@@ -41,6 +39,7 @@ import {
 } from './chess';
 import {
   ActivityStepStateBase,
+  AppStep,
   EditorProps,
   EditorSidebarProps,
   StepBoardComponentProps,
@@ -50,7 +49,13 @@ import {
 } from './step';
 import { ClassComponent } from './_helpers';
 import { OptionsDropdownProps, ButtonProps, UI } from './ui';
-import { LessonActivity, NotificationView, StepModules, Steps } from './index';
+import {
+  AppAnalysis,
+  LessonActivity,
+  NotificationView,
+  StepModules,
+  Steps,
+} from './index';
 
 export interface ChessboardState {
   renderPrompt?: (close: () => void) => ReactElement;
@@ -148,7 +153,7 @@ export type StepToolbox = FunctionComponent<
     textChangeHandler?: (text: string) => void;
     text?: string;
     showInput?: boolean;
-    step: Step;
+    step: AppStep;
     className?: string;
     actionsClassName?: string;
     stepRoot: StepRoot;
@@ -198,7 +203,7 @@ export type ActivityComponent<T> = ComponentType<
 >;
 
 export interface AnalysisSystemProps {
-  analysis: Analysis;
+  analysis: AppAnalysis;
   updateAnalysis: (path: SubjectPath, value: any) => void;
 }
 
@@ -210,12 +215,12 @@ export interface ActivityRendererProps {
   ) => void;
   updateActivityStepState: (
     activity: LessonActivity,
-    stepId: Step['id'],
+    stepId: AppStep['id'],
     state: {},
   ) => void;
   updateActivityStepAnalysis: (
     activity: LessonActivity,
-    stepId: Step['id'],
+    stepId: AppStep['id'],
     path: SubjectPath,
     state: any,
   ) => void;
@@ -223,7 +228,7 @@ export interface ActivityRendererProps {
   stepsCount: number;
   activeStep: Steps;
   chapter: Chapter;
-  analysis: Analysis;
+  analysis: AppAnalysis;
   lesson: Lesson;
   activityStepState: ActivityStepStateBase;
 }
@@ -291,12 +296,12 @@ export type Components = {
   Provider: ComponentType;
 
   StateProvider: ComponentType;
-  StepRenderer: <T extends StepModuleComponentKey, S extends Step>(
+  StepRenderer: <T extends StepModuleComponentKey, S extends AppStep>(
     props: StepModule<
       S,
-      S extends Step<infer U, infer K> ? K : never,
+      S extends AppStep<infer U, infer K> ? K : never,
       {},
-      S extends Step<infer U, infer K>
+      S extends AppStep<infer U, infer K>
         ? K extends StepType
           ? StepModules[K] extends StepModule<
               infer A,

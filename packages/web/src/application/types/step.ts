@@ -6,7 +6,6 @@ import {
 } from 'react';
 import {
   Activity,
-  Analysis,
   Chapter,
   Lesson,
   Step,
@@ -21,6 +20,7 @@ import {
 } from './components';
 import { ClassComponent } from './_helpers';
 import { PieceColor } from './chess';
+import { AppAnalysis } from './analysis';
 
 export type AppStep<S extends {} = {}, T extends StepType = StepType> = Step<
   S & { orientation?: PieceColor },
@@ -88,7 +88,7 @@ export type ActivityComment = {
   id: string;
 };
 export type ActivityStepStateBase = {
-  analysis: Analysis;
+  analysis: AppAnalysis;
   comments?: ActivityComment[];
 };
 
@@ -112,7 +112,10 @@ export type StepModule<
   REQUIRED_STATE extends {} = {},
   ACTIVITY_STATE extends ActivityStepStateBase = ActivityStepStateBase
 > = {
-  EditorBoard: StepComponent<STEP, EditorProps<STEP> & StepBoardComponentProps>;
+  EditorBoard: StepComponent<
+    STEP,
+    EditorProps<AppStep> & StepBoardComponentProps
+  >;
   EditorSidebar: StepComponent<STEP, EditorSidebarProps>;
   ActivityBoard: StepComponent<STEP, ActivityProps<ACTIVITY_STATE>>;
   ActivitySidebar: StepComponent<STEP, ActivityProps<ACTIVITY_STATE>>;

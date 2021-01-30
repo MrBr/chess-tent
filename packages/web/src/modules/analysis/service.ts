@@ -1,5 +1,4 @@
 import {
-  Analysis,
   createAnalysis,
   getParentStep,
   getPreviousStep,
@@ -10,12 +9,12 @@ import {
   updateAnalysisStep,
 } from '@chess-tent/models';
 import { services, utils } from '@application';
-import { FEN } from '@types';
+import { AppAnalysis, FEN, Steps } from '@types';
 
 export const removeAnalysisStep = (
-  analysis: Analysis,
+  analysis: AppAnalysis,
   step: Step,
-): Analysis => {
+): AppAnalysis => {
   const newActiveStep = getPreviousStep(analysis, step);
   const parentStep = getParentStep(analysis, step);
   if (!isStep(parentStep)) {
@@ -30,11 +29,9 @@ export const removeAnalysisStep = (
   );
 };
 
-export const createAnalysisService = (param: [Step] | FEN): Analysis => {
-  const steps = Array.isArray(param)
+export const createAnalysisService = (param: [Step] | FEN): AppAnalysis => {
+  const steps = (Array.isArray(param)
     ? param
-    : ([
-        services.createStep('variation', { position: param }),
-      ] as Analysis['state']['steps']);
-  return createAnalysis(utils.generateIndex(), steps);
+    : [services.createStep('variation', { position: param })]) as [Steps];
+  return createAnalysis<Steps>(utils.generateIndex(), steps);
 };

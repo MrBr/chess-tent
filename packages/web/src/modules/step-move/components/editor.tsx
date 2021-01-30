@@ -2,13 +2,20 @@ import React, { useCallback } from 'react';
 import { DrawShape } from '@chess-tent/chessground/dist/draw';
 import {
   addStep,
-  Step,
   updateStepState,
   getRightStep,
   getParentStep,
   StepRoot,
 } from '@chess-tent/models';
-import { FEN, Move, MoveModule, MoveStep, Piece, VariationStep } from '@types';
+import {
+  FEN,
+  Move,
+  MoveModule,
+  MoveStep,
+  Piece,
+  Steps,
+  VariationStep,
+} from '@types';
 import { services, components, ui } from '@application';
 
 const { Col, Row } = ui;
@@ -18,8 +25,8 @@ const { StepTag, Stepper, StepMove } = components;
 const boardChange = (
   stepRoot: StepRoot,
   step: MoveStep,
-  updateStep: (step: Step) => void,
-  setActiveStep: (step: Step) => void,
+  updateStep: (step: Steps) => void,
+  setActiveStep: (step: Steps) => void,
   newPosition: FEN,
   newMove: Move,
   movedPiece: Piece,

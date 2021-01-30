@@ -25,6 +25,7 @@ export * from './components';
 export * from './ui';
 export * from './socket';
 export * from './constants';
+export * from './analysis';
 export * from './model';
 export * from './hooks';
 export * from './state';

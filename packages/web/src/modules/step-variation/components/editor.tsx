@@ -1,11 +1,6 @@
 import React, { useCallback } from 'react';
 import { DrawShape } from '@chess-tent/chessground/dist/draw';
-import {
-  addStep,
-  updateStepState,
-  Step,
-  getNextStep,
-} from '@chess-tent/models';
+import { addStep, updateStepState, getNextStep } from '@chess-tent/models';
 import {
   FEN,
   Move,
@@ -29,8 +24,8 @@ const { START_FEN, KINGS_FEN } = constants;
 
 const boardChange = (
   step: VariationStep,
-  updateStep: (step: Step) => void,
-  setActiveStep: (step: Step) => void,
+  updateStep: (step: VariationStep) => void,
+  setActiveStep: (step: VariationStep) => void,
   newPosition: FEN,
   newMove?: Move,
   movedPiece?: Piece,

@@ -1,25 +1,34 @@
-import { Analysis, TYPE_ANALYSIS } from './types';
+import {
+  Analysis,
+  InferAnalysis,
+  InferAnalysisStep,
+  TYPE_ANALYSIS,
+} from './types';
 import { getChildStep, getStepPath, Step } from '../step';
 import { SubjectPath, updateSubjectValueAt } from '../subject';
 
-const updateAnalysisPath = (
-  analysis: Analysis,
+const updateAnalysisPath = <T>(
+  analysis: InferAnalysis<T>,
   path: SubjectPath,
   patch: Step['id'] | Step | Step[],
 ) => updateSubjectValueAt(analysis, path, patch);
 
-const updateAnalysisActiveStepId = (analysis: Analysis, stepId: Step['id']) =>
-  updateAnalysisPath(analysis, ['state', 'activeStepId'], stepId);
+const updateAnalysisActiveStepId = <T>(
+  analysis: InferAnalysis<T>,
+  stepId: Step['id'],
+) => updateAnalysisPath(analysis, ['state', 'activeStepId'], stepId);
 
-const getAnalysisActiveStep = (analysis: Analysis): Step => {
+const getAnalysisActiveStep = <T>(
+  analysis: InferAnalysis<T>,
+): InferAnalysisStep<T> => {
   const activeStep =
     analysis.state.activeStepId &&
     getChildStep(analysis, analysis.state.activeStepId);
-  return activeStep || (analysis.state.steps[0] as Step);
+  return (activeStep || analysis.state.steps[0]) as InferAnalysisStep<T>;
 };
 
-const getAnalysisStepPath = (
-  analysis: Analysis,
+const getAnalysisStepPath = <T>(
+  analysis: InferAnalysis<T>,
   step: Step,
 ): SubjectPath | null => {
   for (let index = 0; index < analysis.state.steps.length; index++) {
@@ -35,7 +44,7 @@ const getAnalysisStepPath = (
   return null;
 };
 
-const updateAnalysisStep = (analysis: Analysis, step: Step) => {
+const updateAnalysisStep = <T>(analysis: InferAnalysis<T>, step: Step) => {
   const path = getAnalysisStepPath(analysis, step);
   if (!path) {
     throw new Error("Trying to update step which doesn't exists in analysis.");
@@ -43,10 +52,10 @@ const updateAnalysisStep = (analysis: Analysis, step: Step) => {
   return updateAnalysisPath(analysis, path, step);
 };
 
-const createAnalysis = (
+const createAnalysis = <T extends Step>(
   id: string,
-  steps: Analysis['state']['steps'],
-): Analysis => ({
+  steps: Analysis<T>['state']['steps'],
+): Analysis<T> => ({
   id,
   type: TYPE_ANALYSIS,
   state: { steps },

@@ -1,10 +1,12 @@
 import React, { ComponentProps, FunctionComponent } from 'react';
-import { ExerciseModule } from '@types';
+import { ExerciseModule, ExerciseQuestionStep } from '@types';
 
 const Playground: FunctionComponent<
-  ComponentProps<ExerciseModule['ActivityBoard']>
+  ComponentProps<ExerciseModule<ExerciseQuestionStep>['ActivityBoard']>
 > = ({ step, Footer, Chessboard }) => {
-  const { position, shapes } = step.state;
+  const {
+    task: { position, shapes },
+  } = step.state;
 
   return (
     <Chessboard fen={position} shapes={shapes} animation footer={<Footer />} />

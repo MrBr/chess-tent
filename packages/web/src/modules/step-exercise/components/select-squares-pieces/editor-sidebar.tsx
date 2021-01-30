@@ -1,38 +1,7 @@
 import React from 'react';
-import {
-  ExerciseSelectSquaresAndPiecesState,
-  ExerciseToolboxProps,
-} from '@types';
-import { components } from '@application';
-import { useUpdateExerciseStateProp } from '../../hooks';
+import { ExerciseToolboxProps } from '@types';
+import { SegmentSidebar } from '../segment';
 
-const { LessonToolboxText } = components;
-
-export default ({ step, updateStep }: ExerciseToolboxProps) => {
-  const state = step.state.exerciseState as ExerciseSelectSquaresAndPiecesState;
-  const updateQuestion = useUpdateExerciseStateProp<ExerciseSelectSquaresAndPiecesState>(
-    updateStep,
-    step,
-    'question',
-  );
-  const updateExplanation = useUpdateExerciseStateProp<ExerciseSelectSquaresAndPiecesState>(
-    updateStep,
-    step,
-    'explanation',
-  );
-
-  return (
-    <>
-      <LessonToolboxText
-        defaultText={state.question}
-        placeholder="Write question.."
-        onChange={updateQuestion}
-      />
-      <LessonToolboxText
-        defaultText={state.explanation}
-        placeholder="Write explanation.."
-        onChange={updateExplanation}
-      />
-    </>
-  );
+export default (props: ExerciseToolboxProps) => {
+  return <SegmentSidebar {...props} />;
 };

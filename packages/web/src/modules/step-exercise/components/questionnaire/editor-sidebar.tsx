@@ -1,49 +1,38 @@
 import React, { useCallback } from 'react';
-import {
-  ExerciseQuestionnaireState,
-  ExerciseQuestionState,
-  ExerciseToolboxProps,
-} from '@types';
+import { ExerciseQuestionnaireStep, ExerciseToolboxProps } from '@types';
 import { components, ui } from '@application';
-import { useUpdateExerciseStateProp, useUpdateExerciseStep } from '../../hooks';
+import { useUpdateExerciseStateProp } from '../../hooks';
+import { SegmentSidebar } from '../segment';
 
 const { Check, Row, Col, Text, Container } = ui;
 const { LessonToolboxText } = components;
 
-export default ({ step, updateStep }: ExerciseToolboxProps) => {
-  const state = step.state.exerciseState as ExerciseQuestionnaireState;
-  const updateExerciseStep = useUpdateExerciseStep(updateStep, step);
+export default ({
+  step,
+  updateStep,
+}: ExerciseToolboxProps<ExerciseQuestionnaireStep>) => {
+  const updateTaskOptions = useUpdateExerciseStateProp(updateStep, step, [
+    'task',
+    'options',
+  ]);
+
+  const state = step.state.task;
   const addOption = useCallback(() => {
-    updateExerciseStep({
-      options: [...(state?.options || []), { text: '', correct: false }],
-    });
-  }, [state, updateExerciseStep]);
+    updateTaskOptions([
+      ...(state?.options || []),
+      { text: '', correct: false },
+    ]);
+  }, [state, updateTaskOptions]);
 
   const updateOption = (index: number, update: {}) => {
     const options = state?.options?.map((option, optionIndex) =>
       optionIndex === index ? { ...option, ...update } : option,
     );
-    updateExerciseStep({ options });
+    updateTaskOptions(options);
   };
-  const updateQuestion = useUpdateExerciseStateProp<ExerciseQuestionState>(
-    updateStep,
-    step,
-    'question',
-  );
-  const updateExplanation = useUpdateExerciseStateProp<ExerciseQuestionState>(
-    updateStep,
-    step,
-    'explanation',
-  );
 
   return (
-    <>
-      <LessonToolboxText
-        defaultText={state.question}
-        placeholder="Ask question.."
-        onChange={updateQuestion}
-        className="mt-2"
-      />
+    <SegmentSidebar step={step} updateStep={updateStep}>
       <Container className="mt-2">
         {state?.options?.map(({ text, correct }, index) => (
           <Row key={index} className="align-items-center">
@@ -66,12 +55,6 @@ export default ({ step, updateStep }: ExerciseToolboxProps) => {
       <Text onClick={addOption} fontSize="small" className="mt-2">
         + Add option
       </Text>
-      <LessonToolboxText
-        defaultText={state.explanation}
-        placeholder="Write explanation.."
-        onChange={updateExplanation}
-        className="mt-2"
-      />
-    </>
+    </SegmentSidebar>
   );
 };

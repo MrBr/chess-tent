@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { components, ui } from '@application';
 import { useUpdateExerciseStateProp } from '../../hooks';
 import { SegmentsProps } from './types';
@@ -11,7 +11,7 @@ const SegmentSidebar = <T extends SegmentsProps>({
   step,
   updateStep,
 }: T extends SegmentsProps<infer S>
-  ? T & { updateStep: (step: S) => void }
+  ? T & { updateStep: (step: S) => void; children?: ReactNode }
   : never) => {
   const { task, explanation, hint } = step.state;
   const updateTaskText = useUpdateExerciseStateProp(updateStep, step, [

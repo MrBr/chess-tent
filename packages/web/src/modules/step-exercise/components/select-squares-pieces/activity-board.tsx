@@ -2,12 +2,15 @@ import React, { ComponentProps, FunctionComponent, useCallback } from 'react';
 import {
   ExerciseActivitySelectSquaresAndPiecesState,
   ExerciseModule,
+  ExerciseSelectSquaresAndPiecesStep,
   Shape,
 } from '@types';
 import { isSelectionCorrect } from './utils';
 
 const Playground: FunctionComponent<
-  ComponentProps<ExerciseModule['ActivityBoard']>
+  ComponentProps<
+    ExerciseModule<ExerciseSelectSquaresAndPiecesStep>['ActivityBoard']
+  >
 > = ({
   step,
   stepActivityState,
@@ -16,14 +19,16 @@ const Playground: FunctionComponent<
   Footer,
   Chessboard,
 }) => {
-  const { position, shapes } = step.state;
+  const {
+    task: { position, shapes },
+  } = step.state;
   const {
     selectedShapes,
   } = stepActivityState as ExerciseActivitySelectSquaresAndPiecesState;
   const handleShapesChange = useCallback(
     (newSelectedShapes: Shape[]) => {
       const selectedShapes = newSelectedShapes.map(selectedShape => {
-        return isSelectionCorrect(shapes, selectedShape)
+        return shapes && isSelectionCorrect(shapes, selectedShape)
           ? selectedShape
           : {
               ...selectedShape,
@@ -31,7 +36,7 @@ const Playground: FunctionComponent<
             };
       });
       if (
-        shapes.every(shape =>
+        shapes?.every(shape =>
           selectedShapes.some(
             selectedShape => selectedShape.orig === shape.orig,
           ),

@@ -1,9 +1,9 @@
 import React, { ComponentProps, FunctionComponent, useCallback } from 'react';
 import {
   ExerciseModule,
-  ExerciseArrangePiecesState,
   ExerciseActivityArrangePiecesState,
   Key,
+  ExerciseArrangePiecesStep,
 } from '@types';
 
 const isPieceToMove = (
@@ -13,14 +13,12 @@ const isPieceToMove = (
   !!exerciseMoves?.some(exerciseMove => exerciseMove.move?.[0] === orig);
 
 const Playground: FunctionComponent<
-  ComponentProps<ExerciseModule['ActivityBoard']>
+  ComponentProps<ExerciseModule<ExerciseArrangePiecesStep>['ActivityBoard']>
 > = ({ step, stepActivityState, setStepActivityState, Footer, Chessboard }) => {
-  const { position, shapes } = step.state;
+  const { position, shapes, moves: exerciseMoves } = step.state.task;
   const {
     moves: activityMoves,
   } = stepActivityState as ExerciseActivityArrangePiecesState;
-  const { moves: exerciseMoves } = step.state
-    .exerciseState as ExerciseArrangePiecesState;
   const activePosition = activityMoves
     ? activityMoves[activityMoves.length - 1].position
     : position;

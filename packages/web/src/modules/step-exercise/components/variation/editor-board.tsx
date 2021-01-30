@@ -113,22 +113,27 @@ const EditorBoard: FunctionComponent<
   );
 
   return (
-    <SegmentBoard step={step} updateStep={updateStep}>
-      <Chessboard
-        allowAllMoves
-        sparePieces
-        fen={activePosition}
-        onMove={handleChange}
-        onPieceDrop={position => handleChange(position)}
-        onPieceRemove={position => handleChange(position)}
-        header={status}
-        onShapesChange={handleShapes}
-        shapes={activeShapes}
-        validateMove={validateMove}
-        editing={!!editing}
-        onUpdateEditing={editing => updateExerciseTask({ editing })}
-      />
-    </SegmentBoard>
+    <SegmentBoard
+      step={step}
+      updateStep={updateStep}
+      Chessboard={Chessboard}
+      task={
+        <Chessboard
+          allowAllMoves
+          sparePieces
+          fen={activePosition}
+          onMove={handleChange}
+          onPieceDrop={position => handleChange(position)}
+          onPieceRemove={position => handleChange(position)}
+          header={status}
+          onShapesChange={handleShapes}
+          shapes={activeShapes}
+          validateMove={validateMove}
+          editing={!!editing}
+          onUpdateEditing={editing => updateExerciseTask({ editing })}
+        />
+      }
+    />
   );
 };
 

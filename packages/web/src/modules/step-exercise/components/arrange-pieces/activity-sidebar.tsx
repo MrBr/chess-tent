@@ -2,9 +2,9 @@ import React, { ComponentProps, FunctionComponent } from 'react';
 import { ui } from '@application';
 import {
   ExerciseModule,
-  ExerciseArrangePiecesState,
   Move,
   ExerciseActivityArrangePiecesState,
+  ExerciseArrangePiecesStep,
 } from '@types';
 
 const { Text, Headline4 } = ui;
@@ -21,14 +21,14 @@ const getPieceStatus = (
 };
 
 const Playground: FunctionComponent<
-  ComponentProps<ExerciseModule['ActivitySidebar']>
+  ComponentProps<ExerciseModule<ExerciseArrangePiecesStep>['ActivitySidebar']>
 > = ({ step, stepActivityState }) => {
   const {
     moves: activityMoves,
     invalidPiece,
   } = stepActivityState as ExerciseActivityArrangePiecesState;
-  const { moves: exerciseMoves } = step.state
-    .exerciseState as ExerciseArrangePiecesState;
+  const { moves: exerciseMoves } = step.state.task;
+
   return (
     <>
       <Headline4>Arrange the pieces</Headline4>

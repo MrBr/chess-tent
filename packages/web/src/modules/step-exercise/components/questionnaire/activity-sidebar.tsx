@@ -3,7 +3,7 @@ import { components, ui } from '@application';
 import {
   ExerciseModule,
   ExerciseQuestionnaireActivityState,
-  ExerciseQuestionnaireState,
+  ExerciseQuestionnaireStep,
 } from '@types';
 import { isStepCompleted } from '@chess-tent/models';
 
@@ -11,7 +11,7 @@ const { Headline4, Button, Row, Col, Check, Container, Text } = ui;
 const { LessonToolboxText } = components;
 
 const Playground: FunctionComponent<
-  ComponentProps<ExerciseModule['ActivitySidebar']>
+  ComponentProps<ExerciseModule<ExerciseQuestionnaireStep>['ActivitySidebar']>
 > = ({
   step,
   stepActivityState,
@@ -22,8 +22,10 @@ const Playground: FunctionComponent<
   const {
     selectedOptions,
   } = stepActivityState as ExerciseQuestionnaireActivityState;
-  const { question, explanation, options } = step.state
-    .exerciseState as ExerciseQuestionnaireState;
+  const {
+    explanation,
+    task: { text: question, options },
+  } = step.state;
   const completed = isStepCompleted(activity, step);
   const handleAnswerChange = useCallback(
     (optionIndex: number) => {
@@ -72,7 +74,7 @@ const Playground: FunctionComponent<
       {completed && (
         <>
           <Text className="mt-2 mb-0">Explanation:</Text>
-          <LessonToolboxText defaultText={explanation} />
+          <LessonToolboxText defaultText={explanation?.text} />
         </>
       )}
       <Button onClick={handleSubmit} size="extra-small" className="mt-2">

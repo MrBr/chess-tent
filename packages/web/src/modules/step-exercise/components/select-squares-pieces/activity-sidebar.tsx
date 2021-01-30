@@ -3,7 +3,7 @@ import { components, ui } from '@application';
 import {
   ExerciseActivitySelectSquaresAndPiecesState,
   ExerciseModule,
-  ExerciseSelectSquaresAndPiecesState,
+  ExerciseSelectSquaresAndPiecesStep,
 } from '@types';
 import { isStepCompleted } from '@chess-tent/models';
 import { getCorrectSelectionsCount, isLastSelectionCorrect } from './utils';
@@ -12,14 +12,15 @@ const { Headline4, Text } = ui;
 const { LessonToolboxText } = components;
 
 const Playground: FunctionComponent<
-  ComponentProps<ExerciseModule['ActivitySidebar']>
+  ComponentProps<
+    ExerciseModule<ExerciseSelectSquaresAndPiecesStep>['ActivitySidebar']
+  >
 > = ({ step, activity, stepActivityState }) => {
-  const { shapes } = step.state;
-  const { question, explanation } = step.state
-    .exerciseState as ExerciseSelectSquaresAndPiecesState;
+  const { explanation, task } = step.state;
   const {
     selectedShapes,
   } = stepActivityState as ExerciseActivitySelectSquaresAndPiecesState;
+  const shapes = task.shapes || [];
   const completed = isStepCompleted(activity, step);
   const correctAction = isLastSelectionCorrect(shapes, selectedShapes);
   const correctSelectionsCount = getCorrectSelectionsCount(
@@ -29,7 +30,7 @@ const Playground: FunctionComponent<
   return (
     <>
       <Headline4>Select the squares and pieces</Headline4>
-      <LessonToolboxText defaultText={question} />
+      <LessonToolboxText defaultText={task.text} />
       <Text>{`You have ${
         shapes.length - correctSelectionsCount
       } squares more to go.`}</Text>
@@ -40,7 +41,7 @@ const Playground: FunctionComponent<
           ? 'Correct selection!'
           : ''}
       </Text>
-      {completed && <LessonToolboxText defaultText={explanation} />}
+      {completed && <LessonToolboxText defaultText={explanation?.text} />}
     </>
   );
 };

@@ -1,17 +1,10 @@
 import React from 'react';
 import { components, hooks, ui } from '@application';
-import styled from '@emotion/styled';
 
-const { Icon, Dropdown, Absolute } = ui;
+const { Icon, Dropdown, Absolute, Dot } = ui;
 const { NotificationRender } = components;
 const { useActiveUserNotifications } = hooks;
-const UnreadMark = styled.span({
-  borderRadius: '50%',
-  background: 'red',
-  display: 'inline-block',
-  width: 7,
-  height: 7,
-});
+
 export default () => {
   const [notifications] = useActiveUserNotifications();
   const unread = notifications?.some(notification => !notification.read);
@@ -20,7 +13,7 @@ export default () => {
       <Dropdown.Toggle id="notification-stand" collapse>
         {unread && (
           <Absolute top={4} right={3}>
-            <UnreadMark />
+            <Dot />
           </Absolute>
         )}
         <Icon type="notification" />

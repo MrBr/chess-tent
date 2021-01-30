@@ -35,6 +35,7 @@ import { Tab, Tabs } from './Tab';
 import Icon from './Icon';
 import Absolute from './Absolute';
 import { Toast, ToastBody, ToastHeader } from './Toast';
+import { Dot } from './Dot';
 import { withFiles, withHtml } from './hoc';
 
 application.hoc.withFiles = withFiles;
@@ -92,3 +93,4 @@ application.ui.Text = Text;
 application.ui.SearchBox = SearchBox;
 
 application.ui.Icon = Icon;
+application.ui.Dot = Dot;

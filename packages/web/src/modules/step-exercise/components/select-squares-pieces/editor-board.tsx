@@ -7,7 +7,7 @@ const Editor: FunctionComponent<
   ComponentProps<
     ExerciseModule<ExerciseSelectSquaresAndPiecesStep>['EditorBoard']
   >
-> = ({ step, Chessboard, status, updateStep }) => {
+> = ({ step, Chessboard, updateStep }) => {
   const updateTaskPosition = useUpdateExerciseStateProp(updateStep, step, [
     'task',
     'position',
@@ -33,7 +33,6 @@ const Editor: FunctionComponent<
           onPieceRemove={updateTaskPosition}
           onMove={updateTaskPosition}
           onShapesChange={updateTaskShapes}
-          header={status}
           shapes={shapes}
         />
       }

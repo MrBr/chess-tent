@@ -308,6 +308,7 @@ class EditorRenderer extends React.Component<
 
   renderChessboard = (props: ChessboardProps) => {
     const { activeStep } = this.props;
+    const lessonStatusText = this.renderLessonStatus();
     return (
       <Chessboard
         orientation={activeStep.state.orientation}
@@ -315,7 +316,7 @@ class EditorRenderer extends React.Component<
         {...props}
         header={
           <>
-            {props.header}
+            {props.header || lessonStatusText}
             <Absolute right={20} top={20} onClick={this.undoUpdate}>
               Undo
             </Absolute>

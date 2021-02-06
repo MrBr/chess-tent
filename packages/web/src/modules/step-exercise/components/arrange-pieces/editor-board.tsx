@@ -13,7 +13,7 @@ const { createFenForward, createNotableMove } = services;
 
 const Editor: FunctionComponent<
   ComponentProps<ExerciseModule<ExerciseArrangePiecesStep>['EditorBoard']>
-> = ({ step, Chessboard, status, updateStep }) => {
+> = ({ step, Chessboard, updateStep }) => {
   const { position, shapes, editing, moves } = step.state.task;
   const handleShapes = useUpdateExerciseStateProp(updateStep, step, [
     'task',
@@ -69,7 +69,6 @@ const Editor: FunctionComponent<
           onMove={handleChange}
           onPieceRemove={position => handleChange(position)}
           onPieceDrop={position => handleChange(position)}
-          header={status}
           onShapesChange={handleShapes}
           shapes={shapes}
           onUpdateEditing={editing => updateExerciseTask({ editing })}

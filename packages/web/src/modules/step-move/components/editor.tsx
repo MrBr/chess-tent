@@ -102,7 +102,6 @@ const boardChange = (
 const EditorBoard: MoveModule['EditorBoard'] = ({
   Chessboard,
   step,
-  status,
   stepRoot,
   updateStep,
   setActiveStep,
@@ -158,7 +157,6 @@ const EditorBoard: MoveModule['EditorBoard'] = ({
       onPieceRemove={onFENChange}
       onPieceDrop={onFENChange}
       onFENSet={onFENChange}
-      header={status}
       onShapesChange={updateShapes}
       shapes={shapes}
     />

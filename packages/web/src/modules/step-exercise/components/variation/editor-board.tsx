@@ -50,7 +50,7 @@ const removeOldLineMoves = (index: number, moves?: ExerciseMove[]) =>
 
 const EditorBoard: FunctionComponent<
   ComponentProps<ExerciseModule<ExerciseVariationStep>['EditorBoard']>
-> = ({ step, Chessboard, status, updateStep }) => {
+> = ({ step, Chessboard, updateStep }) => {
   const { position, shapes } = step.state.task;
   const { editing, moves, activeMoveIndex } = step.state.task;
   const activeMove = moves?.[activeMoveIndex as number];
@@ -125,7 +125,6 @@ const EditorBoard: FunctionComponent<
           onMove={handleChange}
           onPieceDrop={position => handleChange(position)}
           onPieceRemove={position => handleChange(position)}
-          header={status}
           onShapesChange={handleShapes}
           shapes={activeShapes}
           validateMove={validateMove}

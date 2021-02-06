@@ -101,7 +101,6 @@ const boardChange = (
 const EditorBoard: VariationModule['EditorBoard'] = ({
   Chessboard,
   step,
-  status,
   updateStep,
   setActiveStep,
 }) => {
@@ -158,7 +157,6 @@ const EditorBoard: VariationModule['EditorBoard'] = ({
       onPieceRemove={onFENChange}
       onFENSet={onFENChange}
       shapes={shapes}
-      header={status}
       onUpdateEditing={updateEditing}
       editing={!!editing}
       onReset={resetHandle}

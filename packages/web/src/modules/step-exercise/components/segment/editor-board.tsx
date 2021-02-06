@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react';
 import { StepBoardComponentProps } from '@types';
 import { useUpdateExerciseStateProp } from '../../hooks';
-import { SegmentsProps } from './types';
+import { InferUpdateStep, SegmentsProps } from './types';
 
 const SegmentBoard = <T extends SegmentsProps>({
   step,
@@ -9,13 +9,15 @@ const SegmentBoard = <T extends SegmentsProps>({
   Chessboard,
   ...props
 }: T extends SegmentsProps<infer S>
-  ? T & {
-      updateStep: (step: S) => void;
-      task?: ReactElement;
-      explanation?: ReactElement;
-      hint?: ReactElement;
-      Chessboard: StepBoardComponentProps['Chessboard'];
-    }
+  ? InferUpdateStep<
+      T,
+      {
+        task?: ReactElement;
+        explanation?: ReactElement;
+        hint?: ReactElement;
+        Chessboard: StepBoardComponentProps['Chessboard'];
+      }
+    >
   : never) => {
   const { task, activeSegment, orientation } = step.state;
   const board = props[activeSegment] as ReactElement;

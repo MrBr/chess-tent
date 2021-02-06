@@ -446,11 +446,11 @@ class Chessboard
       });
       return;
     }
+    const fen = this.fen(lastMove, { piece });
+    this.onChange();
     if (!this.props.onMove) {
       return;
     }
-    const fen = this.fen(lastMove, { piece });
-    this.onChange();
     this.props.onMove(fen, lastMove, piece, !!metadata.captured);
   };
 

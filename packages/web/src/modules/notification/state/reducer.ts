@@ -4,6 +4,7 @@ import {
   SEND_NOTIFICATION,
   UPDATE_ENTITIES,
   UPDATE_NOTIFICATION,
+  UPDATE_NOTIFICATIONS,
 } from '@types';
 
 export const reducer = (

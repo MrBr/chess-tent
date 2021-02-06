@@ -21,6 +21,7 @@ const notificationSchema = db.createSchema<NormalizedNotification>({
     ref: TYPE_USER,
   } as unknown) as NormalizedNotification['user'],
   read: (Schema.Types.Boolean as unknown) as NormalizedNotification['read'],
+  seen: (Schema.Types.Boolean as unknown) as NormalizedNotification['seen'],
   state: (Schema.Types.Mixed as unknown) as NormalizedNotification['state'],
   time: (Schema.Types.Date as unknown) as NormalizedNotification['time'],
 });

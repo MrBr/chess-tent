@@ -133,6 +133,10 @@ export type Requests = {
   >;
   coaches: RequestFetch<User, CoachesResponse>;
   notifications: RequestFetch<boolean | undefined, NotificationsResponse>;
+  updateNotifications: RequestFetch<
+    { ids: Notification['id'][]; updates: Partial<Notification> },
+    StatusResponse
+  >;
   students: RequestFetch<User, StudentsResponse>;
   findTags: RequestFetch<string, TagsResponse>;
   tags: RequestFetch<undefined, TagsResponse>;

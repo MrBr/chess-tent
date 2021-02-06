@@ -1,7 +1,7 @@
 import application, { middleware } from '@application';
-import { getNotifications } from './middleware';
+import { getNotifications, updateNotifications } from './middleware';
 
-const { identify, sendData, toLocals } = middleware;
+const { identify, sendData, toLocals, sendStatusOk } = middleware;
 
 application.service.registerGetRoute(
   '/notifications',
@@ -12,4 +12,12 @@ application.service.registerGetRoute(
   })),
   getNotifications,
   sendData('notifications'),
+);
+
+application.service.registerPutRoute(
+  '/notifications',
+  identify,
+  toLocals('notifications', req => req.body),
+  updateNotifications,
+  sendStatusOk,
 );

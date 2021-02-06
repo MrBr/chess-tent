@@ -31,3 +31,28 @@ export const saveNotification = (notification: Notification) =>
       resolve();
     });
   });
+
+export const updateNotifications = ({
+  ids,
+  updates,
+}: {
+  ids: Notification['id'][];
+  updates: {};
+}) => {
+  console.log({ ids }, { updates });
+  return new Promise(resolve =>
+    NotificationModel.updateMany(
+      {
+        _id: ids,
+      },
+      {
+        $set: updates,
+      },
+    ).exec(err => {
+      if (err) {
+        throw err;
+      }
+      resolve();
+    }),
+  );
+};

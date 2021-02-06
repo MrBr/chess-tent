@@ -36,6 +36,7 @@ export const UPDATE_USER = 'UPDATE_USER';
 
 export const SEND_NOTIFICATION = 'SEND_NOTIFICATION';
 export const UPDATE_NOTIFICATION = 'UPDATE_NOTIFICATION';
+export const UPDATE_NOTIFICATIONS = 'UPDATE_NOTIFICATIONS';
 
 export const UPDATE_RECORD_VALUE = 'UPDATE_RECORD_VALUE';
 export const UPDATE_RECORD = 'UPDATE_RECORD';
@@ -230,6 +231,10 @@ export type SendNotificationAction = Action<
   typeof SEND_NOTIFICATION,
   Notification
 >;
+export type UpdateNotificationsAction = Action<
+  typeof UPDATE_NOTIFICATIONS,
+  Notification[]
+>;
 export type UpdateNotificationAction = Action<
   typeof UPDATE_NOTIFICATION,
   NormalizedNotification,
@@ -238,7 +243,8 @@ export type UpdateNotificationAction = Action<
 export type NotificationAction =
   | UpdateEntitiesAction
   | SendNotificationAction
-  | UpdateNotificationAction;
+  | UpdateNotificationAction
+  | UpdateNotificationsAction;
 
 export type Actions =
   | MessageAction

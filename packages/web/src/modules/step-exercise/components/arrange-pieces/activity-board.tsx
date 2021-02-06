@@ -5,6 +5,7 @@ import {
   Key,
   ExerciseArrangePiecesStep,
 } from '@types';
+import { SegmentActivityBoard } from '../segment';
 
 const isPieceToMove = (
   exerciseMoves: ExerciseActivityArrangePiecesState['moves'],
@@ -14,8 +15,9 @@ const isPieceToMove = (
 
 const Playground: FunctionComponent<
   ComponentProps<ExerciseModule<ExerciseArrangePiecesStep>['ActivityBoard']>
-> = ({ step, stepActivityState, setStepActivityState, Footer, Chessboard }) => {
-  const { position, shapes, moves: exerciseMoves } = step.state.task;
+> = props => {
+  const { step, stepActivityState, setStepActivityState } = props;
+  const { position, moves: exerciseMoves } = step.state.task;
   const {
     moves: activityMoves,
   } = stepActivityState as ExerciseActivityArrangePiecesState;
@@ -54,14 +56,12 @@ const Playground: FunctionComponent<
   );
 
   return (
-    <Chessboard
+    <SegmentActivityBoard
       fen={activePosition}
       onMove={handleMove}
-      shapes={shapes}
       validateMove={validateMove}
-      animation
-      footer={<Footer />}
       allowAllMoves
+      {...props}
     />
   );
 };

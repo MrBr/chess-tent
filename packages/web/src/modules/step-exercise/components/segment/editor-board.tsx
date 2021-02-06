@@ -34,6 +34,7 @@ const SegmentBoard = <T extends SegmentsProps>({
   return (
     board || (
       <Chessboard
+        viewOnly={activeSegment === 'hint'}
         allowAllMoves
         sparePieces
         orientation={orientation}

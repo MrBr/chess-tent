@@ -1,25 +1,25 @@
 import React, { ComponentProps, FunctionComponent } from 'react';
-import { components, ui } from '@application';
+import { ui } from '@application';
 import {
   ExerciseModule,
   ExerciseVariationActivityState,
   ExerciseVariationStep,
   Move,
 } from '@types';
-import { isStepCompleted } from '@chess-tent/models';
 import { isCorrectActivityMove } from './utils';
+import { SegmentActivitySidebar } from '../segment';
 
 const { Text } = ui;
-const { LessonToolboxText } = components;
 
 const Playground: FunctionComponent<
   ComponentProps<ExerciseModule<ExerciseVariationStep>['ActivitySidebar']>
-> = ({ step, stepActivityState, activity }) => {
+> = props => {
+  const { step, stepActivityState } = props;
   const {
     activeMoveIndex,
     moves: activityMoves,
   } = stepActivityState as ExerciseVariationActivityState;
-  const { explanation, task } = step.state;
+  const { task } = step.state;
   const moveToPlayIndex = activeMoveIndex ? activeMoveIndex + 1 : 0;
   const stepToPlayMove = task.moves?.[moveToPlayIndex];
   const activityActiveMove =
@@ -30,10 +30,8 @@ const Playground: FunctionComponent<
         stepToPlayMove?.move as Move,
       )
     : false;
-  const completed = isStepCompleted(activity, step);
   return (
-    <>
-      <LessonToolboxText defaultText={task.text} />
+    <SegmentActivitySidebar title="Play the sequence" {...props}>
       <Text>
         {isCorrectActiveMove
           ? 'Excellent, continue..'
@@ -43,8 +41,7 @@ const Playground: FunctionComponent<
           ? stepToPlayMove.piece?.color + ' to play'
           : 'Done!'}
       </Text>
-      {completed && <LessonToolboxText defaultText={explanation?.text} />}
-    </>
+    </SegmentActivitySidebar>
   );
 };
 

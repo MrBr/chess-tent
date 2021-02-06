@@ -6,8 +6,9 @@ import {
   ExerciseActivityArrangePiecesState,
   ExerciseArrangePiecesStep,
 } from '@types';
+import { SegmentActivitySidebar } from '../segment';
 
-const { Text, Headline4 } = ui;
+const { Text } = ui;
 
 const getPieceStatus = (
   activityMoves?: ExerciseActivityArrangePiecesState['moves'],
@@ -22,7 +23,8 @@ const getPieceStatus = (
 
 const Playground: FunctionComponent<
   ComponentProps<ExerciseModule<ExerciseArrangePiecesStep>['ActivitySidebar']>
-> = ({ step, stepActivityState }) => {
+> = props => {
+  const { step, stepActivityState } = props;
   const {
     moves: activityMoves,
     invalidPiece,
@@ -30,8 +32,7 @@ const Playground: FunctionComponent<
   const { moves: exerciseMoves } = step.state.task;
 
   return (
-    <>
-      <Headline4>Arrange the pieces</Headline4>
+    <SegmentActivitySidebar title="Arrange the pieces" {...props}>
       {exerciseMoves?.map(({ move }) => (
         <Text key={move[0]}>
           {move[0]} - {getPieceStatus(activityMoves, move)}
@@ -40,7 +41,7 @@ const Playground: FunctionComponent<
       {invalidPiece && (
         <Text fontSize="small">{invalidPiece} shouldn't be moved</Text>
       )}
-    </>
+    </SegmentActivitySidebar>
   );
 };
 

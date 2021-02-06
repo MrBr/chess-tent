@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { ReactEventHandler, useCallback } from 'react';
 import { ExerciseQuestionnaireStep, ExerciseToolboxProps } from '@types';
 import { components, ui } from '@application';
 import { useUpdateExerciseStateProp } from '../../hooks';
@@ -17,12 +17,16 @@ export default ({
   ]);
 
   const state = step.state.task;
-  const addOption = useCallback(() => {
-    updateTaskOptions([
-      ...(state?.options || []),
-      { text: '', correct: false },
-    ]);
-  }, [state, updateTaskOptions]);
+  const addOption: ReactEventHandler = useCallback(
+    event => {
+      event.stopPropagation();
+      updateTaskOptions([
+        ...(state?.options || []),
+        { text: '', correct: false },
+      ]);
+    },
+    [state, updateTaskOptions],
+  );
 
   const updateOption = (index: number, update: {}) => {
     const options = state?.options?.map((option, optionIndex) =>

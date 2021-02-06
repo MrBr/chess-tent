@@ -1,6 +1,6 @@
 import { StepType } from '@chess-tent/models';
 import { FEN, Key, NotableMove, PieceColor, Shape } from './chess';
-import { ActivityStepState, StepModule, AppStep } from './step';
+import { StepModule, AppStep, ActivityExerciseStepState } from './step';
 
 // Move
 export type MoveStepState = {
@@ -69,13 +69,13 @@ export type ExerciseVariationState = ExerciseSegments<{
   moves?: ExerciseMove[];
   activeMoveIndex?: number;
 }>;
-export type ExerciseVariationActivityState = ActivityStepState<{
+export type ExerciseVariationActivityState = ActivityExerciseStepState<{
   moves?: { [key: number]: NotableMove };
   activeMoveIndex?: number;
 }>;
 
 export type ExerciseSelectSquaresAndPiecesState = ExerciseSegments;
-export type ExerciseActivitySelectSquaresAndPiecesState = ActivityStepState<{
+export type ExerciseActivitySelectSquaresAndPiecesState = ActivityExerciseStepState<{
   selectedShapes: Shape[];
 }>;
 
@@ -83,20 +83,20 @@ export type ExerciseArrangePiecesState = ExerciseSegments<{
   moves?: NotableMove[];
   editing?: boolean;
 }>;
-export type ExerciseActivityArrangePiecesState = ActivityStepState<{
+export type ExerciseActivityArrangePiecesState = ActivityExerciseStepState<{
   moves?: NotableMove[];
   invalidPiece?: Key; // Piece at key
 }>;
 export type ExerciseQuestionState = ExerciseSegments;
 
-export type ExerciseQuestionActivityState = ActivityStepState<{
+export type ExerciseQuestionActivityState = ActivityExerciseStepState<{
   answer?: string;
 }>;
 
 export type ExerciseQuestionnaireState = ExerciseSegments<{
   options?: { correct: boolean; text: string }[];
 }>;
-export type ExerciseQuestionnaireActivityState = ActivityStepState<{
+export type ExerciseQuestionnaireActivityState = ActivityExerciseStepState<{
   selectedOptions?: { [key: number]: boolean };
 }>;
 

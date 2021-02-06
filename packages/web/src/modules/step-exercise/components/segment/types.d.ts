@@ -1,7 +1,19 @@
-import { ExerciseSteps } from '@types';
+import {
+  ExerciseActivityState,
+  ExerciseSteps,
+  StepBoardComponentProps,
+} from '@types';
+import { Activity } from '@chess-tent/models';
 
 export type SegmentsProps<T extends ExerciseSteps = ExerciseSteps> = {
   step: T;
+};
+
+export type SegmentActivityProps = SegmentsProps & {
+  Chessboard: StepBoardComponentProps['Chessboard'];
+  stepActivityState: ExerciseActivityState;
+  activity: Activity;
+  setStepActivityState: (state: {}) => void;
 };
 
 export type InferUpdateStep<

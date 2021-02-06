@@ -6,21 +6,16 @@ import {
   Shape,
 } from '@types';
 import { isSelectionCorrect } from './utils';
+import { SegmentActivityBoard } from '../segment';
 
 const Playground: FunctionComponent<
   ComponentProps<
     ExerciseModule<ExerciseSelectSquaresAndPiecesStep>['ActivityBoard']
   >
-> = ({
-  step,
-  stepActivityState,
-  setStepActivityState,
-  completeStep,
-  Footer,
-  Chessboard,
-}) => {
+> = props => {
+  const { step, stepActivityState, setStepActivityState, completeStep } = props;
   const {
-    task: { position, shapes },
+    task: { shapes },
   } = step.state;
   const {
     selectedShapes,
@@ -55,13 +50,12 @@ const Playground: FunctionComponent<
   }, []);
 
   return (
-    <Chessboard
-      fen={position}
+    <SegmentActivityBoard
       shapes={selectedShapes}
       animation
       onShapesChange={handleShapesChange}
       validateDrawable={validateShapes}
-      footer={<Footer />}
+      {...props}
     />
   );
 };

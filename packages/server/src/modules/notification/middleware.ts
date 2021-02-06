@@ -36,15 +36,14 @@ export const sendNotification: MiddlewareFunction = (req, res, next) => {
   next();
 };
 
-export const getNotifications: MiddlewareFunction = (req, res, next) => {
-  return notificationService
+export const getNotifications: MiddlewareFunction = (req, res, next) =>
+  notificationService
     .getNotifications(res.locals.filters)
     .then(notifications => {
       res.locals.notifications = notifications;
       next();
     })
     .catch(next);
-};
 
 export const updateNotifications: MiddlewareFunction = (req, res, next) => {
   return notificationService

@@ -1,4 +1,5 @@
 import { User, Notification } from '@chess-tent/models';
+import { UpdateNotificationsRequest } from '@chess-tent/types';
 import { depopulate, NotificationModel } from './model';
 
 export const getNotifications = (filters: {
@@ -33,8 +34,8 @@ export const saveNotification = (notification: Notification) =>
   });
 
 export const updateNotifications = (
-  filter: { user: User['id']; _id: Notification['id'][] },
-  $set: Omit<Notification, 'user' | 'type' | 'notificationType'>,
+  filter: { user: User['id']; _id: UpdateNotificationsRequest['ids'] },
+  $set: UpdateNotificationsRequest['updates'],
 ) => {
   return new Promise<void>(resolve => {
     NotificationModel.updateMany(filter, {

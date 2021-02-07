@@ -34,7 +34,7 @@ export const saveNotification = (notification: Notification) =>
 
 export const updateNotifications = (
   filter: { user: User['id']; _id: Notification['id'][] },
-  $set: {},
+  $set: Omit<Notification, 'user' | 'type' | 'notificationType'>,
 ) => {
   return new Promise<void>(resolve => {
     NotificationModel.updateMany(filter, {

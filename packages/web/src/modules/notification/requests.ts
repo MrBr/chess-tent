@@ -1,6 +1,9 @@
 import { services, requests } from '@application';
-import { NotificationsResponse, StatusResponse } from '@types';
-import { Notification } from '@chess-tent/models';
+import {
+  NotificationsResponse,
+  StatusResponse,
+  UpdateNotificationsRequest,
+} from '@types';
 
 const notifications = services.createRequest<
   boolean | undefined,
@@ -10,7 +13,7 @@ const notifications = services.createRequest<
 }));
 
 const updateNotifications = services.createRequest<
-  { ids: Notification['id'][]; updates: Partial<Notification> },
+  UpdateNotificationsRequest,
   StatusResponse
 >('PUT', updatesForNotifications => ({
   url: '/notifications',

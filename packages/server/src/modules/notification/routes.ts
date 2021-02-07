@@ -17,7 +17,8 @@ application.service.registerGetRoute(
 application.service.registerPutRoute(
   '/notifications',
   identify,
-  toLocals('notifications', req => req.body),
+  toLocals('notificationIds', req => req.body.ids),
+  toLocals('notificationUpdate', req => req.body.updates),
   updateNotifications,
   sendStatusOk,
 );

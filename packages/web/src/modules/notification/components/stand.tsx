@@ -9,9 +9,7 @@ const { actions } = state;
 
 export default () => {
   const [notifications] = useActiveUserNotifications();
-  const { fetch: updateNotifications, response, loading, reset } = useApi(
-    requests.updateNotifications,
-  );
+  const { fetch: updateNotifications } = useApi(requests.updateNotifications);
   const dispatch = useDispatch();
 
   const handleUnseenNotifications = () => {

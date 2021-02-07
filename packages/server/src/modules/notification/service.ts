@@ -17,7 +17,7 @@ export const getNotifications = (filters: {
   });
 
 export const saveNotification = (notification: Notification) =>
-  new Promise(resolve => {
+  new Promise<void>(resolve => {
     NotificationModel.updateOne(
       { _id: notification.id },
       depopulate(notification),
@@ -32,27 +32,18 @@ export const saveNotification = (notification: Notification) =>
     });
   });
 
-export const updateNotifications = ({
-  ids,
-  updates,
-}: {
-  ids: Notification['id'][];
-  updates: {};
-}) => {
-  console.log({ ids }, { updates });
-  return new Promise(resolve =>
-    NotificationModel.updateMany(
-      {
-        _id: ids,
-      },
-      {
-        $set: updates,
-      },
-    ).exec(err => {
+export const updateNotifications = (
+  filter: { user: User['id']; _id: Notification['id'][] },
+  $set: {},
+) => {
+  return new Promise<void>(resolve => {
+    NotificationModel.updateMany(filter, {
+      $set,
+    }).exec(err => {
       if (err) {
         throw err;
       }
-      resolve();
-    }),
-  );
+    });
+    resolve();
+  });
 };

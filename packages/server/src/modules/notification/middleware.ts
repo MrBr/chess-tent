@@ -47,7 +47,13 @@ export const getNotifications: MiddlewareFunction = (req, res, next) =>
 
 export const updateNotifications: MiddlewareFunction = (req, res, next) => {
   return notificationService
-    .updateNotifications(res.locals.notifications)
+    .updateNotifications(
+      {
+        user: res.locals.me.id,
+        _id: res.locals.notificationIds,
+      },
+      res.locals.notificationUpdate,
+    )
     .then(next)
     .catch(next);
 };

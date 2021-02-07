@@ -33,7 +33,7 @@ export type LessonsRequest = {
 export type MyLessonsRequest = Omit<LessonsRequest, 'users' | 'owner'>;
 export type UpdateNotificationsRequest = {
   ids: Notification['id'][];
-  updates: Pick<Partial<Notification>, 'seen' | 'read' | 'state' | 'time'>;
+  updates: Partial<Pick<Notification, 'seen' | 'read' | 'state' | 'time'>>;
 };
 
 export type Pagination = [number, number];

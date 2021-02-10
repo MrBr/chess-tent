@@ -10,6 +10,7 @@ export interface Notification extends Subject {
   user: User;
   time: Date;
   read: boolean;
+  seen: boolean;
   state: {};
 }
 
@@ -20,5 +21,6 @@ export interface NormalizedNotification {
   type: Notification['type'];
   time: Notification['time'];
   read: Notification['read'];
+  seen: Notification['seen'];
   state: Notification['state'];
 }

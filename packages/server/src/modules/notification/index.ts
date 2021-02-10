@@ -1,7 +1,12 @@
 import application from '@application';
-import { createNotification, sendNotification } from './middleware';
+import {
+  createNotification,
+  sendNotification,
+  updateNotifications,
+} from './middleware';
 
 import './routes';
 
 application.middleware.sendNotification = sendNotification;
 application.middleware.createNotification = createNotification;
+application.middleware.updateNotifications = updateNotifications;

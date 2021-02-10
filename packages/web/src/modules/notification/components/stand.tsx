@@ -1,26 +1,42 @@
 import React from 'react';
-import { components, hooks, ui } from '@application';
-import styled from '@emotion/styled';
+import { components, hooks, ui, requests, state } from '@application';
 
-const { Icon, Dropdown, Absolute } = ui;
+const { Icon, Dropdown, Absolute, Dot } = ui;
 const { NotificationRender } = components;
-const { useActiveUserNotifications } = hooks;
-const UnreadMark = styled.span({
-  borderRadius: '50%',
-  background: 'red',
-  display: 'inline-block',
-  width: 7,
-  height: 7,
-});
+const { useActiveUserNotifications, useApi, useDispatch } = hooks;
+
+const { actions } = state;
+
 export default () => {
   const [notifications] = useActiveUserNotifications();
-  const unread = notifications?.some(notification => !notification.read);
+  const { fetch: updateNotifications } = useApi(requests.updateNotifications);
+  const dispatch = useDispatch();
+
+  const handleUnseenNotifications = () => {
+    const unseenNotifications = notifications?.filter(
+      notification => !notification.seen,
+    );
+
+    if (!!unseenNotifications?.length) {
+      const updatedNotifications = unseenNotifications.map(notification => ({
+        ...notification,
+        seen: true,
+      }));
+      dispatch(actions.updateEntities(updatedNotifications));
+      updateNotifications({
+        ids: unseenNotifications.map(notification => notification.id),
+        updates: { seen: true },
+      });
+    }
+  };
+
+  const unseen = notifications?.some(notification => !notification.seen);
   return (
-    <Dropdown className="mr-4">
+    <Dropdown className="mr-4" onClick={handleUnseenNotifications}>
       <Dropdown.Toggle id="notification-stand" collapse>
-        {unread && (
+        {unseen && (
           <Absolute top={4} right={3}>
-            <UnreadMark />
+            <Dot />
           </Absolute>
         )}
         <Icon type="notification" />

@@ -103,6 +103,7 @@ export type Middleware = {
   sendStatusOk: (...args: Parameters<RequestHandler>) => void;
   sendNotification: (...args: Parameters<RequestHandler>) => void;
   createNotification: (...args: Parameters<RequestHandler>) => void;
+  updateNotifications: (...args: Parameters<RequestHandler>) => void;
   getUser: (...args: Parameters<RequestHandler>) => void;
   toLocals: (
     localsKey: string,

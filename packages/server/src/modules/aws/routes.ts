@@ -1,7 +1,7 @@
 import application, { middleware } from '@application';
 import { generateImageSignedUrl } from './middleware';
 
-const { sendData, identify, webLogin, toLocals } = middleware;
+const { sendData, identify, toLocals } = middleware;
 
 application.service.registerPostRoute(
   '/sign-image-url',

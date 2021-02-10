@@ -31,6 +31,10 @@ export type LessonsRequest = {
   published?: boolean;
 };
 export type MyLessonsRequest = Omit<LessonsRequest, 'users' | 'owner'>;
+export type UpdateNotificationsRequest = {
+  ids: Notification['id'][];
+  updates: Partial<Pick<Notification, 'seen' | 'read' | 'state' | 'time'>>;
+};
 
 export type Pagination = [number, number];
 
@@ -133,6 +137,7 @@ export type Requests = {
   >;
   coaches: RequestFetch<User, CoachesResponse>;
   notifications: RequestFetch<boolean | undefined, NotificationsResponse>;
+  updateNotifications: RequestFetch<UpdateNotificationsRequest, StatusResponse>;
   students: RequestFetch<User, StudentsResponse>;
   findTags: RequestFetch<string, TagsResponse>;
   tags: RequestFetch<undefined, TagsResponse>;

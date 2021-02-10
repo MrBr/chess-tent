@@ -212,6 +212,7 @@ export type UI = {
     left?: number;
     zIndex?: number;
   }>;
+  Dot: UIComponent<{ background?: string }>;
   Page: UIComponent<ContainerProps>;
   Tabs: typeof Tabs;
   Tab: typeof Tab;

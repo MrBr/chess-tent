@@ -5,7 +5,7 @@ import { LessonsRequest } from '@chess-tent/types';
 
 const { Page, CoachTrainings, LessonBrowser } = components;
 const { useLessons, useUserTrainings } = hooks;
-const { Headline3 } = ui;
+const { Headline3, Button, Modal } = ui;
 
 export default ({ user }: { user: User }) => {
   const [trainings] = useUserTrainings(user);
@@ -13,6 +13,7 @@ export default ({ user }: { user: User }) => {
   const [lessons] = useLessons(`own-lessons-${user.id}`, lessonsFilter, {
     my: true,
   });
+  const [isModalVisible, setModalVisibility] = useState(false);
 
   const handleFilterChange = useCallback(
     (search, difficulty, tags) => {
@@ -27,6 +28,12 @@ export default ({ user }: { user: User }) => {
 
   return (
     <Page>
+      <Button onClick={() => setModalVisibility(true)}>Invite student</Button>
+      {/* this will be invitationModal */}
+      <Modal close={() => setModalVisibility(false)} show={isModalVisible}>
+        <Modal.Header>Invite student</Modal.Header>
+        <Modal.Body>body</Modal.Body>
+      </Modal>
       {trainings && (
         <>
           <Headline3>My trainings</Headline3>

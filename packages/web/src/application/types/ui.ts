@@ -15,6 +15,7 @@ import {
   InputGroup,
   ModalBody,
   ModalProps as BModalProps,
+  Modal as BModal,
   RowProps,
   Tab,
   Tabs,
@@ -231,7 +232,14 @@ export type UI = {
   Card: ComponentType<ClickProps & ClassNameProps & CardProps>;
   CardBody: ComponentType;
   CardHeader: ComponentType;
-  Modal: UIComponent<ModalProps & { close?: () => void; fullScreen?: boolean }>;
+  Modal: UIComponent<
+    ModalProps & { close?: () => void; fullScreen?: boolean }
+  > & {
+    Header: BModal['Header'];
+    Body: BModal['Body'];
+    Footer: BModal['Footer'];
+    Dialog: BModal['Dialog'];
+  };
   ModalBody: typeof ModalBody;
   Confirm: UIComponent<ConfirmProps>;
   Toast: ComponentType<ToastProps>;

@@ -1,8 +1,9 @@
 import { services, requests } from '@application';
 import { User } from '@chess-tent/models';
+import { RegisterRequestParams } from '@chess-tent/types';
 import { StatusResponse, UserResponse, UsersResponse } from '@types';
 
-const register = services.createRequest<Partial<User>, StatusResponse>(
+const register = services.createRequest<RegisterRequestParams, StatusResponse>(
   'POST',
   '/register',
 );

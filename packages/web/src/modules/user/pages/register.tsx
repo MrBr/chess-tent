@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import queryString from 'query-string';
+import { RegisterQuery } from '@chess-tent/types';
+import queryString, { ParsedQuery } from 'query-string';
 import { ui, hooks, requests, components, utils } from '@application';
 import * as yup from 'yup';
 
@@ -100,7 +101,10 @@ export default () => {
           validationSchema={SignupSchema}
           // Omitting passwordConfirmation
           onSubmit={({ passwordConfirmation, ...user }) => {
-            fetch({ ...user, ...queryString.parse(query) });
+            fetch({
+              user,
+              query: (queryString.parse(query) as unknown) as RegisterQuery,
+            });
           }}
         >
           <FormGroup>

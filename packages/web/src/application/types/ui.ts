@@ -5,6 +5,7 @@ import {
   ReactElement,
   ReactEventHandler,
   ReactNode,
+  MutableRefObject,
 } from 'react';
 import {
   ColProps,
@@ -26,6 +27,8 @@ import {
   Navbar,
   NavDropdown,
   CardProps,
+  TooltipProps,
+  Overlay as BOverlay,
 } from 'react-bootstrap';
 import DropdownToggle from 'react-bootstrap/DropdownToggle';
 import { ErrorMessageProps, Formik } from 'formik';
@@ -45,7 +48,9 @@ export type ButtonProps = {
   size?: 'large' | 'regular' | 'small' | 'extra-small';
   type?: 'button' | 'reset' | 'submit';
   disabled?: boolean;
-} & { onClick?: () => void };
+} & { onClick?: () => void } & {
+  ref?: MutableRefObject<any | undefined>;
+};
 
 export type ModalProps = BModalProps;
 
@@ -248,4 +253,6 @@ export type UI = {
   Nav: typeof Nav;
   Navbar: typeof Navbar;
   NavDropdown: typeof NavDropdown;
+  Tooltip: UIComponent<TooltipProps>;
+  Overlay: typeof BOverlay;
 };

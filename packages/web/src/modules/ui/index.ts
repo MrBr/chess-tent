@@ -17,6 +17,8 @@ import {
 import { Container, Row, Col, Page } from './Grid';
 import { Select, AsyncSelect } from './Select';
 import Dropdown, { OptionsDropdown } from './Dropdown';
+import { Tooltip } from './Tooltip';
+import { Overlay } from './Overlay';
 import {
   Display1,
   Display2,
@@ -91,6 +93,9 @@ application.ui.Headline5 = Headline5;
 application.ui.Headline6 = Headline6;
 application.ui.Text = Text;
 application.ui.SearchBox = SearchBox;
+
+application.ui.Tooltip = Tooltip;
+application.ui.Overlay = Overlay;
 
 application.ui.Icon = Icon;
 application.ui.Dot = Dot;

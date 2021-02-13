@@ -1,11 +1,12 @@
 import React from 'react';
 import styled from '@emotion/styled';
+import queryString from 'query-string';
 import { ui, hooks, requests, components, utils } from '@application';
 import * as yup from 'yup';
 
 const { mediaQueryEnhancer } = utils;
 
-const { useApi, useHistory } = hooks;
+const { useApi, useHistory, useQuery } = hooks;
 const { Link } = components;
 const {
   Form,
@@ -50,6 +51,7 @@ const SubmitButton = styled(Button)(
 export default () => {
   const { fetch, loading, response, error } = useApi(requests.register);
   const history = useHistory();
+  const query = useQuery();
   if (response && !error) {
     return (
       <Container className="h-100 d-flex justify-content-center align-items-center no-gutters mx-auto">
@@ -74,6 +76,7 @@ export default () => {
       </Container>
     );
   }
+
   return (
     <Container className="h-100 d-flex justify-content-center align-items-center no-gutters mx-auto">
       <Absolute
@@ -96,7 +99,9 @@ export default () => {
           }}
           validationSchema={SignupSchema}
           // Omitting passwordConfirmation
-          onSubmit={({ passwordConfirmation, ...user }) => fetch(user)}
+          onSubmit={({ passwordConfirmation, ...user }) => {
+            fetch({ ...user, ...queryString.parse(query) });
+          }}
         >
           <FormGroup>
             <Form.Input

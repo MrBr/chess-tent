@@ -2,11 +2,11 @@ import React, { useCallback, useState, useRef } from 'react';
 import { components, hooks, ui } from '@application';
 import { Tag, User } from '@chess-tent/models';
 import { LessonsRequest } from '@chess-tent/types';
-import { API_PATH } from '../../../api';
+import { APP_DOMAIN } from '../../../api';
 
 const { Page, CoachTrainings, LessonBrowser } = components;
 const { useLessons, useUserTrainings } = hooks;
-const { Headline3, Button, Modal, Input, Tooltip, Overlay } = ui;
+const { Headline3, Button, Modal, Input, Tooltip, Overlay, Check } = ui;
 
 export default ({ user }: { user: User }) => {
   const [trainings] = useUserTrainings(user);
@@ -17,6 +17,7 @@ export default ({ user }: { user: User }) => {
   const target = useRef();
   const [isModalVisible, setModalVisibility] = useState(false);
   const [isLinkCopied, setLink] = useState(false);
+  const [isMentor, setMentor] = useState(true);
 
   const handleFilterChange = useCallback(
     (search, difficulty, tags) => {
@@ -29,7 +30,7 @@ export default ({ user }: { user: User }) => {
     [setLessonsFilter],
   );
 
-  const inviteLink = `${API_PATH}/register?invitation=${user.id}`;
+  const inviteLink = `${APP_DOMAIN}/register?referrer=${user.id}&mentorship=${isMentor}`;
 
   const HandleLinkCopy = () => {
     navigator.clipboard.writeText(inviteLink);
@@ -42,7 +43,7 @@ export default ({ user }: { user: User }) => {
       {/* this will be invitationModal */}
       <Modal close={() => setModalVisibility(false)} show={isModalVisible}>
         <Modal.Header>Invite student</Modal.Header>
-        <Modal.Body>
+        <Modal.Body className="d-flex">
           <Input value={inviteLink} />
           <Button ref={target} onClick={HandleLinkCopy} size="extra-small">
             Copy link
@@ -59,6 +60,11 @@ export default ({ user }: { user: User }) => {
               </Tooltip>
             )}
           </Overlay>
+          <Check
+            checked={isMentor}
+            onChange={() => setMentor(!isMentor)}
+            label="mentorship"
+          />
         </Modal.Body>
       </Modal>
       {trainings && (

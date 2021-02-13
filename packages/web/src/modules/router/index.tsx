@@ -73,6 +73,10 @@ const Link = styled<Components['Link']>(RLink, {
     },
 );
 
+export function useQuery() {
+  return new URLSearchParams(useLocation().search).toString();
+}
+
 application.components.Router = Router;
 application.components.Switch = Switch;
 application.components.Route = Route;
@@ -84,3 +88,4 @@ application.services.history = history;
 application.hooks.useHistory = useHistory;
 application.hooks.useLocation = useLocation;
 application.hooks.useParams = useParams;
+application.hooks.useQuery = useQuery;

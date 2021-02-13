@@ -20,14 +20,22 @@ const {
   sendStatusOk,
   sendMail,
   validate,
+  addMentor,
 } = middleware;
 
 application.service.registerPostRoute(
   '/register',
-  toLocals('user', req => req.body),
+  toLocals('user', req => req.body.user),
   validateUser,
   hashPassword,
   addUser,
+
+  // mentorship flow
+  toLocals('studentId', (req, res) => res.locals.user.id),
+  toLocals('coachId', req => req.body.query.referrer),
+  toLocals('approved', () => true),
+  addMentor,
+
   sendMail((req, res) => ({
     from: 'Chess Tent <noreply@chesstent.com>',
     to: res.locals.user.email,

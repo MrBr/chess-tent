@@ -91,7 +91,7 @@ export type RegisterQuery = {
 
 export type RegisterRequestParams = {
   user: Partial<User>;
-  query?: RegisterQuery;
+  query: RegisterQuery;
 };
 
 export type Requests = {

@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { RegisterQuery } from '@chess-tent/types';
-import queryString, { ParsedQuery } from 'query-string';
+import queryString from 'query-string';
 import { ui, hooks, requests, components, utils } from '@application';
 import * as yup from 'yup';
 

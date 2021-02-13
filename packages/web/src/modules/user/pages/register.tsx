@@ -101,9 +101,16 @@ export default () => {
           validationSchema={SignupSchema}
           // Omitting passwordConfirmation
           onSubmit={({ passwordConfirmation, ...user }) => {
+            const { referrer, mentorship } = (queryString.parse(
+              query,
+            ) as unknown) as RegisterQuery;
             fetch({
               user,
-              query: (queryString.parse(query) as unknown) as RegisterQuery,
+              query: {
+                referrer,
+                //@ts-ignore
+                mentorship: mentorship === 'true' ? true : false,
+              },
             });
           }}
         >

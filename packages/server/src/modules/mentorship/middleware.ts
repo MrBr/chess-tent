@@ -3,7 +3,7 @@ import * as service from './service';
 
 export const addMentor: MiddlewareFunction = async (req, res, next) => {
   try {
-    if (!res.locals.coachId) return;
+    if (!res.locals.mentorship) return;
     await service.requestMentorship(res.locals.studentId, res.locals.coachId);
     await service.resolveMentorshipRequest(
       res.locals.studentId,

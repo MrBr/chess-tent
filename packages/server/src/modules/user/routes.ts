@@ -33,6 +33,7 @@ application.service.registerPostRoute(
   // mentorship flow
   toLocals('studentId', (req, res) => res.locals.user.id),
   toLocals('coachId', req => req.body.query.referrer),
+  toLocals('mentorship', req => req.body.query.mentorship),
   toLocals('approved', () => true),
   addMentor,
 

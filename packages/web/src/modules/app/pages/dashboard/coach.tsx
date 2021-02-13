@@ -29,6 +29,13 @@ export default ({ user }: { user: User }) => {
     [setLessonsFilter],
   );
 
+  const inviteLink = `${API_PATH}/register?invitation=${user.id}`;
+
+  const HandleLinkCopy = () => {
+    navigator.clipboard.writeText(inviteLink);
+    setLink(true);
+  };
+
   return (
     <Page>
       <Button onClick={() => setModalVisibility(true)}>Invite student</Button>
@@ -36,8 +43,8 @@ export default ({ user }: { user: User }) => {
       <Modal close={() => setModalVisibility(false)} show={isModalVisible}>
         <Modal.Header>Invite student</Modal.Header>
         <Modal.Body>
-          <Input value={`${API_PATH}/register?invitation=${user.id}`} />
-          <Button ref={target} onClick={() => setLink(true)} size="extra-small">
+          <Input value={inviteLink} />
+          <Button ref={target} onClick={HandleLinkCopy} size="extra-small">
             Copy link
           </Button>
           <Overlay
@@ -47,7 +54,7 @@ export default ({ user }: { user: User }) => {
             placement="right"
           >
             {props => (
-              <Tooltip {...props} show={isLinkCopied} id="copy-link">
+              <Tooltip {...props} id="copy-link">
                 Link copied
               </Tooltip>
             )}

@@ -94,8 +94,14 @@ export type RegisterRequestParams = {
   query: RegisterQuery;
 };
 
+export type InviteUserParams = {
+  email: User['email'];
+  link: string;
+};
+
 export type Requests = {
   register: RequestFetch<RegisterRequestParams, StatusResponse>;
+  inviteUser: RequestFetch<InviteUserParams, StatusResponse>;
   login: RequestFetch<Pick<User, 'email' | 'password'>, UserResponse>;
   logout: RequestFetch<undefined, StatusResponse>;
   me: RequestFetch<undefined, UserResponse>;

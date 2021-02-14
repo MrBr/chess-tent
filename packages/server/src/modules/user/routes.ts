@@ -50,10 +50,16 @@ application.service.registerPostRoute(
 
 application.service.registerPostRoute(
   '/invite-user',
+  identify,
   toLocals('email', req => req.body.email),
   toLocals('name', req => req.body.name),
   toLocals('link', req => req.body.link),
-  // provjera da li vec ima mail u sustavu
+  getUser,
+  validate((req, res) => {
+    if (res.locals.user.active) {
+      throw new UserAlreadyActivated();
+    }
+  }),
   sendMail((req, res) => ({
     from: 'Chess Tent <noreply@chesstent.com>',
     to: res.locals.email,

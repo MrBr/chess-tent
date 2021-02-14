@@ -24,12 +24,13 @@ export default ({ user }: { user: User }) => {
   const [lessons] = useLessons(`own-lessons-${user.id}`, lessonsFilter, {
     my: true,
   });
-  const { fetch, loading, response, error } = useApi(requests.inviteUser);
+  const { fetch } = useApi(requests.inviteUser);
   const target = useRef();
   const [isModalVisible, setModalVisibility] = useState(false);
   const [isLinkCopied, setLink] = useState(false);
   const [isMentor, setMentor] = useState(true);
   const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
 
   const handleFilterChange = useCallback(
     (search, difficulty, tags) => {
@@ -52,6 +53,7 @@ export default ({ user }: { user: User }) => {
   const handleSend = () => {
     fetch({
       email,
+      name,
       link: inviteLink,
     });
   };
@@ -94,6 +96,13 @@ export default ({ user }: { user: User }) => {
               value={email}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setEmail(e.target.value)
+              }
+            />
+            <Label>name:</Label>
+            <Input
+              value={name}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setName(e.target.value)
               }
             />
             <Button size="extra-small" onClick={handleSend}>

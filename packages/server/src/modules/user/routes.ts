@@ -51,14 +51,15 @@ application.service.registerPostRoute(
 application.service.registerPostRoute(
   '/invite-user',
   toLocals('email', req => req.body.email),
+  toLocals('name', req => req.body.name),
   toLocals('link', req => req.body.link),
   // provjera da li vec ima mail u sustavu
   sendMail((req, res) => ({
     from: 'Chess Tent <noreply@chesstent.com>',
     to: res.locals.email,
     subject: 'Invitation link',
-    html: `<p>Dear ${res.locals.email},</p> 
-      <p>Invitation link: ${res.locals.link}</p>
+    html: `<p>Hey ${res.locals.name},</p> 
+      <p>You've been invited by ${res.locals.me} to join Chess Tent. You can register at <a href=${res.locals.link}> ${process.env.APP_DOMAIN}/register<a></p>
       <p>Best Regards, <br/>Chess Tent Team</p>`,
   })),
   sendStatusOk,

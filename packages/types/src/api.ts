@@ -96,6 +96,7 @@ export type RegisterRequestParams = {
 
 export type InviteUserParams = {
   email: User['email'];
+  name: User['name'];
   link: string;
 };
 

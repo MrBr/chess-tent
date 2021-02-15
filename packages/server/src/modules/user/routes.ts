@@ -9,7 +9,7 @@ import {
   getUser,
   updateUserActivity,
 } from './middleware';
-import { UserAlreadyActivated } from './errors';
+import { UserAlreadyActivated, UserAlreadyExists } from './errors';
 
 const {
   sendData,
@@ -25,6 +25,13 @@ const {
 
 application.service.registerPostRoute(
   '/register',
+  toLocals('user.email', req => req.body.user.email),
+  getUser,
+  validate((req, res) => {
+    if (res.locals?.user?.email) {
+      throw new UserAlreadyExists();
+    }
+  }),
   toLocals('user', req => req.body.user),
   validateUser,
   hashPassword,
@@ -51,21 +58,22 @@ application.service.registerPostRoute(
 application.service.registerPostRoute(
   '/invite-user',
   identify,
+  toLocals('user.email', req => req.body.email),
+  getUser,
+  validate((req, res) => {
+    if (res.locals?.user?.email) {
+      throw new UserAlreadyExists();
+    }
+  }),
   toLocals('email', req => req.body.email),
   toLocals('name', req => req.body.name),
   toLocals('link', req => req.body.link),
-  getUser,
-  validate((req, res) => {
-    if (res.locals.user.active) {
-      throw new UserAlreadyActivated();
-    }
-  }),
   sendMail((req, res) => ({
     from: 'Chess Tent <noreply@chesstent.com>',
     to: res.locals.email,
     subject: 'Invitation link',
     html: `<p>Hey ${res.locals.name},</p> 
-      <p>You've been invited by ${res.locals.me} to join Chess Tent. You can register at <a href=${res.locals.link}> ${process.env.APP_DOMAIN}/register<a></p>
+      <p>You've been invited by ${res.locals.me.name} to join Chess Tent. You can register at <a href=${res.locals.link}> ${process.env.APP_DOMAIN}/register<a></p>
       <p>Best Regards, <br/>Chess Tent Team</p>`,
   })),
   sendStatusOk,

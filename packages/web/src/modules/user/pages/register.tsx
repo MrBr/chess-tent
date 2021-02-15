@@ -77,6 +77,21 @@ export default () => {
       </Container>
     );
   }
+  // Omitting passwordConfirmation
+  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleSubmit = ({ passwordConfirmation, ...user }) => {
+    const { referrer, mentorship } = (queryString.parse(
+      query,
+    ) as unknown) as RegisterQuery;
+    fetch({
+      user,
+      query: {
+        referrer,
+        mentorship,
+      },
+    });
+  };
 
   return (
     <Container className="h-100 d-flex justify-content-center align-items-center no-gutters mx-auto">
@@ -99,20 +114,7 @@ export default () => {
             passwordConfirmation: '',
           }}
           validationSchema={SignupSchema}
-          // Omitting passwordConfirmation
-          onSubmit={({ passwordConfirmation, ...user }) => {
-            const { referrer, mentorship } = (queryString.parse(
-              query,
-            ) as unknown) as RegisterQuery;
-            fetch({
-              user,
-              query: {
-                referrer,
-                //@ts-ignore
-                mentorship: mentorship === 'true' ? true : false,
-              },
-            });
-          }}
+          onSubmit={handleSubmit}
         >
           <FormGroup>
             <Form.Input

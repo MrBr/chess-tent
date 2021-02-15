@@ -85,8 +85,8 @@ export type LessonUpdatableAction =
 export type LessonUpdates = { path: SubjectPath; value: any }[];
 
 export type RegisterQuery = {
-  referrer: User['id'];
-  mentorship: boolean;
+  referrer?: User['id'];
+  mentorship?: boolean;
 };
 
 export type RegisterRequestParams = {

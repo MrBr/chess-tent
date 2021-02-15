@@ -43,10 +43,12 @@ export default ({ user }: { user: User }) => {
     [setLessonsFilter],
   );
 
-  const inviteLink = `${APP_DOMAIN}/register?referrer=${user.id}&mentorship=${isMentor}`;
+  const invitationLink = `${APP_DOMAIN}/register?referrer=${user.id}${
+    isMentor ? `&mentorship=${isMentor}` : ''
+  }`;
 
   const HandleLinkCopy = () => {
-    navigator.clipboard.writeText(inviteLink);
+    navigator.clipboard.writeText(invitationLink);
     setLink(true);
   };
 
@@ -54,7 +56,7 @@ export default ({ user }: { user: User }) => {
     fetch({
       email,
       name,
-      link: inviteLink,
+      link: invitationLink,
     });
   };
 
@@ -66,7 +68,7 @@ export default ({ user }: { user: User }) => {
         <Modal.Header>Invite student</Modal.Header>
         <Modal.Body>
           <Row>
-            <Input value={inviteLink} />
+            <Input value={invitationLink} />
             <Button ref={target} onClick={HandleLinkCopy} size="extra-small">
               Copy link
             </Button>
@@ -91,18 +93,18 @@ export default ({ user }: { user: User }) => {
             />
           </Row>
           <Row>
-            <Label>email:</Label>
-            <Input
-              value={email}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setEmail(e.target.value)
-              }
-            />
             <Label>name:</Label>
             <Input
               value={name}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setName(e.target.value)
+              }
+            />
+            <Label>email:</Label>
+            <Input
+              value={email}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setEmail(e.target.value)
               }
             />
             <Button size="extra-small" onClick={handleSend}>

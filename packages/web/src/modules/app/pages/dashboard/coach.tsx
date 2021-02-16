@@ -16,6 +16,7 @@ const {
   Check,
   Label,
   Row,
+  Col,
 } = ui;
 
 export default ({ user }: { user: User }) => {
@@ -68,10 +69,19 @@ export default ({ user }: { user: User }) => {
         <Modal.Header>Invite student</Modal.Header>
         <Modal.Body>
           <Row>
-            <Input value={invitationLink} />
-            <Button ref={target} onClick={HandleLinkCopy} size="extra-small">
-              Copy link
-            </Button>
+            <Col className="col-sm-9 col-12">
+              <Input value={invitationLink} className="mb-3" />
+            </Col>
+            <Col className="col-sm-3 col-12">
+              <Button
+                className="py-2"
+                ref={target}
+                onClick={HandleLinkCopy}
+                size="extra-small"
+              >
+                Copy link
+              </Button>
+            </Col>
             <Overlay
               //@ts-ignore
               target={target.current}
@@ -86,30 +96,38 @@ export default ({ user }: { user: User }) => {
             </Overlay>
           </Row>
           <Row>
-            <Check
-              checked={isMentor}
-              onChange={() => setMentor(!isMentor)}
-              label="mentorship"
-            />
+            <Col className="col-12 mb-3">
+              <Check
+                checked={isMentor}
+                onChange={() => setMentor(!isMentor)}
+                label="Mentorship"
+              />
+            </Col>
           </Row>
           <Row>
-            <Label>name:</Label>
-            <Input
-              value={name}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setName(e.target.value)
-              }
-            />
-            <Label>email:</Label>
-            <Input
-              value={email}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setEmail(e.target.value)
-              }
-            />
-            <Button size="extra-small" onClick={handleSend}>
-              Send
-            </Button>
+            <Col className="col-12">
+              <Label>Name:</Label>
+              <Input
+                value={name}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setName(e.target.value)
+                }
+              />
+            </Col>
+            <Col className="col-12">
+              <Label>Email:</Label>
+              <Input
+                value={email}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setEmail(e.target.value)
+                }
+              />
+            </Col>
+            <Col className="col-12 mt-3">
+              <Button size="small" onClick={handleSend}>
+                Send
+              </Button>
+            </Col>
           </Row>
         </Modal.Body>
       </Modal>

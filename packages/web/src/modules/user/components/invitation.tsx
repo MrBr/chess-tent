@@ -10,7 +10,7 @@ const { Button, Modal, Input, Tooltip, Overlay, Check, Label, Row, Col } = ui;
 export default () => {
   const { fetch } = useApi(requests.inviteUser);
   const [activeUser] = useActiveUserRecord() as [User, never, never];
-  const target = useRef();
+  const target = useRef() as React.MutableRefObject<HTMLButtonElement>;
   const [isModalVisible, setModalVisibility] = useState(false);
   const [isLinkCopied, setLink] = useState(false);
   const [isMentor, setMentor] = useState(true);
@@ -61,7 +61,6 @@ export default () => {
               </Button>
             </Col>
             <Overlay
-              //@ts-ignore
               target={target.current}
               show={isLinkCopied}
               placement="right"

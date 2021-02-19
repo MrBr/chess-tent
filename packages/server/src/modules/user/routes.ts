@@ -25,14 +25,14 @@ const {
 
 application.service.registerPostRoute(
   '/register',
-  toLocals('user.email', req => req.body.user.email),
-  getUser,
-  validate((req, res) => {
-    if (res.locals?.user?.email) {
-      throw new UserAlreadyExists();
-    }
-  }),
-  toLocals('user', req => req.body.user),
+  // toLocals('user.email', req => req.body.user.email),
+  // getUser,
+  // validate((req, res) => {
+  //   if (res.locals?.user?.email) {
+  //     throw new UserAlreadyExists();
+  //   }
+  // }),
+  // toLocals('user', req => req.body.user),
   validateUser,
   hashPassword,
   addUser,

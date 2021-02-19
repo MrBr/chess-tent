@@ -12,7 +12,7 @@ export default () => {
   const [activeUser] = useActiveUserRecord() as [User, never, never];
   const target = useRef() as React.MutableRefObject<HTMLButtonElement>;
   const [isModalVisible, setModalVisibility] = useState(false);
-  const [isLinkCopied, setLink] = useState(false);
+  const [isLinkCopied, setLinkCopy] = useState(false);
   const [isMentor, setMentor] = useState(true);
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
@@ -22,7 +22,7 @@ export default () => {
   }`;
   const HandleLinkCopy = () => {
     navigator.clipboard.writeText(invitationLink);
-    setLink(true);
+    setLinkCopy(true);
   };
 
   const handleSend = () => {
@@ -34,7 +34,7 @@ export default () => {
   };
 
   useEffect(() => {
-    setLink(false);
+    setLinkCopy(false);
   }, [isMentor, isModalVisible]);
 
   const ContentText = activeUser.coach ? 'Invite student' : 'Invite friend';

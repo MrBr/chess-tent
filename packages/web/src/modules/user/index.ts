@@ -34,6 +34,13 @@ application.register(
   },
 );
 
+application.register(
+  () => import('./components/invitation'),
+  module => {
+    application.components.Invitation = module.default;
+  },
+);
+
 application.model.userSchema = userSchema;
 application.pages.Register = Register;
 application.hooks.useUser = useUser;

@@ -391,4 +391,5 @@ export type Components = {
     notification: Notification;
     view: NotificationView;
   }>;
+  Invitation: ComponentType;
 };

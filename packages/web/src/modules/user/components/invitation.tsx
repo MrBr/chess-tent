@@ -33,7 +33,7 @@ export default () => {
     });
   };
 
-  const ContentText = 'Invite student';
+  const ContentText = activeUser.coach ? 'Invite student' : 'Invite friend';
   return (
     <div className="h-25 mr-3 mt-3">
       <Button

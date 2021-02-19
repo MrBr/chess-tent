@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { hooks, ui, requests } from '@application';
 import { User } from '@chess-tent/models';
 
@@ -32,6 +32,10 @@ export default () => {
       link: invitationLink,
     });
   };
+
+  useEffect(() => {
+    setLink(false);
+  }, [isMentor, isModalVisible]);
 
   const ContentText = activeUser.coach ? 'Invite student' : 'Invite friend';
   return (

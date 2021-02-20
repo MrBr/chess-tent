@@ -5,7 +5,7 @@ import {
   ReactElement,
   ReactEventHandler,
   ReactNode,
-  MutableRefObject,
+  RefObject,
 } from 'react';
 import {
   ColProps,
@@ -48,9 +48,7 @@ export type ButtonProps = {
   size?: 'large' | 'regular' | 'small' | 'extra-small';
   type?: 'button' | 'reset' | 'submit';
   disabled?: boolean;
-} & { onClick?: () => void } & {
-  ref?: MutableRefObject<any | undefined>;
-};
+} & { onClick?: () => void; ref?: RefObject<HTMLButtonElement> };
 
 export type ModalProps = BModalProps;
 

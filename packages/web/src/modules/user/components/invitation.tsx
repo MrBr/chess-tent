@@ -68,7 +68,7 @@ export default () => {
         <Modal.Body>
           <Row>
             <Col className="col-sm-9 col-12">
-              <Input value={invitationLink} className="mb-3" />
+              <Input value={invitationLink} className="mb-3" readOnly />
             </Col>
             <Col className="col-sm-3 col-12 mb-3">
               <Button

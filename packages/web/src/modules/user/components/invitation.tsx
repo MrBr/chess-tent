@@ -1,11 +1,29 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { hooks, ui, requests } from '@application';
 import { User } from '@chess-tent/models';
+import * as yup from 'yup';
 
 import { APP_DOMAIN } from '../../api';
 
 const { useApi, useActiveUserRecord } = hooks;
-const { Button, Modal, Input, Tooltip, Overlay, Check, Label, Row, Col } = ui;
+const {
+  Button,
+  Modal,
+  Input,
+  Tooltip,
+  Overlay,
+  Check,
+  Row,
+  Col,
+  Form,
+  FormGroup,
+  Headline3,
+} = ui;
+
+const InvitationEmailSchema = yup.object().shape({
+  name: yup.string().required(),
+  email: yup.string().email('Invalid email').required(),
+});
 
 export default () => {
   const { fetch } = useApi(requests.inviteUser);
@@ -14,8 +32,6 @@ export default () => {
   const [isModalVisible, setModalVisibility] = useState(false);
   const [isLinkCopied, setLinkCopy] = useState(false);
   const [isMentor, setMentor] = useState(true);
-  const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
 
   const invitationLink = `${APP_DOMAIN}/register?referrer=${activeUser.id}${
     isMentor ? `&mentorship=${isMentor}` : ''
@@ -25,7 +41,7 @@ export default () => {
     setLinkCopy(true);
   };
 
-  const handleSend = () => {
+  const handleSend = ({ name, email }: { name: string; email: string }) => {
     fetch({
       email,
       name,
@@ -87,27 +103,38 @@ export default () => {
           </Row>
           <Row>
             <Col className="col-12">
-              <Label>Name:</Label>
-              <Input
-                value={name}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setName(e.target.value)
-                }
-              />
-            </Col>
-            <Col className="col-12">
-              <Label>Email:</Label>
-              <Input
-                value={email}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setEmail(e.target.value)
-                }
-              />
-            </Col>
-            <Col className="col-12 mt-3">
-              <Button size="small" onClick={handleSend}>
-                Send
-              </Button>
+              <Headline3 className="mt-1 mb-1">
+                Send an invitation email
+              </Headline3>
+              <Form
+                initialValues={{
+                  name: '',
+                  email: '',
+                }}
+                validationSchema={InvitationEmailSchema}
+                onSubmit={handleSend}
+              >
+                <FormGroup className="pt-4">
+                  <Form.Input
+                    size="large"
+                    type="text"
+                    name="name"
+                    placeholder="Name"
+                  />
+                </FormGroup>
+                <FormGroup className="pt-4">
+                  <Form.Input
+                    size="large"
+                    type="email"
+                    name="email"
+                    placeholder="Email address"
+                  />
+                </FormGroup>
+
+                <Button size="small" type="submit">
+                  Send
+                </Button>
+              </Form>
             </Col>
           </Row>
         </Modal.Body>

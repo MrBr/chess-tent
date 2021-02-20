@@ -70,7 +70,7 @@ export default () => {
             <Col className="col-sm-9 col-12">
               <Input value={invitationLink} className="mb-3" />
             </Col>
-            <Col className="col-sm-3 col-12">
+            <Col className="col-sm-3 col-12 mb-3">
               <Button
                 className="py-2"
                 ref={target}

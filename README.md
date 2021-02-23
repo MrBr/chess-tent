@@ -128,8 +128,8 @@ TBD
 
 1. Install prettier package
 2. You can setup to format on Save
-   1. Go to File/Preferences/Settings
-   2. Search for formatOnSave and check the box (prettier will format code on existed .prettierrc setup)
+   2.1. Go to File/Preferences/Settings
+   2.2. Search for formatOnSave and check the box (prettier will format code on existed .prettierrc setup)
 3. Install eslint package (make vscode to log errors in development from .eslintrc file)
 4. ctrl + shift + p eslint: show output channel
 5. If vscode returns message ELINT is not running... Press ctrl + , to go to settings. in Workspace pick extensions/eslint

@@ -2,6 +2,8 @@
 
 Backend for chess-tent project
 
+install compass (https://docs.mongodb.com/compass/master/install/) or any other db editor for mongoDB
+
 ### Available Scripts
 
 pre-step `cd packages/server`

@@ -22,7 +22,7 @@ import { Action as ReduxAction } from 'redux';
 import { useSelector, useDispatch, useStore } from 'react-redux';
 import { BatchAction } from 'redux-batched-actions';
 import { useParams, useLocation } from 'react-router-dom';
-import { History, Location } from 'history';
+import { History } from 'history';
 import { LessonActivity } from './activity';
 import { GenericArguments } from './_helpers';
 
@@ -61,7 +61,7 @@ export type Hooks = {
   useUserLessonsRecord: (user: User) => RecordHookReturn<Lesson[]>;
   useConversationParticipant: () => RecordHookReturn<User>;
   useHistory: () => History;
-  useQuery: () => Location['search'];
+  useQuery: <T extends Record<string, string | undefined>>() => T;
   useLocation: typeof useLocation;
   useParams: typeof useParams;
   useApi: <T, K extends StatusResponse>(

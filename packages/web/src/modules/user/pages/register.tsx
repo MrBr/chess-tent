@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { RegisterOptions } from '@chess-tent/types';
-import queryString from 'query-string';
 import { ui, hooks, requests, components, utils } from '@application';
 import * as yup from 'yup';
 
@@ -52,7 +51,7 @@ const SubmitButton = styled(Button)(
 export default () => {
   const { fetch, loading, response, error } = useApi(requests.register);
   const history = useHistory();
-  const query = useQuery();
+  const query = useQuery<RegisterOptions>();
   if (response && !error) {
     return (
       <Container className="h-100 d-flex justify-content-center align-items-center no-gutters mx-auto">
@@ -81,15 +80,9 @@ export default () => {
   // @ts-ignore
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleSubmit = ({ passwordConfirmation, ...user }) => {
-    const { referrer, mentorship } = (queryString.parse(
-      query,
-    ) as unknown) as RegisterOptions;
     fetch({
       user,
-      options: {
-        referrer,
-        mentorship,
-      },
+      options: query,
     });
   };
 

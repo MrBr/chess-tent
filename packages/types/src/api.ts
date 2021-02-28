@@ -86,7 +86,6 @@ export type LessonUpdates = { path: SubjectPath; value: any }[];
 
 export type RegisterOptions = {
   referrer?: User['id'];
-  mentorship?: boolean;
 };
 
 export type RegisterRequestParams = {

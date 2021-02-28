@@ -5,6 +5,7 @@ import {
   ReactElement,
   ReactEventHandler,
   ReactNode,
+  RefObject,
 } from 'react';
 import {
   ColProps,
@@ -15,6 +16,7 @@ import {
   InputGroup,
   ModalBody,
   ModalProps as BModalProps,
+  Modal as BModal,
   RowProps,
   Tab,
   Tabs,
@@ -25,6 +27,8 @@ import {
   Navbar,
   NavDropdown,
   CardProps,
+  TooltipProps,
+  Overlay as BOverlay,
 } from 'react-bootstrap';
 import DropdownToggle from 'react-bootstrap/DropdownToggle';
 import { ErrorMessageProps, Formik } from 'formik';
@@ -44,7 +48,7 @@ export type ButtonProps = {
   size?: 'large' | 'regular' | 'small' | 'extra-small';
   type?: 'button' | 'reset' | 'submit';
   disabled?: boolean;
-} & { onClick?: () => void };
+} & { onClick?: () => void; ref?: RefObject<HTMLButtonElement> };
 
 export type ModalProps = BModalProps;
 
@@ -231,7 +235,14 @@ export type UI = {
   Card: ComponentType<ClickProps & ClassNameProps & CardProps>;
   CardBody: ComponentType;
   CardHeader: ComponentType;
-  Modal: UIComponent<ModalProps & { close?: () => void; fullScreen?: boolean }>;
+  Modal: UIComponent<
+    ModalProps & { close?: () => void; fullScreen?: boolean }
+  > & {
+    Header: BModal['Header'];
+    Body: BModal['Body'];
+    Footer: BModal['Footer'];
+    Dialog: BModal['Dialog'];
+  };
   ModalBody: typeof ModalBody;
   Confirm: UIComponent<ConfirmProps>;
   Toast: ComponentType<ToastProps>;
@@ -240,4 +251,6 @@ export type UI = {
   Nav: typeof Nav;
   Navbar: typeof Navbar;
   NavDropdown: typeof NavDropdown;
+  Tooltip: UIComponent<TooltipProps>;
+  Overlay: typeof BOverlay;
 };

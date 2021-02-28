@@ -104,6 +104,7 @@ export type Middleware = {
   sendNotification: (...args: Parameters<RequestHandler>) => void;
   createNotification: (...args: Parameters<RequestHandler>) => void;
   updateNotifications: (...args: Parameters<RequestHandler>) => void;
+  addMentor: (...args: Parameters<RequestHandler>) => void;
   getUser: (...args: Parameters<RequestHandler>) => void;
   toLocals: (
     localsKey: string,

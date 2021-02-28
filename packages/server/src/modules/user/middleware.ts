@@ -9,6 +9,7 @@ import {
   PasswordEncryptionError,
 } from './errors';
 import { validateUserPassword } from './service';
+
 export const addUser: MiddlewareFunction = (req, res, next) => {
   service
     .addUser(res.locals.user as User)

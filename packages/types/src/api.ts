@@ -84,8 +84,23 @@ export type LessonUpdatableAction =
   | UpdateLessonPathAction;
 export type LessonUpdates = { path: SubjectPath; value: any }[];
 
+export type RegisterOptions = {
+  referrer?: User['id'];
+};
+
+export type RegisterRequestParams = {
+  user: Partial<User>;
+  options: RegisterOptions;
+};
+
+export type InviteUserParams = {
+  email: User['email'];
+  link: string;
+};
+
 export type Requests = {
-  register: RequestFetch<Partial<User>, StatusResponse>;
+  register: RequestFetch<RegisterRequestParams, StatusResponse>;
+  inviteUser: RequestFetch<InviteUserParams, StatusResponse>;
   login: RequestFetch<Pick<User, 'email' | 'password'>, UserResponse>;
   logout: RequestFetch<undefined, StatusResponse>;
   me: RequestFetch<undefined, UserResponse>;

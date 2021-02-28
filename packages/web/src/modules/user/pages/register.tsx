@@ -1,11 +1,12 @@
 import React from 'react';
 import styled from '@emotion/styled';
+import { RegisterOptions } from '@chess-tent/types';
 import { ui, hooks, requests, components, utils } from '@application';
 import * as yup from 'yup';
 
 const { mediaQueryEnhancer } = utils;
 
-const { useApi, useHistory } = hooks;
+const { useApi, useHistory, useQuery } = hooks;
 const { Link } = components;
 const {
   Form,
@@ -50,6 +51,7 @@ const SubmitButton = styled(Button)(
 export default () => {
   const { fetch, loading, response, error } = useApi(requests.register);
   const history = useHistory();
+  const query = useQuery<RegisterOptions>();
   if (response && !error) {
     return (
       <Container className="h-100 d-flex justify-content-center align-items-center no-gutters mx-auto">
@@ -74,6 +76,16 @@ export default () => {
       </Container>
     );
   }
+  // Omitting passwordConfirmation
+  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleSubmit = ({ passwordConfirmation, ...user }) => {
+    fetch({
+      user,
+      options: query,
+    });
+  };
+
   return (
     <Container className="h-100 d-flex justify-content-center align-items-center no-gutters mx-auto">
       <Absolute
@@ -95,8 +107,7 @@ export default () => {
             passwordConfirmation: '',
           }}
           validationSchema={SignupSchema}
-          // Omitting passwordConfirmation
-          onSubmit={({ passwordConfirmation, ...user }) => fetch(user)}
+          onSubmit={handleSubmit}
         >
           <FormGroup>
             <Form.Input

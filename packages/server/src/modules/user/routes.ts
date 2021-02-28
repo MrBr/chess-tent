@@ -9,7 +9,7 @@ import {
   getUser,
   updateUserActivity,
 } from './middleware';
-import { UserAlreadyActivated } from './errors';
+import { UserAlreadyActivated, UserAlreadyExists } from './errors';
 
 const {
   sendData,
@@ -20,14 +20,20 @@ const {
   sendStatusOk,
   sendMail,
   validate,
+  addMentor,
 } = middleware;
 
 application.service.registerPostRoute(
   '/register',
-  toLocals('user', req => req.body),
+  toLocals('user', req => req.body.user),
   validateUser,
   hashPassword,
   addUser,
+  // mentorship flow
+  toLocals('studentId', (req, res) => res.locals.user.id),
+  toLocals('coachId', req => req.body.options.referrer),
+  addMentor,
+
   sendMail((req, res) => ({
     from: 'Chess Tent <noreply@chesstent.com>',
     to: res.locals.user.email,
@@ -37,6 +43,27 @@ application.service.registerPostRoute(
       <p>Best Regards, <br/>Chess Tent Team</p>`,
   })),
   sendData('user'),
+);
+
+application.service.registerPostRoute(
+  '/invite-user',
+  identify,
+  toLocals('user.email', req => req.body.email),
+  getUser,
+  validate((req, res) => {
+    if (res.locals?.user?.email) {
+      throw new UserAlreadyExists();
+    }
+  }),
+  sendMail(req => ({
+    from: 'Chess Tent <noreply@chesstent.com>',
+    to: req.body.email,
+    subject: 'Invitation link',
+    html: `<p>Hey,</p> 
+      <p>You've been invited to join Chess Tent. You can register at <a href=${req.body.link}> ${process.env.APP_DOMAIN}/register<a></p>
+      <p>Best Regards, <br/>Chess Tent Team</p>`,
+  })),
+  sendStatusOk,
 );
 
 application.service.registerGetRoute(

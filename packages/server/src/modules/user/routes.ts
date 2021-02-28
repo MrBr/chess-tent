@@ -55,14 +55,12 @@ application.service.registerPostRoute(
       throw new UserAlreadyExists();
     }
   }),
-  toLocals('email', req => req.body.email),
-  toLocals('link', req => req.body.link),
-  sendMail((req, res) => ({
+  sendMail(req => ({
     from: 'Chess Tent <noreply@chesstent.com>',
-    to: res.locals.email,
+    to: req.body.email,
     subject: 'Invitation link',
-    html: `<p>Hey ${res.locals.email},</p> 
-      <p>You've been invited to join Chess Tent. You can register at <a href=${res.locals.link}> ${process.env.APP_DOMAIN}/register<a></p>
+    html: `<p>Hey,</p> 
+      <p>You've been invited to join Chess Tent. You can register at <a href=${req.body.link}> ${process.env.APP_DOMAIN}/register<a></p>
       <p>Best Regards, <br/>Chess Tent Team</p>`,
   })),
   sendStatusOk,

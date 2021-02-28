@@ -84,19 +84,18 @@ export type LessonUpdatableAction =
   | UpdateLessonPathAction;
 export type LessonUpdates = { path: SubjectPath; value: any }[];
 
-export type RegisterQuery = {
+export type RegisterOptions = {
   referrer?: User['id'];
   mentorship?: boolean;
 };
 
 export type RegisterRequestParams = {
   user: Partial<User>;
-  query: RegisterQuery;
+  options: RegisterOptions;
 };
 
 export type InviteUserParams = {
   email: User['email'];
-  name: User['name'];
   link: string;
 };
 

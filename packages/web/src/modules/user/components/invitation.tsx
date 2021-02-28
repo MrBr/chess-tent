@@ -12,7 +12,6 @@ const {
   Input,
   Tooltip,
   Overlay,
-  Check,
   Row,
   Col,
   Form,
@@ -21,8 +20,7 @@ const {
 } = ui;
 
 const InvitationEmailSchema = yup.object().shape({
-  name: yup.string().required(),
-  email: yup.string().email('Invalid email').required(),
+  email: yup.string().required(),
 });
 
 export default () => {
@@ -31,29 +29,26 @@ export default () => {
   const target = useRef() as RefObject<HTMLButtonElement>;
   const [isModalVisible, setModalVisibility] = useState(false);
   const [isLinkCopied, setLinkCopy] = useState(false);
-  const [isMentor, setMentor] = useState(true);
 
-  const invitationLink = `${APP_DOMAIN}/register?referrer=${activeUser.id}${
-    isMentor ? `&mentorship=${isMentor}` : ''
-  }`;
+  const invitationLink = `${APP_DOMAIN}/register?referrer=${activeUser.id}`;
+
   const HandleLinkCopy = () => {
     navigator.clipboard.writeText(invitationLink);
     setLinkCopy(true);
   };
 
-  const handleSend = ({ name, email }: { name: string; email: string }) => {
+  const handleSend = ({ email }: { email: string }) => {
     fetch({
       email,
-      name,
       link: invitationLink,
     });
   };
 
   useEffect(() => {
     setLinkCopy(false);
-  }, [isMentor, isModalVisible]);
+  }, [isModalVisible]);
 
-  const ContentText = activeUser.coach ? 'Invite student' : 'Invite friend';
+  const contentText = activeUser.coach ? 'Invite student' : 'Invite friend';
   return (
     <div className="h-25 mr-3 mt-3">
       <Button
@@ -61,10 +56,10 @@ export default () => {
         size="extra-small"
         variant="regular"
       >
-        {ContentText}
+        {contentText}
       </Button>
       <Modal close={() => setModalVisibility(false)} show={isModalVisible}>
-        <Modal.Header>{ContentText}</Modal.Header>
+        <Modal.Header>{contentText}</Modal.Header>
         <Modal.Body>
           <Row>
             <Col className="col-sm-9 col-12">
@@ -93,35 +88,17 @@ export default () => {
             </Overlay>
           </Row>
           <Row>
-            <Col className="col-12 mb-3">
-              <Check
-                checked={isMentor}
-                onChange={() => setMentor(!isMentor)}
-                label="Mentorship"
-              />
-            </Col>
-          </Row>
-          <Row>
             <Col className="col-12">
               <Headline3 className="mt-1 mb-1">
                 Send an invitation email
               </Headline3>
               <Form
                 initialValues={{
-                  name: '',
                   email: '',
                 }}
                 validationSchema={InvitationEmailSchema}
                 onSubmit={handleSend}
               >
-                <FormGroup className="pt-4">
-                  <Form.Input
-                    size="large"
-                    type="text"
-                    name="name"
-                    placeholder="Name"
-                  />
-                </FormGroup>
                 <FormGroup className="pt-4">
                   <Form.Input
                     size="large"

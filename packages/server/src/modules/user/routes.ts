@@ -25,23 +25,13 @@ const {
 
 application.service.registerPostRoute(
   '/register',
-  // toLocals('user.email', req => req.body.user.email),
-  // getUser,
-  // validate((req, res) => {
-  //   if (res.locals?.user?.email) {
-  //     throw new UserAlreadyExists();
-  //   }
-  // }),
-  // toLocals('user', req => req.body.user),
+  toLocals('user', req => req.body.user),
   validateUser,
   hashPassword,
   addUser,
-
   // mentorship flow
   toLocals('studentId', (req, res) => res.locals.user.id),
-  toLocals('coachId', req => req.body.query.referrer),
-  toLocals('mentorship', req => req.body.query.mentorship),
-  toLocals('approved', () => true),
+  toLocals('coachId', req => req.body.options.referrer),
   addMentor,
 
   sendMail((req, res) => ({
@@ -66,16 +56,13 @@ application.service.registerPostRoute(
     }
   }),
   toLocals('email', req => req.body.email),
-  toLocals('name', req => req.body.name),
   toLocals('link', req => req.body.link),
-  toLocals('user.id', (req, res) => res.locals.me.id),
-  getUser,
   sendMail((req, res) => ({
     from: 'Chess Tent <noreply@chesstent.com>',
     to: res.locals.email,
     subject: 'Invitation link',
-    html: `<p>Hey ${res.locals.name},</p> 
-      <p>You've been invited by ${res.locals.user.name} to join Chess Tent. You can register at <a href=${res.locals.link}> ${process.env.APP_DOMAIN}/register<a></p>
+    html: `<p>Hey ${res.locals.email},</p> 
+      <p>You've been invited to join Chess Tent. You can register at <a href=${res.locals.link}> ${process.env.APP_DOMAIN}/register<a></p>
       <p>Best Regards, <br/>Chess Tent Team</p>`,
   })),
   sendStatusOk,

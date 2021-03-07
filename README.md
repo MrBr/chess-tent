@@ -46,59 +46,30 @@ Each package has `@chess-tent/` prior to a package name. For example `@chess-ten
 
 ### Used Technologies
 
-- `web` package
-
-  - **react** - JS library used for building user interface(UI) https://reactjs.org/
-  - **react-redux** - this lib gives us the possibility to use react alongside redux https://react-redux.js.org/
-  - **emotion** - writing css styles with js https://emotion.sh/. `styled` method is most often used feature from this library. https://emotion.sh/docs/styled
-  - **react-bootstrap** - bootstrap components for react. We are using their UI components https://react-bootstrap.github.io/ . You will see that there is often case when we wrap react-bootstrap component with `styled`. For example
-
-  ```jsx
-  import { Card } from 'react-bootstrap/Card'; // we import from other module
-
-  const CardComponent = styled(Card)({
-    border: 0,
-    boxShadow: '0px 4px 8px rgba(0,0,0,0.1)',
-    backgroundColor: 'transparent',
-  });
-  ```
-
-  - **formik** - for building forms with React (easier validations of input fields, error messages etc.) https://formik.org/
-  - **yarn** - package manager. Used for libraries/dependencies installation(like Maven for Java, nuget for C# etc.)
-  - **jest** - testing framework
-
-- `server` package
-
-  - **express.js** - framework to build APIs. You have to have node.js installed on machine
-  - **mongodb** - NoSQL database(document-based) https://www.mongodb.com/
-  - **mongoose** - ODM for mongodb. Something like ORM for relational databases.
-  - **mailgun.js** - email service. To send emails to chess-tent users.
-
-  `web` and `server`
-
+  - **yarn** - package manager. Used for libraries/dependencies installation(like Maven for Java, nuget for C# etc.)  
   - **node.js** - js runtime environment (https://nodejs.org/en/download/)
   - **typescript** - add static typing to JS.
-  - **socket.io and ws** - used for websocket communication between `server` and `web` - for example in chess-tent chat. (https://socket.io/docs/v3/index.html)
 
 ### How to start this project
 
 1. install node.js https://nodejs.org/en/
-2. install yarn package manager on your own machine https://classic.yarnpkg.com/en/docs/install.
+2. install yarn package manager https://classic.yarnpkg.com/en/docs/install.
 3. install mongodb
 4. go to `chess-tent` directory and run in terminal `yarn install` or `yarn`
 5. run `yarn build:dev`
 6. run mongodb database on your OS
-7. you have to run `server` and `web` projects in parallel. First, to start FE - go to web package `cd packages/web` and then `yarn start`. A browser window will launch with the app running on `http://localhost:3000`
+7. run `server` and `web` projects in parallel. First, to start FE - go to web package `cd packages/web` and then `yarn start`. A browser window will launch with the app running on `http://localhost:3000`
 8. In another terminal window go to `chess-tent` directory also and run BE - go to server package `cd packages/web` and then `yarn start`
 
-### Structure of server and web projects
+### Applications architecture
 
-`web` and `server` have `application` and `modules` modules. In Application module we define types needed for application. In modules are application entities which are building blocks of the application.
-TBD
+- **application** - used for global application types (types used by the application and the modules)
+- **modules** - application type implementations (building blocks)
 
-## Local environments
 
-For local development we have to define default environments. Those environments are defined in `.env` files. `server` and `web` have `.env` file where things like api domain, db url, aws keys and mailgun endpoint are defined.
+## .env file
+
+Use `.env` file for local configuration. `server` and `web` have `.env` file where default variables like api domain, db url, aws keys and mailgun endpoint are defined.
 
 ## Unit tests
 

@@ -8,6 +8,7 @@ import {
   TYPE_USER,
 } from '@chess-tent/models';
 import { db } from '@application';
+import { lessonAdapter } from './adapter';
 
 export interface DepupulatedLesson {
   id: NormalizedLesson['id'];
@@ -57,6 +58,8 @@ const lessonSchema = db.createSchema<DepupulatedLesson>(
 
 lessonSchema.index({ 'state.title': 'text' });
 
+db.applyAdapter(lessonSchema, lessonAdapter);
+
 const LessonModel = db.createModel<DepupulatedLesson>(
   TYPE_LESSON,
   lessonSchema,
@@ -67,5 +70,4 @@ const depopulate = (lesson: Partial<Lesson>): DepupulatedLesson => {
   const tags = lesson.tags?.map(tag => tag.id);
   return (owner ? { ...lesson, owner, tags } : lesson) as DepupulatedLesson;
 };
-
 export { lessonSchema, LessonModel, depopulate };

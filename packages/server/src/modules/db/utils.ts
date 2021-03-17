@@ -2,7 +2,7 @@ import { Document, model, Schema, SchemaOptions } from 'mongoose';
 import { DB } from '@types';
 import { v4 as uuid } from 'uuid';
 
-const createTransformRemove_id = <T>(
+const createTransformRemoveId = <T>(
   transform?: (doc: any, ret: any, options: any) => any,
 ) => (doc: unknown, ret: T extends { _id: any } ? T : never, options: any) => {
   delete ret._id;
@@ -16,6 +16,11 @@ export const createSchema: DB['createSchema'] = <T extends {}>(
 ) => {
   const defaultDefinition = {
     _id: ({ type: String, default: uuid, alias: 'id' } as unknown) as string,
+    v: ({
+      type: Schema.Types.Number,
+      required: false,
+      default: 0,
+    } as unknown) as number,
   };
   const schema = new Schema<typeof definition>(
     {
@@ -29,13 +34,14 @@ export const createSchema: DB['createSchema'] = <T extends {}>(
       toJSON: {
         virtuals: true,
         ...(options.toJSON || {}),
-        transform: createTransformRemove_id(options.toJSON?.transform),
+        transform: createTransformRemoveId(options.toJSON?.transform),
       },
       toObject: {
         virtuals: true,
         ...(options.toObject || {}),
-        transform: createTransformRemove_id(options.toObject?.transform),
+        transform: createTransformRemoveId(options.toObject?.transform),
       },
+      versionKey: false,
     },
   );
   return schema;

@@ -1,31 +1,18 @@
 import React from 'react';
-import { ExerciseArrangePiecesState, ExerciseToolboxProps } from '@types';
-import { components, ui } from '@application';
-import { useUpdateExerciseStateProp } from '../../hooks';
+import { ExerciseArrangePiecesStep, ExerciseToolboxProps } from '@types';
+import { ui } from '@application';
+import { SegmentSidebar } from '../segment';
 
-const { LessonToolboxText } = components;
 const { Container, Text } = ui;
 
-export default ({ step, updateStep }: ExerciseToolboxProps) => {
-  const state = step.state.exerciseState as ExerciseArrangePiecesState;
-  const updateQuestion = useUpdateExerciseStateProp<ExerciseArrangePiecesState>(
-    updateStep,
-    step,
-    'question',
-  );
-  const updateExplanation = useUpdateExerciseStateProp<ExerciseArrangePiecesState>(
-    updateStep,
-    step,
-    'explanation',
-  );
+export default ({
+  step,
+  updateStep,
+}: ExerciseToolboxProps<ExerciseArrangePiecesStep>) => {
+  const state = step.state.task;
 
   return (
-    <>
-      <LessonToolboxText
-        defaultText={state.question}
-        placeholder="Describe what pieces to position.."
-        onChange={updateQuestion}
-      />
+    <SegmentSidebar step={step} updateStep={updateStep}>
       <Container>
         {state.moves?.map(move => (
           <Text key={move.move?.[0]}>
@@ -33,11 +20,6 @@ export default ({ step, updateStep }: ExerciseToolboxProps) => {
           </Text>
         ))}
       </Container>
-      <LessonToolboxText
-        defaultText={state.explanation}
-        placeholder="Write explanation.."
-        onChange={updateExplanation}
-      />
-    </>
+    </SegmentSidebar>
   );
 };

@@ -3,26 +3,18 @@ import { components, ui } from '@application';
 import {
   ExerciseModule,
   ExerciseQuestionActivityState,
-  ExerciseQuestionState,
+  ExerciseQuestionStep,
 } from '@types';
-import { isStepCompleted } from '@chess-tent/models';
+import { SegmentActivitySidebar } from '../segment';
 
 const { LessonToolboxText } = components;
-const { Headline4, Button } = ui;
+const { Button } = ui;
 
 const Playground: FunctionComponent<
-  ComponentProps<ExerciseModule['ActivitySidebar']>
-> = ({
-  step,
-  stepActivityState,
-  setStepActivityState,
-  activity,
-  completeStep,
-}) => {
+  ComponentProps<ExerciseModule<ExerciseQuestionStep>['ActivitySidebar']>
+> = props => {
+  const { stepActivityState, setStepActivityState, completeStep, step } = props;
   const { answer } = stepActivityState as ExerciseQuestionActivityState;
-  const { question, explanation } = step.state
-    .exerciseState as ExerciseQuestionState;
-  const completed = isStepCompleted(activity, step);
   const handleAnswerChange = useCallback(
     (text: string) => {
       setStepActivityState({
@@ -36,16 +28,12 @@ const Playground: FunctionComponent<
   }, [completeStep, step]);
 
   return (
-    <>
-      <Headline4>Answer the question</Headline4>
-      <LessonToolboxText defaultText={question} />
-
+    <SegmentActivitySidebar title="Answer the question" {...props}>
       <LessonToolboxText defaultText={answer} onChange={handleAnswerChange} />
-      {completed && <LessonToolboxText defaultText={explanation} />}
       <Button onClick={handleSubmit} size="extra-small">
         Submit
       </Button>
-    </>
+    </SegmentActivitySidebar>
   );
 };
 

@@ -15,6 +15,7 @@ import {
 import {
   DescriptionStep,
   ExerciseModule,
+  ExerciseToolboxProps,
   ExerciseTypes,
   MoveStep,
   VariationStep,
@@ -32,6 +33,13 @@ import QuestionEditorSidebar from './question/editor-sidebar';
 import VariationEditorSidebar from './variation/editor-sidebar';
 import SelectSquaresPiecesEditorSidebar from './select-squares-pieces/editor-sidebar';
 import ArrangePiecesEditorSidebar from './arrange-pieces/editor-sidebar';
+import {
+  isArrangePiecesExerciseStep,
+  isQuestionExerciseStep,
+  isQuestionnaireExerciseStep,
+  isSelectSquarePiecesExerciseStep,
+  isVariationExerciseStep,
+} from '../service';
 
 const { Col, Row, Dropdown } = ui;
 const { StepTag } = components;
@@ -40,37 +48,41 @@ const { START_FEN } = constants;
 const EditorBoard: FunctionComponent<
   ComponentProps<ExerciseModule['EditorBoard']>
 > = props => {
-  switch (props.step.state.exerciseType) {
-    case 'variation':
-      return <VariationEditorBoard {...props} />;
-    case 'question':
-      return <QuestionEditorBoard {...props} />;
-    case 'questionnaire':
-      return <QuestionnaireEditorBoard {...props} />;
-    case 'select-squares-pieces':
-      return <SelectSquaresPiecesEditorBoard {...props} />;
-    case 'arrange-pieces':
-      return <ArrangePiecesEditorBoard {...props} />;
-    default:
-      return null;
+  if (isVariationExerciseStep(props.step)) {
+    return <VariationEditorBoard {...props} step={props.step} />;
   }
+  if (isQuestionExerciseStep(props.step)) {
+    return <QuestionEditorBoard {...props} step={props.step} />;
+  }
+  if (isQuestionnaireExerciseStep(props.step)) {
+    return <QuestionnaireEditorBoard {...props} step={props.step} />;
+  }
+  if (isSelectSquarePiecesExerciseStep(props.step)) {
+    return <SelectSquaresPiecesEditorBoard {...props} step={props.step} />;
+  }
+  if (isArrangePiecesExerciseStep(props.step)) {
+    return <ArrangePiecesEditorBoard {...props} step={props.step} />;
+  }
+  return null;
 };
 
-const getEditorSidebar = (exerciseType: ExerciseTypes) => {
-  switch (exerciseType) {
-    case 'variation':
-      return VariationEditorSidebar;
-    case 'question':
-      return QuestionEditorSidebar;
-    case 'questionnaire':
-      return QuestionnaireEditorSidebar;
-    case 'select-squares-pieces':
-      return SelectSquaresPiecesEditorSidebar;
-    case 'arrange-pieces':
-      return ArrangePiecesEditorSidebar;
-    default:
-      return null;
+const ExerciseToolbox: FunctionComponent<ExerciseToolboxProps> = props => {
+  if (isVariationExerciseStep(props.step)) {
+    return <VariationEditorSidebar {...props} step={props.step} />;
   }
+  if (isQuestionExerciseStep(props.step)) {
+    return <QuestionEditorSidebar {...props} step={props.step} />;
+  }
+  if (isQuestionnaireExerciseStep(props.step)) {
+    return <QuestionnaireEditorSidebar {...props} step={props.step} />;
+  }
+  if (isSelectSquarePiecesExerciseStep(props.step)) {
+    return <SelectSquaresPiecesEditorSidebar {...props} step={props.step} />;
+  }
+  if (isArrangePiecesExerciseStep(props.step)) {
+    return <ArrangePiecesEditorSidebar {...props} step={props.step} />;
+  }
+  return null;
 };
 
 const exerciseTypes: { text: string; type: ExerciseTypes }[] = [
@@ -97,7 +109,7 @@ const EditorSidebar: ExerciseModule['EditorSidebar'] = ({
   const addDescriptionStep = useCallback(() => {
     const parentStep = getParentStep(stepRoot, step) as DescriptionStep;
     const newDescriptionStep = services.createStep('description', {
-      position: step.state.position,
+      position: step.state.task.position,
       orientation: step.state.orientation,
     });
     updateStep(addStepToRightOf(parentStep, step, newDescriptionStep));
@@ -106,7 +118,7 @@ const EditorSidebar: ExerciseModule['EditorSidebar'] = ({
   const addVariationStep = useCallback(() => {
     const parentStep = getParentStep(stepRoot, step) as DescriptionStep;
     const newVariationStep = services.createStep('variation', {
-      position: step.state.position,
+      position: step.state.task.position,
       orientation: step.state.orientation,
     });
     updateStep(addStepToRightOf(parentStep, step, newVariationStep));
@@ -132,14 +144,13 @@ const EditorSidebar: ExerciseModule['EditorSidebar'] = ({
       updateStep(addStepToRightOf(parent, step, exerciseStep));
     } else {
       exerciseStep = services.createStep('exercise', {
-        position: step.state.position,
+        position: step.state.task.position,
+        orientation: step.state.orientation,
       });
       updateChapter(addStepToRightOf(parent, step, exerciseStep));
     }
     setActiveStep(exerciseStep);
   }, [stepRoot, setActiveStep, step, updateStep, updateChapter]);
-
-  const TypeEditor = getEditorSidebar(step.state.exerciseType);
 
   return (
     <>
@@ -172,7 +183,7 @@ const EditorSidebar: ExerciseModule['EditorSidebar'] = ({
               ))}
             </Dropdown.Menu>
           </Dropdown>
-          {TypeEditor && <TypeEditor step={step} updateStep={updateStep} />}
+          <ExerciseToolbox step={step} updateStep={updateStep} />
           <StepToolbox
             add={addVariationStep}
             active={activeStep === step}

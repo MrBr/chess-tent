@@ -14,7 +14,7 @@ const isStep = (entity: unknown): entity is Step =>
  * Unfortunately there is no guaranteed that single step will
  * always have the same reference hence ID must be used to check steps.
  */
-const isSameStep = (leftStep: Step | null, rightStep: Step | null) => {
+const isSameStep = <T>(leftStep: Step<T> | null, rightStep: Step<T> | null) => {
   return leftStep?.id === rightStep?.id;
 };
 
@@ -310,8 +310,8 @@ const updateStep = (step: Step, patch: Partial<Step>) => ({
   ...patch,
 });
 
-function omitArrayMerge(objValue: any, srcValue: any) {
-  if (Array.isArray(objValue)) {
+function omitSteps(objValue: any, srcValue: any, key: string) {
+  if (key === 'steps') {
     return srcValue;
   }
 }
@@ -320,7 +320,7 @@ const updateStepState = <T extends Step>(
   state: Partial<T['state']>,
 ) => ({
   ...step,
-  state: mergeWith({}, step.state, state, omitArrayMerge),
+  state: mergeWith({}, step.state, state, omitSteps),
 });
 
 const updateNestedStep = (

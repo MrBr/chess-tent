@@ -149,6 +149,7 @@ export class ActivityRenderer extends React.Component<
         onMove={this.startAnalysingPosition}
         allowAllMoves
         orientation={activeStep.state.orientation}
+        footer={this.renderFooter({})}
         {...props}
         header={<Header lesson={lesson} />}
       />

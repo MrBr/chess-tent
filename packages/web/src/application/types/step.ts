@@ -6,7 +6,6 @@ import {
 } from 'react';
 import {
   Activity,
-  Analysis,
   Chapter,
   Lesson,
   Step,
@@ -21,6 +20,7 @@ import {
 } from './components';
 import { ClassComponent } from './_helpers';
 import { PieceColor } from './chess';
+import { AppAnalysis } from './analysis';
 
 export type AppStep<S extends {} = {}, T extends StepType = StepType> = Step<
   S & { orientation?: PieceColor },
@@ -42,11 +42,11 @@ export type StepProps<S extends AppStep, P = {}> = {
   step: S;
 } & StepSystemProps &
   P;
-export interface EditorProps {
+export interface EditorProps<T extends AppStep = AppStep> {
   setActiveStep: StepSystemProps['setActiveStep'];
-  updateStep: (step: AppStep) => void;
+  updateStep: (step: T) => void;
   updateChapter: (chapter: Chapter) => void;
-  removeStep: (step: AppStep, adjacent?: boolean) => void;
+  removeStep: (step: T, adjacent?: boolean) => void;
 }
 export type EditorSidebarProps = {
   renderToolbox: (
@@ -88,11 +88,13 @@ export type ActivityComment = {
   id: string;
 };
 export type ActivityStepStateBase = {
-  analysis: Analysis;
+  analysis: AppAnalysis;
   comments?: ActivityComment[];
 };
 
 export type ActivityStepState<T extends {}> = T & ActivityStepStateBase;
+export type ActivityExerciseStepState<T extends {}> = T &
+  ActivityStepStateBase & { hint?: boolean };
 export type ActivityProps<ACTIVITY_STATE> = {
   // TODO - update name to updateStepActivityState
   setStepActivityState: (state: {}) => void;
@@ -112,7 +114,10 @@ export type StepModule<
   REQUIRED_STATE extends {} = {},
   ACTIVITY_STATE extends ActivityStepStateBase = ActivityStepStateBase
 > = {
-  EditorBoard: StepComponent<STEP, EditorProps & StepBoardComponentProps>;
+  EditorBoard: StepComponent<
+    STEP,
+    EditorProps<AppStep> & StepBoardComponentProps
+  >;
   EditorSidebar: StepComponent<STEP, EditorSidebarProps>;
   ActivityBoard: StepComponent<STEP, ActivityProps<ACTIVITY_STATE>>;
   ActivitySidebar: StepComponent<STEP, ActivityProps<ACTIVITY_STATE>>;

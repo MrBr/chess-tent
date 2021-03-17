@@ -8,33 +8,25 @@ import { services } from '@application';
 import {
   ExerciseModule,
   ExerciseVariationActivityState,
-  ExerciseVariationState,
+  ExerciseVariationStep,
 } from '@types';
 import { isCorrectActivityMove, isVariationCompleted } from './utils';
+import { SegmentActivityBoard } from '../segment';
 
 const { createFenForward } = services;
 
 const Playground: FunctionComponent<
-  ComponentProps<ExerciseModule['ActivityBoard']>
-> = ({
-  step,
-  stepActivityState,
-  setStepActivityState,
-  Footer,
-  Chessboard,
-  completeStep,
-}) => {
-  const { position, shapes } = step.state;
+  ComponentProps<ExerciseModule<ExerciseVariationStep>['ActivityBoard']>
+> = props => {
+  const { step, stepActivityState, setStepActivityState, completeStep } = props;
+  const { position } = step.state.task;
   const {
     activeMoveIndex,
     moves: activityMoves,
   } = stepActivityState as ExerciseVariationActivityState;
-  const { moves: exerciseMoves } = step.state
-    .exerciseState as ExerciseVariationState;
+  const { moves: exerciseMoves } = step.state.task;
   const moveToPlayIndex = activeMoveIndex ? activeMoveIndex + 1 : 0;
   const stepToPlayMove = exerciseMoves?.[moveToPlayIndex];
-  const stepActiveMove = exerciseMoves?.[activeMoveIndex as number];
-  const activeShapes = stepActiveMove ? stepActiveMove.shapes : shapes;
   const activeMoves = exerciseMoves?.map(
     (move, index) => activityMoves?.[index] || move,
   );
@@ -81,13 +73,7 @@ const Playground: FunctionComponent<
   );
 
   return (
-    <Chessboard
-      fen={activePosition}
-      onMove={handleMove}
-      shapes={activeShapes}
-      animation
-      footer={<Footer />}
-    />
+    <SegmentActivityBoard fen={activePosition} onMove={handleMove} {...props} />
   );
 };
 

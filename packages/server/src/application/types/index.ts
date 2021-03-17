@@ -12,6 +12,7 @@ import {
   SubjectPathUpdate,
   User,
   Subject,
+  Entity,
 } from '@chess-tent/models';
 import { Socket } from 'socket.io';
 import { Server as HttpServer } from 'http';
@@ -23,6 +24,11 @@ import {
   UNSUBSCRIBE_EVENT,
 } from '@chess-tent/types';
 
+export type AppDocument<T> = T & Document & { v: number };
+export type EntityDocument<T = Entity> = AppDocument<T>;
+export type Updater<T extends EntityDocument> = (
+  entity: T,
+) => Promise<false | T>;
 export type DB = {
   connect: () => void;
   createSchema: <T extends {}>(
@@ -30,7 +36,7 @@ export type DB = {
     options?: SchemaOptions,
     useDefault?: boolean,
   ) => Schema;
-  createModel: <T>(type: string, schema: Schema) => Model<Document & T>;
+  createModel: <T>(type: string, schema: Schema) => Model<AppDocument<T>>;
   orQueries: (
     ...args: MongooseFilterQuery<any>[]
   ) => { $or: MongooseFilterQuery<any>[] | undefined };
@@ -38,6 +44,13 @@ export type DB = {
     field: F,
     value: T[] | T,
   ) => Record<F, { $in: T[] | undefined }> | {};
+  createAdapter<T extends EntityDocument>(
+    ...updaters: Updater<T>[]
+  ): Updater<T>;
+  applyAdapter<T extends EntityDocument>(
+    schema: Schema,
+    adapter: Updater<T>,
+  ): void;
 };
 
 export type Auth = {
@@ -106,6 +119,10 @@ export type Middleware = {
   updateNotifications: (...args: Parameters<RequestHandler>) => void;
   addMentor: (...args: Parameters<RequestHandler>) => void;
   getUser: (...args: Parameters<RequestHandler>) => void;
+  adapter<T extends EntityDocument>(
+    entityKey: string,
+    ...updaters: Updater<T>[]
+  ): (...args: Parameters<RequestHandler>) => void;
   toLocals: (
     localsKey: string,
     func:

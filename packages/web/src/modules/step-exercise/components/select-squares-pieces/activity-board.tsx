@@ -2,28 +2,28 @@ import React, { ComponentProps, FunctionComponent, useCallback } from 'react';
 import {
   ExerciseActivitySelectSquaresAndPiecesState,
   ExerciseModule,
+  ExerciseSelectSquaresAndPiecesStep,
   Shape,
 } from '@types';
 import { isSelectionCorrect } from './utils';
+import { SegmentActivityBoard } from '../segment';
 
 const Playground: FunctionComponent<
-  ComponentProps<ExerciseModule['ActivityBoard']>
-> = ({
-  step,
-  stepActivityState,
-  setStepActivityState,
-  completeStep,
-  Footer,
-  Chessboard,
-}) => {
-  const { position, shapes } = step.state;
+  ComponentProps<
+    ExerciseModule<ExerciseSelectSquaresAndPiecesStep>['ActivityBoard']
+  >
+> = props => {
+  const { step, stepActivityState, setStepActivityState, completeStep } = props;
+  const {
+    task: { shapes },
+  } = step.state;
   const {
     selectedShapes,
   } = stepActivityState as ExerciseActivitySelectSquaresAndPiecesState;
   const handleShapesChange = useCallback(
     (newSelectedShapes: Shape[]) => {
       const selectedShapes = newSelectedShapes.map(selectedShape => {
-        return isSelectionCorrect(shapes, selectedShape)
+        return shapes && isSelectionCorrect(shapes, selectedShape)
           ? selectedShape
           : {
               ...selectedShape,
@@ -31,7 +31,7 @@ const Playground: FunctionComponent<
             };
       });
       if (
-        shapes.every(shape =>
+        shapes?.every(shape =>
           selectedShapes.some(
             selectedShape => selectedShape.orig === shape.orig,
           ),
@@ -50,13 +50,12 @@ const Playground: FunctionComponent<
   }, []);
 
   return (
-    <Chessboard
-      fen={position}
+    <SegmentActivityBoard
       shapes={selectedShapes}
       animation
       onShapesChange={handleShapesChange}
       validateDrawable={validateShapes}
-      footer={<Footer />}
+      {...props}
     />
   );
 };

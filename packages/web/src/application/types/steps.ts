@@ -1,6 +1,6 @@
 import { StepType } from '@chess-tent/models';
 import { FEN, Key, NotableMove, PieceColor, Shape } from './chess';
-import { ActivityStepState, StepModule, AppStep } from './step';
+import { StepModule, AppStep, ActivityExerciseStepState } from './step';
 
 // Move
 export type MoveStepState = {
@@ -17,7 +17,7 @@ export type VariationStepState = {
   shapes: Shape[];
   position?: FEN;
   description?: string;
-  steps: (VariationStep | DescriptionStep | ExerciseStep)[];
+  steps: (VariationStep | DescriptionStep | ExerciseSteps)[];
   editing?: boolean;
   moveIndex?: number;
   // Used for variations derived from previous line.
@@ -42,51 +42,61 @@ export type DescriptionModule = StepModule<
 >;
 
 // Exercise
+export type Task<T = {}> = {
+  text?: string;
+  position: FEN;
+  shapes?: Shape[];
+} & T;
+export type Explanation = {
+  text?: string;
+  position?: FEN;
+  shapes?: Shape[];
+};
+export type Hint = {
+  text?: string;
+  position?: FEN;
+  shapes?: Shape[];
+};
+export type ExerciseSegments<T = {}> = {
+  explanation?: Explanation;
+  hint?: Hint;
+  task: Task<T>;
+};
+
 export type ExerciseMove = NotableMove & { shapes: Shape[] };
-export interface ExerciseVariationState {
+export type ExerciseVariationState = ExerciseSegments<{
   editing?: boolean;
-  question?: string;
-  explanation?: string;
   moves?: ExerciseMove[];
   activeMoveIndex?: number;
-}
-export type ExerciseVariationActivityState = ActivityStepState<{
+}>;
+export type ExerciseVariationActivityState = ActivityExerciseStepState<{
   moves?: { [key: number]: NotableMove };
   activeMoveIndex?: number;
 }>;
 
-export interface ExerciseSelectSquaresAndPiecesState {
-  question?: string;
-  explanation?: string;
-}
-export type ExerciseActivitySelectSquaresAndPiecesState = ActivityStepState<{
+export type ExerciseSelectSquaresAndPiecesState = ExerciseSegments;
+export type ExerciseActivitySelectSquaresAndPiecesState = ActivityExerciseStepState<{
   selectedShapes: Shape[];
 }>;
 
-export interface ExerciseArrangePiecesState {
-  question?: string;
-  explanation?: string;
+export type ExerciseArrangePiecesState = ExerciseSegments<{
   moves?: NotableMove[];
   editing?: boolean;
-}
-export type ExerciseActivityArrangePiecesState = ActivityStepState<{
+}>;
+export type ExerciseActivityArrangePiecesState = ActivityExerciseStepState<{
   moves?: NotableMove[];
   invalidPiece?: Key; // Piece at key
 }>;
-export interface ExerciseQuestionState {
-  question?: string;
-  explanation?: string;
-}
-export type ExerciseQuestionActivityState = ActivityStepState<{
+export type ExerciseQuestionState = ExerciseSegments;
+
+export type ExerciseQuestionActivityState = ActivityExerciseStepState<{
   answer?: string;
 }>;
 
-export interface ExerciseQuestionnaireState {
-  question?: string;
-  explanation?: string;
+export type ExerciseQuestionnaireState = ExerciseSegments<{
   options?: { correct: boolean; text: string }[];
-}
-export type ExerciseQuestionnaireActivityState = ActivityStepState<{
+}>;
+export type ExerciseQuestionnaireActivityState = ActivityExerciseStepState<{
   selectedOptions?: { [key: number]: boolean };
 }>;
 
@@ -110,26 +120,62 @@ export type ExerciseTypes =
   | 'arrange-pieces'
   | 'select-squares-pieces'
   | 'variation';
-export type ExerciseStepState = {
-  shapes: Shape[];
-  position: FEN; // Step end position - position once step is finished
-  exerciseState: ExerciseState;
-  exerciseType: ExerciseTypes;
-  steps: AppStep[];
+
+export type ExerciseStep<
+  S extends ExerciseState,
+  T extends ExerciseTypes
+> = AppStep<
+  {
+    activeSegment: keyof ExerciseSegments;
+    exerciseType: T;
+    steps: AppStep[];
+  } & S,
+  'exercise'
+>;
+
+export type ExerciseVariationStep = ExerciseStep<
+  ExerciseVariationState,
+  'variation'
+>;
+export type ExerciseArrangePiecesStep = ExerciseStep<
+  ExerciseArrangePiecesState,
+  'arrange-pieces'
+>;
+export type ExerciseSelectSquaresAndPiecesStep = ExerciseStep<
+  ExerciseSelectSquaresAndPiecesState,
+  'select-squares-pieces'
+>;
+export type ExerciseQuestionnaireStep = ExerciseStep<
+  ExerciseQuestionnaireState,
+  'questionnaire'
+>;
+export type ExerciseQuestionStep = ExerciseStep<
+  ExerciseQuestionState,
+  'question'
+>;
+
+export type ExerciseSteps =
+  | ExerciseVariationStep
+  | ExerciseArrangePiecesStep
+  | ExerciseSelectSquaresAndPiecesStep
+  | ExerciseQuestionStep
+  | ExerciseQuestionnaireStep;
+
+export type ExerciseToolboxProps<T extends ExerciseSteps = ExerciseSteps> = {
+  step: T;
+  updateStep: (step: AppStep) => void;
 };
-export type ExerciseToolboxProps = {
-  step: ExerciseStep;
-  updateStep: (step: AppStep<ExerciseStepState>) => void;
-};
-export type ExerciseStep = AppStep<ExerciseStepState, 'exercise'>;
-export type ExerciseModule = StepModule<
-  ExerciseStep,
+
+export type ExerciseModule<
+  T extends ExerciseSteps = ExerciseSteps
+> = StepModule<
+  T,
   'exercise',
-  { position: ExerciseStepState['position'] },
+  { position: FEN; orientation?: PieceColor },
   ExerciseActivityState
 >;
 
-export type Steps = MoveStep | DescriptionStep | VariationStep | ExerciseStep;
+export type Steps = MoveStep | DescriptionStep | VariationStep | ExerciseSteps;
 
 type ModuleRecord<K extends StepType, T> = {
   [P in K]: T extends StepModule<infer U, infer S, infer Z, infer Y>
@@ -140,5 +186,8 @@ type ModuleRecord<K extends StepType, T> = {
 };
 export type StepModules = ModuleRecord<
   StepType,
-  MoveModule | VariationModule | DescriptionModule | ExerciseModule
+  | MoveModule
+  | VariationModule
+  | DescriptionModule
+  | ExerciseModule<ExerciseSteps>
 >;

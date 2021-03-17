@@ -23,7 +23,6 @@ import {
 } from '@chess-tent/models';
 import {
   Actions,
-  AppStep,
   ChessboardProps,
   Components,
   EditorContext,
@@ -32,6 +31,7 @@ import {
   LessonUpdatableAction,
   LessonUpdates,
   PieceColor,
+  Steps,
 } from '@types';
 import { debounce } from 'lodash';
 import { components, hooks, services, state, ui, utils } from '@application';
@@ -73,7 +73,7 @@ const {
 
 type EditorRendererProps = ComponentProps<Components['Editor']> & {
   activeChapter: Chapter;
-  activeStep: AppStep;
+  activeStep: Steps;
   dispatch: (action: Actions) => void;
   history: ReturnType<typeof useHistory>;
   location: ReturnType<typeof useLocation>;
@@ -308,6 +308,7 @@ class EditorRenderer extends React.Component<
 
   renderChessboard = (props: ChessboardProps) => {
     const { activeStep } = this.props;
+    const lessonStatusText = this.renderLessonStatus();
     return (
       <Chessboard
         orientation={activeStep.state.orientation}
@@ -315,7 +316,7 @@ class EditorRenderer extends React.Component<
         {...props}
         header={
           <>
-            {props.header}
+            {props.header || lessonStatusText}
             <Absolute right={20} top={20} onClick={this.undoUpdate}>
               Undo
             </Absolute>
@@ -537,7 +538,7 @@ const Editor: Components['Editor'] = ({ lesson, save, onStatusChange }) => {
   const activeStep = useMemo(() => getChildStep(activeChapter, activeStepId), [
     activeChapter,
     activeStepId,
-  ]) as Step;
+  ]) as Steps;
 
   useEffect(() => {
     onStatusChange && onStatusChange(lessonStatus);

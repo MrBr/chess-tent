@@ -226,7 +226,8 @@ class Chessboard
         onRemove: this.onShapeRemove,
       },
       events: {
-        change: this.onChange,
+        // Control change event because chessground doesn't handle well all FEN changes.
+        // change: this.onChange,
         dropNewPiece: this.onPieceDrop,
         removePiece: this.onPieceRemove,
       },
@@ -418,6 +419,7 @@ class Chessboard
       return;
     }
     const fen = this.fen();
+    this.onChange();
     this.props.onPieceDrop(fen, piece, key as Key);
   };
 
@@ -426,6 +428,7 @@ class Chessboard
       return;
     }
     const fen = this.fen();
+    this.onChange();
     this.props.onPieceRemove(fen, piece, key as Key);
   };
 
@@ -443,10 +446,11 @@ class Chessboard
       });
       return;
     }
+    const fen = this.fen(lastMove, { piece });
+    this.onChange();
     if (!this.props.onMove) {
       return;
     }
-    const fen = this.fen(lastMove, { piece });
     this.props.onMove(fen, lastMove, piece, !!metadata.captured);
   };
 

@@ -1,25 +1,41 @@
 import React, { ComponentProps, FunctionComponent } from 'react';
-import { ExerciseModule } from '@types';
-import { updateStepState } from '@chess-tent/models';
+import { ExerciseModule, ExerciseSelectSquaresAndPiecesStep } from '@types';
+import { SegmentBoard } from '../segment';
+import { useUpdateExerciseStateProp } from '../../hooks';
 
 const Editor: FunctionComponent<
-  ComponentProps<ExerciseModule['EditorBoard']>
-> = ({ step, Chessboard, status, updateStep }) => {
-  const { position, shapes } = step.state;
+  ComponentProps<
+    ExerciseModule<ExerciseSelectSquaresAndPiecesStep>['EditorBoard']
+  >
+> = ({ step, Chessboard, updateStep }) => {
+  const updateTaskPosition = useUpdateExerciseStateProp(updateStep, step, [
+    'task',
+    'position',
+  ]);
+  const updateTaskShapes = useUpdateExerciseStateProp(updateStep, step, [
+    'task',
+    'shapes',
+  ]);
+
+  const { position, shapes } = step.state.task;
 
   return (
-    <Chessboard
-      allowAllMoves
-      sparePieces
-      fen={position}
-      onPieceDrop={position => updateStep(updateStepState(step, { position }))}
-      onPieceRemove={position =>
-        updateStep(updateStepState(step, { position }))
+    <SegmentBoard
+      step={step}
+      updateStep={updateStep}
+      Chessboard={Chessboard}
+      task={
+        <Chessboard
+          allowAllMoves
+          sparePieces
+          fen={position}
+          onPieceDrop={updateTaskPosition}
+          onPieceRemove={updateTaskPosition}
+          onMove={updateTaskPosition}
+          onShapesChange={updateTaskShapes}
+          shapes={shapes}
+        />
       }
-      onMove={position => updateStep(updateStepState(step, { position }))}
-      onShapesChange={shapes => updateStep(updateStepState(step, { shapes }))}
-      header={status}
-      shapes={shapes}
     />
   );
 };

@@ -1,14 +1,11 @@
 import React, { ComponentProps, FunctionComponent } from 'react';
-import { ExerciseModule } from '@types';
+import { ExerciseModule, ExerciseQuestionStep } from '@types';
+import { SegmentActivityBoard } from '../segment';
 
 const Playground: FunctionComponent<
-  ComponentProps<ExerciseModule['ActivityBoard']>
-> = ({ step, Footer, Chessboard }) => {
-  const { position, shapes } = step.state;
-
-  return (
-    <Chessboard fen={position} shapes={shapes} animation footer={<Footer />} />
-  );
+  ComponentProps<ExerciseModule<ExerciseQuestionStep>['ActivityBoard']>
+> = props => {
+  return <SegmentActivityBoard {...props} />;
 };
 
 export default Playground;

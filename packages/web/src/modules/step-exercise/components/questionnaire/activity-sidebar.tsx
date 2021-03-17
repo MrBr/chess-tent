@@ -1,29 +1,31 @@
 import React, { ComponentProps, FunctionComponent, useCallback } from 'react';
-import { components, ui } from '@application';
+import { ui } from '@application';
 import {
   ExerciseModule,
   ExerciseQuestionnaireActivityState,
-  ExerciseQuestionnaireState,
+  ExerciseQuestionnaireStep,
 } from '@types';
 import { isStepCompleted } from '@chess-tent/models';
+import { SegmentActivitySidebar } from '../segment';
 
-const { Headline4, Button, Row, Col, Check, Container, Text } = ui;
-const { LessonToolboxText } = components;
+const { Headline4, Button, Row, Col, Check, Container } = ui;
 
 const Playground: FunctionComponent<
-  ComponentProps<ExerciseModule['ActivitySidebar']>
-> = ({
-  step,
-  stepActivityState,
-  setStepActivityState,
-  activity,
-  completeStep,
-}) => {
+  ComponentProps<ExerciseModule<ExerciseQuestionnaireStep>['ActivitySidebar']>
+> = props => {
+  const {
+    step,
+    stepActivityState,
+    setStepActivityState,
+    activity,
+    completeStep,
+  } = props;
   const {
     selectedOptions,
   } = stepActivityState as ExerciseQuestionnaireActivityState;
-  const { question, explanation, options } = step.state
-    .exerciseState as ExerciseQuestionnaireState;
+  const {
+    task: { options },
+  } = step.state;
   const completed = isStepCompleted(activity, step);
   const handleAnswerChange = useCallback(
     (optionIndex: number) => {
@@ -44,15 +46,10 @@ const Playground: FunctionComponent<
   );
 
   return (
-    <>
+    <SegmentActivitySidebar title="Select the answer" {...props}>
       <Headline4>
-        {completed
-          ? correctSubmission
-            ? 'Correct'
-            : 'Incorrect'
-          : 'Select the answer'}
+        {completed ? (correctSubmission ? 'Correct' : 'Incorrect') : ''}
       </Headline4>
-      <LessonToolboxText defaultText={question} />
       <Container className="mt-2">
         {options?.map(({ text, correct }, index) => (
           <Row key={index} className="align-items-center">
@@ -69,16 +66,10 @@ const Playground: FunctionComponent<
           </Row>
         ))}
       </Container>
-      {completed && (
-        <>
-          <Text className="mt-2 mb-0">Explanation:</Text>
-          <LessonToolboxText defaultText={explanation} />
-        </>
-      )}
       <Button onClick={handleSubmit} size="extra-small" className="mt-2">
         Submit
       </Button>
-    </>
+    </SegmentActivitySidebar>
   );
 };
 

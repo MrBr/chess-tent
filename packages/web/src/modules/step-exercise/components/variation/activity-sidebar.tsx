@@ -1,28 +1,27 @@
 import React, { ComponentProps, FunctionComponent } from 'react';
-import { components, ui } from '@application';
+import { ui } from '@application';
 import {
   ExerciseModule,
   ExerciseVariationActivityState,
-  ExerciseVariationState,
+  ExerciseVariationStep,
   Move,
 } from '@types';
 import { isCorrectActivityMove } from './utils';
-import { isStepCompleted } from '@chess-tent/models';
+import { SegmentActivitySidebar } from '../segment';
 
 const { Text } = ui;
-const { LessonToolboxText } = components;
 
 const Playground: FunctionComponent<
-  ComponentProps<ExerciseModule['ActivitySidebar']>
-> = ({ step, stepActivityState, activity }) => {
+  ComponentProps<ExerciseModule<ExerciseVariationStep>['ActivitySidebar']>
+> = props => {
+  const { step, stepActivityState } = props;
   const {
     activeMoveIndex,
     moves: activityMoves,
   } = stepActivityState as ExerciseVariationActivityState;
-  const { moves: exerciseMoves, explanation, question } = step.state
-    .exerciseState as ExerciseVariationState;
+  const { task } = step.state;
   const moveToPlayIndex = activeMoveIndex ? activeMoveIndex + 1 : 0;
-  const stepToPlayMove = exerciseMoves?.[moveToPlayIndex];
+  const stepToPlayMove = task.moves?.[moveToPlayIndex];
   const activityActiveMove =
     activeMoveIndex !== undefined ? activityMoves?.[activeMoveIndex] : null;
   const isCorrectActiveMove = activityActiveMove?.move
@@ -31,10 +30,8 @@ const Playground: FunctionComponent<
         stepToPlayMove?.move as Move,
       )
     : false;
-  const completed = isStepCompleted(activity, step);
   return (
-    <>
-      <LessonToolboxText defaultText={question} />
+    <SegmentActivitySidebar title="Play the sequence" {...props}>
       <Text>
         {isCorrectActiveMove
           ? 'Excellent, continue..'
@@ -44,8 +41,7 @@ const Playground: FunctionComponent<
           ? stepToPlayMove.piece?.color + ' to play'
           : 'Done!'}
       </Text>
-      {completed && <LessonToolboxText defaultText={explanation} />}
-    </>
+    </SegmentActivitySidebar>
   );
 };
 

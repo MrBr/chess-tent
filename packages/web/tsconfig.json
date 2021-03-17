@@ -10,7 +10,7 @@
     "jsx": "react",
     "module": "esnext",
     "isolatedModules": true,
-    "baseUrl": "./src",
+    "baseUrl": "./src"
   },
   "include": [
     "./src"

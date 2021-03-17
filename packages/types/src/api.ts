@@ -31,6 +31,10 @@ export type LessonsRequest = {
   published?: boolean;
 };
 export type MyLessonsRequest = Omit<LessonsRequest, 'users' | 'owner'>;
+export type UpdateNotificationsRequest = {
+  ids: Notification['id'][];
+  updates: Partial<Pick<Notification, 'seen' | 'read' | 'state' | 'time'>>;
+};
 
 export type Pagination = [number, number];
 
@@ -80,8 +84,23 @@ export type LessonUpdatableAction =
   | UpdateLessonPathAction;
 export type LessonUpdates = { path: SubjectPath; value: any }[];
 
+export type RegisterOptions = {
+  referrer?: User['id'];
+};
+
+export type RegisterRequestParams = {
+  user: Partial<User>;
+  options: RegisterOptions;
+};
+
+export type InviteUserParams = {
+  email: User['email'];
+  link: string;
+};
+
 export type Requests = {
-  register: RequestFetch<Partial<User>, StatusResponse>;
+  register: RequestFetch<RegisterRequestParams, StatusResponse>;
+  inviteUser: RequestFetch<InviteUserParams, StatusResponse>;
   login: RequestFetch<Pick<User, 'email' | 'password'>, UserResponse>;
   logout: RequestFetch<undefined, StatusResponse>;
   me: RequestFetch<undefined, UserResponse>;
@@ -133,6 +152,7 @@ export type Requests = {
   >;
   coaches: RequestFetch<User, CoachesResponse>;
   notifications: RequestFetch<boolean | undefined, NotificationsResponse>;
+  updateNotifications: RequestFetch<UpdateNotificationsRequest, StatusResponse>;
   students: RequestFetch<User, StudentsResponse>;
   findTags: RequestFetch<string, TagsResponse>;
   tags: RequestFetch<undefined, TagsResponse>;

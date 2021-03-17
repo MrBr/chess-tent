@@ -4,31 +4,7 @@ import { default as BDropdown } from 'react-bootstrap/Dropdown';
 import styled from '@emotion/styled';
 import { SelectOption, UI } from '@types';
 import { Headline6, Text } from './Text';
-
-const sizeEnhancer = (props: ComponentProps<UI['Dropdown']['Toggle']>) => {
-  switch (props.size) {
-    case 'extra-small':
-      return {
-        fontSize: 12,
-        padding: '2px 8px 3px 8px',
-        lineHeight: '19px',
-        borderRadius: 4,
-      };
-    case 'small':
-      return {
-        borderRadius: 6,
-        fontSize: 14,
-        lineHeight: '16px',
-        padding: '7px 12px 8px 12px',
-      };
-    default:
-      return {
-        fontSize: 16,
-        borderRadius: 10,
-        padding: '15px 16px 14px 16px',
-      };
-  }
-};
+import { sizeEnhancer } from './enhancers';
 
 const Toggle = styled.div(
   {

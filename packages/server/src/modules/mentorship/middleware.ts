@@ -1,6 +1,21 @@
 import { MiddlewareFunction } from '@types';
 import * as service from './service';
 
+export const addMentor: MiddlewareFunction = async (req, res, next) => {
+  try {
+    if (!res.locals.coachId) return;
+    await service.requestMentorship(res.locals.studentId, res.locals.coachId);
+    await service.resolveMentorshipRequest(
+      res.locals.studentId,
+      res.locals.coachId,
+      true,
+    );
+    next();
+  } catch (e) {
+    next(e);
+  }
+};
+
 export const requestMentorship: MiddlewareFunction = (req, res, next) => {
   service
     .requestMentorship(res.locals.studentId, res.locals.coachId)

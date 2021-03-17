@@ -1,10 +1,16 @@
 import { services, requests } from '@application';
 import { User } from '@chess-tent/models';
+import { RegisterRequestParams, InviteUserParams } from '@chess-tent/types';
 import { StatusResponse, UserResponse, UsersResponse } from '@types';
 
-const register = services.createRequest<Partial<User>, StatusResponse>(
+const register = services.createRequest<RegisterRequestParams, StatusResponse>(
   'POST',
   '/register',
+);
+
+const inviteUser = services.createRequest<InviteUserParams, StatusResponse>(
+  'POST',
+  '/invite-user',
 );
 
 const login = services.createRequest<
@@ -35,6 +41,7 @@ const user = services.createRequest<User['id'], UserResponse>(
 );
 
 requests.register = register;
+requests.inviteUser = inviteUser;
 requests.login = login;
 requests.logout = logout;
 requests.me = me;

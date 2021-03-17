@@ -230,6 +230,7 @@ export type SendNotificationAction = Action<
   typeof SEND_NOTIFICATION,
   Notification
 >;
+
 export type UpdateNotificationAction = Action<
   typeof UPDATE_NOTIFICATION,
   NormalizedNotification,

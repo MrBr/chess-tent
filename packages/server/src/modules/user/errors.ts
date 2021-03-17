@@ -25,6 +25,13 @@ export class UserAlreadyActivated extends Error {
   }
 }
 
+export class UserAlreadyExists extends Error {
+  status = 400;
+  constructor() {
+    super('User already exists.');
+  }
+}
+
 export class LoginFailedError extends Error {
   status = 400;
   constructor() {

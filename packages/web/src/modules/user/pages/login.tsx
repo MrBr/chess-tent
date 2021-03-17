@@ -91,7 +91,7 @@ export default () => {
           >
             <FormGroup className="pt-4">
               <Form.Input
-                size="lg"
+                size="large"
                 type="email"
                 name="email"
                 placeholder="Email address"
@@ -99,7 +99,7 @@ export default () => {
             </FormGroup>
             <FormGroup className="pt-3">
               <Form.Input
-                size="lg"
+                size="large"
                 type="password"
                 name="password"
                 placeholder="Password"

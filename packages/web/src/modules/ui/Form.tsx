@@ -5,6 +5,7 @@ import BFormGroup from 'react-bootstrap/FormGroup';
 import BForm from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import styled from '@emotion/styled';
+import { inputSizeEnhancer } from './enhancers';
 import { Select } from './Select';
 
 // There are 2 type of Form components.
@@ -16,17 +17,18 @@ const FormGroup = styled<UI['FormGroup']>(BFormGroup)({
   position: 'relative',
 });
 const Label = BForm.Label;
-const Input = (styled(BForm.Control)({
+
+const InputComponent = (styled(BForm.Control)(inputSizeEnhancer, {
   border: 'none',
   '&:empty': {
     background: '#F3F4F5',
     color: 'rgba(47,56,73,0.4)',
   },
   '&:focus': {
-    background: '#E8E9EB',
     color: '#2F3849',
+    boxShadow: 'none',
   },
-}) as unknown) as typeof BForm.Control;
+}) as unknown) as UI['Input'];
 
 const Check = BForm.Check;
 const File = BForm.File;
@@ -63,7 +65,12 @@ const FormInput: UI['Form']['Input'] = props => {
   const isInvalid = !!touched && !!error;
   return (
     <>
-      <Input isValid={isValid} isInvalid={isInvalid} {...props} {...field} />
+      <InputComponent
+        isValid={isValid}
+        isInvalid={isInvalid}
+        {...props}
+        {...field}
+      />
       <BForm.Control.Feedback type="invalid">{error}</BForm.Control.Feedback>
     </>
   );
@@ -93,4 +100,13 @@ InputGroup.Text = styled(InputGroup.Text)({
   border: 'none',
 });
 
-export { Form, Input, ErrorMessage, FormGroup, Label, Check, File, InputGroup };
+export {
+  Form,
+  InputComponent as Input,
+  ErrorMessage,
+  FormGroup,
+  Label,
+  Check,
+  File,
+  InputGroup,
+};

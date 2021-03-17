@@ -61,6 +61,7 @@ export type Hooks = {
   useUserLessonsRecord: (user: User) => RecordHookReturn<Lesson[]>;
   useConversationParticipant: () => RecordHookReturn<User>;
   useHistory: () => History;
+  useQuery: <T extends Record<string, string | undefined>>() => T;
   useLocation: typeof useLocation;
   useParams: typeof useParams;
   useApi: <T, K extends StatusResponse>(

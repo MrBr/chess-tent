@@ -73,6 +73,15 @@ const Link = styled<Components['Link']>(RLink, {
     },
 );
 
+export function useQuery<T extends Record<string, string | undefined>>(): T {
+  const query: Record<string, string> = {};
+  const searchParams = new URLSearchParams(useLocation().search);
+  searchParams.forEach((value, key) => {
+    query[key] = value;
+  });
+  return query as T;
+}
+
 application.components.Router = Router;
 application.components.Switch = Switch;
 application.components.Route = Route;
@@ -84,3 +93,4 @@ application.services.history = history;
 application.hooks.useHistory = useHistory;
 application.hooks.useLocation = useLocation;
 application.hooks.useParams = useParams;
+application.hooks.useQuery = useQuery;

@@ -1,5 +1,9 @@
 import { services, requests } from '@application';
-import { NotificationsResponse } from '@types';
+import {
+  NotificationsResponse,
+  StatusResponse,
+  UpdateNotificationsRequest,
+} from '@types';
 
 const notifications = services.createRequest<
   boolean | undefined,
@@ -8,4 +12,13 @@ const notifications = services.createRequest<
   url: `/notifications?${!!read ? 'read=true' : ''}`,
 }));
 
+const updateNotifications = services.createRequest<
+  UpdateNotificationsRequest,
+  StatusResponse
+>('PUT', updatesForNotifications => ({
+  url: '/notifications',
+  data: updatesForNotifications,
+}));
+
 requests.notifications = notifications;
+requests.updateNotifications = updateNotifications;

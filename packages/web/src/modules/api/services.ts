@@ -17,6 +17,7 @@ export const createRequest = <T, K>(
     url = urlOrCustomizer;
     data = args.length > 0 ? args[0] : undefined;
   }
+
   return services.api.makeRequest<T, K>({ url, method, data });
 };
 

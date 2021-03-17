@@ -5,6 +5,7 @@ import {
   ReactElement,
   ReactEventHandler,
   ReactNode,
+  RefObject,
 } from 'react';
 import {
   ColProps,
@@ -15,6 +16,7 @@ import {
   InputGroup,
   ModalBody,
   ModalProps as BModalProps,
+  Modal as BModal,
   RowProps,
   Tab,
   Tabs,
@@ -25,6 +27,8 @@ import {
   Navbar,
   NavDropdown,
   CardProps,
+  TooltipProps,
+  Overlay as BOverlay,
 } from 'react-bootstrap';
 import DropdownToggle from 'react-bootstrap/DropdownToggle';
 import { ErrorMessageProps, Formik } from 'formik';
@@ -44,7 +48,7 @@ export type ButtonProps = {
   size?: 'large' | 'regular' | 'small' | 'extra-small';
   type?: 'button' | 'reset' | 'submit';
   disabled?: boolean;
-} & { onClick?: () => void };
+} & { onClick?: () => void; ref?: RefObject<HTMLButtonElement> };
 
 export type ModalProps = BModalProps;
 
@@ -93,7 +97,7 @@ export interface SelectOption<T> {
   toString?: (value: T) => string;
 }
 
-export type DropdownSize = 'regular' | 'small' | 'extra-small';
+export type FormElementsSize = 'large' | 'regular' | 'small' | 'extra-small';
 export interface OptionsDropdownProps<T> {
   id: string;
   className?: string;
@@ -102,7 +106,7 @@ export interface OptionsDropdownProps<T> {
   values: SelectOption<T>[];
   initial?: T;
   onChange: (value?: T) => void;
-  size?: DropdownSize;
+  size?: FormElementsSize;
 }
 
 export type UIComponent<T = {}> = ComponentType<
@@ -112,10 +116,21 @@ export type UIComponent<T = {}> = ComponentType<
   } & ClickProps
 >;
 
+type InputPropsWithSizeEnhancer = Omit<
+  ComponentProps<typeof FormControl>,
+  'size'
+> & {
+  size?: FormElementsSize;
+};
+
 export type UI = {
   Form: typeof Formik & {
     Input: UIComponent<
-      FormControlProps & { rows?: number; name: string; placeholder?: string }
+      InputPropsWithSizeEnhancer & {
+        rows?: number;
+        name: string;
+        placeholder?: string;
+      }
     >;
     Check: UIComponent<
       FormCheckInputProps & { name: string } & FormControlProps
@@ -161,7 +176,7 @@ export type UI = {
   Dropdown: ComponentType<ComponentProps<typeof Dropdown>> & {
     Toggle: ComponentType<
       Omit<ComponentProps<typeof DropdownToggle>, 'size'> & {
-        size?: DropdownSize;
+        size?: Omit<FormElementsSize, 'large'>;
         collapse?: boolean;
       }
     >;
@@ -188,7 +203,7 @@ export type UI = {
   File: typeof FormFile;
   Label: UIComponent<FormLabelProps>;
   FormGroup: UIComponent<FormGroupProps>;
-  Input: typeof FormControl;
+  Input: ComponentType<InputPropsWithSizeEnhancer>;
   InputGroup: typeof InputGroup;
   Select: typeof Select;
   AsyncSelect: typeof AsyncSelect;
@@ -201,6 +216,7 @@ export type UI = {
     left?: number;
     zIndex?: number;
   }>;
+  Dot: UIComponent<{ background?: string }>;
   Page: UIComponent<ContainerProps>;
   Tabs: typeof Tabs;
   Tab: typeof Tab;
@@ -219,7 +235,14 @@ export type UI = {
   Card: ComponentType<ClickProps & ClassNameProps & CardProps>;
   CardBody: ComponentType;
   CardHeader: ComponentType;
-  Modal: UIComponent<ModalProps & { close?: () => void; fullScreen?: boolean }>;
+  Modal: UIComponent<
+    ModalProps & { close?: () => void; fullScreen?: boolean }
+  > & {
+    Header: BModal['Header'];
+    Body: BModal['Body'];
+    Footer: BModal['Footer'];
+    Dialog: BModal['Dialog'];
+  };
   ModalBody: typeof ModalBody;
   Confirm: UIComponent<ConfirmProps>;
   Toast: ComponentType<ToastProps>;
@@ -228,4 +251,6 @@ export type UI = {
   Nav: typeof Nav;
   Navbar: typeof Navbar;
   NavDropdown: typeof NavDropdown;
+  Tooltip: UIComponent<TooltipProps>;
+  Overlay: typeof BOverlay;
 };

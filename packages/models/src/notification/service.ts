@@ -15,6 +15,7 @@ const createNotification = (
   type: TYPE_NOTIFICATION,
   notificationType,
   read: false,
+  seen: false,
   time: new Date(),
   state,
 });

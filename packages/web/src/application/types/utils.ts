@@ -17,5 +17,10 @@ export type Utils = {
     screenSize: 'xs' | 'sm' | 'md' | 'lg' | 'xl',
     style: CSSObject,
   ) => CSSObject;
+  getDiff: (
+    oldSubject: {} | unknown[],
+    newSubject: {} | unknown[],
+    result: { [key: string]: unknown },
+  ) => { [key: string]: unknown };
   downloadAs: typeof saveAs;
 };

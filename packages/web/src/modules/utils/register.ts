@@ -4,6 +4,7 @@ import { saveAs } from 'file-saver';
 import { useComponentState, useComponentStateSilent } from './hooks';
 import { getEntitySchema, getTypeSchema } from './model';
 import { mediaQueryEnhancer } from './enhancers';
+import { getDiff } from './utils';
 
 application.utils.generateIndex = uuid;
 application.utils.rightMouse = (f: Function) => (e: MouseEvent) =>
@@ -16,6 +17,8 @@ application.utils.getTypeSchema = getTypeSchema;
 application.utils.downloadAs = saveAs;
 
 application.utils.mediaQueryEnhancer = mediaQueryEnhancer;
+
+application.utils.getDiff = getDiff;
 
 application.hooks.useComponentStateSilent = useComponentStateSilent;
 application.hooks.useComponentState = useComponentState;

@@ -3,11 +3,13 @@ import {
   getLessonChapterPath,
   getLessonStepPath,
   Lesson,
+  LessonDetails,
   Step,
 } from '@chess-tent/models';
 import {
   ADD_LESSON_CHAPTER,
   AddLessonChapterAction,
+  AddLessonDetailsToLessonVersionsAction,
   State,
   UPDATE_LESSON_CHAPTER,
   UPDATE_LESSON_PATH,
@@ -15,6 +17,7 @@ import {
   UpdateLessonChapterAction,
   UpdateLessonPathAction,
   UpdateLessonStepAction,
+  ADD_LESSON_DETAILS_TO_LESSON_VERSIONS,
 } from '@types';
 
 export const updateLessonStepAction = <T extends Step>(
@@ -40,6 +43,18 @@ export const addLessonChapterAction = (
   meta: {
     lessonId: lesson.id,
     path: ['state', 'chapters', lesson.state.chapters.length],
+  },
+});
+
+export const addLessonDetailsToLessonVersionsAction = (
+  lesson: Lesson,
+  lessonDetails: LessonDetails,
+): AddLessonDetailsToLessonVersionsAction => ({
+  type: ADD_LESSON_DETAILS_TO_LESSON_VERSIONS,
+  payload: lessonDetails,
+  meta: {
+    lessonId: lesson.id,
+    path: ['versions', lesson.versions.length],
   },
 });
 

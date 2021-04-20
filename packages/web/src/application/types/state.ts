@@ -18,9 +18,11 @@ import {
   Notification,
   NormalizedActivity,
   SubjectPath,
+  LessonDetails,
 } from '@chess-tent/models';
 import {
   AddLessonChapterAction,
+  AddLessonDetailsToLessonVersionsAction,
   AppState,
   EntitiesState,
   EntityState,
@@ -105,6 +107,10 @@ export type State = {
       lesson: Lesson,
       chapter: Chapter,
     ) => AddLessonChapterAction;
+    addLessonDetailsToLessonVersions: (
+      lesson: Lesson,
+      lessonDetails: LessonDetails,
+    ) => AddLessonDetailsToLessonVersionsAction;
     updateLessonChapter: (
       lesson: Lesson,
       chapter: Chapter,

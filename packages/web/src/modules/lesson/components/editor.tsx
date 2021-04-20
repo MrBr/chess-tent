@@ -20,6 +20,7 @@ import {
   TYPE_LESSON,
   isStep,
   updateStepState,
+  LessonDetails,
 } from '@chess-tent/models';
 import {
   Actions,
@@ -33,7 +34,7 @@ import {
   PieceColor,
   Steps,
 } from '@types';
-import { debounce } from 'lodash';
+import { debounce, last, isEmpty } from 'lodash';
 import { components, hooks, services, state, ui, utils } from '@application';
 import TrainingModal from './training-assign';
 import CollaboratorModal from './lesson-users';
@@ -41,6 +42,7 @@ import Sidebar from './editor-sidebar';
 import { PreviewModal } from './activity-preview';
 import ChaptersDropdown from './chapters-dropdown';
 import RootStepButton from './editor-sidebar-root-step-button';
+import { getDiff } from '../../utils/utils';
 
 const { Container, Row, Col, Headline2, Button, Absolute, Text } = ui;
 const { createChapter } = services;
@@ -57,6 +59,7 @@ const {
   actions: {
     updateLessonStep,
     addLessonChapter,
+    addLessonDetailsToLessonVersions,
     updateLessonChapter,
     updateLessonPath,
   },
@@ -125,6 +128,7 @@ class EditorRenderer extends React.Component<
   ) {
     const { addLessonUpdate } = this.props;
     undoAction && this.recordHistoryChange(undoAction);
+    console.log('addLessonUpdate isDraft', this.getIsDraft());
     addLessonUpdate(action);
   }
 
@@ -273,6 +277,8 @@ class EditorRenderer extends React.Component<
     updateStep: this.updateStep,
     removeStep: this.deleteStep,
     setActiveStep: this.setActiveStepHandler,
+
+    updateVersions: this.updateVersions,
   });
 
   updateChapterTitle = (title: string) => {
@@ -290,6 +296,30 @@ class EditorRenderer extends React.Component<
     const { lesson } = this.props;
     const action = updateLessonPath(lesson, ['tags'], tags);
     this.addLessonUpdate(action);
+  };
+
+  updateVersions = (lessonDetails: LessonDetails) => {
+    const { lesson } = this.props;
+    const action = addLessonDetailsToLessonVersions(lesson, lessonDetails);
+    console.log('updateVersions lessonDetails', lessonDetails);
+    console.log('updateVersions action', action);
+    this.addLessonUpdate(action);
+  };
+
+  getIsDraft = () => {
+    const { lesson } = this.props;
+    const lastPublished = last(lesson.versions);
+
+    if (!lastPublished) {
+      return true;
+    }
+
+    console.log('lesson.state', lesson.state);
+    console.log('lastPublished', lastPublished);
+    const diff = getDiff(lesson.state, lastPublished, {});
+    console.log('diff', diff);
+    console.log('!isEmpty(diff)', !isEmpty(diff));
+    return !isEmpty(diff);
   };
 
   renderLessonStatus() {
@@ -377,6 +407,15 @@ class EditorRenderer extends React.Component<
               <Container>
                 <Row>
                   <Col>
+                    <Button
+                      size="extra-small"
+                      className="mr-3"
+                      variant={this.getIsDraft() ? 'regular' : 'ghost'}
+                      onClick={() => this.updateVersions(lesson.state)}
+                      disabled={!this.getIsDraft()}
+                    >
+                      Publish
+                    </Button>
                     <Button
                       size="extra-small"
                       className="mr-3"

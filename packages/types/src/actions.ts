@@ -113,7 +113,7 @@ export type AddLessonChapterAction = PathAction<
   Chapter,
   { lessonId: Lesson['id']; path: SubjectPath }
 >;
-export type AddLessonDetailsToLessonVersions = PathAction<
+export type AddLessonDetailsToLessonVersionsAction = PathAction<
   typeof ADD_LESSON_DETAILS_TO_LESSON_VERSIONS,
   LessonDetails,
   { lessonId: Lesson['id']; path: SubjectPath }
@@ -142,7 +142,7 @@ export type LessonAction =
   | UpdateLessonStepAction
   | UpdateLessonChapterAction
   | AddLessonChapterAction
-  | AddLessonDetailsToLessonVersions;
+  | AddLessonDetailsToLessonVersionsAction;
 
 /**
  * Activity

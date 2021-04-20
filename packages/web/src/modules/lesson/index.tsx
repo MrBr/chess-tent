@@ -2,6 +2,7 @@ import application from '@application';
 
 import {
   addLessonChapterAction,
+  addLessonDetailsToLessonVersionsAction,
   updateLessonChapterAction,
   updateLessonPathAction,
   updateLessonStepAction,
@@ -19,6 +20,7 @@ application.context.editorContext = editorContext;
 application.state.actions.updateLessonPath = updateLessonPathAction;
 application.state.actions.updateLessonChapter = updateLessonChapterAction;
 application.state.actions.addLessonChapter = addLessonChapterAction;
+application.state.actions.addLessonDetailsToLessonVersions = addLessonDetailsToLessonVersionsAction;
 application.state.selectors.lessonSelector = lessonSelector;
 application.components.DifficultyDropdown = DifficultyDropdown;
 

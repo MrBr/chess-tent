@@ -1,5 +1,5 @@
 import React from 'react';
-import { Chapter, Lesson, Step } from '@chess-tent/models';
+import { Chapter, Lesson, LessonDetails, Step } from '@chess-tent/models';
 
 export type EditorContext =
   | {
@@ -14,6 +14,8 @@ export type EditorContext =
       setActiveStep: (step: Step) => void;
       updateStep: (step: Step) => void;
       removeStep: (step: Step) => void;
+
+      updateVersions: (lessonDetails: LessonDetails) => void;
     }
   | undefined;
 

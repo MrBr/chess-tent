@@ -1,6 +1,6 @@
 import { User } from '../user';
 import { Subject } from '../subject';
-import { Chapter } from '../chapter';
+import { LessonDetails, NormalizedLessonDetails } from '../lessonDetails';
 import { Tag } from '../tag';
 
 export const TYPE_LESSON = 'lessons';
@@ -19,11 +19,8 @@ export interface Lesson extends Subject {
   tags?: Tag[];
   users?: User[];
   published?: boolean;
-  state: {
-    chapters: Chapter[];
-    title: string;
-    description?: string;
-  };
+  state: LessonDetails;
+  versions: LessonDetails[];
 }
 
 export interface NormalizedLesson {
@@ -34,9 +31,6 @@ export interface NormalizedLesson {
   tags?: Tag['id'][];
   published?: boolean;
   users?: User['id'][];
-  state: {
-    chapters: Chapter[];
-    title: Lesson['state']['title'];
-    description?: Lesson['state']['description'];
-  };
+  state: NormalizedLessonDetails;
+  versions: NormalizedLessonDetails[];
 }

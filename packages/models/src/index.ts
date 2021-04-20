@@ -9,6 +9,7 @@ import { Tag } from './tag';
 import { Analysis } from './analysis';
 import { Notification } from './notification';
 import { Mentorship } from './mentorship';
+import { LessonDetails } from './lessonDetails';
 
 export * from './analysis';
 export * from './notification';
@@ -18,6 +19,7 @@ export * from './message';
 export * from './activity';
 export * from './step';
 export * from './lesson';
+export * from './lessonDetails';
 export * from './user';
 export * from './chapter';
 export * from './mentorship';
@@ -26,6 +28,7 @@ export * from './tag';
 export type Entity =
   | User
   | Lesson
+  | LessonDetails
   | Step
   | Activity
   | Conversation

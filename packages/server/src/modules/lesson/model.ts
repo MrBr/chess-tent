@@ -6,6 +6,7 @@ import {
   TYPE_LESSON,
   TYPE_TAG,
   TYPE_USER,
+  TYPE_LESSON_DETAILS,
 } from '@chess-tent/models';
 import { db } from '@application';
 import { lessonAdapter } from './adapter';
@@ -15,6 +16,7 @@ export interface DepupulatedLesson {
   type: NormalizedLesson['type'];
   owner: NormalizedLesson['owner'];
   state: NormalizedLesson['state'];
+  versions: NormalizedLesson['versions'];
   difficulty: NormalizedLesson['difficulty'];
   tags: NormalizedLesson['tags'];
   users: NormalizedLesson['users'];
@@ -36,6 +38,12 @@ const lessonSchema = db.createSchema<DepupulatedLesson>(
       type: Schema.Types.Mixed,
       required: true,
     } as unknown) as DepupulatedLesson['state'],
+    versions: [
+      {
+        type: Schema.Types.Mixed,
+        ref: TYPE_LESSON_DETAILS,
+      } as unknown,
+    ] as DepupulatedLesson['versions'],
     difficulty: ({
       type: String,
       enum: Object.keys(Difficulty),

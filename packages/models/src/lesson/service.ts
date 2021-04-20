@@ -2,6 +2,11 @@ import { Difficulty, Lesson, NormalizedLesson, TYPE_LESSON } from './types';
 import { User } from '../user';
 import { getStepPath, Step } from '../step';
 import { Chapter } from '../chapter';
+import {
+  createLessonDetails,
+  LessonDetails,
+  NormalizedLessonDetails,
+} from '../lessonDetails';
 import { SubjectPath, updateSubjectValueAt } from '../subject';
 import { Tag } from '../tag';
 
@@ -26,6 +31,14 @@ const addChapterToLesson = <T extends Lesson | NormalizedLesson>(
     ...lesson.state,
     chapters: [...lesson.state.chapters, chapter],
   },
+});
+
+const addLessonDetailsToLessonVersions = <T extends Lesson | NormalizedLesson>(
+  lesson: T,
+  lessonDetails: LessonDetails | NormalizedLessonDetails,
+): T => ({
+  ...lesson,
+  versions: [...lesson.versions, lessonDetails],
 });
 
 const getLessonChapterIndex = (lesson: Lesson, chapterId: Chapter['id']) => {
@@ -71,13 +84,15 @@ const createLesson = (
   title = 'Lesson',
   difficulty: Difficulty = Difficulty.BEGINNER,
   tags: Tag[] = [],
+  versions: LessonDetails[] = [],
 ): Lesson => ({
   id,
   type: TYPE_LESSON,
   owner,
   difficulty,
   tags,
-  state: { chapters, title },
+  state: createLessonDetails(chapters, title),
+  versions,
 });
 
 export {
@@ -85,6 +100,7 @@ export {
   createLesson,
   getLessonChapter,
   addChapterToLesson,
+  addLessonDetailsToLessonVersions,
   getLessonStepPath,
   updateLessonStep,
   getLessonChapterIndex,

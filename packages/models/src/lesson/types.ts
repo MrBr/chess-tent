@@ -46,6 +46,6 @@ export interface LessonDetails {
 export interface NormalizedLessonDetails {
   type: LessonDetails['type'];
   chapters: Chapter[];
-  title: Lesson['state']['title'];
-  description?: Lesson['state']['description'];
+  title: LessonDetails['title'];
+  description?: LessonDetails['description'];
 }

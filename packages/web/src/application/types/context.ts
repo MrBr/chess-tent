@@ -15,7 +15,7 @@ export type EditorContext =
       updateStep: (step: Step) => void;
       removeStep: (step: Step) => void;
 
-      updateVersions: (lessonDetails: LessonDetails) => void;
+      //updateVersions: (lessonDetails: LessonDetails) => void;
     }
   | undefined;
 

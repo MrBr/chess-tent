@@ -12,6 +12,11 @@ export enum Difficulty {
   ADVANCED = 'ADVANCED',
 }
 
+export enum LessonDetailsStatus {
+  DRAFT = 'DRAFT',
+  PUBLISHED = 'PUBLISHED',
+}
+
 export interface Lesson extends Subject {
   id: string;
   owner: User;
@@ -41,6 +46,7 @@ export interface LessonDetails {
   chapters: Chapter[];
   title: string;
   description?: string;
+  status?: LessonDetailsStatus;
 }
 
 export interface NormalizedLessonDetails {
@@ -48,4 +54,5 @@ export interface NormalizedLessonDetails {
   chapters: Chapter[];
   title: LessonDetails['title'];
   description?: LessonDetails['description'];
+  status?: LessonDetails['status'];
 }

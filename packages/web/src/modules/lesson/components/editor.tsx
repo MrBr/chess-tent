@@ -20,7 +20,7 @@ import {
   TYPE_LESSON,
   isStep,
   updateStepState,
-  LessonDetails,
+  LessonDetailsStatus,
 } from '@chess-tent/models';
 import {
   Actions,
@@ -59,7 +59,7 @@ const {
   actions: {
     updateLessonStep,
     addLessonChapter,
-    publishLesson,
+    updateLessonStatus,
     updateLessonChapter,
     updateLessonPath,
   },
@@ -126,9 +126,15 @@ class EditorRenderer extends React.Component<
     action: LessonUpdatableAction,
     undoAction?: LessonUpdatableAction,
   ) {
-    const { addLessonUpdate } = this.props;
+    const { addLessonUpdate, lesson } = this.props;
+
+    const updateStatusAction = updateLessonStatus(
+      lesson,
+      LessonDetailsStatus.DRAFT,
+    );
+    addLessonUpdate(updateStatusAction);
+
     undoAction && this.recordHistoryChange(undoAction);
-    console.log('addLessonUpdate isDraft', this.getIsDraft());
     addLessonUpdate(action);
   }
 
@@ -278,7 +284,7 @@ class EditorRenderer extends React.Component<
     removeStep: this.deleteStep,
     setActiveStep: this.setActiveStepHandler,
 
-    updateVersions: this.updateVersions,
+    //updateVersions: this.updateVersions,
   });
 
   updateChapterTitle = (title: string) => {
@@ -295,14 +301,6 @@ class EditorRenderer extends React.Component<
   updateTags = (tags: NormalizedLesson['tags']) => {
     const { lesson } = this.props;
     const action = updateLessonPath(lesson, ['tags'], tags);
-    this.addLessonUpdate(action);
-  };
-
-  updateVersions = (lessonDetails: LessonDetails) => {
-    const { lesson } = this.props;
-    const action = publishLesson(lesson, lessonDetails);
-    console.log('updateVersions lessonDetails', lessonDetails);
-    console.log('updateVersions action', action);
     this.addLessonUpdate(action);
   };
 
@@ -411,7 +409,7 @@ class EditorRenderer extends React.Component<
                       size="extra-small"
                       className="mr-3"
                       variant={this.getIsDraft() ? 'regular' : 'ghost'}
-                      onClick={() => this.updateVersions(lesson.state)}
+                      //onClick={() => this.updateVersions(lesson.state)}
                       disabled={!this.getIsDraft()}
                     >
                       Publish

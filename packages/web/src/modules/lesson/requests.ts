@@ -7,7 +7,7 @@ import {
   StatusResponse,
   MyLessonsRequest,
 } from '@types';
-import { Lesson } from '@chess-tent/models';
+import { Lesson, LessonDetails } from '@chess-tent/models';
 
 const lesson = services.createRequest<[string], LessonResponse>(
   'GET',
@@ -18,6 +18,11 @@ const lessonSave = services.createRequest<Lesson, LessonResponse>(
   'POST',
   '/lesson/save',
 );
+
+const lessonPublish = services.createRequest<
+  [Lesson['id'], LessonDetails],
+  StatusResponse
+>('PUT', (id, body) => ({ url: `/lesson/${id}`, data: body }));
 
 const lessonPatch = services.createRequest<
   [Lesson['id'], Partial<Lesson>],
@@ -40,6 +45,7 @@ const myLessons = services.createRequest<MyLessonsRequest, LessonsResponse>(
 
 requests.lesson = lesson;
 requests.lessonSave = lessonSave;
+requests.lessonPublish = lessonPublish;
 requests.lessons = lessons;
 requests.myLessons = myLessons;
 requests.lessonPatch = lessonPatch;

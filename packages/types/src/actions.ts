@@ -13,7 +13,7 @@ import {
   Subject,
   User,
   Chapter,
-  LessonDetails,
+  LessonDetailsStatus,
   SubjectPath,
   NormalizedTag,
   Notification,
@@ -26,7 +26,7 @@ export const UPDATE_ENTITIES = 'UPDATE_ENTITIES';
 export const UPDATE_LESSON_STEP = 'UPDATE_LESSON_STEP';
 export const UPDATE_LESSON_CHAPTER = 'UPDATE_LESSON_CHAPTER';
 export const ADD_LESSON_CHAPTER = 'ADD_LESSON_CHAPTER';
-export const PUBLISH_LESSON = 'PUBLISH_LESSON';
+export const UPDATE_LESSON_STATUS = 'UPDATE_LESSON_STATUS';
 export const UPDATE_LESSON_PATH = 'UPDATE_LESSON_PATH';
 
 export const UPDATE_ACTIVITY_STEP_STATE = 'UPDATE_ACTIVITY_STEP_STATE';
@@ -113,9 +113,9 @@ export type AddLessonChapterAction = PathAction<
   Chapter,
   { lessonId: Lesson['id']; path: SubjectPath }
 >;
-export type PublishLessonAction = PathAction<
-  typeof PUBLISH_LESSON,
-  LessonDetails,
+export type UpdateLessonStatusAction = PathAction<
+  typeof UPDATE_LESSON_STATUS,
+  LessonDetailsStatus,
   { lessonId: Lesson['id']; path: SubjectPath }
 >;
 export type UpdateLessonStepAction = PathAction<
@@ -142,7 +142,7 @@ export type LessonAction =
   | UpdateLessonStepAction
   | UpdateLessonChapterAction
   | AddLessonChapterAction
-  | PublishLessonAction;
+  | UpdateLessonStatusAction;
 
 /**
  * Activity

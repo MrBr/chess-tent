@@ -2,6 +2,7 @@ import {
   Activity,
   Conversation,
   Lesson,
+  LessonDetails,
   SubjectPath,
   Message,
   NormalizedMessage,
@@ -17,7 +18,7 @@ import {
 import { GenericArguments } from './_helpers';
 import {
   AddLessonChapterAction,
-  PublishLessonAction,
+  UpdateLessonStatusAction,
   UpdateLessonChapterAction,
   UpdateLessonPathAction,
   UpdateLessonStepAction,
@@ -82,7 +83,7 @@ export type LessonUpdatableAction =
   | UpdateLessonStepAction
   | UpdateLessonChapterAction
   | AddLessonChapterAction
-  | PublishLessonAction
+  | UpdateLessonStatusAction
   | UpdateLessonPathAction;
 export type LessonUpdates = { path: SubjectPath; value: any }[];
 
@@ -120,6 +121,7 @@ export type Requests = {
   updateMe: RequestFetch<Partial<User>, UserResponse>;
   lesson: RequestFetch<[string], LessonResponse>;
   lessonSave: RequestFetch<Lesson, StatusResponse>;
+  lessonPublish: RequestFetch<[Lesson['id'], LessonDetails], StatusResponse>;
   lessonPatch: RequestFetch<[Lesson['id'], Partial<Lesson>], StatusResponse>;
   lessonUpdates: RequestFetch<[Lesson['id'], LessonUpdates], StatusResponse>;
   lessons: RequestFetch<LessonsRequest, LessonsResponse>;

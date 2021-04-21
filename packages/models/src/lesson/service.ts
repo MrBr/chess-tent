@@ -3,6 +3,7 @@ import {
   Lesson,
   NormalizedLesson,
   LessonDetails,
+  LessonDetailsStatus,
   NormalizedLessonDetails,
   TYPE_LESSON,
   TYPE_LESSON_DETAILS,
@@ -91,6 +92,12 @@ const updateLessonStep = (
   path: SubjectPath,
 ) => updateSubjectValueAt(lesson, path, patch);
 
+const updateLessonStatus = (
+  lesson: Lesson,
+  patch: LessonDetailsStatus,
+  path: SubjectPath,
+) => updateSubjectValueAt(lesson, path, patch);
+
 const createLesson = (
   id: string,
   chapters: Chapter[],
@@ -117,6 +124,7 @@ export {
   publishLesson,
   getLessonStepPath,
   updateLessonStep,
+  updateLessonStatus,
   getLessonChapterIndex,
   getLessonChapterPath,
   getLessonStatePath,

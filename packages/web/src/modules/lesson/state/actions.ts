@@ -3,21 +3,21 @@ import {
   getLessonChapterPath,
   getLessonStepPath,
   Lesson,
-  LessonDetails,
+  LessonDetailsStatus,
   Step,
 } from '@chess-tent/models';
 import {
   ADD_LESSON_CHAPTER,
   AddLessonChapterAction,
-  PublishLessonAction,
+  UpdateLessonStatusAction,
   State,
   UPDATE_LESSON_CHAPTER,
   UPDATE_LESSON_PATH,
   UPDATE_LESSON_STEP,
+  UPDATE_LESSON_STATUS,
   UpdateLessonChapterAction,
   UpdateLessonPathAction,
   UpdateLessonStepAction,
-  PUBLISH_LESSON,
 } from '@types';
 
 export const updateLessonStepAction = <T extends Step>(
@@ -46,15 +46,15 @@ export const addLessonChapterAction = (
   },
 });
 
-export const publishLessonAction = (
+export const updateLessonStatusAction = (
   lesson: Lesson,
-  lessonDetails: LessonDetails,
-): PublishLessonAction => ({
-  type: PUBLISH_LESSON,
-  payload: lessonDetails,
+  status: LessonDetailsStatus,
+): UpdateLessonStatusAction => ({
+  type: UPDATE_LESSON_STATUS,
+  payload: status,
   meta: {
     lessonId: lesson.id,
-    path: ['versions', lesson.versions.length],
+    path: ['state', 'status'],
   },
 });
 

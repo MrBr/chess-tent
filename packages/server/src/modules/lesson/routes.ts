@@ -3,6 +3,7 @@ import {
   canEditLesson,
   getLesson,
   saveLesson,
+  publishLesson,
   findLessons,
   patchLesson,
   updateLesson,
@@ -16,6 +17,16 @@ application.service.registerPostRoute(
   toLocals('lesson', req => req.body),
   canEditLesson,
   saveLesson,
+  sendStatusOk,
+);
+
+application.service.registerPutRoute(
+  '/lesson/publish/:lessonId',
+  identify,
+  toLocals('lessonDetails', req => req.body),
+  toLocals('lessonId', req => req.params.lessonId),
+  canEditLesson,
+  publishLesson,
   sendStatusOk,
 );
 

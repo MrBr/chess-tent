@@ -59,7 +59,7 @@ const {
   actions: {
     updateLessonStep,
     addLessonChapter,
-    addLessonDetailsToLessonVersions,
+    publishLesson,
     updateLessonChapter,
     updateLessonPath,
   },
@@ -300,7 +300,7 @@ class EditorRenderer extends React.Component<
 
   updateVersions = (lessonDetails: LessonDetails) => {
     const { lesson } = this.props;
-    const action = addLessonDetailsToLessonVersions(lesson, lessonDetails);
+    const action = publishLesson(lesson, lessonDetails);
     console.log('updateVersions lessonDetails', lessonDetails);
     console.log('updateVersions action', action);
     this.addLessonUpdate(action);

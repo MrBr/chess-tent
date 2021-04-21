@@ -1,9 +1,10 @@
 import { User } from '../user';
 import { Subject } from '../subject';
-import { LessonDetails, NormalizedLessonDetails } from '../lessonDetails';
+import { Chapter } from '../chapter';
 import { Tag } from '../tag';
 
 export const TYPE_LESSON = 'lessons';
+export const TYPE_LESSON_DETAILS = 'lessonDetails';
 
 export enum Difficulty {
   BEGINNER = 'BEGINNER',
@@ -33,4 +34,18 @@ export interface NormalizedLesson {
   users?: User['id'][];
   state: NormalizedLessonDetails;
   versions: NormalizedLessonDetails[];
+}
+
+export interface LessonDetails {
+  type: typeof TYPE_LESSON_DETAILS;
+  chapters: Chapter[];
+  title: string;
+  description?: string;
+}
+
+export interface NormalizedLessonDetails {
+  type: LessonDetails['type'];
+  chapters: Chapter[];
+  title: Lesson['state']['title'];
+  description?: Lesson['state']['description'];
 }

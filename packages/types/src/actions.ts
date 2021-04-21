@@ -26,7 +26,7 @@ export const UPDATE_ENTITIES = 'UPDATE_ENTITIES';
 export const UPDATE_LESSON_STEP = 'UPDATE_LESSON_STEP';
 export const UPDATE_LESSON_CHAPTER = 'UPDATE_LESSON_CHAPTER';
 export const ADD_LESSON_CHAPTER = 'ADD_LESSON_CHAPTER';
-export const ADD_LESSON_DETAILS_TO_LESSON_VERSIONS = 'ADD_LESSON_DETAILS_TO_LESSON_VERSIONS';
+export const PUBLISH_LESSON = 'PUBLISH_LESSON';
 export const UPDATE_LESSON_PATH = 'UPDATE_LESSON_PATH';
 
 export const UPDATE_ACTIVITY_STEP_STATE = 'UPDATE_ACTIVITY_STEP_STATE';
@@ -113,8 +113,8 @@ export type AddLessonChapterAction = PathAction<
   Chapter,
   { lessonId: Lesson['id']; path: SubjectPath }
 >;
-export type AddLessonDetailsToLessonVersionsAction = PathAction<
-  typeof ADD_LESSON_DETAILS_TO_LESSON_VERSIONS,
+export type PublishLessonAction = PathAction<
+  typeof PUBLISH_LESSON,
   LessonDetails,
   { lessonId: Lesson['id']; path: SubjectPath }
 >;
@@ -142,7 +142,7 @@ export type LessonAction =
   | UpdateLessonStepAction
   | UpdateLessonChapterAction
   | AddLessonChapterAction
-  | AddLessonDetailsToLessonVersionsAction;
+  | PublishLessonAction;
 
 /**
  * Activity

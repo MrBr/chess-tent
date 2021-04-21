@@ -1,14 +1,28 @@
-import { Difficulty, Lesson, NormalizedLesson, TYPE_LESSON } from './types';
+import {
+  Difficulty,
+  Lesson,
+  NormalizedLesson,
+  LessonDetails,
+  NormalizedLessonDetails,
+  TYPE_LESSON,
+  TYPE_LESSON_DETAILS,
+} from './types';
 import { User } from '../user';
 import { getStepPath, Step } from '../step';
 import { Chapter } from '../chapter';
-import {
-  createLessonDetails,
-  LessonDetails,
-  NormalizedLessonDetails,
-} from '../lessonDetails';
 import { SubjectPath, updateSubjectValueAt } from '../subject';
 import { Tag } from '../tag';
+
+const createLessonDetails = (
+  chapters: Chapter[],
+  title: string,
+  description?: string,
+): LessonDetails => ({
+  type: TYPE_LESSON_DETAILS,
+  chapters,
+  title,
+  description,
+});
 
 const isLesson = (entity: unknown) =>
   Object.getOwnPropertyDescriptor(entity, 'type')?.value === TYPE_LESSON;
@@ -33,7 +47,7 @@ const addChapterToLesson = <T extends Lesson | NormalizedLesson>(
   },
 });
 
-const addLessonDetailsToLessonVersions = <T extends Lesson | NormalizedLesson>(
+const publishLesson = <T extends Lesson | NormalizedLesson>(
   lesson: T,
   lessonDetails: LessonDetails | NormalizedLessonDetails,
 ): T => ({
@@ -100,10 +114,11 @@ export {
   createLesson,
   getLessonChapter,
   addChapterToLesson,
-  addLessonDetailsToLessonVersions,
+  publishLesson,
   getLessonStepPath,
   updateLessonStep,
   getLessonChapterIndex,
   getLessonChapterPath,
   getLessonStatePath,
+  createLessonDetails,
 };

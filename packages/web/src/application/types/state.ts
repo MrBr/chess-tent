@@ -22,7 +22,7 @@ import {
 } from '@chess-tent/models';
 import {
   AddLessonChapterAction,
-  AddLessonDetailsToLessonVersionsAction,
+  PublishLessonAction,
   AppState,
   EntitiesState,
   EntityState,
@@ -107,10 +107,10 @@ export type State = {
       lesson: Lesson,
       chapter: Chapter,
     ) => AddLessonChapterAction;
-    addLessonDetailsToLessonVersions: (
+    publishLesson: (
       lesson: Lesson,
       lessonDetails: LessonDetails,
-    ) => AddLessonDetailsToLessonVersionsAction;
+    ) => PublishLessonAction;
     updateLessonChapter: (
       lesson: Lesson,
       chapter: Chapter,

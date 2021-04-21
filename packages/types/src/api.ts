@@ -17,7 +17,7 @@ import {
 import { GenericArguments } from './_helpers';
 import {
   AddLessonChapterAction,
-  AddLessonDetailsToLessonVersionsAction,
+  PublishLessonAction,
   UpdateLessonChapterAction,
   UpdateLessonPathAction,
   UpdateLessonStepAction,
@@ -82,7 +82,7 @@ export type LessonUpdatableAction =
   | UpdateLessonStepAction
   | UpdateLessonChapterAction
   | AddLessonChapterAction
-  | AddLessonDetailsToLessonVersionsAction
+  | PublishLessonAction
   | UpdateLessonPathAction;
 export type LessonUpdates = { path: SubjectPath; value: any }[];
 

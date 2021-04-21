@@ -9,7 +9,7 @@ import {
 import {
   ADD_LESSON_CHAPTER,
   AddLessonChapterAction,
-  AddLessonDetailsToLessonVersionsAction,
+  PublishLessonAction,
   State,
   UPDATE_LESSON_CHAPTER,
   UPDATE_LESSON_PATH,
@@ -17,7 +17,7 @@ import {
   UpdateLessonChapterAction,
   UpdateLessonPathAction,
   UpdateLessonStepAction,
-  ADD_LESSON_DETAILS_TO_LESSON_VERSIONS,
+  PUBLISH_LESSON,
 } from '@types';
 
 export const updateLessonStepAction = <T extends Step>(
@@ -46,11 +46,11 @@ export const addLessonChapterAction = (
   },
 });
 
-export const addLessonDetailsToLessonVersionsAction = (
+export const publishLessonAction = (
   lesson: Lesson,
   lessonDetails: LessonDetails,
-): AddLessonDetailsToLessonVersionsAction => ({
-  type: ADD_LESSON_DETAILS_TO_LESSON_VERSIONS,
+): PublishLessonAction => ({
+  type: PUBLISH_LESSON,
   payload: lessonDetails,
   meta: {
     lessonId: lesson.id,

@@ -6,7 +6,6 @@ import {
   TYPE_LESSON,
   TYPE_TAG,
   TYPE_USER,
-  TYPE_LESSON_DETAILS,
 } from '@chess-tent/models';
 import { db } from '@application';
 import { lessonAdapter } from './adapter';
@@ -41,7 +40,6 @@ const lessonSchema = db.createSchema<DepupulatedLesson>(
     versions: [
       {
         type: Schema.Types.Mixed,
-        ref: TYPE_LESSON_DETAILS,
       } as unknown,
     ] as DepupulatedLesson['versions'],
     difficulty: ({

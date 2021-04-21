@@ -1,5 +1,5 @@
 import { User } from './user';
-import { Lesson } from './lesson';
+import { Lesson, LessonDetails } from './lesson';
 import { Step } from './step';
 import { Activity } from './activity';
 import { Conversation } from './conversation';
@@ -9,7 +9,6 @@ import { Tag } from './tag';
 import { Analysis } from './analysis';
 import { Notification } from './notification';
 import { Mentorship } from './mentorship';
-import { LessonDetails } from './lessonDetails';
 
 export * from './analysis';
 export * from './notification';
@@ -19,7 +18,6 @@ export * from './message';
 export * from './activity';
 export * from './step';
 export * from './lesson';
-export * from './lessonDetails';
 export * from './user';
 export * from './chapter';
 export * from './mentorship';

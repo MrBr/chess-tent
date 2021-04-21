@@ -34,7 +34,7 @@ import {
   PieceColor,
   Steps,
 } from '@types';
-import { debounce, last, isEmpty } from 'lodash';
+import { debounce } from 'lodash';
 import { components, hooks, services, state, ui, utils } from '@application';
 import TrainingModal from './training-assign';
 import CollaboratorModal from './lesson-users';
@@ -42,7 +42,7 @@ import Sidebar from './editor-sidebar';
 import { PreviewModal } from './activity-preview';
 import ChaptersDropdown from './chapters-dropdown';
 import RootStepButton from './editor-sidebar-root-step-button';
-import { getDiff } from '../../utils/utils';
+import EditorPublishButton from './editor-publish-button';
 
 const { Container, Row, Col, Headline2, Button, Absolute, Text } = ui;
 const { createChapter } = services;
@@ -128,11 +128,13 @@ class EditorRenderer extends React.Component<
   ) {
     const { addLessonUpdate, lesson } = this.props;
 
-    const updateStatusAction = updateLessonStatus(
-      lesson,
-      LessonDetailsStatus.DRAFT,
-    );
-    addLessonUpdate(updateStatusAction);
+    if (lesson.state.status !== LessonDetailsStatus.DRAFT) {
+      const updateStatusAction = updateLessonStatus(
+        lesson,
+        LessonDetailsStatus.DRAFT,
+      );
+      addLessonUpdate(updateStatusAction);
+    }
 
     undoAction && this.recordHistoryChange(undoAction);
     addLessonUpdate(action);
@@ -304,22 +306,6 @@ class EditorRenderer extends React.Component<
     this.addLessonUpdate(action);
   };
 
-  getIsDraft = () => {
-    const { lesson } = this.props;
-    const lastPublished = last(lesson.versions);
-
-    if (!lastPublished) {
-      return true;
-    }
-
-    console.log('lesson.state', lesson.state);
-    console.log('lastPublished', lastPublished);
-    const diff = getDiff(lesson.state, lastPublished, {});
-    console.log('diff', diff);
-    console.log('!isEmpty(diff)', !isEmpty(diff));
-    return !isEmpty(diff);
-  };
-
   renderLessonStatus() {
     const { lessonStatus } = this.props;
     switch (lessonStatus) {
@@ -405,15 +391,7 @@ class EditorRenderer extends React.Component<
               <Container>
                 <Row>
                   <Col>
-                    <Button
-                      size="extra-small"
-                      className="mr-3"
-                      variant={this.getIsDraft() ? 'regular' : 'ghost'}
-                      //onClick={() => this.updateVersions(lesson.state)}
-                      disabled={!this.getIsDraft()}
-                    >
-                      Publish
-                    </Button>
+                    <EditorPublishButton lesson={lesson} />
                     <Button
                       size="extra-small"
                       className="mr-3"

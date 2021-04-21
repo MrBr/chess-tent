@@ -23,8 +23,8 @@ application.service.registerPostRoute(
 application.service.registerPutRoute(
   '/lesson/publish/:lessonId',
   identify,
-  toLocals('lessonDetails', req => req.body),
-  toLocals('lessonId', req => req.params.lessonId),
+  toLocals('lesson', req => req.body),
+  toLocals('lesson.id', req => req.params.lessonId),
   canEditLesson,
   publishLesson,
   sendStatusOk,

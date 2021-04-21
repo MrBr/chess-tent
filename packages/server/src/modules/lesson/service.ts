@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { Lesson, LessonDetails, User } from '@chess-tent/models';
+import { Lesson, LessonDetailsStatus, User } from '@chess-tent/models';
 import { LessonsRequest, LessonUpdates } from '@chess-tent/types';
 import { MongooseFilterQuery } from 'mongoose';
 import { utils, db, service } from '@application';
@@ -17,14 +17,16 @@ export const saveLesson = (lesson: Lesson) =>
     });
   });
 
-export const publishLesson = (
-  lessonId: Lesson['id'],
-  lessonDetails: LessonDetails,
-) =>
+export const publishLesson = (lessonId: Lesson['id'], lesson: Lesson) =>
   new Promise(resolve => {
     LessonModel.updateOne(
       { _id: lessonId },
-      { lessonDetails: lessonDetails },
+      {
+        $set: {
+          'state.status': LessonDetailsStatus.PUBLISHED,
+        },
+        $push: { versions: lesson.state },
+      },
     ).exec((err, result) => {
       if (err) {
         throw err;

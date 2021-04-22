@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { EntitiesState, PathAction } from '@chess-tent/types';
 import {
   getSubjectValueAt,
@@ -21,6 +21,7 @@ const isSamePathBase = (path1: SubjectPath, path2: SubjectPath) => {
 };
 
 const removeWeakerPaths = (updates: SubjectPath[]) => {
+  console.log('Path base', updates);
   return updates.filter((update1, index) => {
     return !updates.some((update2, i) => {
       if (index === i) {
@@ -46,12 +47,11 @@ export const usePathUpdates = (
     throttle(
       (updates: SubjectPath[]) => {
         const normalizedEntity = store.getState().entities[type][id];
-        save(
-          removeWeakerPaths(updates).map(path => ({
-            path,
-            value: getSubjectValueAt(normalizedEntity, path),
-          })),
-        );
+        const minimumUpdate = removeWeakerPaths(updates).map(path => ({
+          path,
+          value: getSubjectValueAt(normalizedEntity, path),
+        }));
+        save(minimumUpdate);
         setUpdates([]);
       },
       delay,
@@ -60,14 +60,19 @@ export const usePathUpdates = (
         leading: false,
       },
     ),
+    // Must be zero dependencies to call the same throttled function
     [],
   );
 
+  useEffect(() => {
+    if (updates.length > 0) {
+      entityUpdated(updates);
+    }
+  }, [setUpdates, entityUpdated, updates]);
+
   const pushUpdate = useCallback(
     (updateAction: PathAction<any, any, any>) => {
-      const newUpdates = [...updates, updateAction.meta.path];
-      entityUpdated(newUpdates);
-      setUpdates(newUpdates);
+      setUpdates(currentUpdates => [...currentUpdates, updateAction.meta.path]);
     },
     [entityUpdated, updates],
   );

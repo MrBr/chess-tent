@@ -146,7 +146,7 @@ class EditorRenderer extends React.Component<
       LessonDetailsStatus.DRAFT,
     );
     addLessonUpdate(action);
-  }
+  };
 
   undoUpdate = () => {
     const { history } = this.state;

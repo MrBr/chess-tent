@@ -1,3 +1,4 @@
+import { isEmpty, last } from 'lodash';
 import {
   Difficulty,
   Lesson,
@@ -86,6 +87,15 @@ const getLessonStepPath = (
   return null;
 };
 
+const getLessonWithNewestVersion = (lesson: Lesson): Lesson => {
+  const versions = lesson?.versions;
+  const lastVersion = !isEmpty(versions) && last(versions);
+  if (lastVersion) {
+    lesson.state = lastVersion;
+  }
+  return lesson;
+};
+
 const updateLessonStep = (
   lesson: Lesson,
   patch: Partial<Step>,
@@ -128,5 +138,6 @@ export {
   getLessonChapterIndex,
   getLessonChapterPath,
   getLessonStatePath,
+  getLessonWithNewestVersion,
   createLessonDetails,
 };

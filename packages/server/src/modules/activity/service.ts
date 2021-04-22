@@ -1,7 +1,12 @@
-import { orQueries } from './../db/utils';
 import { MongooseFilterQuery } from 'mongoose';
 import { service, db, utils } from '@application';
-import { Activity, SubjectPathUpdate, User } from '@chess-tent/models';
+import {
+  Activity,
+  SubjectPathUpdate,
+  TYPE_LESSON,
+  getLessonWithNewestVersion,
+  User,
+} from '@chess-tent/models';
 import { ActivityFilters } from '@chess-tent/types';
 import { ActivityModel, depopulate } from './model';
 
@@ -53,7 +58,18 @@ export const getActivity = (
         if (err) {
           throw err;
         }
-        resolve(result ? result.toObject() : null);
+        resolve(
+          result
+            ? result.toObject({
+                transform: doc => {
+                  if (doc.type === TYPE_LESSON) {
+                    return getLessonWithNewestVersion(doc);
+                  }
+                  return doc;
+                },
+              })
+            : null,
+        );
       });
   });
 
@@ -84,7 +100,18 @@ export const findActivities = (
         if (err) {
           throw err;
         }
-        resolve(result.map(item => item.toObject()));
+        const objectResult = result.map(item =>
+          item.toObject({
+            transform: doc => {
+              if (doc.type === TYPE_LESSON) {
+                return getLessonWithNewestVersion(doc);
+              }
+              return doc;
+            },
+          }),
+        );
+
+        resolve(objectResult);
       });
   });
 

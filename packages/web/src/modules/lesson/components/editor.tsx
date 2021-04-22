@@ -140,11 +140,7 @@ class EditorRenderer extends React.Component<
 
   updateLessonStatusToDraft = () => {
     const { addLessonUpdate, lesson } = this.props;
-    const action = updateLessonPath(
-      lesson,
-      ['state', 'status'],
-      LessonDetailsStatus.DRAFT,
-    );
+    const action = updateLessonStatus(lesson, LessonDetailsStatus.DRAFT);
     addLessonUpdate(action);
   };
 

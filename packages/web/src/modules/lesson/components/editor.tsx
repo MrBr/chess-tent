@@ -128,11 +128,9 @@ class EditorRenderer extends React.Component<
   ) {
     const { addLessonUpdate, lesson } = this.props;
 
-    console.log(lesson.state.status);
-    //if (lesson.state.status !== LessonDetailsStatus.DRAFT) {
-    console.log('Will update status');
-    this.updateLessonStatusToDraft();
-    //}
+    if (lesson.state.status !== LessonDetailsStatus.DRAFT) {
+      this.updateLessonStatusToDraft();
+    }
 
     undoAction && this.recordHistoryChange(undoAction);
     addLessonUpdate(action);

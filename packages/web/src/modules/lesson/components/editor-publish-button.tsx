@@ -1,15 +1,19 @@
 import React, { useCallback } from 'react';
-import { ui, hooks, requests } from '@application';
+import { ui, hooks, requests, state } from '@application';
 import { Lesson, LessonDetailsStatus } from '@chess-tent/models';
 
 const { Button } = ui;
-const { useApi } = hooks;
+const { useApi, useDispatchBatched } = hooks;
+const {
+  actions: { updateLessonStatus },
+} = state;
 
 export interface PublishButtonProps {
   lesson: Lesson;
 }
 
 export default ({ lesson }: PublishButtonProps) => {
+  const dispatch = useDispatchBatched();
   const {
     fetch: lessonPublish,
     // error: lessonPublishError,
@@ -18,10 +22,13 @@ export default ({ lesson }: PublishButtonProps) => {
   } = useApi(requests.lessonPublish);
 
   const handlePublish = useCallback(() => {
-    // TODO
-    //lessonPublish(lesson.id, lesson);
-    //dispatch(updateLesson(publishLesson(lesson))) //servis iz modela, treba na FE-u osvježiti stvar
-  }, []);
+    lessonPublish(lesson.id, lesson);
+    const updateStatusAction = updateLessonStatus(
+      lesson,
+      LessonDetailsStatus.PUBLISHED,
+    );
+    dispatch(updateStatusAction);
+  }, [dispatch, lesson, lessonPublish]);
 
   const isPublished = lesson.state.status === LessonDetailsStatus.PUBLISHED;
   return (
@@ -29,7 +36,7 @@ export default ({ lesson }: PublishButtonProps) => {
       size="extra-small"
       className="mr-3"
       variant={!isPublished ? 'regular' : 'ghost'}
-      onClick={() => lessonPublish(lesson.id, lesson)}
+      onClick={handlePublish}
       disabled={isPublished}
     >
       Publish

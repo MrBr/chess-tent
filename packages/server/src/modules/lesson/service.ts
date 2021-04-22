@@ -25,7 +25,7 @@ export const publishLesson = (lessonId: Lesson['id'], lesson: Lesson) =>
         $set: {
           'state.status': LessonDetailsStatus.PUBLISHED,
         },
-        $push: { versions: lesson.state },
+        $push: { versions: _.omit(lesson.state, ['status']) },
       },
     ).exec((err, result) => {
       if (err) {

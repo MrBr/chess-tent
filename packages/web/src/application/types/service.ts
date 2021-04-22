@@ -82,6 +82,7 @@ export type Services = {
     owner: User,
     state: T extends Activity<infer S, infer K> ? K : never,
     users: User[],
+    subjectVersion?: number,
   ) => T;
   createActivityComment: (user: User, text: string) => ActivityComment;
   createActivityStepState: (

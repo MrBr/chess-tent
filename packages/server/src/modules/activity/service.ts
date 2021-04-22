@@ -3,9 +3,9 @@ import { service, db, utils } from '@application';
 import {
   Activity,
   SubjectPathUpdate,
-  TYPE_LESSON,
-  getLessonWithNewestVersion,
+  getLessonWithVersion,
   User,
+  TYPE_ACTIVITY,
 } from '@chess-tent/models';
 import { ActivityFilters } from '@chess-tent/types';
 import { ActivityModel, depopulate } from './model';
@@ -62,8 +62,11 @@ export const getActivity = (
           result
             ? result.toObject({
                 transform: doc => {
-                  if (doc.type === TYPE_LESSON) {
-                    return getLessonWithNewestVersion(doc);
+                  if (doc.type === TYPE_ACTIVITY) {
+                    doc.subject = getLessonWithVersion(
+                      doc.subject,
+                      doc.subjectVersion,
+                    );
                   }
                   return doc;
                 },
@@ -103,8 +106,11 @@ export const findActivities = (
         const objectResult = result.map(item =>
           item.toObject({
             transform: doc => {
-              if (doc.type === TYPE_LESSON) {
-                return getLessonWithNewestVersion(doc);
+              if (doc.type === TYPE_ACTIVITY) {
+                doc.subject = getLessonWithVersion(
+                  doc.subject,
+                  doc.subjectVersion,
+                );
               }
               return doc;
             },

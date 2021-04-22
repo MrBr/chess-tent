@@ -6,6 +6,7 @@ import {
   getChildStep,
   getStepIndex,
   getStepsCount,
+  getNewestLessonVersion,
   Lesson,
   Step,
   SubjectPath,
@@ -29,11 +30,18 @@ const { Modal } = ui;
 const Preview = ({ lesson, chapter, step }: PreviewProps) => {
   const [user] = useActiveUserRecord() as [User, never, never];
   const [activity, updateActivity] = useState<LessonActivity>(
-    createActivity('preview', lesson, user, {
-      activeStepId: step.id,
-      activeChapterId: chapter.id,
-      training: false,
-    }),
+    createActivity(
+      'preview',
+      lesson,
+      user,
+      {
+        activeStepId: step.id,
+        activeChapterId: chapter.id,
+        training: false,
+      },
+      [],
+      getNewestLessonVersion(lesson),
+    ),
   );
   const activeStep = getChildStep(
     chapter,

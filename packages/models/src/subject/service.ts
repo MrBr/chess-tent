@@ -63,35 +63,17 @@ export const getNewestSubjectVersion = (subject: Subject): number | null => {
   return null;
 };
 
-export const getSubjectWithVersionBase = (
-  subject: Subject,
-  version: number,
-): Subject => {
-  if (!subject.versions) {
-    return subject;
-  }
-  return { ...subject, state: subject.versions[version] };
-};
-
-export const getSubjectWithNewestVersion = (subject: Subject): Subject => {
-  const newestVersion = getNewestSubjectVersion(subject);
-  if (newestVersion === null) {
-    return subject;
-  }
-  return getSubjectWithVersionBase(subject, newestVersion);
-};
-
 export const getSubjectWithVersion = (
   subject: Subject,
   version: number,
-): Subject => {
+): Subject | null => {
   const versions = subject?.versions;
   const hasVersionIndex =
     versions && !(typeof versions[version] === 'undefined');
 
-  if (!hasVersionIndex) {
-    return getSubjectWithNewestVersion(subject);
+  if (!hasVersionIndex || !versions) {
+    return null;
   }
 
-  return getSubjectWithVersionBase(subject, version);
+  return { ...subject, state: versions[version] };
 };

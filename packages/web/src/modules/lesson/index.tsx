@@ -2,7 +2,6 @@ import application from '@application';
 
 import {
   addLessonChapterAction,
-  updateLessonStatusAction,
   updateLessonChapterAction,
   updateLessonPathAction,
   updateLessonStepAction,
@@ -20,7 +19,6 @@ application.context.editorContext = editorContext;
 application.state.actions.updateLessonPath = updateLessonPathAction;
 application.state.actions.updateLessonChapter = updateLessonChapterAction;
 application.state.actions.addLessonChapter = addLessonChapterAction;
-application.state.actions.updateLessonStatus = updateLessonStatusAction;
 application.state.selectors.lessonSelector = lessonSelector;
 application.components.DifficultyDropdown = DifficultyDropdown;
 

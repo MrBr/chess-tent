@@ -6,11 +6,9 @@ import {
   UPDATE_LESSON_CHAPTER,
   UPDATE_LESSON_PATH,
   UPDATE_LESSON_STEP,
-  UPDATE_LESSON_STATUS,
 } from '@types';
 import {
   addChapterToLesson,
-  updateLessonStatus,
   Lesson,
   NormalizedLesson,
   updateLessonStep,
@@ -47,18 +45,6 @@ export const reducer = (
       return {
         ...state,
         [lessonId]: addChapterToLesson(lesson, action.payload),
-      };
-    }
-    case UPDATE_LESSON_STATUS: {
-      const { lessonId, path } = action.meta;
-      const lesson = state[lessonId];
-      return {
-        ...state,
-        [lessonId]: (updateLessonStatus(
-          (lesson as unknown) as Lesson,
-          action.payload,
-          path,
-        ) as unknown) as NormalizedLesson,
       };
     }
     case UPDATE_LESSON_CHAPTER: {

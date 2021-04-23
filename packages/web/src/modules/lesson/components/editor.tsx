@@ -59,7 +59,6 @@ const {
   actions: {
     updateLessonStep,
     addLessonChapter,
-    updateLessonStatus,
     updateLessonChapter,
     updateLessonPath,
   },
@@ -138,7 +137,11 @@ class EditorRenderer extends React.Component<
 
   updateLessonStatusToDraft = () => {
     const { addLessonUpdate, lesson } = this.props;
-    const action = updateLessonStatus(lesson, LessonStateStatus.DRAFT);
+    const action = updateLessonPath(
+      lesson,
+      ['state', 'status'],
+      LessonStateStatus.DRAFT,
+    );
     addLessonUpdate(action);
   };
 

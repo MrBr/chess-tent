@@ -80,12 +80,6 @@ const updateLessonStep = (
   path: SubjectPath,
 ) => updateSubjectValueAt(lesson, path, patch);
 
-const updateLessonStatus = (
-  lesson: Lesson,
-  patch: LessonStateStatus,
-  path: SubjectPath,
-) => updateSubjectValueAt(lesson, path, patch);
-
 const createLesson = (
   id: string,
   chapters: Chapter[],
@@ -112,7 +106,6 @@ export {
   publishLesson,
   getLessonStepPath,
   updateLessonStep,
-  updateLessonStatus,
   getLessonChapterIndex,
   getLessonChapterPath,
   getLessonStatePath,

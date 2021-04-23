@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { Lesson, LessonDetailsStatus, User } from '@chess-tent/models';
+import { Lesson, LessonStateStatus, User } from '@chess-tent/models';
 import { LessonsRequest, LessonUpdates } from '@chess-tent/types';
 import { MongooseFilterQuery } from 'mongoose';
 import { utils, db, service } from '@application';
@@ -23,7 +23,7 @@ export const publishLesson = (lessonId: Lesson['id'], lesson: Lesson) =>
       { _id: lessonId },
       {
         $set: {
-          'state.status': LessonDetailsStatus.PUBLISHED,
+          'state.status': LessonStateStatus.PUBLISHED,
         },
         $push: { versions: _.omit(lesson.state, ['status']) },
       },

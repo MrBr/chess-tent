@@ -2,7 +2,6 @@ import {
   Activity,
   Conversation,
   Lesson,
-  LessonDetails,
   SubjectPath,
   Message,
   NormalizedMessage,

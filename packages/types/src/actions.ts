@@ -13,7 +13,7 @@ import {
   Subject,
   User,
   Chapter,
-  LessonDetailsStatus,
+  LessonStateStatus,
   SubjectPath,
   NormalizedTag,
   Notification,
@@ -58,7 +58,7 @@ export type PathAction<T, P, M extends { path: SubjectPath }> = Action<T, P, M>;
 export type EntityState<T> = { [key: string]: T };
 export type EntitiesState = {
   users: UserState;
-  lessons: LessonState;
+  lessons: AppLessonState;
   steps: StepsState;
   activities: ActivityState;
   conversations: ConversationState;
@@ -80,7 +80,7 @@ export type RecordType = {
 };
 export type RecordState = Record<string, RecordType>;
 export type MetaState = Record<string, any>;
-export type LessonState = EntityState<NormalizedLesson>;
+export type AppLessonState = EntityState<NormalizedLesson>;
 export type ConversationState = EntityState<NormalizedConversation>;
 export type NotificationState = EntityState<NormalizedNotification>;
 export type StepsState = EntityState<NormalizedStep>;
@@ -115,7 +115,7 @@ export type AddLessonChapterAction = PathAction<
 >;
 export type UpdateLessonStatusAction = PathAction<
   typeof UPDATE_LESSON_STATUS,
-  LessonDetailsStatus,
+  LessonStateStatus,
   { lessonId: Lesson['id']; path: SubjectPath }
 >;
 export type UpdateLessonStepAction = PathAction<

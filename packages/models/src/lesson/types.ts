@@ -4,7 +4,6 @@ import { Chapter } from '../chapter';
 import { Tag } from '../tag';
 
 export const TYPE_LESSON = 'lessons';
-export const TYPE_LESSON_DETAILS = 'lessonDetails';
 
 export enum Difficulty {
   BEGINNER = 'BEGINNER',
@@ -12,7 +11,7 @@ export enum Difficulty {
   ADVANCED = 'ADVANCED',
 }
 
-export enum LessonDetailsStatus {
+export enum LessonStateStatus {
   DRAFT = 'DRAFT',
   PUBLISHED = 'PUBLISHED',
 }
@@ -25,8 +24,8 @@ export interface Lesson extends Subject {
   tags?: Tag[];
   users?: User[];
   published?: boolean;
-  state: LessonDetails;
-  versions: LessonDetails[];
+  state: LessonState;
+  versions: LessonState[];
 }
 
 export interface NormalizedLesson {
@@ -37,22 +36,20 @@ export interface NormalizedLesson {
   tags?: Tag['id'][];
   published?: boolean;
   users?: User['id'][];
-  state: NormalizedLessonDetails;
-  versions: NormalizedLessonDetails[];
+  state: NormalizedLessonState;
+  versions: NormalizedLessonState[];
 }
 
-export interface LessonDetails {
-  type: typeof TYPE_LESSON_DETAILS;
+export interface LessonState {
   chapters: Chapter[];
   title: string;
   description?: string;
-  status?: LessonDetailsStatus;
+  status?: LessonStateStatus;
 }
 
-export interface NormalizedLessonDetails {
-  type: LessonDetails['type'];
+export interface NormalizedLessonState {
   chapters: Chapter[];
-  title: LessonDetails['title'];
-  description?: LessonDetails['description'];
-  status?: LessonDetails['status'];
+  title: LessonState['title'];
+  description?: LessonState['description'];
+  status?: LessonState['status'];
 }

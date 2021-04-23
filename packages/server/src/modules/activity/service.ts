@@ -61,14 +61,15 @@ export const getActivity = (
         resolve(
           result
             ? result.toObject({
-                transform: doc => {
-                  if (doc.type === TYPE_ACTIVITY) {
-                    doc.subject = getLessonWithVersion(
-                      doc.subject,
-                      doc.subjectVersion,
+                transform: (doc, ret) => {
+                  if (ret.type === TYPE_ACTIVITY) {
+                    const newSubject = getLessonWithVersion(
+                      ret.subject,
+                      ret.subjectVersion,
                     );
+                    return { ...ret, subject: newSubject };
                   }
-                  return doc;
+                  return ret;
                 },
               })
             : null,
@@ -105,14 +106,15 @@ export const findActivities = (
         }
         const objectResult = result.map(item =>
           item.toObject({
-            transform: doc => {
-              if (doc.type === TYPE_ACTIVITY) {
-                doc.subject = getLessonWithVersion(
-                  doc.subject,
-                  doc.subjectVersion,
+            transform: (doc, ret) => {
+              if (ret.type === TYPE_ACTIVITY) {
+                const newSubject = getLessonWithVersion(
+                  ret.subject,
+                  ret.subjectVersion,
                 );
+                return { ...ret, subject: newSubject };
               }
-              return doc;
+              return ret;
             },
           }),
         );

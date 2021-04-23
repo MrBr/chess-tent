@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { ui, hooks, requests, state } from '@application';
-import { Lesson, LessonDetailsStatus } from '@chess-tent/models';
+import { Lesson, LessonStateStatus } from '@chess-tent/models';
 
 const { Button } = ui;
 const { useApi, useDispatchBatched } = hooks;
@@ -25,12 +25,12 @@ export default ({ lesson }: PublishButtonProps) => {
     lessonPublish(lesson.id, lesson);
     const updateStatusAction = updateLessonStatus(
       lesson,
-      LessonDetailsStatus.PUBLISHED,
+      LessonStateStatus.PUBLISHED,
     );
     dispatch(updateStatusAction);
   }, [dispatch, lesson, lessonPublish]);
 
-  const isPublished = lesson.state.status === LessonDetailsStatus.PUBLISHED;
+  const isPublished = lesson.state.status === LessonStateStatus.PUBLISHED;
   return (
     <Button
       size="extra-small"

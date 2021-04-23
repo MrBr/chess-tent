@@ -20,7 +20,7 @@ import {
   TYPE_LESSON,
   isStep,
   updateStepState,
-  LessonDetailsStatus,
+  LessonStateStatus,
 } from '@chess-tent/models';
 import {
   Actions,
@@ -128,7 +128,7 @@ class EditorRenderer extends React.Component<
   ) {
     const { addLessonUpdate, lesson } = this.props;
 
-    if (lesson.state.status !== LessonDetailsStatus.DRAFT) {
+    if (lesson.state.status !== LessonStateStatus.DRAFT) {
       this.updateLessonStatusToDraft();
     }
 
@@ -138,7 +138,7 @@ class EditorRenderer extends React.Component<
 
   updateLessonStatusToDraft = () => {
     const { addLessonUpdate, lesson } = this.props;
-    const action = updateLessonStatus(lesson, LessonDetailsStatus.DRAFT);
+    const action = updateLessonStatus(lesson, LessonStateStatus.DRAFT);
     addLessonUpdate(action);
   };
 

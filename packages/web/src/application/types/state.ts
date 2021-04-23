@@ -18,7 +18,7 @@ import {
   Notification,
   NormalizedActivity,
   SubjectPath,
-  LessonDetailsStatus,
+  LessonStateStatus,
 } from '@chess-tent/models';
 import {
   AddLessonChapterAction,
@@ -109,7 +109,7 @@ export type State = {
     ) => AddLessonChapterAction;
     updateLessonStatus: (
       lesson: Lesson,
-      lessonStatus: LessonDetailsStatus,
+      lessonStatus: LessonStateStatus,
     ) => UpdateLessonStatusAction;
     updateLessonChapter: (
       lesson: Lesson,

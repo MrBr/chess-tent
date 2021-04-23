@@ -3,7 +3,7 @@ import {
   getLessonChapterPath,
   getLessonStepPath,
   Lesson,
-  LessonDetailsStatus,
+  LessonStateStatus,
   Step,
 } from '@chess-tent/models';
 import {
@@ -48,7 +48,7 @@ export const addLessonChapterAction = (
 
 export const updateLessonStatusAction = (
   lesson: Lesson,
-  status: LessonDetailsStatus,
+  status: LessonStateStatus,
 ): UpdateLessonStatusAction => ({
   type: UPDATE_LESSON_STATUS,
   payload: status,

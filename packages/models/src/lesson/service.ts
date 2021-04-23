@@ -1,30 +1,18 @@
-import { isEmpty, last } from 'lodash';
+import { isEmpty } from 'lodash';
 import {
   Difficulty,
   Lesson,
   NormalizedLesson,
-  LessonDetails,
-  LessonDetailsStatus,
-  NormalizedLessonDetails,
+  LessonState,
+  LessonStateStatus,
+  NormalizedLessonState,
   TYPE_LESSON,
-  TYPE_LESSON_DETAILS,
 } from './types';
 import { User } from '../user';
 import { getStepPath, Step } from '../step';
 import { Chapter } from '../chapter';
 import { SubjectPath, updateSubjectValueAt } from '../subject';
 import { Tag } from '../tag';
-
-const createLessonDetails = (
-  chapters: Chapter[],
-  title: string,
-  description?: string,
-): LessonDetails => ({
-  type: TYPE_LESSON_DETAILS,
-  chapters,
-  title,
-  description,
-});
 
 const isLesson = (entity: unknown) =>
   Object.getOwnPropertyDescriptor(entity, 'type')?.value === TYPE_LESSON;
@@ -51,10 +39,10 @@ const addChapterToLesson = <T extends Lesson | NormalizedLesson>(
 
 const publishLesson = <T extends Lesson | NormalizedLesson>(
   lesson: T,
-  lessonDetails: LessonDetails | NormalizedLessonDetails,
+  lessonState: LessonState | NormalizedLessonState,
 ): T => ({
   ...lesson,
-  versions: [...lesson.versions, lessonDetails],
+  versions: [...lesson.versions, lessonState],
 });
 
 const getLessonChapterIndex = (lesson: Lesson, chapterId: Chapter['id']) => {
@@ -96,8 +84,7 @@ const getNewestLessonVersion = (lesson: Lesson): number | null => {
 };
 
 const getLessonWithVersionBase = (lesson: Lesson, version: number): Lesson => {
-  lesson.state = lesson.versions[version];
-  return lesson;
+  return { ...lesson, state: lesson.versions[version] };
 };
 
 const getLessonWithNewestVersion = (lesson: Lesson): Lesson => {
@@ -127,7 +114,7 @@ const updateLessonStep = (
 
 const updateLessonStatus = (
   lesson: Lesson,
-  patch: LessonDetailsStatus,
+  patch: LessonStateStatus,
   path: SubjectPath,
 ) => updateSubjectValueAt(lesson, path, patch);
 
@@ -138,14 +125,14 @@ const createLesson = (
   title = 'Lesson',
   difficulty: Difficulty = Difficulty.BEGINNER,
   tags: Tag[] = [],
-  versions: LessonDetails[] = [],
+  versions: LessonState[] = [],
 ): Lesson => ({
   id,
   type: TYPE_LESSON,
   owner,
   difficulty,
   tags,
-  state: createLessonDetails(chapters, title),
+  state: { chapters, title },
   versions,
 });
 
@@ -164,5 +151,4 @@ export {
   getLessonWithVersion,
   getLessonWithNewestVersion,
   getNewestLessonVersion,
-  createLessonDetails,
 };

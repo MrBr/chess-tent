@@ -1,5 +1,5 @@
 import { User } from './user';
-import { Lesson, LessonDetails } from './lesson';
+import { Lesson } from './lesson';
 import { Step } from './step';
 import { Activity } from './activity';
 import { Conversation } from './conversation';
@@ -26,7 +26,6 @@ export * from './tag';
 export type Entity =
   | User
   | Lesson
-  | LessonDetails
   | Step
   | Activity
   | Conversation

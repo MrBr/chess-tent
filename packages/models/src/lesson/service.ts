@@ -1,4 +1,3 @@
-import { isEmpty } from 'lodash';
 import {
   Difficulty,
   Lesson,
@@ -75,37 +74,6 @@ const getLessonStepPath = (
   return null;
 };
 
-const getNewestLessonVersion = (lesson: Lesson): number | null => {
-  const versions = lesson?.versions;
-  if (!isEmpty(versions)) {
-    return versions.length - 1;
-  }
-  return null;
-};
-
-const getLessonWithVersionBase = (lesson: Lesson, version: number): Lesson => {
-  return { ...lesson, state: lesson.versions[version] };
-};
-
-const getLessonWithNewestVersion = (lesson: Lesson): Lesson => {
-  const newestVersion = getNewestLessonVersion(lesson);
-  if (newestVersion === null) {
-    return lesson;
-  }
-  return getLessonWithVersionBase(lesson, newestVersion);
-};
-
-const getLessonWithVersion = (lesson: Lesson, version: number): Lesson => {
-  const versions = lesson?.versions;
-  const hasVersionIndex = !(typeof versions[version] === 'undefined');
-
-  if (!hasVersionIndex) {
-    return getLessonWithNewestVersion(lesson);
-  }
-
-  return getLessonWithVersionBase(lesson, version);
-};
-
 const updateLessonStep = (
   lesson: Lesson,
   patch: Partial<Step>,
@@ -148,7 +116,4 @@ export {
   getLessonChapterIndex,
   getLessonChapterPath,
   getLessonStatePath,
-  getLessonWithVersion,
-  getLessonWithNewestVersion,
-  getNewestLessonVersion,
 };

@@ -3,12 +3,22 @@ import { service, db, utils } from '@application';
 import {
   Activity,
   SubjectPathUpdate,
-  getLessonWithVersion,
   User,
   TYPE_ACTIVITY,
 } from '@chess-tent/models';
 import { ActivityFilters } from '@chess-tent/types';
 import { ActivityModel, depopulate } from './model';
+
+const transformActivity = (doc: any, ret: any) => {
+  if (ret.type === TYPE_ACTIVITY) {
+    const transformMethod = service.transformSubjectVersion(
+      ['subject'],
+      ['subjectVersion'],
+    );
+    return transformMethod(ret);
+  }
+  return ret;
+};
 
 export const saveActivity = (activity: Activity) =>
   new Promise(resolve => {
@@ -61,16 +71,7 @@ export const getActivity = (
         resolve(
           result
             ? result.toObject({
-                transform: (doc, ret) => {
-                  if (ret.type === TYPE_ACTIVITY) {
-                    const newSubject = getLessonWithVersion(
-                      ret.subject,
-                      ret.subjectVersion,
-                    );
-                    return { ...ret, subject: newSubject };
-                  }
-                  return ret;
-                },
+                transform: transformActivity,
               })
             : null,
         );
@@ -106,16 +107,7 @@ export const findActivities = (
         }
         const objectResult = result.map(item =>
           item.toObject({
-            transform: (doc, ret) => {
-              if (ret.type === TYPE_ACTIVITY) {
-                const newSubject = getLessonWithVersion(
-                  ret.subject,
-                  ret.subjectVersion,
-                );
-                return { ...ret, subject: newSubject };
-              }
-              return ret;
-            },
+            transform: transformActivity,
           }),
         );
 

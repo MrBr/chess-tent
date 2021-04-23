@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash';
 import { SubjectPath, Subject } from './types';
 
 export const updateSubjectState = <T extends Subject>(
@@ -52,4 +53,45 @@ export const updateSubjectValueAt = <
   }
 
   return updatedSubject as T;
+};
+
+export const getNewestSubjectVersion = (subject: Subject): number | null => {
+  const versions = subject?.versions;
+  if (versions && !isEmpty(versions)) {
+    return versions.length - 1;
+  }
+  return null;
+};
+
+export const getSubjectWithVersionBase = (
+  subject: Subject,
+  version: number,
+): Subject => {
+  if (!subject.versions) {
+    return subject;
+  }
+  return { ...subject, state: subject.versions[version] };
+};
+
+export const getSubjectWithNewestVersion = (subject: Subject): Subject => {
+  const newestVersion = getNewestSubjectVersion(subject);
+  if (newestVersion === null) {
+    return subject;
+  }
+  return getSubjectWithVersionBase(subject, newestVersion);
+};
+
+export const getSubjectWithVersion = (
+  subject: Subject,
+  version: number,
+): Subject => {
+  const versions = subject?.versions;
+  const hasVersionIndex =
+    versions && !(typeof versions[version] === 'undefined');
+
+  if (!hasVersionIndex) {
+    return getSubjectWithNewestVersion(subject);
+  }
+
+  return getSubjectWithVersionBase(subject, version);
 };

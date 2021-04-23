@@ -6,7 +6,7 @@ import {
   getChildStep,
   getStepIndex,
   getStepsCount,
-  getNewestLessonVersion,
+  getNewestSubjectVersion,
   Lesson,
   Step,
   SubjectPath,
@@ -40,7 +40,7 @@ const Preview = ({ lesson, chapter, step }: PreviewProps) => {
         training: false,
       },
       [],
-      getNewestLessonVersion(lesson),
+      getNewestSubjectVersion(lesson),
     ),
   );
   const activeStep = getChildStep(

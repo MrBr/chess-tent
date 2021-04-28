@@ -44,6 +44,11 @@ export type DB = {
     field: F,
     value: T[] | T,
   ) => Record<F, { $in: T[] | undefined }> | {};
+  dotNotate: (
+    obj: Record<string, any>,
+    target?: Record<string, any>,
+    prefix?: string,
+  ) => Record<string, any>;
   createAdapter<T extends EntityDocument>(
     ...updaters: Updater<T>[]
   ): Updater<T>;

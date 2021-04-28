@@ -62,8 +62,11 @@ export const findActivities = (
     const users = utils.notNullOrUndefined({
       users: activityFilters.users,
     });
+
+    const dotNotatedState = db.dotNotate({ state: activityFilters.state });
+
     const query: MongooseFilterQuery<any> = utils.notNullOrUndefined({
-      state: activityFilters.state,
+      ...dotNotatedState,
       subject: activityFilters.subject,
       ...db.orQueries(owner, users),
     });

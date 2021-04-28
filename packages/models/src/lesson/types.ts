@@ -18,38 +18,34 @@ export enum LessonStateStatus {
 
 export interface Lesson extends Subject {
   id: string;
+  docId?: string;
   owner: User;
   type: typeof TYPE_LESSON;
   difficulty: Difficulty;
   tags?: Tag[];
   users?: User[];
   published?: boolean;
-  state: LessonState;
-  versions: LessonState[];
+  state: {
+    chapters: Chapter[];
+    title: string;
+    description?: string;
+    status?: LessonStateStatus;
+  };
 }
 
 export interface NormalizedLesson {
   id: Lesson['id'];
+  docId?: Lesson['id'];
   type: Lesson['type'];
   owner: User['id'];
   difficulty: Lesson['difficulty'];
   tags?: Tag['id'][];
   published?: boolean;
   users?: User['id'][];
-  state: NormalizedLessonState;
-  versions: NormalizedLessonState[];
-}
-
-export interface LessonState {
-  chapters: Chapter[];
-  title: string;
-  description?: string;
-  status?: LessonStateStatus;
-}
-
-export interface NormalizedLessonState {
-  chapters: Chapter[];
-  title: LessonState['title'];
-  description?: LessonState['description'];
-  status?: LessonState['status'];
+  state: {
+    chapters: Chapter[];
+    title: Lesson['state']['title'];
+    description?: Lesson['state']['description'];
+    status?: Lesson['state']['status'];
+  };
 }

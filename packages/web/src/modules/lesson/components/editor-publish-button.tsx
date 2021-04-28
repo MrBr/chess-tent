@@ -14,12 +14,7 @@ export interface PublishButtonProps {
 
 export default ({ lesson }: PublishButtonProps) => {
   const dispatch = useDispatchBatched();
-  const {
-    fetch: lessonPublish,
-    // error: lessonPublishError,
-    // response: lessonPublishResponse,
-    // reset: lessonPublishReset,
-  } = useApi(requests.lessonPublish);
+  const { fetch: lessonPublish } = useApi(requests.lessonPublish);
 
   const handlePublish = useCallback(() => {
     lessonPublish(lesson.id, lesson);

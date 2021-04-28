@@ -54,26 +54,3 @@ export const updateSubjectValueAt = <
 
   return updatedSubject as T;
 };
-
-export const getNewestSubjectVersion = (subject: Subject): number | null => {
-  const versions = subject?.versions;
-  if (versions && !isEmpty(versions)) {
-    return versions.length - 1;
-  }
-  return null;
-};
-
-export const getSubjectWithVersion = (
-  subject: Subject,
-  version: number,
-): Subject | null => {
-  const versions = subject?.versions;
-  const hasVersionIndex =
-    versions && !(typeof versions[version] === 'undefined');
-
-  if (!hasVersionIndex || !versions) {
-    return null;
-  }
-
-  return { ...subject, state: versions[version] };
-};

@@ -28,6 +28,7 @@ export type LessonsRequest = {
   search?: string;
   tagIds?: Tag['id'][];
   difficulty?: Difficulty;
+  hasDocId?: boolean;
   published?: boolean;
 };
 export type MyLessonsRequest = Omit<LessonsRequest, 'users' | 'owner'>;

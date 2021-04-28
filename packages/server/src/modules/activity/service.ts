@@ -1,30 +1,22 @@
 import { MongooseFilterQuery } from 'mongoose';
 import { service, db, utils } from '@application';
-import {
-  Activity,
-  SubjectPathUpdate,
-  User,
-  TYPE_ACTIVITY,
-} from '@chess-tent/models';
+import { Activity, SubjectPathUpdate, User } from '@chess-tent/models';
 import { ActivityFilters } from '@chess-tent/types';
 import { ActivityModel, depopulate } from './model';
 
-const transformActivity = (doc: any, ret: any) => {
-  if (ret.type === TYPE_ACTIVITY) {
-    const transformMethod = service.transformSubjectVersion(
-      ['subject'],
-      ['subjectVersion'],
-    );
-    return transformMethod(ret);
-  }
-  return ret;
-};
-
 export const saveActivity = (activity: Activity) =>
   new Promise(resolve => {
-    ActivityModel.updateOne({ _id: activity.id }, depopulate(activity), {
-      upsert: true,
-    }).exec(err => {
+    ActivityModel.updateOne(
+      { _id: activity.id },
+      {
+        ...depopulate(activity),
+        subject: activity.subject,
+        subjectType: activity.subject.type,
+      },
+      {
+        upsert: true,
+      },
+    ).exec(err => {
       if (err) {
         throw err;
       }
@@ -60,21 +52,11 @@ export const getActivity = (
     ActivityModel.findById(activityId)
       .populate('owner')
       .populate('users')
-      .populate({
-        path: 'subject',
-        populate: 'owner',
-      })
       .exec((err, result) => {
         if (err) {
           throw err;
         }
-        resolve(
-          result
-            ? result.toObject({
-                transform: transformActivity,
-              })
-            : null,
-        );
+        resolve(result ? result.toObject() : null);
       });
   });
 
@@ -97,19 +79,11 @@ export const findActivities = (
     ActivityModel.find(query)
       .populate('owner')
       .populate('users')
-      .populate({
-        path: 'subject',
-        populate: 'owner',
-      })
       .exec((err, result) => {
         if (err) {
           throw err;
         }
-        const objectResult = result.map(item =>
-          item.toObject({
-            transform: transformActivity,
-          }),
-        );
+        const objectResult = result.map(item => item.toObject());
 
         resolve(objectResult);
       });

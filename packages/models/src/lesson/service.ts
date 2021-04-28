@@ -2,9 +2,7 @@ import {
   Difficulty,
   Lesson,
   NormalizedLesson,
-  LessonState,
   LessonStateStatus,
-  NormalizedLessonState,
   TYPE_LESSON,
 } from './types';
 import { User } from '../user';
@@ -36,12 +34,15 @@ const addChapterToLesson = <T extends Lesson | NormalizedLesson>(
   },
 });
 
-const publishLesson = <T extends Lesson | NormalizedLesson>(
-  lesson: T,
-  lessonState: LessonState | NormalizedLessonState,
-): T => ({
+const publishLesson = <T extends Lesson | NormalizedLesson>(lesson: T): T => ({
   ...lesson,
-  versions: [...lesson.versions, lessonState],
+  state: { ...lesson.state, status: LessonStateStatus.PUBLISHED },
+  isPublished: true,
+});
+
+const draftLesson = <T extends Lesson | NormalizedLesson>(lesson: T): T => ({
+  ...lesson,
+  state: { ...lesson.state, status: LessonStateStatus.DRAFT },
 });
 
 const getLessonChapterIndex = (lesson: Lesson, chapterId: Chapter['id']) => {
@@ -87,7 +88,6 @@ const createLesson = (
   title = 'Lesson',
   difficulty: Difficulty = Difficulty.BEGINNER,
   tags: Tag[] = [],
-  versions: LessonState[] = [],
 ): Lesson => ({
   id,
   type: TYPE_LESSON,
@@ -95,7 +95,6 @@ const createLesson = (
   difficulty,
   tags,
   state: { chapters, title },
-  versions,
 });
 
 export {
@@ -104,6 +103,7 @@ export {
   getLessonChapter,
   addChapterToLesson,
   publishLesson,
+  draftLesson,
   getLessonStepPath,
   updateLessonStep,
   getLessonChapterIndex,

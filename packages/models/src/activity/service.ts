@@ -12,7 +12,6 @@ export const createActivity = <T extends Subject, K extends {}>(
   owner: User,
   state: K,
   users: User[] = [],
-  subjectVersion?: number,
 ): Activity<T, K> => ({
   id,
   type: TYPE_ACTIVITY,
@@ -22,7 +21,6 @@ export const createActivity = <T extends Subject, K extends {}>(
   state,
   completed: false,
   completedSteps: [],
-  subjectVersion,
 });
 
 export const isStepCompleted = (activity: Activity, step: Step) =>

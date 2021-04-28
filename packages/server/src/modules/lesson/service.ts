@@ -19,20 +19,34 @@ export const saveLesson = (lesson: Lesson) =>
 
 export const publishLesson = (lessonId: Lesson['id'], lesson: Lesson) =>
   new Promise(resolve => {
-    LessonModel.updateOne(
-      { _id: lessonId },
-      {
-        $set: {
-          'state.status': LessonStateStatus.PUBLISHED,
+    const newLesson = { ...depopulate(lesson), published: true };
+    LessonModel.bulkWrite(
+      [
+        {
+          updateOne: {
+            filter: { docId: lessonId },
+            update: {
+              $setOnInsert: { _id: service.generateIndex() },
+              $set: newLesson,
+            },
+            upsert: true,
+          },
         },
-        $push: { versions: _.omit(lesson.state, ['status']) },
+        {
+          updateOne: {
+            filter: { _id: lessonId },
+            update: newLesson,
+            upsert: true,
+          },
+        },
+      ],
+      err => {
+        if (err) {
+          throw err;
+        }
+        resolve();
       },
-    ).exec((err, result) => {
-      if (err) {
-        throw err;
-      }
-      resolve();
-    });
+    );
   });
 
 export const patchLesson = (lessonId: Lesson['id'], lesson: Partial<Lesson>) =>
@@ -99,6 +113,14 @@ export const findLessons = (
 
     if (filters.search) {
       query['$text'] = { $search: filters.search, $caseSensitive: false };
+    }
+
+    if (filters.hasDocId === true) {
+      query['docId'] = { $exists: true, $ne: null };
+    }
+
+    if (filters.hasDocId === false) {
+      query['docId'] = { $not: { $exists: true, $ne: null } };
     }
 
     LessonModel.find(query)

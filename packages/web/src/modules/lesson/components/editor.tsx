@@ -290,8 +290,6 @@ class EditorRenderer extends React.Component<
     updateStep: this.updateStep,
     removeStep: this.deleteStep,
     setActiveStep: this.setActiveStepHandler,
-
-    //updateVersions: this.updateVersions,
   });
 
   updateChapterTitle = (title: string) => {

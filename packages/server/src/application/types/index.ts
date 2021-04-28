@@ -13,8 +13,6 @@ import {
   User,
   Subject,
   Entity,
-  SubjectPath,
-  VersionPath,
 } from '@chess-tent/models';
 import { Socket } from 'socket.io';
 import { Server as HttpServer } from 'http';
@@ -89,11 +87,6 @@ export type Service = {
   flattenStateToMongoose$set: <T extends Subject>(
     subject: Partial<T>,
   ) => Partial<T>;
-
-  transformSubjectVersion: (
-    subjectPath: SubjectPath,
-    versionPath: VersionPath,
-  ) => any;
 };
 
 export type MailData = Parameters<Messages['send']>[0];

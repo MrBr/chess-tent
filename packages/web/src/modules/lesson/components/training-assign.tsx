@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { components, hooks, requests, services, ui } from '@application';
-import { Lesson, User, getNewestSubjectVersion } from '@chess-tent/models';
+import { Lesson, User } from '@chess-tent/models';
 import { LessonActivity } from '@types';
 import * as yup from 'yup';
 import lessonThumbUrl from '../images/lesson.svg';
@@ -44,7 +44,6 @@ export default ({ close }: { close: () => void }) => {
         data.user,
         { training: true },
         [user],
-        getNewestSubjectVersion(data.lesson),
       );
       saveActivity(activity);
       helpers.resetForm();

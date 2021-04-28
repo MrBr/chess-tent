@@ -1,8 +1,4 @@
-import {
-  SubjectPath,
-  VersionPath,
-  getSubjectWithVersion,
-} from '@chess-tent/models';
+import { SubjectPath } from '@chess-tent/models';
 import { Service } from '@types';
 
 export const subjectPathToMongoosePath = (path: SubjectPath) => {
@@ -30,21 +26,4 @@ export const flattenStateToMongoose$set: Service['flattenStateToMongoose$set'] =
     return flattenedSubject;
   }
   return subject;
-};
-
-export const transformSubjectVersion = (
-  subjectPath: SubjectPath,
-  versionPath: VersionPath,
-): any => {
-  return (document: any) => {
-    const subjectMongoosePath = subjectPathToMongoosePath(subjectPath);
-    const versionMongoosePath = subjectPathToMongoosePath(versionPath);
-    return {
-      ...document,
-      [subjectMongoosePath]: getSubjectWithVersion(
-        document[subjectMongoosePath],
-        document[versionMongoosePath],
-      ),
-    };
-  };
 };

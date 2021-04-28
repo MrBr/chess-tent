@@ -12,9 +12,8 @@ export interface DepupulatedActivity {
   id: Activity['id'];
   type: Activity['type'];
   state: Activity['state'];
-  subject: NormalizedActivity['subject']['id'];
+  subject: NormalizedActivity['subject'];
   subjectType: NormalizedActivity['subject']['type'];
-  subjectVersion: NormalizedActivity['subjectVersion'];
   owner: NormalizedActivity['owner'];
   users: NormalizedActivity['users'];
 }
@@ -22,15 +21,11 @@ export interface DepupulatedActivity {
 const activitySchema = db.createSchema<DepupulatedActivity>(
   {
     subject: ({
-      type: String,
-      refPath: 'subjectType',
+      type: Schema.Types.Mixed,
     } as unknown) as DepupulatedActivity['subject'],
     subjectType: ({
       type: String,
     } as unknown) as DepupulatedActivity['subjectType'],
-    subjectVersion: ({
-      type: String,
-    } as unknown) as DepupulatedActivity['subjectVersion'],
     owner: ({
       type: String,
       ref: TYPE_USER,
@@ -65,9 +60,7 @@ const depopulate = (activity: Activity<Subject>): DepupulatedActivity => {
     ...activity,
     owner: activity.owner.id,
     users,
-    subject: activity.subject.id,
     subjectType: activity.subject.type,
-    subjectVersion: activity.subjectVersion,
   };
 };
 

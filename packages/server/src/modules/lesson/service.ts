@@ -1,5 +1,9 @@
 import _ from 'lodash';
-import { Lesson, LessonStateStatus, User } from '@chess-tent/models';
+import {
+  Lesson,
+  User,
+  publishLesson as publishLessonService,
+} from '@chess-tent/models';
 import { LessonsRequest, LessonUpdates } from '@chess-tent/types';
 import { MongooseFilterQuery } from 'mongoose';
 import { utils, db, service } from '@application';
@@ -19,14 +23,7 @@ export const saveLesson = (lesson: Lesson) =>
 
 export const publishLesson = (lessonId: Lesson['id'], lesson: Lesson) =>
   new Promise(resolve => {
-    const newLesson = {
-      ...depopulate(lesson),
-      state: {
-        ...lesson.state,
-        status: LessonStateStatus.PUBLISHED,
-      },
-      published: true,
-    };
+    const newLesson = publishLessonService(depopulate(lesson));
     LessonModel.bulkWrite(
       [
         {

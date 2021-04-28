@@ -34,10 +34,10 @@ const addChapterToLesson = <T extends Lesson | NormalizedLesson>(
   },
 });
 
-const publishLesson = <T extends Lesson | NormalizedLesson>(lesson: T): T => ({
+const publishLesson = (lesson: Lesson | NormalizedLesson): typeof lesson => ({
   ...lesson,
   state: { ...lesson.state, status: LessonStateStatus.PUBLISHED },
-  isPublished: true,
+  published: true,
 });
 
 const getLessonChapterIndex = (lesson: Lesson, chapterId: Chapter['id']) => {

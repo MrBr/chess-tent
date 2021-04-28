@@ -80,6 +80,5 @@ export const dotNotate = (
       return (target[prefix + key] = obj[key]);
     }
   });
-  console.log('target', target);
   return target;
 };

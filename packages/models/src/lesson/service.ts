@@ -40,11 +40,6 @@ const publishLesson = <T extends Lesson | NormalizedLesson>(lesson: T): T => ({
   isPublished: true,
 });
 
-const draftLesson = <T extends Lesson | NormalizedLesson>(lesson: T): T => ({
-  ...lesson,
-  state: { ...lesson.state, status: LessonStateStatus.DRAFT },
-});
-
 const getLessonChapterIndex = (lesson: Lesson, chapterId: Chapter['id']) => {
   return lesson.state.chapters.findIndex(({ id }) => id === chapterId);
 };
@@ -103,7 +98,6 @@ export {
   getLessonChapter,
   addChapterToLesson,
   publishLesson,
-  draftLesson,
   getLessonStepPath,
   updateLessonStep,
   getLessonChapterIndex,

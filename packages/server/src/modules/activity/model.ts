@@ -12,7 +12,7 @@ export interface DepupulatedActivity {
   id: Activity['id'];
   type: Activity['type'];
   state: Activity['state'];
-  subject: NormalizedActivity['subject'];
+  subject: Activity['subject'];
   subjectType: NormalizedActivity['subject']['type'];
   owner: NormalizedActivity['owner'];
   users: NormalizedActivity['users'];

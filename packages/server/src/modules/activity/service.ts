@@ -6,17 +6,9 @@ import { ActivityModel, depopulate } from './model';
 
 export const saveActivity = (activity: Activity) =>
   new Promise(resolve => {
-    ActivityModel.updateOne(
-      { _id: activity.id },
-      {
-        ...depopulate(activity),
-        subject: activity.subject,
-        subjectType: activity.subject.type,
-      },
-      {
-        upsert: true,
-      },
-    ).exec(err => {
+    ActivityModel.updateOne({ _id: activity.id }, depopulate(activity), {
+      upsert: true,
+    }).exec(err => {
       if (err) {
         throw err;
       }
@@ -83,9 +75,7 @@ export const findActivities = (
         if (err) {
           throw err;
         }
-        const objectResult = result.map(item => item.toObject());
-
-        resolve(objectResult);
+        resolve(result.map(item => item.toObject()));
       });
   });
 

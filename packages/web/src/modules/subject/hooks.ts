@@ -21,7 +21,6 @@ const isSamePathBase = (path1: SubjectPath, path2: SubjectPath) => {
 };
 
 const removeWeakerPaths = (updates: SubjectPath[]) => {
-  console.log('Path base', updates);
   return updates.filter((update1, index) => {
     return !updates.some((update2, i) => {
       if (index === i) {
@@ -70,12 +69,9 @@ export const usePathUpdates = (
     }
   }, [setUpdates, entityUpdated, updates]);
 
-  const pushUpdate = useCallback(
-    (updateAction: PathAction<any, any, any>) => {
-      setUpdates(currentUpdates => [...currentUpdates, updateAction.meta.path]);
-    },
-    [entityUpdated, updates],
-  );
+  const pushUpdate = useCallback((updateAction: PathAction<any, any, any>) => {
+    setUpdates(currentUpdates => [...currentUpdates, updateAction.meta.path]);
+  }, []);
 
   return pushUpdate;
 };

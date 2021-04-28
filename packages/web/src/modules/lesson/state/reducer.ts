@@ -1,7 +1,7 @@
 import {
   ADD_LESSON_CHAPTER,
   LessonAction,
-  LessonState,
+  AppLessonState,
   UPDATE_ENTITIES,
   UPDATE_LESSON_CHAPTER,
   UPDATE_LESSON_PATH,
@@ -16,9 +16,9 @@ import {
 } from '@chess-tent/models';
 
 export const reducer = (
-  state: LessonState = {},
+  state: AppLessonState = {},
   action: LessonAction,
-): LessonState => {
+): AppLessonState => {
   switch (action.type) {
     case UPDATE_LESSON_STEP: {
       const { lessonId, path } = action.meta;

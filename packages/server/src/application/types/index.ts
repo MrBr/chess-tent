@@ -83,6 +83,7 @@ export type Service = {
   subjectPathUpdatesToMongoose$set: (
     updates: SubjectPathUpdate[],
   ) => Record<string, any>;
+
   flattenStateToMongoose$set: <T extends Subject>(
     subject: Partial<T>,
   ) => Partial<T>;

@@ -3,11 +3,9 @@ import { Lesson, Step } from '@chess-tent/models';
 import { AppDocument } from '@types';
 
 const exerciseStepAdapter = async (entity: AppDocument<Lesson>) => {
-  console.log('TEST');
-  if (entity.v !== 0 && !!entity.v) {
+  if (!entity || (entity.v !== 0 && !!entity.v)) {
     return false;
   }
-  console.log('TEST HOPE NOT');
   const updateExerciseSteps = (...args: [Step]): Step => {
     const step = args[0] as Step<{
       exerciseState: {

@@ -1,4 +1,3 @@
-import { orQueries } from './../db/utils';
 import { MongooseFilterQuery } from 'mongoose';
 import { service, db, utils } from '@application';
 import { Activity, SubjectPathUpdate, User } from '@chess-tent/models';
@@ -45,10 +44,6 @@ export const getActivity = (
     ActivityModel.findById(activityId)
       .populate('owner')
       .populate('users')
-      .populate({
-        path: 'subject',
-        populate: 'owner',
-      })
       .exec((err, result) => {
         if (err) {
           throw err;
@@ -76,10 +71,6 @@ export const findActivities = (
     ActivityModel.find(query)
       .populate('owner')
       .populate('users')
-      .populate({
-        path: 'subject',
-        populate: 'owner',
-      })
       .exec((err, result) => {
         if (err) {
           throw err;

@@ -1,4 +1,10 @@
-import { Difficulty, Lesson, NormalizedLesson, TYPE_LESSON } from './types';
+import {
+  Difficulty,
+  Lesson,
+  NormalizedLesson,
+  LessonStateStatus,
+  TYPE_LESSON,
+} from './types';
 import { User } from '../user';
 import { getStepPath, Step } from '../step';
 import { Chapter } from '../chapter';
@@ -26,6 +32,12 @@ const addChapterToLesson = <T extends Lesson | NormalizedLesson>(
     ...lesson.state,
     chapters: [...lesson.state.chapters, chapter],
   },
+});
+
+const publishLesson = (lesson: Lesson | NormalizedLesson): typeof lesson => ({
+  ...lesson,
+  state: { ...lesson.state, status: LessonStateStatus.PUBLISHED },
+  published: true,
 });
 
 const getLessonChapterIndex = (lesson: Lesson, chapterId: Chapter['id']) => {
@@ -85,6 +97,7 @@ export {
   createLesson,
   getLessonChapter,
   addChapterToLesson,
+  publishLesson,
   getLessonStepPath,
   updateLessonStep,
   getLessonChapterIndex,

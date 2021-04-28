@@ -1,4 +1,4 @@
-import { SubjectPath, Subject } from '@chess-tent/models';
+import { SubjectPath } from '@chess-tent/models';
 import { Service } from '@types';
 
 export const subjectPathToMongoosePath = (path: SubjectPath) => {

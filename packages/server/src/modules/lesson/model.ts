@@ -12,16 +12,21 @@ import { lessonAdapter } from './adapter';
 
 export interface DepupulatedLesson {
   id: NormalizedLesson['id'];
+  docId: NormalizedLesson['docId'];
   type: NormalizedLesson['type'];
   owner: NormalizedLesson['owner'];
   state: NormalizedLesson['state'];
   difficulty: NormalizedLesson['difficulty'];
   tags: NormalizedLesson['tags'];
+  published: NormalizedLesson['published'];
   users: NormalizedLesson['users'];
 }
 
 const lessonSchema = db.createSchema<DepupulatedLesson>(
   {
+    docId: ({
+      type: String,
+    } as unknown) as DepupulatedLesson['docId'],
     owner: ({
       type: String,
       ref: TYPE_USER,
@@ -48,6 +53,9 @@ const lessonSchema = db.createSchema<DepupulatedLesson>(
         ref: TYPE_TAG,
       } as unknown,
     ] as DepupulatedLesson['tags'],
+    published: ({
+      type: Boolean,
+    } as unknown) as DepupulatedLesson['published'],
     type: ({
       type: String,
       default: TYPE_LESSON,

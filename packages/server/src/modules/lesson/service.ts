@@ -1,5 +1,9 @@
 import _ from 'lodash';
-import { Lesson, User } from '@chess-tent/models';
+import {
+  Lesson,
+  User,
+  publishLesson as publishLessonService,
+} from '@chess-tent/models';
 import { LessonsRequest, LessonUpdates } from '@chess-tent/types';
 import { MongooseFilterQuery } from 'mongoose';
 import { utils, db, service } from '@application';
@@ -15,6 +19,38 @@ export const saveLesson = (lesson: Lesson) =>
       }
       resolve();
     });
+  });
+
+export const publishLesson = (lessonId: Lesson['id'], lesson: Lesson) =>
+  new Promise(resolve => {
+    const newLesson = publishLessonService(depopulate(lesson));
+    LessonModel.bulkWrite(
+      [
+        {
+          updateOne: {
+            filter: { docId: lessonId },
+            update: {
+              $setOnInsert: { _id: service.generateIndex() },
+              $set: newLesson,
+            },
+            upsert: true,
+          },
+        },
+        {
+          updateOne: {
+            filter: { _id: lessonId },
+            update: newLesson,
+            upsert: true,
+          },
+        },
+      ],
+      err => {
+        if (err) {
+          throw err;
+        }
+        resolve();
+      },
+    );
   });
 
 export const patchLesson = (lessonId: Lesson['id'], lesson: Partial<Lesson>) =>
@@ -81,6 +117,14 @@ export const findLessons = (
 
     if (filters.search) {
       query['$text'] = { $search: filters.search, $caseSensitive: false };
+    }
+
+    if (filters.hasDocId === true) {
+      query['docId'] = { $exists: true, $ne: null };
+    }
+
+    if (filters.hasDocId === false) {
+      query['docId'] = { $not: { $exists: true, $ne: null } };
     }
 
     LessonModel.find(query)

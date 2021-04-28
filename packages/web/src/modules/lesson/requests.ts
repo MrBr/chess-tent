@@ -19,6 +19,11 @@ const lessonSave = services.createRequest<Lesson, LessonResponse>(
   '/lesson/save',
 );
 
+const lessonPublish = services.createRequest<
+  [Lesson['id'], Lesson],
+  StatusResponse
+>('PUT', (id, body) => ({ url: `/lesson/publish/${id}`, data: body }));
+
 const lessonPatch = services.createRequest<
   [Lesson['id'], Partial<Lesson>],
   StatusResponse
@@ -40,6 +45,7 @@ const myLessons = services.createRequest<MyLessonsRequest, LessonsResponse>(
 
 requests.lesson = lesson;
 requests.lessonSave = lessonSave;
+requests.lessonPublish = lessonPublish;
 requests.lessons = lessons;
 requests.myLessons = myLessons;
 requests.lessonPatch = lessonPatch;

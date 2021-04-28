@@ -11,8 +11,14 @@ export enum Difficulty {
   ADVANCED = 'ADVANCED',
 }
 
+export enum LessonStateStatus {
+  DRAFT = 'DRAFT',
+  PUBLISHED = 'PUBLISHED',
+}
+
 export interface Lesson extends Subject {
   id: string;
+  docId?: string;
   owner: User;
   type: typeof TYPE_LESSON;
   difficulty: Difficulty;
@@ -23,11 +29,13 @@ export interface Lesson extends Subject {
     chapters: Chapter[];
     title: string;
     description?: string;
+    status?: LessonStateStatus;
   };
 }
 
 export interface NormalizedLesson {
   id: Lesson['id'];
+  docId?: Lesson['id'];
   type: Lesson['type'];
   owner: User['id'];
   difficulty: Lesson['difficulty'];
@@ -38,5 +46,6 @@ export interface NormalizedLesson {
     chapters: Chapter[];
     title: Lesson['state']['title'];
     description?: Lesson['state']['description'];
+    status?: Lesson['state']['status'];
   };
 }

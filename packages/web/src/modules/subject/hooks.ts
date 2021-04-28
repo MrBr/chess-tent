@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { EntitiesState, PathAction } from '@chess-tent/types';
 import {
   getSubjectValueAt,
@@ -46,12 +46,11 @@ export const usePathUpdates = (
     throttle(
       (updates: SubjectPath[]) => {
         const normalizedEntity = store.getState().entities[type][id];
-        save(
-          removeWeakerPaths(updates).map(path => ({
-            path,
-            value: getSubjectValueAt(normalizedEntity, path),
-          })),
-        );
+        const minimumUpdate = removeWeakerPaths(updates).map(path => ({
+          path,
+          value: getSubjectValueAt(normalizedEntity, path),
+        }));
+        save(minimumUpdate);
         setUpdates([]);
       },
       delay,
@@ -60,17 +59,19 @@ export const usePathUpdates = (
         leading: false,
       },
     ),
+    // Must be zero dependencies to call the same throttled function
     [],
   );
 
-  const pushUpdate = useCallback(
-    (updateAction: PathAction<any, any, any>) => {
-      const newUpdates = [...updates, updateAction.meta.path];
-      entityUpdated(newUpdates);
-      setUpdates(newUpdates);
-    },
-    [entityUpdated, updates],
-  );
+  useEffect(() => {
+    if (updates.length > 0) {
+      entityUpdated(updates);
+    }
+  }, [setUpdates, entityUpdated, updates]);
+
+  const pushUpdate = useCallback((updateAction: PathAction<any, any, any>) => {
+    setUpdates(currentUpdates => [...currentUpdates, updateAction.meta.path]);
+  }, []);
 
   return pushUpdate;
 };

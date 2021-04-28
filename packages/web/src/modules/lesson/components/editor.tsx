@@ -20,6 +20,7 @@ import {
   TYPE_LESSON,
   isStep,
   updateStepState,
+  LessonStateStatus,
 } from '@chess-tent/models';
 import {
   Actions,
@@ -41,6 +42,7 @@ import Sidebar from './editor-sidebar';
 import { PreviewModal } from './activity-preview';
 import ChaptersDropdown from './chapters-dropdown';
 import RootStepButton from './editor-sidebar-root-step-button';
+import EditorPublishButton from './editor-publish-button';
 
 const { Container, Row, Col, Headline2, Button, Absolute, Text } = ui;
 const { createChapter } = services;
@@ -123,10 +125,25 @@ class EditorRenderer extends React.Component<
     action: LessonUpdatableAction,
     undoAction?: LessonUpdatableAction,
   ) {
-    const { addLessonUpdate } = this.props;
+    const { addLessonUpdate, lesson } = this.props;
+
+    if (lesson.state.status !== LessonStateStatus.DRAFT) {
+      this.updateLessonStatusToDraft();
+    }
+
     undoAction && this.recordHistoryChange(undoAction);
     addLessonUpdate(action);
   }
+
+  updateLessonStatusToDraft = () => {
+    const { addLessonUpdate, lesson } = this.props;
+    const action = updateLessonPath(
+      lesson,
+      ['state', 'status'],
+      LessonStateStatus.DRAFT,
+    );
+    addLessonUpdate(action);
+  };
 
   undoUpdate = () => {
     const { history } = this.state;
@@ -377,6 +394,7 @@ class EditorRenderer extends React.Component<
               <Container>
                 <Row>
                   <Col>
+                    <EditorPublishButton lesson={lesson} />
                     <Button
                       size="extra-small"
                       className="mr-3"

@@ -28,6 +28,7 @@ export type LessonsRequest = {
   search?: string;
   tagIds?: Tag['id'][];
   difficulty?: Difficulty;
+  hasDocId?: boolean;
   published?: boolean;
 };
 export type MyLessonsRequest = Omit<LessonsRequest, 'users' | 'owner'>;
@@ -118,6 +119,7 @@ export type Requests = {
   updateMe: RequestFetch<Partial<User>, UserResponse>;
   lesson: RequestFetch<[string], LessonResponse>;
   lessonSave: RequestFetch<Lesson, StatusResponse>;
+  lessonPublish: RequestFetch<[Lesson['id'], Lesson], StatusResponse>;
   lessonPatch: RequestFetch<[Lesson['id'], Partial<Lesson>], StatusResponse>;
   lessonUpdates: RequestFetch<[Lesson['id'], LessonUpdates], StatusResponse>;
   lessons: RequestFetch<LessonsRequest, LessonsResponse>;

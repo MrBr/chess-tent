@@ -19,7 +19,14 @@ export const saveLesson = (lesson: Lesson) =>
 
 export const publishLesson = (lessonId: Lesson['id'], lesson: Lesson) =>
   new Promise(resolve => {
-    const newLesson = { ...depopulate(lesson), published: true };
+    const newLesson = {
+      ...depopulate(lesson),
+      state: {
+        ...lesson.state,
+        status: LessonStateStatus.PUBLISHED,
+      },
+      published: true,
+    };
     LessonModel.bulkWrite(
       [
         {

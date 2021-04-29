@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import styled from '@emotion/styled';
-import { ui, hooks, requests, components, utils } from '@application';
+import { ui, hooks, requests, components, utils, socket } from '@application';
 import * as yup from 'yup';
 
 const { useApi, useHistory } = hooks;
@@ -48,6 +48,7 @@ export default () => {
       return;
     }
     if (response?.data) {
+      socket.subscribe(`user-${response.data.id}`);
       updateUser(response.data);
     }
   }, [response, updateUser]);

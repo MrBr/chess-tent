@@ -1,7 +1,13 @@
 import mongoose from 'mongoose';
 import application from '@application';
 
-import { createModel, createSchema, inQuery, orQueries } from './utils';
+import {
+  createModel,
+  createSchema,
+  inQuery,
+  orQueries,
+  dotNotate,
+} from './utils';
 import { applyAdapter, createAdapter } from './adapter';
 
 // Connection URL
@@ -32,5 +38,6 @@ application.db.createSchema = createSchema;
 application.db.createModel = createModel;
 application.db.orQueries = orQueries;
 application.db.inQuery = inQuery;
+application.db.dotNotate = dotNotate;
 application.db.createAdapter = createAdapter;
 application.db.applyAdapter = applyAdapter;

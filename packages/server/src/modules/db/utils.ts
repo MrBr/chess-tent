@@ -67,3 +67,18 @@ export const inQuery: DB['inQuery'] = (field, value) => {
   }
   return { [field]: { $in: value } };
 };
+
+export const dotNotate = (
+  obj: Record<string, any>,
+  target: Record<string, any> = {},
+  prefix = '',
+) => {
+  Object.keys(obj).forEach(function (key) {
+    if (typeof obj[key] === 'object') {
+      dotNotate(obj[key], target, prefix + key + '.');
+    } else {
+      return (target[prefix + key] = obj[key]);
+    }
+  });
+  return target;
+};

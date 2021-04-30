@@ -1,39 +1,26 @@
-import {
-  Message,
-  NormalizedMessage,
-  TYPE_MESSAGE,
-  TYPE_USER,
-} from '@chess-tent/models';
+import { Schema } from 'mongoose';
+import { NormalizedMessageBucket, TYPE_MESSAGE } from '@chess-tent/models';
 import { db } from '@application';
 
-const messageSchema = db.createSchema<NormalizedMessage>({
+const messageSchema = db.createSchema<NormalizedMessageBucket>({
   type: ({
     type: String,
     default: TYPE_MESSAGE,
   } as unknown) as typeof TYPE_MESSAGE,
   conversationId: ({
     type: String,
-  } as unknown) as NormalizedMessage['conversationId'],
-  message: ({
-    type: String,
-  } as unknown) as NormalizedMessage['message'],
-  owner: ({
-    type: String,
-    ref: TYPE_USER,
-  } as unknown) as NormalizedMessage['owner'],
-  timestamp: ({
+  } as unknown) as NormalizedMessageBucket['conversationId'],
+  count: ({
     type: Number,
-  } as unknown) as NormalizedMessage['timestamp'],
-  read: ({
-    type: Boolean,
-  } as unknown) as NormalizedMessage['read'],
+  } as unknown) as NormalizedMessageBucket['count'],
+  messages: ({
+    type: Schema.Types.Mixed,
+  } as unknown) as NormalizedMessageBucket['messages'],
 });
 
-const MessageModel = db.createModel<NormalizedMessage>(
+const MessageModel = db.createModel<NormalizedMessageBucket>(
   TYPE_MESSAGE,
   messageSchema,
 );
 
-const depopulate = (message: Message): NormalizedMessage => message;
-
-export { messageSchema, MessageModel, depopulate };
+export { messageSchema, MessageModel };

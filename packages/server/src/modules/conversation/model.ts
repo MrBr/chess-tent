@@ -24,14 +24,12 @@ const conversationSchema = db
   .set('toObject', {
     virtuals: true,
     transform: (doc, ret) => {
-      ret.messages = ret.virtualMessages;
-      delete ret.virtualMessages;
-    },
-  })
-  .set('toJSON', {
-    virtuals: true,
-    transform: (doc, ret) => {
-      ret.messages = ret.virtualMessages;
+      ret.messages = ret.virtualMessages.reduce(
+        (messagesAll: any, messagesBucket: any) => {
+          return messagesAll.concat(messagesBucket.messages);
+        },
+        [],
+      );
       delete ret.virtualMessages;
     },
   });
@@ -40,7 +38,6 @@ conversationSchema.virtual('virtualMessages', {
   ref: TYPE_MESSAGE,
   localField: '_id',
   foreignField: 'conversationId',
-  options: { sort: { timestamp: -1 } },
 });
 
 const ConversationModel = db.createModel<NormalizedConversation>(

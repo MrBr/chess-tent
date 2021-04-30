@@ -8,9 +8,10 @@ import { Pagination } from '@chess-tent/types';
 import { MessageModel } from 'modules/message/model';
 import { ConversationModel, depopulate } from './model';
 
+const MESSAGES_BUCKET_LIMIT = 20;
+
 export const saveConversation = (conversation: Conversation) =>
   new Promise(resolve => {
-    console.log('saveConversation', conversation);
     ConversationModel.updateOne(
       { _id: conversation.id },
       depopulate(conversation),
@@ -30,12 +31,26 @@ export const addMessageToConversation = (
   message: NormalizedMessage,
 ) =>
   new Promise(resolve => {
+    const idRegex = new RegExp(String.raw`^${conversationId}_`);
     MessageModel.updateOne(
-      { _id: message.id, conversationId: conversationId },
-      message,
       {
-        upsert: true,
+        _id: idRegex,
+        count: { $lt: MESSAGES_BUCKET_LIMIT },
       },
+      {
+        $push: {
+          messages: {
+            $each: [message],
+            $position: 0,
+          },
+        },
+        $inc: { count: 1 },
+        $set: { conversationId },
+        $setOnInsert: {
+          _id: `${conversationId}_${message.timestamp}`,
+        },
+      },
+      { upsert: true },
     ).exec(err => {
       if (err) {
         throw err;
@@ -51,14 +66,19 @@ export const updateConversationMessage = (
 ) => {
   const patch = Object.keys(messagePatch).reduce<Record<string, any>>(
     (patch, key) => {
-      patch[key] = messagePatch[key as keyof NormalizedMessage];
+      patch['messages.$.' + key] = messagePatch[key as keyof NormalizedMessage];
       return patch;
     },
     {},
   );
   new Promise(resolve => {
     MessageModel.updateOne(
-      { _id: messageId, conversationId: conversationId },
+      {
+        _id: {
+          $gte: `${conversationId}_${messagePatch.timestamp}`,
+          $lte: `${conversationId}_${messagePatch.timestamp}`,
+        },
+      },
       { $set: patch },
     ).exec(err => {
       if (err) {
@@ -78,6 +98,7 @@ export const findConversations = (
       .populate({
         path: 'virtualMessages',
         options: {
+          sort: { _id: -1 },
           limit: 1,
         },
       })
@@ -85,7 +106,6 @@ export const findConversations = (
         if (err) {
           throw err;
         }
-        console.log('findConversations', result);
         resolve(result.map(item => item.toObject()));
       });
   });
@@ -99,14 +119,14 @@ export const getConversation = (
       .populate({
         path: 'virtualMessages',
         options: {
-          limit: 10,
+          sort: { _id: -1 },
+          limit: 1,
         },
       })
       .exec((err, result) => {
         if (err) {
           throw err;
         }
-        console.log('getConversation', result);
         resolve(result?.toObject());
       });
   });
@@ -118,15 +138,26 @@ export const getConversationMessages = (
   new Promise(resolve => {
     const numToSkip = pagination[0];
     const numToReturn = pagination[1];
-    MessageModel.find({
-      conversationId: conversationId,
-    })
-      .skip(numToSkip)
-      .limit(numToReturn)
+    const toSkip = Math.floor(numToSkip / MESSAGES_BUCKET_LIMIT);
+    const toReturn = Math.ceil(numToReturn / MESSAGES_BUCKET_LIMIT) + 1;
+    const idRegex = new RegExp(String.raw`^${conversationId}_`);
+
+    MessageModel.find({ _id: idRegex })
+      .sort({ _id: -1 })
+      .skip(toSkip)
+      .limit(toReturn)
       .exec((err, result) => {
         if (err) {
           throw err;
         }
-        resolve(result.map(item => item.toObject()));
+        const messageBuckets = result.map(item => item.toObject());
+        const messages = messageBuckets.reduce(
+          (messagesAll: any, messagesBucket: any) => {
+            return messagesAll.concat(messagesBucket.messages);
+          },
+          [],
+        );
+
+        resolve(messages.slice(numToSkip, numToSkip + numToReturn));
       });
   });

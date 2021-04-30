@@ -94,6 +94,7 @@ export default styled(
         // conversation
         const message = createMessage(
           generateIndex(),
+          conversation.id,
           activeUser,
           event.target.value,
         );

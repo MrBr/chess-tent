@@ -1,9 +1,16 @@
-import { Conversation, NormalizedMessage, User } from '@chess-tent/models';
-import { ConversationModel, depopulate } from './model';
+import {
+  Conversation,
+  Message,
+  NormalizedMessage,
+  User,
+} from '@chess-tent/models';
 import { Pagination } from '@chess-tent/types';
+import { MessageModel } from 'modules/message/model';
+import { ConversationModel, depopulate } from './model';
 
 export const saveConversation = (conversation: Conversation) =>
   new Promise(resolve => {
+    console.log('saveConversation', conversation);
     ConversationModel.updateOne(
       { _id: conversation.id },
       depopulate(conversation),
@@ -23,10 +30,13 @@ export const addMessageToConversation = (
   message: NormalizedMessage,
 ) =>
   new Promise(resolve => {
-    ConversationModel.updateOne(
-      { _id: conversationId },
-      { $push: { messages: { $each: [message], $position: 0 } } },
-    ).exec((err, result) => {
+    MessageModel.updateOne(
+      { _id: message.id, conversationId: conversationId },
+      message,
+      {
+        upsert: true,
+      },
+    ).exec(err => {
       if (err) {
         throw err;
       }
@@ -41,16 +51,17 @@ export const updateConversationMessage = (
 ) => {
   const patch = Object.keys(messagePatch).reduce<Record<string, any>>(
     (patch, key) => {
-      patch['messages.$.' + key] = messagePatch[key as keyof NormalizedMessage];
+      patch[key] = messagePatch[key as keyof NormalizedMessage];
       return patch;
     },
     {},
   );
   new Promise(resolve => {
-    ConversationModel.updateOne(
-      { _id: conversationId, messages: { $elemMatch: { id: messageId } } },
+    MessageModel.updateOne(
+      { _id: messageId, conversationId: conversationId },
       { $set: patch },
-    ).exec((err, result) => {
+      { upsert: true },
+    ).exec(err => {
       if (err) {
         throw err;
       }
@@ -63,15 +74,19 @@ export const findConversations = (
   users: User['id'][],
 ): Promise<Conversation[]> =>
   new Promise(resolve => {
-    ConversationModel.find(
-      { users: { $in: users } },
-      { messages: { $slice: 1 } },
-    )
+    ConversationModel.find({ users: { $in: users } })
       .populate('users')
+      .populate({
+        path: 'virtualMessages',
+        options: {
+          limit: 1,
+        },
+      })
       .exec((err, result) => {
         if (err) {
           throw err;
         }
+        console.log('findConversations', result);
         resolve(result.map(item => item.toObject()));
       });
   });
@@ -80,12 +95,19 @@ export const getConversation = (
   conversationId: Conversation['id'],
 ): Promise<Conversation> =>
   new Promise(resolve => {
-    ConversationModel.findById(conversationId, { messages: { $slice: 10 } })
+    ConversationModel.findById(conversationId)
       .populate('users')
+      .populate({
+        path: 'virtualMessages',
+        options: {
+          limit: 10,
+        },
+      })
       .exec((err, result) => {
         if (err) {
           throw err;
         }
+        console.log('getConversation', result);
         resolve(result?.toObject());
       });
   });
@@ -93,14 +115,19 @@ export const getConversation = (
 export const getConversationMessages = (
   conversationId: Conversation['id'],
   pagination: Pagination,
-): Promise<Conversation> =>
+): Promise<Message[]> =>
   new Promise(resolve => {
-    ConversationModel.findById(conversationId, {
-      messages: { $slice: pagination },
-    }).exec((err, result) => {
-      if (err) {
-        throw err;
-      }
-      resolve(result?.toObject().messages);
-    });
+    const numToSkip = pagination[0];
+    const numToReturn = pagination[1];
+    MessageModel.find({
+      conversationId: conversationId,
+    })
+      .skip(numToSkip)
+      .limit(numToReturn)
+      .exec((err, result) => {
+        if (err) {
+          throw err;
+        }
+        resolve(result.map(item => item.toObject()));
+      });
   });

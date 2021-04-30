@@ -60,7 +60,6 @@ export const updateConversationMessage = (
     MessageModel.updateOne(
       { _id: messageId, conversationId: conversationId },
       { $set: patch },
-      { upsert: true },
     ).exec(err => {
       if (err) {
         throw err;

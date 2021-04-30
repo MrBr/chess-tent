@@ -49,7 +49,12 @@ const LoadMore = ({
       loadMore();
     }
   }, [inView, loadMore, loading, noMore, ready]);
-  return <div ref={ref}>{loading ? 'Loading...' : ''}</div>;
+  const className = loading ? '' : 'false-empty';
+  return (
+    <div ref={ref} className={className}>
+      {loading ? 'Loading...' : ''}
+    </div>
+  );
 };
 
 export default styled(
@@ -116,7 +121,7 @@ export default styled(
           </Col>
         </Row>
         <Row className="flex-grow-1 overflow-y-auto pl-3 pr-3 pb-3 flex-column-reverse">
-          <Col>
+          <Col className="overflow-anchor-none">
             <LoadMore
               loadMore={loadMoreMessages}
               loading={loading}

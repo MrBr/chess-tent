@@ -116,6 +116,12 @@ export type UIComponent<T = {}> = ComponentType<
   } & ClickProps
 >;
 
+export interface LoadMoreProps {
+  loadMore: () => void;
+  loading: boolean;
+  noMore: boolean;
+}
+
 type InputPropsWithSizeEnhancer = Omit<
   ComponentProps<typeof FormControl>,
   'size'
@@ -217,6 +223,7 @@ export type UI = {
     zIndex?: number;
   }>;
   Dot: UIComponent<{ background?: string }>;
+  LoadMore: UIComponent<LoadMoreProps>;
   Page: UIComponent<ContainerProps>;
   Tabs: typeof Tabs;
   Tab: typeof Tab;

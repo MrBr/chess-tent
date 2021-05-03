@@ -262,6 +262,7 @@ export type Components = {
   Filters: ComponentType<{ children?: ReactElement }>;
   Header: ComponentType;
   TabBar: ComponentType;
+  LoadMore: ComponentType;
   // Page with common layout setup
   Page: ComponentType;
   Layout: ComponentType<{

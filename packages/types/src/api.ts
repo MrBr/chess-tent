@@ -36,8 +36,7 @@ export type UpdateNotificationsRequest = {
   ids: Notification['id'][];
   updates: Partial<Pick<Notification, 'seen' | 'read' | 'state' | 'time'>>;
 };
-
-export type Pagination = [number, number];
+export type Pagination = number | undefined;
 
 export type StatusResponse = { error: string | null };
 export type SignedImageResponse = { data: string } & StatusResponse;

@@ -39,9 +39,9 @@ const conversationSave = services.createRequest<Conversation, StatusResponse>(
 const messages = services.createRequest<
   [Conversation['id'], Pagination],
   ConversationMessagesResponse
->('POST', (conversationId, pagination) => ({
+>('POST', (conversationId, lastDocumentTimestamp) => ({
   url: `/conversation/${conversationId}/messages`,
-  data: pagination,
+  data: { lastDocumentTimestamp },
 }));
 
 requests.conversations = conversations;

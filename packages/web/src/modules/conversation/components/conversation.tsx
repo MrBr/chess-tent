@@ -74,7 +74,6 @@ export default styled(
     const dispatch = useDispatchBatched();
     const [loadMoreMessages, loading, noMore] = useLoadMoreMessages(
       conversation,
-      10,
     );
     const { messages } = conversation;
 

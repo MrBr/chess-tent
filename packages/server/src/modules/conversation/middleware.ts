@@ -36,7 +36,7 @@ export const getConversationMessages: MiddlewareFunction = (req, res, next) => {
   service
     .getConversationMessages(
       res.locals.conversation.id as Conversation['id'],
-      res.locals.pagination as Pagination,
+      res.locals.lastDocumentTimestamp as Pagination,
     )
     .then(messages => {
       res.locals.messages = messages;

@@ -133,19 +133,20 @@ export const getConversation = (
 
 export const getConversationMessages = (
   conversationId: Conversation['id'],
-  pagination: Pagination,
+  lastDocumentTimestamp: Pagination,
 ): Promise<Message[]> =>
   new Promise(resolve => {
-    const numToSkip = pagination[0];
-    const numToReturn = pagination[1];
-    const toSkip = Math.floor(numToSkip / MESSAGES_BUCKET_LIMIT);
-    const toReturn = Math.ceil(numToReturn / MESSAGES_BUCKET_LIMIT) + 1;
     const idRegex = new RegExp(String.raw`^${conversationId}_`);
 
-    MessageModel.find({ _id: idRegex })
+    const filterBy = lastDocumentTimestamp
+      ? { $lt: `${conversationId}_${lastDocumentTimestamp}` }
+      : { _id: idRegex };
+
+    MessageModel.find({
+      _id: filterBy,
+    })
       .sort({ _id: -1 })
-      .skip(toSkip)
-      .limit(toReturn)
+      .limit(1)
       .exec((err, result) => {
         if (err) {
           throw err;
@@ -158,6 +159,6 @@ export const getConversationMessages = (
           [],
         );
 
-        resolve(messages.slice(numToSkip, numToSkip + numToReturn));
+        resolve(messages);
       });
   });

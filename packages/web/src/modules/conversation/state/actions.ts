@@ -11,7 +11,6 @@ import {
   TYPE_CONVERSATION,
   User,
 } from '@chess-tent/models';
-import { updateRecordAction } from 'modules/state-records/state/actions';
 
 import { state } from '@application';
 
@@ -46,9 +45,6 @@ export const updateMessage = (
   },
 });
 
-export const updateActiveUserConversationsNormalized = (
+export const updateActiveUserConversations = (
   conversations: Conversation['id'][],
 ) => updateRecordValue('conversations', conversations, TYPE_CONVERSATION);
-
-export const updateActiveUserConversations = (conversation: Conversation) =>
-  updateRecordAction('conversations', [conversation]);

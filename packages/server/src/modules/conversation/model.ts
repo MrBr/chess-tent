@@ -48,6 +48,7 @@ const ConversationModel = db.createModel<NormalizedConversation>(
 const depopulate = (conversation: Conversation): NormalizedConversation => ({
   ...conversation,
   users: conversation.users.map(user => user.id),
+  messages: [],
 });
 
 export { conversationSchema, ConversationModel, depopulate };

@@ -84,7 +84,12 @@ export default styled(
         messages[0].owner !== activeUser.id
       ) {
         dispatch(
-          updateMessage({ read: true }, conversation.id, messages[0].id),
+          updateMessage(
+            { read: true },
+            conversation.id,
+            messages[0].id,
+            messages[0].timestamp,
+          ),
         );
       }
     }, [activeUser.id, conversation, dispatch, messages]);

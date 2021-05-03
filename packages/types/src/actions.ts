@@ -215,7 +215,7 @@ export type SendMessageAction = Action<
 export type UpdateMessageAction = Action<
   typeof UPDATE_MESSAGE,
   Partial<NormalizedMessage>,
-  { conversationId: Conversation['id']; messageId: NormalizedMessage['id'] }
+  { conversationId: Conversation['id']; messageId: NormalizedMessage['id']; messageTimestamp: NormalizedMessage['timestamp'] }
 >;
 export type MessageAction = SendMessageAction | UpdateMessageAction;
 

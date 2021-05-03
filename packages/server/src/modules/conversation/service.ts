@@ -62,6 +62,7 @@ export const addMessageToConversation = (
 export const updateConversationMessage = (
   conversationId: Conversation['id'],
   messageId: NormalizedMessage['id'],
+  messageTimestamp: NormalizedMessage['timestamp'],
   messagePatch: Partial<NormalizedMessage>,
 ) => {
   const patch = Object.keys(messagePatch).reduce<Record<string, any>>(
@@ -75,9 +76,9 @@ export const updateConversationMessage = (
     MessageModel.updateOne(
       {
         _id: {
-          $gte: `${conversationId}_${messagePatch.timestamp}`,
-          $lte: `${conversationId}_${messagePatch.timestamp}`,
+          $lte: `${conversationId}_${messageTimestamp}`,
         },
+        'messages.timestamp': messageTimestamp,
       },
       { $set: patch },
     ).exec(err => {

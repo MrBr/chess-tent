@@ -39,13 +39,13 @@ export const useLoadMoreMessages = (
       );
     }
   }, [response, dispatch, conversation, reset]);
-  const lastMessage = last(conversation.messages);
   const loadMore = useCallback(() => {
     if (noMore || loading) {
       return;
     }
+    const lastMessage = last(conversation.messages);
     fetch(conversation.id, lastMessage?.timestamp);
-  }, [noMore, loading, fetch, conversation.id, lastMessage]);
+  }, [noMore, loading, conversation.messages, conversation.id, fetch]);
   return [loadMore, loading || !!response, noMore];
 };
 

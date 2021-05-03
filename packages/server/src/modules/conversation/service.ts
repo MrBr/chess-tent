@@ -145,6 +145,7 @@ export const getConversationMessages = (
 
     MessageModel.find({
       _id: filterBy,
+      conversationId,
     })
       .sort({ _id: -1 })
       .limit(1)

@@ -1,7 +1,10 @@
 import { Middleware, SEND_MESSAGE, UPDATE_MESSAGE } from '@types';
 import { requests, state, socket, utils } from '@application';
 import { TYPE_CONVERSATION } from '@chess-tent/models';
-import { updateActiveUserConversations } from './actions';
+import {
+  updateActiveUserConversations,
+  updateActiveUserConversationsNormalized,
+} from './actions';
 
 const {
   selectors: { selectRecord },
@@ -22,7 +25,10 @@ export const middleware: Middleware = store => next => action => {
         )
         .then(() => {
           store.dispatch(
-            updateActiveUserConversations([conversationId, ...conversations]),
+            updateActiveUserConversationsNormalized([
+              conversationId,
+              ...conversations,
+            ]),
           );
           socket.sendAction(action);
         });
@@ -31,7 +37,12 @@ export const middleware: Middleware = store => next => action => {
     }
     if (!conversation) {
       requests.conversation(conversationId).then(response => {
-        updateActiveUserConversations([conversationId, ...conversations]);
+        store.dispatch(
+          updateActiveUserConversations({
+            ...response.data,
+            messages: [action.payload],
+          }),
+        );
       });
     }
   }

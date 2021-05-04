@@ -71,10 +71,20 @@ export type EntitiesState = {
  * Records represent complex data model which holds
  * both data and metadata about the record.
  */
+export type RecordValueNormalizedSingle = string;
+export type RecordValueNormalizedList = string[];
+export type RecordValueNormalized =
+  | RecordValueNormalizedSingle
+  | RecordValueNormalizedList;
+export type GetRecordNormalizedValue<T extends RecordValue> = T extends Entity[]
+  ? RecordValueNormalizedList
+  : T extends Entity
+  ? RecordValueNormalizedSingle
+  : RecordValueNormalized;
 export type RecordValue = Entity | Entity[];
 export type RecordMeta = { type: Entity['type'] };
-export type RecordType = {
-  value: string | string[];
+export type RecordType<T extends RecordValue = RecordValue> = {
+  value: GetRecordNormalizedValue<T>;
   meta: RecordMeta;
 };
 export type RecordState = Record<string, RecordType>;
@@ -215,7 +225,11 @@ export type SendMessageAction = Action<
 export type UpdateMessageAction = Action<
   typeof UPDATE_MESSAGE,
   Partial<NormalizedMessage>,
-  { conversationId: Conversation['id']; messageId: NormalizedMessage['id']; messageTimestamp: NormalizedMessage['timestamp'] }
+  {
+    conversationId: Conversation['id'];
+    messageId: NormalizedMessage['id'];
+    messageTimestamp: NormalizedMessage['timestamp'];
+  }
 >;
 export type MessageAction = SendMessageAction | UpdateMessageAction;
 

@@ -16,11 +16,12 @@ export const createRecordHook = <T extends RecordValue>(
 
 export const createRecordService = <T extends RecordValue>(
   recordKey: string,
+  recordType: RecordMeta['type'],
 ) => (store: MiddlewareAPI): RecordService<T> => {
   const record = selectRecord<T>(recordKey)(store.getState());
 
   const updateValue = (value: GetRecordNormalizedValue<T>) =>
-    store.dispatch(updateRecordValueAction(recordKey, value, record.meta.type));
+    store.dispatch(updateRecordValueAction(recordKey, value, recordType));
 
   const update = (entity: RecordValue) =>
     store.dispatch(updateRecordAction(recordKey, entity));

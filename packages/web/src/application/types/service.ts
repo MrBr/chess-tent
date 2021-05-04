@@ -83,6 +83,7 @@ export type Services = {
   ) => (...args: GenericArguments<K>) => Promise<U>;
   createRecordService: <T extends RecordValue>(
     recordKey: string,
+    recordType: RecordMeta['type'],
   ) => (store: MiddlewareAPI) => RecordService<T>;
   createRecordHook: <T extends RecordValue>(
     recordKey: string,

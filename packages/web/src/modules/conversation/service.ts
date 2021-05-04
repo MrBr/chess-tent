@@ -1,6 +1,6 @@
 import { services } from '@application';
-import { Conversation } from '@chess-tent/models';
+import { Conversation, TYPE_CONVERSATION } from '@chess-tent/models';
 
 export const conversationRecordService = services.createRecordService<
   Conversation[]
->('conversations');
+>('conversations', TYPE_CONVERSATION);

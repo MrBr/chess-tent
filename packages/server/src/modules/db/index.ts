@@ -7,6 +7,8 @@ import {
   inQuery,
   orQueries,
   dotNotate,
+  flattenBuckets,
+  getBucketingIdFilterRegex,
 } from './utils';
 import { applyAdapter, createAdapter } from './adapter';
 
@@ -39,5 +41,7 @@ application.db.createModel = createModel;
 application.db.orQueries = orQueries;
 application.db.inQuery = inQuery;
 application.db.dotNotate = dotNotate;
+application.db.flattenBuckets = flattenBuckets;
+application.db.getBucketingIdFilterRegex = getBucketingIdFilterRegex;
 application.db.createAdapter = createAdapter;
 application.db.applyAdapter = applyAdapter;

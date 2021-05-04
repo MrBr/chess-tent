@@ -24,12 +24,7 @@ const conversationSchema = db
   .set('toObject', {
     virtuals: true,
     transform: (doc, ret) => {
-      ret.messages = ret.virtualMessages.reduce(
-        (messagesAll: any, messagesBucket: any) => {
-          return messagesAll.concat(messagesBucket.messages);
-        },
-        [],
-      );
+      ret.messages = db.flattenBuckets(ret.virtualMessages, 'messages');
       delete ret.virtualMessages;
     },
   });

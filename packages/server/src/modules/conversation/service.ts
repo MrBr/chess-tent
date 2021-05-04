@@ -1,3 +1,4 @@
+import { db } from '@application';
 import {
   Conversation,
   Message,
@@ -31,7 +32,7 @@ export const addMessageToConversation = (
   message: NormalizedMessage,
 ) =>
   new Promise(resolve => {
-    const idRegex = new RegExp(String.raw`^${conversationId}_`);
+    const idRegex = db.getBucketingIdFilterRegex(conversationId);
     MessageModel.updateOne(
       {
         _id: idRegex,
@@ -135,7 +136,7 @@ export const getConversationMessages = (
   lastDocumentTimestamp: Pagination,
 ): Promise<Message[]> =>
   new Promise(resolve => {
-    const idRegex = new RegExp(String.raw`^${conversationId}_`);
+    const idRegex = db.getBucketingIdFilterRegex(conversationId);
 
     const filterBy = lastDocumentTimestamp
       ? { $lt: `${conversationId}_${lastDocumentTimestamp}` }
@@ -151,14 +152,6 @@ export const getConversationMessages = (
         if (err) {
           throw err;
         }
-        const messageBuckets = result.map(item => item.toObject());
-        const messages = messageBuckets.reduce(
-          (messagesAll: any, messagesBucket: any) => {
-            return messagesAll.concat(messagesBucket.messages);
-          },
-          [],
-        );
-
-        resolve(messages);
+        resolve(db.flattenBuckets(result, 'messages'));
       });
   });

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import styled from '@emotion/styled';
-import { ui, hooks, requests, components, utils, socket } from '@application';
+import { ui, hooks, requests, components, utils } from '@application';
 import * as yup from 'yup';
 
 const { useApi, useHistory } = hooks;

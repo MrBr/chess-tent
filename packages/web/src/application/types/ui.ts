@@ -117,6 +117,7 @@ export type UIComponent<T = {}> = ComponentType<
 >;
 
 export interface LoadMoreProps {
+  className?: string;
   loadMore: () => void;
   loading: boolean;
   noMore: boolean;

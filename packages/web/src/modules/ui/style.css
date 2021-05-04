@@ -57,7 +57,3 @@ body {
 .overflow-anchor-none {
   overflow-anchor: none;
 }
-
-.false-empty {
-  height: 1px;
-}

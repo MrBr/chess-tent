@@ -82,3 +82,15 @@ export const dotNotate = (
   });
   return target;
 };
+
+export const flattenBuckets = (buckets: any[], itemsKey: string) => {
+  return buckets.reduce(
+    (itemsAll: Record<string, any>, bucket: Record<string, any>) => {
+      return itemsAll.concat(bucket[itemsKey]);
+    },
+    [],
+  );
+};
+
+export const getBucketingIdFilterRegex = (parentId: string) =>
+  new RegExp(String.raw`^${parentId}_`);

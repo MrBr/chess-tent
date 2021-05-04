@@ -8,7 +8,7 @@ import { Pagination } from '@chess-tent/types';
 import { MessageModel } from 'modules/message/model';
 import { ConversationModel, depopulate } from './model';
 
-const MESSAGES_BUCKET_LIMIT = 20;
+const MESSAGES_BUCKET_LIMIT = 50;
 
 export const saveConversation = (conversation: Conversation) =>
   new Promise(resolve => {
@@ -99,7 +99,6 @@ export const findConversations = (
       .populate({
         path: 'virtualMessages',
         options: {
-          sort: { _id: -1 },
           limit: 1,
         },
       })
@@ -120,7 +119,6 @@ export const getConversation = (
       .populate({
         path: 'virtualMessages',
         options: {
-          sort: { _id: -1 },
           limit: 1,
         },
       })

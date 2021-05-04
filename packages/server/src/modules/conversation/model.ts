@@ -38,6 +38,7 @@ conversationSchema.virtual('virtualMessages', {
   ref: TYPE_MESSAGE,
   localField: '_id',
   foreignField: 'conversationId',
+  options: { sort: { _id: -1 } },
 });
 
 const ConversationModel = db.createModel<NormalizedConversation>(

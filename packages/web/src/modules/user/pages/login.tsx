@@ -48,7 +48,6 @@ export default () => {
       return;
     }
     if (response?.data) {
-      socket.subscribe(`user-${response.data.id}`);
       updateUser(response.data);
     }
   }, [response, updateUser]);

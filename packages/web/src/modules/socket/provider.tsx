@@ -8,7 +8,7 @@ import {
 } from '@chess-tent/types';
 import { hooks } from '@application';
 
-const { useDispatchBatched } = hooks;
+const { useDispatchBatched, useActiveUserRecord, useMeta } = hooks;
 const socket = io(
   `${process.env.REACT_APP_PROTOCOL}${process.env.REACT_APP_DOMAIN}`,
   {
@@ -27,11 +27,29 @@ export const unsubscribe = (channel: string) =>
 
 export const SocketProvider: ComponentType = props => {
   const dispatch = useDispatchBatched();
+  const [, updateSocketConnected] = useMeta('socketConnected');
+  const [user] = useActiveUserRecord();
+  const userId = user?.id;
+
+  useEffect(() => {
+    if (!userId) {
+      updateSocketConnected(false);
+      socket.disconnect();
+    } else {
+      updateSocketConnected(true);
+      socket.connect();
+    }
+    return () => {
+      updateSocketConnected(false);
+      socket.disconnect();
+    };
+  }, [updateSocketConnected, userId]);
+
   useEffect(() => {
     socket.on(ACTION_EVENT, (action: Actions) => {
       action.meta.push = true;
       dispatch(action);
     });
-  });
+  }, [dispatch]);
   return <>{props.children}</>;
 };

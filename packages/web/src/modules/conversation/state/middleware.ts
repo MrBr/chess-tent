@@ -1,37 +1,31 @@
 import { Middleware, SEND_MESSAGE, UPDATE_MESSAGE } from '@types';
-import { requests, state, socket, utils } from '@application';
-import { TYPE_CONVERSATION } from '@chess-tent/models';
-import { updateActiveUserConversations } from './actions';
+import { requests, state, socket } from '@application';
+import { selectConversation } from './selectors';
+import { conversationRecordService } from '../service';
 
-const {
-  selectors: { selectRecord },
-} = state;
+const { actions } = state;
+
+const { updateEntities } = actions;
 
 export const middleware: Middleware = store => next => action => {
   if (action.type === SEND_MESSAGE) {
     const state = store.getState();
-    const conversations = selectRecord('conversations')(state)
-      .value as string[];
-    const conversationId = action.meta.conversationId;
-    const conversation = state.entities.conversations[conversationId];
+    const { record, updateValue } = conversationRecordService(store);
+    const { conversationId } = action.meta;
+    const conversation = selectConversation(conversationId)(state);
     if (conversation?.messages.length === 0) {
       // Starting new conversation
-      requests
-        .conversationSave(
-          utils.denormalize(conversation.id, TYPE_CONVERSATION, state.entities),
-        )
-        .then(() => {
-          store.dispatch(
-            updateActiveUserConversations([conversationId, ...conversations]),
-          );
-          socket.sendAction(action);
-        });
+      requests.conversationSave(conversation).then(() => {
+        updateValue([conversation.id, ...record.value]);
+        socket.sendAction(action);
+      });
     } else if (!action.meta.push) {
       socket.sendAction(action);
     }
     if (!conversation) {
       requests.conversation(conversationId).then(response => {
-        updateActiveUserConversations([conversationId, ...conversations]);
+        store.dispatch(updateEntities(response.data));
+        updateValue([conversationId, ...record.value]);
       });
     }
   }

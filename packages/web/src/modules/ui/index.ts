@@ -38,6 +38,7 @@ import Icon from './Icon';
 import Absolute from './Absolute';
 import { Toast, ToastBody, ToastHeader } from './Toast';
 import { Dot } from './Dot';
+import LoadMore from './LoadMore';
 import { withFiles, withHtml } from './hoc';
 
 application.hoc.withFiles = withFiles;
@@ -99,3 +100,5 @@ application.ui.Overlay = Overlay;
 
 application.ui.Icon = Icon;
 application.ui.Dot = Dot;
+
+application.ui.LoadMore = LoadMore;

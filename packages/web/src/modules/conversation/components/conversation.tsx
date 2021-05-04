@@ -1,5 +1,4 @@
-import React, { ReactElement, useCallback, useEffect, useState } from 'react';
-import { useInView } from 'react-intersection-observer';
+import React, { ReactElement, useCallback, useEffect } from 'react';
 import { components, hooks, state, ui, utils } from '@application';
 import {
   Conversation,
@@ -12,7 +11,17 @@ import { DateTime } from 'luxon';
 import { updateMessage } from '../state/actions';
 import { useLoadMoreMessages } from '../hooks';
 
-const { Container, Headline3, Text, Row, Col, Input, Icon, Absolute } = ui;
+const {
+  Container,
+  Headline3,
+  Text,
+  Row,
+  Col,
+  Input,
+  Icon,
+  Absolute,
+  LoadMore,
+} = ui;
 const { UserAvatar, MentorshipButton } = components;
 const { generateIndex } = utils;
 const {
@@ -26,31 +35,6 @@ const ActiveUserMessages = styled(Text)({
   padding: '1em',
   textAlign: 'right',
 });
-
-const LoadMore = ({
-  loading,
-  loadMore,
-  noMore,
-}: {
-  loadMore: () => void;
-  loading: boolean;
-  noMore: boolean;
-}) => {
-  const { ref, inView } = useInView();
-  // Ready is used to debounce load more so that dom can actually rerender and hide "LoadMore"
-  const [ready, setReady] = useState<boolean>(false);
-
-  useEffect(() => {
-    inView && !loading && !noMore && setTimeout(() => setReady(true), 50);
-  }, [inView, loadMore, loading, noMore]);
-  useEffect(() => {
-    if (inView && !loading && !noMore && ready) {
-      setReady(false);
-      loadMore();
-    }
-  }, [inView, loadMore, loading, noMore, ready]);
-  return <div ref={ref}>{loading ? 'Loading...' : ''}</div>;
-};
 
 export default styled(
   ({
@@ -69,7 +53,6 @@ export default styled(
     const dispatch = useDispatchBatched();
     const [loadMoreMessages, loading, noMore] = useLoadMoreMessages(
       conversation,
-      10,
     );
     const { messages } = conversation;
 
@@ -80,7 +63,12 @@ export default styled(
         messages[0].owner !== activeUser.id
       ) {
         dispatch(
-          updateMessage({ read: true }, conversation.id, messages[0].id),
+          updateMessage(
+            { read: true },
+            conversation.id,
+            messages[0].id,
+            messages[0].timestamp,
+          ),
         );
       }
     }, [activeUser.id, conversation, dispatch, messages]);
@@ -115,7 +103,7 @@ export default styled(
           </Col>
         </Row>
         <Row className="flex-grow-1 overflow-y-auto pl-3 pr-3 pb-3 flex-column-reverse">
-          <Col>
+          <Col className="overflow-anchor-none">
             <LoadMore
               loadMore={loadMoreMessages}
               loading={loading}

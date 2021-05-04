@@ -142,7 +142,9 @@ export type State = {
     activitySelector: <T extends Subject>(
       activityId: Activity<T>['id'],
     ) => (state: AppState) => Activity<T>;
-    selectRecord: (recordKey: string) => (state: AppState) => RecordType;
+    selectRecord: <T extends RecordValue>(
+      recordKey: string,
+    ) => (state: AppState) => RecordType<T>;
     selectNormalizedEntities: <
       T extends string | string[],
       K extends keyof EntitiesState

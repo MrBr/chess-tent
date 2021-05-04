@@ -1,6 +1,15 @@
-import { Conversation, NormalizedMessage, User } from '@chess-tent/models';
-import { ConversationModel, depopulate } from './model';
+import { db } from '@application';
+import {
+  Conversation,
+  Message,
+  NormalizedMessage,
+  User,
+} from '@chess-tent/models';
 import { Pagination } from '@chess-tent/types';
+import { MessageModel } from 'modules/message/model';
+import { ConversationModel, depopulate } from './model';
+
+const MESSAGES_BUCKET_LIMIT = 50;
 
 export const saveConversation = (conversation: Conversation) =>
   new Promise(resolve => {
@@ -23,10 +32,27 @@ export const addMessageToConversation = (
   message: NormalizedMessage,
 ) =>
   new Promise(resolve => {
-    ConversationModel.updateOne(
-      { _id: conversationId },
-      { $push: { messages: { $each: [message], $position: 0 } } },
-    ).exec((err, result) => {
+    const idRegex = db.getBucketingIdFilterRegex(conversationId);
+    MessageModel.updateOne(
+      {
+        _id: idRegex,
+        count: { $lt: MESSAGES_BUCKET_LIMIT },
+      },
+      {
+        $push: {
+          messages: {
+            $each: [message],
+            $position: 0,
+          },
+        },
+        $inc: { count: 1 },
+        $set: { conversationId },
+        $setOnInsert: {
+          _id: `${conversationId}_${message.timestamp}`,
+        },
+      },
+      { upsert: true },
+    ).exec(err => {
       if (err) {
         throw err;
       }
@@ -37,6 +63,7 @@ export const addMessageToConversation = (
 export const updateConversationMessage = (
   conversationId: Conversation['id'],
   messageId: NormalizedMessage['id'],
+  messageTimestamp: NormalizedMessage['timestamp'],
   messagePatch: Partial<NormalizedMessage>,
 ) => {
   const patch = Object.keys(messagePatch).reduce<Record<string, any>>(
@@ -47,10 +74,15 @@ export const updateConversationMessage = (
     {},
   );
   new Promise(resolve => {
-    ConversationModel.updateOne(
-      { _id: conversationId, messages: { $elemMatch: { id: messageId } } },
+    MessageModel.updateOne(
+      {
+        _id: {
+          $lte: `${conversationId}_${messageTimestamp}`,
+        },
+        'messages.timestamp': messageTimestamp,
+      },
       { $set: patch },
-    ).exec((err, result) => {
+    ).exec(err => {
       if (err) {
         throw err;
       }
@@ -63,11 +95,14 @@ export const findConversations = (
   users: User['id'][],
 ): Promise<Conversation[]> =>
   new Promise(resolve => {
-    ConversationModel.find(
-      { users: { $in: users } },
-      { messages: { $slice: 1 } },
-    )
+    ConversationModel.find({ users: { $in: users } })
       .populate('users')
+      .populate({
+        path: 'virtualMessages',
+        options: {
+          limit: 1,
+        },
+      })
       .exec((err, result) => {
         if (err) {
           throw err;
@@ -80,8 +115,14 @@ export const getConversation = (
   conversationId: Conversation['id'],
 ): Promise<Conversation> =>
   new Promise(resolve => {
-    ConversationModel.findById(conversationId, { messages: { $slice: 10 } })
+    ConversationModel.findById(conversationId)
       .populate('users')
+      .populate({
+        path: 'virtualMessages',
+        options: {
+          limit: 1,
+        },
+      })
       .exec((err, result) => {
         if (err) {
           throw err;
@@ -92,15 +133,25 @@ export const getConversation = (
 
 export const getConversationMessages = (
   conversationId: Conversation['id'],
-  pagination: Pagination,
-): Promise<Conversation> =>
+  lastDocumentTimestamp: Pagination,
+): Promise<Message[]> =>
   new Promise(resolve => {
-    ConversationModel.findById(conversationId, {
-      messages: { $slice: pagination },
-    }).exec((err, result) => {
-      if (err) {
-        throw err;
-      }
-      resolve(result?.toObject().messages);
-    });
+    const idRegex = db.getBucketingIdFilterRegex(conversationId);
+
+    const filterBy = lastDocumentTimestamp
+      ? { $lt: `${conversationId}_${lastDocumentTimestamp}` }
+      : { _id: idRegex };
+
+    MessageModel.find({
+      _id: filterBy,
+      conversationId,
+    })
+      .sort({ _id: -1 })
+      .limit(1)
+      .exec((err, result) => {
+        if (err) {
+          throw err;
+        }
+        resolve(db.flattenBuckets(result, 'messages'));
+      });
   });

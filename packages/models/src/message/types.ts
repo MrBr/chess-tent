@@ -19,3 +19,11 @@ export interface NormalizedMessage {
   read: Message['read'];
   type: typeof TYPE_MESSAGE;
 }
+
+export interface NormalizedMessageBucket {
+  id: string;
+  conversationId: string;
+  count: number;
+  messages: NormalizedMessage[];
+  type: typeof TYPE_MESSAGE;
+}

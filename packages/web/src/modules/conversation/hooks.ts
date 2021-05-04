@@ -7,6 +7,7 @@ import {
   User,
 } from '@chess-tent/models';
 import { RecordHookReturn } from '@types';
+import last from 'lodash/last';
 
 const { useApi, useRecord, useDispatch } = hooks;
 const {
@@ -20,7 +21,6 @@ export const useConversationParticipant = services.createRecordHook<User>(
 
 export const useLoadMoreMessages = (
   conversation: Conversation,
-  pageSize: number,
 ): [() => void, boolean, boolean] => {
   const dispatch = useDispatch();
   const [noMore, setNoMore] = useState(conversation.messages.length === 0);
@@ -28,7 +28,7 @@ export const useLoadMoreMessages = (
   useEffect(() => {
     if (response) {
       reset();
-      if (response.data.length < pageSize) {
+      if (response.data.length === 0) {
         setNoMore(true);
       }
       dispatch(
@@ -38,14 +38,14 @@ export const useLoadMoreMessages = (
         }),
       );
     }
-  }, [response, dispatch, conversation, reset, pageSize]);
-  const messageCount = conversation.messages.length;
+  }, [response, dispatch, conversation, reset]);
   const loadMore = useCallback(() => {
     if (noMore || loading) {
       return;
     }
-    fetch(conversation.id, [messageCount, pageSize]);
-  }, [noMore, loading, fetch, conversation.id, messageCount, pageSize]);
+    const lastMessage = last(conversation.messages);
+    fetch(conversation.id, lastMessage?.timestamp);
+  }, [noMore, loading, conversation.messages, conversation.id, fetch]);
   return [loadMore, loading || !!response, noMore];
 };
 

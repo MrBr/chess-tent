@@ -21,6 +21,7 @@ socket.registerMiddleware(async (stream, next) => {
     updateConversationMessage(
       action.meta.conversationId,
       action.meta.messageId,
+      action.meta.messageTimestamp,
       action.payload,
     );
   }

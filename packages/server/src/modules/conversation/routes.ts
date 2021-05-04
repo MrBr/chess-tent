@@ -50,7 +50,7 @@ application.service.registerPostRoute(
   '/conversation/:conversationId/messages',
   identify,
   toLocals('conversation.id', req => req.params.conversationId),
-  toLocals('pagination', req => req.body),
+  toLocals('lastDocumentTimestamp', req => req.body.lastDocumentTimestamp),
   canEditConversation,
   getConversationMessages,
   sendData('messages'),

@@ -11,6 +11,7 @@ import {
   TYPE_CONVERSATION,
   User,
 } from '@chess-tent/models';
+
 import { state } from '@application';
 
 const {
@@ -33,12 +34,14 @@ export const updateMessage = (
   message: Partial<NormalizedMessage>,
   conversationId: Conversation['id'],
   messageId: NormalizedMessage['id'],
+  messageTimestamp: NormalizedMessage['timestamp'],
 ): UpdateMessageAction => ({
   type: UPDATE_MESSAGE,
   payload: message,
   meta: {
     conversationId,
     messageId,
+    messageTimestamp,
   },
 });
 

@@ -49,6 +49,8 @@ export type DB = {
     target?: Record<string, any>,
     prefix?: string,
   ) => Record<string, any>;
+  flattenBuckets: (buckets: Record<string, any>[], itemsKey: string) => any;
+  getBucketingIdFilterRegex: (parentId: string) => RegExp;
   createAdapter<T extends EntityDocument>(
     ...updaters: Updater<T>[]
   ): Updater<T>;

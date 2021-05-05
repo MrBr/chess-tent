@@ -8,8 +8,8 @@ import {
   updateAnalysisActiveStepId,
   updateAnalysisStep,
 } from '@chess-tent/models';
-import { services, utils } from '@application';
-import { AppAnalysis, FEN, Steps } from '@types';
+import { utils } from '@application';
+import { AppAnalysis, Steps } from '@types';
 
 export const removeAnalysisStep = (
   analysis: AppAnalysis,
@@ -29,9 +29,6 @@ export const removeAnalysisStep = (
   );
 };
 
-export const createAnalysisService = (param: [Step] | FEN): AppAnalysis => {
-  const steps = (Array.isArray(param)
-    ? param
-    : [services.createStep('variation', { position: param })]) as [Steps];
-  return createAnalysis<Steps>(utils.generateIndex(), steps);
+export const createAnalysisService = (): AppAnalysis => {
+  return createAnalysis<Steps>(utils.generateIndex());
 };

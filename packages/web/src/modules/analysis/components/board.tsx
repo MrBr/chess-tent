@@ -12,8 +12,8 @@ class AnalysisBoard extends Analysis<
   ComponentProps<Components['AnalysisBoard']>
 > {
   render() {
-    const { Chessboard, analysis } = this.props;
-    const step = getAnalysisActiveStep(analysis);
+    const { Chessboard, analysis, activeStep } = this.props;
+    const step = getAnalysisActiveStep(analysis) || activeStep;
 
     return (
       <StepRenderer

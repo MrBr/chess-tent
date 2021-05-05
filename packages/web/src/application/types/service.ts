@@ -101,16 +101,13 @@ export type Services = {
     users: User[],
   ) => T;
   createActivityComment: (user: User, text: string) => ActivityComment;
-  createActivityStepState: (
-    activeStep: Steps,
-    initialState?: {},
-  ) => ActivityStepStateBase;
+  createActivityStepState: (initialState?: {}) => ActivityStepStateBase;
   getStepPosition: (step: Steps) => FEN;
   getStepBoardOrientation: (step: Steps) => PieceColor;
   addStepNextToTheComments: <T extends Steps>(parentStep: T, step: Steps) => T;
   createChapter: (title?: string, steps?: Step[]) => Chapter;
   history: History;
-  createAnalysis: (param: [Step] | FEN) => AppAnalysis;
+  createAnalysis: () => AppAnalysis;
   removeAnalysisStep: (analysis: AppAnalysis, step: Step) => AppAnalysis;
   pushToast: (toast: ReactElement) => void;
   registerNotificationRenderer: <T extends Notification>(

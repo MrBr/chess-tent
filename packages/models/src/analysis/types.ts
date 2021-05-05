@@ -11,7 +11,7 @@ export interface Analysis<T extends Step> extends Subject {
   type: typeof TYPE_ANALYSIS;
   state: {
     activeStepId?: Step['id'];
-    steps: { 0: T } & Array<Step>;
+    steps: Array<Step>;
   };
 }
 

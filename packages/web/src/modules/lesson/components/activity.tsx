@@ -237,6 +237,7 @@ export class ActivityRenderer extends React.Component<
                 <AnalysisBoard
                   analysis={analysis}
                   updateAnalysis={this.setStepActivityAnalysisState}
+                  activeStep={activeStep}
                   Chessboard={this.renderBoard}
                 />
               </>
@@ -245,6 +246,7 @@ export class ActivityRenderer extends React.Component<
               <AnalysisSidebar
                 analysis={analysis}
                 updateAnalysis={this.setStepActivityAnalysisState}
+                activeStep={activeStep}
               />
             ),
           },
@@ -264,8 +266,7 @@ const Activity: ActivityComponent<LessonActivity> = ({ activity }) => {
     activity.state.activeStepId || activeChapter.state.steps[0].id;
   const activeStep = getChildStep(activeChapter, activeStepId) as Steps;
   const activeStepActivityState =
-    activity.state[activeStep.id] ||
-    services.createActivityStepState(activeStep);
+    activity.state[activeStep.id] || services.createActivityStepState();
   const { fetch: saveActivity } = useApi(requests.activityUpdate);
   const pushUpdate = usePathUpdates(
     TYPE_ACTIVITY,

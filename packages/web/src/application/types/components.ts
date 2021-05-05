@@ -205,6 +205,7 @@ export type ActivityComponent<T> = ComponentType<
 export interface AnalysisSystemProps {
   analysis: AppAnalysis;
   updateAnalysis: (path: SubjectPath, value: any) => void;
+  activeStep: Steps;
 }
 
 export interface ActivityRendererProps {

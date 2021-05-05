@@ -25,6 +25,7 @@ import {
   Step,
   SubjectPath,
   TYPE_ACTIVITY,
+  addStep,
 } from '@chess-tent/models';
 import Footer from './activity-footer';
 import Header from './activity-header';
@@ -87,6 +88,7 @@ export class ActivityRenderer extends React.Component<
     captured?: boolean,
     promoted?: PieceRole,
   ) => {
+    const { analysis } = this.props.activityStepState;
     const notableMove = services.createNotableMove(
       position,
       move,
@@ -96,18 +98,17 @@ export class ActivityRenderer extends React.Component<
       promoted,
     );
 
-    const { activityStepState } = this.props;
-    const { steps } = activityStepState.analysis.state;
+    const newAnalysis = addStep(
+      analysis,
+      services.createStep('variation', {
+        position: position,
+        move: notableMove,
+      }),
+    );
 
     this.setStepActivityAnalysisState(
       ['state', 'steps'],
-      [
-        ...steps,
-        services.createStep('variation', {
-          position: position,
-          move: notableMove,
-        }),
-      ],
+      newAnalysis.state.steps,
     );
   };
 

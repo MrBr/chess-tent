@@ -45,12 +45,14 @@ export default ({
   const handleCommentSubmit = useCallback(
     event => {
       if (event.key === 'Enter') {
+        event.preventDefault();
         updateActivityStepState({
           comments: [
             ...(activeStepActivityState.comments || []),
             createActivityComment(activeUser, event.target.value),
           ],
         });
+        event.target.value = '';
       }
     },
     [activeStepActivityState.comments, activeUser, updateActivityStepState],

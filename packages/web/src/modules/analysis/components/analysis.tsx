@@ -22,6 +22,8 @@ export default class Analysis<
     const { updateAnalysis, analysis } = this.props;
     const parentStep = getParentStep(analysis, step);
     if (!isStep(parentStep)) {
+      const newRootSteps = analysis.state.steps.filter(s => s.id !== step.id);
+      updateAnalysis(['state', 'steps'], newRootSteps);
       return;
     }
     updateAnalysis(

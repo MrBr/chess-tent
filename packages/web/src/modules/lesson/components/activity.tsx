@@ -96,9 +96,13 @@ export class ActivityRenderer extends React.Component<
       promoted,
     );
 
+    const { activityStepState } = this.props;
+    const { steps } = activityStepState.analysis.state;
+
     this.setStepActivityAnalysisState(
       ['state', 'steps'],
       [
+        ...steps,
         services.createStep('variation', {
           position: position,
           move: notableMove,

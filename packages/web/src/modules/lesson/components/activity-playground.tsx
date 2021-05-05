@@ -91,11 +91,13 @@ export default ({
                 onKeyDown={handleCommentSubmit}
               />
             </Col>
-            <Col className="mt-3 h-100 p-0 overflow-y-auto">
-              {activeStepActivityState.comments?.map(comment => (
-                <Comment comment={comment} key={comment.id} />
-              ))}
-            </Col>
+            <Row className="flex-grow-1 mt-3 overflow-y-auto flex-column-reverse no-gutters">
+              <Col className="overflow-anchor-none">
+                {activeStepActivityState.comments?.map(comment => (
+                  <Comment comment={comment} key={comment.id} />
+                ))}
+              </Col>
+            </Row>
           </Row>
         </Col>
       </Row>

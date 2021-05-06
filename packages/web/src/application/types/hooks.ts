@@ -17,6 +17,7 @@ import {
   User,
   Notification,
   SubjectPathUpdate,
+  Subject,
 } from '@chess-tent/models';
 import { Action as ReduxAction } from 'redux';
 import { useSelector, useDispatch, useStore } from 'react-redux';
@@ -53,6 +54,11 @@ export type Hooks = {
     save: (updates: SubjectPathUpdate[]) => void,
     delay?: number,
   ) => (action: PathAction<any, any, any>) => void;
+  useDiffUpdates: (
+    subject: Subject,
+    save: (updates: SubjectPathUpdate[]) => void,
+    delay?: number,
+  ) => void;
   useTags: () => Tag[];
   useUser: (userId: User['id']) => User;
   useActiveUserRecord: () => RecordHookReturn<User>;

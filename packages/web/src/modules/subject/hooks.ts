@@ -1,12 +1,14 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { EntitiesState, PathAction } from '@chess-tent/types';
 import {
   getSubjectValueAt,
+  Subject,
   SubjectPath,
   SubjectPathUpdate,
 } from '@chess-tent/models';
 import { hooks } from '@application';
 import { throttle } from 'lodash';
+import { getDiff } from '../utils/utils';
 
 const { useStore } = hooks;
 
@@ -32,6 +34,7 @@ const removeWeakerPaths = (updates: SubjectPath[]) => {
     });
   });
 };
+
 export const usePathUpdates = (
   type: keyof EntitiesState,
   id: string,
@@ -74,4 +77,59 @@ export const usePathUpdates = (
   }, []);
 
   return pushUpdate;
+};
+
+export const useDiffUpdates = (
+  subject: Subject,
+  save: (updates: SubjectPathUpdate[]) => void,
+  delay = 5000,
+) => {
+  const subjectRef = useRef<Subject | null>(null);
+  // Use store to get latest entity
+  const store = useStore();
+
+  useEffect(() => {
+    // Save initial normalized subject version
+    subjectRef.current = store.getState().entities[subject.type][
+      subject.id
+    ] as Subject;
+  }, [store, subject.id, subject.type]);
+
+  const entityUpdated = useCallback(
+    throttle(
+      () => {
+        if (!subjectRef.current) {
+          console.warn('Updating entity without previous reference.');
+          return;
+        }
+        const { type, id } = subjectRef.current;
+        const normalizedEntity = store.getState().entities[type][id];
+        const diffs = getDiff(subjectRef.current, normalizedEntity);
+        const updatedPaths = Object.keys(diffs).map(path =>
+          path.split('.'),
+        ) as SubjectPath[];
+        const minimumUpdate = removeWeakerPaths(updatedPaths).map(path => {
+          return {
+            path,
+            value: getSubjectValueAt(normalizedEntity, path),
+          };
+        });
+        save(minimumUpdate);
+        subjectRef.current = normalizedEntity;
+      },
+      delay,
+      {
+        trailing: true,
+        leading: false,
+      },
+    ),
+    // Must be zero dependencies to call the same throttled function
+    [subjectRef],
+  );
+
+  useEffect(() => {
+    if (subjectRef.current) {
+      entityUpdated();
+    }
+  }, [subject, entityUpdated]);
 };

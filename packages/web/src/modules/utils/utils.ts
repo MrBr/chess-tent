@@ -1,7 +1,7 @@
 export const getDiff = (
   oldSubject: {} | unknown[],
   newSubject: {} | unknown[],
-  result: { [key: string]: unknown },
+  result: { [key: string]: unknown } = {},
   path = '',
 ): { [key: string]: unknown } => {
   for (const key in newSubject) {
@@ -12,7 +12,8 @@ export const getDiff = (
     if (
       typeof newValue === 'object' &&
       typeof newValue === typeof oldValue &&
-      Array.isArray(newValue) === Array.isArray(oldValue)
+      Array.isArray(newValue) === Array.isArray(oldValue) &&
+      newValue !== oldValue
     ) {
       getDiff(oldValue, newValue, result, newPath + '.');
     } else if (newValue !== oldValue) {

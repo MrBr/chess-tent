@@ -17,7 +17,6 @@ import {
   Step,
   Tag,
   getChildStep,
-  TYPE_LESSON,
   isStep,
   LessonStateStatus,
 } from '@chess-tent/models';
@@ -69,7 +68,7 @@ const {
   usePromptModal,
   useHistory,
   useTags,
-  usePathUpdates,
+  useDiffUpdates,
 } = hooks;
 
 type EditorRendererProps = ComponentProps<Components['Editor']> & {
@@ -535,13 +534,10 @@ const Editor: Components['Editor'] = ({ lesson, save, onStatusChange }) => {
   const [lessonStatus, setLessonStatus] = useState<LessonStatus>(
     LessonStatus.INITIAL,
   );
-  const pushUpdate = usePathUpdates(
-    TYPE_LESSON,
-    lesson.id,
-    (updates: LessonUpdates) => {
-      lessonUpdate(lesson.id, updates);
-    },
-  );
+
+  useDiffUpdates(lesson, (updates: LessonUpdates) => {
+    lessonUpdate(lesson.id, updates);
+  });
 
   const activeChapterId =
     new URLSearchParams(location.search).get('activeChapter') || chapters[0].id;
@@ -580,10 +576,9 @@ const Editor: Components['Editor'] = ({ lesson, save, onStatusChange }) => {
   const handleLessonUpdate = useCallback(
     action => {
       setLessonStatus(LessonStatus.DIRTY);
-      pushUpdate(action);
       dispatch(action);
     },
-    [dispatch, pushUpdate],
+    [dispatch],
   );
 
   const promptModal = usePromptModal();

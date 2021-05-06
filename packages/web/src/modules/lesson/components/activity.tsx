@@ -189,6 +189,21 @@ export class ActivityRenderer extends React.Component<
     );
   };
 
+  renderNoActiveStepChessboard = () => {
+    const { lesson, activeStep } = this.props;
+    const initialPosition = services.getStepPosition(activeStep);
+    return (
+      <Chessboard
+        allowAllMoves
+        orientation={activeStep.state.orientation}
+        footer={this.renderFooter({})}
+        fen={initialPosition || ''}
+        onMove={this.startAnalysingPosition}
+        header={<Header lesson={lesson} />}
+      />
+    );
+  };
+
   render() {
     const {
       lesson,
@@ -271,8 +286,8 @@ export class ActivityRenderer extends React.Component<
                   analysis={analysis}
                   updateAnalysis={this.setStepActivityAnalysisState}
                   initialPosition={services.getStepPosition(activeStep)}
-                  startAnalysingPosition={this.startAnalysingPosition}
                   Chessboard={this.renderAnalysisBoard}
+                  NoActiveStepChessboard={this.renderNoActiveStepChessboard}
                 />
               </>
             ),

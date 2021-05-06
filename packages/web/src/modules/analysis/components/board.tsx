@@ -12,21 +12,11 @@ class AnalysisBoard extends Analysis<
   ComponentProps<Components['AnalysisBoard']>
 > {
   render() {
-    const {
-      Chessboard,
-      analysis,
-      initialPosition,
-      startAnalysingPosition,
-    } = this.props;
+    const { Chessboard, analysis, NoActiveStepChessboard } = this.props;
     const step = getAnalysisActiveStep(analysis);
 
-    if (!step) {
-      return (
-        <Chessboard
-          fen={initialPosition || ''}
-          onMove={startAnalysingPosition}
-        />
-      );
+    if (!step && NoActiveStepChessboard) {
+      return <NoActiveStepChessboard />;
     }
 
     return (

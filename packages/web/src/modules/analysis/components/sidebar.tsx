@@ -13,24 +13,22 @@ class AnalysisSidebar extends Analysis<
   ComponentProps<Components['AnalysisSidebar']>
 > {
   render() {
-    const { analysis, updateAnalysis, activeStep } = this.props;
+    const { analysis, updateAnalysis, initialPosition } = this.props;
     const step = getAnalysisActiveStep(analysis);
 
     if (!step) {
       return (
-        <div>
-          <Button
-            size="extra-small"
-            onClick={() => {
-              const newStep = services.createStep('variation', {
-                position: services.getStepPosition(activeStep),
-              });
-              updateAnalysis(['state', 'steps'], [newStep]);
-            }}
-          >
-            Start Analysis
-          </Button>
-        </div>
+        <Button
+          size="extra-small"
+          onClick={() => {
+            const newStep = services.createStep('variation', {
+              position: initialPosition,
+            });
+            updateAnalysis(['state', 'steps'], [newStep]);
+          }}
+        >
+          Start Analysis
+        </Button>
       );
     }
 

@@ -242,7 +242,8 @@ export class ActivityRenderer extends React.Component<
                 <AnalysisBoard
                   analysis={analysis}
                   updateAnalysis={this.setStepActivityAnalysisState}
-                  activeStep={activeStep}
+                  initialPosition={services.getStepPosition(activeStep)}
+                  startAnalysingPosition={this.startAnalysingPosition}
                   Chessboard={this.renderBoard}
                 />
               </>
@@ -251,7 +252,7 @@ export class ActivityRenderer extends React.Component<
               <AnalysisSidebar
                 analysis={analysis}
                 updateAnalysis={this.setStepActivityAnalysisState}
-                activeStep={activeStep}
+                initialPosition={services.getStepPosition(activeStep)}
               />
             ),
           },

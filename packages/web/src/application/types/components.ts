@@ -10,6 +10,7 @@ import {
 } from 'react';
 import { DrawCurrent, DrawShape } from '@chess-tent/chessground/dist/draw';
 import { Api } from '@chess-tent/chessground/dist/api';
+import { Role } from '@chess-tent/chessground/dist/types';
 import { LinkProps, RedirectProps, RouteProps } from 'react-router-dom';
 import { Requests } from '@chess-tent/types';
 import {
@@ -205,7 +206,14 @@ export type ActivityComponent<T> = ComponentType<
 export interface AnalysisSystemProps {
   analysis: AppAnalysis;
   updateAnalysis: (path: SubjectPath, value: any) => void;
-  activeStep: Steps;
+  initialPosition?: FEN;
+  startAnalysingPosition?: (
+    position: string,
+    move: Move,
+    piece: Piece,
+    captured?: boolean | undefined,
+    promoted?: Role | undefined,
+  ) => void;
 }
 
 export interface ActivityRendererProps {

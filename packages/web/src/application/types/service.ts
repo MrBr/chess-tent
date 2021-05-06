@@ -104,6 +104,7 @@ export type Services = {
   createActivityStepState: (initialState?: {}) => ActivityStepStateBase;
   getStepPosition: (step: Steps) => FEN;
   getStepBoardOrientation: (step: Steps) => PieceColor;
+  updateStepRotation: (step: Steps, orientation?: PieceColor) => Steps;
   addStepNextToTheComments: <T extends Steps>(parentStep: T, step: Steps) => T;
   createChapter: (title?: string, steps?: Step[]) => Chapter;
   history: History;

@@ -9,6 +9,7 @@ import {
   LessonActivity,
   Move,
   Piece,
+  PieceColor,
   PieceRole,
   Steps,
 } from '@types';
@@ -26,6 +27,8 @@ import {
   SubjectPath,
   TYPE_ACTIVITY,
   addStep,
+  getAnalysisActiveStep,
+  updateAnalysisStep,
 } from '@chess-tent/models';
 import Footer from './activity-footer';
 import Header from './activity-header';
@@ -134,6 +137,17 @@ export class ActivityRenderer extends React.Component<
     prevStep && updateActivity(['state', 'activeStepId'], prevStep.id);
   };
 
+  updateStepRotation = (orientation?: PieceColor) => {
+    const { analysis } = this.props;
+    const step = getAnalysisActiveStep(analysis);
+    const updatedStep = services.updateStepRotation(step, orientation);
+    const newAnalysis = updateAnalysisStep(analysis, updatedStep);
+    this.setStepActivityAnalysisState(
+      ['state', 'steps'],
+      newAnalysis.state.steps,
+    );
+  };
+
   renderFooter = (props: Partial<ActivityFooterProps>) => {
     const { stepsCount, currentStepIndex } = this.props;
     return (
@@ -147,7 +161,7 @@ export class ActivityRenderer extends React.Component<
     );
   };
 
-  renderBoard = (props: ChessboardProps) => {
+  renderActivityBoard = (props: ChessboardProps) => {
     const { lesson, activeStep } = this.props;
     return (
       <Chessboard
@@ -155,6 +169,20 @@ export class ActivityRenderer extends React.Component<
         allowAllMoves
         orientation={activeStep.state.orientation}
         footer={this.renderFooter({})}
+        {...props}
+        header={<Header lesson={lesson} />}
+      />
+    );
+  };
+
+  renderAnalysisBoard = (props: ChessboardProps) => {
+    const { lesson, analysis } = this.props;
+    const step = getAnalysisActiveStep(analysis);
+    return (
+      <Chessboard
+        allowAllMoves
+        orientation={step.state.orientation}
+        onOrientationChange={this.updateStepRotation}
         {...props}
         header={<Header lesson={lesson} />}
       />
@@ -202,7 +230,7 @@ export class ActivityRenderer extends React.Component<
                 prevStep={this.prevActivityStep}
                 activity={activity}
                 completeStep={this.completeStep}
-                Chessboard={this.renderBoard}
+                Chessboard={this.renderActivityBoard}
                 Footer={this.renderFooter}
               />
             ),
@@ -221,7 +249,7 @@ export class ActivityRenderer extends React.Component<
                 prevStep={this.prevActivityStep}
                 activity={activity}
                 completeStep={this.completeStep}
-                Chessboard={this.renderBoard}
+                Chessboard={this.renderActivityBoard}
                 Footer={this.renderFooter}
               />
             ),
@@ -244,7 +272,7 @@ export class ActivityRenderer extends React.Component<
                   updateAnalysis={this.setStepActivityAnalysisState}
                   initialPosition={services.getStepPosition(activeStep)}
                   startAnalysingPosition={this.startAnalysingPosition}
-                  Chessboard={this.renderBoard}
+                  Chessboard={this.renderAnalysisBoard}
                 />
               </>
             ),

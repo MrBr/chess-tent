@@ -40,7 +40,7 @@ const Preview = ({ lesson, chapter, step }: PreviewProps) => {
     activity.state.activeStepId || step.id,
   ) as Steps;
   const activityStepState =
-    activity.state[step.id] || services.createActivityStepState(activeStep);
+    activity.state[step.id] || services.createActivityStepState();
   const stepsCount = useMemo(() => getStepsCount(chapter), [chapter]);
   const currentStepIndex = useMemo(() => getStepIndex(chapter, activeStep), [
     chapter,

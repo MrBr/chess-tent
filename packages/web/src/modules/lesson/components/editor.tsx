@@ -17,9 +17,7 @@ import {
   Step,
   Tag,
   getChildStep,
-  TYPE_LESSON,
   isStep,
-  updateStepState,
   LessonStateStatus,
 } from '@chess-tent/models';
 import {
@@ -45,7 +43,7 @@ import RootStepButton from './editor-sidebar-root-step-button';
 import EditorPublishButton from './editor-publish-button';
 
 const { Container, Row, Col, Headline2, Button, Absolute, Text } = ui;
-const { createChapter } = services;
+const { createChapter, updateStepRotation } = services;
 const { downloadAs } = utils;
 const {
   Stepper,
@@ -70,7 +68,7 @@ const {
   usePromptModal,
   useHistory,
   useTags,
-  usePathUpdates,
+  useDiffUpdates,
 } = hooks;
 
 type EditorRendererProps = ComponentProps<Components['Editor']> & {
@@ -215,7 +213,7 @@ class EditorRenderer extends React.Component<
 
   updateStepRotation = (orientation?: PieceColor) => {
     const { activeStep } = this.props;
-    this.updateStep(updateStepState(activeStep, { orientation }));
+    this.updateStep(updateStepRotation(activeStep, orientation));
   };
 
   deleteStep = (step: Step, adjacent?: boolean) => {
@@ -536,13 +534,10 @@ const Editor: Components['Editor'] = ({ lesson, save, onStatusChange }) => {
   const [lessonStatus, setLessonStatus] = useState<LessonStatus>(
     LessonStatus.INITIAL,
   );
-  const pushUpdate = usePathUpdates(
-    TYPE_LESSON,
-    lesson.id,
-    (updates: LessonUpdates) => {
-      lessonUpdate(lesson.id, updates);
-    },
-  );
+
+  useDiffUpdates(lesson, (updates: LessonUpdates) => {
+    lessonUpdate(lesson.id, updates);
+  });
 
   const activeChapterId =
     new URLSearchParams(location.search).get('activeChapter') || chapters[0].id;
@@ -581,10 +576,9 @@ const Editor: Components['Editor'] = ({ lesson, save, onStatusChange }) => {
   const handleLessonUpdate = useCallback(
     action => {
       setLessonStatus(LessonStatus.DIRTY);
-      pushUpdate(action);
       dispatch(action);
     },
-    [dispatch, pushUpdate],
+    [dispatch],
   );
 
   const promptModal = usePromptModal();

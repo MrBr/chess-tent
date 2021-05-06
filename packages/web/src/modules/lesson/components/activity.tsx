@@ -9,6 +9,7 @@ import {
   LessonActivity,
   Move,
   Piece,
+  PieceColor,
   PieceRole,
   Steps,
 } from '@types';
@@ -25,6 +26,9 @@ import {
   Step,
   SubjectPath,
   TYPE_ACTIVITY,
+  addStep,
+  getAnalysisActiveStep,
+  updateAnalysisStep,
 } from '@chess-tent/models';
 import Footer from './activity-footer';
 import Header from './activity-header';
@@ -87,6 +91,7 @@ export class ActivityRenderer extends React.Component<
     captured?: boolean,
     promoted?: PieceRole,
   ) => {
+    const { analysis } = this.props.activityStepState;
     const notableMove = services.createNotableMove(
       position,
       move,
@@ -96,14 +101,17 @@ export class ActivityRenderer extends React.Component<
       promoted,
     );
 
+    const newAnalysis = addStep(
+      analysis,
+      services.createStep('variation', {
+        position: position,
+        move: notableMove,
+      }),
+    );
+
     this.setStepActivityAnalysisState(
       ['state', 'steps'],
-      [
-        services.createStep('variation', {
-          position: position,
-          move: notableMove,
-        }),
-      ],
+      newAnalysis.state.steps,
     );
   };
 
@@ -129,6 +137,17 @@ export class ActivityRenderer extends React.Component<
     prevStep && updateActivity(['state', 'activeStepId'], prevStep.id);
   };
 
+  updateStepRotation = (orientation?: PieceColor) => {
+    const { analysis } = this.props;
+    const step = getAnalysisActiveStep(analysis);
+    const updatedStep = services.updateStepRotation(step, orientation);
+    const newAnalysis = updateAnalysisStep(analysis, updatedStep);
+    this.setStepActivityAnalysisState(
+      ['state', 'steps'],
+      newAnalysis.state.steps,
+    );
+  };
+
   renderFooter = (props: Partial<ActivityFooterProps>) => {
     const { stepsCount, currentStepIndex } = this.props;
     return (
@@ -142,7 +161,7 @@ export class ActivityRenderer extends React.Component<
     );
   };
 
-  renderBoard = (props: ChessboardProps) => {
+  renderActivityBoard = (props: ChessboardProps) => {
     const { lesson, activeStep } = this.props;
     return (
       <Chessboard
@@ -150,6 +169,20 @@ export class ActivityRenderer extends React.Component<
         allowAllMoves
         orientation={activeStep.state.orientation}
         footer={this.renderFooter({})}
+        {...props}
+        header={<Header lesson={lesson} />}
+      />
+    );
+  };
+
+  renderAnalysisBoard = (props: ChessboardProps) => {
+    const { lesson, analysis } = this.props;
+    const step = getAnalysisActiveStep(analysis);
+    return (
+      <Chessboard
+        allowAllMoves
+        orientation={step && services.getStepBoardOrientation(step)}
+        onOrientationChange={this.updateStepRotation}
         {...props}
         header={<Header lesson={lesson} />}
       />
@@ -197,7 +230,7 @@ export class ActivityRenderer extends React.Component<
                 prevStep={this.prevActivityStep}
                 activity={activity}
                 completeStep={this.completeStep}
-                Chessboard={this.renderBoard}
+                Chessboard={this.renderActivityBoard}
                 Footer={this.renderFooter}
               />
             ),
@@ -216,7 +249,7 @@ export class ActivityRenderer extends React.Component<
                 prevStep={this.prevActivityStep}
                 activity={activity}
                 completeStep={this.completeStep}
-                Chessboard={this.renderBoard}
+                Chessboard={this.renderActivityBoard}
                 Footer={this.renderFooter}
               />
             ),
@@ -237,7 +270,9 @@ export class ActivityRenderer extends React.Component<
                 <AnalysisBoard
                   analysis={analysis}
                   updateAnalysis={this.setStepActivityAnalysisState}
-                  Chessboard={this.renderBoard}
+                  initialPosition={services.getStepPosition(activeStep)}
+                  initialOrientation={activeStep.state.orientation}
+                  Chessboard={this.renderAnalysisBoard}
                 />
               </>
             ),
@@ -245,6 +280,7 @@ export class ActivityRenderer extends React.Component<
               <AnalysisSidebar
                 analysis={analysis}
                 updateAnalysis={this.setStepActivityAnalysisState}
+                initialPosition={services.getStepPosition(activeStep)}
               />
             ),
           },
@@ -264,8 +300,7 @@ const Activity: ActivityComponent<LessonActivity> = ({ activity }) => {
     activity.state.activeStepId || activeChapter.state.steps[0].id;
   const activeStep = getChildStep(activeChapter, activeStepId) as Steps;
   const activeStepActivityState =
-    activity.state[activeStep.id] ||
-    services.createActivityStepState(activeStep);
+    activity.state[activeStep.id] || services.createActivityStepState();
   const { fetch: saveActivity } = useApi(requests.activityUpdate);
   const pushUpdate = usePathUpdates(
     TYPE_ACTIVITY,

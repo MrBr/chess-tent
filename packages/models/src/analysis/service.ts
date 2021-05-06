@@ -54,7 +54,7 @@ const updateAnalysisStep = <T>(analysis: InferAnalysis<T>, step: Step) => {
 
 const createAnalysis = <T extends Step>(
   id: string,
-  steps: Analysis<T>['state']['steps'],
+  steps: Analysis<T>['state']['steps'] = [],
 ): Analysis<T> => ({
   id,
   type: TYPE_ANALYSIS,

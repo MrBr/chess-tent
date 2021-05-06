@@ -1,5 +1,5 @@
 import { FEN, PieceColor, Steps } from '@types';
-import { addStepToLeft } from '@chess-tent/models';
+import { addStepToLeft, updateStepState } from '@chess-tent/models';
 
 export const getStepPosition = (step: Steps): FEN => {
   if (step.stepType === 'variation') {
@@ -16,6 +16,13 @@ export const getStepPosition = (step: Steps): FEN => {
 
 export const getStepBoardOrientation = (step: Steps): PieceColor => {
   return step.state.orientation || 'white';
+};
+
+export const updateStepRotation = (
+  step: Steps,
+  orientation?: PieceColor,
+): Steps => {
+  return updateStepState(step, { orientation });
 };
 
 export const addStepNextToTheComments = <T extends Steps>(

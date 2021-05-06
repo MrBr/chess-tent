@@ -11,6 +11,7 @@ import {
 import {
   addStepNextToTheComments,
   getStepBoardOrientation,
+  updateStepRotation,
   getStepPosition,
 } from './service';
 
@@ -21,6 +22,7 @@ application.services.isSameStepMove = isSameStepMove;
 application.services.getSameMoveVariationStep = getSameMoveVariationStep;
 application.services.getStepPosition = getStepPosition;
 application.services.getStepBoardOrientation = getStepBoardOrientation;
+application.services.updateStepRotation = updateStepRotation;
 application.services.addStepNextToTheComments = addStepNextToTheComments;
 application.components.StepRenderer = StepComponentRenderer;
 

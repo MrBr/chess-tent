@@ -102,19 +102,25 @@ export const useDiffUpdates = (
           console.warn('Updating entity without previous reference.');
           return;
         }
+
         const { type, id } = subjectRef.current;
         const normalizedEntity = store.getState().entities[type][id];
         const diffs = getDiff(subjectRef.current, normalizedEntity);
+
         const updatedPaths = Object.keys(diffs).map(path =>
           path.split('.'),
         ) as SubjectPath[];
+
         const minimumUpdate = removeWeakerPaths(updatedPaths).map(path => {
           return {
             path,
             value: getSubjectValueAt(normalizedEntity, path),
           };
         });
-        save(minimumUpdate);
+
+        if (minimumUpdate.length > 0) {
+          save(minimumUpdate);
+        }
         subjectRef.current = normalizedEntity;
       },
       delay,

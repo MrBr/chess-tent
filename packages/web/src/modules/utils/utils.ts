@@ -4,7 +4,11 @@ export const getDiff = (
   result: { [key: string]: unknown } = {},
   path = '',
 ): { [key: string]: unknown } => {
-  for (const key in newSubject) {
+  const keys = new Set([
+    ...Object.keys(oldSubject),
+    ...Object.keys(newSubject),
+  ]);
+  keys.forEach(key => {
     const newValue = newSubject?.[key as keyof typeof newSubject];
     const oldValue = oldSubject?.[key as keyof typeof newSubject];
 
@@ -19,6 +23,6 @@ export const getDiff = (
     } else if (newValue !== oldValue) {
       result[newPath] = newValue;
     }
-  }
+  });
   return result;
 };

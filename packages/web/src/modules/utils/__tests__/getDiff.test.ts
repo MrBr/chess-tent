@@ -159,9 +159,7 @@ describe('getDiff', () => {
     };
 
     expect(getDiff(oldSubject, newSubject)).toStrictEqual({
-      'state.chapters.0.state.steps.1.b': undefined,
-      'state.chapters.0.state.steps.1.c': 1,
-      'state.chapters.0.state.steps.2': undefined,
+      'state.chapters.0.state.steps': [{ a: 1 }, { c: 1 }],
     });
   });
 });

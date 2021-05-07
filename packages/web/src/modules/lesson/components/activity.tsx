@@ -25,7 +25,6 @@ import {
   markStepCompleted,
   Step,
   SubjectPath,
-  TYPE_ACTIVITY,
   addStep,
   getAnalysisActiveStep,
   updateAnalysisStep,
@@ -41,7 +40,7 @@ const {
   AnalysisSidebar,
   LessonChapters,
 } = components;
-const { useDispatchBatched, usePathUpdates, useApi } = hooks;
+const { useDispatchBatched, useDiffUpdates, useApi } = hooks;
 const { actions } = state;
 const { Button, Absolute } = ui;
 
@@ -302,9 +301,8 @@ const Activity: ActivityComponent<LessonActivity> = ({ activity }) => {
   const activeStepActivityState =
     activity.state[activeStep.id] || services.createActivityStepState();
   const { fetch: saveActivity } = useApi(requests.activityUpdate);
-  const pushUpdate = usePathUpdates(
-    TYPE_ACTIVITY,
-    activity.id,
+  useDiffUpdates(
+    activity,
     updates => {
       saveActivity(activity.id, updates);
     },
@@ -322,18 +320,16 @@ const Activity: ActivityComponent<LessonActivity> = ({ activity }) => {
     (path, value) => {
       // TODO - implement logic similar to the lessonUpdates to reduce request payload
       const action = actions.updateActivityProperty(activity, path, value);
-      pushUpdate(action);
       dispatch(action);
     },
-    [activity, dispatch, pushUpdate],
+    [activity, dispatch],
   );
   const updateStepActivityState = useCallback(
     (activity: LessonActivity, stepId: Step['id'], state: {}) => {
       const action = actions.updateActivityStepState(activity, stepId, state);
-      pushUpdate(action);
       dispatch(action);
     },
-    [dispatch, pushUpdate],
+    [dispatch],
   );
   const updateStepActivityAnalysis = useCallback(
     (
@@ -348,10 +344,9 @@ const Activity: ActivityComponent<LessonActivity> = ({ activity }) => {
         path,
         state,
       );
-      pushUpdate(action);
       dispatch(action);
     },
-    [dispatch, pushUpdate],
+    [dispatch],
   );
 
   return (

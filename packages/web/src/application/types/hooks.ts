@@ -48,12 +48,6 @@ export type Hooks = {
   useDispatch: typeof useDispatch;
   useSelector: typeof useSelector;
   useStore: typeof useStore;
-  usePathUpdates: (
-    type: keyof EntitiesState,
-    id: string,
-    save: (updates: SubjectPathUpdate[]) => void,
-    delay?: number,
-  ) => (action: PathAction<any, any, any>) => void;
   useDiffUpdates: (
     subject: Subject,
     save: (updates: SubjectPathUpdate[]) => void,

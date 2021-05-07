@@ -81,6 +81,7 @@ export default class Analysis<
         comment={false}
         exercise={false}
         showInput={false}
+        paste={false}
         stepRoot={analysis}
         updateChapter={() => {}}
         {...props}

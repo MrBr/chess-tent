@@ -3,7 +3,6 @@ import { Step } from '../step';
 
 export const TYPE_ANALYSIS = 'analyses';
 
-export type InferAnalysis<T> = T extends Analysis<infer U> ? T : never;
 export type InferAnalysisStep<T> = T extends Analysis<infer U> ? U : never;
 
 export interface Analysis<T extends Step> extends Subject {

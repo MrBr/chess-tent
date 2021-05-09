@@ -1,14 +1,14 @@
-import { User } from './user';
-import { Lesson } from './lesson';
-import { Step } from './step';
-import { Activity } from './activity';
-import { Conversation } from './conversation';
-import { Chapter } from './chapter';
-import { Message } from './message';
-import { Tag } from './tag';
-import { Analysis } from './analysis';
-import { Notification } from './notification';
-import { Mentorship } from './mentorship';
+import { NormalizedUser, User } from './user';
+import { Lesson, NormalizedLesson } from './lesson';
+import { NormalizedStep, Step } from './step';
+import { Activity, NormalizedActivity } from './activity';
+import { Conversation, NormalizedConversation } from './conversation';
+import { Chapter, NormalizedChapter } from './chapter';
+import { Message, NormalizedMessage } from './message';
+import { NormalizedTag, Tag } from './tag';
+import { Analysis, NormalizedAnalysis } from './analysis';
+import { NormalizedNotification, Notification } from './notification';
+import { Mentorship, NormalizedMentorship } from './mentorship';
 
 export * from './analysis';
 export * from './notification';
@@ -35,3 +35,16 @@ export type Entity =
   | Analysis<any> // :o
   | Notification
   | Mentorship;
+
+export type NormalizedEntity =
+  | NormalizedUser
+  | NormalizedLesson
+  | NormalizedStep
+  | NormalizedActivity
+  | NormalizedConversation
+  | NormalizedChapter
+  | NormalizedMessage
+  | NormalizedTag
+  | NormalizedAnalysis<any> // :o
+  | NormalizedNotification
+  | NormalizedMentorship;

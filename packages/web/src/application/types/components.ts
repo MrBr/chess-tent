@@ -15,6 +15,7 @@ import { LinkProps, RedirectProps, RouteProps } from 'react-router-dom';
 import { Requests } from '@chess-tent/types';
 import {
   Activity,
+  Analysis,
   Chapter,
   Difficulty,
   Lesson,
@@ -22,7 +23,6 @@ import {
   Notification,
   StepRoot,
   StepType,
-  SubjectPath,
   Tag,
   User,
 } from '@chess-tent/models';
@@ -204,18 +204,15 @@ export type ActivityComponent<T> = ComponentType<
 >;
 
 export interface AnalysisSystemProps {
-  analysis: AppAnalysis;
-  updateAnalysis: (path: SubjectPath, value: any) => void;
+  analysis: Analysis<any>;
+  updateAnalysis: (analysis: Analysis<any>) => void;
   initialPosition?: FEN;
   initialOrientation?: Color;
 }
 
 export interface ActivityRendererProps {
   activity: LessonActivity;
-  updateActivity: (
-    path: ['state', keyof LessonActivity['state']] | [keyof LessonActivity],
-    value: any,
-  ) => void;
+  updateActivity: (activity: LessonActivity) => void;
   updateActivityStepState: (
     activity: LessonActivity,
     stepId: AppStep['id'],
@@ -224,8 +221,7 @@ export interface ActivityRendererProps {
   updateActivityStepAnalysis: (
     activity: LessonActivity,
     stepId: AppStep['id'],
-    path: SubjectPath,
-    state: any,
+    analysis: Analysis<any>,
   ) => void;
   currentStepIndex: number;
   stepsCount: number;

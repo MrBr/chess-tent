@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { hooks, services, ui } from '@application';
 import {
+  Analysis,
   Chapter,
   createActivity,
   getChildStep,
@@ -8,9 +9,8 @@ import {
   getStepsCount,
   Lesson,
   Step,
-  SubjectPath,
+  updateActivityStepAnalysis,
   updateActivityStepState,
-  updateSubjectValueAt,
   User,
 } from '@chess-tent/models';
 import { LessonActivity, Steps } from '@types';
@@ -28,48 +28,33 @@ const { Modal } = ui;
 
 const Preview = ({ lesson, chapter, step }: PreviewProps) => {
   const [user] = useActiveUserRecord() as [User, never, never];
-  const [activity, updateActivity] = useState<LessonActivity>(
+  const [activity, updatePreviewActivity] = useState<LessonActivity>(
     createActivity('preview', lesson, user, {
       activeStepId: step.id,
       activeChapterId: chapter.id,
       training: false,
+      [step.id]: services.createActivityStepState(),
     }),
   );
   const activeStep = getChildStep(
     chapter,
     activity.state.activeStepId || step.id,
   ) as Steps;
-  const activityStepState =
-    activity.state[step.id] || services.createActivityStepState();
+  const activityStepState = activity.state[step.id];
   const stepsCount = useMemo(() => getStepsCount(chapter), [chapter]);
   const currentStepIndex = useMemo(() => getStepIndex(chapter, activeStep), [
     chapter,
     activeStep,
   ]);
-  const updateActivityProperty = useCallback(
-    (path, value) => {
-      updateActivity(updateSubjectValueAt(activity, path, value));
-    },
-    [activity],
-  );
   const updateStepState = useCallback(
     (activity: LessonActivity, stepId: Step['id'], state: {}) =>
-      updateActivity(updateActivityStepState(activity, stepId, state)),
+      updatePreviewActivity(updateActivityStepState(activity, stepId, state)),
     [],
   );
   const updateStepAnalysis = useCallback(
-    (
-      activity: LessonActivity,
-      stepId: Step['id'],
-      path: SubjectPath,
-      state: {},
-    ) =>
-      updateActivity(
-        updateSubjectValueAt(
-          activity,
-          ['state', stepId, 'analysis', ...path],
-          state,
-        ),
+    (activity: LessonActivity, stepId: Step['id'], analysis: Analysis<Steps>) =>
+      updatePreviewActivity(
+        updateActivityStepAnalysis(activity, stepId, analysis),
       ),
     [],
   );
@@ -81,7 +66,7 @@ const Preview = ({ lesson, chapter, step }: PreviewProps) => {
       analysis={activityStepState.analysis}
       activeStep={activeStep}
       chapter={chapter}
-      updateActivity={updateActivityProperty}
+      updateActivity={updatePreviewActivity}
       updateActivityStepState={updateStepState}
       updateActivityStepAnalysis={updateStepAnalysis}
       stepsCount={stepsCount}

@@ -24,10 +24,13 @@ import {
   getLessonChapter,
   markStepCompleted,
   Step,
-  SubjectPath,
   addStep,
   getAnalysisActiveStep,
   updateAnalysisStep,
+  updateActivityStepState,
+  Analysis,
+  updateActivityActiveChapter,
+  updateActivityStepAnalysis,
 } from '@chess-tent/models';
 import Footer from './activity-footer';
 import Header from './activity-header';
@@ -41,7 +44,9 @@ const {
   LessonChapters,
 } = components;
 const { useDispatchBatched, useDiffUpdates, useApi } = hooks;
-const { actions } = state;
+const {
+  actions: { serviceAction, updateEntity },
+} = state;
 const { Button, Absolute } = ui;
 
 export class ActivityRenderer extends React.Component<
@@ -77,10 +82,10 @@ export class ActivityRenderer extends React.Component<
     });
   };
 
-  setStepActivityAnalysisState = (path: SubjectPath, state: any) => {
+  updateStepActivityAnalysis = (analysis: Analysis<Steps>) => {
     const { updateActivityStepAnalysis, activity, activeStep } = this.props;
     !this.isAnalysing() && this.updateActiveTab(1);
-    updateActivityStepAnalysis(activity, activeStep.id, path, state);
+    updateActivityStepAnalysis(activity, activeStep.id, analysis);
   };
 
   startAnalysingPosition = (
@@ -108,32 +113,31 @@ export class ActivityRenderer extends React.Component<
       }),
     );
 
-    this.setStepActivityAnalysisState(
-      ['state', 'steps'],
-      newAnalysis.state.steps,
-    );
+    this.updateStepActivityAnalysis(newAnalysis);
   };
 
   completeStep = (step: Step) => {
     const { updateActivity, activity } = this.props;
-    updateActivity(['completedSteps'], markStepCompleted(activity, step));
+    updateActivity(markStepCompleted(activity, step));
   };
 
   chapterChangeHandler = (chapter: Chapter) => {
-    const { updateActivity } = this.props;
-    updateActivity(['state', 'activeChapterId'], chapter.id);
+    const { updateActivity, activity } = this.props;
+    updateActivity(updateActivityActiveChapter(activity, chapter));
   };
 
   nextActivityStep = () => {
-    const { updateActivity, chapter, activeStep } = this.props;
-    const nextStep = getNextStep(chapter, activeStep);
-    nextStep && updateActivity(['state', 'activeStepId'], nextStep.id);
+    const { updateActivity, chapter, activeStep, activity } = this.props;
+    const nextStep = getNextStep(chapter, activeStep) as Steps;
+    nextStep &&
+      updateActivity(services.updateActivityActiveStep(activity, nextStep));
   };
 
   prevActivityStep = () => {
-    const { updateActivity, chapter, activeStep } = this.props;
-    const prevStep = getPreviousStep(chapter, activeStep);
-    prevStep && updateActivity(['state', 'activeStepId'], prevStep.id);
+    const { updateActivity, chapter, activeStep, activity } = this.props;
+    const prevStep = getPreviousStep(chapter, activeStep) as Steps;
+    prevStep &&
+      updateActivity(services.updateActivityActiveStep(activity, prevStep));
   };
 
   updateStepRotation = (orientation?: PieceColor) => {
@@ -141,10 +145,7 @@ export class ActivityRenderer extends React.Component<
     const step = getAnalysisActiveStep(analysis);
     const updatedStep = services.updateStepRotation(step, orientation);
     const newAnalysis = updateAnalysisStep(analysis, updatedStep);
-    this.setStepActivityAnalysisState(
-      ['state', 'steps'],
-      newAnalysis.state.steps,
-    );
+    this.updateStepActivityAnalysis(newAnalysis);
   };
 
   renderFooter = (props: Partial<ActivityFooterProps>) => {
@@ -268,7 +269,7 @@ export class ActivityRenderer extends React.Component<
                 </Absolute>
                 <AnalysisBoard
                   analysis={analysis}
-                  updateAnalysis={this.setStepActivityAnalysisState}
+                  updateAnalysis={this.updateStepActivityAnalysis}
                   initialPosition={services.getStepPosition(activeStep)}
                   initialOrientation={activeStep.state.orientation}
                   Chessboard={this.renderAnalysisBoard}
@@ -278,7 +279,7 @@ export class ActivityRenderer extends React.Component<
             sidebar: (
               <AnalysisSidebar
                 analysis={analysis}
-                updateAnalysis={this.setStepActivityAnalysisState}
+                updateAnalysis={this.updateStepActivityAnalysis}
                 initialPosition={services.getStepPosition(activeStep)}
               />
             ),
@@ -289,17 +290,28 @@ export class ActivityRenderer extends React.Component<
   }
 }
 
-const Activity: ActivityComponent<LessonActivity> = ({ activity }) => {
+const Activity: ActivityComponent<LessonActivity> = props => {
   const dispatch = useDispatchBatched();
-  const lesson = activity.subject;
+  const lesson = props.activity.subject;
   const activeChapterId =
-    activity.state.activeChapterId || activity.subject.state.chapters[0].id;
+    props.activity.state.activeChapterId ||
+    props.activity.subject.state.chapters[0].id;
   const activeChapter = getLessonChapter(lesson, activeChapterId) as Chapter;
   const activeStepId =
-    activity.state.activeStepId || activeChapter.state.steps[0].id;
+    props.activity.state.activeStepId || activeChapter.state.steps[0].id;
+  const activity = props.activity.state[activeStepId]
+    ? props.activity
+    : // Formatting local activity so that it has active step state.
+      // This behaviour has to be proven right, because for the moment (until first update)
+      // there is some inconsistencies between local and store activity.
+      updateActivityStepState(
+        props.activity,
+        activeStepId,
+        services.createActivityStepState(),
+      );
   const activeStep = getChildStep(activeChapter, activeStepId) as Steps;
-  const activeStepActivityState =
-    activity.state[activeStep.id] || services.createActivityStepState();
+  const activeStepActivityState = activity.state[activeStep.id];
+
   const { fetch: saveActivity } = useApi(requests.activityUpdate);
   useDiffUpdates(
     activity,
@@ -317,16 +329,16 @@ const Activity: ActivityComponent<LessonActivity> = ({ activity }) => {
   );
 
   const updateActivity = useCallback(
-    (path, value) => {
-      // TODO - implement logic similar to the lessonUpdates to reduce request payload
-      const action = actions.updateActivityProperty(activity, path, value);
-      dispatch(action);
-    },
-    [activity, dispatch],
+    updatedActivity => dispatch(updateEntity(updatedActivity)),
+    [dispatch],
   );
   const updateStepActivityState = useCallback(
     (activity: LessonActivity, stepId: Step['id'], state: {}) => {
-      const action = actions.updateActivityStepState(activity, stepId, state);
+      const action = serviceAction(updateActivityStepState)(
+        activity,
+        stepId,
+        state,
+      );
       dispatch(action);
     },
     [dispatch],
@@ -335,14 +347,12 @@ const Activity: ActivityComponent<LessonActivity> = ({ activity }) => {
     (
       activity: LessonActivity,
       stepId: Step['id'],
-      path: SubjectPath,
-      state: any,
+      analysis: Analysis<Steps>,
     ) => {
-      const action = actions.updateActivityStepAnalysis(
+      const action = serviceAction(updateActivityStepAnalysis)(
         activity,
         stepId,
-        path,
-        state,
+        analysis,
       );
       dispatch(action);
     },

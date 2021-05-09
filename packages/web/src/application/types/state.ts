@@ -6,21 +6,14 @@ import {
 } from 'redux';
 import {
   Activity,
-  Chapter,
   Conversation,
   Entity,
   Lesson,
   Message,
-  NormalizedLesson,
-  Step,
   Subject,
   User,
-  Notification,
-  NormalizedActivity,
-  SubjectPath,
 } from '@chess-tent/models';
 import {
-  AddLessonChapterAction,
   AppState,
   EntitiesState,
   EntityState,
@@ -30,13 +23,8 @@ import {
   RecordUpdateValueAction,
   RecordValue,
   SendMessageAction,
-  UpdateActivityPropertyAction,
-  UpdateActivityStepAction,
   UpdateEntitiesAction,
-  UpdateLessonChapterAction,
-  UpdateLessonPathAction,
-  UpdateLessonStepAction,
-  UpdateNotificationAction,
+  UpdateEntityAction,
 } from '@chess-tent/types';
 
 export type Middleware = ReduxMiddleware;
@@ -48,9 +36,13 @@ export type State = {
     path: string,
     reducer: Reducer<T, U>,
   ) => void;
-  registerEntityReducer: <T, U extends ReduxAction>(
-    path: string,
-    reducer: Reducer<T, U>,
+  registerEntityReducer: <
+    T extends keyof EntitiesState,
+    S,
+    U extends ReduxAction
+  >(
+    path: T,
+    reducer?: Reducer<S, U>,
   ) => void;
   registerMiddleware: (middleware: Middleware) => void;
   getRootReducer: () => Reducer;
@@ -66,74 +58,17 @@ export type State = {
       type: RecordMeta['type'],
     ) => RecordUpdateValueAction;
     updateEntities: (entity: Entity | Entity[]) => UpdateEntitiesAction;
-    updateNotification: (
-      notification: Notification,
-    ) => UpdateNotificationAction;
-    updateActivityStepState: (
-      activity: Activity,
-      stepId: Step['id'],
-      // TODO - resolve payload type; something like recursive Partial<T extends {}>
-      payload: {},
-    ) => UpdateActivityStepAction;
-    updateActivityStepAnalysis: (
-      activity: Activity,
-      stepId: Step['id'],
-      path: SubjectPath,
-      payload: any,
-    ) => UpdateActivityStepAction;
-    updateActivityProperty: <
-      T extends keyof NormalizedActivity,
-      K extends keyof NormalizedActivity['state']
-    >(
-      activity: Activity,
-      path: T extends 'state' ? [T, K] : [T],
-      value: T extends 'state'
-        ? NormalizedActivity[T][K]
-        : NormalizedActivity[T],
-    ) => UpdateActivityPropertyAction;
+    updateEntity: (entity: Entity) => UpdateEntityAction;
+    serviceAction: <T extends (...args: any) => any>(
+      service: T,
+    ) => (
+      ...payload: T extends (...args: infer U) => any ? U : never
+    ) => UpdateEntityAction;
     sendMessage: (
       user: User,
       conversation: Conversation,
       message: Message,
     ) => SendMessageAction;
-    updateLessonStep: <T extends Step>(
-      lesson: Lesson,
-      chapter: Chapter,
-      step: T,
-    ) => UpdateLessonStepAction;
-    addLessonChapter: (
-      lesson: Lesson,
-      chapter: Chapter,
-    ) => AddLessonChapterAction;
-    updateLessonChapter: (
-      lesson: Lesson,
-      chapter: Chapter,
-    ) => UpdateLessonChapterAction;
-    updateLessonPath: <
-      T extends keyof NormalizedLesson,
-      K extends keyof NormalizedLesson['state']
-    >(
-      lesson: Lesson,
-      path: T extends 'state' ? [T, K] : [T],
-      value: T extends 'state' ? NormalizedLesson[T][K] : NormalizedLesson[T],
-    ) => UpdateLessonPathAction;
-    // TODO - not implemented - requires some refactoring, but useful for atomic updates
-    updateLessonStepState: <
-      T extends Step,
-      K extends keyof T['state'],
-      U extends keyof T['state'][K],
-      S extends keyof T['state'][K][U]
-    >(
-      lesson: Lesson,
-      chapter: Chapter,
-      step: T,
-      path: [K] | [K, U] | [K, U, S],
-      value: T['state'][K] extends {}
-        ? T['state'][K][U] extends {}
-          ? T['state'][K][U][S]
-          : T['state'][K][U]
-        : T['state'][K],
-    ) => void;
   };
   selectors: {
     lessonSelector: (

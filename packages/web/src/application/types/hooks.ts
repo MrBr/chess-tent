@@ -1,8 +1,6 @@
 // Hooks
 import {
-  EntitiesState,
   LessonsRequest,
-  PathAction,
   RecordType,
   RecordValue,
   RequestFetch,
@@ -95,4 +93,7 @@ export type Hooks = {
     descriptor: string[] | string | null,
     type?: string,
   ) => T | null;
+  useDispatchService: () => <T extends (...args: any) => any>(
+    service: T,
+  ) => (...payload: T extends (...args: infer U) => any ? U : never) => void;
 };

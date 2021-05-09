@@ -2,6 +2,8 @@ import { services, utils } from '@application';
 import {
   Activity,
   createActivity as modelCreateActivity,
+  Step,
+  updateActivityActiveStep as modelUpdateActivityActiveStep,
 } from '@chess-tent/models';
 import { ActivityStepStateBase, Services } from '@types';
 
@@ -13,6 +15,14 @@ export const createActivityStepState = (initialState?: {}): ActivityStepStateBas
   analysis: services.createAnalysis(),
   ...(initialState || {}),
 });
+
+export const updateActivityActiveStep = <T extends Activity>(
+  activity: T,
+  step: Step,
+) =>
+  modelUpdateActivityActiveStep(activity, step, {
+    analysis: services.createAnalysis(),
+  });
 
 export const createActivityComment: Services['createActivityComment'] = (
   user,

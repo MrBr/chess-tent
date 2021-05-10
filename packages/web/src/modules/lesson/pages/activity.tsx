@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { hooks, state, requests, socket, ui } from '@application';
 import {
   LessonActivity,
@@ -31,6 +31,7 @@ export default () => {
   const dispatch = useDispatchBatched();
   const activity = useSelector(activitySelector(activityId)) as LessonActivity;
   const history = useHistory();
+  const [shouldFetch, setShouldFetch] = useState(false);
 
   useEffect(() => {
     return () => {
@@ -49,8 +50,10 @@ export default () => {
       SYNC_ACTIVITY_REQUEST_EVENT,
       (forwardToSocketId: string) => {
         if (!forwardToSocketId) {
+          setShouldFetch(true);
           return;
         }
+        console.log(SYNC_ACTIVITY_REQUEST_EVENT);
         socket.emitEvent(SYNC_ACTIVITY_EVENT, { activity, forwardToSocketId });
       },
     );
@@ -59,6 +62,7 @@ export default () => {
   useEffect(() => {
     socket.registerEvent(SYNC_ACTIVITY_EVENT, (newActivity: any) => {
       if (newActivity) {
+        console.log(SYNC_ACTIVITY_EVENT);
         dispatch(updateEntities(newActivity));
       }
     });
@@ -66,11 +70,11 @@ export default () => {
 
   useEffect(() => {
     // Load existing activity
-    if (!activityId || activity) {
+    if (!activityId || activity || !shouldFetch) {
       return;
     }
     fetch(activityId);
-  }, [fetch, activity, activityId]);
+  }, [fetch, activity, activityId, shouldFetch]);
 
   useEffect(() => {
     if (activityResponse) {

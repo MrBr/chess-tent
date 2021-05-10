@@ -24,8 +24,10 @@ export const subscribe = (channel: string) =>
   socket.emit(SUBSCRIBE_EVENT, channel);
 export const unsubscribe = (channel: string) =>
   socket.emit(UNSUBSCRIBE_EVENT, channel);
-export const registerEvent = (event: string, onEvent: Function) =>
-  socket.on(event, onEvent);
+export const registerEvent = (event: string, onEvent: Function) => {
+  socket.off(event);
+  return socket.on(event, onEvent);
+};
 export const emitEvent = (event: string, data: any) => socket.emit(event, data);
 
 export const SocketProvider: ComponentType = props => {

@@ -60,7 +60,6 @@ const init: SocketService['init'] = server => {
     });
 
     client.on(SYNC_ACTIVITY_EVENT, function (data) {
-      console.log('SYNC_ACTIVITY_EVENT', data);
       io.to(data.forwardToSocketId).emit(SYNC_ACTIVITY_EVENT, data.activity);
     });
   });
@@ -83,12 +82,13 @@ const sendDataToOwner = (
   event: string,
 ) => {
   const roomSockets = Object.keys(io.sockets.adapter.rooms[roomId].sockets);
+  const ownerSocketId = roomSockets && roomSockets[0];
 
   if (roomSockets.length <= 1) {
+    io.to(ownerSocketId).emit(event);
     return;
   }
 
-  const ownerSocketId = roomSockets && roomSockets[0];
   io.to(ownerSocketId).emit(event, forwardToSocketId);
 };
 

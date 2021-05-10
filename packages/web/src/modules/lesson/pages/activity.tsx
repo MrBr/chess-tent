@@ -48,18 +48,21 @@ export default () => {
     socket.registerEvent(
       SYNC_ACTIVITY_REQUEST_EVENT,
       (forwardToSocketId: string) => {
-        console.log(SYNC_ACTIVITY_REQUEST_EVENT, forwardToSocketId);
+        if (!forwardToSocketId) {
+          return;
+        }
         socket.emitEvent(SYNC_ACTIVITY_EVENT, { activity, forwardToSocketId });
       },
     );
+  }, [activity, dispatch]);
 
+  useEffect(() => {
     socket.registerEvent(SYNC_ACTIVITY_EVENT, (newActivity: any) => {
-      console.log(SYNC_ACTIVITY_EVENT, newActivity);
       if (newActivity) {
         dispatch(updateEntities(newActivity));
       }
     });
-  }, [activity, dispatch]);
+  }, [dispatch]);
 
   useEffect(() => {
     // Load existing activity

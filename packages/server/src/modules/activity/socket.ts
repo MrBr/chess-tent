@@ -46,12 +46,6 @@ socket.registerMiddleware(async (stream, next) => {
     stream.client.leave(stream.data);
   }
 
-  // Handle activity channel sync
-  // if (stream.event === SYNC_ACTIVITY_EVENT) {
-  //   const { activity, fromUserId } = stream.data;
-  //   console.log('SYNC_ACTIVITY_EVENT', activity, fromUserId);
-  // }
-
   // Forward activity action
   if (
     stream.event === ACTION_EVENT &&

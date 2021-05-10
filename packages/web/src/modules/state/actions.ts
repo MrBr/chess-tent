@@ -1,6 +1,6 @@
 import { utils } from '@application';
 import { EntitiesState, State, UPDATE_ENTITIES, UPDATE_ENTITY } from '@types';
-import { Entity } from '@chess-tent/models';
+import { Entity, ServiceType } from '@chess-tent/models';
 
 export const updateEntitiesAction: State['actions']['updateEntities'] = root => {
   const payload = (Array.isArray(root) ? root : [root]).reduce<
@@ -34,6 +34,7 @@ export const updateEntityAction: State['actions']['updateEntity'] = entity => {
   };
 };
 
-export const serviceAction = <T extends (...args: any) => any>(service: T) => (
-  ...payload: T extends (...args: infer U) => any ? U : never
-) => updateEntityAction(service(...payload) as Entity);
+export const serviceAction = <T extends (...args: any) => any>(
+  service: T extends ServiceType ? T : never,
+) => (...payload: T extends (...args: infer U) => any ? U : never) =>
+  updateEntityAction(service(...payload) as Entity);

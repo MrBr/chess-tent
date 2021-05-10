@@ -16,6 +16,7 @@ import {
   Notification,
   SubjectPathUpdate,
   Subject,
+  ServiceType,
 } from '@chess-tent/models';
 import { Action as ReduxAction } from 'redux';
 import { useSelector, useDispatch, useStore } from 'react-redux';
@@ -94,6 +95,6 @@ export type Hooks = {
     type?: string,
   ) => T | null;
   useDispatchService: () => <T extends (...args: any) => any>(
-    service: T,
+    service: T extends ServiceType ? T : never,
   ) => (...payload: T extends (...args: infer U) => any ? U : never) => void;
 };

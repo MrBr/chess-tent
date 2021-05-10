@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useCallback } from 'react';
 import { batchActions } from 'redux-batched-actions';
 import { serviceAction } from './actions';
+import { ServiceType } from '@chess-tent/models';
 
 export const useDispatchBatched = () => {
   const dispatch = useDispatch();
@@ -40,9 +41,9 @@ export const useDispatchService = () => {
   const dispatch = useDispatch();
 
   return useCallback(
-    <T extends (...args: any) => any>(service: T) => (
-      ...args: T extends (...args: infer U) => any ? U : never
-    ) => {
+    <T extends (...args: any) => any>(
+      service: T extends ServiceType ? T : never,
+    ) => (...args: T extends (...args: infer U) => any ? U : never) => {
       dispatch(serviceAction(service)(...args));
     },
     [dispatch],

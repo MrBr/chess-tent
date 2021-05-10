@@ -1,23 +1,23 @@
+import merge from 'lodash.mergewith';
 import { Subject, SubjectPath } from './types';
+import { createService } from '../_helpers';
 
-export const updateSubject = <T extends Subject>(
-  subject: T,
-  patch: Partial<T>,
-): T => ({
-  ...subject,
-  ...patch,
-});
-
-export const updateSubjectState = <T extends Subject>(
-  subject: T,
-  patch: T extends { state: infer U } ? Partial<U> : never,
-): T => ({
-  ...subject,
-  state: {
-    ...subject.state,
-    ...patch,
+export const updateSubject = createService(
+  <T extends Subject>(draft: T, patch: Partial<T>): T => {
+    merge(draft, patch);
+    return draft;
   },
-});
+);
+
+export const updateSubjectState = createService(
+  <T extends Subject>(
+    draft: T,
+    patch: T extends { state: infer U } ? Partial<U> : never,
+  ): T => {
+    merge(draft.state, patch);
+    return draft;
+  },
+);
 
 export const getSubjectValueAt = <T extends Subject>(
   subject: T,

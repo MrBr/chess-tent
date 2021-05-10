@@ -1,7 +1,9 @@
 import mergeWith from 'lodash.mergewith';
-import produce, { createDraft, current, finishDraft, isDraft } from 'immer';
+import { current, isDraft } from 'immer';
 import { Step, StepRoot, TYPE_STEP } from './types';
 import { updateSubject } from '../subject';
+import { createService, ServiceType } from '../_helpers';
+import { Analysis } from '../analysis';
 
 // Step
 const isStep = (entity: unknown): entity is Step =>
@@ -180,22 +182,22 @@ const getParentStep = <T extends Step | StepRoot>(
   return closestParentStep;
 };
 
-const addStep = <T extends Step | StepRoot>(parentStep: T, step: Step): T =>
-  produce(parentStep, draft => {
+const addStep = createService(
+  <T extends Step | StepRoot>(draft: T, step: Step): T => {
     draft.state.steps.push(step);
-  });
+    return draft;
+  },
+);
 
-const addStepToLeft = (parentStep: Step, step: Step, skip = 0): Step =>
-  produce(parentStep, draft => {
+const addStepToLeft = createService(
+  <T extends Step | StepRoot>(draft: T, step: Step, skip: number): T => {
     draft.state.steps.splice(skip, 0, step);
-  });
+    return draft;
+  },
+);
 
-const addStepToRightOf = <T extends Step | StepRoot>(
-  parent: T,
-  leftStep: Step,
-  newStep: Step,
-): T =>
-  produce(parent, draft => {
+const addStepToRightOf = createService(
+  <T extends Step | StepRoot>(draft: T, leftStep: Step, newStep: Step) => {
     const newStepIndex = draft.state.steps.findIndex(childStep =>
       isSameStep(childStep, leftStep),
     );
@@ -203,37 +205,29 @@ const addStepToRightOf = <T extends Step | StepRoot>(
     newStepIndex >= 0
       ? draft.state.steps.splice(newStepIndex + 1, 0, newStep)
       : draft.state.steps.push(newStep);
-  });
+    return draft;
+  },
+);
+
 /**
  * Remove the step and all adjacent steps
  */
-const removeStep = <T extends Step | StepRoot>(
-  parentStep: T,
-  step: Step,
-  adjacent = true,
-): T => {
-  // TODO - rewrite to immer
-  let removeStep = false;
-  return {
-    ...parentStep,
-    state: {
-      ...parentStep.state,
-      steps: parentStep.state.steps.filter(childStep => {
-        if (isSameStep(childStep, step)) {
-          removeStep = adjacent;
-          return false;
-        }
-        return !removeStep;
-      }),
-    },
-  };
-};
+const removeStep = createService(
+  <T extends Step | StepRoot>(draft: T, step: Step, adjacent: boolean): T => {
+    let removeStep = false;
+    draft.state.steps = draft.state.steps.filter(childStep => {
+      if (isSameStep(childStep, step)) {
+        removeStep = adjacent;
+        return false;
+      }
+      return !removeStep;
+    });
+    return draft;
+  },
+);
 
-const addStepRightToSame = <T extends Step | StepRoot>(
-  parent: T,
-  newStep: Step,
-): T =>
-  produce(parent, draft => {
+const addStepRightToSame = createService(
+  <T extends Step | StepRoot>(draft: T, newStep: Step): T => {
     const newStepIndex = draft.state.steps.findIndex(
       childStep => childStep.stepType === newStep.stepType,
     );
@@ -241,7 +235,10 @@ const addStepRightToSame = <T extends Step | StepRoot>(
     newStepIndex >= 0
       ? draft.state.steps.splice(newStepIndex + 1, 0, newStep)
       : draft.state.steps.push(newStep);
-  });
+
+    return draft;
+  },
+);
 
 const updateStep = (step: Step, patch: Partial<Step>) =>
   updateSubject(step, patch);
@@ -251,40 +248,34 @@ function omitSteps(objValue: any, srcValue: any, key: string) {
     return srcValue;
   }
 }
-const updateStepState = <T extends Step>(
-  step: T,
-  state: Partial<T['state']>,
-) => ({
-  ...step,
-  state: mergeWith({}, step.state, state, omitSteps),
-});
+const updateStepState = createService(
+  <T extends Step>(draft: T, state: Partial<T['state']>): T => {
+    mergeWith(draft.state, state, omitSteps);
+    return draft;
+  },
+);
 
-const replaceStep = <T extends Step | StepRoot>(
-  parentStep: T,
-  step: Step,
-  newStep: Step,
-): T => {
-  const draft = (isDraft(parentStep)
-    ? parentStep
-    : createDraft(parentStep)) as T;
-  for (let index = 0; index < draft.state.steps.length; index++) {
-    const childStep = draft.state.steps[index];
-    if (isSameStep(step, childStep)) {
-      draft.state.steps[index] = newStep;
-      return current(draft);
+const replaceStep = createService(
+  <T extends Step | StepRoot>(draft: T, step: Step, newStep: Step): T => {
+    for (let index = 0; index < draft.state.steps.length; index++) {
+      const childStep = draft.state.steps[index];
+      if (isSameStep(step, childStep)) {
+        draft.state.steps[index] = newStep;
+        return current(draft);
+      }
+      const updatedStep = replaceStep(childStep, step, newStep);
+      if (!isDraft(updatedStep)) {
+        return current(draft);
+      }
     }
-    const updatedStep = replaceStep(childStep, step, newStep);
-    if (!isDraft(updatedStep)) {
-      return current(draft);
-    }
-  }
-  return parentStep;
-};
+    return draft;
+  },
+);
 
-const updateNestedStep = <T extends Step | StepRoot>(
-  parentStep: T,
-  step: Step,
-): T => replaceStep(parentStep, step, step);
+const updateNestedStep = createService(
+  <T extends Step | StepRoot>(draft: T, step: Step): T =>
+    replaceStep(draft, step, step) as T,
+);
 
 const createStep = <T>(
   id: string,

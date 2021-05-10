@@ -1,14 +1,7 @@
-import produce from 'immer';
+import produce, { PatchListener } from 'immer';
 import { Analysis, InferAnalysisStep, TYPE_ANALYSIS } from './types';
 import { getChildStep, Step, updateNestedStep } from '../step';
-
-const updateAnalysisActiveStepId = <T extends Analysis<any>>(
-  analysis: T,
-  stepId: Step['id'],
-) =>
-  produce(analysis, (draft: T) => {
-    draft.state.activeStepId = stepId;
-  });
+import { createService } from '../_helpers';
 
 const getAnalysisActiveStep = <T extends Analysis<any>>(
   analysis: T,
@@ -19,11 +12,19 @@ const getAnalysisActiveStep = <T extends Analysis<any>>(
   return (activeStep || analysis.state.steps[0]) as InferAnalysisStep<T>;
 };
 
+const updateAnalysisActiveStepId = createService(
+  <T extends Analysis<any>>(draft: T, stepId: Step['id']): T => {
+    draft.state.activeStepId = stepId;
+    return draft;
+  },
+);
+
 const updateAnalysisStep = <T extends Analysis<any>>(
   analysis: T,
   step: Step,
+  patchListener?: PatchListener,
 ) => {
-  return updateNestedStep(analysis, step);
+  return updateNestedStep(analysis, step, patchListener);
 };
 
 const createAnalysis = <T extends Step>(

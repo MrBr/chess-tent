@@ -235,7 +235,7 @@ class EditorRenderer extends React.Component<
       );
       this.updateStep(updatedParent as Step);
     } else {
-      const updatedParent = removeStep(parent, step, adjacent);
+      const updatedParent = removeStep(parent, step, !!adjacent);
       this.updateChapter(updatedParent as Chapter);
     }
     history.replace({

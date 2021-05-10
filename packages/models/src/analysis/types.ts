@@ -1,5 +1,5 @@
 import { Subject } from '../subject';
-import { Step } from '../step';
+import { Step, StepRoot } from '../step';
 
 export const TYPE_ANALYSIS = 'analyses';
 
@@ -10,7 +10,7 @@ export interface Analysis<T extends Step> extends Subject {
   type: typeof TYPE_ANALYSIS;
   state: {
     activeStepId?: Step['id'];
-    steps: Array<Step>;
+    steps: T[];
   };
 }
 

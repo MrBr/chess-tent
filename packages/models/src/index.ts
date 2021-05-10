@@ -23,6 +23,8 @@ export * from './chapter';
 export * from './mentorship';
 export * from './tag';
 
+export * from './_helpers';
+
 export type Entity =
   | User
   | Lesson

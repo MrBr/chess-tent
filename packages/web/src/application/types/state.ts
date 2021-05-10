@@ -10,6 +10,7 @@ import {
   Entity,
   Lesson,
   Message,
+  ServiceType,
   Subject,
   User,
 } from '@chess-tent/models';
@@ -60,7 +61,7 @@ export type State = {
     updateEntities: (entity: Entity | Entity[]) => UpdateEntitiesAction;
     updateEntity: (entity: Entity) => UpdateEntityAction;
     serviceAction: <T extends (...args: any) => any>(
-      service: T,
+      service: T extends ServiceType ? T : never,
     ) => (
       ...payload: T extends (...args: infer U) => any ? U : never
     ) => UpdateEntityAction;

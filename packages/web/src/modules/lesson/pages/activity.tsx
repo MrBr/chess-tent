@@ -1,6 +1,10 @@
 import React, { useEffect } from 'react';
 import { hooks, state, requests, socket, ui } from '@application';
-import { LessonActivity } from '@types';
+import {
+  LessonActivity,
+  SYNC_ACTIVITY_REQUEST_EVENT,
+  SYNC_ACTIVITY_EVENT,
+} from '@types';
 import { isLesson } from '@chess-tent/models';
 import Activity from '../components/activity';
 
@@ -35,9 +39,27 @@ export default () => {
       socket.unsubscribe(`activity-${activityId}`);
     };
   }, [activityId]);
+
   useEffect(() => {
     socket.subscribe(`activity-${activityId}`);
   }, [activityId]);
+
+  useEffect(() => {
+    socket.registerEvent(
+      SYNC_ACTIVITY_REQUEST_EVENT,
+      (forwardToSocketId: string) => {
+        console.log(SYNC_ACTIVITY_REQUEST_EVENT, forwardToSocketId);
+        socket.emitEvent(SYNC_ACTIVITY_EVENT, { activity, forwardToSocketId });
+      },
+    );
+
+    socket.registerEvent(SYNC_ACTIVITY_EVENT, (newActivity: any) => {
+      console.log(SYNC_ACTIVITY_EVENT, newActivity);
+      if (newActivity) {
+        dispatch(updateEntities(newActivity));
+      }
+    });
+  }, [activity, dispatch]);
 
   useEffect(() => {
     // Load existing activity

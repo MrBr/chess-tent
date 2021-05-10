@@ -7,6 +7,7 @@ import {
   SocketEvents,
   SUBSCRIBE_EVENT,
   UNSUBSCRIBE_EVENT,
+  SYNC_ACTIVITY_EVENT,
 } from '@chess-tent/types';
 
 let io: Server;
@@ -57,6 +58,11 @@ const init: SocketService['init'] = server => {
     client.on(ACTION_EVENT, function (data) {
       dispatch(client, ACTION_EVENT, JSON.parse(data));
     });
+
+    client.on(SYNC_ACTIVITY_EVENT, function (data) {
+      console.log('SYNC_ACTIVITY_EVENT', data);
+      io.to(data.forwardToSocketId).emit(SYNC_ACTIVITY_EVENT, data.activity);
+    });
   });
 };
 
@@ -71,8 +77,24 @@ const sendServerAction = (channel: string, action: Actions) => {
   io.in(channel).emit(ACTION_EVENT, action);
 };
 
+const sendDataToOwner = (
+  roomId: string,
+  forwardToSocketId: string,
+  event: string,
+) => {
+  const roomSockets = Object.keys(io.sockets.adapter.rooms[roomId].sockets);
+
+  if (roomSockets.length <= 1) {
+    return;
+  }
+
+  const ownerSocketId = roomSockets && roomSockets[0];
+  io.to(ownerSocketId).emit(event, forwardToSocketId);
+};
+
 application.socket.init = init;
 application.socket.sendAction = sendAction;
 application.socket.sendServerAction = sendServerAction;
+application.socket.sendDataToOwner = sendDataToOwner;
 application.socket.identify = identify;
 application.socket.registerMiddleware = registerMiddleware;

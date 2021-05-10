@@ -1,10 +1,14 @@
 export const SUBSCRIBE_EVENT = 'subscribe';
 export const UNSUBSCRIBE_EVENT = 'unsubscribe';
+export const SYNC_ACTIVITY_REQUEST_EVENT = 'sync_activity_request';
+export const SYNC_ACTIVITY_EVENT = 'sync_activity';
 export const ACTION_EVENT = 'action';
 
 export type SocketEvents =
   | typeof SUBSCRIBE_EVENT
   | typeof UNSUBSCRIBE_EVENT
+  | typeof SYNC_ACTIVITY_REQUEST_EVENT
+  | typeof SYNC_ACTIVITY_EVENT
   | typeof ACTION_EVENT;
 
 export const USER_CHANNEL_PREFIX = 'user';

@@ -5,4 +5,6 @@ export type Socket = {
   sendAction: (action: Actions) => void;
   subscribe: (channel: string) => void;
   unsubscribe: (channel: string) => void;
+  registerEvent: (event: string, onEvent: Function) => SocketIOClient.Emitter;
+  emitEvent: (event: string, data: any) => SocketIOClient.Socket;
 };

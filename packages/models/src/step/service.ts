@@ -1,5 +1,5 @@
 import mergeWith from 'lodash.mergewith';
-import produce, { createDraft, finishDraft, isDraft } from 'immer';
+import produce, { createDraft, current, finishDraft, isDraft } from 'immer';
 import { Step, StepRoot, TYPE_STEP } from './types';
 import { updateSubject } from '../subject';
 
@@ -271,11 +271,11 @@ const replaceStep = <T extends Step | StepRoot>(
     const childStep = draft.state.steps[index];
     if (isSameStep(step, childStep)) {
       draft.state.steps[index] = newStep;
-      return finishDraft(draft);
+      return current(draft);
     }
     const updatedStep = replaceStep(childStep, step, newStep);
     if (!isDraft(updatedStep)) {
-      return finishDraft(draft);
+      return current(draft);
     }
   }
   return parentStep;

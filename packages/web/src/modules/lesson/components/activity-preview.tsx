@@ -1,7 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { hooks, services, ui } from '@application';
 import {
-  Analysis,
   Chapter,
   createActivity,
   getChildStep,
@@ -9,8 +8,6 @@ import {
   getStepsCount,
   Lesson,
   Step,
-  updateActivityStepAnalysis,
-  updateActivityStepState,
   User,
 } from '@chess-tent/models';
 import { LessonActivity, Steps } from '@types';
@@ -40,23 +37,17 @@ const Preview = ({ lesson, chapter, step }: PreviewProps) => {
     chapter,
     activity.state.activeStepId || step.id,
   ) as Steps;
-  const activityStepState = activity.state[step.id];
+  const activityStepState = activity.state[activeStep.id];
   const stepsCount = useMemo(() => getStepsCount(chapter), [chapter]);
   const currentStepIndex = useMemo(() => getStepIndex(chapter, activeStep), [
     chapter,
     activeStep,
   ]);
-  const updateStepState = useCallback(
-    (activity: LessonActivity, stepId: Step['id'], state: {}) =>
-      updatePreviewActivity(updateActivityStepState(activity, stepId, state)),
-    [],
-  );
-  const updateStepAnalysis = useCallback(
-    (activity: LessonActivity, stepId: Step['id'], analysis: Analysis<Steps>) =>
-      updatePreviewActivity(
-        updateActivityStepAnalysis(activity, stepId, analysis),
-      ),
-    [],
+  const updateActivity = useCallback(
+    service => (...args: Parameters<typeof service>) => {
+      updatePreviewActivity(service(...args));
+    },
+    [updatePreviewActivity],
   );
 
   return (
@@ -66,9 +57,7 @@ const Preview = ({ lesson, chapter, step }: PreviewProps) => {
       analysis={activityStepState.analysis}
       activeStep={activeStep}
       chapter={chapter}
-      updateActivity={updatePreviewActivity}
-      updateActivityStepState={updateStepState}
-      updateActivityStepAnalysis={updateStepAnalysis}
+      updateActivity={updateActivity}
       stepsCount={stepsCount}
       currentStepIndex={currentStepIndex}
       activityStepState={activityStepState}

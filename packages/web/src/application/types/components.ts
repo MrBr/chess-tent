@@ -52,6 +52,7 @@ import { ClassComponent } from './_helpers';
 import { OptionsDropdownProps, ButtonProps, UI } from './ui';
 import {
   AppAnalysis,
+  Hooks,
   LessonActivity,
   NotificationView,
   StepModules,
@@ -212,17 +213,7 @@ export interface AnalysisSystemProps {
 
 export interface ActivityRendererProps {
   activity: LessonActivity;
-  updateActivity: (activity: LessonActivity) => void;
-  updateActivityStepState: (
-    activity: LessonActivity,
-    stepId: AppStep['id'],
-    state: {},
-  ) => void;
-  updateActivityStepAnalysis: (
-    activity: LessonActivity,
-    stepId: AppStep['id'],
-    analysis: Analysis<any>,
-  ) => void;
+  updateActivity: ReturnType<Hooks['useDispatchService']>;
   currentStepIndex: number;
   stepsCount: number;
   activeStep: Steps;

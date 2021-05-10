@@ -13,7 +13,7 @@ import {
   PieceRole,
   Steps,
 } from '@types';
-import { components, hooks, requests, services, state, ui } from '@application';
+import { components, hooks, requests, services, ui } from '@application';
 import {
   Chapter,
   getNextStep,
@@ -43,10 +43,7 @@ const {
   AnalysisSidebar,
   LessonChapters,
 } = components;
-const { useDispatchBatched, useDiffUpdates, useApi } = hooks;
-const {
-  actions: { serviceAction, updateEntity },
-} = state;
+const { useDiffUpdates, useApi, useDispatchService } = hooks;
 const { Button, Absolute } = ui;
 
 export class ActivityRenderer extends React.Component<
@@ -71,21 +68,26 @@ export class ActivityRenderer extends React.Component<
 
   setStepActivityState = (state: {}) => {
     const {
-      updateActivityStepState,
       activity,
       activeStep,
       activityStepState,
+      updateActivity,
     } = this.props;
-    updateActivityStepState(activity, activeStep.id, {
+
+    updateActivity(updateActivityStepState)(activity, activeStep.id, {
       ...activityStepState,
       ...state,
     });
   };
 
   updateStepActivityAnalysis = (analysis: Analysis<Steps>) => {
-    const { updateActivityStepAnalysis, activity, activeStep } = this.props;
+    const { updateActivity, activity, activeStep } = this.props;
     !this.isAnalysing() && this.updateActiveTab(1);
-    updateActivityStepAnalysis(activity, activeStep.id, analysis);
+    updateActivity(updateActivityStepAnalysis)(
+      activity,
+      activeStep.id,
+      analysis,
+    );
   };
 
   startAnalysingPosition = (
@@ -118,26 +120,26 @@ export class ActivityRenderer extends React.Component<
 
   completeStep = (step: Step) => {
     const { updateActivity, activity } = this.props;
-    updateActivity(markStepCompleted(activity, step));
+    updateActivity(markStepCompleted)(activity, step);
   };
 
   chapterChangeHandler = (chapter: Chapter) => {
     const { updateActivity, activity } = this.props;
-    updateActivity(updateActivityActiveChapter(activity, chapter));
+    updateActivity(updateActivityActiveChapter)(activity, chapter);
   };
 
   nextActivityStep = () => {
     const { updateActivity, chapter, activeStep, activity } = this.props;
     const nextStep = getNextStep(chapter, activeStep) as Steps;
     nextStep &&
-      updateActivity(services.updateActivityActiveStep(activity, nextStep));
+      updateActivity(services.updateActivityActiveStep)(activity, nextStep);
   };
 
   prevActivityStep = () => {
     const { updateActivity, chapter, activeStep, activity } = this.props;
     const prevStep = getPreviousStep(chapter, activeStep) as Steps;
     prevStep &&
-      updateActivity(services.updateActivityActiveStep(activity, prevStep));
+      updateActivity(services.updateActivityActiveStep)(activity, prevStep);
   };
 
   updateStepRotation = (orientation?: PieceColor) => {
@@ -291,7 +293,6 @@ export class ActivityRenderer extends React.Component<
 }
 
 const Activity: ActivityComponent<LessonActivity> = props => {
-  const dispatch = useDispatchBatched();
   const lesson = props.activity.subject;
   const activeChapterId =
     props.activity.state.activeChapterId ||
@@ -312,6 +313,7 @@ const Activity: ActivityComponent<LessonActivity> = props => {
   const activeStep = getChildStep(activeChapter, activeStepId) as Steps;
   const activeStepActivityState = activity.state[activeStep.id];
 
+  const dispatchService = useDispatchService();
   const { fetch: saveActivity } = useApi(requests.activityUpdate);
   useDiffUpdates(
     activity,
@@ -328,36 +330,7 @@ const Activity: ActivityComponent<LessonActivity> = props => {
     [activeChapter, activeStep],
   );
 
-  const updateActivity = useCallback(
-    updatedActivity => dispatch(updateEntity(updatedActivity)),
-    [dispatch],
-  );
-  const updateStepActivityState = useCallback(
-    (activity: LessonActivity, stepId: Step['id'], state: {}) => {
-      const action = serviceAction(updateActivityStepState)(
-        activity,
-        stepId,
-        state,
-      );
-      dispatch(action);
-    },
-    [dispatch],
-  );
-  const updateStepActivityAnalysis = useCallback(
-    (
-      activity: LessonActivity,
-      stepId: Step['id'],
-      analysis: Analysis<Steps>,
-    ) => {
-      const action = serviceAction(updateActivityStepAnalysis)(
-        activity,
-        stepId,
-        analysis,
-      );
-      dispatch(action);
-    },
-    [dispatch],
-  );
+  const updateActivity = useCallback(dispatchService, [dispatchService]);
 
   return (
     <ActivityRenderer
@@ -367,8 +340,6 @@ const Activity: ActivityComponent<LessonActivity> = props => {
       activeStep={activeStep}
       chapter={activeChapter}
       updateActivity={updateActivity}
-      updateActivityStepState={updateStepActivityState}
-      updateActivityStepAnalysis={updateStepActivityAnalysis}
       stepsCount={stepsCount}
       currentStepIndex={currentStepIndex}
       activityStepState={activeStepActivityState}

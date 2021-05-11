@@ -4,6 +4,8 @@ import { utils } from '@application';
 import { useDispatch, useSelector } from 'react-redux';
 import { useCallback } from 'react';
 import { batchActions } from 'redux-batched-actions';
+import { serviceAction } from './actions';
+import { ServiceType } from '@chess-tent/models';
 
 export const useDispatchBatched = () => {
   const dispatch = useDispatch();
@@ -13,6 +15,7 @@ export const useDispatchBatched = () => {
 };
 
 const useState = () => useSelector(state => state);
+
 export const useDenormalize = <T extends RecordValue>(
   descriptor: string[] | string | null,
   type?: string,
@@ -32,4 +35,17 @@ export const useDenormalize = <T extends RecordValue>(
     denormalized = utils.denormalize(descriptor, type, state.entities);
   }
   return denormalized as T;
+};
+
+export const useDispatchService = () => {
+  const dispatch = useDispatch();
+
+  return useCallback(
+    <T extends (...args: any) => any>(
+      service: T extends ServiceType ? T : never,
+    ) => (...args: T extends (...args: infer U) => any ? U : never) => {
+      dispatch(serviceAction(service)(...args));
+    },
+    [dispatch],
+  );
 };

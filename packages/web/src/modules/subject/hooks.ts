@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { EntitiesState, PathAction } from '@chess-tent/types';
+import { useCallback, useEffect, useRef } from 'react';
 import {
   getSubjectValueAt,
   Subject,
@@ -35,50 +34,6 @@ const removeWeakerPaths = (updates: SubjectPath[]) => {
   });
 };
 
-export const usePathUpdates = (
-  type: keyof EntitiesState,
-  id: string,
-  save: (updates: SubjectPathUpdate[]) => void,
-  delay = 5000,
-) => {
-  // Use store to get latest entity
-  const store = useStore();
-  const [updates, setUpdates] = useState<SubjectPath[]>([]);
-
-  const entityUpdated = useCallback(
-    throttle(
-      (updates: SubjectPath[]) => {
-        const normalizedEntity = store.getState().entities[type][id];
-        const minimumUpdate = removeWeakerPaths(updates).map(path => ({
-          path,
-          value: getSubjectValueAt(normalizedEntity, path),
-        }));
-        save(minimumUpdate);
-        setUpdates([]);
-      },
-      delay,
-      {
-        trailing: true,
-        leading: false,
-      },
-    ),
-    // Must be zero dependencies to call the same throttled function
-    [],
-  );
-
-  useEffect(() => {
-    if (updates.length > 0) {
-      entityUpdated(updates);
-    }
-  }, [setUpdates, entityUpdated, updates]);
-
-  const pushUpdate = useCallback((updateAction: PathAction<any, any, any>) => {
-    setUpdates(currentUpdates => [...currentUpdates, updateAction.meta.path]);
-  }, []);
-
-  return pushUpdate;
-};
-
 export const useDiffUpdates = (
   subject: Subject,
   save: (updates: SubjectPathUpdate[]) => void,
@@ -102,19 +57,25 @@ export const useDiffUpdates = (
           console.warn('Updating entity without previous reference.');
           return;
         }
+
         const { type, id } = subjectRef.current;
         const normalizedEntity = store.getState().entities[type][id];
         const diffs = getDiff(subjectRef.current, normalizedEntity);
+
         const updatedPaths = Object.keys(diffs).map(path =>
           path.split('.'),
         ) as SubjectPath[];
+
         const minimumUpdate = removeWeakerPaths(updatedPaths).map(path => {
           return {
             path,
             value: getSubjectValueAt(normalizedEntity, path),
           };
         });
-        save(minimumUpdate);
+
+        if (minimumUpdate.length > 0) {
+          save(minimumUpdate);
+        }
         subjectRef.current = normalizedEntity;
       },
       delay,

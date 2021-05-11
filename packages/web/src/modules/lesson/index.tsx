@@ -1,24 +1,14 @@
 import application from '@application';
 
-import {
-  addLessonChapterAction,
-  updateLessonChapterAction,
-  updateLessonPathAction,
-  updateLessonStepAction,
-} from './state/actions';
 import { lessonSelector } from './state/selectors';
 import DifficultyDropdown from './components/difficulty-dropdown';
 import { editorContext } from './context';
 
-application.register(() => import('./register'));
+application.register(() => import('./state/reducer'));
 application.register(() => import('./routes'));
 application.register(() => import('./requests'));
 
-application.state.actions.updateLessonStep = updateLessonStepAction;
 application.context.editorContext = editorContext;
-application.state.actions.updateLessonPath = updateLessonPathAction;
-application.state.actions.updateLessonChapter = updateLessonChapterAction;
-application.state.actions.addLessonChapter = addLessonChapterAction;
 application.state.selectors.lessonSelector = lessonSelector;
 application.components.DifficultyDropdown = DifficultyDropdown;
 

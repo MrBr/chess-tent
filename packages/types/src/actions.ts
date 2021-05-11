@@ -1,49 +1,31 @@
 import {
   Conversation,
   NormalizedMessage,
-  Activity,
   Entity,
-  Lesson,
   NormalizedActivity,
   NormalizedConversation,
   NormalizedLesson,
   NormalizedStep,
   NormalizedUser,
-  Step,
   Subject,
-  User,
-  Chapter,
-  LessonStateStatus,
-  SubjectPath,
   NormalizedTag,
   Notification,
   NormalizedNotification,
   NormalizedMentorship,
+  NormalizedEntity,
+  ReversiblePatch,
 } from '@chess-tent/models';
 
 export const UPDATE_ENTITIES = 'UPDATE_ENTITIES';
-
-export const UPDATE_LESSON_STEP = 'UPDATE_LESSON_STEP';
-export const UPDATE_LESSON_CHAPTER = 'UPDATE_LESSON_CHAPTER';
-export const ADD_LESSON_CHAPTER = 'ADD_LESSON_CHAPTER';
-export const UPDATE_LESSON_PATH = 'UPDATE_LESSON_PATH';
-
-export const UPDATE_ACTIVITY_STEP_STATE = 'UPDATE_ACTIVITY_STEP_STATE';
-export const UPDATE_ACTIVITY_STEP_ANALYSIS =
-  'UPDATE_ACTIVITY_STEP_STATE_ANALYSIS';
-export const UPDATE_ACTIVITY_PROPERTY = 'UPDATE_ACTIVITY_PROPERTY';
-
-export const UPDATE_USER = 'UPDATE_USER';
-
-export const SEND_NOTIFICATION = 'SEND_NOTIFICATION';
-export const UPDATE_NOTIFICATION = 'UPDATE_NOTIFICATION';
+export const UPDATE_ENTITY = 'UPDATE_ENTITY';
 
 export const UPDATE_RECORD_VALUE = 'UPDATE_RECORD_VALUE';
 export const UPDATE_RECORD = 'UPDATE_RECORD';
 export const DELETE_RECORD = 'DELETE_RECORD';
 
+export const SEND_NOTIFICATION = 'SEND_NOTIFICATION';
 export const SEND_MESSAGE = 'SEND_MESSAGE';
-export const UPDATE_MESSAGE = 'UPDATE_MESSAGE';
+export const SEND_PATCH = 'SEND_PATCH';
 
 export type Action<T, P, M = {}> = {
   type: T;
@@ -52,7 +34,13 @@ export type Action<T, P, M = {}> = {
   meta: M & { push?: boolean };
 };
 
-export type PathAction<T, P, M extends { path: SubjectPath }> = Action<T, P, M>;
+export type GetActionMeta<T extends Action<any, any>> = T extends Action<
+  any,
+  any,
+  infer M
+>
+  ? M
+  : never;
 
 export type EntityState<T> = { [key: string]: T };
 export type EntitiesState = {
@@ -108,85 +96,21 @@ export type UpdateEntitiesAction = Action<
   typeof UPDATE_ENTITIES,
   EntitiesState
 >;
-
-/**
- * Lesson
- */
-export type UpdateLessonChapterAction = PathAction<
-  typeof UPDATE_LESSON_CHAPTER,
-  Chapter,
-  { lessonId: Lesson['id']; chapterId: Chapter['id']; path: SubjectPath }
->;
-export type AddLessonChapterAction = PathAction<
-  typeof ADD_LESSON_CHAPTER,
-  Chapter,
-  { lessonId: Lesson['id']; path: SubjectPath }
->;
-export type UpdateLessonStepAction = PathAction<
-  typeof UPDATE_LESSON_STEP,
-  Step,
-  { lessonId: Lesson['id']; chapterId: Chapter['id']; path: SubjectPath }
->;
-
-export type UpdateLessonPathAction<
-  T extends keyof NormalizedLesson = keyof NormalizedLesson,
-  K extends keyof NormalizedLesson['state'] = keyof NormalizedLesson['state']
-> = PathAction<
-  typeof UPDATE_LESSON_PATH,
-  T extends 'state' ? NormalizedLesson[T][K] : NormalizedLesson[T],
+export type UpdateEntityAction = Action<
+  typeof UPDATE_ENTITY,
+  NormalizedEntity,
   {
-    lessonId: NormalizedLesson['id'];
-    path: T extends 'state' ? [T, K] : [T];
+    patch?: ReversiblePatch;
+    type: string;
+    id: string;
   }
 >;
 
-export type LessonAction =
-  | UpdateEntitiesAction
-  | UpdateLessonPathAction
-  | UpdateLessonStepAction
-  | UpdateLessonChapterAction
-  | AddLessonChapterAction;
+export type LessonAction = UpdateEntityAction | UpdateEntitiesAction;
 
-/**
- * Activity
- */
-export type UpdateActivityStepAction = PathAction<
-  typeof UPDATE_ACTIVITY_STEP_STATE,
-  any,
-  { activityId: Activity['id']; path: SubjectPath }
->;
-export type UpdateActivityStepAnalysisAction = PathAction<
-  typeof UPDATE_ACTIVITY_STEP_ANALYSIS,
-  any,
-  { activityId: Activity['id']; path: SubjectPath }
->;
-export type UpdateActivityPropertyAction<
-  T extends keyof NormalizedActivity = keyof NormalizedActivity,
-  K extends keyof NormalizedActivity['state'] = keyof NormalizedActivity['state']
-> = PathAction<
-  typeof UPDATE_ACTIVITY_PROPERTY,
-  T extends 'state' ? NormalizedActivity[T][K] : NormalizedActivity[T],
-  {
-    activityId: NormalizedActivity['id'];
-    path: T extends 'state' ? [T, K] : [T];
-  }
->;
+export type ActivityAction<T extends Subject> = UpdateEntitiesAction;
 
-export type ActivityAction<T extends Subject> =
-  | UpdateEntitiesAction
-  | UpdateActivityStepAction
-  | UpdateActivityPropertyAction;
-
-/**
- * User
- */
-export type UpdateUserAction = Action<
-  typeof UPDATE_USER,
-  Partial<User>,
-  { id: User['id'] }
->;
-
-export type UserAction = UpdateEntitiesAction | UpdateUserAction;
+export type UserAction = UpdateEntitiesAction;
 
 /**
  * Records
@@ -222,16 +146,7 @@ export type SendMessageAction = Action<
   NormalizedMessage,
   { conversationId: Conversation['id'] }
 >;
-export type UpdateMessageAction = Action<
-  typeof UPDATE_MESSAGE,
-  Partial<NormalizedMessage>,
-  {
-    conversationId: Conversation['id'];
-    messageId: NormalizedMessage['id'];
-    messageTimestamp: NormalizedMessage['timestamp'];
-  }
->;
-export type MessageAction = SendMessageAction | UpdateMessageAction;
+export type MessageAction = SendMessageAction;
 
 /**
  * Conversation
@@ -246,17 +161,23 @@ export type SendNotificationAction = Action<
   Notification
 >;
 
-export type UpdateNotificationAction = Action<
-  typeof UPDATE_NOTIFICATION,
-  NormalizedNotification,
-  { id: Notification['id'] }
+export type NotificationAction = UpdateEntitiesAction | SendNotificationAction;
+
+/**
+ * Patch
+ */
+export type SendPatchAction = Action<
+  typeof SEND_PATCH,
+  ReversiblePatch,
+  { type: string; id: string }
 >;
-export type NotificationAction =
-  | UpdateEntitiesAction
-  | SendNotificationAction
-  | UpdateNotificationAction;
+
+export type PatchAction = SendPatchAction;
 
 export type Actions =
+  | UpdateEntityAction
+  | UpdateEntitiesAction
+  | PatchAction
   | MessageAction
   | NotificationAction
   | ConversationAction

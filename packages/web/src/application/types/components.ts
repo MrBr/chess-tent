@@ -15,6 +15,7 @@ import { LinkProps, RedirectProps, RouteProps } from 'react-router-dom';
 import { Requests } from '@chess-tent/types';
 import {
   Activity,
+  Analysis,
   Chapter,
   Difficulty,
   Lesson,
@@ -22,7 +23,6 @@ import {
   Notification,
   StepRoot,
   StepType,
-  SubjectPath,
   Tag,
   User,
 } from '@chess-tent/models';
@@ -52,6 +52,7 @@ import { ClassComponent } from './_helpers';
 import { OptionsDropdownProps, ButtonProps, UI } from './ui';
 import {
   AppAnalysis,
+  Hooks,
   LessonActivity,
   NotificationView,
   StepModules,
@@ -204,29 +205,15 @@ export type ActivityComponent<T> = ComponentType<
 >;
 
 export interface AnalysisSystemProps {
-  analysis: AppAnalysis;
-  updateAnalysis: (path: SubjectPath, value: any) => void;
+  analysis: Analysis<any>;
+  updateAnalysis: (analysis: Analysis<any>) => void;
   initialPosition?: FEN;
   initialOrientation?: Color;
 }
 
 export interface ActivityRendererProps {
   activity: LessonActivity;
-  updateActivity: (
-    path: ['state', keyof LessonActivity['state']] | [keyof LessonActivity],
-    value: any,
-  ) => void;
-  updateActivityStepState: (
-    activity: LessonActivity,
-    stepId: AppStep['id'],
-    state: {},
-  ) => void;
-  updateActivityStepAnalysis: (
-    activity: LessonActivity,
-    stepId: AppStep['id'],
-    path: SubjectPath,
-    state: any,
-  ) => void;
+  updateActivity: ReturnType<Hooks['useDispatchService']>;
   currentStepIndex: number;
   stepsCount: number;
   activeStep: Steps;

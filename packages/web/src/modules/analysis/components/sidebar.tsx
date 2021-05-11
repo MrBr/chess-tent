@@ -1,7 +1,7 @@
 import React, { ComponentProps } from 'react';
 import { components, ui, services } from '@application';
 import { Components } from '@types';
-import { getAnalysisActiveStep } from '@chess-tent/models';
+import { addStep, getAnalysisActiveStep } from '@chess-tent/models';
 import Analysis from './analysis';
 
 const { Stepper } = components;
@@ -24,7 +24,7 @@ class AnalysisSidebar extends Analysis<
             const newStep = services.createStep('variation', {
               position: initialPosition,
             });
-            updateAnalysis(['state', 'steps'], [newStep]);
+            updateAnalysis(addStep(analysis, newStep));
           }}
         >
           Start Analysis

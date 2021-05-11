@@ -1,8 +1,6 @@
 // Hooks
 import {
-  EntitiesState,
   LessonsRequest,
-  PathAction,
   RecordType,
   RecordValue,
   RequestFetch,
@@ -18,6 +16,7 @@ import {
   Notification,
   SubjectPathUpdate,
   Subject,
+  ServiceType,
 } from '@chess-tent/models';
 import { Action as ReduxAction } from 'redux';
 import { useSelector, useDispatch, useStore } from 'react-redux';
@@ -48,12 +47,6 @@ export type Hooks = {
   useDispatch: typeof useDispatch;
   useSelector: typeof useSelector;
   useStore: typeof useStore;
-  usePathUpdates: (
-    type: keyof EntitiesState,
-    id: string,
-    save: (updates: SubjectPathUpdate[]) => void,
-    delay?: number,
-  ) => (action: PathAction<any, any, any>) => void;
   useDiffUpdates: (
     subject: Subject,
     save: (updates: SubjectPathUpdate[]) => void,
@@ -101,4 +94,7 @@ export type Hooks = {
     descriptor: string[] | string | null,
     type?: string,
   ) => T | null;
+  useDispatchService: () => <T extends (...args: any) => any>(
+    service: T extends ServiceType ? T : never,
+  ) => (...payload: T extends (...args: infer U) => any ? U : never) => void;
 };

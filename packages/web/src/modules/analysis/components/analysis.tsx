@@ -9,39 +9,29 @@ import {
 } from '@types';
 import {
   addStep,
-  getParentStep,
-  getStepPath,
-  isStep,
   removeStep,
   Step,
+  updateAnalysisActiveStepId,
+  updateAnalysisStep,
 } from '@chess-tent/models';
 import { components, services } from '@application';
 
 const { StepToolbox } = components;
 
-export default class Analysis<
+export default class AnalysisBase<
   T extends AnalysisSystemProps
 > extends React.Component<T> {
   updateStep = (step: Step) => {
     const { updateAnalysis, analysis } = this.props;
-    updateAnalysis(getStepPath(analysis, step), step);
+    updateAnalysis(updateAnalysisStep(analysis, step));
   };
   removeStep = (step: Step) => {
     const { updateAnalysis, analysis } = this.props;
-    const parentStep = getParentStep(analysis, step);
-    if (!isStep(parentStep)) {
-      const newAnalysis = removeStep(analysis, step);
-      updateAnalysis(['state', 'steps'], newAnalysis.state.steps);
-      return;
-    }
-    updateAnalysis(
-      getStepPath(analysis, parentStep),
-      removeStep(parentStep, step, true),
-    );
+    updateAnalysis(removeStep(analysis, step, true));
   };
   setActiveStep = (step: Step) => {
-    const { updateAnalysis } = this.props;
-    updateAnalysis(['state', 'activeStepId'], step.id);
+    const { updateAnalysis, analysis } = this.props;
+    updateAnalysis(updateAnalysisActiveStepId(analysis, step.id));
   };
   startAnalysis = (
     position: FEN,
@@ -68,7 +58,7 @@ export default class Analysis<
       }),
     );
 
-    updateAnalysis(['state', 'steps'], newAnalysis.state.steps);
+    updateAnalysis(newAnalysis);
   };
   renderToolbox: EditorSidebarProps['renderToolbox'] = props => {
     const { analysis } = this.props;

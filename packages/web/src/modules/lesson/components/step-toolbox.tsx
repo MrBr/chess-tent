@@ -65,7 +65,7 @@ const StepToolbox: Components['StepToolbox'] = ({
       position,
       orientation,
     });
-    updateStep(addStepToLeft(step, descriptionStep));
+    updateStep(addStepToLeft(step, descriptionStep, 0));
     setActiveStep(descriptionStep);
   }, [step, updateStep, setActiveStep]);
   const addVariationStep = useCallback(() => {

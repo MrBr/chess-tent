@@ -8,7 +8,6 @@ import {
 } from '@chess-tent/models';
 import styled from '@emotion/styled';
 import { DateTime } from 'luxon';
-import { updateMessage } from '../state/actions';
 import { useLoadMoreMessages } from '../hooks';
 
 const {
@@ -62,14 +61,15 @@ export default styled(
         !messages[0].read &&
         messages[0].owner !== activeUser.id
       ) {
-        dispatch(
-          updateMessage(
-            { read: true },
-            conversation.id,
-            messages[0].id,
-            messages[0].timestamp,
-          ),
-        );
+        // TODO - implement updateConversationMessage
+        // dispatch(
+        //   updateMessage(
+        //     { read: true },
+        //     conversation.id,
+        //     messages[0].id,
+        //     messages[0].timestamp,
+        //   ),
+        // );
       }
     }, [activeUser.id, conversation, dispatch, messages]);
 

@@ -6,14 +6,6 @@ import { Components, LessonActivity } from '@types';
 const { CoachCard, TrainingCard } = components;
 const { Headline3, Container, Row, Col } = ui;
 
-const StudentActivity = ({ activity }: { activity: LessonActivity }) => {
-  return (
-    <Col md={6} xs={12} className="mb-4" key={activity.id}>
-      <TrainingCard training={activity} />
-    </Col>
-  );
-};
-
 const StudentTrainings: Components['StudentTrainings'] = ({ trainings }) => {
   const groupByMentor = groupBy(
     trainings,
@@ -29,7 +21,9 @@ const StudentTrainings: Components['StudentTrainings'] = ({ trainings }) => {
         <Col md={8} xs={12} className="mt-4">
           <Row>
             {activities.map(activity => (
-              <StudentActivity key={activity.id} activity={activity} />
+              <Col md={6} xs={12} className="mb-4" key={activity.id}>
+                <TrainingCard training={activity} />
+              </Col>
             ))}
           </Row>
         </Col>

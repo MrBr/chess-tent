@@ -1,25 +1,10 @@
-import {
-  Analysis,
-  InferAnalysis,
-  InferAnalysisStep,
-  TYPE_ANALYSIS,
-} from './types';
-import { getChildStep, getStepPath, Step } from '../step';
-import { SubjectPath, updateSubjectValueAt } from '../subject';
+import produce, { PatchListener } from 'immer';
+import { Analysis, InferAnalysisStep, TYPE_ANALYSIS } from './types';
+import { getChildStep, Step, updateNestedStep } from '../step';
+import { createService } from '../_helpers';
 
-const updateAnalysisPath = <T>(
-  analysis: InferAnalysis<T>,
-  path: SubjectPath,
-  patch: Step['id'] | Step | Step[],
-) => updateSubjectValueAt(analysis, path, patch);
-
-const updateAnalysisActiveStepId = <T>(
-  analysis: InferAnalysis<T>,
-  stepId: Step['id'],
-) => updateAnalysisPath(analysis, ['state', 'activeStepId'], stepId);
-
-const getAnalysisActiveStep = <T>(
-  analysis: InferAnalysis<T>,
+const getAnalysisActiveStep = <T extends Analysis<any>>(
+  analysis: T,
 ): InferAnalysisStep<T> => {
   const activeStep =
     analysis.state.activeStepId &&
@@ -27,29 +12,19 @@ const getAnalysisActiveStep = <T>(
   return (activeStep || analysis.state.steps[0]) as InferAnalysisStep<T>;
 };
 
-const getAnalysisStepPath = <T>(
-  analysis: InferAnalysis<T>,
-  step: Step,
-): SubjectPath | null => {
-  for (let index = 0; index < analysis.state.steps.length; index++) {
-    const childStep = analysis.state.steps[index];
-    if (childStep.id === step.id) {
-      return ['state', 'steps', index];
-    }
-    const path = getStepPath(childStep, step);
-    if (path) {
-      return ['state', 'steps', index, ...path];
-    }
-  }
-  return null;
-};
+const updateAnalysisActiveStepId = createService(
+  <T extends Analysis<any>>(draft: T, stepId: Step['id']): T => {
+    draft.state.activeStepId = stepId;
+    return draft;
+  },
+);
 
-const updateAnalysisStep = <T>(analysis: InferAnalysis<T>, step: Step) => {
-  const path = getAnalysisStepPath(analysis, step);
-  if (!path) {
-    throw new Error("Trying to update step which doesn't exists in analysis.");
-  }
-  return updateAnalysisPath(analysis, path, step);
+const updateAnalysisStep = <T extends Analysis<any>>(
+  analysis: T,
+  step: Step,
+  patchListener?: PatchListener,
+) => {
+  return updateNestedStep(analysis, step, patchListener);
 };
 
 const createAnalysis = <T extends Step>(
@@ -64,8 +39,6 @@ const createAnalysis = <T extends Step>(
 export {
   updateAnalysisStep,
   getAnalysisActiveStep,
-  updateAnalysisPath,
-  getAnalysisStepPath,
   createAnalysis,
   updateAnalysisActiveStepId,
 };

@@ -2,9 +2,9 @@ import {
   NotificationAction,
   NotificationState,
   SEND_NOTIFICATION,
-  UPDATE_ENTITIES,
-  UPDATE_NOTIFICATION,
 } from '@types';
+import { state } from '@application';
+import { TYPE_NOTIFICATION } from '@chess-tent/models';
 
 export const reducer = (
   state: NotificationState = {},
@@ -20,19 +20,10 @@ export const reducer = (
         },
       };
     }
-    case UPDATE_NOTIFICATION: {
-      return { ...state, [action.meta.id]: action.payload };
-    }
-    case UPDATE_ENTITIES: {
-      return action.payload.notifications
-        ? {
-            ...state,
-            ...action.payload.notifications,
-          }
-        : state;
-    }
     default: {
       return state;
     }
   }
 };
+
+state.registerEntityReducer(TYPE_NOTIFICATION, reducer);

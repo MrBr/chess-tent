@@ -102,6 +102,7 @@ export type Services = {
   ) => T;
   createActivityComment: (user: User, text: string) => ActivityComment;
   createActivityStepState: (initialState?: {}) => ActivityStepStateBase;
+  updateActivityActiveStep: <T extends Activity>(activity: T, step: Steps) => T;
   getStepPosition: (step: Steps) => FEN;
   getStepBoardOrientation: (step: Steps) => PieceColor;
   updateStepRotation: (step: Steps, orientation?: PieceColor) => Steps;

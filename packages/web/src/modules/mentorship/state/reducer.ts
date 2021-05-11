@@ -1,20 +1,4 @@
-import { UPDATE_ENTITIES, MentorshipState, UpdateEntitiesAction } from '@types';
+import { state } from '@application';
+import { TYPE_MENTORSHIP } from '@chess-tent/models';
 
-export const reducer = (
-  state: MentorshipState = {},
-  action: UpdateEntitiesAction,
-) => {
-  switch (action.type) {
-    case UPDATE_ENTITIES: {
-      return action.payload.mentorship
-        ? {
-            ...state,
-            ...action.payload.mentorship,
-          }
-        : state;
-    }
-    default: {
-      return state;
-    }
-  }
-};
+state.registerEntityReducer(TYPE_MENTORSHIP);

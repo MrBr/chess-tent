@@ -22,6 +22,8 @@ export const reducer = (
         [activityId]: updateSubjectValueAt(activity, path, action.payload),
       };
     }
+    // TODO: Can we somehow reuse UPDATE_ENTITIES?
+    // Beware, Sync Actions need special attributes in Meta - fromSocketId and toSocketId
     case SYNC_ACTIVITY: {
       const activity = action.payload;
       console.log('SYNC_ACTIVITY reducer', activity);

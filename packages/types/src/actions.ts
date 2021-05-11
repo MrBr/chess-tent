@@ -184,6 +184,7 @@ export type SyncActivityRequestAction = SocketAction<
 >;
 export type SyncActivityAction = SocketAction<
   typeof SYNC_ACTIVITY,
+  // TODO: What to put here? Web complains if I put Activity | NormalizedActivity.
   any,
   {
     entityId: NormalizedActivity['id'];

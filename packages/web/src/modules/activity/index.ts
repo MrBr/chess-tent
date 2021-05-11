@@ -3,6 +3,7 @@ import { activitySchema } from './model';
 
 application.model.activitySchema = activitySchema;
 application.register(() => import('./state/reducer'));
+application.register(() => import('./state/middleware'));
 application.register(
   () => import('./state/selectors'),
   module => {

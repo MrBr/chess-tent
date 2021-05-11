@@ -2,9 +2,11 @@ import { Action as ReduxAction, combineReducers, Reducer } from 'redux';
 import {
   Actions,
   EntitiesState,
+  SEND_PATCH,
   UPDATE_ENTITIES,
   UPDATE_ENTITY,
 } from '@chess-tent/types';
+import { applyPatches } from '@chess-tent/models';
 import { utils } from '@application';
 
 const appReducer: {
@@ -35,6 +37,16 @@ const createEntityReducer = <T extends keyof EntitiesState>(
           }
         : state;
     }
+    case SEND_PATCH:
+      const { next } = action.payload;
+      const { type, id } = action.meta;
+      const entity = state[id];
+      return type === reducerEntityType && entity
+        ? {
+            ...state,
+            [id]: applyPatches(entity, next),
+          }
+        : state;
     default: {
       return state;
     }

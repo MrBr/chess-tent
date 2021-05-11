@@ -5,6 +5,7 @@ import {
   PatchListener,
   Patch,
   enablePatches,
+  applyPatches,
 } from 'immer';
 import { Objectish } from 'immer/dist/types/types-internal';
 
@@ -80,4 +81,10 @@ const createService = <T extends any[], U>(
   };
 };
 
-export { createService, PatchListener, Patch, createReversiblePatch };
+export {
+  createService,
+  PatchListener,
+  Patch,
+  createReversiblePatch,
+  applyPatches,
+};

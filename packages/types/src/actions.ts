@@ -25,6 +25,7 @@ export const DELETE_RECORD = 'DELETE_RECORD';
 
 export const SEND_NOTIFICATION = 'SEND_NOTIFICATION';
 export const SEND_MESSAGE = 'SEND_MESSAGE';
+export const SEND_PATCH = 'SEND_PATCH';
 
 export type Action<T, P, M = {}> = {
   type: T;
@@ -100,6 +101,8 @@ export type UpdateEntityAction = Action<
   NormalizedEntity,
   {
     patch?: ReversiblePatch;
+    type: string;
+    id: string;
   }
 >;
 
@@ -160,7 +163,21 @@ export type SendNotificationAction = Action<
 
 export type NotificationAction = UpdateEntitiesAction | SendNotificationAction;
 
+/**
+ * Patch
+ */
+export type SendPatchAction = Action<
+  typeof SEND_PATCH,
+  ReversiblePatch,
+  { type: string; id: string }
+>;
+
+export type PatchAction = SendPatchAction;
+
 export type Actions =
+  | UpdateEntityAction
+  | UpdateEntitiesAction
+  | PatchAction
   | MessageAction
   | NotificationAction
   | ConversationAction

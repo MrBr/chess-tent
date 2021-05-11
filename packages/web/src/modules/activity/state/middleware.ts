@@ -1,15 +1,16 @@
-import { Middleware } from '@types';
-import application, { socket } from '@application';
+import { Middleware, UPDATE_ENTITY } from '@types';
+import application, { socket, state } from '@application';
+import { TYPE_ACTIVITY } from '@chess-tent/models';
 
 export const middleware: Middleware = store => next => action => {
-  // if (
-  //   action.type === UPDATE_ACTIVITY_PROPERTY ||
-  //   action.type === UPDATE_ACTIVITY_STEP_STATE
-  // ) {
-  //   if (!action.meta.push) {
-  //     socket.sendAction(action);
-  //   }
-  // }
+  if (
+    action.type === UPDATE_ENTITY &&
+    action.meta.type === TYPE_ACTIVITY &&
+    !action.meta.push
+  ) {
+    const { id, type, patch } = action.meta;
+    socket.sendAction(state.actions.sendPatchAction(patch, id, type));
+  }
   next(action);
 };
 application.state.registerMiddleware(middleware);

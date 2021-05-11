@@ -10,6 +10,7 @@ import {
   Entity,
   Lesson,
   Message,
+  ReversiblePatch,
   ServiceType,
   Subject,
   User,
@@ -25,6 +26,7 @@ import {
   RecordUpdateValueAction,
   RecordValue,
   SendMessageAction,
+  SendPatchAction,
   UpdateEntitiesAction,
   UpdateEntityAction,
 } from '@chess-tent/types';
@@ -69,6 +71,11 @@ export type State = {
     ) => (
       ...payload: T extends (...args: infer U) => any ? U : never
     ) => UpdateEntityAction;
+    sendPatchAction: (
+      reversiblePatch: ReversiblePatch,
+      id: string,
+      type: string,
+    ) => SendPatchAction;
     sendMessage: (
       user: User,
       conversation: Conversation,

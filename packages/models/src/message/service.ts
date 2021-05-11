@@ -1,5 +1,6 @@
 import { User } from '../user';
 import { Message, TYPE_MESSAGE } from './types';
+import { createService } from '../_helpers';
 
 const createMessage = (
   id: string,
@@ -15,4 +16,11 @@ const createMessage = (
   timestamp: Date.now(),
 });
 
-export { createMessage };
+const updateMessage = createService(
+  (draft: Message, patch: Partial<Message>): Message => {
+    Object.assign(draft, patch);
+    return draft;
+  },
+);
+
+export { createMessage, updateMessage };

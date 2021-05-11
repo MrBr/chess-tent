@@ -4,6 +4,7 @@ import {
   Conversation,
   createMessage,
   getParticipant,
+  updateMessage,
   User,
 } from '@chess-tent/models';
 import styled from '@emotion/styled';
@@ -24,7 +25,7 @@ const {
 const { UserAvatar, MentorshipButton } = components;
 const { generateIndex } = utils;
 const {
-  actions: { sendMessage },
+  actions: { sendMessage, updateEntity },
 } = state;
 const { useDispatchBatched } = hooks;
 
@@ -61,17 +62,14 @@ export default styled(
         !messages[0].read &&
         messages[0].owner !== activeUser.id
       ) {
-        // TODO - implement updateConversationMessage
-        // dispatch(
-        //   updateMessage(
-        //     { read: true },
-        //     conversation.id,
-        //     messages[0].id,
-        //     messages[0].timestamp,
-        //   ),
-        // );
+        const updatedMessage = updateMessage(messages[0], {
+          read: true,
+        });
+        dispatch(
+          updateEntity(updatedMessage, { conversationId: conversation.id }),
+        );
       }
-    }, [activeUser.id, conversation, dispatch, messages]);
+    }, [activeUser.id, conversation.id, dispatch, messages]);
 
     const handleEnter = useCallback(
       event => {

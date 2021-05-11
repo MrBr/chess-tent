@@ -96,6 +96,10 @@ export type UpdateEntitiesAction = Action<
   typeof UPDATE_ENTITIES,
   EntitiesState
 >;
+// TODO - define a pattern for generic meta
+//        probably new actions that extend updateEntity will be needed
+// TODO - couple meta.type and payload if possible
+//        depending on meta.type entity should infer type making it typesafe
 export type UpdateEntityAction = Action<
   typeof UPDATE_ENTITY,
   NormalizedEntity,
@@ -103,7 +107,7 @@ export type UpdateEntityAction = Action<
     patch?: ReversiblePatch;
     type: string;
     id: string;
-  }
+  } & { [key: string]: any }
 >;
 
 export type LessonAction = UpdateEntityAction | UpdateEntitiesAction;

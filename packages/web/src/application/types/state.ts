@@ -19,7 +19,6 @@ import {
   AppState,
   EntitiesState,
   EntityState,
-  GetActionMeta,
   RecordMeta,
   RecordType,
   RecordUpdateAction,
@@ -62,9 +61,9 @@ export type State = {
       type: RecordMeta['type'],
     ) => RecordUpdateValueAction;
     updateEntities: (entity: Entity | Entity[]) => UpdateEntitiesAction;
-    updateEntity: (
+    updateEntity: <M extends {}>(
       entity: Entity,
-      meta?: GetActionMeta<UpdateEntityAction>,
+      meta?: M,
     ) => UpdateEntityAction;
     serviceAction: <T extends (...args: any) => any>(
       service: T extends ServiceType ? T : never,

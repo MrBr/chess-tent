@@ -7,7 +7,7 @@ import {
   SocketEvents,
   SUBSCRIBE_EVENT,
   UNSUBSCRIBE_EVENT,
-  SYNC_ACTIVITY_EVENT,
+  isSocketAction,
 } from '@chess-tent/types';
 
 let io: Server;
@@ -58,10 +58,6 @@ const init: SocketService['init'] = server => {
     client.on(ACTION_EVENT, function (data) {
       dispatch(client, ACTION_EVENT, JSON.parse(data));
     });
-
-    client.on(SYNC_ACTIVITY_EVENT, function (data) {
-      io.to(data.forwardToSocketId).emit(SYNC_ACTIVITY_EVENT, data.activity);
-    });
   });
 };
 
@@ -71,30 +67,30 @@ const sendAction = (channel: string, stream: SocketStream) => {
 };
 
 const sendServerAction = (channel: string, action: Actions) => {
+  if (isSocketAction(action)) {
+    console.log('sendServerAction isSocketAction', action.meta);
+    io.to(action.meta.toSocketId).emit(ACTION_EVENT, action);
+    return;
+  }
   // Sending action to all the clients
   // Be careful not to send action to the action owner
   io.in(channel).emit(ACTION_EVENT, action);
 };
 
-const sendDataToOwner = (
-  roomId: string,
-  forwardToSocketId: string,
-  event: string,
-) => {
+const shouldSyncData = (roomId: string) => {
   const roomSockets = Object.keys(io.sockets.adapter.rooms[roomId].sockets);
-  const ownerSocketId = roomSockets && roomSockets[0];
+  return roomSockets.length > 1;
+};
 
-  if (roomSockets.length <= 1) {
-    io.to(ownerSocketId).emit(event);
-    return;
-  }
-
-  io.to(ownerSocketId).emit(event, forwardToSocketId);
+const getOwnerSocketId = (roomId: string) => {
+  const roomSockets = Object.keys(io.sockets.adapter.rooms[roomId].sockets);
+  return roomSockets && roomSockets[0];
 };
 
 application.socket.init = init;
 application.socket.sendAction = sendAction;
 application.socket.sendServerAction = sendServerAction;
-application.socket.sendDataToOwner = sendDataToOwner;
+application.socket.shouldSyncData = shouldSyncData;
+application.socket.getOwnerSocketId = getOwnerSocketId;
 application.socket.identify = identify;
 application.socket.registerMiddleware = registerMiddleware;

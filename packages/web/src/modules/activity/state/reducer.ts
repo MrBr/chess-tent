@@ -4,6 +4,7 @@ import {
   ActivityState,
   UPDATE_ACTIVITY_PROPERTY,
   UPDATE_ACTIVITY_STEP_STATE,
+  SYNC_ACTIVITY,
 } from '@types';
 import { Subject, updateSubjectValueAt } from '@chess-tent/models';
 
@@ -19,6 +20,14 @@ export const reducer = (
       return {
         ...state,
         [activityId]: updateSubjectValueAt(activity, path, action.payload),
+      };
+    }
+    case SYNC_ACTIVITY: {
+      const activity = action.payload;
+      console.log('SYNC_ACTIVITY reducer', activity);
+      return {
+        ...state,
+        [activity.id]: activity,
       };
     }
     case UPDATE_ENTITIES: {

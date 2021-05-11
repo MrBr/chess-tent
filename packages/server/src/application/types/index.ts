@@ -22,8 +22,6 @@ import {
   Actions,
   SUBSCRIBE_EVENT,
   UNSUBSCRIBE_EVENT,
-  SYNC_ACTIVITY_REQUEST_EVENT,
-  SYNC_ACTIVITY_EVENT,
 } from '@chess-tent/types';
 
 export type AppDocument<T> = T & Document & { v: number };
@@ -176,16 +174,6 @@ export type SocketStream =
       client: Socket;
       event: typeof UNSUBSCRIBE_EVENT;
       data: string;
-    }
-  | {
-      client: Socket;
-      event: typeof SYNC_ACTIVITY_REQUEST_EVENT;
-      data: any;
-    }
-  | {
-      client: Socket;
-      event: typeof SYNC_ACTIVITY_EVENT;
-      data: any;
     };
 
 export type SocketService = {
@@ -202,11 +190,8 @@ export type SocketService = {
   ) => void;
   sendAction: (channel: string, stream: SocketStream) => void;
   sendServerAction: (channel: string, action: Actions) => void;
-  sendDataToOwner: (
-    roomId: string,
-    forwardToSocketId: string,
-    event: string,
-  ) => void;
+  shouldSyncData: (roomId: string) => boolean;
+  getOwnerSocketId: (roomId: string) => string;
   identify: (stream: SocketStream) => Auth['apiTokenPayload'] | null;
 };
 

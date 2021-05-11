@@ -12,6 +12,7 @@ application.register(
       module.updateActivityStepAction;
     application.state.actions.updateActivityStepAnalysis =
       module.updateActivityStepAnalysisAction;
+    application.state.actions.syncActivity = module.syncActivityAction;
   },
 );
 application.register(

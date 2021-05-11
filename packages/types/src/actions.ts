@@ -13,7 +13,6 @@ import {
   Subject,
   User,
   Chapter,
-  LessonStateStatus,
   SubjectPath,
   NormalizedTag,
   Notification,
@@ -32,6 +31,8 @@ export const UPDATE_ACTIVITY_STEP_STATE = 'UPDATE_ACTIVITY_STEP_STATE';
 export const UPDATE_ACTIVITY_STEP_ANALYSIS =
   'UPDATE_ACTIVITY_STEP_STATE_ANALYSIS';
 export const UPDATE_ACTIVITY_PROPERTY = 'UPDATE_ACTIVITY_PROPERTY';
+export const SYNC_ACTIVITY_REQUEST = 'SYNC_ACTIVITY_REQUEST';
+export const SYNC_ACTIVITY = 'SYNC_ACTIVITY';
 
 export const UPDATE_USER = 'UPDATE_USER';
 
@@ -53,6 +54,7 @@ export type Action<T, P, M = {}> = {
 };
 
 export type PathAction<T, P, M extends { path: SubjectPath }> = Action<T, P, M>;
+export type SocketAction<T, P, M extends { entityId: string, fromSocketId?: string, toSocketId: string }> = Action<T, P, M>;
 
 export type EntityState<T> = { [key: string]: T };
 export type EntitiesState = {
@@ -171,11 +173,34 @@ export type UpdateActivityPropertyAction<
     path: T extends 'state' ? [T, K] : [T];
   }
 >;
+export type SyncActivityRequestAction = SocketAction<
+  typeof SYNC_ACTIVITY_REQUEST,
+  undefined,
+  {
+    entityId: NormalizedActivity['id'];
+    fromSocketId?: string,
+    toSocketId: string,
+  }
+>;
+export type SyncActivityAction = SocketAction<
+  typeof SYNC_ACTIVITY,
+  any,
+  {
+    entityId: NormalizedActivity['id'];
+    fromSocketId?: string,
+    toSocketId: string,
+  }
+>;
+
+export type ActivitySyncAction = 
+  | SyncActivityRequestAction
+  | SyncActivityAction;
 
 export type ActivityAction<T extends Subject> =
   | UpdateEntitiesAction
   | UpdateActivityStepAction
-  | UpdateActivityPropertyAction;
+  | UpdateActivityPropertyAction
+  | ActivitySyncAction;
 
 /**
  * User

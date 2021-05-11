@@ -4,6 +4,8 @@ import {
   State,
   UPDATE_ACTIVITY_PROPERTY,
   UpdateActivityPropertyAction,
+  SYNC_ACTIVITY,
+  SyncActivityAction,
 } from '@types';
 
 export const updateActivityPropertyAction: State['actions']['updateActivityProperty'] = (
@@ -43,5 +45,18 @@ export const updateActivityStepAnalysisAction: State['actions']['updateActivityS
   meta: {
     activityId: activity.id,
     path: ['state', stepId, 'analysis', ...path],
+  },
+});
+
+export const syncActivityAction: State['actions']['syncActivity'] = (
+  activity,
+  activityId,
+  socketId,
+): SyncActivityAction => ({
+  type: SYNC_ACTIVITY,
+  payload: activity,
+  meta: {
+    entityId: activityId,
+    toSocketId: socketId,
   },
 });

@@ -32,6 +32,7 @@ import {
   SendMessageAction,
   UpdateActivityPropertyAction,
   UpdateActivityStepAction,
+  SyncActivityAction,
   UpdateEntitiesAction,
   UpdateLessonChapterAction,
   UpdateLessonPathAction,
@@ -91,6 +92,11 @@ export type State = {
         ? NormalizedActivity[T][K]
         : NormalizedActivity[T],
     ) => UpdateActivityPropertyAction;
+    syncActivity: (
+      activity: Activity,
+      activityId: string,
+      socketId: string,
+    ) => SyncActivityAction;
     sendMessage: (
       user: User,
       conversation: Conversation,

@@ -21,6 +21,6 @@ export interface NormalizedStep {
 }
 
 // Step root shape has steps array in the state but it doesn't have to be a step itself.
-export interface StepRoot extends Subject {
-  state: { steps: Step[] };
+export interface StepRoot<T extends Step = Step> extends Subject {
+  state: { steps: T[] };
 }

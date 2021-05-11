@@ -1,4 +1,4 @@
-import { Middleware, SEND_MESSAGE, UPDATE_MESSAGE } from '@types';
+import { Middleware, SEND_MESSAGE } from '@types';
 import { requests, state, socket } from '@application';
 import { selectConversation } from './selectors';
 import { conversationRecordService } from '../service';
@@ -29,8 +29,8 @@ export const middleware: Middleware = store => next => action => {
       });
     }
   }
-  if (action.type === UPDATE_MESSAGE && !action.meta.push) {
-    socket.sendAction(action);
-  }
+  // if (action.type === UPDATE_MESSAGE && !action.meta.push) {
+  //   socket.sendAction(action);
+  // }
   next(action);
 };

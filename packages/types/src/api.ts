@@ -15,12 +15,7 @@ import {
   SubjectPathUpdate,
 } from '@chess-tent/models';
 import { GenericArguments } from './_helpers';
-import {
-  AddLessonChapterAction,
-  UpdateLessonChapterAction,
-  UpdateLessonPathAction,
-  UpdateLessonStepAction,
-} from './actions';
+import { LessonAction } from './actions';
 
 export type LessonsRequest = {
   owner?: User['id'];
@@ -77,11 +72,7 @@ export interface API {
 }
 
 export type RequestFetch<T, U> = (...args: GenericArguments<T>) => Promise<U>;
-export type LessonUpdatableAction =
-  | UpdateLessonStepAction
-  | UpdateLessonChapterAction
-  | AddLessonChapterAction
-  | UpdateLessonPathAction;
+export type LessonUpdatableAction = LessonAction;
 export type LessonUpdates = { path: SubjectPath; value: any }[];
 
 export type RegisterOptions = {

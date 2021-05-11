@@ -1,15 +1,15 @@
+import { PatchListener } from 'immer';
 import { Chapter, TYPE_CHAPTER } from './types';
-import { Step } from '../step';
-import { SubjectPath, updateSubjectValueAt } from '../subject';
+import { Step, updateNestedStep } from '../step';
 
 const isChapter = (entity: unknown): entity is Chapter =>
   Object.getOwnPropertyDescriptor(entity, 'type')?.value === TYPE_CHAPTER;
 
 const updateChapterStep = (
   chapter: Chapter,
-  patch: Partial<Step>,
-  path: SubjectPath,
-) => updateSubjectValueAt(chapter, path, patch);
+  step: Step,
+  patchListener?: PatchListener,
+): Chapter => updateNestedStep(chapter, step, patchListener);
 
 const createChapter = (
   id: string,

@@ -1,30 +1,22 @@
 import React, { useCallback } from 'react';
-import { ui, hooks, requests, state } from '@application';
-import { Lesson, LessonStateStatus } from '@chess-tent/models';
+import { ui, hooks, requests } from '@application';
+import { Lesson, LessonStateStatus, publishLesson } from '@chess-tent/models';
 
-const {
-  actions: { updateLessonPath },
-} = state;
 const { Button } = ui;
-const { useApi, useDispatchBatched } = hooks;
+const { useApi, useDispatchService } = hooks;
 
 export interface PublishButtonProps {
   lesson: Lesson;
 }
 
 export default ({ lesson }: PublishButtonProps) => {
-  const dispatch = useDispatchBatched();
+  const dispatchService = useDispatchService();
   const { fetch: lessonPublish } = useApi(requests.lessonPublish);
 
   const handlePublish = useCallback(() => {
     lessonPublish(lesson.id, lesson);
-    const action = updateLessonPath(
-      lesson,
-      ['state', 'status'],
-      LessonStateStatus.PUBLISHED,
-    );
-    dispatch(action);
-  }, [dispatch, lesson, lessonPublish]);
+    dispatchService(publishLesson)(lesson);
+  }, [dispatchService, lesson, lessonPublish]);
 
   const isPublished = lesson.state.status === LessonStateStatus.PUBLISHED;
   return (

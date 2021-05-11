@@ -1,5 +1,19 @@
-import { createDraft, finishDraft, isDraft, PatchListener } from 'immer';
+import {
+  createDraft,
+  finishDraft,
+  isDraft,
+  PatchListener,
+  Patch,
+  enablePatches,
+} from 'immer';
 import { Objectish } from 'immer/dist/types/types-internal';
+
+enablePatches();
+
+export type ReversiblePatch = {
+  next: Patch[];
+  prev: Patch[];
+};
 
 export type ServiceType =
   | ((a1: any, a2: any, a3?: PatchListener) => any)
@@ -23,6 +37,14 @@ type CreateServiceArgs<
   : T extends [infer A0, infer A1, infer A2, infer A3, infer A4, infer A5]
   ? [A0, A1, A2, A3, A4, A5, TNew?]
   : never;
+
+const createReversiblePatch = (
+  next: Patch[],
+  prev: Patch[],
+): ReversiblePatch => ({
+  next,
+  prev,
+});
 
 /**
  * Standardise all services to work with drafts and optionally to track patches.
@@ -58,4 +80,4 @@ const createService = <T extends any[], U>(
   };
 };
 
-export { createService };
+export { createService, PatchListener, Patch, createReversiblePatch };

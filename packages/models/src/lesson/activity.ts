@@ -12,7 +12,7 @@ export const markStepCompleted = createService(
 );
 
 export const updateActivityActiveStep = createService(
-  <T extends Activity>(draft: T, step: Step, initialState = {}): T => {
+  <T extends Activity>(draft: T, step: Step, initialState: {}): T => {
     if (!draft.state[step.id]) {
       draft.state[step.id] = initialState;
     }

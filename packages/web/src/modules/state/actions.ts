@@ -1,6 +1,12 @@
 import { utils } from '@application';
 import { EntitiesState, State, UPDATE_ENTITIES, UPDATE_ENTITY } from '@types';
-import { Entity, ServiceType } from '@chess-tent/models';
+import {
+  createReversiblePatch,
+  Entity,
+  ReversiblePatch,
+  ServiceType,
+  Patch,
+} from '@chess-tent/models';
 
 export const updateEntitiesAction: State['actions']['updateEntities'] = root => {
   const payload = (Array.isArray(root) ? root : [root]).reduce<
@@ -24,17 +30,25 @@ export const updateEntitiesAction: State['actions']['updateEntities'] = root => 
   };
 };
 
-export const updateEntityAction: State['actions']['updateEntity'] = entity => {
+export const updateEntityAction: State['actions']['updateEntity'] = (
+  entity,
+  meta = {},
+) => {
   const payload = utils.normalize(entity).result;
 
   return {
     type: UPDATE_ENTITY,
     payload,
-    meta: {},
+    meta: meta,
   };
 };
 
 export const serviceAction = <T extends (...args: any) => any>(
   service: T extends ServiceType ? T : never,
-) => (...payload: T extends (...args: infer U) => any ? U : never) =>
-  updateEntityAction(service(...payload) as Entity);
+) => (...payload: T extends (...args: infer U) => any ? U : never) => {
+  const meta: { patch?: ReversiblePatch } = {};
+  const updatedEntity = service(...payload, (next: Patch[], prev: Patch[]) => {
+    meta.patch = createReversiblePatch(next, prev);
+  }) as Entity;
+  return updateEntityAction(updatedEntity, meta);
+};

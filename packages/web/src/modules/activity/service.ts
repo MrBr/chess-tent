@@ -3,6 +3,7 @@ import {
   Activity,
   createActivity as modelCreateActivity,
   Step,
+  PatchListener,
   updateActivityActiveStep as modelUpdateActivityActiveStep,
 } from '@chess-tent/models';
 import { ActivityStepStateBase, Services } from '@types';
@@ -16,14 +17,6 @@ export const createActivityStepState = (initialState?: {}): ActivityStepStateBas
   ...(initialState || {}),
 });
 
-export const updateActivityActiveStep = <T extends Activity>(
-  activity: T,
-  step: Step,
-) =>
-  modelUpdateActivityActiveStep(activity, step, {
-    analysis: services.createAnalysis(),
-  });
-
 export const createActivityComment: Services['createActivityComment'] = (
   user,
   text,
@@ -32,3 +25,17 @@ export const createActivityComment: Services['createActivityComment'] = (
   text,
   id: utils.generateIndex(),
 });
+
+export const updateActivityActiveStep = <T extends Activity>(
+  activity: T,
+  step: Step,
+  patchListener?: PatchListener,
+) =>
+  modelUpdateActivityActiveStep(
+    activity,
+    step,
+    {
+      analysis: services.createAnalysis(),
+    },
+    patchListener,
+  );

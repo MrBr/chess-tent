@@ -13,6 +13,7 @@ import {
   NormalizedNotification,
   NormalizedMentorship,
   NormalizedEntity,
+  ReversiblePatch,
 } from '@chess-tent/models';
 
 export const UPDATE_ENTITIES = 'UPDATE_ENTITIES';
@@ -31,6 +32,14 @@ export type Action<T, P, M = {}> = {
   // push property indicates that actions is pushed from the server
   meta: M & { push?: boolean };
 };
+
+export type GetActionMeta<T extends Action<any, any>> = T extends Action<
+  any,
+  any,
+  infer M
+>
+  ? M
+  : never;
 
 export type EntityState<T> = { [key: string]: T };
 export type EntitiesState = {
@@ -86,7 +95,13 @@ export type UpdateEntitiesAction = Action<
   typeof UPDATE_ENTITIES,
   EntitiesState
 >;
-export type UpdateEntityAction = Action<typeof UPDATE_ENTITY, NormalizedEntity>;
+export type UpdateEntityAction = Action<
+  typeof UPDATE_ENTITY,
+  NormalizedEntity,
+  {
+    patch?: ReversiblePatch;
+  }
+>;
 
 export type LessonAction = UpdateEntityAction | UpdateEntitiesAction;
 

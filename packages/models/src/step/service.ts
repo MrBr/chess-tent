@@ -1,9 +1,8 @@
 import mergeWith from 'lodash.mergewith';
-import { current, isDraft } from 'immer';
 import { Step, StepRoot, TYPE_STEP } from './types';
 import { updateSubject } from '../subject';
-import { createService, ServiceType } from '../_helpers';
-import { Analysis } from '../analysis';
+import { createService } from '../_helpers';
+import { replaceStepBase } from './_helpers';
 
 // Step
 const isStep = (entity: unknown): entity is Step =>
@@ -257,17 +256,7 @@ const updateStepState = createService(
 
 const replaceStep = createService(
   <T extends Step | StepRoot>(draft: T, step: Step, newStep: Step): T => {
-    for (let index = 0; index < draft.state.steps.length; index++) {
-      const childStep = draft.state.steps[index];
-      if (isSameStep(step, childStep)) {
-        draft.state.steps[index] = newStep;
-        return current(draft);
-      }
-      const updatedStep = replaceStep(childStep, step, newStep);
-      if (!isDraft(updatedStep)) {
-        return current(draft);
-      }
-    }
+    replaceStepBase(draft, step, newStep);
     return draft;
   },
 );

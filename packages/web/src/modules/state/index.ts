@@ -12,18 +12,22 @@ import {
   useDispatchBatched,
   useDispatchService,
 } from './hooks';
-import {
-  generalMiddleware,
-  middleware,
-  registerMiddleware,
-} from './middleware';
 import { selectNormalizedEntities } from './selectors';
 
-application.state.getRootReducer = getRootReducer;
+application.register(
+  () => import('./middleware'),
+  ({ generalMiddleware, middleware, registerMiddleware }) => {
+    application.state.registerReducer = registerReducer;
+    application.state.registerMiddleware = registerMiddleware;
+    application.state.middleware = middleware;
+    registerMiddleware(logger);
+    registerMiddleware(batchDispatchMiddleware);
+    registerMiddleware(generalMiddleware);
+  },
+);
+
 application.state.registerEntityReducer = registerEntityReducer;
-application.state.registerReducer = registerReducer;
-application.state.registerMiddleware = registerMiddleware;
-application.state.middleware = middleware;
+application.state.getRootReducer = getRootReducer;
 application.state.selectors.selectNormalizedEntities = selectNormalizedEntities;
 application.hooks.useDispatchBatched = useDispatchBatched;
 application.hooks.useDispatch = useDispatch;
@@ -42,6 +46,3 @@ application.register(
   },
 );
 application.register(() => import('./provider'));
-registerMiddleware(logger);
-registerMiddleware(batchDispatchMiddleware);
-registerMiddleware(generalMiddleware);

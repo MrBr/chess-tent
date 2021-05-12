@@ -1,13 +1,6 @@
-import {
-  Middleware,
-  SYNC_ACTIVITY_REQUEST,
-  UPDATE_ENTITY,
-  LessonActivity,
-} from '@types';
+import { Middleware, UPDATE_ENTITY } from '@types';
 import application, { socket, state } from '@application';
 import { TYPE_ACTIVITY } from '@chess-tent/models';
-import { syncActivityAction } from './actions';
-import { activitySelector } from './selectors';
 
 export const middleware: Middleware = store => next => action => {
   if (
@@ -17,15 +10,6 @@ export const middleware: Middleware = store => next => action => {
   ) {
     const { id, type, patch } = action.meta;
     socket.sendAction(state.actions.sendPatchAction(patch, id, type));
-  }
-
-  if (action.type === SYNC_ACTIVITY_REQUEST) {
-    console.log('SYNC_ACTIVITY_REQUEST middleware');
-    const { entityId, fromSocketId } = action.meta;
-    const selector = activitySelector(entityId);
-    const activity = selector(store.getState()) as LessonActivity;
-    socket.sendAction(syncActivityAction(activity, activity.id, fromSocketId));
-    //return;
   }
 
   next(action);

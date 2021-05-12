@@ -4,10 +4,10 @@ import {
   SUBSCRIBE_EVENT,
   UNSUBSCRIBE_EVENT,
   SEND_PATCH,
-  SYNC_ACTIVITY,
+  SYNC_ACTION,
 } from '@chess-tent/types';
 import { TYPE_ACTIVITY } from '@chess-tent/models';
-import { syncActivityRequestAction, syncActivityAction } from './actions';
+import { syncAction } from 'modules/api/service';
 import { canEditActivity, getActivity } from './service';
 
 socket.registerMiddleware(async (stream, next) => {
@@ -34,24 +34,26 @@ socket.registerMiddleware(async (stream, next) => {
 
       if (shouldSyncData) {
         console.log('I am NOT the first!');
-        socket.sendServerAction(
-          channel,
-          syncActivityRequestAction(
-            activityId,
-            newSocket.id,
-            socket.getOwnerSocketId(roomId),
-          ),
+        const sync = syncAction(
+          activityId,
+          TYPE_ACTIVITY,
+          newSocket.id,
+          undefined,
         );
+        socket.sendServerAction(channel, sync, socket.getOwnerSocketId(roomId));
       } else {
         console.log('I am the first!');
         const activity = await getActivity(activityId);
         if (!activity) {
           return null;
         }
-        socket.sendServerAction(
-          channel,
-          syncActivityAction(activity, newSocket.id),
+        const sync = syncAction(
+          activityId,
+          TYPE_ACTIVITY,
+          newSocket.id,
+          activity,
         );
+        socket.sendServerAction(channel, sync, newSocket.id);
       }
     }
   }
@@ -80,10 +82,18 @@ socket.registerMiddleware(async (stream, next) => {
     socket.sendAction(`activity-${action.meta.id}`, stream);
   }
 
-  if (stream.event === ACTION_EVENT && stream.data.type === SYNC_ACTIVITY) {
+  if (stream.event === ACTION_EVENT && stream.data.type === SYNC_ACTION) {
     const action = stream.data;
-    console.log('Forwarding SYNC_ACTIVITY action');
-    socket.sendServerAction(`activity-${action.meta.entityId}`, action);
+    console.log('Forwarding SYNC action');
+    if (action.payload === undefined) {
+      console.warn('Forwarding SYNC action Error - no payload');
+      return;
+    }
+    socket.sendServerAction(
+      `activity-${action.meta.id}`,
+      action,
+      action.meta.socketId,
+    );
   }
 
   next(stream);

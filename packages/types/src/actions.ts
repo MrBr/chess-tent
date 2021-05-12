@@ -20,8 +20,7 @@ import {
 export const UPDATE_ENTITIES = 'UPDATE_ENTITIES';
 export const UPDATE_ENTITY = 'UPDATE_ENTITY';
 
-export const SYNC_ACTIVITY_REQUEST = 'SYNC_ACTIVITY_REQUEST';
-export const SYNC_ACTIVITY = 'SYNC_ACTIVITY';
+export const SYNC_ACTION = 'SYNC_ACTION';
 
 export const UPDATE_RECORD_VALUE = 'UPDATE_RECORD_VALUE';
 export const UPDATE_RECORD = 'UPDATE_RECORD';
@@ -39,7 +38,7 @@ export type Action<T, P, M = {}> = {
 };
 
 export type PathAction<T, P, M extends { path: SubjectPath }> = Action<T, P, M>;
-export type SocketAction<T, P, M extends { entityId: string, fromSocketId?: string, toSocketId: string }> = Action<T, P, M>;
+
 export type GetActionMeta<T extends Action<any, any>> = T extends Action<
   any,
   any,
@@ -114,36 +113,18 @@ export type UpdateEntityAction = Action<
 
 export type LessonAction = UpdateEntityAction | UpdateEntitiesAction;
 
-/**
- * Activity
- */
-export type SyncActivityRequestAction = SocketAction<
-  typeof SYNC_ACTIVITY_REQUEST,
-  undefined,
+export type SyncAction = Action<
+  typeof SYNC_ACTION,
+  Entity | undefined,
   {
-    entityId: NormalizedActivity['id'];
-    fromSocketId?: string,
-    toSocketId: string,
+    id: string,
+    type: string,
+    socketId: string,
   }
 >;
-export type SyncActivityAction = SocketAction<
-  typeof SYNC_ACTIVITY,
-  // TODO: What to put here? Web complains if I put Activity | NormalizedActivity.
-  any,
-  {
-    entityId: NormalizedActivity['id'];
-    fromSocketId?: string,
-    toSocketId: string,
-  }
->;
-
-export type ActivitySyncAction = 
-  | SyncActivityRequestAction
-  | SyncActivityAction;
 
 export type ActivityAction<T extends Subject> =
-  | UpdateEntitiesAction
-  | ActivitySyncAction;
+  | UpdateEntitiesAction;
 
 export type UserAction = UpdateEntitiesAction;
 
@@ -211,6 +192,7 @@ export type PatchAction = SendPatchAction;
 
 export type Actions =
   | UpdateEntityAction
+  | SyncAction
   | UpdateEntitiesAction
   | PatchAction
   | MessageAction

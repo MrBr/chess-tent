@@ -189,7 +189,11 @@ export type SocketService = {
     ) => void,
   ) => void;
   sendAction: (channel: string, stream: SocketStream) => void;
-  sendServerAction: (channel: string, action: Actions) => void;
+  sendServerAction: (
+    channel: string,
+    action: Actions,
+    toSocketId?: string,
+  ) => void;
   shouldSyncData: (roomId: string) => boolean;
   getOwnerSocketId: (roomId: string) => string;
   identify: (stream: SocketStream) => Auth['apiTokenPayload'] | null;

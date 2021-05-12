@@ -5,12 +5,6 @@ application.model.activitySchema = activitySchema;
 application.register(() => import('./state/reducer'));
 application.register(() => import('./state/middleware'));
 application.register(
-  () => import('./state/actions'),
-  module => {
-    application.state.actions.syncActivity = module.syncActivityAction;
-  },
-);
-application.register(
   () => import('./state/selectors'),
   module => {
     application.state.selectors.activitySelector = module.activitySelector;

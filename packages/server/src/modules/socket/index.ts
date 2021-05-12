@@ -7,7 +7,6 @@ import {
   SocketEvents,
   SUBSCRIBE_EVENT,
   UNSUBSCRIBE_EVENT,
-  isSocketAction,
 } from '@chess-tent/types';
 
 let io: Server;
@@ -66,10 +65,14 @@ const sendAction = (channel: string, stream: SocketStream) => {
   stream.client.in(channel).emit(ACTION_EVENT, stream.data);
 };
 
-const sendServerAction = (channel: string, action: Actions) => {
-  if (isSocketAction(action)) {
-    console.log('sendServerAction isSocketAction', action.meta);
-    io.to(action.meta.toSocketId).emit(ACTION_EVENT, action);
+const sendServerAction = (
+  channel: string,
+  action: Actions,
+  toSocketId?: string,
+) => {
+  if (toSocketId) {
+    console.log('sendServerAction has toSocketId', action.meta);
+    io.to(toSocketId).emit(ACTION_EVENT, action);
     return;
   }
   // Sending action to all the clients

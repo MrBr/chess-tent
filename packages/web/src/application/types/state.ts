@@ -27,7 +27,6 @@ import {
   RecordValue,
   SendMessageAction,
   SendPatchAction,
-  SyncActivityAction,
   UpdateEntitiesAction,
   UpdateEntityAction,
 } from '@chess-tent/types';
@@ -77,11 +76,6 @@ export type State = {
       id: string,
       type: string,
     ) => SendPatchAction;
-    syncActivity: (
-      activity: Activity,
-      activityId: string,
-      socketId: string,
-    ) => SyncActivityAction;
     sendMessage: (
       user: User,
       conversation: Conversation,

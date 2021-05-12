@@ -12,7 +12,11 @@ import {
   useDispatchBatched,
   useDispatchService,
 } from './hooks';
-import { middleware, registerMiddleware } from './middleware';
+import {
+  generalMiddleware,
+  middleware,
+  registerMiddleware,
+} from './middleware';
 import { selectNormalizedEntities } from './selectors';
 
 application.state.getRootReducer = getRootReducer;
@@ -40,3 +44,4 @@ application.register(
 application.register(() => import('./provider'));
 registerMiddleware(logger);
 registerMiddleware(batchDispatchMiddleware);
+registerMiddleware(generalMiddleware);

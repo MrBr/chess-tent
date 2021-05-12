@@ -1,4 +1,4 @@
-import { socket } from '@application';
+import { socket, api } from '@application';
 import {
   ACTION_EVENT,
   SUBSCRIBE_EVENT,
@@ -7,7 +7,6 @@ import {
   SYNC_ACTION,
 } from '@chess-tent/types';
 import { TYPE_ACTIVITY } from '@chess-tent/models';
-import { syncAction } from 'modules/api/service';
 import { canEditActivity, getActivity } from './service';
 
 socket.registerMiddleware(async (stream, next) => {
@@ -35,7 +34,7 @@ socket.registerMiddleware(async (stream, next) => {
 
       if (shouldSyncData) {
         console.log('Owner already exists');
-        const sync = syncAction(
+        const sync = api.syncAction(
           activityId,
           TYPE_ACTIVITY,
           newSocket.id,
@@ -48,7 +47,7 @@ socket.registerMiddleware(async (stream, next) => {
         if (!activity) {
           return null;
         }
-        const sync = syncAction(
+        const sync = api.syncAction(
           activityId,
           TYPE_ACTIVITY,
           newSocket.id,

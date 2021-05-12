@@ -22,6 +22,7 @@ import {
   Actions,
   SUBSCRIBE_EVENT,
   UNSUBSCRIBE_EVENT,
+  SyncAction,
 } from '@chess-tent/types';
 
 export type AppDocument<T> = T & Document & { v: number };
@@ -29,6 +30,16 @@ export type EntityDocument<T = Entity> = AppDocument<T>;
 export type Updater<T extends EntityDocument> = (
   entity: T,
 ) => Promise<false | T>;
+
+export type API = {
+  syncAction: (
+    id: string,
+    type: string,
+    socketId: string,
+    payload: Entity | undefined,
+  ) => SyncAction;
+};
+
 export type DB = {
   connect: () => void;
   createSchema: <T extends {}>(
@@ -150,6 +161,7 @@ export type Utils = {
 export type Application = {
   middleware: Middleware;
   db: DB;
+  api: API;
   service: Service;
   socket: SocketService;
   utils: Utils;

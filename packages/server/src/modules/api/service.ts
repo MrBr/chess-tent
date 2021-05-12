@@ -1,7 +1,5 @@
-import { SyncAction, SYNC_ACTION } from "@chess-tent/types";
-import { Entity } from "@chess-tent/models";
-
-export const parsePopulate = (populate: string) => {};
+import { SyncAction, SYNC_ACTION } from '@chess-tent/types';
+import { Entity } from '@chess-tent/models';
 
 export const syncAction = (
   id: string,

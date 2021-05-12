@@ -71,7 +71,6 @@ const sendServerAction = (
   toSocketId?: string,
 ) => {
   if (toSocketId) {
-    console.log('sendServerAction has toSocketId', action.meta);
     io.to(toSocketId).emit(ACTION_EVENT, action);
     return;
   }

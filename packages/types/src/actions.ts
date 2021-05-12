@@ -123,8 +123,7 @@ export type SyncAction = Action<
   }
 >;
 
-export type ActivityAction<T extends Subject> =
-  | UpdateEntitiesAction;
+export type ActivityAction<T extends Subject> = UpdateEntitiesAction;
 
 export type UserAction = UpdateEntitiesAction;
 

@@ -11,7 +11,6 @@ export const middleware: Middleware = store => next => action => {
     const { id, type, patch } = action.meta;
     socket.sendAction(state.actions.sendPatchAction(patch, id, type));
   }
-
   next(action);
 };
 application.state.registerMiddleware(middleware);

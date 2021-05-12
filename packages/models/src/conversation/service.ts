@@ -1,6 +1,7 @@
 import { User } from '../user';
 import { Conversation, TYPE_CONVERSATION } from './types';
 import { Message } from '../message';
+import { createService } from '../_helpers';
 
 const createConversation = (
   id: string,
@@ -16,4 +17,18 @@ const createConversation = (
 const getParticipant = (conversation: Conversation, userId: User['id']) =>
   conversation.users.find(user => user.id === userId);
 
-export { createConversation, getParticipant };
+const updateConversationMessage = createService(
+  (draft: Conversation, message: Message): Conversation => {
+    const messageIndex = draft.messages.findIndex(
+      ({ id }) => id === message.id,
+    );
+
+    if (messageIndex > -1) {
+      draft.messages[messageIndex] = message;
+    }
+
+    return draft;
+  },
+);
+
+export { createConversation, getParticipant, updateConversationMessage };

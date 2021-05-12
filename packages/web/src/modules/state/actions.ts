@@ -49,7 +49,7 @@ export const updateEntityAction: State['actions']['updateEntity'] = (
     meta: {
       id: utils.getEntityId(payload),
       type: payload.type,
-      ...meta,
+      ...(meta || {}),
     },
   };
 };
@@ -57,10 +57,7 @@ export const updateEntityAction: State['actions']['updateEntity'] = (
 export const serviceAction = <T extends (...args: any) => any>(
   service: T extends ServiceType ? T : never,
 ) => (...payload: T extends (...args: infer U) => any ? U : never) => {
-  const meta: { patch?: ReversiblePatch; id: string; type: string } = {
-    id: utils.getEntityId(payload[0]),
-    type: payload[0].type,
-  };
+  const meta: { patch?: ReversiblePatch } = {};
   const updatedEntity = service(...payload, (next: Patch[], prev: Patch[]) => {
     meta.patch = createReversiblePatch(next, prev);
   }) as Entity;

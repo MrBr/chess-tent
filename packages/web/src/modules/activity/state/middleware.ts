@@ -1,22 +1,22 @@
 import {
   Middleware,
-  UPDATE_ACTIVITY_PROPERTY,
-  UPDATE_ACTIVITY_STEP_STATE,
   SYNC_ACTIVITY_REQUEST,
+  UPDATE_ENTITY,
   LessonActivity,
 } from '@types';
-import { socket } from '@application';
+import application, { socket, state } from '@application';
+import { TYPE_ACTIVITY } from '@chess-tent/models';
 import { syncActivityAction } from './actions';
 import { activitySelector } from './selectors';
 
 export const middleware: Middleware = store => next => action => {
   if (
-    action.type === UPDATE_ACTIVITY_PROPERTY ||
-    action.type === UPDATE_ACTIVITY_STEP_STATE
+    action.type === UPDATE_ENTITY &&
+    action.meta.type === TYPE_ACTIVITY &&
+    !action.meta.push
   ) {
-    if (!action.meta.push) {
-      socket.sendAction(action);
-    }
+    const { id, type, patch } = action.meta;
+    socket.sendAction(state.actions.sendPatchAction(patch, id, type));
   }
 
   if (action.type === SYNC_ACTIVITY_REQUEST) {
@@ -30,3 +30,4 @@ export const middleware: Middleware = store => next => action => {
 
   next(action);
 };
+application.state.registerMiddleware(middleware);

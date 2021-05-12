@@ -1,3 +1,4 @@
+import produce, { PatchListener } from 'immer';
 import {
   Difficulty,
   Lesson,
@@ -6,10 +7,11 @@ import {
   TYPE_LESSON,
 } from './types';
 import { User } from '../user';
-import { getStepPath, Step } from '../step';
-import { Chapter } from '../chapter';
-import { SubjectPath, updateSubjectValueAt } from '../subject';
+import { Step } from '../step';
+import { Chapter, updateChapterStep } from '../chapter';
 import { Tag } from '../tag';
+import { updateSubject } from '../subject';
+import { createService } from '../_helpers';
 
 const isLesson = (entity: unknown) =>
   Object.getOwnPropertyDescriptor(entity, 'type')?.value === TYPE_LESSON;
@@ -23,58 +25,53 @@ const getLessonChapter = (lesson: Lesson, chapterId: Chapter['id']) => {
   return null;
 };
 
-const addChapterToLesson = <T extends Lesson | NormalizedLesson>(
-  lesson: T,
-  chapter: Chapter,
-): T => ({
-  ...lesson,
-  state: {
-    ...lesson.state,
-    chapters: [...lesson.state.chapters, chapter],
-  },
-});
-
-const publishLesson = (lesson: Lesson | NormalizedLesson): typeof lesson => ({
-  ...lesson,
-  state: { ...lesson.state, status: LessonStateStatus.PUBLISHED },
-  published: true,
-});
-
-const getLessonChapterIndex = (lesson: Lesson, chapterId: Chapter['id']) => {
+const getLessonChapterIndex = (
+  lesson: Lesson | NormalizedLesson,
+  chapterId: Chapter['id'],
+) => {
   return lesson.state.chapters.findIndex(({ id }) => id === chapterId);
 };
 
-const getLessonStatePath = (stateKey: keyof Lesson['state']): SubjectPath => {
-  return ['state', stateKey];
-};
+const addChapterToLesson = createService(
+  <T extends Lesson | NormalizedLesson>(draft: T, chapter: Chapter): T => {
+    draft.state.chapters.push(chapter);
+    return draft;
+  },
+);
 
-const getLessonChapterPath = (
-  lesson: Lesson,
-  chapterId: Chapter['id'],
-): SubjectPath => {
-  return ['state', 'chapters', getLessonChapterIndex(lesson, chapterId)];
-};
+const publishLesson = createService(
+  <T extends Lesson | NormalizedLesson>(draft: T): T => {
+    draft.state.status = LessonStateStatus.PUBLISHED;
+    draft.published = true;
+    return draft;
+  },
+);
 
-const getLessonStepPath = (
-  lesson: Lesson,
-  chapter: Chapter,
-  step: Step,
-): SubjectPath | null => {
-  for (let index = 0; index < lesson.state.chapters.length; index++) {
-    const childChapter = lesson.state.chapters[index];
-    if (childChapter.id === chapter.id) {
-      const path = getStepPath(chapter, step);
-      return path ? ['state', 'chapters', index, ...path] : null;
-    }
-  }
-  return null;
-};
+const updateLessonChapter = createService(
+  <T extends Lesson | NormalizedLesson>(draft: T, chapter: Chapter): T => {
+    const chapterIndex = getLessonChapterIndex(draft, chapter.id);
+    draft.state.chapters[chapterIndex] = chapter;
+    return draft;
+  },
+);
 
-const updateLessonStep = (
-  lesson: Lesson,
-  patch: Partial<Step>,
-  path: SubjectPath,
-) => updateSubjectValueAt(lesson, path, patch);
+const updateLessonStep = createService(
+  <T extends Lesson | NormalizedLesson>(
+    draft: T,
+    chapter: Chapter,
+    step: Step,
+  ): T => {
+    const chapterIndex = getLessonChapterIndex(draft, chapter.id);
+    draft.state.chapters[chapterIndex] = updateChapterStep(chapter, step);
+    return draft;
+  },
+);
+
+const updateLesson = (
+  lesson: Lesson | NormalizedLesson,
+  update: Partial<Lesson | NormalizedLesson>,
+  patchListener?: PatchListener,
+) => updateSubject(lesson, update, patchListener);
 
 const createLesson = (
   id: string,
@@ -98,9 +95,8 @@ export {
   getLessonChapter,
   addChapterToLesson,
   publishLesson,
-  getLessonStepPath,
+  updateLessonChapter,
   updateLessonStep,
   getLessonChapterIndex,
-  getLessonChapterPath,
-  getLessonStatePath,
+  updateLesson,
 };

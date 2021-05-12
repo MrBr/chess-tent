@@ -2,16 +2,11 @@ import application from '@application';
 import { activitySchema } from './model';
 
 application.model.activitySchema = activitySchema;
-application.register(() => import('./register'));
+application.register(() => import('./state/reducer'));
+application.register(() => import('./state/middleware'));
 application.register(
   () => import('./state/actions'),
   module => {
-    application.state.actions.updateActivityProperty =
-      module.updateActivityPropertyAction;
-    application.state.actions.updateActivityStepState =
-      module.updateActivityStepAction;
-    application.state.actions.updateActivityStepAnalysis =
-      module.updateActivityStepAnalysisAction;
     application.state.actions.syncActivity = module.syncActivityAction;
   },
 );
@@ -25,6 +20,8 @@ application.register(
   () => import('./service'),
   module => {
     application.services.createActivity = module.createActivity;
+    application.services.updateActivityActiveStep =
+      module.updateActivityActiveStep;
     application.services.createActivityStepState =
       module.createActivityStepState;
     application.services.createActivityComment = module.createActivityComment;

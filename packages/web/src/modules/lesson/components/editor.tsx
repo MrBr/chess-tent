@@ -19,6 +19,11 @@ import {
   getChildStep,
   isStep,
   LessonStateStatus,
+  updateSubjectState,
+  updateLesson,
+  updateLessonChapter,
+  updateLessonStep,
+  addChapterToLesson,
 } from '@chess-tent/models';
 import {
   Actions,
@@ -54,12 +59,7 @@ const {
   StepToolbox,
 } = components;
 const {
-  actions: {
-    updateLessonStep,
-    addLessonChapter,
-    updateLessonChapter,
-    updateLessonPath,
-  },
+  actions: { serviceAction },
 } = state;
 const {
   useDispatchBatched,
@@ -135,11 +135,9 @@ class EditorRenderer extends React.Component<
 
   updateLessonStatusToDraft = () => {
     const { addLessonUpdate, lesson } = this.props;
-    const action = updateLessonPath(
-      lesson,
-      ['state', 'status'],
-      LessonStateStatus.DRAFT,
-    );
+    const action = serviceAction(updateSubjectState)(lesson, {
+      status: LessonStateStatus.DRAFT,
+    });
     addLessonUpdate(action);
   };
 
@@ -177,7 +175,7 @@ class EditorRenderer extends React.Component<
 
   updateLessonTitleDebounced = debounce(title => {
     const { lesson } = this.props;
-    const action = updateLessonPath(lesson, ['state', 'title'], title);
+    const action = serviceAction(updateSubjectState)(lesson, { title });
     this.addLessonUpdate(action);
   }, 500);
 
@@ -198,15 +196,18 @@ class EditorRenderer extends React.Component<
     }
 
     const { lesson } = this.props;
-    const action = updateLessonPath(lesson, ['difficulty'], difficulty);
+    const action = serviceAction(updateLesson)(lesson, { difficulty });
     this.addLessonUpdate(action);
   };
 
   updateStep = (step: Step) => {
     const { lesson, activeChapter } = this.props;
 
-    const action = updateLessonStep(lesson, activeChapter, step);
-    const undoAction = updateLessonChapter(lesson, activeChapter);
+    const action = serviceAction(updateLessonStep)(lesson, activeChapter, step);
+    const undoAction = serviceAction(updateLessonChapter)(
+      lesson,
+      activeChapter,
+    );
 
     this.addLessonUpdate(action, undoAction);
   };
@@ -234,7 +235,7 @@ class EditorRenderer extends React.Component<
       );
       this.updateStep(updatedParent as Step);
     } else {
-      const updatedParent = removeStep(parent, step, adjacent);
+      const updatedParent = removeStep(parent, step, !!adjacent);
       this.updateChapter(updatedParent as Chapter);
     }
     history.replace({
@@ -245,14 +246,14 @@ class EditorRenderer extends React.Component<
 
   updateChapter = (chapter: Chapter) => {
     const { lesson } = this.props;
-    const action = updateLessonChapter(lesson, chapter);
+    const action = serviceAction(updateLessonChapter)(lesson, chapter);
     this.addLessonUpdate(action);
   };
 
   addNewChapter = () => {
     const { lesson } = this.props;
     const newChapter = createChapter(`Chapter ${lesson.state.chapters.length}`);
-    const action = addLessonChapter(lesson, newChapter);
+    const action = serviceAction(addChapterToLesson)(lesson, newChapter);
     this.addLessonUpdate(action);
     this.setActiveChapterHandler(newChapter);
   };
@@ -266,16 +267,19 @@ class EditorRenderer extends React.Component<
       // Don't allow deleting last chapter
       return;
     }
-    const action = updateLessonPath(lesson, ['state', 'chapters'], newChapters);
-    const undoAction = updateLessonPath(
-      lesson,
-      ['state', 'chapters'],
-      lesson.state.chapters,
-    );
+
+    const action = serviceAction(updateSubjectState)(lesson, {
+      chapters: newChapters,
+    });
+    const undoAction = serviceAction(updateSubjectState)(lesson, {
+      chapters: lesson.state.chapters,
+    });
+
     this.addLessonUpdate(action, undoAction);
     history.replace(location.pathname);
   };
 
+  // TODO - instead of passing methods through the props use context
   resolveEditorContext = (): EditorContext => ({
     lesson: this.props.lesson,
     chapter: this.props.activeChapter,
@@ -303,7 +307,7 @@ class EditorRenderer extends React.Component<
 
   updateTags = (tags: NormalizedLesson['tags']) => {
     const { lesson } = this.props;
-    const action = updateLessonPath(lesson, ['tags'], tags);
+    const action = serviceAction(updateLesson)(lesson, { tags });
     this.addLessonUpdate(action);
   };
 

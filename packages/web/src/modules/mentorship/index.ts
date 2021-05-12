@@ -10,12 +10,7 @@ application.register(
   },
 );
 
-application.register(
-  () => import('./state/reducer'),
-  module => {
-    application.state.registerEntityReducer(TYPE_MENTORSHIP, module.reducer);
-  },
-);
+application.register(() => import('./state/reducer'));
 
 application.register(
   () => import('./components/button/mentorship'),

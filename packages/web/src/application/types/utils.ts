@@ -1,5 +1,5 @@
 import { CSSObject } from '@emotion/styled';
-import { Entity } from '@chess-tent/models';
+import { Entity, NormalizedEntity } from '@chess-tent/models';
 import { ReactEventHandler } from 'react';
 import { saveAs } from 'file-saver';
 import { Schema } from './model';
@@ -12,7 +12,7 @@ export type Utils = {
   generateIndex: () => string;
   denormalize: (id: string, type: string, entities: {}) => any;
   normalize: (entity: Entity) => any;
-  getEntityId: (entity: Entity) => string;
+  getEntityId: (entity: Entity | NormalizedEntity) => string;
   mediaQueryEnhancer: (
     screenSize: 'xs' | 'sm' | 'md' | 'lg' | 'xl',
     style: CSSObject,

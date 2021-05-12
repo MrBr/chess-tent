@@ -13,7 +13,7 @@ import {
   PieceRole,
   Steps,
 } from '@types';
-import { components, hooks, requests, services, state, ui } from '@application';
+import { components, hooks, requests, services, ui } from '@application';
 import {
   Chapter,
   getNextStep,
@@ -24,11 +24,13 @@ import {
   getLessonChapter,
   markStepCompleted,
   Step,
-  SubjectPath,
-  TYPE_ACTIVITY,
   addStep,
   getAnalysisActiveStep,
   updateAnalysisStep,
+  updateActivityStepState,
+  Analysis,
+  updateActivityActiveChapter,
+  updateActivityStepAnalysis,
 } from '@chess-tent/models';
 import Footer from './activity-footer';
 import Header from './activity-header';
@@ -41,8 +43,7 @@ const {
   AnalysisSidebar,
   LessonChapters,
 } = components;
-const { useDispatchBatched, usePathUpdates, useApi } = hooks;
-const { actions } = state;
+const { useDiffUpdates, useApi, useDispatchService } = hooks;
 const { Button, Absolute } = ui;
 
 export class ActivityRenderer extends React.Component<
@@ -67,21 +68,26 @@ export class ActivityRenderer extends React.Component<
 
   setStepActivityState = (state: {}) => {
     const {
-      updateActivityStepState,
       activity,
       activeStep,
       activityStepState,
+      updateActivity,
     } = this.props;
-    updateActivityStepState(activity, activeStep.id, {
+
+    updateActivity(updateActivityStepState)(activity, activeStep.id, {
       ...activityStepState,
       ...state,
     });
   };
 
-  setStepActivityAnalysisState = (path: SubjectPath, state: any) => {
-    const { updateActivityStepAnalysis, activity, activeStep } = this.props;
+  updateStepActivityAnalysis = (analysis: Analysis<Steps>) => {
+    const { updateActivity, activity, activeStep } = this.props;
     !this.isAnalysing() && this.updateActiveTab(1);
-    updateActivityStepAnalysis(activity, activeStep.id, path, state);
+    updateActivity(updateActivityStepAnalysis)(
+      activity,
+      activeStep.id,
+      analysis,
+    );
   };
 
   startAnalysingPosition = (
@@ -109,32 +115,31 @@ export class ActivityRenderer extends React.Component<
       }),
     );
 
-    this.setStepActivityAnalysisState(
-      ['state', 'steps'],
-      newAnalysis.state.steps,
-    );
+    this.updateStepActivityAnalysis(newAnalysis);
   };
 
   completeStep = (step: Step) => {
     const { updateActivity, activity } = this.props;
-    updateActivity(['completedSteps'], markStepCompleted(activity, step));
+    updateActivity(markStepCompleted)(activity, step);
   };
 
   chapterChangeHandler = (chapter: Chapter) => {
-    const { updateActivity } = this.props;
-    updateActivity(['state', 'activeChapterId'], chapter.id);
+    const { updateActivity, activity } = this.props;
+    updateActivity(updateActivityActiveChapter)(activity, chapter);
   };
 
   nextActivityStep = () => {
-    const { updateActivity, chapter, activeStep } = this.props;
-    const nextStep = getNextStep(chapter, activeStep);
-    nextStep && updateActivity(['state', 'activeStepId'], nextStep.id);
+    const { updateActivity, chapter, activeStep, activity } = this.props;
+    const nextStep = getNextStep(chapter, activeStep) as Steps;
+    nextStep &&
+      updateActivity(services.updateActivityActiveStep)(activity, nextStep);
   };
 
   prevActivityStep = () => {
-    const { updateActivity, chapter, activeStep } = this.props;
-    const prevStep = getPreviousStep(chapter, activeStep);
-    prevStep && updateActivity(['state', 'activeStepId'], prevStep.id);
+    const { updateActivity, chapter, activeStep, activity } = this.props;
+    const prevStep = getPreviousStep(chapter, activeStep) as Steps;
+    prevStep &&
+      updateActivity(services.updateActivityActiveStep)(activity, prevStep);
   };
 
   updateStepRotation = (orientation?: PieceColor) => {
@@ -142,10 +147,7 @@ export class ActivityRenderer extends React.Component<
     const step = getAnalysisActiveStep(analysis);
     const updatedStep = services.updateStepRotation(step, orientation);
     const newAnalysis = updateAnalysisStep(analysis, updatedStep);
-    this.setStepActivityAnalysisState(
-      ['state', 'steps'],
-      newAnalysis.state.steps,
-    );
+    this.updateStepActivityAnalysis(newAnalysis);
   };
 
   renderFooter = (props: Partial<ActivityFooterProps>) => {
@@ -269,7 +271,7 @@ export class ActivityRenderer extends React.Component<
                 </Absolute>
                 <AnalysisBoard
                   analysis={analysis}
-                  updateAnalysis={this.setStepActivityAnalysisState}
+                  updateAnalysis={this.updateStepActivityAnalysis}
                   initialPosition={services.getStepPosition(activeStep)}
                   initialOrientation={activeStep.state.orientation}
                   Chessboard={this.renderAnalysisBoard}
@@ -279,7 +281,7 @@ export class ActivityRenderer extends React.Component<
             sidebar: (
               <AnalysisSidebar
                 analysis={analysis}
-                updateAnalysis={this.setStepActivityAnalysisState}
+                updateAnalysis={this.updateStepActivityAnalysis}
                 initialPosition={services.getStepPosition(activeStep)}
               />
             ),
@@ -290,21 +292,31 @@ export class ActivityRenderer extends React.Component<
   }
 }
 
-const Activity: ActivityComponent<LessonActivity> = ({ activity }) => {
-  const dispatch = useDispatchBatched();
-  const lesson = activity.subject;
+const Activity: ActivityComponent<LessonActivity> = props => {
+  const lesson = props.activity.subject;
   const activeChapterId =
-    activity.state.activeChapterId || activity.subject.state.chapters[0].id;
+    props.activity.state.activeChapterId ||
+    props.activity.subject.state.chapters[0].id;
   const activeChapter = getLessonChapter(lesson, activeChapterId) as Chapter;
   const activeStepId =
-    activity.state.activeStepId || activeChapter.state.steps[0].id;
+    props.activity.state.activeStepId || activeChapter.state.steps[0].id;
+  const activity = props.activity.state[activeStepId]
+    ? props.activity
+    : // Formatting local activity so that it has active step state.
+      // This behaviour has to be proven right, because for the moment (until first update)
+      // there is some inconsistencies between local and store activity.
+      updateActivityStepState(
+        props.activity,
+        activeStepId,
+        services.createActivityStepState(),
+      );
   const activeStep = getChildStep(activeChapter, activeStepId) as Steps;
-  const activeStepActivityState =
-    activity.state[activeStep.id] || services.createActivityStepState();
+  const activeStepActivityState = activity.state[activeStep.id];
+
+  const dispatchService = useDispatchService();
   const { fetch: saveActivity } = useApi(requests.activityUpdate);
-  const pushUpdate = usePathUpdates(
-    TYPE_ACTIVITY,
-    activity.id,
+  useDiffUpdates(
+    activity,
     updates => {
       saveActivity(activity.id, updates);
     },
@@ -318,41 +330,7 @@ const Activity: ActivityComponent<LessonActivity> = ({ activity }) => {
     [activeChapter, activeStep],
   );
 
-  const updateActivity = useCallback(
-    (path, value) => {
-      // TODO - implement logic similar to the lessonUpdates to reduce request payload
-      const action = actions.updateActivityProperty(activity, path, value);
-      pushUpdate(action);
-      dispatch(action);
-    },
-    [activity, dispatch, pushUpdate],
-  );
-  const updateStepActivityState = useCallback(
-    (activity: LessonActivity, stepId: Step['id'], state: {}) => {
-      const action = actions.updateActivityStepState(activity, stepId, state);
-      pushUpdate(action);
-      dispatch(action);
-    },
-    [dispatch, pushUpdate],
-  );
-  const updateStepActivityAnalysis = useCallback(
-    (
-      activity: LessonActivity,
-      stepId: Step['id'],
-      path: SubjectPath,
-      state: any,
-    ) => {
-      const action = actions.updateActivityStepAnalysis(
-        activity,
-        stepId,
-        path,
-        state,
-      );
-      pushUpdate(action);
-      dispatch(action);
-    },
-    [dispatch, pushUpdate],
-  );
+  const updateActivity = useCallback(dispatchService, [dispatchService]);
 
   return (
     <ActivityRenderer
@@ -362,8 +340,6 @@ const Activity: ActivityComponent<LessonActivity> = ({ activity }) => {
       activeStep={activeStep}
       chapter={activeChapter}
       updateActivity={updateActivity}
-      updateActivityStepState={updateStepActivityState}
-      updateActivityStepAnalysis={updateStepActivityAnalysis}
       stepsCount={stepsCount}
       currentStepIndex={currentStepIndex}
       activityStepState={activeStepActivityState}

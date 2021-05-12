@@ -1,9 +1,8 @@
 import { Subject } from '../subject';
-import { Step } from '../step';
+import { Step, StepRoot } from '../step';
 
 export const TYPE_ANALYSIS = 'analyses';
 
-export type InferAnalysis<T> = T extends Analysis<infer U> ? T : never;
 export type InferAnalysisStep<T> = T extends Analysis<infer U> ? U : never;
 
 export interface Analysis<T extends Step> extends Subject {
@@ -11,7 +10,7 @@ export interface Analysis<T extends Step> extends Subject {
   type: typeof TYPE_ANALYSIS;
   state: {
     activeStepId?: Step['id'];
-    steps: Array<Step>;
+    steps: T[];
   };
 }
 

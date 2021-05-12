@@ -28,12 +28,13 @@ socket.registerMiddleware(async (stream, next) => {
     const canJoin = await canEditActivity(activityId, userId);
     if (canJoin) {
       console.log('Client joined to', roomId);
+      // Joining a room implicitly requires sending a sync request
       const newSocket = stream.client.join(roomId);
       const shouldSyncData = socket.shouldSyncData(roomId);
       const channel = `activity-${activityId}`;
 
       if (shouldSyncData) {
-        console.log('I am NOT the first!');
+        console.log('Owner already exists');
         const sync = syncAction(
           activityId,
           TYPE_ACTIVITY,
@@ -42,7 +43,7 @@ socket.registerMiddleware(async (stream, next) => {
         );
         socket.sendServerAction(channel, sync, socket.getOwnerSocketId(roomId));
       } else {
-        console.log('I am the first!');
+        console.log('First user joined');
         const activity = await getActivity(activityId);
         if (!activity) {
           return null;

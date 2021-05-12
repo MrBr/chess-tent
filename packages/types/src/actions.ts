@@ -2,14 +2,12 @@ import {
   Conversation,
   NormalizedMessage,
   Entity,
-  Activity,
   NormalizedActivity,
   NormalizedConversation,
   NormalizedLesson,
   NormalizedStep,
   NormalizedUser,
   Subject,
-  User,
   SubjectPath,
   NormalizedTag,
   Notification,
@@ -20,29 +18,16 @@ import {
 } from '@chess-tent/models';
 
 export const UPDATE_ENTITIES = 'UPDATE_ENTITIES';
+export const UPDATE_ENTITY = 'UPDATE_ENTITY';
 
-export const UPDATE_LESSON_STEP = 'UPDATE_LESSON_STEP';
-export const UPDATE_LESSON_CHAPTER = 'UPDATE_LESSON_CHAPTER';
-export const ADD_LESSON_CHAPTER = 'ADD_LESSON_CHAPTER';
-export const UPDATE_LESSON_PATH = 'UPDATE_LESSON_PATH';
-
-export const UPDATE_ACTIVITY_STEP_STATE = 'UPDATE_ACTIVITY_STEP_STATE';
-export const UPDATE_ACTIVITY_STEP_ANALYSIS =
-  'UPDATE_ACTIVITY_STEP_STATE_ANALYSIS';
-export const UPDATE_ACTIVITY_PROPERTY = 'UPDATE_ACTIVITY_PROPERTY';
 export const SYNC_ACTIVITY_REQUEST = 'SYNC_ACTIVITY_REQUEST';
 export const SYNC_ACTIVITY = 'SYNC_ACTIVITY';
-
-export const UPDATE_USER = 'UPDATE_USER';
-
-export const SEND_NOTIFICATION = 'SEND_NOTIFICATION';
-export const UPDATE_NOTIFICATION = 'UPDATE_NOTIFICATION';
-export const UPDATE_ENTITY = 'UPDATE_ENTITY';
 
 export const UPDATE_RECORD_VALUE = 'UPDATE_RECORD_VALUE';
 export const UPDATE_RECORD = 'UPDATE_RECORD';
 export const DELETE_RECORD = 'DELETE_RECORD';
 
+export const SEND_NOTIFICATION = 'SEND_NOTIFICATION';
 export const SEND_MESSAGE = 'SEND_MESSAGE';
 export const SEND_PATCH = 'SEND_PATCH';
 
@@ -132,27 +117,6 @@ export type LessonAction = UpdateEntityAction | UpdateEntitiesAction;
 /**
  * Activity
  */
-export type UpdateActivityStepAction = PathAction<
-  typeof UPDATE_ACTIVITY_STEP_STATE,
-  any,
-  { activityId: Activity['id']; path: SubjectPath }
->;
-export type UpdateActivityStepAnalysisAction = PathAction<
-  typeof UPDATE_ACTIVITY_STEP_ANALYSIS,
-  any,
-  { activityId: Activity['id']; path: SubjectPath }
->;
-export type UpdateActivityPropertyAction<
-  T extends keyof NormalizedActivity = keyof NormalizedActivity,
-  K extends keyof NormalizedActivity['state'] = keyof NormalizedActivity['state']
-> = PathAction<
-  typeof UPDATE_ACTIVITY_PROPERTY,
-  T extends 'state' ? NormalizedActivity[T][K] : NormalizedActivity[T],
-  {
-    activityId: NormalizedActivity['id'];
-    path: T extends 'state' ? [T, K] : [T];
-  }
->;
 export type SyncActivityRequestAction = SocketAction<
   typeof SYNC_ACTIVITY_REQUEST,
   undefined,
@@ -180,15 +144,6 @@ export type ActivitySyncAction =
 export type ActivityAction<T extends Subject> =
   | UpdateEntitiesAction
   | ActivitySyncAction;
-
-/**
- * User
- */
-export type UpdateUserAction = Action<
-  typeof UPDATE_USER,
-  Partial<User>,
-  { id: User['id'] }
->;
 
 export type UserAction = UpdateEntitiesAction;
 

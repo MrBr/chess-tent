@@ -2,7 +2,7 @@ import mergeWith from 'lodash.mergewith';
 import { Step, StepRoot, TYPE_STEP } from './types';
 import { updateSubject } from '../subject';
 import { createService } from '../_helpers';
-import { replaceStepBase } from './_helpers';
+import { replaceStepRecursive, removeStepRecursive } from './_helpers';
 
 // Step
 const isStep = (entity: unknown): entity is Step =>
@@ -209,18 +209,11 @@ const addStepToRightOf = createService(
 );
 
 /**
- * Remove the step and all adjacent steps
+ * Remove the step and optionally all adjacent steps
  */
 const removeStep = createService(
   <T extends Step | StepRoot>(draft: T, step: Step, adjacent: boolean): T => {
-    let removeStep = false;
-    draft.state.steps = draft.state.steps.filter(childStep => {
-      if (isSameStep(childStep, step)) {
-        removeStep = adjacent;
-        return false;
-      }
-      return !removeStep;
-    });
+    removeStepRecursive(draft, step, adjacent);
     return draft;
   },
 );
@@ -256,7 +249,7 @@ const updateStepState = createService(
 
 const replaceStep = createService(
   <T extends Step | StepRoot>(draft: T, step: Step, newStep: Step): T => {
-    replaceStepBase(draft, step, newStep);
+    replaceStepRecursive(draft, step, newStep);
     return draft;
   },
 );

@@ -117,9 +117,9 @@ export type SyncAction = Action<
   typeof SYNC_ACTION,
   Entity | undefined,
   {
-    id: string,
-    type: string,
-    socketId: string,
+    id: string;
+    type: string;
+    socketId: string;
   }
 >;
 

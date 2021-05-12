@@ -6,7 +6,7 @@ import { isSameStep } from './service';
  * This helper service is used only to implement step replacement feature
  * with option to exist recursion once replacement is done.
  */
-export const replaceStepBase = <T extends Step | StepRoot>(
+export const replaceStepRecursive = <T extends Step | StepRoot>(
   draft: T,
   step: Step,
   newStep: Step,
@@ -17,9 +17,37 @@ export const replaceStepBase = <T extends Step | StepRoot>(
       draft.state.steps[index] = newStep;
       return true;
     }
-    if (replaceStepBase(childStep, step, newStep)) {
+    if (replaceStepRecursive(childStep, step, newStep)) {
       return true;
     }
   }
   return false;
+};
+
+/**
+ * Helper method to more efficiently perform recursive remove.
+ * Recursive in this context means it traversal.
+ */
+export const removeStepRecursive = <T extends Step | StepRoot>(
+  draft: T,
+  step: Step,
+  adjacent: boolean,
+) => {
+  let removeStep = false;
+  let stepRemoved = false;
+  draft.state.steps = draft.state.steps.filter(childStep => {
+    if (isSameStep(childStep, step)) {
+      removeStep = adjacent;
+      stepRemoved = true;
+      return false;
+    }
+    // If current step isn't the one to remove, try with his children
+    // If step is removed from current step that means the step has been found
+    // and there is no need to remove any other.
+    if (!stepRemoved) {
+      stepRemoved = removeStepRecursive(childStep, step, adjacent);
+    }
+    return !removeStep;
+  });
+  return stepRemoved;
 };

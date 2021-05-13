@@ -8,7 +8,6 @@ export const registerMiddleware = (middlewareFunction: Middleware) =>
 
 export const syncMiddleware: Middleware = store => next => action => {
   if (action.type === SYNC_ACTION) {
-    console.log('syncMiddleware', action);
     const shouldSendSync = action.payload === undefined;
     const { id, type } = action.meta;
     if (shouldSendSync) {
@@ -18,9 +17,6 @@ export const syncMiddleware: Middleware = store => next => action => {
     } else {
       const entity = action.payload;
       const record = services.createRecordService(`${type}-${id}`, type)(store);
-      console.log('entity in syncMiddleware', entity);
-      const entityToRecord = entity === null ? { id, type } : entity;
-      console.log('entityToRecord in syncMiddleware', entityToRecord);
       record.update(entity, { loading: false, loaded: true });
     }
     return;

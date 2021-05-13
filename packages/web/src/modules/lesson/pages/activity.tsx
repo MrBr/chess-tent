@@ -19,11 +19,7 @@ export default () => {
     },
   );
   const history = useHistory();
-
   const { loading, loaded } = meta;
-
-  console.log('activity', activity);
-  console.log('meta', meta);
 
   useEffect(() => {
     socket.subscribe(`activity-${activityId}`);

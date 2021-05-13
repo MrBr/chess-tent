@@ -10,7 +10,7 @@ export const middleware: State['middleware'] = [];
 export const registerMiddleware = (middlewareFunction: Middleware) =>
   middleware.push(middlewareFunction);
 
-export const generalMiddleware: Middleware = store => next => action => {
+export const syncMiddleware: Middleware = store => next => action => {
   if (action.type === SYNC_ACTION) {
     const hasPayload = action.payload !== undefined;
     if (!hasPayload) {

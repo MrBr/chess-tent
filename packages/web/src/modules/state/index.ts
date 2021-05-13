@@ -16,13 +16,13 @@ import { selectNormalizedEntities } from './selectors';
 
 application.register(
   () => import('./middleware'),
-  ({ generalMiddleware, middleware, registerMiddleware }) => {
+  ({ syncMiddleware, middleware, registerMiddleware }) => {
     application.state.registerReducer = registerReducer;
     application.state.registerMiddleware = registerMiddleware;
     application.state.middleware = middleware;
     registerMiddleware(logger);
     registerMiddleware(batchDispatchMiddleware);
-    registerMiddleware(generalMiddleware);
+    registerMiddleware(syncMiddleware);
   },
 );
 

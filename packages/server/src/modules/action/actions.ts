@@ -5,7 +5,7 @@ export const syncAction = (
   id: string,
   type: string,
   socketId: string,
-  payload: Entity | undefined,
+  payload: Entity | undefined | null,
 ): SyncAction => ({
   type: SYNC_ACTION,
   payload,

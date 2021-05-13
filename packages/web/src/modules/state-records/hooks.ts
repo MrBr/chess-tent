@@ -8,10 +8,12 @@ import { deleteRecordAction, updateRecordAction } from './state/actions';
 export const useRecord = <T extends RecordValue>(
   recordKey: string,
   type: RecordMeta['type'],
+  initialMeta?: RecordMeta,
 ): RecordHookReturn<T> => {
   const record = useSelector(selectRecord(recordKey)) || {
     value: null,
     meta: {
+      ...initialMeta,
       type,
     },
   };
@@ -19,17 +21,19 @@ export const useRecord = <T extends RecordValue>(
   const dispatch = useDispatch();
   const update = useCallback(
     (entity: T, meta?: {}) => {
-      dispatch(updateRecordAction(recordKey, entity, meta));
+      dispatch(updateRecordAction(recordKey, entity, type, meta));
     },
-    [recordKey, dispatch],
+    [dispatch, recordKey, type],
   );
   const remove = useCallback(() => {
     dispatch(deleteRecordAction(recordKey));
   }, [recordKey, dispatch]);
+  const meta = record.meta;
 
-  return useMemo(() => [recordValue, update, remove], [
+  return useMemo(() => [recordValue, update, remove, meta], [
     recordValue,
     update,
     remove,
+    meta,
   ]);
 };

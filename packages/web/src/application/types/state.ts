@@ -54,6 +54,7 @@ export type State = {
     updateRecord: <T extends RecordValue>(
       recordKey: string,
       entity: T,
+      type: RecordMeta['type'],
       meta?: RecordMeta,
     ) => RecordUpdateAction;
     updateRecordValue: (

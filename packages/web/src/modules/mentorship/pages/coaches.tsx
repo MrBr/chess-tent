@@ -7,7 +7,7 @@ const { Container, Row, Col, Text, Headline2, Card, CardBody } = ui;
 const { MentorshipAction, Page, MessageButton, UserAvatar } = components;
 
 const Coaches = () => {
-  const [user] = useActiveUserRecord() as [User, never, never];
+  const [user] = useActiveUserRecord() as [User, never, never, never];
   const [coaches] = useCoaches(user);
   return (
     <Page>

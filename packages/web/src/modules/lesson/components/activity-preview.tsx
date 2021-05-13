@@ -24,7 +24,7 @@ const { useActiveUserRecord, useComponentState } = hooks;
 const { Modal } = ui;
 
 const Preview = ({ lesson, chapter, step }: PreviewProps) => {
-  const [user] = useActiveUserRecord() as [User, never, never];
+  const [user] = useActiveUserRecord() as [User, never, never, never];
   const [activity, updatePreviewActivity] = useState<LessonActivity>(
     createActivity('preview', lesson, user, {
       activeStepId: step.id,

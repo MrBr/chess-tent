@@ -8,7 +8,7 @@ const { useActiveUserRecord, useLocation } = hooks;
 export default () => {
   const location = useLocation();
   const edit = new URLSearchParams(location.search).get('edit');
-  const [user] = useActiveUserRecord() as [User, never, never];
+  const [user] = useActiveUserRecord() as [User, never, never, never];
 
   return edit ? <ProfileEdit user={user} /> : <Profile user={user} editable />;
 };

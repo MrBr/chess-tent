@@ -44,9 +44,6 @@ socket.registerMiddleware(async (stream, next) => {
       } else {
         console.log('First user joined');
         const activity = await getActivity(activityId);
-        if (!activity) {
-          return null;
-        }
         const sync = action.syncAction(
           activityId,
           TYPE_ACTIVITY,

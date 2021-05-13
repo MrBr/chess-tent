@@ -9,18 +9,18 @@ import {
   UPDATE_RECORD,
   UPDATE_RECORD_VALUE,
 } from '@types';
-import { getEntityType } from './_helpers';
 
 export const updateRecordAction = <T extends RecordValue>(
   key: string,
   entity: T,
+  type: RecordMeta['type'],
   meta = {},
 ): RecordUpdateAction => ({
   type: UPDATE_RECORD,
   payload: {
     value: entity,
     meta: {
-      type: getEntityType(entity),
+      type,
       ...meta,
     },
   },

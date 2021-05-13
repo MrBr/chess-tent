@@ -41,7 +41,7 @@ export default ({
   activeStepActivityState,
 }: ComponentProps<Components['LessonPlayground']>) => {
   const tab = tabs[activeTab];
-  const [activeUser] = useActiveUserRecord() as [User, never, never];
+  const [activeUser] = useActiveUserRecord() as [User, never, never, never];
   const handleCommentSubmit = useCallback(
     event => {
       if (event.key === 'Enter') {

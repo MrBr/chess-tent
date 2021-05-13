@@ -28,8 +28,9 @@ import { GenericArguments } from './_helpers';
 
 export type RecordHookReturn<T extends RecordValue> = [
   T | null,
-  (value: T, meta?: {}) => void,
+  (value: T, meta?: Partial<{}>) => void,
   () => void,
+  RecordType['meta'],
 ];
 
 export type Hooks = {
@@ -75,6 +76,7 @@ export type Hooks = {
   useRecord: <T extends RecordValue>(
     recordKey: string,
     type: RecordType['meta']['type'],
+    initialMeta?: RecordType['meta'],
   ) => RecordHookReturn<T>;
   useMeta: <T>(metaKey: string) => [T, (meta: T) => void, () => void];
   useCopyStep: () => [

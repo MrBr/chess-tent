@@ -47,7 +47,7 @@ const createNewLesson = (user: User) => {
 
 export default () => {
   const dispatch = useDispatchBatched();
-  const [user] = useActiveUserRecord() as [User, unknown, unknown];
+  const [user] = useActiveUserRecord() as [User, unknown, unknown, unknown];
   const [lessonId, setLessonId] = useState<Lesson['id'] | undefined>();
   const lesson = useSelector(
     lessonSelector((lessonId as unknown) as string),

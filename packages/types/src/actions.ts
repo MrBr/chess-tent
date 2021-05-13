@@ -75,9 +75,13 @@ export type GetRecordNormalizedValue<T extends RecordValue> = T extends Entity[]
   ? RecordValueNormalizedSingle
   : RecordValueNormalized;
 export type RecordValue = Entity | Entity[];
-export type RecordMeta = { type: Entity['type'] };
+export type RecordMeta = {
+  type: Entity['type'],
+  loading?: boolean,
+  loaded?: boolean,
+};
 export type RecordType<T extends RecordValue = RecordValue> = {
-  value: GetRecordNormalizedValue<T>;
+  value: GetRecordNormalizedValue<T> | [] | null;
   meta: RecordMeta;
 };
 export type RecordState = Record<string, RecordType>;
@@ -115,7 +119,7 @@ export type LessonAction = UpdateEntityAction | UpdateEntitiesAction;
 
 export type SyncAction = Action<
   typeof SYNC_ACTION,
-  Entity | undefined,
+  Entity | undefined | null,
   {
     id: string;
     type: string;

@@ -1,8 +1,4 @@
-import {
-  GetRecordNormalizedValue,
-  RecordMeta,
-  RecordValue,
-} from '@chess-tent/types';
+import { RecordMeta, RecordType, RecordValue } from '@chess-tent/types';
 import { RecordService } from '@types';
 import { MiddlewareAPI } from 'redux';
 import { useRecord } from './hooks';
@@ -20,11 +16,11 @@ export const createRecordService = <T extends RecordValue>(
 ) => (store: MiddlewareAPI): RecordService<T> => {
   const record = selectRecord<T>(recordKey)(store.getState());
 
-  const updateValue = (value: GetRecordNormalizedValue<T>) =>
+  const updateValue = (value: RecordType<T>['value']) =>
     store.dispatch(updateRecordValueAction(recordKey, value, recordType));
 
-  const update = (entity: RecordValue) =>
-    store.dispatch(updateRecordAction(recordKey, entity));
+  const update = (entity: RecordValue, meta?: {}) =>
+    store.dispatch(updateRecordAction(recordKey, entity, recordType, meta));
 
   return {
     record,

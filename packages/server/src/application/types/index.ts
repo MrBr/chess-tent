@@ -36,7 +36,7 @@ export type Action = {
     id: string,
     type: string,
     socketId: string,
-    payload: Entity | undefined,
+    payload: Entity | undefined | null,
   ) => SyncAction;
 };
 

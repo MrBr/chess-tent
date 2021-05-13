@@ -31,7 +31,7 @@ export type Updater<T extends EntityDocument> = (
   entity: T,
 ) => Promise<false | T>;
 
-export type API = {
+export type Action = {
   syncAction: (
     id: string,
     type: string,
@@ -161,7 +161,7 @@ export type Utils = {
 export type Application = {
   middleware: Middleware;
   db: DB;
-  api: API;
+  action: Action;
   service: Service;
   socket: SocketService;
   utils: Utils;

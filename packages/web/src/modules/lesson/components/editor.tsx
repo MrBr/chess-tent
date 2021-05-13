@@ -9,7 +9,6 @@ import React, {
 import {
   Chapter,
   Difficulty,
-  getParentStep,
   getPreviousStep,
   getLessonChapter,
   NormalizedLesson,
@@ -17,7 +16,6 @@ import {
   Step,
   Tag,
   getChildStep,
-  isStep,
   LessonStateStatus,
   updateSubjectState,
   updateLesson,

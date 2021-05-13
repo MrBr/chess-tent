@@ -1,4 +1,4 @@
-import { socket, api } from '@application';
+import { socket, action } from '@application';
 import {
   ACTION_EVENT,
   SUBSCRIBE_EVENT,
@@ -34,7 +34,7 @@ socket.registerMiddleware(async (stream, next) => {
 
       if (shouldSyncData) {
         console.log('Owner already exists');
-        const sync = api.syncAction(
+        const sync = action.syncAction(
           activityId,
           TYPE_ACTIVITY,
           newSocket.id,
@@ -47,7 +47,7 @@ socket.registerMiddleware(async (stream, next) => {
         if (!activity) {
           return null;
         }
-        const sync = api.syncAction(
+        const sync = action.syncAction(
           activityId,
           TYPE_ACTIVITY,
           newSocket.id,

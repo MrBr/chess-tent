@@ -2,7 +2,7 @@ import { register, createNamespace, init } from 'core-module';
 import {
   Application,
   DB,
-  API,
+  Action,
   Errors,
   Middleware,
   Service,
@@ -11,7 +11,7 @@ import {
 } from '@types';
 
 const db = createNamespace({}) as DB;
-const api = createNamespace({}) as API;
+const action = createNamespace({}) as Action;
 const service = createNamespace({}) as Service;
 const errors = createNamespace({}) as Errors;
 const socket = createNamespace({}) as SocketService;
@@ -22,7 +22,7 @@ const application = createNamespace({
   register,
   init,
   db,
-  api,
+  action,
   service,
   middleware,
   socket,
@@ -33,7 +33,7 @@ const application = createNamespace({
 export {
   application as default,
   db,
-  api,
+  action,
   service,
   middleware,
   socket,

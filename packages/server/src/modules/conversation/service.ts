@@ -4,6 +4,7 @@ import {
   Message,
   NormalizedMessage,
   User,
+  updateMessage,
 } from '@chess-tent/models';
 import { Pagination } from '@chess-tent/types';
 import { MessageModel } from 'modules/message/model';
@@ -33,6 +34,10 @@ export const addMessageToConversation = (
 ) =>
   new Promise(resolve => {
     const idRegex = db.getBucketingIdFilterRegex(conversationId);
+    // Server should be the source of truth for time
+    const updatedMessage = updateMessage(message, {
+      timestamp: Date.now(),
+    });
     MessageModel.updateOne(
       {
         _id: idRegex,
@@ -41,14 +46,14 @@ export const addMessageToConversation = (
       {
         $push: {
           messages: {
-            $each: [message],
+            $each: [updatedMessage],
             $position: 0,
           },
         },
         $inc: { count: 1 },
         $set: { conversationId },
         $setOnInsert: {
-          _id: `${conversationId}_${message.timestamp}`,
+          _id: `${conversationId}_${updatedMessage.timestamp}`,
         },
       },
       { upsert: true },

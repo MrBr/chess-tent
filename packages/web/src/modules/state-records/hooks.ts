@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { RecordHookReturn, RecordMeta, RecordValue } from '@types';
 import { useDispatch, useSelector } from 'react-redux';
 import { hooks } from '@application';
@@ -10,15 +10,22 @@ export const useRecord = <T extends RecordValue>(
   type: RecordMeta['type'],
   initialMeta?: RecordMeta,
 ): RecordHookReturn<T> => {
-  const record = useSelector(selectRecord(recordKey)) || {
-    value: null,
-    meta: {
-      ...initialMeta,
-      type,
-    },
+  const record = useSelector(selectRecord(recordKey));
+  const value = record?.value;
+  const meta = record?.meta || {
+    ...initialMeta,
+    type,
   };
-  const recordValue = hooks.useDenormalize<T>(record.value, record.meta.type);
+
+  const recordValue = hooks.useDenormalize<T>(value, meta.type);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (record === null && value === null) {
+      dispatch(updateRecordAction(recordKey, value, type, meta));
+    }
+  }, [record, value]);
+
   const update = useCallback(
     (entity: T, meta?: {}) => {
       dispatch(updateRecordAction(recordKey, entity, type, meta));
@@ -28,7 +35,6 @@ export const useRecord = <T extends RecordValue>(
   const remove = useCallback(() => {
     dispatch(deleteRecordAction(recordKey));
   }, [recordKey, dispatch]);
-  const meta = record.meta;
 
   return useMemo(() => [recordValue, update, remove, meta], [
     recordValue,

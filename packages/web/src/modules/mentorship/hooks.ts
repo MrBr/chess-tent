@@ -9,10 +9,12 @@ const { useRecord } = hooks;
 const createUseMentorship = (type: 'coaches' | 'students') => (
   user: User,
 ): RecordHookReturn<Mentorship[]> => {
-  const [mentorship, setMentorship, resetMentorship] = useRecord<Mentorship[]>(
-    `${type}-${user.id}`,
-    TYPE_MENTORSHIP,
-  );
+  const [
+    mentorship,
+    setMentorship,
+    resetMentorship,
+    mentorshipMeta,
+  ] = useRecord<Mentorship[]>(`${type}-${user.id}`, TYPE_MENTORSHIP);
   const { fetch, response, loading, error, reset } = useApi(
     type === 'coaches' ? requests.coaches : requests.students,
   );
@@ -28,7 +30,7 @@ const createUseMentorship = (type: 'coaches' | 'students') => (
     }
     fetch(user);
   }, [fetch, loading, response, error, mentorship, user]);
-  return [mentorship, setMentorship, resetMentorship];
+  return [mentorship, setMentorship, resetMentorship, mentorshipMeta];
 };
 
 const useCoaches = createUseMentorship('coaches');

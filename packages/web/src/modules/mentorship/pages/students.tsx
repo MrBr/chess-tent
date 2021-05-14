@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import { components, hooks, ui } from '@application';
-import { User } from '@chess-tent/models';
 import { groupBy } from 'lodash';
 
 const { useActiveUserRecord, useStudents } = hooks;
@@ -8,7 +7,7 @@ const { Container, Row, Col, Headline3, Text, Headline2, Card, CardBody } = ui;
 const { Link, MentorshipAction, Page, UserAvatar, MessageButton } = components;
 
 const Students = () => {
-  const [user] = useActiveUserRecord() as [User, never, never];
+  const [user] = useActiveUserRecord();
   const [students] = useStudents(user);
   const result = useMemo(() => groupBy(students, student => student.approved), [
     students,

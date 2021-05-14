@@ -9,9 +9,12 @@ const { useRecord } = hooks;
 export const useActiveUserNotifications = (): RecordHookReturn<
   Notification[]
 > => {
-  const [notifications, setNotifications, resetNotifications] = useRecord<
-    Notification[]
-  >('notifications', TYPE_NOTIFICATION);
+  const [
+    notifications,
+    setNotifications,
+    resetNotifications,
+    notificationsMeta,
+  ] = useRecord<Notification[]>('notifications', TYPE_NOTIFICATION);
   const { fetch, response, loading, error, reset } = useApi(
     requests.notifications,
   );
@@ -27,5 +30,10 @@ export const useActiveUserNotifications = (): RecordHookReturn<
     }
     fetch();
   }, [fetch, loading, response, error, notifications]);
-  return [notifications, setNotifications, resetNotifications];
+  return [
+    notifications,
+    setNotifications,
+    resetNotifications,
+    notificationsMeta,
+  ];
 };

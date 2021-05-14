@@ -9,7 +9,6 @@ import React, {
 import {
   Chapter,
   Difficulty,
-  getParentStep,
   getPreviousStep,
   getLessonChapter,
   NormalizedLesson,
@@ -17,7 +16,6 @@ import {
   Step,
   Tag,
   getChildStep,
-  isStep,
   LessonStateStatus,
   updateSubjectState,
   updateLesson,
@@ -221,23 +219,19 @@ class EditorRenderer extends React.Component<
     // It's very helpful behavior that only selected step can be deleted
     // It makes undo action much simpler regarding setting new active step
     const { activeChapter, history } = this.props;
-    const parent = getParentStep(activeChapter, step);
     const newActiveStep = getPreviousStep(activeChapter, step);
     if (!newActiveStep) {
       // Don't allow deleting first step (for now)
       return;
     }
-    if (isStep(parent)) {
-      const updatedParent = removeStep(
-        parent,
-        step,
-        adjacent === undefined ? step.stepType !== 'variation' : adjacent,
-      );
-      this.updateStep(updatedParent as Step);
-    } else {
-      const updatedParent = removeStep(parent, step, !!adjacent);
-      this.updateChapter(updatedParent as Chapter);
-    }
+
+    const updatedChapter = removeStep(
+      activeChapter,
+      step,
+      adjacent === undefined ? step.stepType !== 'variation' : adjacent,
+    );
+    this.updateChapter(updatedChapter);
+
     history.replace({
       pathname: history.location.pathname,
       search: `?activeChapter=${activeChapter.id}&activeStep=${newActiveStep.id}`,

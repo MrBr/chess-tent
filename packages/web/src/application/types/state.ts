@@ -53,7 +53,7 @@ export type State = {
     updateRecord: <T extends RecordValue>(
       recordKey: string,
       entity: T,
-      meta?: RecordMeta,
+      meta?: Partial<RecordMeta>,
     ) => RecordUpdateAction;
     updateRecordValue: (
       recordKey: string,

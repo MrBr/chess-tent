@@ -21,7 +21,7 @@ const { generateIndex } = utils;
 
 export default () => {
   const dispatch = useDispatchBatched();
-  const [activeUser] = useActiveUserRecord() as [User, never, never];
+  const [activeUser] = useActiveUserRecord();
   const [
     participant,
     setParticipant,

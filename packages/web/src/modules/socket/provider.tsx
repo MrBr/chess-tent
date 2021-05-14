@@ -47,6 +47,7 @@ export const SocketProvider: ComponentType = props => {
 
   useEffect(() => {
     socket.on(ACTION_EVENT, (action: Actions) => {
+      console.log('Socket Action Received', action);
       action.meta.push = true;
       dispatch(action);
     });

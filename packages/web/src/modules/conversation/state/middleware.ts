@@ -21,7 +21,7 @@ export const middleware: Middleware = store => next => action => {
     if (conversation?.messages.length === 0) {
       // Starting new conversation
       requests.conversationSave(conversation).then(() => {
-        updateValue([conversation.id, ...record.value]);
+        updateValue([conversation.id, ...(record.value || [])]);
         socket.sendAction(action);
       });
     } else if (!action.meta.push) {
@@ -30,7 +30,7 @@ export const middleware: Middleware = store => next => action => {
     if (!conversation) {
       requests.conversation(conversationId).then(response => {
         store.dispatch(updateEntities(response.data));
-        updateValue([conversationId, ...record.value]);
+        updateValue([conversationId, ...(record.value || [])]);
       });
     }
   }

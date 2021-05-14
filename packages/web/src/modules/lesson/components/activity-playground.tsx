@@ -1,7 +1,6 @@
 import React, { ComponentProps, useCallback } from 'react';
 import { ActivityComment, Components } from '@types';
 import { components, hooks, services, ui } from '@application';
-import { User } from '@chess-tent/models';
 
 const { Tabs, Tab, Container, Col, Row, Input, Text } = ui;
 const { UserAvatar } = components;
@@ -41,7 +40,7 @@ export default ({
   activeStepActivityState,
 }: ComponentProps<Components['LessonPlayground']>) => {
   const tab = tabs[activeTab];
-  const [activeUser] = useActiveUserRecord() as [User, never, never];
+  const [activeUser] = useActiveUserRecord();
   const handleCommentSubmit = useCallback(
     event => {
       if (event.key === 'Enter') {

@@ -26,10 +26,16 @@ import { History } from 'history';
 import { LessonActivity } from './activity';
 import { GenericArguments } from './_helpers';
 
+export type NonNullableRecordReturn<
+  T extends RecordValue,
+  R extends RecordHookReturn<any> = RecordHookReturn<T>
+> = [T, R[1], R[2], R[3]];
+
 export type RecordHookReturn<T extends RecordValue> = [
   T | null,
-  (value: T, meta?: {}) => void,
+  (value: T, meta?: Partial<{}>) => void,
   () => void,
+  RecordType['meta'],
 ];
 
 export type Hooks = {
@@ -54,7 +60,7 @@ export type Hooks = {
   ) => void;
   useTags: () => Tag[];
   useUser: (userId: User['id']) => User;
-  useActiveUserRecord: () => RecordHookReturn<User>;
+  useActiveUserRecord: () => NonNullableRecordReturn<User>;
   useActiveUserNotifications: () => RecordHookReturn<Notification[]>;
   useUserTrainings: (user: User) => RecordHookReturn<LessonActivity[]>;
   useUserLessonsRecord: (user: User) => RecordHookReturn<Lesson[]>;
@@ -75,6 +81,7 @@ export type Hooks = {
   useRecord: <T extends RecordValue>(
     recordKey: string,
     type: RecordType['meta']['type'],
+    initialMeta?: RecordType['meta'],
   ) => RecordHookReturn<T>;
   useMeta: <T>(metaKey: string) => [T, (meta: T) => void, () => void];
   useCopyStep: () => [

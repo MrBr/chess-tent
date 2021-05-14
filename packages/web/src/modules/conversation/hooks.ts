@@ -52,9 +52,12 @@ export const useLoadMoreMessages = (
 export const useUserConversations = (
   userId: User['id'],
 ): RecordHookReturn<Conversation[]> => {
-  const [conversations, setConversations, resetConversations] = useRecord<
-    Conversation[]
-  >('conversations', TYPE_CONVERSATION);
+  const [
+    conversations,
+    setConversations,
+    resetConversations,
+    conversationsMeta,
+  ] = useRecord<Conversation[]>('conversations', TYPE_CONVERSATION);
   const { fetch, response, loading, error, reset } = useApi(
     requests.conversations,
   );
@@ -70,5 +73,10 @@ export const useUserConversations = (
     }
     fetch(userId);
   }, [fetch, loading, response, error, conversations, userId]);
-  return [conversations, setConversations, resetConversations];
+  return [
+    conversations,
+    setConversations,
+    resetConversations,
+    conversationsMeta,
+  ];
 };

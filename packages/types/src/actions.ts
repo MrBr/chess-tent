@@ -8,6 +8,7 @@ import {
   NormalizedStep,
   NormalizedUser,
   Subject,
+  SubjectPath,
   NormalizedTag,
   Notification,
   NormalizedNotification,
@@ -18,6 +19,8 @@ import {
 
 export const UPDATE_ENTITIES = 'UPDATE_ENTITIES';
 export const UPDATE_ENTITY = 'UPDATE_ENTITY';
+
+export const SYNC_ACTION = 'SYNC_ACTION';
 
 export const UPDATE_RECORD_VALUE = 'UPDATE_RECORD_VALUE';
 export const UPDATE_RECORD = 'UPDATE_RECORD';
@@ -33,6 +36,8 @@ export type Action<T, P, M = {}> = {
   // push property indicates that actions is pushed from the server
   meta: M & { push?: boolean };
 };
+
+export type PathAction<T, P, M extends { path: SubjectPath }> = Action<T, P, M>;
 
 export type GetActionMeta<T extends Action<any, any>> = T extends Action<
   any,
@@ -69,10 +74,14 @@ export type GetRecordNormalizedValue<T extends RecordValue> = T extends Entity[]
   : T extends Entity
   ? RecordValueNormalizedSingle
   : RecordValueNormalized;
-export type RecordValue = Entity | Entity[];
-export type RecordMeta = { type: Entity['type'] };
+export type RecordValue = Entity | Entity[] | null;
+export type RecordMeta = {
+  type: Entity['type'];
+  loading?: boolean;
+  loaded?: boolean;
+};
 export type RecordType<T extends RecordValue = RecordValue> = {
-  value: GetRecordNormalizedValue<T>;
+  value: GetRecordNormalizedValue<T> | [] | null;
   meta: RecordMeta;
 };
 export type RecordState = Record<string, RecordType>;
@@ -112,6 +121,16 @@ export type UpdateEntityAction = Action<
 
 export type LessonAction = UpdateEntityAction | UpdateEntitiesAction;
 
+export type SyncAction = Action<
+  typeof SYNC_ACTION,
+  Entity | undefined | null,
+  {
+    id: string;
+    type: string;
+    socketId: string;
+  }
+>;
+
 export type ActivityAction<T extends Subject> = UpdateEntitiesAction;
 
 export type UserAction = UpdateEntitiesAction;
@@ -121,7 +140,7 @@ export type UserAction = UpdateEntitiesAction;
  */
 export type RecordUpdateAction = Action<
   typeof UPDATE_RECORD,
-  { value: RecordValue; meta: RecordMeta },
+  { value: RecordValue; meta?: Partial<RecordMeta> },
   { key: string }
 >;
 export type RecordUpdateValueAction = Action<
@@ -180,6 +199,7 @@ export type PatchAction = SendPatchAction;
 
 export type Actions =
   | UpdateEntityAction
+  | SyncAction
   | UpdateEntitiesAction
   | PatchAction
   | MessageAction

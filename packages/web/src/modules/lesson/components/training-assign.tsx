@@ -29,7 +29,7 @@ export default ({ close }: { close: () => void }) => {
   const { fetch: saveActivity, response: assignResponse, loading } = useApi(
     requests.activitySave,
   );
-  const [user] = useActiveUserRecord() as [User, never, never, never];
+  const [user] = useActiveUserRecord();
   const [mentorship] = useStudents(user);
   const { fetch: fetchUserLessons, response } = useApi(requests.myLessons);
 

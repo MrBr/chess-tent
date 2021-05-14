@@ -1,6 +1,5 @@
 import React from 'react';
 import { hooks } from '@application';
-import { User } from '@chess-tent/models';
 import { Profile, ProfileEdit } from '../components/profile';
 
 const { useActiveUserRecord, useLocation } = hooks;
@@ -8,7 +7,7 @@ const { useActiveUserRecord, useLocation } = hooks;
 export default () => {
   const location = useLocation();
   const edit = new URLSearchParams(location.search).get('edit');
-  const [user] = useActiveUserRecord() as [User, never, never, never];
+  const [user] = useActiveUserRecord();
 
   return edit ? <ProfileEdit user={user} /> : <Profile user={user} editable />;
 };

@@ -1,13 +1,12 @@
 import React from 'react';
 import { components, hooks, ui } from '@application';
-import { User } from '@chess-tent/models';
 
 const { useActiveUserRecord, useCoaches } = hooks;
 const { Container, Row, Col, Text, Headline2, Card, CardBody } = ui;
 const { MentorshipAction, Page, MessageButton, UserAvatar } = components;
 
 const Coaches = () => {
-  const [user] = useActiveUserRecord() as [User, never, never, never];
+  const [user] = useActiveUserRecord();
   const [coaches] = useCoaches(user);
   return (
     <Page>

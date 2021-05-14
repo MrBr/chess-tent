@@ -76,9 +76,9 @@ export type GetRecordNormalizedValue<T extends RecordValue> = T extends Entity[]
   : RecordValueNormalized;
 export type RecordValue = Entity | Entity[];
 export type RecordMeta = {
-  type: Entity['type'],
-  loading?: boolean,
-  loaded?: boolean,
+  type: Entity['type'];
+  loading?: boolean;
+  loaded?: boolean;
 };
 export type RecordType<T extends RecordValue = RecordValue> = {
   value: GetRecordNormalizedValue<T> | [] | null;

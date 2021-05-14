@@ -8,4 +8,3 @@ export type SocketEvents =
   | typeof ACTION_EVENT;
 
 export const USER_CHANNEL_PREFIX = 'user';
-export const ACTIVITY_CHANNEL_PREFIX = 'activity';

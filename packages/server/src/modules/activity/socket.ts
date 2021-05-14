@@ -1,11 +1,5 @@
 import { socket, action } from '@application';
-import {
-  ACTION_EVENT,
-  SUBSCRIBE_EVENT,
-  UNSUBSCRIBE_EVENT,
-  SEND_PATCH,
-  SYNC_ACTION,
-} from '@chess-tent/types';
+import { ACTION_EVENT, SUBSCRIBE_EVENT, SEND_PATCH } from '@chess-tent/types';
 import { TYPE_ACTIVITY } from '@chess-tent/models';
 import { canEditActivity, getActivity } from './service';
 
@@ -13,7 +7,7 @@ socket.registerMiddleware(async (stream, next) => {
   // Handle activity channel subscription
   if (
     stream.event === SUBSCRIBE_EVENT &&
-    stream.data?.indexOf('activity') > -1
+    stream.data?.indexOf(TYPE_ACTIVITY) > -1
   ) {
     const tokenData = socket.identify(stream);
     if (!tokenData) {
@@ -30,7 +24,7 @@ socket.registerMiddleware(async (stream, next) => {
       // Joining a room implicitly requires sending a sync request
       const newSocket = stream.client.join(roomId);
       const shouldSyncData = socket.shouldSyncData(roomId);
-      const channel = `activity-${activityId}`;
+      const channel = `${TYPE_ACTIVITY}-${activityId}`;
 
       if (shouldSyncData) {
         console.log('Owner already exists');
@@ -55,20 +49,6 @@ socket.registerMiddleware(async (stream, next) => {
     }
   }
 
-  // Handle activity channel unsubscription
-  if (
-    stream.event === UNSUBSCRIBE_EVENT &&
-    stream.data?.indexOf('activity') > -1
-  ) {
-    const tokenData = socket.identify(stream);
-    if (!tokenData) {
-      console.log('Unauthorized socket unsubscribe');
-      return;
-    }
-    console.log('Client left from', stream.data);
-    stream.client.leave(stream.data);
-  }
-
   // Forward activity action
   if (
     stream.event === ACTION_EVENT &&
@@ -76,21 +56,7 @@ socket.registerMiddleware(async (stream, next) => {
     stream.data.meta.type === TYPE_ACTIVITY
   ) {
     const action = stream.data;
-    socket.sendAction(`activity-${action.meta.id}`, stream);
-  }
-
-  if (stream.event === ACTION_EVENT && stream.data.type === SYNC_ACTION) {
-    const action = stream.data;
-    console.log('Forwarding SYNC action');
-    if (action.payload === undefined) {
-      console.warn('Forwarding SYNC action Error - no payload');
-      return;
-    }
-    socket.sendServerAction(
-      `activity-${action.meta.id}`,
-      action,
-      action.meta.socketId,
-    );
+    socket.sendAction(`${TYPE_ACTIVITY}-${action.meta.id}`, stream);
   }
 
   next(stream);

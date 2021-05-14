@@ -22,12 +22,12 @@ export default () => {
   const { loading, loaded } = meta;
 
   useEffect(() => {
-    socket.subscribe(`activity-${activityId}`);
+    socket.subscribe(`${TYPE_ACTIVITY}-${activityId}`);
 
     return () => {
       // In case activity change from within activity this may not trigger
       // take care
-      socket.unsubscribe(`activity-${activityId}`);
+      socket.unsubscribe(`${TYPE_ACTIVITY}-${activityId}`);
     };
   }, [activityId]);
 

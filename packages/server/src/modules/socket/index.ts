@@ -1,3 +1,3 @@
 import './service';
-import './syncMiddleware';
-import './unsubscribeMiddleware';
+import './middleware/sync-middleware';
+import './middleware/unsubscribe-middleware';

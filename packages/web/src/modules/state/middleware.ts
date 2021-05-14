@@ -1,9 +1,5 @@
 import { Middleware, State, SYNC_ACTION } from '@types';
-import { socket, utils, state } from '@application';
-
-const {
-  actions: { updateEntities },
-} = state;
+import { socket, utils, services } from '@application';
 
 export const middleware: State['middleware'] = [];
 
@@ -12,15 +8,16 @@ export const registerMiddleware = (middlewareFunction: Middleware) =>
 
 export const syncMiddleware: Middleware = store => next => action => {
   if (action.type === SYNC_ACTION) {
-    const hasPayload = action.payload !== undefined;
-    if (!hasPayload) {
-      const { id, type } = action.meta;
+    const shouldSendSync = action.payload === undefined;
+    const { id, type } = action.meta;
+    if (shouldSendSync) {
       const entity = utils.denormalize(id, type, store.getState().entities);
       const actionWithPayload = { ...action, payload: entity };
       socket.sendAction(actionWithPayload);
     } else {
       const entity = action.payload;
-      store.dispatch(updateEntities(entity));
+      const record = services.createRecordService(`${type}-${id}`, type)(store);
+      record.update(entity, { loading: false, loaded: true });
     }
     return;
   }

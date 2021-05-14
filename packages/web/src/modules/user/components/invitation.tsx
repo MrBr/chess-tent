@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect, RefObject } from 'react';
 import { hooks, ui, requests } from '@application';
-import { User } from '@chess-tent/models';
 import * as yup from 'yup';
 
 import { APP_DOMAIN } from '../../api';
@@ -25,7 +24,7 @@ const InvitationEmailSchema = yup.object().shape({
 
 export default () => {
   const { fetch } = useApi(requests.inviteUser);
-  const [activeUser] = useActiveUserRecord() as [User, never, never];
+  const [activeUser] = useActiveUserRecord();
   const target = useRef() as RefObject<HTMLButtonElement>;
   const [isModalVisible, setModalVisibility] = useState(false);
   const [isLinkCopied, setLinkCopy] = useState(false);

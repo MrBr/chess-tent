@@ -29,10 +29,9 @@ export const useUserLessonRecord = (user: User) =>
 export const useUserTrainings = (
   user: User,
 ): RecordHookReturn<LessonActivity[]> => {
-  const [trainings, setTrainings, resetTrainings] = useRecord<LessonActivity[]>(
-    `trainings-${user.id}`,
-    TYPE_ACTIVITY,
-  );
+  const [trainings, setTrainings, resetTrainings, trainingsMeta] = useRecord<
+    LessonActivity[]
+  >(`trainings-${user.id}`, TYPE_ACTIVITY);
   const { fetch, response, loading, error, reset } = useApi(
     requests.activities,
   );
@@ -48,7 +47,7 @@ export const useUserTrainings = (
     }
     fetch({ owner: user.id, users: user.id, state: { training: true } });
   }, [fetch, loading, response, error, trainings, user]);
-  return [trainings, setTrainings, resetTrainings];
+  return [trainings, setTrainings, resetTrainings, trainingsMeta];
 };
 
 export const useLessons: Hooks['useLessons'] = (
@@ -56,7 +55,7 @@ export const useLessons: Hooks['useLessons'] = (
   filters,
   options,
 ) => {
-  const [lessons, setLessons, resetLessons] = useRecord<Lesson[]>(
+  const [lessons, setLessons, resetLessons, lessonsMeta] = useRecord<Lesson[]>(
     key,
     TYPE_LESSON,
   );
@@ -72,7 +71,7 @@ export const useLessons: Hooks['useLessons'] = (
   useEffect(() => {
     fetch(filters);
   }, [filters, fetch]);
-  return [lessons, setLessons, resetLessons];
+  return [lessons, setLessons, resetLessons, lessonsMeta];
 };
 
 export const useEditor = () => {

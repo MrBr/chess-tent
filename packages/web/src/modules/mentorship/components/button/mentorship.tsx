@@ -1,13 +1,13 @@
 import React, { useCallback, useEffect } from 'react';
 import { hooks, requests, ui } from '@application';
 import { Components } from '@types';
-import { Mentorship, User } from '@chess-tent/models';
+import { Mentorship } from '@chess-tent/models';
 
 const { useActiveUserRecord, useCoaches, useApi } = hooks;
 const { Button } = ui;
 
 export default (({ user, className }) => {
-  const [me] = useActiveUserRecord() as [User, never, never];
+  const [me] = useActiveUserRecord();
   const [coaches, setCoaches] = useCoaches(me);
   const { fetch: requestMentorship, response, loading, reset } = useApi(
     requests.mentorshipRequest,

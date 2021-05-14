@@ -13,16 +13,12 @@ import {
 export const updateRecordAction = <T extends RecordValue>(
   key: string,
   entity: T,
-  type: RecordMeta['type'],
-  meta = {},
+  meta?: Partial<RecordMeta>,
 ): RecordUpdateAction => ({
   type: UPDATE_RECORD,
   payload: {
     value: entity,
-    meta: {
-      type,
-      ...meta,
-    },
+    meta,
   },
   meta: {
     key,

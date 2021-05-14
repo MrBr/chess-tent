@@ -13,10 +13,7 @@ export const records = (state: RecordState = {}, action: RecordAction) => {
       return {
         ...state,
         [action.meta.key]: {
-          value:
-            action.payload.value === null
-              ? null
-              : formatEntityValue(action.payload.value),
+          value: formatEntityValue(action.payload.value),
           meta: {
             ...state[action.meta.key]?.meta,
             ...action.payload.meta,

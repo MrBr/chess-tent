@@ -1,6 +1,7 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { RecordHookReturn, RecordMeta, RecordValue } from '@types';
 import { useDispatch, useSelector } from 'react-redux';
+import isNil from 'lodash/isNil';
 import { hooks } from '@application';
 import { selectRecord } from './state/selectors';
 import { deleteRecordAction, updateRecordAction } from './state/actions';
@@ -20,17 +21,17 @@ export const useRecord = <T extends RecordValue>(
   const recordValue = hooks.useDenormalize<T>(value, meta.type);
   const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   if (record === null && value === null) {
-  //     dispatch(updateRecordAction(recordKey, value, type, meta));
-  //   }
-  // }, [record, value]);
+  useEffect(() => {
+    if (isNil(record) && isNil(value)) {
+      dispatch(updateRecordAction(recordKey, value, { ...meta, type }));
+    }
+  }, [dispatch, meta, record, recordKey, type, value]);
 
   const update = useCallback(
-    (entity: T, meta?: {}) => {
-      dispatch(updateRecordAction(recordKey, entity, type, meta));
+    (entity: T, meta?: Partial<RecordMeta>) => {
+      dispatch(updateRecordAction(recordKey, entity, meta));
     },
-    [dispatch, recordKey, type],
+    [dispatch, recordKey],
   );
   const remove = useCallback(() => {
     dispatch(deleteRecordAction(recordKey));

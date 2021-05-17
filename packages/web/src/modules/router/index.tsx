@@ -1,5 +1,5 @@
 import React, { ComponentType } from 'react';
-import application, { ui } from '@application';
+import application, { ui, components } from '@application';
 import { Components, Services } from '@types';
 import isPropValid from '@emotion/is-prop-valid';
 import {
@@ -16,6 +16,7 @@ import { createBrowserHistory, History, LocationState } from 'history';
 import styled from '@emotion/styled';
 
 const { Icon } = ui;
+const { Provider } = components;
 
 const routes: ComponentType[] = [];
 const history = new Proxy(createBrowserHistory(), {
@@ -38,13 +39,15 @@ const history = new Proxy(createBrowserHistory(), {
 const Router: ComponentType = () => {
   return (
     <BaseRouter history={history}>
-      <Switch>
-        <>
-          {routes.map((Page, index) => (
-            <Page key={index} />
-          ))}
-        </>
-      </Switch>
+      <Provider>
+        <Switch>
+          <>
+            {routes.map((Page, index) => (
+              <Page key={index} />
+            ))}
+          </>
+        </Switch>
+      </Provider>
     </BaseRouter>
   );
 };

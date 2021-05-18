@@ -35,10 +35,10 @@ const history = new Proxy(createBrowserHistory(), {
   },
 });
 
-const Router: RenderPropComponentType = ({ render }) => {
+const Router: RenderPropComponentType = ({ children }) => {
   return (
     <BaseRouter history={history}>
-      {render(
+      {children(
         <Switch>
           <>
             {routes.map((Page, index) => (

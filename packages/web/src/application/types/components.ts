@@ -246,7 +246,7 @@ export type NotificationComponent<T extends Notification> = ComponentType<{
 }>;
 
 export type RenderPropComponentType = ComponentType<{
-  render(children: React.ReactNode): React.ReactNode;
+  children(children: React.ReactNode): React.ReactNode;
 }>;
 
 export type Components = {

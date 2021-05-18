@@ -2,28 +2,27 @@ import {
   TYPE_NOTIFICATION,
   TYPE_USER,
   NormalizedNotification,
+  NormalizedNotificationBucket,
   Notification,
 } from '@chess-tent/models';
 import { db } from '@application';
 import { Schema } from 'mongoose';
 
-const notificationSchema = db.createSchema<NormalizedNotification>({
+const notificationSchema = db.createSchema<NormalizedNotificationBucket>({
   type: ({
     type: String,
     default: TYPE_NOTIFICATION,
   } as unknown) as typeof TYPE_NOTIFICATION,
-  notificationType: ({
-    type: String,
-    required: true,
-  } as unknown) as string,
   user: ({
     type: String,
     ref: TYPE_USER,
   } as unknown) as NormalizedNotification['user'],
-  read: (Schema.Types.Boolean as unknown) as NormalizedNotification['read'],
-  seen: (Schema.Types.Boolean as unknown) as NormalizedNotification['seen'],
-  state: (Schema.Types.Mixed as unknown) as NormalizedNotification['state'],
-  time: (Schema.Types.Date as unknown) as NormalizedNotification['time'],
+  count: ({
+    type: Number,
+  } as unknown) as NormalizedNotificationBucket['count'],
+  notifications: ({
+    type: Schema.Types.Mixed,
+  } as unknown) as NormalizedNotificationBucket['notifications'],
 });
 
 const NotificationModel = db.createModel<NormalizedNotification>(

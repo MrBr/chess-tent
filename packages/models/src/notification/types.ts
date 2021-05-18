@@ -8,7 +8,7 @@ export interface Notification extends Subject {
   type: typeof TYPE_NOTIFICATION;
   notificationType: string;
   user: User;
-  time: Date;
+  timestamp: number;
   read: boolean;
   seen: boolean;
   state: {};
@@ -19,8 +19,16 @@ export interface NormalizedNotification {
   user: User['id'];
   notificationType: Notification['notificationType'];
   type: Notification['type'];
-  time: Notification['time'];
+  timestamp: Notification['timestamp'];
   read: Notification['read'];
   seen: Notification['seen'];
   state: Notification['state'];
+}
+
+export interface NormalizedNotificationBucket {
+  id: string;
+  user: User['id'];
+  count: number;
+  notifications: NormalizedNotification[];
+  type: typeof TYPE_NOTIFICATION;
 }

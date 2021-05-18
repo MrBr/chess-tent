@@ -1,6 +1,7 @@
 import { db } from '@application';
 import { User, Notification, TYPE_USER } from '@chess-tent/models';
 import { UpdateNotificationsRequest } from '@chess-tent/types';
+import take from 'lodash/take';
 import { depopulate, NotificationModel } from './model';
 
 const NOTIFICATIONS_BUCKET_LIMIT = 1;
@@ -8,8 +9,12 @@ const NOTIFICATIONS_BUCKET_LIMIT = 1;
 export const getNotifications = (filters: {
   user?: User['id'];
   read?: boolean;
+  limit?: number;
 }): Promise<Notification[]> =>
   new Promise(resolve => {
+    const bucketLimit = Math.ceil(
+      (filters.limit || 50) / NOTIFICATIONS_BUCKET_LIMIT,
+    );
     NotificationModel.find({
       user: filters.user,
     })
@@ -18,7 +23,8 @@ export const getNotifications = (filters: {
         path: 'notifications.user',
         model: TYPE_USER,
       })
-      .limit(2)
+      .sort({ _id: -1 })
+      .limit(bucketLimit)
       .then(notifications => {
         console.log('getNotifications filters', filters);
         console.log('getNotifications notifications', notifications);
@@ -28,7 +34,7 @@ export const getNotifications = (filters: {
           (item: Notification) => item.read === filters.read,
         );
         console.log('getNotifications filteredResult', filteredResult);
-        resolve(filteredResult);
+        resolve(take(filteredResult, filters.limit));
       })
       .catch(err => {
         throw err;

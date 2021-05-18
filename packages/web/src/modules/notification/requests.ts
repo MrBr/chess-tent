@@ -8,8 +8,8 @@ import {
 const notifications = services.createRequest<
   boolean | undefined,
   NotificationsResponse
->('GET', (read?: boolean) => ({
-  url: `/notifications?${!!read ? 'read=true' : ''}`,
+>('GET', (read?: boolean, limit?: number) => ({
+  url: `/notifications?limit=${limit || '5'}${!!read ? 'read=true' : ''}`,
 }));
 
 const updateNotifications = services.createRequest<

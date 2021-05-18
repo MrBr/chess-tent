@@ -30,6 +30,11 @@ BDropdown.Menu = styled(BDropdown.Menu)(({ width }) => ({
 }));
 
 // @ts-ignore
+BDropdown.Item = styled(BDropdown.Item)({
+  whiteSpace: 'initial',
+});
+
+// @ts-ignore
 BDropdown.Toggle.defaultProps = {
   as: Toggle,
 };

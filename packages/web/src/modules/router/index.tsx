@@ -1,6 +1,6 @@
 import React, { ComponentType } from 'react';
-import application, { ui, components } from '@application';
-import { Components, Services } from '@types';
+import application, { ui } from '@application';
+import { Components, RenderPropComponentType, Services } from '@types';
 import isPropValid from '@emotion/is-prop-valid';
 import {
   Switch,
@@ -16,7 +16,6 @@ import { createBrowserHistory, History, LocationState } from 'history';
 import styled from '@emotion/styled';
 
 const { Icon } = ui;
-const { Provider } = components;
 
 const routes: ComponentType[] = [];
 const history = new Proxy(createBrowserHistory(), {
@@ -36,18 +35,18 @@ const history = new Proxy(createBrowserHistory(), {
   },
 });
 
-const Router: ComponentType = () => {
+const Router: RenderPropComponentType = ({ render }) => {
   return (
     <BaseRouter history={history}>
-      <Provider>
+      {render(
         <Switch>
           <>
             {routes.map((Page, index) => (
               <Page key={index} />
             ))}
           </>
-        </Switch>
-      </Provider>
+        </Switch>,
+      )}
     </BaseRouter>
   );
 };

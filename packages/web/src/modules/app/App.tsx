@@ -1,13 +1,15 @@
 import React from 'react';
 import { components } from '@application';
 
-const { Router, StateProvider, MobileRoot } = components;
+const { Provider, Router, StateProvider, MobileRoot } = components;
 
 export default () => (
   <>
     <MobileRoot />
     <StateProvider>
-      <Router />
+      <Router
+        render={(routes: React.ReactNode) => <Provider>{routes}</Provider>}
+      />
     </StateProvider>
   </>
 );

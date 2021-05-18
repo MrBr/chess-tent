@@ -28,7 +28,7 @@ application.service.registerPostRoute(
   toLocals('notificationType', TYPE_MENTORSHIP),
   toLocals('state', (req, res) => ({
     text: `${res.locals.mentorship.student.name} requested mentorship`,
-    mentorship: res.locals.mentorship,
+    student: res.locals.mentorship.student.id,
   })),
   createNotification,
   sendNotification,

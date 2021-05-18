@@ -1,30 +1,18 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { NotificationComponent } from '@types';
-import { Mentorship, Notification, TYPE_MENTORSHIP } from '@chess-tent/models';
-import { hooks, ui, components, state } from '@application';
+import { Notification } from '@chess-tent/models';
+import { hooks, ui, components } from '@application';
 
-const { ToastHeader, ToastBody, Button, Text, Dropdown } = ui;
-const { MessageButton, MentorshipAction } = components;
-const { useHistory, useRecord } = hooks;
+const { ToastHeader, ToastBody, Text, Dropdown } = ui;
+const { Link } = components;
+const { useHistory } = hooks;
 
 export const Toast: NotificationComponent<
   Notification & {
-    state: { text: string; mentorship: Mentorship };
+    state: { text: string };
   }
 > = ({ notification }) => {
-  const { text, mentorship: newMentorship } = notification.state;
-  const history = useHistory();
-  const [mentorship, updateMentorship] = useRecord<Mentorship>(
-    `${TYPE_MENTORSHIP}-${newMentorship.coach.id}-${newMentorship.student.id}`,
-    TYPE_MENTORSHIP,
-  );
-  useEffect(() => {
-    updateMentorship(newMentorship);
-  }, [newMentorship, updateMentorship]);
-
-  if (!mentorship) {
-    return null;
-  }
+  const { text } = notification.state;
 
   return (
     <>
@@ -34,31 +22,9 @@ export const Toast: NotificationComponent<
         </Text>
       </ToastHeader>
       <ToastBody>
-        <Text>{text}</Text>
-        <MessageButton
-          user={mentorship.student}
-          className="mr-4"
-          size="extra-small"
-          variant="regular"
-        />
-        {mentorship.approved ? (
-          <Text inline className="mr-4">
-            Accepted
-          </Text>
-        ) : (
-          <MentorshipAction
-            mentorship={mentorship}
-            text="Accept"
-            className="mr-4"
-          />
-        )}
-        <Button
-          size="extra-small"
-          variant="secondary"
-          onClick={() => history.push(`/user/${mentorship.student.id}`)}
-        >
-          Preview
-        </Button>
+        <Link to={'/me/students'}>
+          <Text>{text}</Text>
+        </Link>
       </ToastBody>
     </>
   );
@@ -66,7 +32,7 @@ export const Toast: NotificationComponent<
 
 export const DropdownItem: NotificationComponent<
   Notification & {
-    state: { text: string; mentorship: Mentorship };
+    state: { text: string };
   }
 > = ({ notification }) => {
   const history = useHistory();

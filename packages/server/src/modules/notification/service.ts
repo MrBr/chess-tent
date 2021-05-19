@@ -63,12 +63,7 @@ export const saveNotification = (notification: Notification) =>
         count: { $lt: NOTIFICATIONS_BUCKET_LIMIT },
       },
       {
-        $push: {
-          notifications: {
-            $each: [depopulate(notification)],
-            $position: 0,
-          },
-        },
+        $push: { notifications: depopulate(notification) },
         $inc: { count: 1 },
         $set: { user: userId },
         $setOnInsert: {

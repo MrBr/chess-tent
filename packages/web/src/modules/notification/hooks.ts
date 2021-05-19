@@ -1,6 +1,6 @@
 import { hooks, requests } from '@application';
 import { Notification, TYPE_NOTIFICATION } from '@chess-tent/models';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { RecordHookReturn } from '@types';
 import last from 'lodash/last';
 import take from 'lodash/take';
@@ -33,8 +33,15 @@ export const useActiveUserNotifications = (
     fetch();
   }, [fetch, loading, response, error, notifications]);
   const finalNotifications = limit ? take(notifications, limit) : notifications;
+  const sortedNotifications = useMemo(
+    () =>
+      (finalNotifications || []).sort(
+        (a: Notification, b: Notification) => b.timestamp - a.timestamp,
+      ),
+    [finalNotifications],
+  );
   return [
-    finalNotifications,
+    sortedNotifications,
     setNotifications,
     resetNotifications,
     notificationsMeta,
@@ -42,10 +49,7 @@ export const useActiveUserNotifications = (
 };
 
 export const useLoadMoreNotifications = (): [() => void, boolean, boolean] => {
-  const [notifications, setNotifications] = useRecord<Notification[]>(
-    'notifications',
-    TYPE_NOTIFICATION,
-  );
+  const [notifications, setNotifications] = useActiveUserNotifications();
   const [noMore, setNoMore] = useState(
     notifications ? notifications.length === 0 : false,
   );

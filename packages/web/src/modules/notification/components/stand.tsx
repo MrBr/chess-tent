@@ -2,8 +2,13 @@ import React from 'react';
 import { components, hooks, ui, requests, state } from '@application';
 
 const { Icon, Dropdown, Absolute, Dot } = ui;
-const { NotificationRender } = components;
-const { useActiveUserNotifications, useApi, useDispatch } = hooks;
+const { NotificationRender, NotificationSeeAllModal } = components;
+const {
+  useActiveUserNotifications,
+  useApi,
+  useDispatch,
+  usePromptModal,
+} = hooks;
 
 const { actions } = state;
 
@@ -11,6 +16,7 @@ export default () => {
   const [notifications] = useActiveUserNotifications();
   const { fetch: updateNotifications } = useApi(requests.updateNotifications);
   const dispatch = useDispatch();
+  const promptModal = usePromptModal();
 
   const handleUnseenNotifications = () => {
     const unseenNotifications = notifications?.filter(
@@ -58,7 +64,15 @@ export default () => {
             <Dropdown.Divider />
           </React.Fragment>
         )}
-        <Dropdown.Item>See all</Dropdown.Item>
+        {!!notifications && (
+          <Dropdown.Item
+            onClick={() =>
+              promptModal(close => <NotificationSeeAllModal close={close} />)
+            }
+          >
+            See all
+          </Dropdown.Item>
+        )}
       </Dropdown.Menu>
     </Dropdown>
   );

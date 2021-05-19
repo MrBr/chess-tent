@@ -29,6 +29,12 @@ application.register(
   },
 );
 application.register(
+  () => import('./components/see-all'),
+  module => {
+    application.components.NotificationSeeAllModal = module.default;
+  },
+);
+application.register(
   () => import('./provider'),
   module => {
     application.services.pushToast = module.pushToast;

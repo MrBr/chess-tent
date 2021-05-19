@@ -391,5 +391,8 @@ export type Components = {
     notification: Notification;
     view: NotificationView;
   }>;
+  NotificationSeeAllModal: ComponentType<{
+    close: () => void;
+  }>;
   Invitation: ComponentType;
 };

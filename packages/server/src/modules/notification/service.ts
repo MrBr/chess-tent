@@ -7,15 +7,25 @@ import { depopulate, NotificationModel } from './model';
 const NOTIFICATIONS_BUCKET_LIMIT = 1;
 
 export const getNotifications = (filters: {
-  user?: User['id'];
+  user: User['id'];
   read?: boolean;
   limit?: number;
+  lastDocumentTimestamp?: number;
 }): Promise<Notification[]> =>
   new Promise(resolve => {
-    const bucketLimit = Math.ceil(
-      (filters.limit || 50) / NOTIFICATIONS_BUCKET_LIMIT,
-    );
+    console.log('getNotifications filters', filters);
+    const idRegex = db.getBucketingIdFilterRegex(filters.user);
+
+    const filterBy = filters.lastDocumentTimestamp
+      ? { $lt: `${filters.user}_${filters.lastDocumentTimestamp}` }
+      : idRegex;
+
+    const bucketLimit = filters.limit
+      ? Math.ceil(filters.limit / NOTIFICATIONS_BUCKET_LIMIT)
+      : 2;
+
     NotificationModel.find({
+      _id: filterBy,
       user: filters.user,
     })
       .populate('user')
@@ -26,7 +36,6 @@ export const getNotifications = (filters: {
       .sort({ _id: -1 })
       .limit(bucketLimit)
       .then(notifications => {
-        console.log('getNotifications filters', filters);
         console.log('getNotifications notifications', notifications);
         const result = db.flattenBuckets(notifications, 'notifications');
         console.log('getNotifications result', result);
@@ -90,7 +99,6 @@ export const updateNotifications = (
     NotificationModel.updateMany(
       { user: filter.user },
       { $set: newSet },
-      // { $set: { 'notifications.$[elem].seen': true } },
       {
         multi: true,
         arrayFilters: [{ 'elem.id': { $in: filter._id } }],

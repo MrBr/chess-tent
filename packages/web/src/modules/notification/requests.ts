@@ -3,6 +3,7 @@ import {
   NotificationsResponse,
   StatusResponse,
   UpdateNotificationsRequest,
+  Pagination,
 } from '@types';
 
 const notifications = services.createRequest<
@@ -10,6 +11,13 @@ const notifications = services.createRequest<
   NotificationsResponse
 >('GET', (read?: boolean, limit?: number) => ({
   url: `/notifications?limit=${limit || '5'}${!!read ? 'read=true' : ''}`,
+}));
+
+const loadMoreNotifications = services.createRequest<
+  Pagination,
+  NotificationsResponse
+>('GET', (lastDocumentTimestamp?: Pagination) => ({
+  url: `/notifications?lastDocumentTimestamp=${lastDocumentTimestamp}`,
 }));
 
 const updateNotifications = services.createRequest<
@@ -21,4 +29,5 @@ const updateNotifications = services.createRequest<
 }));
 
 requests.notifications = notifications;
+requests.loadMoreNotifications = loadMoreNotifications;
 requests.updateNotifications = updateNotifications;

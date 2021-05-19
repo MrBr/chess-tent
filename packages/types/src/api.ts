@@ -144,6 +144,7 @@ export type Requests = {
   >;
   coaches: RequestFetch<User, CoachesResponse>;
   notifications: RequestFetch<boolean | undefined, NotificationsResponse>;
+  loadMoreNotifications: RequestFetch<Pagination, NotificationsResponse>;
   updateNotifications: RequestFetch<UpdateNotificationsRequest, StatusResponse>;
   students: RequestFetch<User, StudentsResponse>;
   findTags: RequestFetch<string, TagsResponse>;

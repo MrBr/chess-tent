@@ -145,7 +145,7 @@ export const getConversationMessages = (
 
     const filterBy = lastDocumentTimestamp
       ? { $lt: `${conversationId}_${lastDocumentTimestamp}` }
-      : { _id: idRegex };
+      : idRegex;
 
     MessageModel.find({
       _id: filterBy,

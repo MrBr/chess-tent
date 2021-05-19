@@ -11,18 +11,21 @@ export default ({ close }: { close: () => void }) => {
   const [loadMoreNotifications, loading, noMore] = useLoadMoreNotifications();
 
   return (
-    <Modal show scrolalble close={close}>
+    <Modal show scrollable close={close}>
       <ModalBody>
         <Headline3 className="mt-0">Notifications</Headline3>
-        {notifications?.map(notification => (
-          <div key={notification.id} onClick={close}>
-            <NotificationRender
-              view="DropdownItem"
-              notification={notification}
-            />
-            <Dropdown.Divider />
-          </div>
-        ))}
+        {notifications
+          ?.splice(0)
+          .reverse()
+          .map(notification => (
+            <div key={notification.id} onClick={close}>
+              <NotificationRender
+                view="DropdownItem"
+                notification={notification}
+              />
+              <Dropdown.Divider />
+            </div>
+          ))}
         <LoadMore
           loadMore={loadMoreNotifications}
           loading={loading}

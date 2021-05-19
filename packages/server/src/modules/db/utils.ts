@@ -102,7 +102,7 @@ export const get$SetForArrayElemUpdate = (
 export const flattenBuckets = (buckets: any[], itemsKey: string) => {
   return buckets.reduce(
     (itemsAll: Record<string, any>, bucket: Record<string, any>) => {
-      return itemsAll.concat(bucket[itemsKey]);
+      return bucket[itemsKey].concat(itemsAll);
     },
     [],
   );

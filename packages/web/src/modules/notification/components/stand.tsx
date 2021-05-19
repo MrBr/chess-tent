@@ -51,15 +51,18 @@ export default () => {
       </Dropdown.Toggle>
       <Dropdown.Menu width={250}>
         {!!notifications ? (
-          notifications?.map(notification => (
-            <React.Fragment key={notification.id}>
-              <NotificationRender
-                view="DropdownItem"
-                notification={notification}
-              />
-              <Dropdown.Divider />
-            </React.Fragment>
-          ))
+          notifications
+            ?.splice(0)
+            .reverse()
+            .map(notification => (
+              <React.Fragment key={notification.id}>
+                <NotificationRender
+                  view="DropdownItem"
+                  notification={notification}
+                />
+                <Dropdown.Divider />
+              </React.Fragment>
+            ))
         ) : (
           <React.Fragment key="all-read">
             <Dropdown.Item>All read</Dropdown.Item>

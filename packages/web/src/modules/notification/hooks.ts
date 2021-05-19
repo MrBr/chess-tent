@@ -1,8 +1,8 @@
 import { hooks, requests } from '@application';
 import { Notification, TYPE_NOTIFICATION } from '@chess-tent/models';
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { RecordHookReturn } from '@types';
-import last from 'lodash/last';
+import first from 'lodash/first';
 import take from 'lodash/take';
 import { useApi } from '../api/hooks';
 
@@ -33,15 +33,9 @@ export const useActiveUserNotifications = (
     fetch();
   }, [fetch, loading, response, error, notifications]);
   const finalNotifications = limit ? take(notifications, limit) : notifications;
-  const sortedNotifications = useMemo(
-    () =>
-      (finalNotifications || []).sort(
-        (a: Notification, b: Notification) => b.timestamp - a.timestamp,
-      ),
-    [finalNotifications],
-  );
+
   return [
-    sortedNotifications,
+    finalNotifications,
     setNotifications,
     resetNotifications,
     notificationsMeta,
@@ -62,15 +56,15 @@ export const useLoadMoreNotifications = (): [() => void, boolean, boolean] => {
       if (response.data.length === 0) {
         setNoMore(true);
       }
-      setNotifications([...(notifications || []), ...response.data]);
+      setNotifications([...response.data, ...(notifications || [])]);
     }
   }, [notifications, reset, response, setNotifications]);
   const loadMore = useCallback(() => {
-    const lastNotification = last(notifications);
-    if (noMore || loading || !lastNotification) {
+    const firstNotification = first(notifications);
+    if (noMore || loading || !firstNotification) {
       return;
     }
-    fetch(lastNotification.timestamp);
+    fetch(firstNotification.timestamp);
   }, [fetch, loading, noMore, notifications]);
   return [loadMore, loading || !!response, noMore];
 };

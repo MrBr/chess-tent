@@ -11,7 +11,7 @@ export default ({ close }: { close: () => void }) => {
   const [loadMoreNotifications, loading, noMore] = useLoadMoreNotifications();
 
   return (
-    <Modal show close={close}>
+    <Modal show scrolalble close={close}>
       <ModalBody>
         <Headline3 className="mt-0">Notifications</Headline3>
         {notifications?.map(notification => (

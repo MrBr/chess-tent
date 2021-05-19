@@ -29,9 +29,9 @@ application.register(
   },
 );
 application.register(
-  () => import('./components/see-all'),
+  () => import('./components/notifications-modal'),
   module => {
-    application.components.NotificationSeeAllModal = module.default;
+    application.components.NotificationsModal = module.default;
   },
 );
 application.register(

@@ -2,7 +2,7 @@ import React from 'react';
 import { components, hooks, ui, requests, state } from '@application';
 
 const { Icon, Dropdown, Absolute, Dot } = ui;
-const { NotificationRender, NotificationSeeAllModal } = components;
+const { NotificationRender, NotificationsModal } = components;
 const {
   useActiveUserNotifications,
   useApi,
@@ -67,7 +67,7 @@ export default () => {
         {!!notifications && (
           <Dropdown.Item
             onClick={() =>
-              promptModal(close => <NotificationSeeAllModal close={close} />)
+              promptModal(close => <NotificationsModal close={close} />)
             }
           >
             See all

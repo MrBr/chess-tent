@@ -91,20 +91,18 @@ export const updateNotifications = (
   return new Promise<void>(resolve => {
     console.log('updateNotifications filter', filter);
     console.log('updateNotifications $set', $set);
-    const setPrefix = 'notifications.$[elem]';
-    // Transform to MongoDB format for array elem update
-    // More info: https://docs.mongodb.com/manual/reference/operator/update/positional-filtered/#examples
-    const newSet: Record<string, any> = {};
-    Object.entries($set).forEach(
-      ([key, value]) => (newSet[`${setPrefix}.${key}`] = value),
+    const elemName = 'elem';
+    const newSet = db.get$SetForArrayElemUpdate(
+      $set,
+      'notifications',
+      elemName,
     );
-    console.log('updateNotifications newSet', newSet);
     NotificationModel.updateMany(
       { user: filter.user },
       { $set: newSet },
       {
         multi: true,
-        arrayFilters: [{ 'elem.id': { $in: filter._id } }],
+        arrayFilters: [{ [`${elemName}.id`]: { $in: filter._id } }],
       },
     ).exec(err => {
       if (err) {

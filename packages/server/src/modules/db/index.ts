@@ -7,6 +7,7 @@ import {
   inQuery,
   orQueries,
   dotNotate,
+  get$SetForArrayElemUpdate,
   flattenBuckets,
   getBucketingIdFilterRegex,
 } from './utils';
@@ -41,6 +42,7 @@ application.db.createModel = createModel;
 application.db.orQueries = orQueries;
 application.db.inQuery = inQuery;
 application.db.dotNotate = dotNotate;
+application.db.get$SetForArrayElemUpdate = get$SetForArrayElemUpdate;
 application.db.flattenBuckets = flattenBuckets;
 application.db.getBucketingIdFilterRegex = getBucketingIdFilterRegex;
 application.db.createAdapter = createAdapter;

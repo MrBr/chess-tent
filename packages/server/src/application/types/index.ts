@@ -60,6 +60,11 @@ export type DB = {
     target?: Record<string, any>,
     prefix?: string,
   ) => Record<string, any>;
+  get$SetForArrayElemUpdate: (
+    setObject: Record<string, any>,
+    arrayName: string,
+    elementName: string,
+  ) => Record<string, any>;
   flattenBuckets: (buckets: Record<string, any>[], itemsKey: string) => any;
   getBucketingIdFilterRegex: (parentId: string) => RegExp;
   createAdapter<T extends EntityDocument>(

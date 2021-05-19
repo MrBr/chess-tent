@@ -15,13 +15,13 @@ export default ({ close }: { close: () => void }) => {
       <ModalBody>
         <Headline3 className="mt-0">Notifications</Headline3>
         {notifications?.map(notification => (
-          <React.Fragment key={notification.id}>
+          <div key={notification.id} onClick={close}>
             <NotificationRender
               view="DropdownItem"
               notification={notification}
             />
             <Dropdown.Divider />
-          </React.Fragment>
+          </div>
         ))}
         <LoadMore
           loadMore={loadMoreNotifications}

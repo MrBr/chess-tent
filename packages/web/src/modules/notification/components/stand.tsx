@@ -12,8 +12,10 @@ const {
 
 const { actions } = state;
 
+const NOTIFICATIONS_LIMIT = 5;
+
 export default () => {
-  const [notifications] = useActiveUserNotifications();
+  const [notifications] = useActiveUserNotifications(NOTIFICATIONS_LIMIT);
   const { fetch: updateNotifications } = useApi(requests.updateNotifications);
   const dispatch = useDispatch();
   const promptModal = usePromptModal();

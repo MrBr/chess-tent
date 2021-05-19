@@ -43,7 +43,10 @@ export const getNotifications = (filters: {
           (item: Notification) => item.read === filters.read,
         );
         console.log('getNotifications filteredResult', filteredResult);
-        resolve(take(filteredResult, filters.limit));
+        const finalResult = filters.limit
+          ? take(filteredResult, filters.limit)
+          : filteredResult;
+        resolve(finalResult);
       })
       .catch(err => {
         throw err;

@@ -10,7 +10,9 @@ const notifications = services.createRequest<
   boolean | undefined,
   NotificationsResponse
 >('GET', (read?: boolean, limit?: number) => ({
-  url: `/notifications?limit=${limit || '5'}${!!read ? 'read=true' : ''}`,
+  url: `/notifications?${!!limit ? `limit=${limit}` : ''}${
+    !!read ? 'read=true' : ''
+  }`,
 }));
 
 const loadMoreNotifications = services.createRequest<

@@ -99,6 +99,26 @@ export const get$SetForArrayElemUpdate = (
   return newSet;
 };
 
+export const getOptionsForArrayElemUpdate = (
+  elementName: string,
+  ids: string[],
+) => ({
+  multi: true,
+  arrayFilters: [{ [`${elementName}.id`]: { $in: ids } }],
+});
+
+export const get$SetAndOptionsForArrayElemUpdate = (
+  setObject: Record<string, any>,
+  arrayName: string,
+  ids: string[],
+) => {
+  const elementName = 'elem';
+  return {
+    $set: get$SetForArrayElemUpdate(setObject, arrayName, elementName),
+    options: getOptionsForArrayElemUpdate(elementName, ids),
+  };
+};
+
 export const flattenBuckets = (buckets: any[], itemsKey: string) => {
   return buckets.reduce(
     (itemsAll: Record<string, any>, bucket: Record<string, any>) => {

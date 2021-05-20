@@ -13,7 +13,6 @@ export const getNotifications = (filters: {
   lastDocumentTimestamp?: number;
 }): Promise<Notification[]> =>
   new Promise(resolve => {
-    console.log('getNotifications filters', filters);
     const idRegex = db.getBucketingIdFilterRegex(filters.user);
 
     const filterBy = filters.lastDocumentTimestamp
@@ -36,13 +35,10 @@ export const getNotifications = (filters: {
       .sort({ _id: -1 })
       .limit(bucketLimit)
       .then(notifications => {
-        console.log('getNotifications notifications', notifications);
         const result = db.flattenBuckets(notifications, 'notifications');
-        console.log('getNotifications result', result);
         const filteredResult = result.filter(
           (item: Notification) => item.read === filters.read,
         );
-        console.log('getNotifications filteredResult', filteredResult);
         const finalResult = filters.limit
           ? take(filteredResult, filters.limit)
           : filteredResult;
@@ -84,21 +80,15 @@ export const updateNotifications = (
   $set: UpdateNotificationsRequest['updates'],
 ) => {
   return new Promise<void>(resolve => {
-    console.log('updateNotifications filter', filter);
-    console.log('updateNotifications $set', $set);
-    const elemName = 'elem';
-    const newSet = db.get$SetForArrayElemUpdate(
+    const { $set: newSet, options } = db.get$SetAndOptionsForArrayElemUpdate(
       $set,
       'notifications',
-      elemName,
+      filter._id,
     );
     NotificationModel.updateMany(
       { user: filter.user },
       { $set: newSet },
-      {
-        multi: true,
-        arrayFilters: [{ [`${elemName}.id`]: { $in: filter._id } }],
-      },
+      options,
     ).exec(err => {
       if (err) {
         throw err;

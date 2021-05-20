@@ -44,12 +44,7 @@ export const addMessageToConversation = (
         count: { $lt: MESSAGES_BUCKET_LIMIT },
       },
       {
-        $push: {
-          messages: {
-            $each: [updatedMessage],
-            $position: 0,
-          },
-        },
+        $push: { messages: updatedMessage },
         $inc: { count: 1 },
         $set: { conversationId },
         $setOnInsert: {

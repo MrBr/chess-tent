@@ -4,7 +4,7 @@ import { UpdateNotificationsRequest } from '@chess-tent/types';
 import take from 'lodash/take';
 import { depopulate, NotificationModel } from './model';
 
-const NOTIFICATIONS_BUCKET_LIMIT = 1;
+const NOTIFICATIONS_BUCKET_LIMIT = 50;
 
 export const getNotifications = (filters: {
   user: User['id'];

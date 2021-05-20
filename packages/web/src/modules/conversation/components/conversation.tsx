@@ -9,6 +9,7 @@ import {
 } from '@chess-tent/models';
 import styled from '@emotion/styled';
 import { DateTime } from 'luxon';
+import last from 'lodash/last';
 import { useLoadMoreMessages } from '../hooks';
 
 const {
@@ -57,12 +58,13 @@ export default styled(
     const { messages } = conversation;
 
     useEffect(() => {
+      const lastMessage = last(messages);
       if (
-        messages[0] &&
-        !messages[0].read &&
-        messages[0].owner !== activeUser.id
+        lastMessage &&
+        !lastMessage.read &&
+        lastMessage.owner !== activeUser.id
       ) {
-        const updatedMessage = updateMessage(messages[0], {
+        const updatedMessage = updateMessage(lastMessage, {
           read: true,
         });
         dispatch(
@@ -111,7 +113,7 @@ export default styled(
               const messageElement =
                 message.owner !== activeUser.id ? (
                   <Container key={message.id} className="pl-0">
-                    {messages[index + 1]?.owner !== message.owner && (
+                    {messages[index - 1]?.owner !== message.owner && (
                       <>
                         <UserAvatar
                           size="small"
@@ -141,7 +143,7 @@ export default styled(
                     {message.message}
                   </ActiveUserMessages>
                 );
-              result.unshift(messageElement);
+              result.push(messageElement);
               return result;
             }, [])}
           </Col>

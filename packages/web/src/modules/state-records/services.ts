@@ -1,8 +1,9 @@
 import { RecordMeta, RecordType, RecordValue } from '@chess-tent/types';
 import { RecordService } from '@types';
 import { MiddlewareAPI } from 'redux';
+import { Entity } from '@chess-tent/models';
 import isNil from 'lodash/isNil';
-import { useRecord } from './hooks';
+import { useRecord, useCollectionRecord } from './hooks';
 import { updateRecordAction, updateRecordValueAction } from './state/actions';
 import { selectRecord } from './state/selectors';
 
@@ -10,6 +11,11 @@ export const createRecordHook = <T extends RecordValue>(
   recordKey: string,
   type: RecordMeta['type'],
 ) => () => useRecord<T>(recordKey, type);
+
+export const createCollectionRecordHook = <T extends Entity>(
+  recordKey: string,
+  type: RecordMeta['type'],
+) => () => useCollectionRecord<T>(recordKey, type);
 
 export const createRecordService = <T extends RecordValue>(
   recordKey: string,

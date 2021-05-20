@@ -6,9 +6,9 @@ import {
   TYPE_LESSON,
   TYPE_ACTIVITY,
 } from '@chess-tent/models';
-import { hooks, requests } from '@application';
+import { hooks, requests, services } from '@application';
 import { useCallback, useContext, useEffect } from 'react';
-import { Hooks, LessonActivity, RecordHookReturn } from '@types';
+import { Hooks, LessonActivity, CollectionRecordHookReturn } from '@types';
 import { editorContext } from './context';
 
 const { useApi, useRecord } = hooks;
@@ -26,28 +26,38 @@ export const useUpdateLessonStepState = <T extends Step>(
 export const useUserLessonRecord = (user: User) =>
   hooks.useRecord<Lesson[]>(`${user.id}-lessons`, TYPE_LESSON);
 
+export const useUserTrainingsRecord = (user: User) =>
+  services.createCollectionRecordHook<LessonActivity>(
+    `trainings-${user.id}`,
+    TYPE_ACTIVITY,
+  )();
+
 export const useUserTrainings = (
   user: User,
-): RecordHookReturn<LessonActivity[]> => {
-  const [trainings, setTrainings, resetTrainings, trainingsMeta] = useRecord<
-    LessonActivity[]
-  >(`trainings-${user.id}`, TYPE_ACTIVITY);
-  const { fetch, response, loading, error, reset } = useApi(
-    requests.activities,
-  );
+): CollectionRecordHookReturn<LessonActivity> => {
+  const [
+    trainings,
+    setTrainings,
+    pushTraining,
+    resetTrainings,
+    trainingsMeta,
+  ] = useUserTrainingsRecord(user);
+  const { fetch, response, loading, error } = useApi(requests.activities);
   useEffect(() => {
-    if (!response || trainings) {
+    console.log('response', response);
+    if (!response) {
       return;
     }
     setTrainings(response.data as LessonActivity[]);
-  }, [reset, response, setTrainings, trainings]);
+  }, [response, setTrainings]);
   useEffect(() => {
-    if (loading || response || error || trainings) {
+    console.log(loading, response, error);
+    if (loading || response || error) {
       return;
     }
     fetch({ owner: user.id, users: user.id, state: { training: true } });
-  }, [fetch, loading, response, error, trainings, user]);
-  return [trainings, setTrainings, resetTrainings, trainingsMeta];
+  }, [fetch, loading, response, error, user]);
+  return [trainings, setTrainings, pushTraining, resetTrainings, trainingsMeta];
 };
 
 export const useLessons: Hooks['useLessons'] = (

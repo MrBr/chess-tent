@@ -24,6 +24,7 @@ export const SYNC_ACTION = 'SYNC_ACTION';
 
 export const UPDATE_RECORD_VALUE = 'UPDATE_RECORD_VALUE';
 export const UPDATE_RECORD = 'UPDATE_RECORD';
+export const PUSH_RECORD = 'PUSH_RECORD';
 export const DELETE_RECORD = 'DELETE_RECORD';
 
 export const SEND_NOTIFICATION = 'SEND_NOTIFICATION';
@@ -143,6 +144,11 @@ export type RecordUpdateAction = Action<
   { value: RecordValue; meta?: Partial<RecordMeta> },
   { key: string }
 >;
+export type RecordPushAction = Action<
+  typeof PUSH_RECORD,
+  { value: RecordValue; },
+  { key: string }
+>;
 export type RecordUpdateValueAction = Action<
   typeof UPDATE_RECORD_VALUE,
   RecordType['value'],
@@ -157,6 +163,7 @@ export type RecordDeleteAction = Action<
 
 export type RecordAction =
   | RecordUpdateAction
+  | RecordPushAction
   | RecordDeleteAction
   | RecordUpdateValueAction;
 

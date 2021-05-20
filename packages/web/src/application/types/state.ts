@@ -22,6 +22,7 @@ import {
   RecordMeta,
   RecordType,
   RecordUpdateAction,
+  RecordPushAction,
   RecordUpdateValueAction,
   RecordValue,
   SendMessageAction,
@@ -55,6 +56,10 @@ export type State = {
       entity: T,
       meta?: Partial<RecordMeta>,
     ) => RecordUpdateAction;
+    pushRecord: <T extends RecordValue>(
+      recordKey: string,
+      entity: T,
+    ) => RecordPushAction;
     updateRecordValue: (
       recordKey: string,
       recordValue: RecordType['value'],

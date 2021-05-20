@@ -7,7 +7,7 @@ import {
   User,
 } from '@chess-tent/models';
 import { RecordHookReturn } from '@types';
-import last from 'lodash/last';
+import first from 'lodash/first';
 
 const { useApi, useRecord, useDispatch } = hooks;
 const {
@@ -34,17 +34,17 @@ export const useLoadMoreMessages = (
       dispatch(
         updateEntities({
           ...conversation,
-          messages: [...conversation.messages, ...response.data],
+          messages: [...response.data, ...conversation.messages],
         }),
       );
     }
   }, [response, dispatch, conversation, reset]);
   const loadMore = useCallback(() => {
-    if (noMore || loading) {
+    const firstMessage = first(conversation.messages);
+    if (noMore || loading || !firstMessage) {
       return;
     }
-    const lastMessage = last(conversation.messages);
-    fetch(conversation.id, lastMessage?.timestamp);
+    fetch(conversation.id, firstMessage.timestamp);
   }, [noMore, loading, conversation.messages, conversation.id, fetch]);
   return [loadMore, loading || !!response, noMore];
 };

@@ -19,17 +19,17 @@ const createUseMentorship = (type: 'coaches' | 'students') => (
     type === 'coaches' ? requests.coaches : requests.students,
   );
   useEffect(() => {
-    if (!response || mentorship) {
+    if (!response) {
       return;
     }
     setMentorship(response.data);
-  }, [reset, response, setMentorship, mentorship]);
+  }, [reset, response, setMentorship]);
   useEffect(() => {
-    if (loading || response || error || mentorship) {
+    if (loading || response || error) {
       return;
     }
     fetch(user);
-  }, [fetch, loading, response, error, mentorship, user]);
+  }, [fetch, loading, response, error, user]);
   return [mentorship, setMentorship, resetMentorship, mentorshipMeta];
 };
 

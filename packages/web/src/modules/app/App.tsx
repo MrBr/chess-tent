@@ -7,9 +7,9 @@ export default () => (
   <>
     <MobileRoot />
     <StateProvider>
-      <Provider>
-        <Router />
-      </Provider>
+      <Router>
+        {(routes: React.ReactNode) => <Provider>{routes}</Provider>}
+      </Router>
     </StateProvider>
   </>
 );

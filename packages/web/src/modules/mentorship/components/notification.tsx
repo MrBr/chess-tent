@@ -3,7 +3,7 @@ import { NotificationComponent } from '@types';
 import { Notification } from '@chess-tent/models';
 import { hooks, ui } from '@application';
 
-const { ToastHeader, ToastBody, Button, Text, Dropdown } = ui;
+const { ToastHeader, ToastBody, Text, Dropdown, Button } = ui;
 const { useHistory } = hooks;
 
 export const Toast: NotificationComponent<
@@ -11,6 +11,9 @@ export const Toast: NotificationComponent<
     state: { text: string };
   }
 > = ({ notification }) => {
+  const history = useHistory();
+  const { text } = notification.state;
+
   return (
     <>
       <ToastHeader>
@@ -19,12 +22,13 @@ export const Toast: NotificationComponent<
         </Text>
       </ToastHeader>
       <ToastBody>
-        <Text>{notification.state.text}</Text>
-        <Button size="extra-small" className="mr-3">
-          Accept
-        </Button>
-        <Button size="extra-small" variant="secondary">
-          Preview
+        <Text>{text}</Text>
+        <Button
+          size="extra-small"
+          variant="secondary"
+          onClick={() => history.push('/me/students')}
+        >
+          See more
         </Button>
       </ToastBody>
     </>
@@ -37,12 +41,13 @@ export const DropdownItem: NotificationComponent<
   }
 > = ({ notification }) => {
   const history = useHistory();
+  const { text } = notification.state;
   return (
     <Dropdown.Item onClick={() => history.push('/me/students')}>
       <Text weight={700} fontSize="small">
         Mentorship request
       </Text>
-      <Text fontSize="extra-small">{notification.state.text}</Text>
+      <Text fontSize="extra-small">{text}</Text>
     </Dropdown.Item>
   );
 };

@@ -29,6 +29,12 @@ application.register(
   },
 );
 application.register(
+  () => import('./components/notifications-modal'),
+  module => {
+    application.components.NotificationsModal = module.default;
+  },
+);
+application.register(
   () => import('./provider'),
   module => {
     application.services.pushToast = module.pushToast;

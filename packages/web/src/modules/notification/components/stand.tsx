@@ -1,16 +1,25 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+import reverse from 'lodash/reverse';
 import { components, hooks, ui, requests, state } from '@application';
 
 const { Icon, Dropdown, Absolute, Dot } = ui;
-const { NotificationRender } = components;
-const { useActiveUserNotifications, useApi, useDispatch } = hooks;
+const { NotificationRender, NotificationsModal } = components;
+const {
+  useActiveUserNotifications,
+  useApi,
+  useDispatch,
+  usePromptModal,
+} = hooks;
 
 const { actions } = state;
 
+const NOTIFICATIONS_LIMIT = 5;
+
 export default () => {
-  const [notifications] = useActiveUserNotifications();
+  const [notifications] = useActiveUserNotifications(NOTIFICATIONS_LIMIT);
   const { fetch: updateNotifications } = useApi(requests.updateNotifications);
   const dispatch = useDispatch();
+  const promptModal = usePromptModal();
 
   const handleUnseenNotifications = () => {
     const unseenNotifications = notifications?.filter(
@@ -31,6 +40,11 @@ export default () => {
   };
 
   const unseen = notifications?.some(notification => !notification.seen);
+  const reversedNotifications = useMemo(
+    () => (notifications ? reverse([...notifications]) : null),
+    [notifications],
+  );
+
   return (
     <Dropdown className="mr-4" onClick={handleUnseenNotifications}>
       <Dropdown.Toggle id="notification-stand" collapse>
@@ -42,8 +56,8 @@ export default () => {
         <Icon type="notification" />
       </Dropdown.Toggle>
       <Dropdown.Menu width={250}>
-        {!!notifications ? (
-          notifications?.map(notification => (
+        {!!reversedNotifications &&
+          reversedNotifications?.map(notification => (
             <React.Fragment key={notification.id}>
               <NotificationRender
                 view="DropdownItem"
@@ -51,14 +65,16 @@ export default () => {
               />
               <Dropdown.Divider />
             </React.Fragment>
-          ))
-        ) : (
-          <React.Fragment key="all-read">
-            <Dropdown.Item>All read</Dropdown.Item>
-            <Dropdown.Divider />
-          </React.Fragment>
+          ))}
+        {!!notifications && (
+          <Dropdown.Item
+            onClick={() =>
+              promptModal(close => <NotificationsModal close={close} />)
+            }
+          >
+            See all
+          </Dropdown.Item>
         )}
-        <Dropdown.Item>See all</Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>
   );

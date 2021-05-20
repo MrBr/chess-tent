@@ -61,7 +61,9 @@ export type Hooks = {
   useTags: () => Tag[];
   useUser: (userId: User['id']) => User;
   useActiveUserRecord: () => NonNullableRecordReturn<User>;
-  useActiveUserNotifications: () => RecordHookReturn<Notification[]>;
+  useActiveUserNotifications: (
+    limit?: number,
+  ) => RecordHookReturn<Notification[]>;
   useUserTrainings: (user: User) => RecordHookReturn<LessonActivity[]>;
   useUserLessonsRecord: (user: User) => RecordHookReturn<Lesson[]>;
   useConversationParticipant: () => RecordHookReturn<User>;

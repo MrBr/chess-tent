@@ -245,6 +245,10 @@ export type NotificationComponent<T extends Notification> = ComponentType<{
   notification: T;
 }>;
 
+export type RenderPropComponentType = ComponentType<{
+  children(children: React.ReactNode): React.ReactNode;
+}>;
+
 export type Components = {
   App: ComponentType;
   MobileRoot: ComponentType;
@@ -269,7 +273,7 @@ export type Components = {
   LessonPlayground: LessonPlayground;
   StepTag: StepTag;
   StepMove: StepMove;
-  Router: ComponentType;
+  Router: RenderPropComponentType;
   Switch: ComponentType;
   Redirect: ComponentType<RedirectProps>;
   Route: ComponentType<RouteProps>;
@@ -386,6 +390,9 @@ export type Components = {
   NotificationRender: ComponentType<{
     notification: Notification;
     view: NotificationView;
+  }>;
+  NotificationsModal: ComponentType<{
+    close: () => void;
   }>;
   Invitation: ComponentType;
 };

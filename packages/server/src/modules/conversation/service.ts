@@ -44,12 +44,7 @@ export const addMessageToConversation = (
         count: { $lt: MESSAGES_BUCKET_LIMIT },
       },
       {
-        $push: {
-          messages: {
-            $each: [updatedMessage],
-            $position: 0,
-          },
-        },
+        $push: { messages: updatedMessage },
         $inc: { count: 1 },
         $set: { conversationId },
         $setOnInsert: {
@@ -145,7 +140,7 @@ export const getConversationMessages = (
 
     const filterBy = lastDocumentTimestamp
       ? { $lt: `${conversationId}_${lastDocumentTimestamp}` }
-      : { _id: idRegex };
+      : idRegex;
 
     MessageModel.find({
       _id: filterBy,

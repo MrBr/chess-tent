@@ -83,10 +83,46 @@ export const dotNotate = (
   return target;
 };
 
+// Transform to MongoDB format for array elem update
+// More info: https://docs.mongodb.com/manual/reference/operator/update/positional-filtered/#examples
+export const get$SetForArrayElemUpdate = (
+  setObject: Record<string, any>,
+  arrayName: string,
+  elementName: string,
+) => {
+  const setPrefix = `${arrayName}.$[${elementName}]`;
+  const newSet: Record<string, any> = {};
+  Object.entries(setObject).forEach(
+    ([key, value]) => (newSet[`${setPrefix}.${key}`] = value),
+  );
+  console.log('get$SetForArrayElemUpdate newSet', newSet);
+  return newSet;
+};
+
+export const getOptionsForArrayElemUpdate = (
+  elementName: string,
+  ids: string[],
+) => ({
+  multi: true,
+  arrayFilters: [{ [`${elementName}.id`]: { $in: ids } }],
+});
+
+export const get$SetAndOptionsForArrayElemUpdate = (
+  setObject: Record<string, any>,
+  arrayName: string,
+  ids: string[],
+) => {
+  const elementName = 'elem';
+  return {
+    $set: get$SetForArrayElemUpdate(setObject, arrayName, elementName),
+    options: getOptionsForArrayElemUpdate(elementName, ids),
+  };
+};
+
 export const flattenBuckets = (buckets: any[], itemsKey: string) => {
   return buckets.reduce(
     (itemsAll: Record<string, any>, bucket: Record<string, any>) => {
-      return itemsAll.concat(bucket[itemsKey]);
+      return bucket[itemsKey].concat(itemsAll);
     },
     [],
   );

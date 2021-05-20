@@ -27,7 +27,7 @@ export const ToastProvider: ComponentType = ({ children }) => {
             key={index}
             onClose={() => setToasts(toasts.filter((item, i) => i !== index))}
             autohide
-            delay={4000}
+            delay={7500}
           >
             {toast}
           </Toast>

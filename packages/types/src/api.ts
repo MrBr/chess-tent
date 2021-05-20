@@ -29,7 +29,7 @@ export type LessonsRequest = {
 export type MyLessonsRequest = Omit<LessonsRequest, 'users' | 'owner'>;
 export type UpdateNotificationsRequest = {
   ids: Notification['id'][];
-  updates: Partial<Pick<Notification, 'seen' | 'read' | 'state' | 'time'>>;
+  updates: Partial<Pick<Notification, 'seen' | 'read' | 'state' | 'timestamp'>>;
 };
 export type Pagination = number | undefined;
 
@@ -144,6 +144,7 @@ export type Requests = {
   >;
   coaches: RequestFetch<User, CoachesResponse>;
   notifications: RequestFetch<boolean | undefined, NotificationsResponse>;
+  loadMoreNotifications: RequestFetch<Pagination, NotificationsResponse>;
   updateNotifications: RequestFetch<UpdateNotificationsRequest, StatusResponse>;
   students: RequestFetch<User, StudentsResponse>;
   findTags: RequestFetch<string, TagsResponse>;

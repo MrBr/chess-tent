@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from 'react';
 import { components, hooks, state, ui, utils } from '@application';
 import { createConversation, User } from '@chess-tent/models';
-import { sortBy } from 'lodash';
+import { sortBy, last } from 'lodash';
 import Conversation from './conversation';
 import { selectConversationByUsers } from '../state/selectors';
 import { useUserConversations } from '../hooks';
@@ -46,11 +46,11 @@ export default () => {
   const sortedConversations = useMemo(
     () =>
       sortBy(conversations, ({ messages }) => {
-        if (messages.length === 0) {
+        const lastMessage = last(messages);
+        if (messages.length === 0 || !lastMessage) {
           return 0;
         }
-
-        return messages[0].read || messages[0].owner === activeUser.id ? 1 : 0;
+        return lastMessage.read || lastMessage.owner === activeUser.id ? 1 : 0;
       }),
     [activeUser.id, conversations],
   );
@@ -70,6 +70,7 @@ export default () => {
         const participant =
           conversation.users.find(user => user.id !== activeUser.id) ||
           (conversation.users[0] as User); // User sends messages to himself
+        const lastMessage = last(conversation.messages);
         return (
           <Row
             onClick={() => setParticipant(participant)}
@@ -93,13 +94,12 @@ export default () => {
                 fontSize="small"
                 color="title"
                 weight={
-                  conversation.messages[0]?.read ||
-                  conversation.messages[0]?.owner === activeUser.id
+                  lastMessage?.read || lastMessage?.owner === activeUser.id
                     ? 400
                     : 700
                 }
               >
-                {conversation.messages[0]?.message}
+                {lastMessage?.message}
               </Text>
             </Col>
           </Row>

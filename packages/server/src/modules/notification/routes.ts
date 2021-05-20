@@ -9,6 +9,8 @@ application.service.registerGetRoute(
   toLocals('filters', (req, res) => ({
     user: res.locals.me.id,
     read: !!req.query.read,
+    limit: req.query.limit,
+    lastDocumentTimestamp: req.query.lastDocumentTimestamp,
   })),
   getNotifications,
   sendData('notifications'),

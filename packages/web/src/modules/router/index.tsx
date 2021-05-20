@@ -1,6 +1,6 @@
 import React, { ComponentType } from 'react';
 import application, { ui } from '@application';
-import { Components, Services } from '@types';
+import { Components, RenderPropComponentType, Services } from '@types';
 import isPropValid from '@emotion/is-prop-valid';
 import {
   Switch,
@@ -35,16 +35,18 @@ const history = new Proxy(createBrowserHistory(), {
   },
 });
 
-const Router: ComponentType = () => {
+const Router: RenderPropComponentType = ({ children }) => {
   return (
     <BaseRouter history={history}>
-      <Switch>
-        <>
-          {routes.map((Page, index) => (
-            <Page key={index} />
-          ))}
-        </>
-      </Switch>
+      {children(
+        <Switch>
+          <>
+            {routes.map((Page, index) => (
+              <Page key={index} />
+            ))}
+          </>
+        </Switch>,
+      )}
     </BaseRouter>
   );
 };

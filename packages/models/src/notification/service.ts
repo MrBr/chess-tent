@@ -16,7 +16,7 @@ const createNotification = (
   notificationType,
   read: false,
   seen: false,
-  time: new Date(),
+  timestamp: Date.now(),
   state,
 });
 

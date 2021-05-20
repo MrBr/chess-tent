@@ -15,7 +15,7 @@ export const notificationMiddleware: Middleware = store => next => action => {
     const notification = action.payload;
     const { record, updateValue } = notificationRecordService(store);
     store.dispatch(updateEntities(notification));
-    updateValue([notification.id, ...(record.value || [])]);
+    updateValue([...(record.value || []), notification.id]);
   }
   if (
     action.type === SEND_NOTIFICATION &&

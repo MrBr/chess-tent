@@ -3,7 +3,7 @@ import { Notification, TYPE_NOTIFICATION } from '@chess-tent/models';
 import { useState, useEffect, useCallback } from 'react';
 import { RecordHookReturn } from '@types';
 import first from 'lodash/first';
-import take from 'lodash/take';
+import takeRight from 'lodash/takeRight';
 import { useApi } from '../api/hooks';
 
 const { useRecord } = hooks;
@@ -32,7 +32,9 @@ export const useActiveUserNotifications = (
     }
     fetch();
   }, [fetch, loading, response, error, notifications]);
-  const finalNotifications = limit ? take(notifications, limit) : notifications;
+  const finalNotifications = limit
+    ? takeRight(notifications, limit)
+    : notifications;
 
   return [
     finalNotifications,

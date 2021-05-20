@@ -1,4 +1,5 @@
 import application from '@application';
+import { TYPE_ACTIVITY } from '@chess-tent/models';
 import { activitySchema } from './model';
 
 application.model.activitySchema = activitySchema;
@@ -19,6 +20,15 @@ application.register(
     application.services.createActivityStepState =
       module.createActivityStepState;
     application.services.createActivityComment = module.createActivityComment;
+  },
+);
+application.register(
+  () => import('./components/notification'),
+  module => {
+    application.services.registerNotificationRenderer(TYPE_ACTIVITY, {
+      Toast: module.Toast,
+      DropdownItem: module.DropdownItem,
+    });
   },
 );
 application.register(() => import('./requests'));

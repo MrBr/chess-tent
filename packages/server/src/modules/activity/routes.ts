@@ -1,4 +1,5 @@
 import application, { middleware } from '@application';
+import { TYPE_ACTIVITY } from '@chess-tent/models';
 import {
   canEditActivity,
   getActivity,
@@ -7,7 +8,14 @@ import {
   updateActivity,
 } from './middleware';
 
-const { identify, sendData, sendStatusOk, toLocals } = middleware;
+const {
+  identify,
+  sendData,
+  sendStatusOk,
+  toLocals,
+  createNotification,
+  sendNotification,
+} = middleware;
 
 application.service.registerPostRoute(
   '/activity/save',
@@ -15,6 +23,17 @@ application.service.registerPostRoute(
   toLocals('activity', req => req.body),
   canEditActivity,
   saveActivity,
+
+  // Notification flow
+  toLocals('user', (req, res) => res.locals.activity.owner),
+  toLocals('notificationType', TYPE_ACTIVITY),
+  toLocals('state', (req, res) => ({
+    activityId: res.locals.activity.id,
+    activityTitle: res.locals.activity.subject.state.title,
+  })),
+  createNotification,
+  sendNotification,
+
   sendStatusOk,
 );
 application.service.registerPostRoute(

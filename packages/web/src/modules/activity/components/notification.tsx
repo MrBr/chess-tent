@@ -1,0 +1,57 @@
+import React from 'react';
+import { NotificationComponent } from '@types';
+import { Notification } from '@chess-tent/models';
+import { hooks, ui } from '@application';
+
+const { ToastHeader, ToastBody, Text, Dropdown, Button } = ui;
+const { useHistory } = hooks;
+
+const getNotificationText = (activityTitle: string) => {
+  return `${activityTitle} has been assigned to you. You can start with practice.`;
+};
+
+export const Toast: NotificationComponent<
+  Notification & {
+    state: { activityId: string; activityTitle: string };
+  }
+> = ({ notification }) => {
+  const history = useHistory();
+  const { activityId, activityTitle } = notification.state;
+
+  return (
+    <>
+      <ToastHeader>
+        <Text weight={700} className="mb-0">
+          New Activity
+        </Text>
+      </ToastHeader>
+      <ToastBody>
+        <Text>{getNotificationText(activityTitle)}</Text>
+        <Button
+          size="extra-small"
+          variant="secondary"
+          onClick={() => history.push(`/activity/${activityId}`)}
+        >
+          Start
+        </Button>
+      </ToastBody>
+    </>
+  );
+};
+
+export const DropdownItem: NotificationComponent<
+  Notification & {
+    state: { activityId: string; activityTitle: string };
+  }
+> = ({ notification }) => {
+  const history = useHistory();
+  const { activityId, activityTitle } = notification.state;
+  return (
+    <Dropdown.Item onClick={() => history.push(`/activity/${activityId}`)}>
+      <Text weight={700} fontSize="small">
+        New Activity
+      </Text>
+      <Text fontSize="extra-small">{getNotificationText(activityTitle)}</Text>
+    </Dropdown.Item>
+  );
+};

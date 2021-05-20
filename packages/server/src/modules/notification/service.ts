@@ -1,7 +1,7 @@
 import { db } from '@application';
 import { User, Notification, TYPE_USER } from '@chess-tent/models';
 import { UpdateNotificationsRequest } from '@chess-tent/types';
-import take from 'lodash/take';
+import takeRight from 'lodash/take';
 import { depopulate, NotificationModel } from './model';
 
 const NOTIFICATIONS_BUCKET_LIMIT = 50;
@@ -40,7 +40,7 @@ export const getNotifications = (filters: {
           (item: Notification) => item.read === filters.read,
         );
         const finalResult = filters.limit
-          ? take(filteredResult, filters.limit)
+          ? takeRight(filteredResult, filters.limit)
           : filteredResult;
         resolve(finalResult);
       })

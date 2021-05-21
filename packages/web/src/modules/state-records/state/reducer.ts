@@ -23,23 +23,13 @@ export const records = (state: RecordState = {}, action: RecordAction) => {
       };
     }
     case PUSH_RECORD: {
-      const previousValue = state[action.meta.key].value;
+      const previousValue = (state[action.meta.key].value as []) || [];
       const payloadValue = action.payload.value;
-      const test = () => {
-        const entityValue = formatEntityValue(payloadValue);
-        if (
-          Array.isArray(previousValue) &&
-          !Array.isArray(entityValue) &&
-          typeof entityValue === 'string'
-        ) {
-          return [...previousValue, entityValue];
-        }
-        return entityValue;
-      };
+      const pushedValue = formatEntityValue(payloadValue) as string;
       return {
         ...state,
         [action.meta.key]: {
-          value: test(),
+          value: [...previousValue, pushedValue],
           meta: {
             ...state[action.meta.key]?.meta,
           },

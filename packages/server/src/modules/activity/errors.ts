@@ -11,3 +11,10 @@ export class ActivityNotFoundError extends Error {
     super('Activity not found.');
   }
 }
+
+export class ActivityNotPreparedError extends Error {
+  constructor() {
+    super();
+    this.message = 'Activity not prepared in res.locals.activity';
+  }
+}

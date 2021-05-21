@@ -44,14 +44,12 @@ export const useUserTrainings = (
   ] = useUserTrainingsRecord(user);
   const { fetch, response, loading, error } = useApi(requests.activities);
   useEffect(() => {
-    console.log('response', response);
     if (!response) {
       return;
     }
     setTrainings(response.data as LessonActivity[]);
   }, [response, setTrainings]);
   useEffect(() => {
-    console.log(loading, response, error);
     if (loading || response || error) {
       return;
     }

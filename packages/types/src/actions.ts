@@ -206,6 +206,7 @@ export type PatchAction = SendPatchAction;
 
 export type Actions =
   | UpdateEntityAction
+  | RecordAction
   | SyncAction
   | UpdateEntitiesAction
   | PatchAction

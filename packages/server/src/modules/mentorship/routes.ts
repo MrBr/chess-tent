@@ -1,11 +1,11 @@
 import application, { middleware } from '@application';
+import { TYPE_MENTORSHIP } from '@chess-tent/models';
 import {
   getCoaches,
   getStudents,
   resolveMentorshipRequest,
   requestMentorship,
 } from './middleware';
-import { TYPE_MENTORSHIP } from '@chess-tent/models';
 
 const {
   identify,

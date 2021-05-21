@@ -5,7 +5,7 @@ import {
   createCollectionRecordHook,
   createRecordService,
 } from './services';
-import { useRecord } from './hooks';
+import { useRecord, useCollectionRecord } from './hooks';
 import { updateRecordEntitiesMiddleware } from './state/middleware';
 import { records } from './state/reducer';
 import {
@@ -19,6 +19,7 @@ application.services.createRecordHook = createRecordHook;
 application.services.createCollectionRecordHook = createCollectionRecordHook;
 application.services.createRecordService = createRecordService;
 application.hooks.useRecord = useRecord;
+application.hooks.useCollectionRecord = useCollectionRecord;
 application.state.actions.updateRecord = updateRecordAction;
 application.state.actions.pushRecord = pushRecordAction;
 application.state.actions.updateRecordValue = updateRecordValueAction;

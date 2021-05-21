@@ -6,7 +6,7 @@ import {
   TYPE_LESSON,
   TYPE_ACTIVITY,
 } from '@chess-tent/models';
-import { hooks, requests, services } from '@application';
+import { hooks, requests } from '@application';
 import { useCallback, useContext, useEffect } from 'react';
 import { Hooks, LessonActivity, CollectionRecordHookReturn } from '@types';
 import { editorContext } from './context';
@@ -27,10 +27,10 @@ export const useUserLessonRecord = (user: User) =>
   hooks.useRecord<Lesson[]>(`${user.id}-lessons`, TYPE_LESSON);
 
 export const useUserTrainingsRecord = (user: User) =>
-  services.createCollectionRecordHook<LessonActivity>(
+  hooks.useCollectionRecord<LessonActivity>(
     `trainings-${user.id}`,
     TYPE_ACTIVITY,
-  )();
+  );
 
 export const useUserTrainings = (
   user: User,

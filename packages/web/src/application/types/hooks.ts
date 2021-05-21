@@ -17,6 +17,7 @@ import {
   SubjectPathUpdate,
   Subject,
   ServiceType,
+  Entity,
 } from '@chess-tent/models';
 import { Action as ReduxAction } from 'redux';
 import { useSelector, useDispatch, useStore } from 'react-redux';
@@ -34,6 +35,14 @@ export type NonNullableRecordReturn<
 export type RecordHookReturn<T extends RecordValue> = [
   T | null,
   (value: T, meta?: Partial<{}>) => void,
+  () => void,
+  RecordType['meta'],
+];
+
+export type CollectionRecordHookReturn<T extends Entity> = [
+  T[] | null,
+  (value: T[], meta?: Partial<{}>) => void,
+  (value: T) => void,
   () => void,
   RecordType['meta'],
 ];
@@ -64,7 +73,7 @@ export type Hooks = {
   useActiveUserNotifications: (
     limit?: number,
   ) => RecordHookReturn<Notification[]>;
-  useUserTrainings: (user: User) => RecordHookReturn<LessonActivity[]>;
+  useUserTrainings: (user: User) => CollectionRecordHookReturn<LessonActivity>;
   useUserLessonsRecord: (user: User) => RecordHookReturn<Lesson[]>;
   useConversationParticipant: () => RecordHookReturn<User>;
   useHistory: () => History;
@@ -85,6 +94,11 @@ export type Hooks = {
     type: RecordType['meta']['type'],
     initialMeta?: RecordType['meta'],
   ) => RecordHookReturn<T>;
+  useCollectionRecord: <T extends Entity>(
+    recordKey: string,
+    type: RecordType['meta']['type'],
+    initialMeta?: RecordType['meta'],
+  ) => CollectionRecordHookReturn<T>;
   useMeta: <T>(metaKey: string) => [T, (meta: T) => void, () => void];
   useCopyStep: () => [
     boolean,

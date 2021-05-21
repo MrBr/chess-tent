@@ -6,6 +6,7 @@ import {
   saveActivity,
   findActivities,
   updateActivity,
+  sendActivity,
 } from './middleware';
 
 const {
@@ -33,6 +34,7 @@ application.service.registerPostRoute(
   })),
   createNotification,
   sendNotification,
+  sendActivity,
 
   sendStatusOk,
 );

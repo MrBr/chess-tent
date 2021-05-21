@@ -3,6 +3,7 @@ import {
   RecordAction,
   RecordState,
   UPDATE_RECORD,
+  PUSH_RECORD,
   UPDATE_RECORD_VALUE,
 } from '@types';
 import { formatEntityValue } from './_helpers';
@@ -17,6 +18,20 @@ export const records = (state: RecordState = {}, action: RecordAction) => {
           meta: {
             ...state[action.meta.key]?.meta,
             ...action.payload.meta,
+          },
+        },
+      };
+    }
+    case PUSH_RECORD: {
+      const previousValue = (state[action.meta.key].value as []) || [];
+      const payloadValue = action.payload.value;
+      const pushedValue = formatEntityValue(payloadValue) as string;
+      return {
+        ...state,
+        [action.meta.key]: {
+          value: [...previousValue, pushedValue],
+          meta: {
+            ...state[action.meta.key]?.meta,
           },
         },
       };

@@ -4,9 +4,11 @@ import {
   RecordMeta,
   RecordType,
   RecordUpdateAction,
+  RecordPushAction,
   RecordUpdateValueAction,
   RecordValue,
   UPDATE_RECORD,
+  PUSH_RECORD,
   UPDATE_RECORD_VALUE,
 } from '@types';
 
@@ -19,6 +21,19 @@ export const updateRecordAction = <T extends RecordValue>(
   payload: {
     value: entity,
     meta,
+  },
+  meta: {
+    key,
+  },
+});
+
+export const pushRecordAction = <T extends RecordValue>(
+  key: string,
+  entity: T,
+): RecordPushAction => ({
+  type: PUSH_RECORD,
+  payload: {
+    value: entity,
   },
   meta: {
     key,

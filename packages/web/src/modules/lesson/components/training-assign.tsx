@@ -16,7 +16,7 @@ const {
   Text,
   Modal,
 } = ui;
-const { useApi, useActiveUserRecord, useStudents } = hooks;
+const { useApi, useActiveUserRecord, useStudents, useUserTrainings } = hooks;
 const { createActivity } = services;
 const { UserAvatar } = components;
 
@@ -31,6 +31,7 @@ export default ({ close }: { close: () => void }) => {
   );
   const [user] = useActiveUserRecord();
   const [mentorship] = useStudents(user);
+  const [, , pushTraining] = useUserTrainings(user);
   const { fetch: fetchUserLessons, response } = useApi(requests.myLessons);
 
   const students = useMemo(() => mentorship?.map(({ student }) => student), [
@@ -46,9 +47,10 @@ export default ({ close }: { close: () => void }) => {
         [user],
       );
       saveActivity(activity);
+      pushTraining(activity);
       helpers.resetForm();
     },
-    [saveActivity, user],
+    [pushTraining, saveActivity, user],
   );
 
   useEffect(() => {

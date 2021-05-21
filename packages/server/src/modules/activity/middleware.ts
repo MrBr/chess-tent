@@ -1,6 +1,12 @@
+import { socket } from '@application';
 import { MiddlewareFunction } from '@types';
 import { Activity } from '@chess-tent/models';
-import { ActivityNotFoundError, UnauthorizedActivityEditError } from './errors';
+import { PUSH_RECORD } from '@chess-tent/types';
+import {
+  ActivityNotFoundError,
+  UnauthorizedActivityEditError,
+  ActivityNotPreparedError,
+} from './errors';
 import * as service from './service';
 
 export const saveActivity: MiddlewareFunction = (req, res, next) => {
@@ -51,4 +57,20 @@ export const canEditActivity: MiddlewareFunction = (req, res, next) => {
       throw new UnauthorizedActivityEditError();
     })
     .catch(next);
+};
+
+export const sendActivity: MiddlewareFunction = (req, res, next) => {
+  const activity = res.locals.activity;
+  if (!activity) {
+    throw new ActivityNotPreparedError();
+  }
+
+  socket.sendServerAction(`user-${activity.owner.id}`, {
+    type: PUSH_RECORD,
+    payload: { value: activity },
+    meta: {
+      key: `trainings-${activity.owner.id}`,
+    },
+  });
+  next();
 };

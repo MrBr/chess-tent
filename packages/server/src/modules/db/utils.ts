@@ -95,7 +95,6 @@ export const get$SetForArrayElemUpdate = (
   Object.entries(setObject).forEach(
     ([key, value]) => (newSet[`${setPrefix}.${key}`] = value),
   );
-  console.log('get$SetForArrayElemUpdate newSet', newSet);
   return newSet;
 };
 

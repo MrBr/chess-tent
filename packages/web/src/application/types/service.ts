@@ -14,6 +14,7 @@ import {
   Notification,
   Activity,
   User,
+  Entity,
 } from '@chess-tent/models';
 import { History } from 'history';
 import { MiddlewareAPI } from 'redux';
@@ -30,7 +31,7 @@ import {
 } from './chess';
 import { MoveStep, Steps, VariationStep } from './steps';
 import { GenericArguments } from './_helpers';
-import { RecordHookReturn } from './hooks';
+import { RecordHookReturn, CollectionRecordHookReturn } from './hooks';
 import { ActivityComment, ActivityStepStateBase, StepModule } from './step';
 import { AppAnalysis, NotificationRenderer, StepModules } from './index';
 
@@ -89,6 +90,10 @@ export type Services = {
     recordKey: string,
     type: RecordMeta['type'],
   ) => () => RecordHookReturn<T>;
+  createCollectionRecordHook: <T extends Entity>(
+    recordKey: string,
+    type: RecordMeta['type'],
+  ) => () => CollectionRecordHookReturn<T>;
   isStepType: <T extends Steps>(step: Step, stepType: StepType) => step is T;
   createStep: <T extends StepType>(
     stepType: T,

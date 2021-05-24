@@ -13,6 +13,8 @@ export interface DepupulatedActivity {
   type: Activity['type'];
   state: Activity['state'];
   subject: Activity['subject'];
+  completedSteps: Activity['completedSteps'];
+  completed: Activity['completed'];
   subjectType: NormalizedActivity['subject']['type'];
   owner: NormalizedActivity['owner'];
   users: NormalizedActivity['users'];
@@ -41,6 +43,14 @@ const activitySchema = db.createSchema<DepupulatedActivity>(
       required: true,
       default: {},
     } as unknown) as DepupulatedActivity['state'],
+    completedSteps: [
+      {
+        type: String,
+      } as unknown,
+    ] as DepupulatedActivity['completedSteps'],
+    completed: ({
+      type: Boolean,
+    } as unknown) as DepupulatedActivity['completed'],
     type: ({
       type: String,
       default: TYPE_ACTIVITY,

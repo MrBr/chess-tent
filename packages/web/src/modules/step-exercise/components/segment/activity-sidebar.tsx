@@ -1,10 +1,9 @@
 import React, { FunctionComponent, useCallback } from 'react';
-import { components, ui } from '@application';
+import { ui } from '@application';
 import { isStepCompleted } from '@chess-tent/models';
 import { SegmentActivityProps } from './types';
 
-const { LessonToolboxText } = components;
-const { Headline4, Button, Headline5 } = ui;
+const { Headline4, Button, Headline5, Text } = ui;
 
 const Playground: FunctionComponent<
   SegmentActivityProps & { title: string }
@@ -31,17 +30,23 @@ const Playground: FunctionComponent<
         Hint
       </Button>
       <Headline4 className="mt-2 mb-1">{title}</Headline4>
-      <LessonToolboxText className="m-0" defaultText={task.text} />
+      <Text className="m-0" fontSize="small" color="subtitle">
+        {task.text}
+      </Text>
       {completed && (
         <>
           <Headline5 className="mt-2 mb-1">Explanation</Headline5>
-          <LessonToolboxText className="m-0" defaultText={explanation?.text} />
+          <Text className="m-0" fontSize="small" color="subtitle">
+            {explanation?.text}
+          </Text>
         </>
       )}
       {showHint && hint && (
         <>
           <Headline5 className="mt-2 mb-1">Hint</Headline5>
-          <LessonToolboxText className="m-0" defaultText={hint?.text} />
+          <Text className="m-0" fontSize="small" color="subtitle">
+            {hint?.text}
+          </Text>
         </>
       )}
       {children}

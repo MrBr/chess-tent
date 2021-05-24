@@ -16,10 +16,10 @@ const Playground: FunctionComponent<
   stepActivityState,
   setStepActivityState,
 }) => {
-  const { hint } = stepActivityState;
-  const { task, explanation } = step.state;
+  const { hint: showHint } = stepActivityState;
+  const { task, explanation, hint } = step.state;
   const completed = isStepCompleted(activity, step);
-  const showHint = useCallback(() => {
+  const handleShowHint = useCallback(() => {
     setStepActivityState({
       hint: true,
     });
@@ -27,24 +27,24 @@ const Playground: FunctionComponent<
 
   return (
     <>
-      <Button onClick={showHint} size="extra-small">
+      <Button onClick={handleShowHint} size="extra-small">
         Hint
       </Button>
-      <Headline4 className="m-0">{title}</Headline4>
-      <LessonToolboxText defaultText={task.text} />
-      {children}
+      <Headline4 className="mt-2 mb-1">{title}</Headline4>
+      <LessonToolboxText className="m-0" defaultText={task.text} />
       {completed && (
         <>
-          <Headline5 className="m-0">Explanation</Headline5>
-          <LessonToolboxText defaultText={explanation?.text} />
+          <Headline5 className="mt-2 mb-1">Explanation</Headline5>
+          <LessonToolboxText className="m-0" defaultText={explanation?.text} />
         </>
       )}
-      {!completed && hint && (
+      {showHint && hint && (
         <>
-          <Headline5 className="m-0">Hint</Headline5>
-          <LessonToolboxText defaultText={explanation?.text} />
+          <Headline5 className="mt-2 mb-1">Hint</Headline5>
+          <LessonToolboxText className="m-0" defaultText={hint?.text} />
         </>
       )}
+      {children}
     </>
   );
 };

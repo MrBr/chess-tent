@@ -26,8 +26,13 @@ const Playground: FunctionComponent<
 
   return (
     <>
-      <Button onClick={handleShowHint} size="extra-small">
-        Hint
+      <Button
+        onClick={handleShowHint}
+        size="extra-small"
+        variant={showHint ? 'regular' : 'primary'}
+        disabled={showHint}
+      >
+        Show Hint
       </Button>
       <Headline4 className="mt-2 mb-1">{title}</Headline4>
       <Text

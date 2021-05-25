@@ -27,4 +27,6 @@ export interface NormalizedActivity<
   subject: Subject;
   owner: User['id'];
   users: User['id'][];
+  completedSteps: Activity<T>['completedSteps'];
+  completed: Activity<T>['completed'];
 }

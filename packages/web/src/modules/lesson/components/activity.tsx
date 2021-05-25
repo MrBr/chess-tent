@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useEffect, useCallback, useMemo } from 'react';
 import {
   ActivityComponent,
   ActivityFooterProps,
@@ -300,28 +300,31 @@ const Activity: ActivityComponent<LessonActivity> = props => {
   const activeChapter = getLessonChapter(lesson, activeChapterId) as Chapter;
   const activeStepId =
     props.activity.state.activeStepId || activeChapter.state.steps[0].id;
-  const activity = props.activity.state[activeStepId]
-    ? props.activity
-    : // Formatting local activity so that it has active step state.
-      // This behaviour has to be proven right, because for the moment (until first update)
-      // there is some inconsistencies between local and store activity.
-      updateActivityStepState(
-        props.activity,
-        activeStepId,
-        services.createActivityStepState(),
-      );
   const activeStep = getChildStep(activeChapter, activeStepId) as Steps;
-  const activeStepActivityState = activity.state[activeStep.id];
+  const activeStepActivityState = props.activity.state[activeStep.id];
 
   const dispatchService = useDispatchService();
   const { fetch: saveActivity } = useApi(requests.activityUpdate);
   useDiffUpdates(
-    activity,
+    props.activity,
     updates => {
-      saveActivity(activity.id, updates);
+      saveActivity(props.activity.id, updates);
     },
     2000,
   );
+
+  const updateActivity = useCallback(dispatchService, [dispatchService]);
+
+  useEffect(() => {
+    if (!props.activity.state[activeStepId]) {
+      updateActivity(updateActivityStepState)(
+        props.activity,
+        activeStepId,
+        services.createActivityStepState(),
+      );
+    }
+  }, [activeStepId, props.activity, updateActivity]);
+
   const stepsCount = useMemo(() => getStepsCount(activeChapter), [
     activeChapter,
   ]);
@@ -330,11 +333,13 @@ const Activity: ActivityComponent<LessonActivity> = props => {
     [activeChapter, activeStep],
   );
 
-  const updateActivity = useCallback(dispatchService, [dispatchService]);
+  if (!activeStepActivityState) {
+    return null;
+  }
 
   return (
     <ActivityRenderer
-      activity={activity}
+      activity={props.activity}
       lesson={lesson}
       analysis={activeStepActivityState.analysis}
       activeStep={activeStep}

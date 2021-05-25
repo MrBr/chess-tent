@@ -6,7 +6,9 @@ import { createService } from '../_helpers';
 
 export const markStepCompleted = createService(
   <T extends Activity>(draft: T, step: Step): T => {
-    draft.completedSteps.push(step.id);
+    if (!draft.completedSteps.includes(step.id)) {
+      draft.completedSteps.push(step.id);
+    }
     return draft;
   },
 );

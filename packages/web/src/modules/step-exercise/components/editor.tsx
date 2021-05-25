@@ -13,7 +13,6 @@ import {
   updateStepState,
 } from '@chess-tent/models';
 import {
-  DescriptionStep,
   ExerciseModule,
   ExerciseToolboxProps,
   ExerciseTypes,

@@ -48,7 +48,7 @@ export const withFiles = <P extends FileUploaderProps>(
 
 export const withHtml: HOC['withHtml'] = WrappedComponent => props => {
   const defaultValueRef = useRef(props.initialHtml);
-  if (props.contentEditable) {
+  if (props.contentEditable || props.initialHtml) {
     //children aren't actually used here
     return (
       // eslint-disable-next-line

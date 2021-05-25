@@ -30,23 +30,32 @@ const Playground: FunctionComponent<
         Hint
       </Button>
       <Headline4 className="mt-2 mb-1">{title}</Headline4>
-      <Text className="m-0" fontSize="small" color="subtitle">
-        {task.text}
-      </Text>
+      <Text
+        className="m-0"
+        fontSize="small"
+        color="subtitle"
+        initialHtml={task.text}
+      />
       {completed && (
         <>
           <Headline5 className="mt-2 mb-1">Explanation</Headline5>
-          <Text className="m-0" fontSize="small" color="subtitle">
-            {explanation?.text}
-          </Text>
+          <Text
+            className="m-0"
+            fontSize="small"
+            color="subtitle"
+            initialHtml={explanation?.text}
+          />
         </>
       )}
       {showHint && hint && (
         <>
           <Headline5 className="mt-2 mb-1">Hint</Headline5>
-          <Text className="m-0" fontSize="small" color="subtitle">
-            {hint?.text}
-          </Text>
+          <Text
+            className="m-0"
+            fontSize="small"
+            color="subtitle"
+            initialHtml={hint?.text}
+          />
         </>
       )}
       {children}

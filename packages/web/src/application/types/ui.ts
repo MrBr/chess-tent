@@ -80,7 +80,13 @@ export type TextProps = {
   inline?: boolean;
   weight?: number;
   align?: 'center' | 'left' | 'right';
-  color?: 'title' | 'subtitle' | 'alt' | 'alt-title' | 'alt-subtitle';
+  color?:
+    | 'title'
+    | 'subtitle'
+    | 'alt'
+    | 'alt-title'
+    | 'alt-subtitle'
+    | 'inherit';
   fontSize?: FontSize;
   onClick?: ReactEventHandler;
 } & HtmlProps;

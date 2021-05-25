@@ -106,24 +106,6 @@ const EditorSidebar: ExerciseModule['EditorSidebar'] = ({
     () => exerciseTypes.find(({ type }) => type === step.state.exerciseType),
     [step.state.exerciseType],
   );
-  const addDescriptionStep = useCallback(() => {
-    const parentStep = getParentStep(stepRoot, step) as DescriptionStep;
-    const newDescriptionStep = services.createStep('description', {
-      position: step.state.task.position,
-      orientation: step.state.orientation,
-    });
-    updateStep(addStepToRightOf(parentStep, step, newDescriptionStep));
-    setActiveStep(newDescriptionStep);
-  }, [stepRoot, step, updateStep, setActiveStep]);
-  const addVariationStep = useCallback(() => {
-    const parentStep = getParentStep(stepRoot, step) as DescriptionStep;
-    const newVariationStep = services.createStep('variation', {
-      position: step.state.task.position,
-      orientation: step.state.orientation,
-    });
-    updateStep(addStepToRightOf(parentStep, step, newVariationStep));
-    setActiveStep(newVariationStep);
-  }, [stepRoot, step, updateStep, setActiveStep]);
   const removeExerciseStep = useCallback(() => {
     removeStep(step, false);
   }, [removeStep, step]);
@@ -185,11 +167,11 @@ const EditorSidebar: ExerciseModule['EditorSidebar'] = ({
           </Dropdown>
           <ExerciseToolbox step={step} updateStep={updateStep} />
           <StepToolbox
-            add={addVariationStep}
+            add={false}
             active={activeStep === step}
             step={step}
             exercise={addExerciseStep}
-            comment={addDescriptionStep}
+            comment={false}
             remove={removeExerciseStep}
             showInput={false}
           />

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { ExerciseToolboxProps, ExerciseVariationStep } from '@types';
 import { components, ui } from '@application';
 import { SegmentSidebar } from '../segment';
@@ -19,6 +19,14 @@ export default ({
     'activeMoveIndex',
   ]);
 
+  const handleUpdateActiveMove = useCallback(
+    (index: number, event: React.SyntheticEvent<Element, Event>) => {
+      event.stopPropagation();
+      updateActiveMoveIndex(index);
+    },
+    [updateActiveMoveIndex],
+  );
+
   return (
     <SegmentSidebar step={step} updateStep={updateStep}>
       <>
@@ -27,7 +35,7 @@ export default ({
           <StepTag
             active={activeMoveIndex === -1}
             collapse
-            onClick={() => updateActiveMoveIndex(-1)}
+            onClick={event => handleUpdateActiveMove(-1, event)}
           >
             <Text className="mb-0" fontSize="small" color="title">
               FEN
@@ -37,7 +45,7 @@ export default ({
             <StepTag
               active={activeMoveIndex === index}
               collapse
-              onClick={() => updateActiveMoveIndex(index)}
+              onClick={event => handleUpdateActiveMove(index, event)}
               key={index}
             >
               <StepMove move={move} suffix=" " prefix=" " blackIndexSign=" " />

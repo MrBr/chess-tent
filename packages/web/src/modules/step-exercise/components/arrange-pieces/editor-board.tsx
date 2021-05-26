@@ -79,6 +79,7 @@ const Editor: FunctionComponent<
           onPieceDrop={position => handleChange(position)}
           onShapesChange={handleShapes}
           shapes={shapes}
+          editing={!!editing}
           onUpdateEditing={editing => updateExerciseTask({ editing })}
         />
       }

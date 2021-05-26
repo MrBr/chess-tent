@@ -1,5 +1,5 @@
 import React, { ComponentProps, FunctionComponent, useEffect } from 'react';
-import { ui } from '@application';
+import { ui, components } from '@application';
 import {
   ExerciseModule,
   Move,
@@ -10,6 +10,7 @@ import { isStepCompleted } from '@chess-tent/models';
 import { SegmentActivitySidebar } from '../segment';
 
 const { Text } = ui;
+const { PieceIcon } = components;
 
 const getPieceStatus = (
   activityMoves?: ExerciseActivityArrangePiecesState['moves'],
@@ -44,10 +45,13 @@ const Playground: FunctionComponent<
 
   return (
     <SegmentActivitySidebar title="Arrange the pieces" {...props}>
-      {exerciseMoves?.map(({ move }) => (
-        <Text key={move[0]}>
-          {move[0]} - {getPieceStatus(activityMoves, move)}
-        </Text>
+      {exerciseMoves?.map(({ move, piece }) => (
+        <div>
+          <PieceIcon piece={piece} />
+          <Text className="d-inline-block" key={move[0]}>
+            {move[0]} - {getPieceStatus(activityMoves, move)}
+          </Text>
+        </div>
       ))}
       {invalidPiece && (
         <Text fontSize="small">{invalidPiece} shouldn't be moved</Text>

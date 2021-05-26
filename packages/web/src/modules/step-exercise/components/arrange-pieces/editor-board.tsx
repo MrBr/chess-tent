@@ -44,8 +44,8 @@ const Editor: FunctionComponent<
         position,
         newMoveTest,
         0,
-        captured,
         piece,
+        captured,
       );
       const newMoves: typeof moves = [
         // Remove piece previous move

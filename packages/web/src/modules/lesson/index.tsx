@@ -102,3 +102,9 @@ application.register(
     application.components.StepMove = module.default;
   },
 );
+application.register(
+  () => import('./components/piece-icon'),
+  module => {
+    application.components.PieceIcon = module.default;
+  },
+);

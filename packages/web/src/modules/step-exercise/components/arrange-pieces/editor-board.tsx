@@ -35,17 +35,25 @@ const Editor: FunctionComponent<
       const movedPiecePrevMove = moves?.find(
         move => move.move?.[1] === newMove[0],
       );
+      const newMoveTest = [
+        movedPiecePrevMove?.move?.[0] || newMove[0],
+        newMove[1],
+      ] as Move;
+      const isBackMove = newMoveTest[0] === newMoveTest[1];
+      const newNotableMove = createNotableMove(
+        position,
+        newMoveTest,
+        0,
+        captured,
+        piece,
+      );
       const newMoves: typeof moves = [
         // Remove piece previous move
         ...(moves || []).filter(move => move !== movedPiecePrevMove),
-        createNotableMove(
-          position,
-          [movedPiecePrevMove?.move?.[0] || newMove[0], newMove[1]],
-          0,
-          captured,
-          piece,
-        ),
       ];
+      if (!isBackMove) {
+        newMoves.push(newNotableMove);
+      }
       updateExerciseTask({ moves: newMoves });
     },
     [editing, moves, updateExerciseTask],

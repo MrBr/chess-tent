@@ -10,7 +10,6 @@ import {
   Chapter,
   getParentStep,
   isStep,
-  updateStepState,
 } from '@chess-tent/models';
 import {
   ExerciseModule,
@@ -39,6 +38,7 @@ import {
   isQuestionnaireExerciseStep,
   isSelectSquarePiecesExerciseStep,
   isVariationExerciseStep,
+  changeStepState,
 } from '../service';
 
 const { Col, Row, Dropdown } = ui;
@@ -171,7 +171,7 @@ const EditorSidebar: ExerciseModule['EditorSidebar'] = ({
               const initialExerciseStepState = getInitialExerciseStepState(
                 exerciseType as ExerciseTypes,
               );
-              updateStep(updateStepState(step, initialExerciseStepState));
+              updateStep(changeStepState(step, initialExerciseStepState));
             }}
           >
             <Dropdown.Toggle id="exercises" size="extra-small" className="mb-2">

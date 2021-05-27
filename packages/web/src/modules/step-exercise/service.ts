@@ -9,7 +9,10 @@ import {
   ExerciseVariationStep,
   PieceColor,
 } from '@types';
-import { createStep as coreCreateStep } from '@chess-tent/models';
+import {
+  createService,
+  createStep as coreCreateStep,
+} from '@chess-tent/models';
 import { stepType } from './model';
 
 export const createExerciseStepState = <T extends ExerciseSteps>(
@@ -45,6 +48,13 @@ export const createStep: ExerciseModule<ExerciseSteps>['createStep'] = (
       orientation,
     ),
   );
+
+export const changeStepState = createService(
+  <T extends ExerciseSteps>(draft: T, state: ExerciseSteps['state']): T => {
+    draft.state = state;
+    return draft;
+  },
+);
 
 export const isVariationExerciseStep = (
   step: ExerciseSteps,

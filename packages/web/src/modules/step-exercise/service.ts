@@ -5,41 +5,46 @@ import {
   ExerciseQuestionStep,
   ExerciseSelectSquaresAndPiecesStep,
   ExerciseSteps,
+  ExerciseTypes,
   ExerciseVariationStep,
+  PieceColor,
 } from '@types';
-import {
-  createStep as coreCreateStep,
-  updateStepState,
-} from '@chess-tent/models';
+import { createStep as coreCreateStep } from '@chess-tent/models';
 import { stepType } from './model';
 
-export const updateExerciseStep = <T extends ExerciseSteps>(
-  step: T,
-  state: Partial<T['state']>,
-): T =>
-  updateStepState(step, {
-    ...state,
-  });
+export const createExerciseStepState = <T extends ExerciseSteps>(
+  exerciseType: ExerciseTypes,
+  position: string,
+  orientation?: PieceColor,
+): T['state'] => ({
+  steps: [],
+  exerciseType,
+  activeSegment: 'task',
+  orientation,
+  task: {
+    position,
+  },
+  hint: {
+    position,
+  },
+  explanation: {
+    position,
+  },
+});
 
-export const createStep: ExerciseModule<ExerciseVariationStep>['createStep'] = (
+export const createStep: ExerciseModule<ExerciseSteps>['createStep'] = (
   id,
   { position, orientation },
 ) =>
-  coreCreateStep<ExerciseVariationStep>(id, stepType, {
-    steps: [],
-    exerciseType: 'variation',
-    activeSegment: 'task',
-    orientation,
-    task: {
+  coreCreateStep<ExerciseVariationStep>(
+    id,
+    stepType,
+    createExerciseStepState<ExerciseVariationStep>(
+      'variation',
       position,
-    },
-    hint: {
-      position,
-    },
-    explanation: {
-      position,
-    },
-  });
+      orientation,
+    ),
+  );
 
 export const isVariationExerciseStep = (
   step: ExerciseSteps,

@@ -33,6 +33,7 @@ import VariationEditorSidebar from './variation/editor-sidebar';
 import SelectSquaresPiecesEditorSidebar from './select-squares-pieces/editor-sidebar';
 import ArrangePiecesEditorSidebar from './arrange-pieces/editor-sidebar';
 import {
+  createExerciseStepState,
   isArrangePiecesExerciseStep,
   isQuestionExerciseStep,
   isQuestionnaireExerciseStep,
@@ -133,6 +134,31 @@ const EditorSidebar: ExerciseModule['EditorSidebar'] = ({
     setActiveStep(exerciseStep);
   }, [stepRoot, setActiveStep, step, updateStep, updateChapter]);
 
+  const getInitialExerciseStepState = useCallback(
+    (exerciseType: ExerciseTypes) => {
+      const parent = getParentStep(stepRoot, step) as
+        | VariationStep
+        | MoveStep
+        | Chapter;
+      if (isStep(parent)) {
+        return createExerciseStepState(
+          exerciseType,
+          parent.state.move?.position ||
+            (parent as VariationStep).state.position ||
+            START_FEN,
+          step.state.orientation,
+        );
+      } else {
+        return createExerciseStepState(
+          exerciseType,
+          step.state.task.position,
+          step.state.orientation,
+        );
+      }
+    },
+    [step, stepRoot],
+  );
+
   return (
     <>
       <Row>
@@ -142,11 +168,10 @@ const EditorSidebar: ExerciseModule['EditorSidebar'] = ({
         <Col>
           <Dropdown
             onSelect={exerciseType => {
-              updateStep(
-                updateStepState(step, {
-                  exerciseType,
-                } as { exerciseType: ExerciseTypes }),
+              const initialExerciseStepState = getInitialExerciseStepState(
+                exerciseType as ExerciseTypes,
               );
+              updateStep(updateStepState(step, initialExerciseStepState));
             }}
           >
             <Dropdown.Toggle id="exercises" size="extra-small" className="mb-2">

@@ -235,16 +235,9 @@ const addStepRightToSame = createService(
 const updateStep = (step: Step, patch: Partial<Step>) =>
   updateSubject(step, patch);
 
-// TODO: Keep eye on this when changing step update logic
-// or if something strange starts happening
-function keepArrays(objValue: any, srcValue: any, key: string) {
-  if (Array.isArray(srcValue)) {
-    return srcValue;
-  }
-}
 const updateStepState = createService(
   <T extends Step>(draft: T, state: Partial<T['state']>): T => {
-    mergeWith(draft.state, state, keepArrays);
+    draft.state = { ...draft.state, ...state };
     return draft;
   },
 );

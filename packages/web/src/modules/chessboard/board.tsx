@@ -31,7 +31,7 @@ import { Config } from '@chess-tent/chessground/dist/config';
 import { SparePieces } from './spare-pieces';
 import Promotion from './promotion';
 import Footer from './footer';
-import { replaceFENPosition, updateMovable } from './_helpers';
+import { replaceFENPosition, unfreeze, updateMovable } from './_helpers';
 
 const { Evaluator } = components;
 const { START_FEN, MAX_BOARD_SIZE } = constants;
@@ -189,6 +189,7 @@ class Chessboard
       resizable,
       allowAllMoves,
       orientation,
+      shapes,
     } = this.props;
 
     if (!this.boardHost.current) {
@@ -217,6 +218,7 @@ class Chessboard
         },
       },
       drawable: {
+        shapes: shapes,
         validate: this.validateDrawable,
         onChange: this.onShapesChange,
         visible: true,
@@ -239,13 +241,25 @@ class Chessboard
    * @param config
    */
   setConfig(config: Partial<Config>) {
-    const finalConfig = this.props.allowAllMoves
+    let finalConfig = this.props.allowAllMoves
       ? config
       : updateMovable(config, config.fen || this.props.fen);
+    // Chessground for some reason mutates config, on the other hand
+    // Immer freezes passed values. All that leads to forbidden mutations.
+    // In order to allow Chessground to work as planned passed object
+    // must be mutable and thus reference must be broken between prop and config values.
+    finalConfig = unfreeze(finalConfig);
+
+    const shapes = finalConfig.drawable?.shapes;
+    if (finalConfig.drawable?.shapes) {
+      delete finalConfig.drawable.shapes;
+    }
+
     this.api.set(finalConfig);
     // Shapes can't be set in the same time as fen so this is additional update
     // TODO - edit Chessground
-    this.props.shapes && this.api.setShapes([...this.props.shapes]);
+    shapes && this.api.setShapes(shapes);
+
     config.fen && this.chess.load(config.fen);
   }
 
@@ -403,6 +417,7 @@ class Chessboard
     if (!this.props.onShapesChange) {
       return;
     }
+
     return this.props.onShapesChange(...args);
   };
 

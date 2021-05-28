@@ -7,13 +7,24 @@ import {
   ExerciseSteps,
   ExerciseTypes,
   ExerciseVariationStep,
+  MoveStep,
   PieceColor,
+  VariationStep,
 } from '@types';
 import {
+  Chapter,
   createService,
   createStep as coreCreateStep,
+  getParentStep,
+  isStep,
+  Step,
+  StepRoot,
+  StepType,
 } from '@chess-tent/models';
+import { constants } from '@application';
 import { stepType } from './model';
+
+const { START_FEN } = constants;
 
 export const createExerciseStepState = <T extends ExerciseSteps>(
   exerciseType: ExerciseTypes,
@@ -49,10 +60,56 @@ export const createStep: ExerciseModule<ExerciseSteps>['createStep'] = (
     ),
   );
 
-export const changeStepState = createService(
-  <T extends ExerciseSteps>(draft: T, state: ExerciseSteps['state']): T => {
-    draft.state = state;
-    return draft;
+export const getParent = (
+  stepRoot: StepRoot<Step<{}, StepType>>,
+  step: ExerciseSteps,
+) => {
+  return getParentStep(stepRoot, step) as VariationStep | MoveStep | Chapter;
+};
+
+export const getPositionAndOrientation = (
+  stepRoot: StepRoot<Step<{}, StepType>>,
+  step: ExerciseSteps,
+) => {
+  const parent = getParent(stepRoot, step);
+  if (isStep(parent)) {
+    return {
+      position:
+        parent.state.move?.position ||
+        (parent as VariationStep).state.position ||
+        START_FEN,
+      orientation: step.state.orientation,
+    };
+  } else {
+    return {
+      position: step.state.task.position,
+      orientation: step.state.orientation,
+    };
+  }
+};
+
+export const getInitialExerciseStepState = (
+  stepRoot: StepRoot<Step<{}, StepType>>,
+  step: ExerciseSteps,
+  exerciseType: ExerciseTypes,
+) => {
+  const { position, orientation } = getPositionAndOrientation(stepRoot, step);
+  return createExerciseStepState(exerciseType, position, orientation);
+};
+
+export const changeExercise = createService(
+  <T extends ExerciseSteps>(
+    step: T,
+    stepRoot: StepRoot<Step<{}, StepType>>,
+    exerciseType: ExerciseTypes,
+  ): T => {
+    const initialExerciseStepState = getInitialExerciseStepState(
+      stepRoot,
+      step,
+      exerciseType as ExerciseTypes,
+    );
+    step.state = initialExerciseStepState;
+    return step;
   },
 );
 

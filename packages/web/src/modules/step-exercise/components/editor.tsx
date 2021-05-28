@@ -5,20 +5,9 @@ import React, {
   FunctionComponent,
 } from 'react';
 
-import {
-  addStepToRightOf,
-  Chapter,
-  getParentStep,
-  isStep,
-} from '@chess-tent/models';
-import {
-  ExerciseModule,
-  ExerciseToolboxProps,
-  ExerciseTypes,
-  MoveStep,
-  VariationStep,
-} from '@types';
-import { components, constants, services, ui } from '@application';
+import { addStepToRightOf, isStep } from '@chess-tent/models';
+import { ExerciseModule, ExerciseToolboxProps, ExerciseTypes } from '@types';
+import { components, services, ui } from '@application';
 
 import QuestionnaireEditorBoard from './questionnaire/editor-board';
 import QuestionEditorBoard from './question/editor-board';
@@ -32,18 +21,18 @@ import VariationEditorSidebar from './variation/editor-sidebar';
 import SelectSquaresPiecesEditorSidebar from './select-squares-pieces/editor-sidebar';
 import ArrangePiecesEditorSidebar from './arrange-pieces/editor-sidebar';
 import {
-  createExerciseStepState,
   isArrangePiecesExerciseStep,
   isQuestionExerciseStep,
   isQuestionnaireExerciseStep,
   isSelectSquarePiecesExerciseStep,
   isVariationExerciseStep,
-  changeStepState,
+  getParent,
+  getPositionAndOrientation,
+  changeExercise,
 } from '../service';
 
 const { Col, Row, Dropdown } = ui;
 const { StepTag } = components;
-const { START_FEN } = constants;
 
 const EditorBoard: FunctionComponent<
   ComponentProps<ExerciseModule['EditorBoard']>
@@ -110,54 +99,19 @@ const EditorSidebar: ExerciseModule['EditorSidebar'] = ({
     removeStep(step, false);
   }, [removeStep, step]);
   const addExerciseStep = useCallback(() => {
-    const parent = getParentStep(stepRoot, step) as
-      | VariationStep
-      | MoveStep
-      | Chapter;
-    let exerciseStep;
+    const { position, orientation } = getPositionAndOrientation(stepRoot, step);
+    const parent = getParent(stepRoot, step);
+    const exerciseStep = services.createStep('exercise', {
+      position,
+      orientation,
+    });
     if (isStep(parent)) {
-      exerciseStep = services.createStep('exercise', {
-        position:
-          parent.state.move?.position ||
-          (parent as VariationStep).state.position ||
-          START_FEN,
-        orientation: step.state.orientation,
-      });
       updateStep(addStepToRightOf(parent, step, exerciseStep));
     } else {
-      exerciseStep = services.createStep('exercise', {
-        position: step.state.task.position,
-        orientation: step.state.orientation,
-      });
       updateChapter(addStepToRightOf(parent, step, exerciseStep));
     }
     setActiveStep(exerciseStep);
   }, [stepRoot, setActiveStep, step, updateStep, updateChapter]);
-
-  const getInitialExerciseStepState = useCallback(
-    (exerciseType: ExerciseTypes) => {
-      const parent = getParentStep(stepRoot, step) as
-        | VariationStep
-        | MoveStep
-        | Chapter;
-      if (isStep(parent)) {
-        return createExerciseStepState(
-          exerciseType,
-          parent.state.move?.position ||
-            (parent as VariationStep).state.position ||
-            START_FEN,
-          step.state.orientation,
-        );
-      } else {
-        return createExerciseStepState(
-          exerciseType,
-          step.state.task.position,
-          step.state.orientation,
-        );
-      }
-    },
-    [step, stepRoot],
-  );
 
   return (
     <>
@@ -168,10 +122,12 @@ const EditorSidebar: ExerciseModule['EditorSidebar'] = ({
         <Col>
           <Dropdown
             onSelect={exerciseType => {
-              const initialExerciseStepState = getInitialExerciseStepState(
-                exerciseType as ExerciseTypes,
+              if (!exerciseType) {
+                return;
+              }
+              updateStep(
+                changeExercise(step, stepRoot, exerciseType as ExerciseTypes),
               );
-              updateStep(changeStepState(step, initialExerciseStepState));
             }}
           >
             <Dropdown.Toggle id="exercises" size="extra-small" className="mb-2">

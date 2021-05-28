@@ -46,12 +46,12 @@ const Playground: FunctionComponent<
   return (
     <SegmentActivitySidebar title="Arrange the pieces" {...props}>
       {exerciseMoves?.map(({ move, piece }) => (
-        <span>
+        <div>
           <PieceIcon piece={piece} />
           <Text className="d-inline-block" key={move[0]}>
             {move[0]} - {getPieceStatus(activityMoves, move)}
           </Text>
-        </span>
+        </div>
       ))}
       {invalidPiece && (
         <Text fontSize="small">{invalidPiece} shouldn't be moved</Text>

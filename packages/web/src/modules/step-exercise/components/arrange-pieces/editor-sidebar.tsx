@@ -16,12 +16,12 @@ export default ({
     <SegmentSidebar step={step} updateStep={updateStep}>
       <Container>
         {state.moves?.map(move => (
-          <span>
+          <div>
             <PieceIcon piece={move.piece} />
             <Text key={move.move?.[0]} className="d-inline-block">
               {move.move?.[0]} {move.move?.[1]}
             </Text>
-          </span>
+          </div>
         ))}
       </Container>
     </SegmentSidebar>

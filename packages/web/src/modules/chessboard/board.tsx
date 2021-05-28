@@ -172,6 +172,7 @@ class Chessboard
     size: '80%',
     edit: false,
     orientation: 'white',
+    shapes: [],
   };
 
   constructor(props: ChessboardProps) {
@@ -260,7 +261,7 @@ class Chessboard
     // TODO - edit Chessground
     shapes && this.api.setShapes(shapes);
 
-    config.fen && this.chess.load(config.fen);
+    finalConfig.fen && this.chess.load(finalConfig.fen);
   }
 
   prompt(renderPrompt: ChessboardState['renderPrompt']) {

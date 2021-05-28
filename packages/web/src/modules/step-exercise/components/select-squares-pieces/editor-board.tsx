@@ -8,17 +8,19 @@ const Editor: FunctionComponent<
     ExerciseModule<ExerciseSelectSquaresAndPiecesStep>['EditorBoard']
   >
 > = ({ step, Chessboard, updateStep }) => {
+  const { task, activeSegment } = step.state;
+  const { position } = task;
+  const segment = step.state[activeSegment];
   const updateTaskPosition = useUpdateExerciseStateProp(updateStep, step, [
     'task',
     'position',
   ]);
-  const updateTaskShapes = useUpdateExerciseStateProp(updateStep, step, [
-    'task',
+  const updateShapes = useUpdateExerciseStateProp(updateStep, step, [
+    activeSegment,
     'shapes',
   ]);
 
-  const { position, shapes } = step.state.task;
-
+  const finalShapes = segment?.shapes || [];
   return (
     <SegmentBoard
       step={step}
@@ -32,8 +34,8 @@ const Editor: FunctionComponent<
           onPieceDrop={updateTaskPosition}
           onPieceRemove={updateTaskPosition}
           onMove={updateTaskPosition}
-          onShapesChange={updateTaskShapes}
-          shapes={shapes}
+          onShapesChange={updateShapes}
+          shapes={finalShapes}
         />
       }
     />

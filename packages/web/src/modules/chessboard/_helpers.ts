@@ -2,6 +2,7 @@ import { FEN, Key, Piece } from '@types';
 import { ChessInstance } from 'chess.js';
 import { Config } from '@chess-tent/chessground/dist/config';
 import { services } from '@application';
+import isNil from 'lodash/isNil';
 
 const { Chess } = services;
 
@@ -48,22 +49,17 @@ export function updateMovable(config: Config, fen: FEN): Config {
 }
 
 export function unfreeze<T>(value: T): T {
+  if (isNil(value)) {
+    return value;
+  }
   const newValue = (Array.isArray(value)
     ? value.map(unfreeze)
     : typeof value === 'object'
     ? Object.keys(value).reduce((result, key) => {
         // @ts-ignore
         result[key] = unfreeze(value[key]);
-        console.log('Prop is sealed', Object.isSealed(result));
         return result;
       }, {})
     : value) as T;
-  console.log(
-    'Prop',
-    Object.isSealed(value),
-    Object.isSealed(newValue),
-    typeof value,
-  );
-
   return newValue;
 }

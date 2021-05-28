@@ -241,7 +241,7 @@ function keepArrays(objValue: any, srcValue: any, key: string) {
   if (Array.isArray(srcValue)) {
     return srcValue;
   }
-};
+}
 
 const updateStepState = createService(
   <T extends Step>(draft: T, state: Partial<T['state']>): T => {

@@ -146,7 +146,7 @@ export type RecordUpdateAction = Action<
 >;
 export type RecordPushAction = Action<
   typeof PUSH_RECORD,
-  { value: RecordValue; },
+  { value: RecordValue },
   { key: string }
 >;
 export type RecordUpdateValueAction = Action<

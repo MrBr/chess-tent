@@ -5,22 +5,9 @@ import React, {
   FunctionComponent,
 } from 'react';
 
-import {
-  addStepToRightOf,
-  Chapter,
-  getParentStep,
-  isStep,
-  updateStepState,
-} from '@chess-tent/models';
-import {
-  DescriptionStep,
-  ExerciseModule,
-  ExerciseToolboxProps,
-  ExerciseTypes,
-  MoveStep,
-  VariationStep,
-} from '@types';
-import { components, constants, services, ui } from '@application';
+import { addStepToRightOf, isStep } from '@chess-tent/models';
+import { ExerciseModule, ExerciseToolboxProps, ExerciseTypes } from '@types';
+import { components, services, ui } from '@application';
 
 import QuestionnaireEditorBoard from './questionnaire/editor-board';
 import QuestionEditorBoard from './question/editor-board';
@@ -39,11 +26,13 @@ import {
   isQuestionnaireExerciseStep,
   isSelectSquarePiecesExerciseStep,
   isVariationExerciseStep,
+  getParent,
+  getPositionAndOrientation,
+  changeExercise,
 } from '../service';
 
 const { Col, Row, Dropdown } = ui;
 const { StepTag } = components;
-const { START_FEN } = constants;
 
 const EditorBoard: FunctionComponent<
   ComponentProps<ExerciseModule['EditorBoard']>
@@ -106,47 +95,19 @@ const EditorSidebar: ExerciseModule['EditorSidebar'] = ({
     () => exerciseTypes.find(({ type }) => type === step.state.exerciseType),
     [step.state.exerciseType],
   );
-  const addDescriptionStep = useCallback(() => {
-    const parentStep = getParentStep(stepRoot, step) as DescriptionStep;
-    const newDescriptionStep = services.createStep('description', {
-      position: step.state.task.position,
-      orientation: step.state.orientation,
-    });
-    updateStep(addStepToRightOf(parentStep, step, newDescriptionStep));
-    setActiveStep(newDescriptionStep);
-  }, [stepRoot, step, updateStep, setActiveStep]);
-  const addVariationStep = useCallback(() => {
-    const parentStep = getParentStep(stepRoot, step) as DescriptionStep;
-    const newVariationStep = services.createStep('variation', {
-      position: step.state.task.position,
-      orientation: step.state.orientation,
-    });
-    updateStep(addStepToRightOf(parentStep, step, newVariationStep));
-    setActiveStep(newVariationStep);
-  }, [stepRoot, step, updateStep, setActiveStep]);
   const removeExerciseStep = useCallback(() => {
     removeStep(step, false);
   }, [removeStep, step]);
   const addExerciseStep = useCallback(() => {
-    const parent = getParentStep(stepRoot, step) as
-      | VariationStep
-      | MoveStep
-      | Chapter;
-    let exerciseStep;
+    const { position, orientation } = getPositionAndOrientation(stepRoot, step);
+    const parent = getParent(stepRoot, step);
+    const exerciseStep = services.createStep('exercise', {
+      position,
+      orientation,
+    });
     if (isStep(parent)) {
-      exerciseStep = services.createStep('exercise', {
-        position:
-          parent.state.move?.position ||
-          (parent as VariationStep).state.position ||
-          START_FEN,
-        orientation: step.state.orientation,
-      });
       updateStep(addStepToRightOf(parent, step, exerciseStep));
     } else {
-      exerciseStep = services.createStep('exercise', {
-        position: step.state.task.position,
-        orientation: step.state.orientation,
-      });
       updateChapter(addStepToRightOf(parent, step, exerciseStep));
     }
     setActiveStep(exerciseStep);
@@ -161,10 +122,11 @@ const EditorSidebar: ExerciseModule['EditorSidebar'] = ({
         <Col>
           <Dropdown
             onSelect={exerciseType => {
+              if (!exerciseType) {
+                return;
+              }
               updateStep(
-                updateStepState(step, {
-                  exerciseType,
-                } as { exerciseType: ExerciseTypes }),
+                changeExercise(step, stepRoot, exerciseType as ExerciseTypes),
               );
             }}
           >
@@ -185,11 +147,11 @@ const EditorSidebar: ExerciseModule['EditorSidebar'] = ({
           </Dropdown>
           <ExerciseToolbox step={step} updateStep={updateStep} />
           <StepToolbox
-            add={addVariationStep}
+            add={false}
             active={activeStep === step}
             step={step}
             exercise={addExerciseStep}
-            comment={addDescriptionStep}
+            comment={false}
             remove={removeExerciseStep}
             showInput={false}
           />

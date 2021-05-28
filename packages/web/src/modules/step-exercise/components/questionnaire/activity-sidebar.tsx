@@ -8,7 +8,7 @@ import {
 import { isStepCompleted } from '@chess-tent/models';
 import { SegmentActivitySidebar } from '../segment';
 
-const { Headline4, Button, Row, Col, Check, Container } = ui;
+const { Headline5, Button, Row, Col, Check, Container, Text } = ui;
 
 const Playground: FunctionComponent<
   ComponentProps<ExerciseModule<ExerciseQuestionnaireStep>['ActivitySidebar']>
@@ -29,6 +29,9 @@ const Playground: FunctionComponent<
   const completed = isStepCompleted(activity, step);
   const handleAnswerChange = useCallback(
     (optionIndex: number) => {
+      if (completed) {
+        return;
+      }
       setStepActivityState({
         selectedOptions: {
           ...selectedOptions,
@@ -36,7 +39,7 @@ const Playground: FunctionComponent<
         },
       });
     },
-    [selectedOptions, setStepActivityState],
+    [completed, selectedOptions, setStepActivityState],
   );
   const handleSubmit = useCallback(() => {
     completeStep(step);
@@ -46,10 +49,14 @@ const Playground: FunctionComponent<
   );
 
   return (
-    <SegmentActivitySidebar title="Select the answer" {...props}>
-      <Headline4>
-        {completed ? (correctSubmission ? 'Correct' : 'Incorrect') : ''}
-      </Headline4>
+    <SegmentActivitySidebar title="Select the correct options" {...props}>
+      <Headline5 className="mt-2 mb-2">
+        {completed
+          ? correctSubmission
+            ? 'The options are correct'
+            : 'The options are not correct'
+          : ''}
+      </Headline5>
       <Container className="mt-2">
         {options?.map(({ text, correct }, index) => (
           <Row key={index} className="align-items-center">
@@ -59,16 +66,21 @@ const Playground: FunctionComponent<
                   !!(selectedOptions?.[index] && !correct && completed)
                 }
                 isValid={!!(correct && completed)}
+                checked={!!selectedOptions?.[index]}
                 onChange={() => handleAnswerChange(index)}
-                label={text}
+                label={
+                  <Text className="m-0" color="inherit" initialHtml={text} />
+                }
               />
             </Col>
           </Row>
         ))}
       </Container>
-      <Button onClick={handleSubmit} size="extra-small" className="mt-2">
-        Submit
-      </Button>
+      {!completed && (
+        <Button onClick={handleSubmit} size="extra-small" className="mt-2">
+          Submit
+        </Button>
+      )}
     </SegmentActivitySidebar>
   );
 };

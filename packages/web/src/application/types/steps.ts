@@ -94,7 +94,7 @@ export type ExerciseQuestionActivityState = ActivityExerciseStepState<{
 }>;
 
 export type ExerciseQuestionnaireState = ExerciseSegments<{
-  options?: { correct: boolean; text: string }[];
+  options?: { id: string, correct: boolean; text: string }[];
 }>;
 export type ExerciseQuestionnaireActivityState = ActivityExerciseStepState<{
   selectedOptions?: { [key: number]: boolean };

@@ -86,6 +86,7 @@ export default ({
             <Col className="pt-1 col-auto">
               <Input
                 as="textarea"
+                rows={1}
                 placeholder="Add comment"
                 onKeyDown={handleCommentSubmit}
               />

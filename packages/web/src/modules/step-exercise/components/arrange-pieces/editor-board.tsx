@@ -14,9 +14,11 @@ const { createFenForward, createNotableMove } = services;
 const Editor: FunctionComponent<
   ComponentProps<ExerciseModule<ExerciseArrangePiecesStep>['EditorBoard']>
 > = ({ step, Chessboard, updateStep }) => {
-  const { position, shapes, editing, moves } = step.state.task;
+  const { task, activeSegment } = step.state;
+  const { position, editing, moves } = task;
+  const segment = step.state[activeSegment];
   const handleShapes = useUpdateExerciseStateProp(updateStep, step, [
-    'task',
+    activeSegment,
     'shapes',
   ]);
   const updateExerciseTask = useUpdateExerciseStateProp(
@@ -35,17 +37,25 @@ const Editor: FunctionComponent<
       const movedPiecePrevMove = moves?.find(
         move => move.move?.[1] === newMove[0],
       );
+      const newMoveTest = [
+        movedPiecePrevMove?.move?.[0] || newMove[0],
+        newMove[1],
+      ] as Move;
+      const isBackMove = newMoveTest[0] === newMoveTest[1];
+      const newNotableMove = createNotableMove(
+        position,
+        newMoveTest,
+        0,
+        piece,
+        captured,
+      );
       const newMoves: typeof moves = [
         // Remove piece previous move
         ...(moves || []).filter(move => move !== movedPiecePrevMove),
-        createNotableMove(
-          position,
-          [movedPiecePrevMove?.move?.[0] || newMove[0], newMove[1]],
-          0,
-          captured,
-          piece,
-        ),
       ];
+      if (!isBackMove) {
+        newMoves.push(newNotableMove);
+      }
       updateExerciseTask({ moves: newMoves });
     },
     [editing, moves, updateExerciseTask],
@@ -56,6 +66,7 @@ const Editor: FunctionComponent<
     [position, moves],
   );
 
+  const finalShapes = segment?.shapes || [];
   return (
     <SegmentBoard
       step={step}
@@ -70,7 +81,8 @@ const Editor: FunctionComponent<
           onPieceRemove={position => handleChange(position)}
           onPieceDrop={position => handleChange(position)}
           onShapesChange={handleShapes}
-          shapes={shapes}
+          shapes={finalShapes}
+          editing={!!editing}
           onUpdateEditing={editing => updateExerciseTask({ editing })}
         />
       }

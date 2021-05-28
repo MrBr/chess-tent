@@ -31,6 +31,7 @@ const SegmentBoard = <T extends SegmentsProps>({
     'shapes',
   ]);
 
+  const finalShapes = segment?.shapes || [];
   return (
     board || (
       <Chessboard
@@ -40,6 +41,7 @@ const SegmentBoard = <T extends SegmentsProps>({
         orientation={orientation}
         fen={segment?.position || task.position}
         onShapesChange={updateSegmentShapes}
+        shapes={finalShapes}
         onChange={updateSegmentPosition}
       />
     )

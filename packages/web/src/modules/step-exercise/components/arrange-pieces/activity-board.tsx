@@ -8,10 +8,18 @@ import {
 import { SegmentActivityBoard } from '../segment';
 
 const isPieceToMove = (
+  activityMoves: ExerciseActivityArrangePiecesState['moves'],
   exerciseMoves: ExerciseActivityArrangePiecesState['moves'],
   orig: Key,
 ): boolean =>
-  !!exerciseMoves?.some(exerciseMove => exerciseMove.move?.[0] === orig);
+  !!exerciseMoves?.some(exerciseMove => exerciseMove.move?.[0] === orig) ||
+  !!activityMoves?.some(activityMove => activityMove.move?.[1] === orig);
+
+const isPieceOnRightPlace = (
+  exerciseMoves: ExerciseActivityArrangePiecesState['moves'],
+  orig: Key,
+): boolean =>
+  !!exerciseMoves?.some(exerciseMove => exerciseMove.move?.[1] === orig);
 
 const Playground: FunctionComponent<
   ComponentProps<ExerciseModule<ExerciseArrangePiecesStep>['ActivityBoard']>
@@ -48,11 +56,13 @@ const Playground: FunctionComponent<
 
   const validateMove = useCallback(
     orig => {
-      const isValid = isPieceToMove(exerciseMoves, orig);
+      const isPieceMoveable = isPieceToMove(activityMoves, exerciseMoves, orig);
+      const isPieceCorrectlyPlaced = isPieceOnRightPlace(exerciseMoves, orig);
+      const isValid = isPieceMoveable && !isPieceCorrectlyPlaced;
       setStepActivityState(isValid ? null : orig);
       return isValid;
     },
-    [exerciseMoves, setStepActivityState],
+    [activityMoves, exerciseMoves, setStepActivityState],
   );
 
   return (

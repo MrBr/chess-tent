@@ -51,25 +51,31 @@ const removeOldLineMoves = (index: number, moves?: ExerciseMove[]) =>
 const EditorBoard: FunctionComponent<
   ComponentProps<ExerciseModule<ExerciseVariationStep>['EditorBoard']>
 > = ({ step, Chessboard, updateStep }) => {
-  const { position, shapes } = step.state.task;
-  const { editing, moves, activeMoveIndex } = step.state.task;
+  const { task, activeSegment } = step.state;
+  const { editing, moves, activeMoveIndex, position } = task;
+  const segment = step.state[activeSegment];
   const activeMove = moves?.[activeMoveIndex as number];
   const updateExerciseTask = useUpdateExerciseStateProp(
     updateStep,
     step,
     'task',
   );
+  const updateShapes = useUpdateExerciseStateProp(updateStep, step, [
+    activeSegment,
+    'shapes',
+  ]);
   const handleShapes = useCallback(
     (shapes: Shape[]) => {
-      if (activeMoveIndex) {
+      const isTaskActiveSegment = activeSegment === 'task';
+      if (isTaskActiveSegment && activeMoveIndex !== undefined) {
         updateExerciseTask({
           moves: updateMoveShapes(activeMoveIndex, moves, shapes),
         });
       } else {
-        updateExerciseTask({ shapes });
+        updateShapes(shapes);
       }
     },
-    [activeMoveIndex, moves, updateExerciseTask],
+    [activeMoveIndex, activeSegment, moves, updateExerciseTask, updateShapes],
   );
   const handleChange = useCallback(
     (newPosition, move?, piece?: Piece, captured?) => {
@@ -99,7 +105,9 @@ const EditorBoard: FunctionComponent<
   );
 
   const activePosition = activeMove?.position || position;
-  const activeShapes = activeMove ? activeMove.shapes : shapes;
+  const activeShapes = activeMove
+    ? activeMove.shapes || []
+    : segment?.shapes || [];
 
   const validateMove = useCallback(
     orig => {

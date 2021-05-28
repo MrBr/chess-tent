@@ -1,10 +1,9 @@
 import React, { FunctionComponent, useCallback } from 'react';
-import { components, ui } from '@application';
+import { ui } from '@application';
 import { isStepCompleted } from '@chess-tent/models';
 import { SegmentActivityProps } from './types';
 
-const { LessonToolboxText } = components;
-const { Headline4, Button, Headline5 } = ui;
+const { Headline4, Button, Headline5, Text } = ui;
 
 const Playground: FunctionComponent<
   SegmentActivityProps & { title: string }
@@ -16,10 +15,10 @@ const Playground: FunctionComponent<
   stepActivityState,
   setStepActivityState,
 }) => {
-  const { hint } = stepActivityState;
-  const { task, explanation } = step.state;
+  const { hint: showHint } = stepActivityState;
+  const { task, explanation, hint } = step.state;
   const completed = isStepCompleted(activity, step);
-  const showHint = useCallback(() => {
+  const handleShowHint = useCallback(() => {
     setStepActivityState({
       hint: true,
     });
@@ -27,24 +26,44 @@ const Playground: FunctionComponent<
 
   return (
     <>
-      <Button onClick={showHint} size="extra-small">
-        Hint
+      <Button
+        onClick={handleShowHint}
+        size="extra-small"
+        variant={showHint ? 'regular' : 'primary'}
+        disabled={showHint}
+      >
+        Show Hint
       </Button>
-      <Headline4 className="m-0">{title}</Headline4>
-      <LessonToolboxText defaultText={task.text} />
-      {children}
+      <Headline4 className="mt-2 mb-1">{title}</Headline4>
+      <Text
+        className="m-0"
+        fontSize="small"
+        color="subtitle"
+        initialHtml={task.text}
+      />
       {completed && (
         <>
-          <Headline5 className="m-0">Explanation</Headline5>
-          <LessonToolboxText defaultText={explanation?.text} />
+          <Headline5 className="mt-2 mb-1">Explanation</Headline5>
+          <Text
+            className="m-0"
+            fontSize="small"
+            color="subtitle"
+            initialHtml={explanation?.text}
+          />
         </>
       )}
-      {!completed && hint && (
+      {showHint && hint && (
         <>
-          <Headline5 className="m-0">Hint</Headline5>
-          <LessonToolboxText defaultText={explanation?.text} />
+          <Headline5 className="mt-2 mb-1">Hint</Headline5>
+          <Text
+            className="m-0"
+            fontSize="small"
+            color="subtitle"
+            initialHtml={hint?.text}
+          />
         </>
       )}
+      {children}
     </>
   );
 };

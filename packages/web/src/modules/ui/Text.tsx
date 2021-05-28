@@ -43,6 +43,8 @@ const fontColor = (props: TextProps) => {
       return 'rgba(255,255,255,0.8)';
     case 'alt':
       return 'rgba(255,255,255,0.8)';
+    case 'inherit':
+      return 'inherit';
     default:
       // base
       return '#747A86';

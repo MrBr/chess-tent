@@ -188,6 +188,11 @@ export type StepMove = FunctionComponent<{
   move: NotableMove;
 }>;
 
+export type PieceIcon = FunctionComponent<{
+  className?: string;
+  piece: Piece;
+}>;
+
 export type StepTag = FunctionComponent<{
   children: ReactNode;
   active: boolean;
@@ -273,6 +278,7 @@ export type Components = {
   LessonPlayground: LessonPlayground;
   StepTag: StepTag;
   StepMove: StepMove;
+  PieceIcon: PieceIcon;
   Router: RenderPropComponentType;
   Switch: ComponentType;
   Redirect: ComponentType<RedirectProps>;

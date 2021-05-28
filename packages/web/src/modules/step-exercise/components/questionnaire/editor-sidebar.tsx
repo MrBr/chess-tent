@@ -1,10 +1,10 @@
 import React, { ReactEventHandler, useCallback } from 'react';
 import { ExerciseQuestionnaireStep, ExerciseToolboxProps } from '@types';
-import { components, ui } from '@application';
+import { components, ui, utils } from '@application';
 import { useUpdateExerciseStateProp } from '../../hooks';
 import { SegmentSidebar } from '../segment';
 
-const { Check, Row, Col, Text, Container } = ui;
+const { Check, Row, Col, Text, Container, Icon } = ui;
 const { LessonToolboxText } = components;
 
 export default ({
@@ -19,18 +19,28 @@ export default ({
   const state = step.state.task;
   const addOption: ReactEventHandler = useCallback(
     event => {
+      // Used to prevent other actions such as activeSegment from dispatching
       event.stopPropagation();
       updateTaskOptions([
         ...(state?.options || []),
-        { text: '', correct: false },
+        { id: utils.generateIndex(), text: '', correct: false },
       ]);
     },
     [state, updateTaskOptions],
   );
 
-  const updateOption = (index: number, update: {}) => {
-    const options = state?.options?.map((option, optionIndex) =>
-      optionIndex === index ? { ...option, ...update } : option,
+  const removeOption = useCallback(
+    (id: string, event: React.SyntheticEvent<Element, Event>) => {
+      event.stopPropagation();
+      const options = state?.options?.filter(option => option.id !== id);
+      updateTaskOptions(options);
+    },
+    [state, updateTaskOptions],
+  );
+
+  const updateOption = (id: string, update: {}) => {
+    const options = state?.options?.map(option =>
+      option.id === id ? { ...option, ...update } : option,
     );
     updateTaskOptions(options);
   };
@@ -38,20 +48,28 @@ export default ({
   return (
     <SegmentSidebar step={step} updateStep={updateStep}>
       <Container className="mt-2">
-        {state?.options?.map(({ text, correct }, index) => (
-          <Row key={index} className="align-items-center">
+        {state?.options?.map(({ id, text, correct }, index) => (
+          <Row key={id} className="align-items-center">
             <Col className="pr-0 pl-0 col-auto">
               <Check
                 checked={correct}
-                onChange={() => updateOption(index, { correct: !correct })}
+                onChange={() => updateOption(id, { correct: !correct })}
               />
             </Col>
-            <Col className="pl-0">
+            <Col className="d-flex align-items-center pl-0">
               <LessonToolboxText
                 defaultText={text}
-                placeholder="Type option.."
-                onChange={text => updateOption(index, { text })}
+                placeholder="Type option..."
+                onChange={text => updateOption(id, { text })}
               />
+              {index !== state?.options?.length && (
+                <Icon
+                  type="close"
+                  size="extra-small"
+                  onClick={event => removeOption(id, event)}
+                  textual
+                />
+              )}
             </Col>
           </Row>
         ))}

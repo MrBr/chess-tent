@@ -1,20 +1,33 @@
-import React, { ComponentProps, FunctionComponent, useCallback } from 'react';
+import React, {
+  ComponentProps,
+  FunctionComponent,
+  useCallback,
+  useMemo,
+} from 'react';
 import { components, ui } from '@application';
 import {
   ExerciseModule,
   ExerciseQuestionActivityState,
   ExerciseQuestionStep,
 } from '@types';
+import { isStepCompleted } from '@chess-tent/models';
 import { SegmentActivitySidebar } from '../segment';
 
 const { LessonToolboxText } = components;
-const { Button } = ui;
+const { Button, Headline5, Text } = ui;
 
 const Playground: FunctionComponent<
   ComponentProps<ExerciseModule<ExerciseQuestionStep>['ActivitySidebar']>
 > = props => {
-  const { stepActivityState, setStepActivityState, completeStep, step } = props;
+  const {
+    stepActivityState,
+    setStepActivityState,
+    completeStep,
+    step,
+    activity,
+  } = props;
   const { answer } = stepActivityState as ExerciseQuestionActivityState;
+  const completed = isStepCompleted(activity, step);
   const handleAnswerChange = useCallback(
     (text: string) => {
       setStepActivityState({
@@ -27,12 +40,28 @@ const Playground: FunctionComponent<
     completeStep(step);
   }, [completeStep, step]);
 
+  const InitialHtmlText = ({ initialHtml }: { initialHtml?: string }) =>
+    useMemo(
+      () => <Text className="m-0" color="subtitle" initialHtml={initialHtml} />,
+      [initialHtml],
+    );
+
   return (
-    <SegmentActivitySidebar title="Answer the question" {...props}>
-      <LessonToolboxText defaultText={answer} onChange={handleAnswerChange} />
-      <Button onClick={handleSubmit} size="extra-small">
-        Submit
-      </Button>
+    <SegmentActivitySidebar title="Question" {...props}>
+      <Headline5 className="mt-2 mb-1">Answer</Headline5>
+      {!completed && (
+        <LessonToolboxText
+          defaultText={answer}
+          placeholder="Type here..."
+          onChange={handleAnswerChange}
+        />
+      )}
+      {completed && <InitialHtmlText initialHtml={answer} />}
+      {!completed && (
+        <Button onClick={handleSubmit} size="extra-small" className="mt-2">
+          Submit
+        </Button>
+      )}
     </SegmentActivitySidebar>
   );
 };

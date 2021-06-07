@@ -83,14 +83,16 @@ export const updateLessonSteps = (
   lessonId: Lesson['id'],
   updates: LessonUpdates,
 ) => {
-  const $set = service.subjectPathUpdatesToMongoose$set(updates);
+  const { $set, $unset } = service.subjectPathUpdatesToMongoose(updates);
   return new Promise(resolve => {
-    LessonModel.updateOne({ _id: lessonId }, { $set }).exec((err, result) => {
-      if (err) {
-        throw err;
-      }
-      resolve();
-    });
+    LessonModel.updateOne({ _id: lessonId }, { $set, $unset }).exec(
+      (err, result) => {
+        if (err) {
+          throw err;
+        }
+        resolve();
+      },
+    );
   });
 };
 

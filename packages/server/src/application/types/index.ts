@@ -129,7 +129,7 @@ export type Service = {
   generateImgUrl: () => string;
   fileStorage: AWS.S3;
 
-  subjectPathUpdatesToMongoose$set: (
+  subjectPathUpdatesToMongoose: (
     updates: SubjectPathUpdate[],
   ) => Record<string, any>;
 

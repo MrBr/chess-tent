@@ -83,9 +83,7 @@ export const updateLessonSteps = (
   lessonId: Lesson['id'],
   updates: LessonUpdates,
 ) => {
-  const original$Set = service.subjectPathUpdatesToMongoose$set(updates);
-  const $set = _.pickBy(original$Set, value => value !== undefined);
-  const $unset = _.pickBy(original$Set, value => value === undefined);
+  const { $set, $unset } = service.subjectPathUpdatesToMongoose(updates);
   return new Promise(resolve => {
     LessonModel.updateOne({ _id: lessonId }, { $set, $unset }).exec(
       (err, result) => {

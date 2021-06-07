@@ -20,11 +20,11 @@ export const updateActivity = (
   activityId: Activity['id'],
   updates: SubjectPathUpdate[],
 ) => {
-  const $set = service.subjectPathUpdatesToMongoose$set(updates);
+  const { $set, $unset } = service.subjectPathUpdatesToMongoose(updates);
   return new Promise(resolve => {
     ActivityModel.updateOne(
       { _id: activityId },
-      { $set },
+      { $set, $unset },
       {
         upsert: true,
       },

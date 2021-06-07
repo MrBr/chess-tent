@@ -1,8 +1,8 @@
 import application from '@application';
 import {
-  subjectPathUpdatesToMongoose$set,
+  subjectPathUpdatesToMongoose,
   flattenStateToMongoose$set,
 } from './service';
 
-application.service.subjectPathUpdatesToMongoose$set = subjectPathUpdatesToMongoose$set;
+application.service.subjectPathUpdatesToMongoose = subjectPathUpdatesToMongoose;
 application.service.flattenStateToMongoose$set = flattenStateToMongoose$set;

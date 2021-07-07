@@ -129,6 +129,9 @@ export type SyncAction = Action<
     id: string;
     type: string;
     socketId: string;
+    // Signals record reducer that the record has been synced
+    recordKey?: string;
+    push?: boolean;
   }
 >;
 

@@ -32,6 +32,7 @@ export const useRecord = <T extends RecordValue>(
   const dispatch = useDispatch();
 
   useEffect(() => {
+    // init
     if (isNil(record) && isNil(value)) {
       dispatch(updateRecordAction(recordKey, value, { ...meta, type }));
     }
@@ -43,14 +44,14 @@ export const useRecord = <T extends RecordValue>(
     },
     [dispatch, recordKey],
   );
-  const remove = useCallback(() => {
+  const reset = useCallback(() => {
     dispatch(deleteRecordAction(recordKey));
   }, [recordKey, dispatch]);
 
-  return useMemo(() => [recordValue, update, remove, meta], [
+  return useMemo(() => [recordValue, update, reset, meta], [
     recordValue,
     update,
-    remove,
+    reset,
     meta,
   ]);
 };
@@ -60,7 +61,7 @@ export const useCollectionRecord = <T extends Entity>(
   type: RecordMeta['type'],
   initialMeta?: RecordMeta,
 ): CollectionRecordHookReturn<T> => {
-  const [recordValue, , remove, meta] = useRecord<T>(
+  const [recordValue, update, reset, meta] = useRecord<T[]>(
     recordKey,
     type,
     initialMeta,
@@ -70,12 +71,7 @@ export const useCollectionRecord = <T extends Entity>(
     ? (recordValue as T[])
     : [];
   const dispatch = useDispatch();
-  const updateArray = useCallback(
-    (entity: T[], meta?: Partial<RecordMeta>) => {
-      dispatch(updateRecordAction(recordKey, entity, meta));
-    },
-    [dispatch, recordKey],
-  );
+
   const push = useCallback(
     (entity: T) => {
       dispatch(pushRecordAction(recordKey, entity));
@@ -83,11 +79,11 @@ export const useCollectionRecord = <T extends Entity>(
     [dispatch, recordKey],
   );
 
-  return useMemo(() => [recordValueArray, updateArray, push, remove, meta], [
+  return useMemo(() => [recordValueArray, update, push, reset, meta], [
     recordValueArray,
-    updateArray,
+    update,
     push,
-    remove,
+    reset,
     meta,
   ]);
 };

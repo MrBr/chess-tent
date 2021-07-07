@@ -26,26 +26,12 @@ import { useParams, useLocation } from 'react-router-dom';
 import { History } from 'history';
 import { LessonActivity } from './activity';
 import { GenericArguments } from './_helpers';
-
-export type NonNullableRecordReturn<
-  T extends RecordValue,
-  R extends RecordHookReturn<any> = RecordHookReturn<T>
-> = [T, R[1], R[2], R[3]];
-
-export type RecordHookReturn<T extends RecordValue> = [
-  T | null,
-  (value: T, meta?: Partial<{}>) => void,
-  () => void,
-  RecordType['meta'],
-];
-
-export type CollectionRecordHookReturn<T extends Entity> = [
-  T[] | null,
-  (value: T[], meta?: Partial<{}>) => void,
-  (value: T) => void,
-  () => void,
-  RecordType['meta'],
-];
+import {
+  CollectionRecordHookReturn,
+  NonNullableRecordReturn,
+  RecordHookReturn,
+  RecordHookReturnNew,
+} from './record';
 
 export type Hooks = {
   useIsMobile: () => boolean;
@@ -94,6 +80,11 @@ export type Hooks = {
     type: RecordType['meta']['type'],
     initialMeta?: RecordType['meta'],
   ) => RecordHookReturn<T>;
+  useRecordNew: <T extends RecordValue>(
+    recordKey: string,
+    type: RecordType['meta']['type'],
+    initialMeta?: RecordType['meta'],
+  ) => RecordHookReturnNew<T>;
   useCollectionRecord: <T extends Entity>(
     recordKey: string,
     type: RecordType['meta']['type'],

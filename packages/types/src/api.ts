@@ -72,6 +72,11 @@ export interface API {
 }
 
 export type RequestFetch<T, U> = (...args: GenericArguments<T>) => Promise<U>;
+export type RequestState<T> = {
+  response: T | null;
+  loading: boolean;
+  error: string | null;
+};
 export type LessonUpdatableAction = LessonAction;
 export type LessonUpdates = { path: SubjectPath; value: any }[];
 

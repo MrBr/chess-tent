@@ -1,40 +1,20 @@
-import { useCallback, useState } from 'react';
-import { GenericArguments, Hooks, RequestFetch, StatusResponse } from '@types';
+import { useCallback, useMemo, useState } from 'react';
+import { Hooks, RequestFetch, RequestState, StatusResponse } from '@types';
+import { withRequestHandler } from './hof';
 
 export const useApi: Hooks['useApi'] = <T, U extends StatusResponse>(
   request: RequestFetch<T, U>,
 ) => {
-  const [apiRequestState, setApiRequestState] = useState<{
-    loading: boolean;
-    error: null | string | {};
-    response: U | null;
-  }>({
+  const [apiRequestState, setApiRequestState] = useState<RequestState<U>>({
     loading: false,
     error: null,
     response: null,
   });
 
-  const fetch = useCallback(
-    (...args: GenericArguments<T>) => {
-      setApiRequestState({ response: null, error: null, loading: true });
-      request(...args)
-        .then(response => {
-          if (response.error) {
-            setApiRequestState({
-              response: null,
-              loading: false,
-              error: response.error,
-            });
-            return;
-          }
-          setApiRequestState({ error: null, loading: false, response });
-        })
-        .catch(error => {
-          setApiRequestState({ response: null, loading: false, error });
-        });
-    },
-    [request, setApiRequestState],
-  );
+  const fetch = useMemo(() => withRequestHandler(request)(setApiRequestState), [
+    request,
+    setApiRequestState,
+  ]);
 
   const reset = useCallback(() => {
     setApiRequestState({ response: null, loading: false, error: null });

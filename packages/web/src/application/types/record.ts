@@ -1,5 +1,14 @@
+export type RecordValueNew<V> = V | null | undefined;
+
+export type RecordBase<V> = {
+  get: () => RecordTypeNew<V>;
+  update: (value: V | null | undefined, meta?: Partial<RecordMetaNew>) => void;
+  reset: () => void;
+  recordKey: string;
+};
+
 export type RecordTypeNew<T> = {
-  value: T | undefined | null;
+  value: RecordValueNew<T>;
   meta: RecordMetaNew;
 };
 

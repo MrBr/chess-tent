@@ -1,87 +1,32 @@
-import { services, socket, requests } from '@application';
-import { useCallback, useEffect, useMemo } from 'react';
+import { utils, state, socket } from '@application';
+import { useCallback, useEffect } from 'react';
 import {
-  RecordHookReturn,
-  CollectionRecordHookReturn,
-  RecordMeta,
   RecordValue,
   RequestFetch,
   RecordHook,
-  StatusResponse,
   RecordHookReturnNew,
-  WithRecordHook,
   DataResponse,
-  ExtendRecordHook,
 } from '@types';
 import { useDispatch, useSelector } from 'react-redux';
-import isNil from 'lodash/isNil';
 import { hooks } from '@application';
-import {
-  Activity,
-  Entity,
-  TYPE_ACTIVITY,
-  TYPE_LESSON,
-} from '@chess-tent/models';
+import { Entity } from '@chess-tent/models';
 import { selectRecord } from './state/selectors';
-import {
-  deleteRecordAction,
-  updateRecordAction,
-  pushRecordAction,
-} from './state/actions';
-import { createRecordService } from './services';
+import { deleteRecordAction, updateRecordAction } from './state/actions';
 import { useApi } from '../api/hooks';
+import { useDispatchBatched } from '../state/hooks';
 
-// const createRecordSingle = (recordKey, initialValue) => {
-//   // API
-//   // load
-//   // Lifecycle
-//   // init
-//   // Methods
-//   // update
-//   // reset
-// };
-
-// const createRecordCollection = (recordKey, initialValue) => {
-//   // API
-//   // load: promise
-//   // loadNext: promise
-//   // Lifecycle
-//   // init: T | Promise<T>
-//   // next: T | Promise<T>
-//   // Methods
-//   // push: T
-//   // pop: T
-//   // update: T
-//   // concat: T
-//   // reset: void
-// };
-
-const createRecordHook = <V extends RecordValue>(
-  prefix: string,
-  type: RecordMeta['type'],
-): RecordHook<V> => suffix => {
+const createRecordHook = <V>(prefix: string): RecordHook<V> => suffix => {
   const recordKey = `${prefix}${suffix}`;
-  const record = useSelector(selectRecord(recordKey));
-  const identifier = record?.value;
+  const dispatch = useDispatch();
+  const record = useSelector(selectRecord<V>(recordKey));
+  const value = record?.value;
   const meta = record?.meta || {
-    type,
     recordKey,
   };
 
-  // If ever needed make a composable denormalizeRecord plugin
-  const value = hooks.useDenormalize<V>(identifier, meta.type);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (isNil(record) && isNil(identifier)) {
-      // dispatch(updateRecordAction(recordKey, identifier, { ...meta, type }));
-      dispatch(updateRecordAction(recordKey, identifier, { ...meta }));
-    }
-  }, [dispatch, meta, record, recordKey, type, identifier]);
-
   const update = useCallback(
-    (entity, meta) => {
-      dispatch(updateRecordAction(recordKey, entity, meta));
+    (value, meta) => {
+      dispatch(updateRecordAction(recordKey, value, meta));
     },
     [dispatch, recordKey],
   );
@@ -100,14 +45,14 @@ const createRecordHook = <V extends RecordValue>(
   };
 };
 
-const withRecordApiLoad = <V extends RecordValue, A>(
-  request: RequestFetch<A, DataResponse<V>>,
-): ExtendRecordHook<
-  V,
-  {
-    load: (...args: Parameters<RequestFetch<A, DataResponse<V>>>) => void;
-  }
-> => useRecord => suffix => {
+const withRecordApiLoad = <K extends RecordValue>(useRecord: RecordHook<K>) => <
+  A
+>(
+  request: RequestFetch<A, DataResponse<K>>,
+): RecordHook<
+  K,
+  { load: (...args: Parameters<RequestFetch<A, DataResponse<K>>>) => void }
+> => (suffix: string) => {
   const { fetch, response, loading } = useApi(request);
   const record = useRecord(suffix);
 
@@ -129,10 +74,9 @@ const withRecordApiLoad = <V extends RecordValue, A>(
   };
 };
 
-// const useTestHook = createRecordHook<Activity<any>[]>('test', TYPE_LESSON);
-// const enhancedHook = withRecordApiLoad(requests.activities)(useTestHook);
-
-const withRecordSocketLoad = (): WithRecordHook => useRecord => (...args) => {
+const withRecordSocketLoad = <T extends RecordValue, S extends {}>(
+  useRecord: RecordHook<T, S>,
+) => (): typeof useRecord => (...args) => {
   const record = useRecord(...args);
   const load = useCallback(() => {
     // socket.sendAction - dispatch sync action
@@ -154,13 +98,10 @@ const withRecordSocketLoad = (): WithRecordHook => useRecord => (...args) => {
   };
 };
 
-// const useTestHook = createRecordHook<Activity<any>[]>('test', TYPE_LESSON);
-// const enhancedHook = withRecordSocketLoad()(useTestHook);
-
 // Record init allows custom implementation on recordInitialisation
-const withRecordInit = <V extends RecordValue>(
+const withRecordInit = <V extends RecordValue>(useRecord: RecordHook<V>) => (
   init: (record: RecordHookReturnNew<V>) => void,
-): ExtendRecordHook<V, {}> => useRecord => (...args) => {
+): typeof useRecord => (...args) => {
   const record = useRecord(...args);
 
   useEffect(() => {
@@ -170,10 +111,57 @@ const withRecordInit = <V extends RecordValue>(
   return record;
 };
 
-// const useTestHook = createRecordHook<Activity<any>[]>('test', TYPE_LESSON);
-// const enhancedHook = withRecordInit<Activity<any>[]>(() => {})(useTestHook);
+const withRecordCollection = <V, K, S extends {}>(
+  useRecord: RecordHook<V[], S>,
+) => (): RecordHook<
+  V[],
+  S & {
+    push: (item: V) => void;
+    pop: () => void;
+    concat: (items: V[]) => void;
+  }
+> => (...args) => {
+  const record = useRecord(...args);
 
-// Record plugins example
-// const userRecord = connect(recordSocketLoad(), recordInit())(recordBase)
-// userRecord.useRecord();
-// userRecord.initService(store);
+  const push = (item: V) => {};
+  const pop = () => {
+    // record.update();
+  };
+  const concat = (items: V[]) => {};
+
+  return {
+    ...record,
+    push,
+    pop,
+    concat,
+  };
+};
+
+const withRecordDenormalized = <V extends Entity | Entity[], S extends {}>(
+  useRecord: RecordHook<V, S>,
+  type: string,
+) => (): RecordHook<V, S> => (...args) => {
+  const dispatch = useDispatchBatched();
+  const record = useRecord(...args);
+  const value = hooks.useDenormalize<V>(
+    (record.value as unknown) as V extends Entity[] ? string[] : string,
+    type,
+  );
+  const update = useCallback(
+    (value: V, meta: {}) => {
+      const descriptor = Array.isArray(value)
+        ? value.map(utils.getEntityId)
+        : utils.getEntityId(value as Entity);
+      dispatch(
+        state.actions.updateEntities(value),
+        state.actions.updateRecord(record.recordKey, descriptor, meta),
+      );
+    },
+    [record.update, record.recordKey],
+  );
+  return {
+    ...record,
+    value,
+    update,
+  };
+};

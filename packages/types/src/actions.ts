@@ -81,11 +81,12 @@ export type RecordMeta = {
   loading?: boolean;
   loaded?: boolean;
 };
-export type RecordType<T extends RecordValue = RecordValue> = {
-  value: GetRecordNormalizedValue<T> | [] | null;
+export type RecordType<T> = {
+  value: T | null;
   meta: RecordMeta;
 };
-export type RecordState = Record<string, RecordType>;
+
+export type RecordState = Record<string, RecordType<any>>;
 export type MetaState = Record<string, any>;
 export type AppLessonState = EntityState<NormalizedLesson>;
 export type ConversationState = EntityState<NormalizedConversation>;
@@ -142,20 +143,10 @@ export type UserAction = UpdateEntitiesAction;
 /**
  * Records
  */
-export type RecordUpdateAction = Action<
+export type RecordUpdateAction<T> = Action<
   typeof UPDATE_RECORD,
-  { value: RecordValue; meta?: Partial<RecordMeta> },
+  { value: T; meta?: {} },
   { key: string }
->;
-export type RecordPushAction = Action<
-  typeof PUSH_RECORD,
-  { value: RecordValue },
-  { key: string }
->;
-export type RecordUpdateValueAction = Action<
-  typeof UPDATE_RECORD_VALUE,
-  RecordType['value'],
-  { key: string; type: RecordMeta['type'] }
 >;
 
 export type RecordDeleteAction = Action<
@@ -164,11 +155,7 @@ export type RecordDeleteAction = Action<
   { key: string }
 >;
 
-export type RecordAction =
-  | RecordUpdateAction
-  | RecordPushAction
-  | RecordDeleteAction
-  | RecordUpdateValueAction;
+export type RecordAction = RecordUpdateAction<unknown> | RecordDeleteAction;
 
 /**
  * Message

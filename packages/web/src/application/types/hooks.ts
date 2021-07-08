@@ -1,7 +1,6 @@
 // Hooks
 import {
   LessonsRequest,
-  RecordType,
   RecordValue,
   RequestFetch,
   StatusResponse,
@@ -26,12 +25,7 @@ import { useParams, useLocation } from 'react-router-dom';
 import { History } from 'history';
 import { LessonActivity } from './activity';
 import { GenericArguments } from './_helpers';
-import {
-  CollectionRecordHookReturn,
-  NonNullableRecordReturn,
-  RecordHookReturn,
-  RecordHookReturnNew,
-} from './record';
+import { RecordHookReturnNew } from './record';
 
 export type Hooks = {
   useIsMobile: () => boolean;
@@ -55,13 +49,13 @@ export type Hooks = {
   ) => void;
   useTags: () => Tag[];
   useUser: (userId: User['id']) => User;
-  useActiveUserRecord: () => NonNullableRecordReturn<User>;
+  useActiveUserRecord: () => RecordHookReturnNew<User>;
   useActiveUserNotifications: (
     limit?: number,
-  ) => RecordHookReturn<Notification[]>;
-  useUserTrainings: (user: User) => CollectionRecordHookReturn<LessonActivity>;
-  useUserLessonsRecord: (user: User) => RecordHookReturn<Lesson[]>;
-  useConversationParticipant: () => RecordHookReturn<User>;
+  ) => RecordHookReturnNew<Notification[]>;
+  useUserTrainings: (user: User) => RecordHookReturnNew<LessonActivity>;
+  useUserLessonsRecord: (user: User) => RecordHookReturnNew<Lesson[]>;
+  useConversationParticipant: () => RecordHookReturnNew<User>;
   useHistory: () => History;
   useQuery: <T extends Record<string, string | undefined>>() => T;
   useLocation: typeof useLocation;
@@ -75,21 +69,6 @@ export type Hooks = {
     error: null | string | {};
     reset: () => void;
   };
-  useRecord: <T extends RecordValue>(
-    recordKey: string,
-    type: RecordType['meta']['type'],
-    initialMeta?: RecordType['meta'],
-  ) => RecordHookReturn<T>;
-  useRecordNew: <T extends RecordValue>(
-    recordKey: string,
-    type: RecordType['meta']['type'],
-    initialMeta?: RecordType['meta'],
-  ) => RecordHookReturnNew<T>;
-  useCollectionRecord: <T extends Entity>(
-    recordKey: string,
-    type: RecordType['meta']['type'],
-    initialMeta?: RecordType['meta'],
-  ) => CollectionRecordHookReturn<T>;
   useMeta: <T>(metaKey: string) => [T, (meta: T) => void, () => void];
   useCopyStep: () => [
     boolean,
@@ -101,11 +80,11 @@ export type Hooks = {
     key: string,
     filters: LessonsRequest,
     options?: { my?: boolean },
-  ) => RecordHookReturn<Lesson[]>;
-  useCoaches: (user: User) => RecordHookReturn<Mentorship[]>;
-  useStudents: (user: User) => RecordHookReturn<Mentorship[]>;
+  ) => RecordHookReturnNew<Lesson[]>;
+  useCoaches: (user: User) => RecordHookReturnNew<Mentorship[]>;
+  useStudents: (user: User) => RecordHookReturnNew<Mentorship[]>;
   useDenormalize: <T extends RecordValue>(
-    descriptor: string[] | string | null,
+    descriptor: string[] | string | null | undefined,
     type?: string,
   ) => T | null;
   useDispatchService: () => <T extends (...args: any) => any>(

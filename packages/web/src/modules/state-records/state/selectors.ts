@@ -1,5 +1,5 @@
-import { AppState, RecordType, RecordValue } from '@types';
+import { AppState, RecordTypeNew } from '@types';
 
-export const selectRecord = <T extends RecordValue>(recordKey: string) => (
+export const selectRecord = <T>(recordKey: string) => (
   state: AppState,
-): RecordType<T> => state.records[recordKey] as RecordType<T>;
+): RecordTypeNew<T> => state.records[recordKey] as RecordTypeNew<T>;

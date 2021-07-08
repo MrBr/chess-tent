@@ -19,11 +19,8 @@ import {
   AppState,
   EntitiesState,
   EntityState,
-  RecordMeta,
   RecordType,
   RecordUpdateAction,
-  RecordPushAction,
-  RecordUpdateValueAction,
   RecordValue,
   SendMessageAction,
   SendPatchAction,
@@ -51,20 +48,11 @@ export type State = {
   registerMiddleware: (middleware: Middleware) => void;
   getRootReducer: () => Reducer;
   actions: {
-    updateRecord: <T extends RecordValue>(
+    updateRecord: <T>(
       recordKey: string,
-      entity: T,
-      meta?: Partial<RecordMeta>,
-    ) => RecordUpdateAction;
-    pushRecord: <T extends RecordValue>(
-      recordKey: string,
-      entity: T,
-    ) => RecordPushAction;
-    updateRecordValue: (
-      recordKey: string,
-      recordValue: RecordType['value'],
-      type: RecordMeta['type'],
-    ) => RecordUpdateValueAction;
+      value: T,
+      meta?: {},
+    ) => RecordUpdateAction<T>;
     updateEntities: (entity: Entity | Entity[]) => UpdateEntitiesAction;
     updateEntity: <M extends {}>(
       entity: Entity,

@@ -1,70 +1,24 @@
-import requests, { utils, state } from '@application';
-import { useMemo } from 'react';
-import { RequestFetch, DataResponse, RecordBase } from '@types';
-import { useStore } from 'react-redux';
+import { utils, state } from '@application';
+import {
+  RequestFetch,
+  DataResponse,
+  RecordBase,
+  InferRecordValue,
+  MF,
+  CreateRecord,
+} from '@types';
 import { Store } from 'redux';
-import { Entity, Lesson, TYPE_LESSON } from '@chess-tent/models';
+import { Entity } from '@chess-tent/models';
 import { batchActions } from 'redux-batched-actions';
 import { selectRecord } from './state/selectors';
 import { deleteRecordAction, updateRecordAction } from './state/actions';
 import { withRequestHandler } from '../api/hof';
 
-type MF = (
-  store: Store,
-) => (record: { recordKey: string }) => { recordKey: string };
-
-type UseRecord = <V>(store: Store, recordKey: string) => RecordBase<V>;
-
-type InferRecordValue<T extends RecordBase<any>> = T extends RecordBase<infer V>
-  ? V extends (infer AV)[]
-    ? AV
-    : V
-  : never;
-
-function createRecord<T1, T2>(
-  f1: (store: Store) => (x: T1) => T2,
-): (store: Store, recordKey: string) => T2;
-function createRecord<T1, T2, T3>(
-  f1: (store: Store) => (x: T1) => T2,
-  f2: (store: Store) => (x: T2) => T3,
-): (store: Store, recordKey: string) => T3;
-function createRecord<T1, T2, T3, T4>(
-  f1: (store: Store) => (x: T1) => T2,
-  f2: (store: Store) => (x: T2) => T3,
-  f3: (store: Store) => (x: T3) => T4,
-): (store: Store, recordKey: string) => T4;
-function createRecord<T1, T2, T3, T4, T5>(
-  f1: (store: Store) => (x: T1) => T2,
-  f2: (store: Store) => (x: T2) => T3,
-  f3: (store: Store) => (x: T3) => T4,
-  f4: (store: Store) => (x: T4) => T5,
-): (store: Store, recordKey: string) => T5;
-function createRecord<T1, T2, T3, T4, T5, T6>(
-  f1: (store: Store) => (x: T1) => T2,
-  f2: (store: Store) => (x: T2) => T3,
-  f3: (store: Store) => (x: T3) => T4,
-  f4: (store: Store) => (x: T4) => T5,
-  f5: (store: Store) => (x: T5) => T6,
-): (store: Store, recordKey: string) => T6;
-function createRecord<V>(...fns: MF[]) {
+const createRecord: CreateRecord = function createRecord(...fns: MF[]) {
   return (store: Store, recordKey: string) => {
     return fns.reduce((record, middleware) => middleware(store)(record), {
       recordKey,
     });
-  };
-}
-
-const useRecordHook = <V>(resolveRecord: UseRecord, suffix: string) => {
-  const store = useStore();
-  const record = useMemo(() => resolveRecord<V>(store, suffix), [
-    store,
-    suffix,
-  ]);
-  const { value, meta } = record.get();
-  return {
-    ...record,
-    value,
-    meta,
   };
 };
 
@@ -176,10 +130,3 @@ export const withRecordBase = <V>() => (store: Store) => ({
     recordKey,
   };
 };
-
-const record = createRecord(
-  withRecordBase<Lesson[]>(),
-  withRecordDenormalized(TYPE_LESSON),
-  withRecordCollection(),
-  withRecordApiLoad(requests.requests.lessons),
-)({} as Store, '');

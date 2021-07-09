@@ -31,7 +31,12 @@ import {
 import { MoveStep, Steps, VariationStep } from './steps';
 import { GenericArguments } from './_helpers';
 import { ActivityComment, ActivityStepStateBase, StepModule } from './step';
-import { AppAnalysis, NotificationRenderer, StepModules } from './index';
+import {
+  AppAnalysis,
+  CreateRecord,
+  NotificationRenderer,
+  StepModules,
+} from './index';
 
 export type RecordService<T extends RecordValue> = {
   record: RecordType<T>;
@@ -53,6 +58,7 @@ export type Services = {
     promoted?: PieceRolePromotable,
   ) => MoveShort;
   shortenRole: (role: PieceRole) => PieceRoleShort;
+  createRecord: CreateRecord;
   createNotableMove: (
     position: FEN,
     move: Move,

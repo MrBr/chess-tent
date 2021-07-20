@@ -57,6 +57,9 @@ export type Hooks = {
   useActiveUserRecord: <T = void>(
     fallback?: T,
   ) => RecordHookSafe<InferInitRecord<Records['activeUser']>, T>;
+  useConversationParticipant: () => RecordHookInit<
+    InferInitRecord<Records['conversationParticipant']>
+  >;
   useActiveUserNotifications: (
     limit?: number,
   ) => RecordHookInit<InferInitRecord<Records['activeUserNotifications']>>;

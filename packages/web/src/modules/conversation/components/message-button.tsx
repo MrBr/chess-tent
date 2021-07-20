@@ -1,10 +1,9 @@
 import React from 'react';
 import { hooks, ui } from '@application';
 import { Components } from '@types';
-import { conversationParticipant } from '../records';
 
 const { Button } = ui;
-const { useRecordInit } = hooks;
+const { useConversationParticipant } = hooks;
 
 const MessageButton: Components['MessageButton'] = ({
   variant,
@@ -13,9 +12,7 @@ const MessageButton: Components['MessageButton'] = ({
   user,
   className,
 }) => {
-  const { update: setConversationParticipant } = useRecordInit(
-    conversationParticipant,
-  );
+  const { update: setConversationParticipant } = useConversationParticipant();
 
   return (
     <Button

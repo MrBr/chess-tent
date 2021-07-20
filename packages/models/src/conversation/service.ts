@@ -31,4 +31,17 @@ const updateConversationMessage = createService(
   },
 );
 
-export { createConversation, getParticipant, updateConversationMessage };
+const addConversationMessage = createService(
+  (draft: Conversation, message: Message): Conversation => {
+    draft.messages.push(message);
+
+    return draft;
+  },
+);
+
+export {
+  createConversation,
+  getParticipant,
+  updateConversationMessage,
+  addConversationMessage,
+};

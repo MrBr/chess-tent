@@ -4,6 +4,7 @@ import {
   Conversation,
   TYPE_MESSAGE,
   updateConversationMessage,
+  addConversationMessage,
 } from '@chess-tent/models';
 import { selectConversation } from './selectors';
 import { activeUserConversations } from '../records';
@@ -22,7 +23,7 @@ export const middleware: Middleware = store => next => action => {
       // Starting new conversation
 
       requests.conversationSave(conversation).then(() => {
-        record.push(conversation);
+        record.push(addConversationMessage(conversation, action.payload));
         socket.sendAction(action);
       });
     } else if (!action.meta.push) {

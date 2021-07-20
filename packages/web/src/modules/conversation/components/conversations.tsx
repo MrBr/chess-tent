@@ -15,6 +15,7 @@ const {
   useSelector,
   useRecordInit,
   useActiveUserRecord,
+  useConversationParticipant,
 } = hooks;
 const { generateIndex } = utils;
 
@@ -25,13 +26,18 @@ export default () => {
     value: participant,
     update: setParticipant,
     reset: clearParticipant,
-  } = useRecordInit(records.conversationParticipant);
-  const { value: conversations } = useRecordInit(
+  } = useConversationParticipant();
+  const { value: conversations, load } = useRecordInit(
     records.activeUserConversations,
+    'conversations',
   );
   const conversation = useSelector(
     selectConversationByUsers(activeUser, participant),
   );
+
+  useEffect(() => {
+    load(activeUser.id);
+  }, [load, activeUser.id]);
 
   useEffect(() => {
     if (participant && !conversation) {

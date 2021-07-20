@@ -2,13 +2,14 @@ import { useCallback, useEffect, useState } from 'react';
 import { hooks, requests, state } from '@application';
 import { Conversation } from '@chess-tent/models';
 import first from 'lodash/first';
+import { conversationParticipant } from './records';
 
-const { useApi, useDispatch } = hooks;
+const { useApi, useDispatch, useRecordInit } = hooks;
 const {
   actions: { updateEntities },
 } = state;
 
-export const useLoadMoreMessages = (
+const useLoadMoreMessages = (
   conversation: Conversation,
 ): [() => void, boolean, boolean] => {
   const dispatch = useDispatch();
@@ -37,3 +38,9 @@ export const useLoadMoreMessages = (
   }, [noMore, loading, conversation.messages, conversation.id, fetch]);
   return [loadMore, loading || !!response, noMore];
 };
+
+const useConversationParticipant = () => {
+  return useRecordInit(conversationParticipant, 'conversationParticipant');
+};
+
+export { useLoadMoreMessages, useConversationParticipant };

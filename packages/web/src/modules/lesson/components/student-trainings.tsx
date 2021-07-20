@@ -1,7 +1,8 @@
 import React from 'react';
 import { components, ui } from '@application';
 import groupBy from 'lodash/groupBy';
-import { Components, LessonActivity } from '@types';
+import { Components } from '@types';
+import { LessonActivity } from '@chess-tent/models';
 
 const { CoachCard, TrainingCard } = components;
 const { Headline3, Container, Row, Col } = ui;

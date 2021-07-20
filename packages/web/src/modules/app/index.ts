@@ -10,6 +10,13 @@ application.register(
   },
 );
 application.register(
+  () => import('./record'),
+  module => {
+    application.records.getRecordInitByNamespace =
+      module.getRecordInitByNamespace;
+  },
+);
+application.register(
   () => import('./pages/landing'),
   module => {
     application.pages.Landing = module.default;

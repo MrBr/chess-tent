@@ -1,21 +1,17 @@
 import React from 'react';
 import { Middleware, SEND_NOTIFICATION } from '@types';
-import { services, components, state } from '@application';
+import { services, components } from '@application';
 import { hasNotificationRender } from '../model';
-import { notificationRecordService } from '../service';
+import { activeUserNotifications } from '../record';
 
-const { actions } = state;
-
-const { updateEntities } = actions;
 const { pushToast } = services;
 const { NotificationRender } = components;
 
 export const notificationMiddleware: Middleware = store => next => action => {
   if (action.type === SEND_NOTIFICATION) {
     const notification = action.payload;
-    const { record, updateValue } = notificationRecordService(store);
-    store.dispatch(updateEntities(notification));
-    updateValue([...(record?.value || []), notification.id]);
+    const record = activeUserNotifications(store, 'notifications');
+    record.push(notification);
   }
   if (
     action.type === SEND_NOTIFICATION &&

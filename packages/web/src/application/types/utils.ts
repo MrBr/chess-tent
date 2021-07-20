@@ -10,7 +10,7 @@ export type Utils = {
   rightMouse: (f: Function) => (e: MouseEvent) => void;
   stopPropagation: ReactEventHandler;
   generateIndex: () => string;
-  denormalize: <T>(id: string | string[], type: string, entities: {}) => T;
+  denormalize: <T>(id: string, type: string, entities: {}) => T;
   normalize: (entity: Entity) => { entities: any; result: any };
   getEntityId: (entity: Entity | NormalizedEntity) => string;
   mediaQueryEnhancer: (

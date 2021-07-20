@@ -28,7 +28,7 @@ export const unsubscribe = (channel: string) =>
 export const SocketProvider: ComponentType = props => {
   const dispatch = useDispatchBatched();
   const [, updateSocketConnected] = useMeta('socketConnected');
-  const [user] = useActiveUserRecord();
+  const { value: user } = useActiveUserRecord(null);
   const userId = user?.id;
 
   useEffect(() => {

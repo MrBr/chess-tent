@@ -24,7 +24,7 @@ const InvitationEmailSchema = yup.object().shape({
 
 export default () => {
   const { fetch } = useApi(requests.inviteUser);
-  const [activeUser] = useActiveUserRecord();
+  const { value: activeUser } = useActiveUserRecord();
   const target = useRef() as RefObject<HTMLButtonElement>;
   const [isModalVisible, setModalVisibility] = useState(false);
   const [isLinkCopied, setLinkCopy] = useState(false);

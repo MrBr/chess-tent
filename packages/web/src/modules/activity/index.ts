@@ -6,9 +6,15 @@ application.model.activitySchema = activitySchema;
 application.register(() => import('./state/reducer'));
 application.register(() => import('./state/middleware'));
 application.register(
-  () => import('./state/selectors'),
+  () => import('./record'),
   module => {
-    application.state.selectors.activitySelector = module.activitySelector;
+    application.records.activity = module.activity;
+  },
+);
+application.register(
+  () => import('./hook'),
+  module => {
+    application.hooks.useActivity = module.useActivity;
   },
 );
 application.register(

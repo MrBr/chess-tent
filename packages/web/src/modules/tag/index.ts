@@ -5,7 +5,7 @@ import { tagSchema } from './model';
 application.model.tagSchema = tagSchema;
 
 application.register(
-  () => import('./state/hooks'),
+  () => import('./hooks'),
   module => {
     application.hooks.useTags = module.useTags;
   },

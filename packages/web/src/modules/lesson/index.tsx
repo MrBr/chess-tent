@@ -23,8 +23,8 @@ application.register(
   module => {
     application.hooks.useUpdateLessonStepState =
       module.useUpdateLessonStepState;
-    application.hooks.useUserLessonsRecord = module.useUserLessonRecord;
     application.hooks.useLessons = module.useLessons;
+    application.hooks.useMyLessons = module.useMyLessons;
     application.hooks.useUserTrainings = module.useUserTrainings;
   },
 );

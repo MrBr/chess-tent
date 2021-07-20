@@ -1,6 +1,6 @@
 import React from 'react';
-import { LessonActivity } from '@types';
 import { hooks, ui } from '@application';
+import { LessonActivity } from '@chess-tent/models';
 import LessonThumbnail from './thumbnail';
 
 const { Row, Col, Headline6, Text } = ui;

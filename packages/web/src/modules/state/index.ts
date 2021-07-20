@@ -7,11 +7,7 @@ import {
   getRootReducer,
   registerReducer,
 } from './reducer';
-import {
-  useDenormalize,
-  useDispatchBatched,
-  useDispatchService,
-} from './hooks';
+import { useDispatchBatched, useDispatchService } from './hooks';
 import { selectNormalizedEntities } from './selectors';
 
 application.register(
@@ -33,7 +29,6 @@ application.hooks.useDispatchBatched = useDispatchBatched;
 application.hooks.useDispatch = useDispatch;
 application.hooks.useSelector = useSelector;
 application.hooks.useStore = useStore;
-application.hooks.useDenormalize = useDenormalize;
 application.hooks.useDispatchService = useDispatchService;
 application.register(() => import('./register'));
 application.register(

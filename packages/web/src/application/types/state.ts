@@ -19,14 +19,15 @@ import {
   AppState,
   EntitiesState,
   EntityState,
-  RecordType,
-  RecordUpdateAction,
-  RecordValue,
   SendMessageAction,
   SendPatchAction,
   UpdateEntitiesAction,
   UpdateEntityAction,
 } from '@chess-tent/types';
+import {
+  RecordPushAction,
+  RecordUpdateAction,
+} from '@chess-tent/redux-record/types';
 
 export type Middleware = ReduxMiddleware;
 
@@ -53,6 +54,12 @@ export type State = {
       value: T,
       meta?: {},
     ) => RecordUpdateAction<T>;
+    pushRecord: <T>(
+      recordKey: string,
+      value: T,
+      meta?: {},
+    ) => RecordPushAction<T>;
+
     updateEntities: (entity: Entity | Entity[]) => UpdateEntitiesAction;
     updateEntity: <M extends {}>(
       entity: Entity,
@@ -81,9 +88,6 @@ export type State = {
     activitySelector: <T extends Subject>(
       activityId: Activity<T>['id'],
     ) => (state: AppState) => Activity<T>;
-    selectRecord: <T extends RecordValue>(
-      recordKey: string,
-    ) => (state: AppState) => RecordType<T>;
     selectNormalizedEntities: <
       T extends string | string[],
       K extends keyof EntitiesState

@@ -1,12 +1,12 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { hooks, ui } from '@application';
+import { hooks, ui, records } from '@application';
 import { Components } from '@types';
 import defaultAvatarSrc from '../images/default-avatar.svg';
 
 const { Card, CardBody, FramedProfile, Headline4, Button, Text, Row, Col } = ui;
 
-const { useConversationParticipant, useHistory } = hooks;
+const { useHistory, useRecordInit } = hooks;
 
 const CoachFrame = styled(Card)({
   margin: '0.5rem',
@@ -20,7 +20,9 @@ const CoachFrame = styled(Card)({
 });
 
 const CoachCard: Components['CoachCard'] = ({ coach }) => {
-  const [, setConversationParticipant] = useConversationParticipant();
+  const { update: setConversationParticipant } = useRecordInit(
+    records.conversationParticipant,
+  );
   const history = useHistory();
 
   return (

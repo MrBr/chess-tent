@@ -9,7 +9,7 @@ const { useLessons } = hooks;
 
 const BrowseLessonsPage: React.FC = () => {
   const [lessonsFilter, setLessonsFilter] = useState<LessonsRequest>({});
-  const [lessons] = useLessons('all-lessons', lessonsFilter);
+  const { value: lessons } = useLessons('all-lessons', lessonsFilter);
 
   const handleFilterChange = useCallback(
     (search, difficulty, tags) => {

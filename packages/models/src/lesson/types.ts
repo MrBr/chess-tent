@@ -2,6 +2,8 @@ import { User } from '../user';
 import { Subject } from '../subject';
 import { Chapter } from '../chapter';
 import { Tag } from '../tag';
+import { Step } from '../step';
+import { Activity } from '../activity';
 
 export const TYPE_LESSON = 'lessons';
 
@@ -49,3 +51,13 @@ export interface NormalizedLesson {
     status?: Lesson['state']['status'];
   };
 }
+
+export type LessonActivity = Activity<
+  Lesson,
+  {
+    activeChapterId?: Chapter['id'];
+    activeStepId?: Step['id'];
+    training: boolean;
+    [key: string]: any;
+  }
+>;

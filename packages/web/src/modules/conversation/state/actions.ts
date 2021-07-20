@@ -1,16 +1,5 @@
 import { SEND_MESSAGE, SendMessageAction } from '@types';
-import {
-  Conversation,
-  Message,
-  TYPE_CONVERSATION,
-  User,
-} from '@chess-tent/models';
-
-import { state } from '@application';
-
-const {
-  actions: { updateRecordValue },
-} = state;
+import { Conversation, Message, User } from '@chess-tent/models';
 
 export const sendMessage = (
   user: User,
@@ -23,7 +12,3 @@ export const sendMessage = (
     conversationId: conversation.id,
   },
 });
-
-export const updateActiveUserConversations = (
-  conversations: Conversation['id'][],
-) => updateRecordValue('conversations', conversations, TYPE_CONVERSATION);

@@ -7,8 +7,8 @@ const { Container, Row, Col, Headline3, Text, Headline2, Card, CardBody } = ui;
 const { Link, MentorshipAction, Page, UserAvatar, MessageButton } = components;
 
 const Students = () => {
-  const [user] = useActiveUserRecord();
-  const [students] = useStudents(user);
+  const { value: user } = useActiveUserRecord();
+  const { value: students } = useStudents(user);
   const result = useMemo(() => groupBy(students, student => student.approved), [
     students,
   ]);

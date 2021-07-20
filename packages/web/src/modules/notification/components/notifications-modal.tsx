@@ -8,7 +8,7 @@ const { NotificationRender } = components;
 const { useActiveUserNotifications } = hooks;
 
 export default ({ close }: { close: () => void }) => {
-  const [notifications] = useActiveUserNotifications();
+  const { value: notifications } = useActiveUserNotifications();
   const [loadMoreNotifications, loading, noMore] = useLoadMoreNotifications();
 
   const reversedNotifications = useMemo(

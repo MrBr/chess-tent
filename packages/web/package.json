@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@chess-tent/redux-record": "1.0.0",
     "@chess-tent/chessground": "1.0.0",
     "@chess-tent/models": "1.0.0",
     "@chess-tent/normalization": "1.0.0",

@@ -1,7 +1,7 @@
 import { socket } from '@application';
 import { MiddlewareFunction } from '@types';
 import { Activity } from '@chess-tent/models';
-import { PUSH_RECORD } from '@chess-tent/types';
+import { PUSH_RECORD } from '@chess-tent/redux-record/types';
 import {
   ActivityNotFoundError,
   UnauthorizedActivityEditError,

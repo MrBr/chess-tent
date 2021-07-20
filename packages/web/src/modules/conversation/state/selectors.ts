@@ -7,9 +7,9 @@ export const selectConversation = (conversationId: Conversation['id']) => (
 ): Conversation | null =>
   utils.denormalize(conversationId, TYPE_CONVERSATION, state.entities);
 
-export const selectConversationByUsers = (...users: (User | null)[]) => (
-  state: AppState,
-): Conversation | null => {
+export const selectConversationByUsers = (
+  ...users: (User | null | undefined)[]
+) => (state: AppState): Conversation | null => {
   if (users.every(Boolean) && users.length < 2) {
     return null;
   }

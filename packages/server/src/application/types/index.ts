@@ -24,6 +24,7 @@ import {
   UNSUBSCRIBE_EVENT,
   SyncAction,
 } from '@chess-tent/types';
+import { RecordAction } from '@chess-tent/redux-record/types';
 
 export type AppDocument<T> = T & Document & { v: number };
 export type EntityDocument<T = Entity> = AppDocument<T>;
@@ -206,7 +207,7 @@ export type SocketStream =
   | {
       client: Socket;
       event: typeof ACTION_EVENT;
-      data: Actions;
+      data: Actions | RecordAction;
     }
   | {
       client: Socket;
@@ -234,7 +235,7 @@ export type SocketService = {
   sendAction: (channel: string, stream: SocketStream) => void;
   sendServerAction: (
     channel: string,
-    action: Actions,
+    action: Actions | RecordAction,
     toSocketId?: string,
   ) => void;
   shouldSyncData: (roomId: string) => boolean;

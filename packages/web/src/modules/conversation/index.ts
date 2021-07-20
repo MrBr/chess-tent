@@ -20,6 +20,15 @@ application.register(
     application.state.registerEntityReducer('conversations', module.reducer);
   },
 );
+application.register(
+  () => import('./records'),
+  module => {
+    application.records.conversationParticipant =
+      module.conversationParticipant;
+    application.records.activeUserConversations =
+      module.activeUserConversations;
+  },
+);
 
 application.register(
   () => import('./state/actions'),
@@ -28,13 +37,6 @@ application.register(
   },
 );
 
-application.register(
-  () => import('./hooks'),
-  module => {
-    application.hooks.useConversationParticipant =
-      module.useConversationParticipant;
-  },
-);
 application.register(
   () => import('./components/conversations'),
   module => {

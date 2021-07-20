@@ -1,7 +1,5 @@
 import React, { ComponentType, ReactElement, useEffect } from 'react';
 import { hooks, requests, services, socket } from '@application';
-import { RecordHookReturn } from '@types';
-import { User } from '@chess-tent/models';
 
 const {
   useApi,
@@ -18,10 +16,7 @@ const Provider: ComponentType = ({ children }) => {
   const { fetch, response, loading, reset } = useApi(requests.me);
   const dispatch = useDispatch();
   const [socketConnected] = useMeta('socketConnected');
-  const [
-    user,
-    updateActiveUser,
-  ] = useActiveUserRecord() as RecordHookReturn<User>;
+  const { value: user, update: updateActiveUser } = useActiveUserRecord(null);
   const userId = user?.id;
 
   useEffect(() => {

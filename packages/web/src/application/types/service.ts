@@ -1,12 +1,6 @@
 import { ChessInstance } from 'chess.js';
 import { ComponentType, ReactElement } from 'react';
-import {
-  API,
-  ApiMethods,
-  RecordMeta,
-  RecordType,
-  RecordValue,
-} from '@chess-tent/types';
+import { API, ApiMethods } from '@chess-tent/types';
 import {
   Chapter,
   Step,
@@ -16,7 +10,6 @@ import {
   User,
 } from '@chess-tent/models';
 import { History } from 'history';
-import { MiddlewareAPI } from 'redux';
 import {
   FEN,
   Move,
@@ -31,18 +24,7 @@ import {
 import { MoveStep, Steps, VariationStep } from './steps';
 import { GenericArguments } from './_helpers';
 import { ActivityComment, ActivityStepStateBase, StepModule } from './step';
-import {
-  AppAnalysis,
-  CreateRecord,
-  NotificationRenderer,
-  StepModules,
-} from './index';
-
-export type RecordService<T extends RecordValue> = {
-  record: RecordType<T>;
-  update: (value: T, meta?: {}) => void;
-  updateValue: (value: RecordType<T>['value']) => void;
-};
+import { AppAnalysis, NotificationRenderer, StepModules } from './index';
 
 export type Services = {
   Chess: {
@@ -58,7 +40,6 @@ export type Services = {
     promoted?: PieceRolePromotable,
   ) => MoveShort;
   shortenRole: (role: PieceRole) => PieceRoleShort;
-  createRecord: CreateRecord;
   createNotableMove: (
     position: FEN,
     move: Move,
@@ -86,10 +67,6 @@ export type Services = {
       | string
       | ((...args: GenericArguments<K>) => { url: string; data?: any }),
   ) => (...args: GenericArguments<K>) => Promise<U>;
-  createRecordService: <T extends RecordValue>(
-    recordKey: string,
-    recordType: RecordMeta['type'],
-  ) => (store: MiddlewareAPI) => RecordService<T>;
   isStepType: <T extends Steps>(step: Step, stepType: StepType) => step is T;
   createStep: <T extends StepType>(
     stepType: T,

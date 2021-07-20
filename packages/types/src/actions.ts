@@ -33,16 +33,6 @@ export type Action<T, P, M = {}> = {
   meta: M & { push?: boolean };
 };
 
-export type PathAction<T, P, M extends { path: SubjectPath }> = Action<T, P, M>;
-
-export type GetActionMeta<T extends Action<any, any>> = T extends Action<
-  any,
-  any,
-  infer M
->
-  ? M
-  : never;
-
 export type EntityState<T> = { [key: string]: T };
 export type EntitiesState = {
   users: UserState;
@@ -67,8 +57,6 @@ export type MentorshipState = EntityState<NormalizedMentorship>;
 
 export interface AppState {
   entities: EntitiesState;
-  // TODO - take from state? - leave room for extension
-  // records: RecordState;
   meta: MetaState;
 }
 

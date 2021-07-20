@@ -6,22 +6,23 @@ import {
   updateConversationMessage,
 } from '@chess-tent/models';
 import { selectConversation } from './selectors';
-import { conversationRecordService } from '../service';
+import { activeUserConversations } from '../records';
 
 const { actions } = state;
 
-const { updateEntities, updateEntity } = actions;
+const { updateEntity } = actions;
 
 export const middleware: Middleware = store => next => action => {
   if (action.type === SEND_MESSAGE) {
     const state = store.getState();
-    const { record, updateValue } = conversationRecordService(store);
+    const record = activeUserConversations(store, 'conversations');
     const { conversationId } = action.meta;
     const conversation = selectConversation(conversationId)(state);
     if (conversation?.messages.length === 0) {
       // Starting new conversation
+
       requests.conversationSave(conversation).then(() => {
-        updateValue([conversation.id, ...(record.value || [])]);
+        record.push(conversation);
         socket.sendAction(action);
       });
     } else if (!action.meta.push) {
@@ -29,8 +30,7 @@ export const middleware: Middleware = store => next => action => {
     }
     if (!conversation) {
       requests.conversation(conversationId).then(response => {
-        store.dispatch(updateEntities(response.data));
-        updateValue([conversationId, ...(record.value || [])]);
+        record.push(response.data);
       });
     }
   }

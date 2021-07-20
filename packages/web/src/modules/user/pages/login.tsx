@@ -39,7 +39,8 @@ const LoginButton = styled(Button)(
 
 export default () => {
   const { fetch, loading, response } = useApi(requests.login);
-  const [user, updateUser] = hooks.useActiveUserRecord();
+  const record = hooks.useActiveUserRecord(null);
+  const { value: user, update: updateUser } = record;
   const history = useHistory();
 
   useEffect(() => {

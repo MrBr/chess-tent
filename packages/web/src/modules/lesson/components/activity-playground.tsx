@@ -40,7 +40,7 @@ export default ({
   activeStepActivityState,
 }: ComponentProps<Components['LessonPlayground']>) => {
   const tab = tabs[activeTab];
-  const [activeUser] = useActiveUserRecord();
+  const { value: activeUser } = useActiveUserRecord();
   const handleCommentSubmit = useCallback(
     event => {
       if (event.key === 'Enter') {

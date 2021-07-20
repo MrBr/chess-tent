@@ -14,9 +14,9 @@ import { Pages } from './pages';
 import { Constants } from './constants';
 import { Context } from './context';
 import { HOF } from './hof';
+import { Records } from './records';
 
 export * from '@chess-tent/types';
-export * from './activity';
 export * from './hoc';
 export * from './context';
 export * from './chess';
@@ -34,7 +34,7 @@ export * from './service';
 export * from './utils';
 export * from './pages';
 export * from './notification';
-export * from './record';
+export * from './records';
 export * from './_helpers';
 
 export type Application = {
@@ -55,5 +55,6 @@ export type Application = {
   stepModules: StepModules;
   hoc: HOC;
   hof: HOF;
+  records: Records;
   context: Context;
 };

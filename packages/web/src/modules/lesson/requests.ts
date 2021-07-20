@@ -6,8 +6,10 @@ import {
   LessonUpdates,
   StatusResponse,
   MyLessonsRequest,
+  ActivitiesResponse,
+  ActivityFilters,
 } from '@types';
-import { Lesson } from '@chess-tent/models';
+import { Lesson, LessonActivity } from '@chess-tent/models';
 
 const lesson = services.createRequest<[string], LessonResponse>(
   'GET',
@@ -43,6 +45,18 @@ const myLessons = services.createRequest<MyLessonsRequest, LessonsResponse>(
   '/my-lessons',
 );
 
+const trainings = services.createRequest<
+  ActivityFilters,
+  ActivitiesResponse<LessonActivity>
+>('POST', data => ({
+  url: '/activities',
+  data: {
+    ...data,
+    state: { ...data.state, training: true },
+  },
+}));
+
+requests.trainings = trainings;
 requests.lesson = lesson;
 requests.lessonSave = lessonSave;
 requests.lessonPublish = lessonPublish;

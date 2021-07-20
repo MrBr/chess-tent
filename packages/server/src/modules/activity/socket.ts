@@ -11,7 +11,7 @@ socket.registerMiddleware(async (stream, next) => {
   ) {
     const tokenData = socket.identify(stream);
     if (!tokenData) {
-      console.log('Unauthorized socket subscribe');
+      console.log(`Unauthorized channel socket subscribe: ${stream.data}`);
       return;
     }
     const roomId = stream.data;

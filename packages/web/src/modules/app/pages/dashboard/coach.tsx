@@ -8,11 +8,12 @@ const { useLessons, useUserTrainings } = hooks;
 const { Headline3 } = ui;
 
 export default ({ user }: { user: User }) => {
-  const [trainings] = useUserTrainings(user);
+  const { value: trainings } = useUserTrainings(user);
   const [lessonsFilter, setLessonsFilter] = useState<LessonsRequest>({});
-  const [lessons] = useLessons(`own-lessons-${user.id}`, lessonsFilter, {
-    my: true,
-  });
+  const { value: lessons } = useLessons(
+    `own-lessons-${user.id}`,
+    lessonsFilter,
+  );
 
   const handleFilterChange = useCallback(
     (search, difficulty, tags) => {

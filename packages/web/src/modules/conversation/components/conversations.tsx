@@ -1,10 +1,9 @@
 import React, { useEffect, useMemo } from 'react';
-import { components, hooks, state, ui, utils } from '@application';
+import { components, hooks, state, ui, utils, records } from '@application';
 import { createConversation, User } from '@chess-tent/models';
 import { sortBy, last } from 'lodash';
 import Conversation from './conversation';
 import { selectConversationByUsers } from '../state/selectors';
-import { useUserConversations } from '../hooks';
 
 const { Container, Headline3, Text, Row, Col } = ui;
 const { UserAvatar } = components;
@@ -12,25 +11,33 @@ const {
   actions: { updateEntities },
 } = state;
 const {
-  useActiveUserRecord,
-  useConversationParticipant,
   useDispatchBatched,
   useSelector,
+  useRecordInit,
+  useActiveUserRecord,
+  useConversationParticipant,
 } = hooks;
 const { generateIndex } = utils;
 
 export default () => {
   const dispatch = useDispatchBatched();
-  const [activeUser] = useActiveUserRecord();
-  const [
-    participant,
-    setParticipant,
-    clearParticipant,
-  ] = useConversationParticipant();
-  const [conversations] = useUserConversations(activeUser.id);
+  const { value: activeUser } = useActiveUserRecord();
+  const {
+    value: participant,
+    update: setParticipant,
+    reset: clearParticipant,
+  } = useConversationParticipant();
+  const { value: conversations, load } = useRecordInit(
+    records.activeUserConversations,
+    'conversations',
+  );
   const conversation = useSelector(
     selectConversationByUsers(activeUser, participant),
   );
+
+  useEffect(() => {
+    load(activeUser.id);
+  }, [load, activeUser.id]);
 
   useEffect(() => {
     if (participant && !conversation) {

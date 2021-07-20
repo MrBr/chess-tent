@@ -1,13 +1,16 @@
 import React, { useEffect } from 'react';
 import { hooks, requests } from '@application';
-import { TYPE_USER, User } from '@chess-tent/models';
 import { Profile } from '../components/profile';
+import { user as userRecord } from '../records';
 
-const { useParams, useApi, useRecord } = hooks;
+const { useParams, useApi, useRecordInit } = hooks;
 
 export default () => {
   const { userId } = useParams();
-  const [user, setUser] = useRecord<User>(`user-${userId}`, TYPE_USER);
+  const { value: user, update: setUser } = useRecordInit(
+    userRecord,
+    `user-${userId}`,
+  );
   const { fetch, response, loading, error } = useApi(requests.user);
   useEffect(() => {
     if (response && !error) {

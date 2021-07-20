@@ -15,7 +15,9 @@ import {
   Socket,
   HOC,
   Context,
+  Records,
 } from '@types';
+import { HOF } from './types/hof';
 
 const services = createNamespace({}) as Services;
 const context = createNamespace({}) as Context;
@@ -32,6 +34,8 @@ const utils = createNamespace({}) as Utils;
 const socket = createNamespace({}) as Socket;
 const model = createNamespace({}) as Model;
 const hoc = createNamespace({}) as HOC;
+const hof = createNamespace({}) as HOF;
+const records = createNamespace({}) as Records;
 const stepModules = createNamespace({}) as StepModules;
 const constants = createNamespace({
   START_FEN: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
@@ -57,6 +61,8 @@ const application: Application = createNamespace({
   requests,
   socket,
   hoc,
+  hof,
+  records,
 }) as Application;
 
 export {
@@ -75,4 +81,6 @@ export {
   stepModules,
   pages,
   context,
+  hof,
+  records,
 };

@@ -1,51 +1,36 @@
 import { hooks, requests } from '@application';
-import { Notification, TYPE_NOTIFICATION } from '@chess-tent/models';
 import { useState, useEffect, useCallback } from 'react';
-import { RecordHookReturn } from '@types';
 import first from 'lodash/first';
+import { Hooks } from '@types';
 import takeRight from 'lodash/takeRight';
-import { useApi } from '../api/hooks';
+import { activeUserNotifications } from './record';
 
-const { useRecord } = hooks;
+const { useRecordInit, useApi } = hooks;
 
-export const useActiveUserNotifications = (
+export const useActiveUserNotifications: Hooks['useActiveUserNotifications'] = (
   limit?: number,
-): RecordHookReturn<Notification[]> => {
-  const [
-    notifications,
-    setNotifications,
-    resetNotifications,
-    notificationsMeta,
-  ] = useRecord<Notification[]>('notifications', TYPE_NOTIFICATION);
-  const { fetch, response, loading, error, reset } = useApi(
-    requests.notifications,
-  );
-  useEffect(() => {
-    if (!response || notifications) {
-      return;
-    }
-    setNotifications(response.data);
-  }, [reset, response, setNotifications, notifications]);
-  useEffect(() => {
-    if (loading || response || error || notifications) {
-      return;
-    }
-    fetch();
-  }, [fetch, loading, response, error, notifications]);
-  const finalNotifications = limit
-    ? takeRight(notifications, limit)
-    : notifications;
+) => {
+  const record = useRecordInit(activeUserNotifications, 'notifications');
+  const { load, value } = record;
 
-  return [
-    finalNotifications,
-    setNotifications,
-    resetNotifications,
-    notificationsMeta,
-  ];
+  useEffect(() => {
+    if (value) {
+      return;
+    }
+    load();
+  }, [value, load]);
+
+  const notifications = limit ? takeRight(record.value, limit) : record.value;
+
+  return { ...record, value: notifications };
 };
 
 export const useLoadMoreNotifications = (): [() => void, boolean, boolean] => {
-  const [notifications, setNotifications] = useActiveUserNotifications();
+  const { value: notifications, update: setNotifications } = useRecordInit(
+    activeUserNotifications,
+    'notifications',
+  );
+
   const [noMore, setNoMore] = useState(
     notifications ? notifications.length === 0 : false,
   );

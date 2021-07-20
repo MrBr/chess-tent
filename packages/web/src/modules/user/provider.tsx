@@ -1,14 +1,12 @@
 import React, { ComponentType, ReactElement, useEffect } from 'react';
-import { hooks, requests, services, socket } from '@application';
-import { RecordHookReturn } from '@types';
-import { User } from '@chess-tent/models';
+import { hooks, requests, services } from '@application';
 
 const {
   useApi,
   useDispatch,
   useActiveUserRecord,
   useComponentState,
-  useMeta,
+  useSocketSubscribe,
 } = hooks;
 
 const { addProvider } = services;
@@ -17,22 +15,14 @@ const Provider: ComponentType = ({ children }) => {
   const { mounted } = useComponentState();
   const { fetch, response, loading, reset } = useApi(requests.me);
   const dispatch = useDispatch();
-  const [socketConnected] = useMeta('socketConnected');
-  const [
-    user,
-    updateActiveUser,
-  ] = useActiveUserRecord() as RecordHookReturn<User>;
+  const { value: user, update: updateActiveUser } = useActiveUserRecord(null);
   const userId = user?.id;
+
+  useSocketSubscribe(userId ? `user-${userId}` : null);
 
   useEffect(() => {
     fetch();
   }, [fetch]);
-
-  useEffect(() => {
-    if (socketConnected && userId) {
-      socket.subscribe(`user-${userId}`);
-    }
-  }, [socketConnected, userId]);
 
   useEffect(() => {
     if (response) {

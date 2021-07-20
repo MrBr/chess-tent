@@ -1,41 +1,23 @@
-import React, { useEffect } from 'react';
-import { hooks, socket, ui } from '@application';
-import { LessonActivity } from '@types';
-import { isLesson, TYPE_ACTIVITY } from '@chess-tent/models';
+import React from 'react';
+import { hooks, ui } from '@application';
+import { isLesson, LessonActivity } from '@chess-tent/models';
 import Activity from '../components/activity';
 
-const { useParams, useRecord, useHistory } = hooks;
+const { useParams, useActivity, useHistory } = hooks;
 const { Absolute, Icon } = ui;
 
 export default () => {
-  const { activityId } = useParams();
-  const [activity, , , meta] = useRecord<LessonActivity>(
-    `${TYPE_ACTIVITY}-${activityId}`,
-    TYPE_ACTIVITY,
-    {
-      type: TYPE_ACTIVITY,
-      loaded: false,
-      loading: true,
-    },
-  );
   const history = useHistory();
+  const { activityId } = useParams();
+  const { value: activity, meta } = useActivity<LessonActivity>(activityId);
   const { loading, loaded } = meta;
-
-  useEffect(() => {
-    socket.subscribe(`${TYPE_ACTIVITY}-${activityId}`);
-
-    return () => {
-      // In case activity change from within activity this may not trigger
-      // take care
-      socket.unsubscribe(`${TYPE_ACTIVITY}-${activityId}`);
-    };
-  }, [activityId]);
 
   if (loaded && activity === null) {
     return <>Couldn't load activity</>;
   }
 
   if (loading || !activity) {
+    // TODO - render loader
     return null;
   }
 

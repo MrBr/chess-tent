@@ -6,7 +6,7 @@ import defaultAvatarSrc from '../images/default-avatar.svg';
 
 const { Card, CardBody, FramedProfile, Headline4, Button, Text, Row, Col } = ui;
 
-const { useConversationParticipant, useHistory } = hooks;
+const { useHistory, useConversationParticipant } = hooks;
 
 const CoachFrame = styled(Card)({
   margin: '0.5rem',
@@ -20,7 +20,7 @@ const CoachFrame = styled(Card)({
 });
 
 const CoachCard: Components['CoachCard'] = ({ coach }) => {
-  const [, setConversationParticipant] = useConversationParticipant();
+  const { update: setConversationParticipant } = useConversationParticipant();
   const history = useHistory();
 
   return (

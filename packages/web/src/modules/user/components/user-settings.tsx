@@ -7,7 +7,7 @@ const { UserAvatar } = components;
 
 export default () => {
   const history = useHistory();
-  const [user, , clear] = useActiveUserRecord();
+  const { value: user, reset: clear } = useActiveUserRecord();
   const { fetch: logout, response: logoutResponse } = useApi(requests.logout);
 
   useEffect(() => {

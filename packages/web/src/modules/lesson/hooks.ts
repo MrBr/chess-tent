@@ -1,17 +1,11 @@
-import {
-  Step,
-  updateStepState,
-  User,
-  Lesson,
-  TYPE_LESSON,
-  TYPE_ACTIVITY,
-} from '@chess-tent/models';
-import { hooks, requests } from '@application';
+import { Step, updateStepState, User } from '@chess-tent/models';
+import { hooks } from '@application';
 import { useCallback, useContext, useEffect } from 'react';
-import { Hooks, LessonActivity, CollectionRecordHookReturn } from '@types';
+import { Hooks } from '@types';
 import { editorContext } from './context';
+import { userTrainings, lessons, myLessons } from './record';
 
-const { useApi, useRecord } = hooks;
+const { useRecordInit } = hooks;
 
 export const useUpdateLessonStepState = <T extends Step>(
   updateStep: (step: T) => void,
@@ -23,63 +17,37 @@ export const useUpdateLessonStepState = <T extends Step>(
   );
 };
 
-export const useUserLessonRecord = (user: User) =>
-  hooks.useRecord<Lesson[]>(`${user.id}-lessons`, TYPE_LESSON);
+export const useUserTrainings: Hooks['useUserTrainings'] = (user: User) => {
+  const record = useRecordInit(userTrainings, `trainings-${user.id}`);
 
-export const useUserTrainingsRecord = (user: User) =>
-  hooks.useCollectionRecord<LessonActivity>(
-    `trainings-${user.id}`,
-    TYPE_ACTIVITY,
-  );
+  useEffect(() => {
+    record.load({ owner: user.id, users: user.id });
+    // eslint-disable-next-line
+  }, []);
 
-export const useUserTrainings = (
-  user: User,
-): CollectionRecordHookReturn<LessonActivity> => {
-  const [
-    trainings,
-    setTrainings,
-    pushTraining,
-    resetTrainings,
-    trainingsMeta,
-  ] = useUserTrainingsRecord(user);
-  const { fetch, response, loading, error } = useApi(requests.activities);
-  useEffect(() => {
-    if (!response) {
-      return;
-    }
-    setTrainings(response.data as LessonActivity[]);
-  }, [response, setTrainings]);
-  useEffect(() => {
-    if (loading || response || error) {
-      return;
-    }
-    fetch({ owner: user.id, users: user.id, state: { training: true } });
-  }, [fetch, loading, response, error, user]);
-  return [trainings, setTrainings, pushTraining, resetTrainings, trainingsMeta];
+  return record;
 };
 
-export const useLessons: Hooks['useLessons'] = (
-  key: string,
-  filters,
-  options,
-) => {
-  const [lessons, setLessons, resetLessons, lessonsMeta] = useRecord<Lesson[]>(
-    key,
-    TYPE_LESSON,
-  );
-  const { fetch, response, loading, error } = useApi(
-    options?.my ? requests.myLessons : requests.lessons,
-  );
+export const useLessons: Hooks['useLessons'] = (key: string, filters) => {
+  const record = useRecordInit(lessons, key);
+
   useEffect(() => {
-    if (!response || error) {
-      return;
-    }
-    setLessons(response.data);
-  }, [loading, response, setLessons, error]);
+    record.load(filters);
+    // eslint-disable-next-line
+  }, [filters]);
+
+  return record;
+};
+
+export const useMyLessons: Hooks['useMyLessons'] = (key: string, filters) => {
+  const record = useRecordInit(myLessons, key);
+
   useEffect(() => {
-    fetch(filters);
-  }, [filters, fetch]);
-  return [lessons, setLessons, resetLessons, lessonsMeta];
+    record.load(filters);
+    // eslint-disable-next-line
+  }, [filters]);
+
+  return record;
 };
 
 export const useEditor = () => {

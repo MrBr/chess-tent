@@ -3,8 +3,20 @@ import application from '@application';
 import { userSchema } from './model';
 
 import Register from './pages/register';
-import { useActiveUserRecord, useUser } from './state/hooks';
 
+application.register(
+  () => import('./records'),
+  module => {
+    application.records.activeUser = module.activeUser;
+  },
+);
+application.register(
+  () => import('./hooks'),
+  module => {
+    application.hooks.useUser = module.useUser;
+    application.hooks.useActiveUserRecord = module.useActiveUserRecord;
+  },
+);
 application.register(() => import('./provider'));
 application.register(() => import('./routes'));
 application.register(() => import('./requests'));
@@ -43,5 +55,3 @@ application.register(
 
 application.model.userSchema = userSchema;
 application.pages.Register = Register;
-application.hooks.useUser = useUser;
-application.hooks.useActiveUserRecord = useActiveUserRecord;

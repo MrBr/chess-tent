@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.build.json",
+  "compilerOptions": {
+    "declarationDir": "./dist",
+    "outDir": "./dist",
+    "esModuleInterop": true,
+    "baseUrl": ".",
+    "paths": {
+      "@types": ["types"]
+    }
+  },
+  "include": [
+    "src/**/*",
+    "types/**/*"
+  ]
+}

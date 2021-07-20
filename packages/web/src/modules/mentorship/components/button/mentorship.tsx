@@ -7,8 +7,8 @@ const { useActiveUserRecord, useCoaches, useApi } = hooks;
 const { Button } = ui;
 
 export default (({ user, className }) => {
-  const [me] = useActiveUserRecord();
-  const [coaches, setCoaches] = useCoaches(me);
+  const { value: me } = useActiveUserRecord();
+  const { value: coaches, update: setCoaches } = useCoaches(me);
   const { fetch: requestMentorship, response, loading, reset } = useApi(
     requests.mentorshipRequest,
   );

@@ -34,6 +34,7 @@
     "typescript": "^3.9.2"
   },
   "dependencies": {
+    "@chess-tent/redux-record": "1.0.0",
     "@chess-tent/models": "1.0.0",
     "@chess-tent/types": "1.0.0",
     "aws-sdk": "^2.742.0",

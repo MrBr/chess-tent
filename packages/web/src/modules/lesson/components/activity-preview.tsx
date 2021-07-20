@@ -8,8 +8,9 @@ import {
   getStepsCount,
   Lesson,
   Step,
+  LessonActivity,
 } from '@chess-tent/models';
-import { LessonActivity, Steps } from '@types';
+import { Steps } from '@types';
 import { ActivityRenderer } from './activity';
 
 interface PreviewProps {
@@ -23,7 +24,7 @@ const { useActiveUserRecord, useComponentState } = hooks;
 const { Modal } = ui;
 
 const Preview = ({ lesson, chapter, step }: PreviewProps) => {
-  const [user] = useActiveUserRecord();
+  const { value: user } = useActiveUserRecord();
   const [activity, updatePreviewActivity] = useState<LessonActivity>(
     createActivity('preview', lesson, user, {
       activeStepId: step.id,

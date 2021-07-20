@@ -7,14 +7,16 @@ import {
   UNSUBSCRIBE_EVENT,
 } from '@chess-tent/types';
 import { hooks } from '@application';
+import { useSocketConnected } from './hook';
 
-const { useDispatchBatched, useActiveUserRecord, useMeta } = hooks;
+const { useDispatchBatched, useActiveUserRecord } = hooks;
 const socket = io(
   `${process.env.REACT_APP_PROTOCOL}${process.env.REACT_APP_DOMAIN}`,
   {
     path: '/api/socket.io',
     secure: process.env.REACT_APP_PROTOCOL === 'https://',
-    transports: ['websocket'], // Needed for build?
+    transports: ['websocket'], // Needed for build?,
+    autoConnect: false, // Needed to prevent subscribing while user isn't authorised
   },
 );
 
@@ -27,20 +29,28 @@ export const unsubscribe = (channel: string) =>
 
 export const SocketProvider: ComponentType = props => {
   const dispatch = useDispatchBatched();
-  const [, updateSocketConnected] = useMeta('socketConnected');
-  const [user] = useActiveUserRecord();
+  const [, updateSocketConnected] = useSocketConnected();
+  const { value: user } = useActiveUserRecord(null);
   const userId = user?.id;
 
   useEffect(() => {
+    socket.on('connect', () => {
+      console.log('Socket connected');
+      updateSocketConnected(socket.connected);
+    });
+    socket.on('disconnect', () => {
+      console.log('Socket disconnected');
+      updateSocketConnected(socket.connected);
+    });
+  });
+
+  useEffect(() => {
     if (!userId) {
-      updateSocketConnected(false);
       socket.disconnect();
     } else {
-      updateSocketConnected(true);
       socket.connect();
     }
     return () => {
-      updateSocketConnected(false);
       socket.disconnect();
     };
   }, [updateSocketConnected, userId]);

@@ -1,39 +1,31 @@
 import { useEffect } from 'react';
-import { Mentorship, TYPE_MENTORSHIP, User } from '@chess-tent/models';
-import { hooks, requests } from '@application';
-import { RecordHookReturn } from '@types';
-import { useApi } from '../api/hooks';
+import { User } from '@chess-tent/models';
+import { hooks } from '@application';
+import { Hooks } from '@types';
+import { students, coaches } from './record';
 
-const { useRecord } = hooks;
+const { useRecordInit } = hooks;
 
-const createUseMentorship = (type: 'coaches' | 'students') => (
-  user: User,
-): RecordHookReturn<Mentorship[]> => {
-  const [
-    mentorship,
-    setMentorship,
-    resetMentorship,
-    mentorshipMeta,
-  ] = useRecord<Mentorship[]>(`${type}-${user.id}`, TYPE_MENTORSHIP);
-  const { fetch, response, loading, error, reset } = useApi(
-    type === 'coaches' ? requests.coaches : requests.students,
-  );
+const useCoaches: Hooks['useCoaches'] = (user: User) => {
+  const record = useRecordInit(coaches, `coaches-${user.id}`);
+
   useEffect(() => {
-    if (!response) {
-      return;
-    }
-    setMentorship(response.data);
-  }, [reset, response, setMentorship]);
-  useEffect(() => {
-    if (loading || response || error) {
-      return;
-    }
-    fetch(user);
-  }, [fetch, loading, response, error, user]);
-  return [mentorship, setMentorship, resetMentorship, mentorshipMeta];
+    record.load(user);
+    // eslint-disable-next-line
+  }, []);
+
+  return record;
 };
 
-const useCoaches = createUseMentorship('coaches');
-const useStudents = createUseMentorship('students');
+const useStudents: Hooks['useStudents'] = (user: User) => {
+  const record = useRecordInit(students, `students-${user.id}`);
+
+  useEffect(() => {
+    record.load(user);
+    // eslint-disable-next-line
+  }, []);
+
+  return record;
+};
 
 export { useCoaches, useStudents };

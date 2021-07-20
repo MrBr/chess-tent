@@ -12,7 +12,7 @@ const MessageButton: Components['MessageButton'] = ({
   user,
   className,
 }) => {
-  const [, setConversationParticipant] = useConversationParticipant();
+  const { update: setConversationParticipant } = useConversationParticipant();
 
   return (
     <Button

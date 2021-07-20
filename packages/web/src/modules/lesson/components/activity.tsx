@@ -6,7 +6,6 @@ import {
   ActivityRendererState,
   ChessboardProps,
   FEN,
-  LessonActivity,
   Move,
   Piece,
   PieceColor,
@@ -31,6 +30,7 @@ import {
   Analysis,
   updateActivityActiveChapter,
   updateActivityStepAnalysis,
+  LessonActivity,
 } from '@chess-tent/models';
 import Footer from './activity-footer';
 import Header from './activity-header';

@@ -1,53 +1,37 @@
 // Hooks
 import {
   LessonsRequest,
-  RecordType,
-  RecordValue,
   RequestFetch,
   StatusResponse,
 } from '@chess-tent/types';
 import { ReactElement } from 'react';
 import {
-  Lesson,
-  Mentorship,
   Step,
   Tag,
   User,
-  Notification,
   SubjectPathUpdate,
   Subject,
   ServiceType,
-  Entity,
+  Activity,
 } from '@chess-tent/models';
+import { useRecordInit, useRecordSafe } from '@chess-tent/redux-record';
 import { Action as ReduxAction } from 'redux';
 import { useSelector, useDispatch, useStore } from 'react-redux';
 import { BatchAction } from 'redux-batched-actions';
 import { useParams, useLocation } from 'react-router-dom';
 import { History } from 'history';
-import { LessonActivity } from './activity';
+import {
+  InferInitRecord,
+  RecordHookInit,
+  RecordHookSafe,
+} from '@chess-tent/redux-record/types';
+
 import { GenericArguments } from './_helpers';
-
-export type NonNullableRecordReturn<
-  T extends RecordValue,
-  R extends RecordHookReturn<any> = RecordHookReturn<T>
-> = [T, R[1], R[2], R[3]];
-
-export type RecordHookReturn<T extends RecordValue> = [
-  T | null,
-  (value: T, meta?: Partial<{}>) => void,
-  () => void,
-  RecordType['meta'],
-];
-
-export type CollectionRecordHookReturn<T extends Entity> = [
-  T[] | null,
-  (value: T[], meta?: Partial<{}>) => void,
-  (value: T) => void,
-  () => void,
-  RecordType['meta'],
-];
+import { Records } from './records';
 
 export type Hooks = {
+  useRecordInit: typeof useRecordInit;
+  useRecordSafe: typeof useRecordSafe;
   useIsMobile: () => boolean;
   useComponentStateSilent: () => { mounted: boolean };
   useComponentState: () => { mounted: boolean };
@@ -62,6 +46,7 @@ export type Hooks = {
   useDispatch: typeof useDispatch;
   useSelector: typeof useSelector;
   useStore: typeof useStore;
+  useSocketSubscribe: (channel: string | null) => void;
   useDiffUpdates: (
     subject: Subject,
     save: (updates: SubjectPathUpdate[]) => void,
@@ -69,13 +54,21 @@ export type Hooks = {
   ) => void;
   useTags: () => Tag[];
   useUser: (userId: User['id']) => User;
-  useActiveUserRecord: () => NonNullableRecordReturn<User>;
+  useActiveUserRecord: <T = void>(
+    fallback?: T,
+  ) => RecordHookSafe<InferInitRecord<Records['activeUser']>, T>;
+  useConversationParticipant: () => RecordHookInit<
+    InferInitRecord<Records['conversationParticipant']>
+  >;
   useActiveUserNotifications: (
     limit?: number,
-  ) => RecordHookReturn<Notification[]>;
-  useUserTrainings: (user: User) => CollectionRecordHookReturn<LessonActivity>;
-  useUserLessonsRecord: (user: User) => RecordHookReturn<Lesson[]>;
-  useConversationParticipant: () => RecordHookReturn<User>;
+  ) => RecordHookInit<InferInitRecord<Records['activeUserNotifications']>>;
+  useUserTrainings: (
+    user: User,
+  ) => RecordHookInit<InferInitRecord<Records['userTrainings']>>;
+  useUserLessonsRecord: (
+    user: User,
+  ) => RecordHookInit<InferInitRecord<Records['lessons']>>;
   useHistory: () => History;
   useQuery: <T extends Record<string, string | undefined>>() => T;
   useLocation: typeof useLocation;
@@ -89,16 +82,6 @@ export type Hooks = {
     error: null | string | {};
     reset: () => void;
   };
-  useRecord: <T extends RecordValue>(
-    recordKey: string,
-    type: RecordType['meta']['type'],
-    initialMeta?: RecordType['meta'],
-  ) => RecordHookReturn<T>;
-  useCollectionRecord: <T extends Entity>(
-    recordKey: string,
-    type: RecordType['meta']['type'],
-    initialMeta?: RecordType['meta'],
-  ) => CollectionRecordHookReturn<T>;
   useMeta: <T>(metaKey: string) => [T, (meta: T) => void, () => void];
   useCopyStep: () => [
     boolean,
@@ -106,17 +89,23 @@ export type Hooks = {
     () => Step | null,
     () => void,
   ];
+  useActivity: <T extends Activity>(
+    key: string,
+  ) => RecordHookInit<InferInitRecord<Records<T>['activity']>>;
   useLessons: (
     key: string,
     filters: LessonsRequest,
-    options?: { my?: boolean },
-  ) => RecordHookReturn<Lesson[]>;
-  useCoaches: (user: User) => RecordHookReturn<Mentorship[]>;
-  useStudents: (user: User) => RecordHookReturn<Mentorship[]>;
-  useDenormalize: <T extends RecordValue>(
-    descriptor: string[] | string | null,
-    type?: string,
-  ) => T | null;
+  ) => RecordHookInit<InferInitRecord<Records['lessons']>>;
+  useMyLessons: (
+    key: string,
+    filters: LessonsRequest,
+  ) => RecordHookInit<InferInitRecord<Records['activeUserLessons']>>;
+  useCoaches: (
+    user: User,
+  ) => RecordHookInit<InferInitRecord<Records['coaches']>>;
+  useStudents: (
+    user: User,
+  ) => RecordHookInit<InferInitRecord<Records['students']>>;
   useDispatchService: () => <T extends (...args: any) => any>(
     service: T extends ServiceType ? T : never,
   ) => (...payload: T extends (...args: infer U) => any ? U : never) => void;

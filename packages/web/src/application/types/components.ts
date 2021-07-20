@@ -25,6 +25,7 @@ import {
   StepType,
   Tag,
   User,
+  LessonActivity,
 } from '@chess-tent/models';
 import {
   Move,
@@ -53,7 +54,6 @@ import { OptionsDropdownProps, ButtonProps, UI } from './ui';
 import {
   AppAnalysis,
   Hooks,
-  LessonActivity,
   NotificationView,
   StepModules,
   Steps,
@@ -342,7 +342,7 @@ export type Components = {
   TrainingCard: ComponentType<{ training: LessonActivity }>;
   StudentTrainings: ComponentType<{ trainings: LessonActivity[] }>;
   LessonBrowser: ComponentType<{
-    lessons: Lesson[] | null;
+    lessons: Lesson[] | null | undefined;
     onFiltersChange?: (
       search?: string,
       difficulty?: Difficulty,

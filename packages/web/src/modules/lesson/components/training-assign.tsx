@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { components, hooks, requests, services, ui } from '@application';
-import { Lesson, User } from '@chess-tent/models';
-import { LessonActivity } from '@types';
+import { Lesson, User, LessonActivity } from '@chess-tent/models';
 import * as yup from 'yup';
 import lessonThumbUrl from '../images/lesson.svg';
 
@@ -29,9 +28,9 @@ export default ({ close }: { close: () => void }) => {
   const { fetch: saveActivity, response: assignResponse, loading } = useApi(
     requests.activitySave,
   );
-  const [user] = useActiveUserRecord();
-  const [mentorship] = useStudents(user);
-  const [, , pushTraining] = useUserTrainings(user);
+  const { value: user } = useActiveUserRecord();
+  const { value: mentorship } = useStudents(user);
+  const { push: pushTraining } = useUserTrainings(user);
   const { fetch: fetchUserLessons, response } = useApi(requests.myLessons);
 
   const students = useMemo(() => mentorship?.map(({ student }) => student), [

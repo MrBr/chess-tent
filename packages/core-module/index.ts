@@ -79,10 +79,7 @@ const resolveDeferredModules = () => {
     moduleCursor.registerParams === registerParams &&
     moduleCursor.deferredCount === deferredModules.length
   ) {
-    throw Error(
-      `Can't resolve module: ${registerParams[0]} (usually sing of a missing or a circular dependency).` +
-        `\nFailed with error: ${moduleCursor.error}`,
-    );
+    throw moduleCursor.error;
   }
 
   return resolveModule(...(registerParams as Parameters<typeof register>))
@@ -90,7 +87,7 @@ const resolveDeferredModules = () => {
       moduleCursor = null;
     })
     .catch(e => {
-      moduleCursor.error = e.message;
+      moduleCursor.error = e;
       deferredModules.push(registerParams);
     })
     .finally(resolveDeferredModules);

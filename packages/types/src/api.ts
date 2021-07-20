@@ -13,6 +13,7 @@ import {
   NormalizedMentorship,
   Notification,
   SubjectPathUpdate,
+  LessonActivity,
 } from '@chess-tent/models';
 import { GenericArguments } from './_helpers';
 import { LessonAction } from './actions';
@@ -41,7 +42,9 @@ export type UsersResponse = DataResponse<User[]>;
 export type LessonResponse = DataResponse<Lesson>;
 export type LessonsResponse = DataResponse<Lesson[]>;
 export type ActivityResponse = DataResponse<Activity>;
-export type ActivitiesResponse = DataResponse<Activity[]>;
+export type ActivitiesResponse<T extends Activity = Activity> = DataResponse<
+  T[]
+>;
 export type ConversationsResponse = DataResponse<Conversation[]>;
 export type ConversationResponse = DataResponse<Conversation>;
 export type ConversationMessagesResponse = DataResponse<NormalizedMessage[]>;
@@ -72,6 +75,11 @@ export interface API {
 }
 
 export type RequestFetch<T, U> = (...args: GenericArguments<T>) => Promise<U>;
+export type RequestState<T> = {
+  response: T | null;
+  loading: boolean;
+  error: string | null;
+};
 export type LessonUpdatableAction = LessonAction;
 export type LessonUpdates = { path: SubjectPath; value: any }[];
 
@@ -121,6 +129,7 @@ export type Requests = {
     StatusResponse
   >;
   activities: RequestFetch<ActivityFilters, ActivitiesResponse>;
+  trainings: RequestFetch<ActivityFilters, ActivitiesResponse<LessonActivity>>;
   uploadImage: RequestFetch<[string, File], any>;
   signImageUrl: RequestFetch<
     { contentType: string; key: string },

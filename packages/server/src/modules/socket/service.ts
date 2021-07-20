@@ -8,6 +8,7 @@ import {
   SUBSCRIBE_EVENT,
   UNSUBSCRIBE_EVENT,
 } from '@chess-tent/types';
+import { RecordAction } from '@chess-tent/redux-record/types';
 
 let io: Server;
 
@@ -18,7 +19,7 @@ const getTokenFromCookie = (cookie: string | undefined) => {
   }
   const params = cookie.split(';');
   for (const index in params) {
-    if (params[index].startsWith('token')) {
+    if (params[index].trim().startsWith('token')) {
       // @ts-ignore
       return params[index].split('=')[1];
     }
@@ -67,7 +68,7 @@ const sendAction = (channel: string, stream: SocketStream) => {
 
 const sendServerAction = (
   channel: string,
-  action: Actions,
+  action: Actions | RecordAction,
   toSocketId?: string,
 ) => {
   if (toSocketId) {

@@ -5,7 +5,7 @@ import { hooks, components } from '@application';
 const { Redirect, Route } = components;
 
 export const Authorized: Components['Authorized'] = ({ children }) => {
-  const authorized = !!hooks.useActiveUserRecord()[0];
+  const authorized = !!hooks.useActiveUserRecord(null).value;
 
   if (typeof children === 'function') {
     return children(authorized);

@@ -19,7 +19,7 @@ const getTokenFromCookie = (cookie: string | undefined) => {
   }
   const params = cookie.split(';');
   for (const index in params) {
-    if (params[index].startsWith('token')) {
+    if (params[index].trim().startsWith('token')) {
       // @ts-ignore
       return params[index].split('=')[1];
     }

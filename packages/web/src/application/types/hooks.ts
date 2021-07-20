@@ -46,6 +46,7 @@ export type Hooks = {
   useDispatch: typeof useDispatch;
   useSelector: typeof useSelector;
   useStore: typeof useStore;
+  useSocketSubscribe: (channel: string | null) => void;
   useDiffUpdates: (
     subject: Subject,
     save: (updates: SubjectPathUpdate[]) => void,

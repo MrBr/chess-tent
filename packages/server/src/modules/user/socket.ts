@@ -6,7 +6,7 @@ socket.registerMiddleware((stream, next) => {
   if (stream.event === SUBSCRIBE_EVENT && stream.data?.indexOf('user') > -1) {
     const tokenData = socket.identify(stream);
     if (!tokenData) {
-      console.log('Unauthorized socket subscribe');
+      console.log(`Unauthorized channel socket subscribe: ${stream.data}`);
       return;
     }
     if (`user-${tokenData.user.id}` === stream.data) {

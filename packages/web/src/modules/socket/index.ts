@@ -9,3 +9,9 @@ application.register(
     application.socket.unsubscribe = module.unsubscribe;
   },
 );
+application.register(
+  () => import('./hook'),
+  module => {
+    application.hooks.useSocketSubscribe = module.useSocketSubscribe;
+  },
+);

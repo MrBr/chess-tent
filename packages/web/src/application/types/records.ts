@@ -99,5 +99,4 @@ export type Records<T = any> = {
     T,
     { load: (...args: Parameters<RequestFetch<A, DataResponse<V>>>) => void }
   >;
-  withRecordSocketSync: <T extends RecordBase<any>>() => RecordRecipe<T>;
 };

@@ -1,5 +1,4 @@
-import { useEffect } from 'react';
-import { utils, state, hof, socket } from '@application';
+import { utils, state, hof } from '@application';
 import { RequestFetch, DataResponse } from '@types';
 import { Entity } from '@chess-tent/models';
 import {
@@ -37,22 +36,6 @@ const withRecordApiLoad = <A, V, T extends RecordBase<V>>(
     ...record,
     load,
   };
-};
-
-const withRecordSocketSync = <T extends RecordBase<any>>() => () => (
-  record: T,
-): T => {
-  useEffect(() => {
-    socket.subscribe(record.recordKey);
-
-    return () => {
-      // In case activity change from within activity this may not trigger
-      // take care
-      socket.unsubscribe(record.recordKey);
-    };
-  }, [record.recordKey]);
-
-  return record;
 };
 
 const withRecordDenormalized = <T extends RecordBase<any>>(
@@ -135,6 +118,5 @@ const withRecordDenormalizedCollection = <
 export {
   withRecordApiLoad,
   withRecordDenormalized,
-  withRecordSocketSync,
   withRecordDenormalizedCollection,
 };

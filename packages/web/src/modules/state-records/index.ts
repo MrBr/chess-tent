@@ -13,7 +13,6 @@ import {
   withRecordApiLoad,
   withRecordDenormalized,
   withRecordDenormalizedCollection,
-  withRecordSocketSync,
 } from './recipes';
 
 application.hooks.useRecordInit = useRecordInit;
@@ -24,7 +23,6 @@ application.records.createRecord = createRecord;
 application.records.withRecordBase = withRecordBase;
 application.records.withRecordCollection = withRecordCollection;
 application.records.withRecordApiLoad = withRecordApiLoad;
-application.records.withRecordSocketSync = withRecordSocketSync;
 application.records.withRecordDenormalized = withRecordDenormalized;
 application.records.withRecordDenormalizedCollection = withRecordDenormalizedCollection;
 application.state.registerReducer('records', records);

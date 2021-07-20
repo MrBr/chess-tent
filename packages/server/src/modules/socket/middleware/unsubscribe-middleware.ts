@@ -5,7 +5,7 @@ socket.registerMiddleware(async (stream, next) => {
   if (stream.event === UNSUBSCRIBE_EVENT) {
     const tokenData = socket.identify(stream);
     if (!tokenData) {
-      console.log('Unauthorized socket unsubscribe');
+      console.log(`Unauthorized channel socket unsubscribe: ${stream.data}`);
       return;
     }
     console.log('Client left from', stream.data);

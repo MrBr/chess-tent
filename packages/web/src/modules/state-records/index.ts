@@ -1,28 +1,30 @@
 import application from '@application';
-
 import {
-  createRecordHook,
-  createCollectionRecordHook,
-  createRecordService,
-} from './services';
-import { useRecord, useCollectionRecord } from './hooks';
-import { updateRecordEntitiesMiddleware } from './state/middleware';
-import { records } from './state/reducer';
-import {
-  updateRecordAction,
+  createRecord,
   pushRecordAction,
-  updateRecordValueAction,
-} from './state/actions';
-import { selectRecord } from './state/selectors';
+  records,
+  updateRecordAction,
+  useRecordInit,
+  useRecordSafe,
+  withRecordBase,
+  withRecordCollection,
+} from '@chess-tent/redux-record';
+import {
+  withRecordApiLoad,
+  withRecordDenormalized,
+  withRecordDenormalizedCollection,
+  withRecordSocketSync,
+} from './recipes';
 
-application.services.createRecordHook = createRecordHook;
-application.services.createCollectionRecordHook = createCollectionRecordHook;
-application.services.createRecordService = createRecordService;
-application.hooks.useRecord = useRecord;
-application.hooks.useCollectionRecord = useCollectionRecord;
-application.state.actions.updateRecord = updateRecordAction;
+application.hooks.useRecordInit = useRecordInit;
+application.hooks.useRecordSafe = useRecordSafe;
 application.state.actions.pushRecord = pushRecordAction;
-application.state.actions.updateRecordValue = updateRecordValueAction;
-application.state.selectors.selectRecord = selectRecord;
-application.state.registerMiddleware(updateRecordEntitiesMiddleware);
+application.state.actions.updateRecord = updateRecordAction;
+application.records.createRecord = createRecord;
+application.records.withRecordBase = withRecordBase;
+application.records.withRecordCollection = withRecordCollection;
+application.records.withRecordApiLoad = withRecordApiLoad;
+application.records.withRecordSocketSync = withRecordSocketSync;
+application.records.withRecordDenormalized = withRecordDenormalized;
+application.records.withRecordDenormalizedCollection = withRecordDenormalizedCollection;
 application.state.registerReducer('records', records);

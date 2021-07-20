@@ -22,11 +22,6 @@ export const UPDATE_ENTITY = 'UPDATE_ENTITY';
 
 export const SYNC_ACTION = 'SYNC_ACTION';
 
-export const UPDATE_RECORD_VALUE = 'UPDATE_RECORD_VALUE';
-export const UPDATE_RECORD = 'UPDATE_RECORD';
-export const PUSH_RECORD = 'PUSH_RECORD';
-export const DELETE_RECORD = 'DELETE_RECORD';
-
 export const SEND_NOTIFICATION = 'SEND_NOTIFICATION';
 export const SEND_MESSAGE = 'SEND_MESSAGE';
 export const SEND_PATCH = 'SEND_PATCH';
@@ -59,34 +54,7 @@ export type EntitiesState = {
   notifications: NotificationState;
   mentorship: MentorshipState;
 };
-/**
- * Records are used to store single entity reference
- * or a collection which have domain meaning.
- * Records represent complex data model which holds
- * both data and metadata about the record.
- */
-export type RecordValueNormalizedSingle = string;
-export type RecordValueNormalizedList = string[];
-export type RecordValueNormalized =
-  | RecordValueNormalizedSingle
-  | RecordValueNormalizedList;
-export type GetRecordNormalizedValue<T extends RecordValue> = T extends Entity[]
-  ? RecordValueNormalizedList
-  : T extends Entity
-  ? RecordValueNormalizedSingle
-  : RecordValueNormalized;
-export type RecordValue = Entity | Entity[] | null;
-export type RecordMeta = {
-  type: Entity['type'];
-  loading?: boolean;
-  loaded?: boolean;
-};
-export type RecordType<T> = {
-  value: T | null;
-  meta: RecordMeta;
-};
 
-export type RecordState = Record<string, RecordType<any>>;
 export type MetaState = Record<string, any>;
 export type AppLessonState = EntityState<NormalizedLesson>;
 export type ConversationState = EntityState<NormalizedConversation>;
@@ -99,7 +67,8 @@ export type MentorshipState = EntityState<NormalizedMentorship>;
 
 export interface AppState {
   entities: EntitiesState;
-  records: RecordState;
+  // TODO - take from state? - leave room for extension
+  // records: RecordState;
   meta: MetaState;
 }
 
@@ -141,23 +110,6 @@ export type ActivityAction<T extends Subject> = UpdateEntitiesAction;
 export type UserAction = UpdateEntitiesAction;
 
 /**
- * Records
- */
-export type RecordUpdateAction<T> = Action<
-  typeof UPDATE_RECORD,
-  { value: T; meta?: {} },
-  { key: string }
->;
-
-export type RecordDeleteAction = Action<
-  typeof DELETE_RECORD,
-  void,
-  { key: string }
->;
-
-export type RecordAction = RecordUpdateAction<unknown> | RecordDeleteAction;
-
-/**
  * Message
  */
 
@@ -196,7 +148,6 @@ export type PatchAction = SendPatchAction;
 
 export type Actions =
   | UpdateEntityAction
-  | RecordAction
   | SyncAction
   | UpdateEntitiesAction
   | PatchAction

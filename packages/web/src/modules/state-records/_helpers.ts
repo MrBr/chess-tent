@@ -1,8 +1,10 @@
 import isNil from 'lodash/isNil';
-import { RecordValue } from '@types';
 import { utils } from '@application';
+import { Entity } from '@chess-tent/models';
 
-export const formatEntityValue = (value: RecordValue) => {
+export const formatEntityValue = (
+  value: Entity | Entity[] | null | undefined,
+) => {
   if (isNil(value)) {
     return value;
   }

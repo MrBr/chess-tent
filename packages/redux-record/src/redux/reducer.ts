@@ -1,20 +1,22 @@
+import { Reducer } from 'redux';
 import {
   DELETE_RECORD,
   RecordAction,
   RecordState,
   UPDATE_RECORD,
   PUSH_RECORD,
-  UPDATE_RECORD_VALUE,
-} from '@types';
-import { formatEntityValue } from './_helpers';
+} from '../../types';
 
-export const records = (state: RecordState = {}, action: RecordAction) => {
+export const records: Reducer<RecordState, RecordAction> = (
+  state = {},
+  action,
+) => {
   switch (action.type) {
     case UPDATE_RECORD: {
       return {
         ...state,
         [action.meta.key]: {
-          value: formatEntityValue(action.payload.value),
+          value: action.payload.value,
           meta: {
             ...state[action.meta.key]?.meta,
             ...action.payload.meta,
@@ -25,25 +27,12 @@ export const records = (state: RecordState = {}, action: RecordAction) => {
     case PUSH_RECORD: {
       const previousValue = (state[action.meta.key]?.value as []) || [];
       const payloadValue = action.payload.value;
-      const pushedValue = formatEntityValue(payloadValue) as string;
       return {
         ...state,
         [action.meta.key]: {
-          value: [...previousValue, pushedValue],
+          value: [...previousValue, payloadValue],
           meta: {
             ...state[action.meta.key]?.meta,
-          },
-        },
-      };
-    }
-    case UPDATE_RECORD_VALUE: {
-      return {
-        ...state,
-        [action.meta.key]: {
-          value: action.payload,
-          meta: {
-            ...state[action.meta.key]?.meta,
-            type: action.meta.type,
           },
         },
       };

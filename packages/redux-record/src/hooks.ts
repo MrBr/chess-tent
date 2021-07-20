@@ -13,7 +13,7 @@ import {
 
 const useRecordInit = <T extends RecordBase<any>>(
   initRecord: InitRecord<T>,
-  suffix = '',
+  suffix: string,
 ): RecordHookReturn<
   T,
   { value: RecordValue<InferRecordValue<T>>; meta: RecordMeta }

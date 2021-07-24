@@ -1,9 +1,10 @@
-import React, { useEffect, useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import {
   ActivityComponent,
   ActivityFooterProps,
   ActivityRendererProps,
   ActivityRendererState,
+  ActivityStepMode,
   ChessboardProps,
   FEN,
   Move,
@@ -14,23 +15,23 @@ import {
 } from '@types';
 import { components, hooks, requests, services, ui } from '@application';
 import {
+  addStep,
+  Analysis,
   Chapter,
+  getAnalysisActiveStep,
+  getChildStep,
+  getLessonChapter,
   getNextStep,
   getPreviousStep,
-  getChildStep,
   getStepIndex,
   getStepsCount,
-  getLessonChapter,
+  LessonActivity,
   markStepCompleted,
   Step,
-  addStep,
-  getAnalysisActiveStep,
-  updateAnalysisStep,
-  updateActivityStepState,
-  Analysis,
   updateActivityActiveChapter,
   updateActivityStepAnalysis,
-  LessonActivity,
+  updateActivityStepState,
+  updateAnalysisStep,
 } from '@chess-tent/models';
 import Footer from './activity-footer';
 import Header from './activity-header';
@@ -56,14 +57,17 @@ export class ActivityRenderer extends React.Component<
       activeTab: 0,
     };
   }
+
   isAnalysing() {
-    const { activeTab } = this.state;
-    // TODO - find a better way to render tabs and resolve which tab is active
-    return activeTab === 1;
+    const { activityStepState } = this.props;
+    return activityStepState.mode === ActivityStepMode.ANALYSING;
   }
 
-  updateActiveTab = (activeTab: number) => {
-    this.setState({ activeTab });
+  updateStepMode = (mode: ActivityStepMode) => {
+    const { updateActivity, activity, activeStep } = this.props;
+    updateActivity(updateActivityStepState)(activity, activeStep.id, {
+      mode,
+    });
   };
 
   setStepActivityState = (state: {}) => {
@@ -82,7 +86,7 @@ export class ActivityRenderer extends React.Component<
 
   updateStepActivityAnalysis = (analysis: Analysis<Steps>) => {
     const { updateActivity, activity, activeStep } = this.props;
-    !this.isAnalysing() && this.updateActiveTab(1);
+    !this.isAnalysing() && this.updateStepMode(ActivityStepMode.ANALYSING);
     updateActivity(updateActivityStepAnalysis)(
       activity,
       activeStep.id,
@@ -200,11 +204,10 @@ export class ActivityRenderer extends React.Component<
       activeStep,
       activityStepState,
     } = this.props;
-    const { activeTab } = this.state;
+
     return (
       <LessonPlayground
-        activeTab={activeTab}
-        setActiveTab={this.updateActiveTab}
+        updateStepMode={this.updateStepMode}
         updateActivityStepState={this.setStepActivityState}
         activeStepActivityState={activityStepState}
         header={
@@ -216,6 +219,7 @@ export class ActivityRenderer extends React.Component<
         }
         tabs={[
           {
+            mode: ActivityStepMode.SOLVING,
             title: 'Step',
             board: (
               <StepRenderer
@@ -257,6 +261,7 @@ export class ActivityRenderer extends React.Component<
             ),
           },
           {
+            mode: ActivityStepMode.ANALYSING,
             title: 'Analysis',
             board: (
               <>
@@ -264,7 +269,9 @@ export class ActivityRenderer extends React.Component<
                   <Button
                     variant="regular"
                     size="extra-small"
-                    onClick={() => this.updateActiveTab(0)}
+                    onClick={() =>
+                      this.updateStepMode(ActivityStepMode.SOLVING)
+                    }
                   >
                     Stop analysing
                   </Button>

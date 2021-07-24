@@ -2,11 +2,11 @@ import { services, utils } from '@application';
 import {
   Activity,
   createActivity as modelCreateActivity,
-  Step,
   PatchListener,
+  Step,
   updateActivityActiveStep as modelUpdateActivityActiveStep,
 } from '@chess-tent/models';
-import { ActivityStepStateBase, Services } from '@types';
+import { ActivityStepMode, ActivityStepStateBase, Services } from '@types';
 
 export const createActivity = <T extends Activity>(
   ...args: Parameters<Services['createActivity']>
@@ -14,6 +14,7 @@ export const createActivity = <T extends Activity>(
 
 export const createActivityStepState = (initialState?: {}): ActivityStepStateBase => ({
   analysis: services.createAnalysis(),
+  mode: ActivityStepMode.SOLVING,
   ...(initialState || {}),
 });
 

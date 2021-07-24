@@ -1,5 +1,10 @@
 import React, { ComponentProps, useCallback } from 'react';
-import { ActivityComment, Components } from '@types';
+import {
+  ActivityComment,
+  ActivityStepMode,
+  Components,
+  LessonPlaygroundTab,
+} from '@types';
 import { components, hooks, services, ui } from '@application';
 
 const { Tabs, Tab, Container, Col, Row, Input, Text } = ui;
@@ -31,15 +36,19 @@ const Comment = ({ comment }: { comment: ActivityComment }) => {
   );
 };
 
+const DEFAULT_PLAYGROUND_MODE = ActivityStepMode.SOLVING;
+
 export default ({
   header,
   tabs,
-  activeTab,
-  setActiveTab,
+  updateStepMode,
   updateActivityStepState,
   activeStepActivityState,
 }: ComponentProps<Components['LessonPlayground']>) => {
-  const tab = tabs[activeTab];
+  const tab = tabs.find(
+    ({ mode }) =>
+      mode === (activeStepActivityState.mode || DEFAULT_PLAYGROUND_MODE),
+  ) as LessonPlaygroundTab;
   const { value: activeUser } = useActiveUserRecord();
   const handleCommentSubmit = useCallback(
     event => {
@@ -66,15 +75,13 @@ export default ({
             <Col xs={4} className="mt-5 mw-100 overflow-y-auto">
               <Tabs
                 id="activity-tabs"
-                activeKey={activeTab}
-                onSelect={eventKey =>
-                  setActiveTab(parseInt(eventKey as string))
-                }
+                activeKey={tab.mode || DEFAULT_PLAYGROUND_MODE}
+                onSelect={status => updateStepMode(status as ActivityStepMode)}
               >
-                {tabs.map((tab, index) => (
+                {tabs.map(tab => (
                   <Tab
-                    eventKey={index + ''}
-                    key={index}
+                    eventKey={tab.mode}
+                    key={tab.mode}
                     title={tab.title}
                     className="mt-4"
                   >

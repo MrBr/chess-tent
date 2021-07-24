@@ -2,6 +2,7 @@ import application, { db, socket } from '@application';
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import {
   errorHandler,
   logLocal,
@@ -10,7 +11,6 @@ import {
   toLocals,
   validate,
 } from './middleware';
-import cookieParser from 'cookie-parser';
 import { generateIndex } from './service';
 import { BadRequest } from './errors';
 

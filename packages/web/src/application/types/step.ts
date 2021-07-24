@@ -87,9 +87,15 @@ export type ActivityComment = {
   text: string;
   id: string;
 };
+
+export enum ActivityStepMode {
+  ANALYSING = 'ANALYSING',
+  SOLVING = 'SOLVING',
+}
 export type ActivityStepStateBase = {
   analysis: AppAnalysis;
   comments?: ActivityComment[];
+  mode: ActivityStepMode;
 };
 
 export type ActivityStepState<T extends {}> = T & ActivityStepStateBase;

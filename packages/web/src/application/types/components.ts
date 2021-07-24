@@ -41,6 +41,7 @@ import {
 } from './chess';
 import {
   ActivityStepStateBase,
+  ActivityStepMode,
   AppStep,
   EditorProps,
   EditorSidebarProps,
@@ -162,11 +163,17 @@ export type StepToolbox = FunctionComponent<
   } & EditorProps
 >;
 
+export type LessonPlaygroundTab = {
+  board: ReactElement;
+  sidebar: ReactElement;
+  title: string;
+  mode: ActivityStepMode;
+};
+
 export type LessonPlayground = FunctionComponent<{
   header: ReactElement;
-  tabs: { board: ReactElement; sidebar: ReactElement; title: string }[];
-  activeTab: number;
-  setActiveTab: (activeTab: number) => void;
+  tabs: LessonPlaygroundTab[];
+  updateStepMode: (mode: ActivityStepMode) => void;
   updateActivityStepState: (state: {}) => void;
   activeStepActivityState: ActivityStepStateBase;
 }>;

@@ -41,14 +41,14 @@ export const updateEntityAction: State['actions']['updateEntity'] = (
   entity,
   meta?,
 ) => {
-  const payload = utils.normalize(entity).result;
+  const payload = utils.normalize(entity);
 
   return {
     type: UPDATE_ENTITY,
     payload,
     meta: {
-      id: utils.getEntityId(payload),
-      type: payload.type,
+      id: utils.getEntityId(payload.result),
+      type: payload.result.type,
       ...(meta || {}),
     },
   };

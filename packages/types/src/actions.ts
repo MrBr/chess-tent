@@ -8,7 +8,6 @@ import {
   NormalizedStep,
   NormalizedUser,
   Subject,
-  SubjectPath,
   NormalizedTag,
   Notification,
   NormalizedNotification,
@@ -70,10 +69,10 @@ export type UpdateEntitiesAction = Action<
 //        depending on meta.type entity should infer type making it typesafe
 export type UpdateEntityAction = Action<
   typeof UPDATE_ENTITY,
-  NormalizedEntity,
+  { result: NormalizedEntity; entities: EntitiesState },
   {
     patch?: ReversiblePatch;
-    type: string;
+    type: keyof EntitiesState;
     id: string;
   } & { [key: string]: any }
 >;

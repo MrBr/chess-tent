@@ -7,7 +7,6 @@ import {
   UPDATE_ENTITY,
 } from '@chess-tent/types';
 import { applyPatches } from '@chess-tent/models';
-import { utils } from '@application';
 
 const appReducer: {
   [key: string]: Reducer;
@@ -17,25 +16,43 @@ const entityReducer: {
   [key: string]: Reducer;
 } = {};
 
+const isEmpty = (obj: {}) => {
+  for (const i in obj) return false;
+  return true;
+};
+
 const createEntityReducer = <T extends keyof EntitiesState>(
   reducerEntityType: T,
 ) => (state: EntitiesState[T] = {}, action: Actions): EntitiesState[T] => {
   switch (action.type) {
     case UPDATE_ENTITIES: {
-      return action.payload[reducerEntityType]
-        ? {
+      return isEmpty(action.payload[reducerEntityType])
+        ? state
+        : {
             ...state,
             ...action.payload[reducerEntityType],
-          }
-        : state;
+          };
     }
     case UPDATE_ENTITY: {
-      return action.payload.type === reducerEntityType
-        ? {
+      const { patch, type, id } = action.meta;
+      const entity = state[id];
+      // TODO - standardise "patching"
+      // update entity has a dual behavior
+      // it ONLY sometimes sends a patch which should be applied
+      // in other cases, it sends a whole object
+      // sending a whole object can leads to the race when the same entity is updated multiple times immediately one after the other
+      // basically first update doesn't have to be taken into an account for the second, meaning, the next update used stale state in update which in the end overrides previous action
+      const updatedEntity =
+        reducerEntityType && patch && entity
+          ? applyPatches(entity, patch.next)
+          : (action.payload.entities[type][id] as unknown);
+      return isEmpty(action.payload.entities[reducerEntityType])
+        ? state
+        : {
             ...state,
-            [utils.getEntityId(action.payload)]: action.payload,
-          }
-        : state;
+            ...action.payload.entities[reducerEntityType],
+            [id]: updatedEntity,
+          };
     }
     case SEND_PATCH:
       const { next } = action.payload;

@@ -13,10 +13,7 @@ export default ({ user }: { user: User }) => {
   const [lessonsFilter, setLessonsFilter] = useState<LessonsRequest>({
     owner: user.id,
   });
-  const { value: lessons } = useLessons(
-    `own-lessons-${user.id}`,
-    lessonsFilter,
-  );
+  const { value: lessons } = useLessons(`lessons`, lessonsFilter);
 
   const handleFilterChange = useCallback(
     (search, difficulty, tags) => {

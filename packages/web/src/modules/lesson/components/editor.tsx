@@ -207,6 +207,7 @@ class EditorRenderer extends React.Component<
       activeChapter,
     );
 
+    // Only tracking history for the current chapter
     this.addLessonUpdate(action, undoAction);
   };
 

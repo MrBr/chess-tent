@@ -42,6 +42,7 @@ export type EntitiesState = {
   tags: TagState;
   notifications: NotificationState;
   mentorship: MentorshipState;
+  messages: MessagesState;
 };
 
 export type MetaState = Record<string, any>;
@@ -53,6 +54,7 @@ export type ActivityState = EntityState<NormalizedActivity<Subject>>;
 export type UserState = EntityState<NormalizedUser>;
 export type TagState = EntityState<NormalizedTag>;
 export type MentorshipState = EntityState<NormalizedMentorship>;
+export type MessagesState = EntityState<NormalizedMessage>;
 
 export interface AppState {
   entities: EntitiesState;

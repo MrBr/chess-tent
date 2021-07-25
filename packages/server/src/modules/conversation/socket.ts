@@ -23,7 +23,7 @@ socket.registerMiddleware(async (stream, next) => {
     stream.data.meta.type === TYPE_MESSAGE
   ) {
     const action = stream.data;
-    const message = stream.data.payload as Message;
+    const message = (stream.data.payload as unknown) as Message;
     updateConversationMessage(
       action.meta.conversationId,
       action.meta.id,

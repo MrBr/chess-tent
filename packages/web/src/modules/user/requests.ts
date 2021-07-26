@@ -3,7 +3,7 @@ import { User } from '@chess-tent/models';
 import { RegisterRequestParams, InviteUserParams } from '@chess-tent/types';
 import { StatusResponse, UserResponse, UsersResponse } from '@types';
 
-const register = services.createRequest<RegisterRequestParams, StatusResponse>(
+const register = services.createRequest<RegisterRequestParams, UserResponse>(
   'POST',
   '/register',
 );

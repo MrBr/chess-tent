@@ -2,8 +2,6 @@ import application from '@application';
 
 import { userSchema } from './model';
 
-import Register from './pages/register';
-
 application.register(
   () => import('./records'),
   module => {
@@ -52,6 +50,11 @@ application.register(
     application.components.Invitation = module.default;
   },
 );
+application.register(
+  () => import('./pages/register'),
+  module => {
+    application.pages.Register = module.default;
+  },
+);
 
 application.model.userSchema = userSchema;
-application.pages.Register = Register;

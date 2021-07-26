@@ -98,7 +98,7 @@ export type InviteUserParams = {
 };
 
 export type Requests = {
-  register: RequestFetch<RegisterRequestParams, StatusResponse>;
+  register: RequestFetch<RegisterRequestParams, UserResponse>;
   inviteUser: RequestFetch<InviteUserParams, StatusResponse>;
   login: RequestFetch<Pick<User, 'email' | 'password'>, UserResponse>;
   logout: RequestFetch<undefined, StatusResponse>;

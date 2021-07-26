@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from '@emotion/styled';
 import { RegisterOptions } from '@chess-tent/types';
 import { ui, hooks, requests, components, utils } from '@application';
@@ -6,7 +6,7 @@ import * as yup from 'yup';
 
 const { mediaQueryEnhancer } = utils;
 
-const { useApi, useHistory, useQuery } = hooks;
+const { useApi, useHistory, useQuery, useActiveUserRecord } = hooks;
 const { Link } = components;
 const {
   Form,
@@ -18,7 +18,6 @@ const {
   Icon,
   Card,
   Headline1,
-  Headline3,
   Text,
   Col,
   Row,
@@ -50,33 +49,18 @@ const SubmitButton = styled(Button)(
 
 export default () => {
   const { fetch, loading, response, error } = useApi(requests.register);
+  const { update } = useActiveUserRecord(null);
   const history = useHistory();
   const query = useQuery<RegisterOptions>();
-  if (response && !error) {
-    return (
-      <Container className="h-100 d-flex justify-content-center align-items-center no-gutters mx-auto">
-        <Absolute
-          left={25}
-          top={15}
-          onClick={() => history.push('/')}
-          className="cursor-pointer"
-        >
-          <Icon type="close" size="large" />
-        </Absolute>
-        <Card className="px-5 py-4 border rounded-lg">
-          <Headline1 className="mb-4">
-            You have successfully created an account.
-          </Headline1>
-          <Headline3>
-            Because of the limited resources in the beta we will notify you upon
-            account activation.
-          </Headline3>
-          <Link to="/">Go back</Link>
-        </Card>
-      </Container>
-    );
-  }
-  // Omitting passwordConfirmation
+
+  useEffect(() => {
+    if (response && !error) {
+      update(response.data);
+      history.replace('/');
+    }
+  }, [response, error, history, update]);
+
+  // Omitting passwordConfirmation field
   // @ts-ignore
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleSubmit = ({ passwordConfirmation, ...user }) => {
@@ -155,13 +139,16 @@ export default () => {
             />
           </FormGroup>
           <FormGroup className="mt-4 d-flex">
-            <Label htmlFor="pick-coach">Are you coach?</Label>
+            <Label htmlFor="pick-coach">Are you a coach?</Label>
             <Form.Check
               size="sm"
               className="w-25 shadow-none"
               name="coach"
               id="pick-coach"
             />
+            <Text fontSize="extra-small" className="mt-2">
+              Mark true if you want to tutor others.
+            </Text>
           </FormGroup>
           {error && (
             <FormGroup>

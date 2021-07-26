@@ -12,22 +12,6 @@ import { ConversationModel, depopulate } from './model';
 
 const MESSAGES_BUCKET_LIMIT = 50;
 
-export const saveConversation = (conversation: Conversation) =>
-  new Promise(resolve => {
-    ConversationModel.updateOne(
-      { _id: conversation.id },
-      depopulate(conversation),
-      {
-        upsert: true,
-      },
-    ).exec(err => {
-      if (err) {
-        throw err;
-      }
-      resolve();
-    });
-  });
-
 export const addMessageToConversation = (
   conversationId: Conversation['id'],
   message: NormalizedMessage,
@@ -59,6 +43,26 @@ export const addMessageToConversation = (
       resolve();
     });
   });
+
+export const saveConversation = async (conversation: Conversation) => {
+  await ConversationModel.updateOne(
+    { _id: conversation.id },
+    depopulate(conversation),
+    {
+      upsert: true,
+    },
+  ).exec(err => {
+    if (err) {
+      throw err;
+    }
+  });
+  // TODO - add a service for adding multiple messages
+  if (conversation.messages.length > 0) {
+    for await (const message of conversation.messages) {
+      await addMessageToConversation(conversation.id, message);
+    }
+  }
+};
 
 export const updateConversationMessage = (
   conversationId: Conversation['id'],

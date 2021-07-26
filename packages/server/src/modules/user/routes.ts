@@ -8,10 +8,13 @@ import {
   findUsers,
   getUser,
   updateUserActivity,
+  createInitialFounderConversation,
 } from './middleware';
+import { getUser as getUserService } from './service';
 import { UserAlreadyActivated, UserAlreadyExists } from './errors';
 
 const {
+  ifThen,
   sendData,
   identify,
   webLogin,
@@ -21,6 +24,7 @@ const {
   sendMail,
   validate,
   addMentor,
+  saveConversation,
 } = middleware;
 
 application.service.registerPostRoute(
@@ -33,15 +37,20 @@ application.service.registerPostRoute(
   toLocals('studentId', (req, res) => res.locals.user.id),
   toLocals('coachId', req => req.body.options.referrer),
   addMentor,
+  // Initial founder message flow
+  toLocals('founder', () => getUserService({ id: process.env.FOUNDER_ID })),
+  ifThen('founder')(createInitialFounderConversation),
+  ifThen('conversation')(saveConversation),
 
   sendMail((req, res) => ({
     from: 'Chess Tent <noreply@chesstent.com>',
     to: res.locals.user.email,
     subject: 'Beta Registration',
-    html: `<p>Dear ${res.locals.user.name},</p> 
-      <p>Thank you for registering for Chess Tent private beta. Due to limited resources users are activated with a delay. We are still in very early phase and kindly ask for patience and understanding.</p>
-      <p>Best Regards, <br/>Chess Tent Team</p>`,
+    html: `<p>Dear ${res.locals.user.name},</p>
+       <p>Thank you for registering. We are still in very early phase and kindly ask for patience and understanding.</p>
+       <p>Best Regards, <br/>Chess Tent Team</p>`,
   })),
+  webLogin,
   sendData('user'),
 );
 

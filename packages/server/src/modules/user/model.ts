@@ -24,7 +24,7 @@ const userSchema = db.createSchema<NormalizedUser>(
     coach: (Schema.Types.Boolean as unknown) as boolean,
     active: ({
       type: Schema.Types.Boolean,
-      default: false,
+      default: true,
     } as unknown) as boolean,
     state: ({
       type: Schema.Types.Mixed,

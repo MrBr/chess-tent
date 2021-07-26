@@ -41,14 +41,43 @@ export const sendStatusOk: Middleware['sendStatusOk'] = (req, res) => {
   res.json({ error: null });
 };
 
-export const toLocals: Middleware['toLocals'] = (localsKey, value) => (
+export const toLocals: Middleware['toLocals'] = (localsKey, value) => async (
   ...args
 ) => {
   const next = args[2];
-  set(
-    args[1].locals,
-    localsKey,
-    typeof value === 'function' ? value(...args) : value,
-  );
+  let localValue = value;
+  if (typeof value === 'function') {
+    try {
+      localValue = await value(...args);
+    } catch (e) {
+      return next(e);
+    }
+  }
+  set(args[1].locals, localsKey, localValue);
+  next();
+};
+
+export const ifThen: Middleware['ifThen'] = condition => func => async (
+  ...args
+) => {
+  const res = args[1];
+  const next = args[2];
+
+  let isValid;
+
+  if (typeof condition === 'function') {
+    try {
+      isValid = await condition(...args);
+    } catch (e) {
+      return next(e);
+    }
+  } else {
+    isValid = res.locals[condition];
+  }
+
+  if (isValid) {
+    await func(...args);
+  }
+
   next();
 };

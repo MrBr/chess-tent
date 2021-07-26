@@ -1,6 +1,6 @@
 import { MiddlewareFunction } from '@types';
-import { User } from '@chess-tent/models';
-import { errors } from '@application';
+import { createConversation, createMessage, User } from '@chess-tent/models';
+import application, { errors, middleware } from '@application';
 import * as service from './service';
 import {
   AccountNotActivatedError,
@@ -9,6 +9,8 @@ import {
   PasswordEncryptionError,
 } from './errors';
 import { validateUserPassword } from './service';
+
+const { toLocals } = middleware;
 
 export const addUser: MiddlewareFunction = (req, res, next) => {
   service
@@ -90,8 +92,8 @@ export const verifyUser: MiddlewareFunction = async (req, res, next) => {
       throw new LoginFailedError();
     }
 
+    delete user.password;
     res.locals.user = user;
-    delete res.locals.user.password;
 
     next();
   } catch (err) {
@@ -110,3 +112,27 @@ export const hashPassword: MiddlewareFunction = (req, res, next) => {
       throw new PasswordEncryptionError();
     });
 };
+
+export const createInitialFounderConversation = toLocals(
+  'conversation',
+  async (req, res) => {
+    const { founder, user } = res.locals;
+    const participants = [user, founder];
+
+    const messages = [
+      `Hi!`,
+      `I am Luka. The founder of Chess Tent platform. For the time being I'll be you support :)`,
+      `Chess Tent is truly aiming to be a community driven platform so every feedback is of great value. The platform is still in early phase so don't mind a bug or few. `,
+      `Feel free to let me know if you have any questions.`,
+      `Thank you for signing up! Have a good chess time.`,
+    ].map(message =>
+      createMessage(application.service.generateIndex(), founder, message),
+    );
+
+    return createConversation(
+      application.service.generateIndex(),
+      participants,
+      messages,
+    );
+  },
+);

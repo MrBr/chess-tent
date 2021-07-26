@@ -1,8 +1,8 @@
 import { MiddlewareFunction } from '@types';
+import { Pagination } from '@chess-tent/types';
 import { Conversation } from '@chess-tent/models';
 import * as service from './service';
 import { UnauthorizedConversationEditError } from './errors';
-import { Pagination } from '@chess-tent/types';
 
 export const saveConversation: MiddlewareFunction = (req, res, next) => {
   service

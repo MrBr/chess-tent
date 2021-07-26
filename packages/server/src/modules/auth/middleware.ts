@@ -1,7 +1,7 @@
-import { verifyToken } from './service';
 import { Middleware } from '@types';
-import { UnauthorizedError } from './errors';
 import application from '@application';
+import { verifyToken } from './service';
+import { UnauthorizedError } from './errors';
 
 const COOKIE_TOKEN_KEY = 'token';
 

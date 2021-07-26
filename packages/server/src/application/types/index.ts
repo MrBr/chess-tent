@@ -168,6 +168,7 @@ export type Middleware = {
   sendNotification: (...args: Parameters<RequestHandler>) => void;
   createNotification: (...args: Parameters<RequestHandler>) => void;
   updateNotifications: (...args: Parameters<RequestHandler>) => void;
+  saveConversation: (...args: Parameters<RequestHandler>) => void;
   addMentor: (...args: Parameters<RequestHandler>) => void;
   getUser: (...args: Parameters<RequestHandler>) => void;
   adapter<T extends EntityDocument>(
@@ -182,6 +183,11 @@ export type Middleware = {
       | object
       | []
       | ((...args: Parameters<RequestHandler>) => void),
+  ) => (...args: Parameters<RequestHandler>) => void;
+  ifThen: (
+    condition: string | ((...args: Parameters<RequestHandler>) => boolean),
+  ) => (
+    func: (...args: Parameters<RequestHandler>) => void,
   ) => (...args: Parameters<RequestHandler>) => void;
 };
 export type MiddlewareFunction = (...args: Parameters<RequestHandler>) => void;

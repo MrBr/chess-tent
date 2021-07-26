@@ -1,9 +1,9 @@
 import _ from 'lodash';
-import { UserModel } from './model';
 import { User } from '@chess-tent/models';
 import { compare, hash } from 'bcrypt';
 import { MongooseFilterQuery } from 'mongoose';
 import { utils, service } from '@application';
+import { UserModel } from './model';
 
 export const addUser = (user: User) =>
   new Promise((resolve, reject) => {

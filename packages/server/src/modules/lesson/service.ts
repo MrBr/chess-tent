@@ -31,7 +31,10 @@ export const publishLesson = (lessonId: Lesson['id'], lesson: Lesson) =>
             filter: { docId: lessonId },
             update: {
               $setOnInsert: { _id: service.generateIndex() },
-              $set: newLesson,
+              $set: {
+                docId: lessonId,
+                ...newLesson,
+              },
             },
             upsert: true,
           },

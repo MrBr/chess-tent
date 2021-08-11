@@ -27,11 +27,14 @@ export default styled<Components['Layout']>(
       padding: '0 5em',
       background: '#FAFBFB',
       position: 'relative',
-      overflowY: 'scroll',
+      overflowY: 'auto',
     },
     '.layout-sidebar': {
       gridArea: 'sidebar',
       position: 'relative',
+    },
+    '&.extended-sidebar': {
+      gridTemplateColumns: '4fr 2fr',
     },
     display: 'grid',
     gridTemplateRows: 'min-content calc(100vh - 96px)',

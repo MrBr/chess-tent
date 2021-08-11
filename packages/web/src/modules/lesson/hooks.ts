@@ -1,11 +1,12 @@
-import { Step, updateStepState, User } from '@chess-tent/models';
+import { Lesson, Step, updateStepState, User } from '@chess-tent/models';
 import { hooks } from '@application';
 import { useCallback, useContext, useEffect } from 'react';
 import { Hooks } from '@types';
 import { editorContext } from './context';
-import { userTrainings, lessons, myLessons } from './record';
+import { userTrainings, lessons, myLessons, lesson } from './record';
+import { lessonSelector } from './state/selectors';
 
-const { useRecordInit } = hooks;
+const { useRecordInit, useStore } = hooks;
 
 export const useUpdateLessonStepState = <T extends Step>(
   updateStep: (step: T) => void,
@@ -35,6 +36,24 @@ export const useLessons: Hooks['useLessons'] = (key: string, filters) => {
     record.load(filters);
     // eslint-disable-next-line
   }, [filters]);
+
+  return record;
+};
+
+export const useLesson: Hooks['useLesson'] = (lessonId: Lesson['id']) => {
+  const store = useStore();
+  const record = useRecordInit(lesson, 'lesson' + lessonId);
+
+  useEffect(() => {
+    const state = store.getState();
+    const lesson = lessonSelector(lessonId)(state);
+    if (lesson) {
+      record.update(lesson);
+      return;
+    }
+    record.load(lessonId);
+    // eslint-disable-next-line
+  }, [lessonId]);
 
   return record;
 };

@@ -34,7 +34,11 @@ export default ({ user }: { user: User }) => {
           <CoachTrainings trainings={trainings} />
         </>
       )}
-      <LessonBrowser lessons={lessons} onFiltersChange={handleFilterChange} />
+      <LessonBrowser
+        lessons={lessons}
+        onFiltersChange={handleFilterChange}
+        editable
+      />
     </Page>
   );
 };

@@ -7,3 +7,4 @@ export { ReactComponent as crown } from './icons/crown.svg';
 export { ReactComponent as home } from './icons/home.svg';
 export { ReactComponent as plus } from './icons/plus.svg';
 export { ReactComponent as board } from './icons/board.svg';
+export { ReactComponent as like } from './icons/like.svg';

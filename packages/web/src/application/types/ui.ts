@@ -29,6 +29,7 @@ import {
   CardProps,
   TooltipProps,
   Overlay as BOverlay,
+  BadgeProps,
 } from 'react-bootstrap';
 import DropdownToggle from 'react-bootstrap/DropdownToggle';
 import { ErrorMessageProps, Formik } from 'formik';
@@ -174,6 +175,7 @@ export type UI = {
       | 'crown'
       | 'plus'
       | 'board'
+      | 'like'
       | 'chess';
     textual?: boolean;
     size?: 'large' | 'regular' | 'small' | 'extra-small';
@@ -247,7 +249,7 @@ export type UI = {
     }
   >;
   Card: ComponentType<ClickProps & ClassNameProps & CardProps>;
-  CardBody: ComponentType;
+  CardBody: ComponentType<ClassNameProps>;
   CardHeader: ComponentType;
   Modal: UIComponent<
     ModalProps & { close?: () => void; fullScreen?: boolean }
@@ -267,4 +269,5 @@ export type UI = {
   NavDropdown: typeof NavDropdown;
   Tooltip: UIComponent<TooltipProps>;
   Overlay: typeof BOverlay;
+  Tag: UIComponent<BadgeProps>;
 };

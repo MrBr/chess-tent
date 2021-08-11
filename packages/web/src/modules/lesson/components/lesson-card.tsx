@@ -1,40 +1,34 @@
 import React from 'react';
-import { hooks, ui } from '@application';
+import { ui } from '@application';
 import { Lesson } from '@chess-tent/models';
 import LessonThumbnail from './thumbnail';
 
-const { Headline5, Text, Card, Container } = ui;
-const { useHistory } = hooks;
+const { Headline5, Text, Card, Container, Tag } = ui;
 
-const LessonCard: React.FC<{ lesson: Lesson }> = ({ lesson }) => {
-  const history = useHistory();
-
-  return (
-    <Card
-      key={lesson.id}
-      onClick={() => history.push(`/lesson/${lesson.id}`)}
-      className="cursor-pointer mb-4 shadow-none"
-    >
-      <LessonThumbnail size="large" difficulty={lesson.difficulty} />
-      <Headline5 className="mt-2 mb-2">{lesson.state.title}</Headline5>
-      <Text fontSize="extra-small" weight={700} className="mb-1">
-        {lesson.difficulty}
-      </Text>
-      <Container>
-        {lesson.tags?.map(({ text, id }) => (
-          <Text
-            key={id}
-            fontSize="extra-small"
-            inline
-            className="mr-1"
-            weight={700}
-          >
+const LessonCard: React.FC<{
+  lesson: Lesson;
+  onClick: (lesson: Lesson) => void;
+}> = ({ lesson, onClick }) => (
+  <Card
+    key={lesson.id}
+    onClick={() => onClick(lesson)}
+    className="cursor-pointer mb-4 shadow-none"
+  >
+    <LessonThumbnail size="large" difficulty={lesson.difficulty} />
+    <Headline5 className="mt-2 mb-2">{lesson.state.title}</Headline5>
+    <Text fontSize="extra-small" weight={700} className="mb-1">
+      {lesson.difficulty}
+    </Text>
+    <Container className="pl-0">
+      {lesson.tags?.map(({ text, id }) => (
+        <Tag pill key={id} variant="success" className="mr-1">
+          <Text fontSize="extra-small" inline weight={700} color="inherit">
             {text}
           </Text>
-        ))}
-      </Container>
-    </Card>
-  );
-};
+        </Tag>
+      ))}
+    </Container>
+  </Card>
+);
 
 export default LessonCard;

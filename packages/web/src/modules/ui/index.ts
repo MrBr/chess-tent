@@ -18,6 +18,7 @@ import { Container, Row, Col, Page } from './Grid';
 import { Select, AsyncSelect } from './Select';
 import Dropdown, { OptionsDropdown } from './Dropdown';
 import { Tooltip } from './Tooltip';
+import { Tag } from './Tag';
 import { Overlay } from './Overlay';
 import {
   Display1,
@@ -97,6 +98,7 @@ application.ui.SearchBox = SearchBox;
 
 application.ui.Tooltip = Tooltip;
 application.ui.Overlay = Overlay;
+application.ui.Tag = Tag;
 
 application.ui.Icon = Icon;
 application.ui.Dot = Dot;

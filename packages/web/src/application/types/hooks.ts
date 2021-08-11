@@ -13,6 +13,7 @@ import {
   Subject,
   ServiceType,
   Activity,
+  Lesson,
 } from '@chess-tent/models';
 import { useRecordInit, useRecordSafe } from '@chess-tent/redux-record';
 import { Action as ReduxAction } from 'redux';
@@ -89,6 +90,9 @@ export type Hooks = {
     () => Step | null,
     () => void,
   ];
+  useLesson: <T extends Activity>(
+    lessonId: Lesson['id'],
+  ) => RecordHookInit<InferInitRecord<Records<T>['lesson']>>;
   useActivity: <T extends Activity>(
     key: string,
   ) => RecordHookInit<InferInitRecord<Records<T>['activity']>>;

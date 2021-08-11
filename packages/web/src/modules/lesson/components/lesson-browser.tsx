@@ -1,18 +1,20 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { hooks, ui, components } from '@application';
 import { Components } from '@types';
-import { Difficulty, Tag } from '@chess-tent/models';
+import { Difficulty, Lesson, Tag } from '@chess-tent/models';
 import LessonCard from '../components/lesson-card';
 import DifficultyDropdown from './difficulty-dropdown';
 
 const { Container, Headline3, Row, Col, SearchBox } = ui;
-const { useTags } = hooks;
+const { useTags, useHistory } = hooks;
 const { TagsSelect, Filters } = components;
 
 const LessonBrowser: Components['LessonBrowser'] = ({
   lessons,
   onFiltersChange,
+  editable,
 }) => {
+  const history = useHistory();
   const [search, setSearch] = useState('');
   const [difficulty, setDifficulty] = useState<Difficulty>();
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
@@ -28,6 +30,13 @@ const LessonBrowser: Components['LessonBrowser'] = ({
       setSelectedTags(selected);
     },
     [setSelectedTags, tags],
+  );
+
+  const handleLessonClick = useCallback(
+    (lesson: Lesson) => {
+      history.push(`/lesson/${editable ? '' : 'preview/'}${lesson.id}`);
+    },
+    [history],
   );
 
   return (
@@ -72,7 +81,7 @@ const LessonBrowser: Components['LessonBrowser'] = ({
       <Row>
         {lessons?.map(lesson => (
           <Col key={lesson.id} className="col-auto">
-            <LessonCard lesson={lesson} />
+            <LessonCard lesson={lesson} onClick={handleLessonClick} />
           </Col>
         ))}
       </Row>

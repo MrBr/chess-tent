@@ -20,6 +20,12 @@ const lessons = records.createRecord(
   records.withRecordApiLoad(requests.lessons),
 );
 
+const lesson = records.createRecord(
+  records.withRecordBase<Lesson>(),
+  records.withRecordDenormalized(TYPE_LESSON),
+  records.withRecordApiLoad(requests.lesson),
+);
+
 const myLessons = records.createRecord(
   records.withRecordBase<Lesson[]>(),
   records.withRecordCollection(),
@@ -27,4 +33,4 @@ const myLessons = records.createRecord(
   records.withRecordApiLoad(requests.myLessons),
 );
 
-export { userTrainings, lessons, myLessons };
+export { userTrainings, lessons, myLessons, lesson };

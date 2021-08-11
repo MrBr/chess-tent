@@ -58,6 +58,7 @@ export type Records<T = any> = {
   conversationParticipant: InitRecord<RecordBase<User>>;
 
   activity: InitRecord<RecordBase<T>>;
+  lesson: InitRecord<RecipeApiLoad<Requests['lesson']> & RecordBase<Lesson>>;
   lessons: InitRecord<
     RecipeApiLoad<Requests['lessons']> &
       RecordBase<Lesson[]> &

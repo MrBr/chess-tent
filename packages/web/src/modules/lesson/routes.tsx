@@ -1,6 +1,7 @@
 import React from 'react';
 import application, { components } from '@application';
 import Lesson from './pages/lesson';
+import PreviewLesson from './pages/preview-lesson';
 import NewLesson from './pages/new-lesson';
 import Activity from './pages/activity';
 import Lessons from './pages/browse-lessons';
@@ -14,6 +15,9 @@ application.services.addRoute(() => (
     </AuthorizedRoute>
     <AuthorizedRoute path="/lesson/:lessonId" exact>
       <Lesson />
+    </AuthorizedRoute>
+    <AuthorizedRoute path="/lesson/preview/:lessonId" exact>
+      <PreviewLesson />
     </AuthorizedRoute>
   </Switch>
 ));

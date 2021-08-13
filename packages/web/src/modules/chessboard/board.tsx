@@ -537,7 +537,7 @@ class Chessboard
           )}
         </BoardContainer>
         <BoardFooter className="mt-4" width={size as number}>
-          {footer || (
+          {footer === undefined ? (
             <Footer
               editing={!!editing}
               onReset={this.onReset}
@@ -547,6 +547,8 @@ class Chessboard
               position={fen}
               onRotate={this.onRotate}
             />
+          ) : (
+            footer
           )}
         </BoardFooter>
         <Modal

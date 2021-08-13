@@ -36,7 +36,7 @@ const LessonBrowser: Components['LessonBrowser'] = ({
     (lesson: Lesson) => {
       history.push(`/lesson/${editable ? '' : 'preview/'}${lesson.id}`);
     },
-    [history],
+    [editable, history],
   );
 
   return (

@@ -3,6 +3,8 @@ import {
   Lesson,
   User,
   publishLesson as publishLessonService,
+  canEditLesson as canEditLessonService,
+  canAccessLesson as canAccessLessonService,
 } from '@chess-tent/models';
 import { LessonsRequest, LessonUpdates } from '@chess-tent/types';
 import { MongooseFilterQuery } from 'mongoose';
@@ -147,12 +149,15 @@ export const findLessons = (
 export const canEditLesson = (lessonId: Lesson['id'], userId: User['id']) =>
   new Promise((resolve, reject) => {
     getLesson(lessonId)
+      .then(lesson => resolve(!lesson || canEditLessonService(lesson, userId)))
+      .catch(reject);
+  });
+
+export const canAccessLesson = (lessonId: Lesson['id'], userId: User['id']) =>
+  new Promise((resolve, reject) => {
+    getLesson(lessonId)
       .then(lesson =>
-        resolve(
-          !lesson ||
-            lesson.owner.id === userId ||
-            lesson.users?.some(({ id }) => id === userId),
-        ),
+        resolve(!!lesson && canAccessLessonService(lesson, userId)),
       )
       .catch(reject);
   });

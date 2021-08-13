@@ -69,3 +69,16 @@ export const canEditLesson: MiddlewareFunction = (req, res, next) => {
     })
     .catch(next);
 };
+
+export const canAccessLesson: MiddlewareFunction = (req, res, next) => {
+  service
+    .canAccessLesson(res.locals.lesson.id, res.locals.me.id)
+    .then(canEdit => {
+      if (canEdit) {
+        next();
+        return;
+      }
+      throw new UnauthorizedLessonEditError();
+    })
+    .catch(next);
+};

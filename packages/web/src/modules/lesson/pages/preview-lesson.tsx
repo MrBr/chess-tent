@@ -1,6 +1,6 @@
 import React from 'react';
 import { hooks, ui, components } from '@application';
-// import ChaptersDropdown from '../components/chapters-dropdown';
+import ChaptersDropdown from '../components/chapters-dropdown';
 import LessonThumbnail from '../components/thumbnail';
 
 const {
@@ -84,11 +84,12 @@ const PreviewLesson = () => {
                 </Row>
               </CardBody>
             </Card>
-            {/* <ChaptersDropdown
-              chapter={lesson?.state?.chapters}
-              // @ts-ignore
-              activeChapter={lesson?.state?.chapters?.[0]}
-            /> */}
+            {lesson && (
+              <ChaptersDropdown
+                chapters={lesson.state.chapters}
+                activeChapter={lesson.state.chapters[0]}
+              />
+            )}
           </Container>
         }
         className="extended-sidebar"

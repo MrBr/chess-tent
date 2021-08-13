@@ -7,6 +7,7 @@ import {
   findLessons,
   patchLesson,
   updateLesson,
+  canAccessLesson,
 } from './middleware';
 
 const { identify, sendData, sendStatusOk, toLocals } = middleware;
@@ -86,6 +87,6 @@ application.service.registerGetRoute(
   identify,
   toLocals('lesson.id', req => req.params.lessonId),
   getLesson,
-  canEditLesson,
+  canAccessLesson,
   sendData('lesson'),
 );

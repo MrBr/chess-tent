@@ -1,14 +1,22 @@
 import React, { useEffect } from 'react';
 import { components, hooks, state, requests } from '@application';
+import { canEditLesson, isLessonPublicDocument } from '@chess-tent/models';
 
-const { useParams, useDispatchBatched, useSelector, useApi } = hooks;
-const { Editor } = components;
+const {
+  useParams,
+  useDispatchBatched,
+  useSelector,
+  useApi,
+  useActiveUserRecord,
+} = hooks;
+const { Editor, Redirect } = components;
 const {
   selectors: { lessonSelector },
   actions: { updateEntities },
 } = state;
 
 export default () => {
+  const { value: user } = useActiveUserRecord();
   const { lessonId } = useParams();
   const {
     fetch,
@@ -38,6 +46,10 @@ export default () => {
 
   if (!lesson) {
     return null;
+  }
+
+  if (isLessonPublicDocument(lesson) || !canEditLesson(lesson, user.id)) {
+    return <Redirect to="/" />;
   }
 
   return <Editor lesson={lesson} save={requests.lessonUpdates} />;

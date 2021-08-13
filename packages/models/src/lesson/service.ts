@@ -73,6 +73,22 @@ const updateLesson = (
   patchListener?: PatchListener,
 ) => updateSubject(lesson, update, patchListener);
 
+const canEditLesson = (lesson: Lesson, userId: User['id']) =>
+  lesson.owner.id === userId || lesson.users?.some(({ id }) => id === userId);
+
+/**
+ * Draft lesson is editable version of the lesson unlike public document version.
+ */
+const isLessonDraft = (lesson: Lesson) => !lesson.docId;
+
+/**
+ * Public copy of the lesson, accessible by non collaborators.
+ */
+const isLessonPublicDocument = (lesson: Lesson) => !!lesson.docId;
+
+const canAccessLesson = (lesson: Lesson, userId: User['id']) =>
+  canEditLesson(lesson, userId) || isLessonPublicDocument(lesson);
+
 const createLesson = (
   id: string,
   chapters: Chapter[],
@@ -99,4 +115,8 @@ export {
   updateLessonStep,
   getLessonChapterIndex,
   updateLesson,
+  canEditLesson,
+  canAccessLesson,
+  isLessonDraft,
+  isLessonPublicDocument,
 };

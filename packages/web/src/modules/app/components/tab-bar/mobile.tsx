@@ -49,15 +49,15 @@ export default function TabBar() {
       </TabButton>
       <TabButton path="/lessons">
         <Icon type="chess" textual />
-        Browse Lessons
+        Lessons
       </TabButton>
       <TabButton path="/lesson/new">
         <Icon type="plus" textual />
-        Create Lesson
+        Create
       </TabButton>
       <TabButton path="/coaches">
         <Icon type="crown" textual />
-        Find Coach
+        Coaches
       </TabButton>
     </Container>
   );

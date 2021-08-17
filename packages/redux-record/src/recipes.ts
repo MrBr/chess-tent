@@ -63,4 +63,28 @@ const withRecordBase = <V>(): RecordRecipe<RecordBase<V>> => (
   };
 };
 
-export { withRecordBase, withRecordCollection };
+const withRecordMethod = <
+  A,
+  V,
+  T extends RecordBase<V>,
+  M extends string,
+  F extends (this: T, ...args: any[]) => void
+>(
+  method: M,
+  func: F,
+) => () => (
+  record: T,
+): T &
+  {
+    [prop in M]: F;
+  } => {
+  return {
+    ...record,
+    [method]: func.bind(record),
+  } as T &
+    {
+      [prop in M]: F;
+    };
+};
+
+export { withRecordBase, withRecordCollection, withRecordMethod };

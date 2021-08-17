@@ -1,16 +1,37 @@
-import { records, requests } from '@application';
+import { records, requests, services } from '@application';
 import {
   Lesson,
   LessonActivity,
   TYPE_ACTIVITY,
   TYPE_LESSON,
+  User,
 } from '@chess-tent/models';
+
+const { createActivity } = services;
 
 const userTrainings = records.createRecord(
   records.withRecordBase<LessonActivity[]>(),
   records.withRecordCollection(),
   records.withRecordDenormalizedCollection(TYPE_ACTIVITY),
   records.withRecordApiLoad(requests.trainings),
+  records.withRecordMethod(
+    'new',
+    async function (lesson: Lesson, owner: User, state = {}, users = []) {
+      const activity = createActivity<LessonActivity>(
+        lesson,
+        owner,
+        state,
+        users,
+      );
+      try {
+        await requests.activitySave(activity);
+        this.amend({ loading: true, loaded: false });
+      } finally {
+        this.push(activity);
+        this.amend({ loading: false, loaded: true });
+      }
+    },
+  ),
 );
 
 const lessons = records.createRecord(

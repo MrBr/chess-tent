@@ -15,6 +15,7 @@ import {
   InferRecordValueType,
   InitRecord,
   RecipeCollection,
+  RecipeMethod,
   RecordBase,
   RecordRecipe,
 } from '@chess-tent/redux-record/types';
@@ -30,6 +31,10 @@ function getRecordInitByNamespace(
     `Unknown namespace ${namespace} - no record registered for that namespace.`,
   );
 }
+
+type UserTrainingsRecord = RecipeApiLoad<Requests['activities']> &
+  RecordBase<LessonActivity[]> &
+  RecipeCollection<LessonActivity>;
 
 export type Records<T = any> = {
   activeUser: InitRecord<RecipeApiLoad<Requests['me']> & RecordBase<User>>;
@@ -50,9 +55,17 @@ export type Records<T = any> = {
   >;
 
   userTrainings: InitRecord<
-    RecipeApiLoad<Requests['activities']> &
-      RecordBase<LessonActivity[]> &
-      RecipeCollection<LessonActivity>
+    UserTrainingsRecord &
+      RecipeMethod<
+        UserTrainingsRecord,
+        'new',
+        (
+          lesson: Lesson,
+          owner: User,
+          state?: LessonActivity['state'],
+          users?: User[],
+        ) => void
+      >
   >;
 
   conversationParticipant: InitRecord<RecordBase<User>>;
@@ -85,6 +98,14 @@ export type Records<T = any> = {
     T,
     RecipeCollection<InferRecordValueType<T>>
   >;
+  withRecordMethod: <
+    T extends RecordBase<any>,
+    M extends string,
+    F extends (this: T, ...args: any[]) => void
+  >(
+    method: M,
+    func: F,
+  ) => RecordRecipe<T, RecipeMethod<T, M, F>>;
   // TODO - safe type `type` argument - should match selected entity
   withRecordDenormalized: <T extends RecordBase<any>>(
     type: string,

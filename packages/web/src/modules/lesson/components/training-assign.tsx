@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
-import { components, hooks, requests, services, ui } from '@application';
-import { Lesson, User, LessonActivity } from '@chess-tent/models';
+import { components, hooks, requests, ui } from '@application';
+import { Lesson, User } from '@chess-tent/models';
 import * as yup from 'yup';
 import lessonThumbUrl from '../images/lesson.svg';
 
@@ -16,7 +16,6 @@ const {
   Modal,
 } = ui;
 const { useApi, useActiveUserRecord, useStudents, useUserTrainings } = hooks;
-const { createActivity } = services;
 const { UserAvatar } = components;
 
 const TrainingSchema = yup.object().shape({
@@ -25,12 +24,12 @@ const TrainingSchema = yup.object().shape({
 });
 
 export default ({ close }: { close: () => void }) => {
-  const { fetch: saveActivity, response: assignResponse, loading } = useApi(
-    requests.activitySave,
-  );
   const { value: user } = useActiveUserRecord();
   const { value: mentorship } = useStudents(user);
-  const { push: pushTraining } = useUserTrainings(user);
+  const {
+    new: newTraining,
+    meta: { loading, loaded },
+  } = useUserTrainings(user);
   const { fetch: fetchUserLessons, response } = useApi(requests.myLessons);
 
   const students = useMemo(() => mentorship?.map(({ student }) => student), [
@@ -39,17 +38,10 @@ export default ({ close }: { close: () => void }) => {
 
   const assignTraining = useCallback(
     (data, helpers) => {
-      const activity = createActivity<LessonActivity>(
-        data.lesson,
-        data.user,
-        { training: true },
-        [user],
-      );
-      saveActivity(activity);
-      pushTraining(activity);
+      newTraining(data.lesson, data.user, {}, [user]);
       helpers.resetForm();
     },
-    [pushTraining, saveActivity, user],
+    [newTraining, user],
   );
 
   useEffect(() => {
@@ -96,11 +88,7 @@ export default ({ close }: { close: () => void }) => {
             Assign
           </Button>
           <Text inline fontSize="small" className="ml-4">
-            {loading
-              ? 'Assigning'
-              : !!assignResponse
-              ? 'Training assigned'
-              : null}
+            {loading ? 'Assigning' : !!loaded ? 'Training assigned' : null}
           </Text>
         </Form>
       </ModalBody>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { hooks, ui, components } from '@application';
 import { Chapter } from '@chess-tent/models';
 import { VariationStep } from '@types';
@@ -21,12 +21,39 @@ const {
 
 const { Layout, Header, Chessboard } = components;
 
-const { useParams, useLesson } = hooks;
+const {
+  useParams,
+  useLesson,
+  useUserTrainings,
+  useActiveUserRecord,
+  useHistory,
+} = hooks;
 
 const PreviewLesson = () => {
   const { lessonId } = useParams();
+  const history = useHistory();
   const { value: lesson } = useLesson(lessonId);
   const [chapter, setActiveChapter] = useState<Chapter>();
+  const { value: user } = useActiveUserRecord();
+  const { new: newTraining, value: activities } = useUserTrainings(user);
+
+  const ownedLessonActivity = activities?.find(
+    ({ subject }) => subject.id === lessonId,
+  );
+
+  const assignLesson = useCallback(() => {
+    if (!lesson) {
+      return;
+    }
+    newTraining(lesson, user);
+  }, [newTraining, lesson, user]);
+
+  const goToLesson = useCallback(() => {
+    if (!ownedLessonActivity) {
+      return;
+    }
+    history.push(`/activity/${ownedLessonActivity.id}`);
+  }, [history, ownedLessonActivity]);
 
   if (!lesson) {
     return null;
@@ -75,7 +102,15 @@ const PreviewLesson = () => {
               </Text>
             </Col>
             <Col className="col-6 d-flex justify-content-end align-items-center">
-              <Button size="small">Start</Button>
+              {ownedLessonActivity ? (
+                <Button size="small" onClick={goToLesson} variant="secondary">
+                  Owned
+                </Button>
+              ) : (
+                <Button size="small" onClick={assignLesson}>
+                  Start
+                </Button>
+              )}
             </Col>
           </Row>
         </CardBody>

@@ -50,10 +50,7 @@ const trainings = services.createRequest<
   ActivitiesResponse<LessonActivity>
 >('POST', data => ({
   url: '/activities',
-  data: {
-    ...data,
-    state: { ...data.state, training: true },
-  },
+  data,
 }));
 
 requests.trainings = trainings;

@@ -57,7 +57,6 @@ export type LessonActivity = Activity<
   {
     activeChapterId?: Chapter['id'];
     activeStepId?: Step['id'];
-    training: boolean;
     [key: string]: any;
   }
 >;

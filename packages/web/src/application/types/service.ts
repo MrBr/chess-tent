@@ -75,8 +75,8 @@ export type Services = {
   createActivity: <T extends Activity>(
     subject: T extends Activity<infer S, infer K> ? S : never,
     owner: User,
-    state: T extends Activity<infer S, infer K> ? K : never,
-    users: User[],
+    state?: T extends Activity<infer S, infer K> ? K : never,
+    users?: User[],
   ) => T;
   createActivityComment: (user: User, text: string) => ActivityComment;
   createActivityStepState: (initialState?: {}) => ActivityStepStateBase;

@@ -4,9 +4,10 @@ import { Components } from '@types';
 import { Difficulty, Lesson, Tag } from '@chess-tent/models';
 import LessonCard from '../components/lesson-card';
 import DifficultyDropdown from './difficulty-dropdown';
+import { isOwned } from '../service';
 
 const { Container, Headline3, Row, Col, SearchBox } = ui;
-const { useTags, useHistory } = hooks;
+const { useTags, useHistory, useUserTrainings, useActiveUserRecord } = hooks;
 const { TagsSelect, Filters } = components;
 
 const LessonBrowser: Components['LessonBrowser'] = ({
@@ -19,6 +20,8 @@ const LessonBrowser: Components['LessonBrowser'] = ({
   const [difficulty, setDifficulty] = useState<Difficulty>();
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
   const tags = useTags();
+  const { value: user } = useActiveUserRecord();
+  const { value: trainings } = useUserTrainings(user);
 
   useEffect(() => {
     onFiltersChange && onFiltersChange(search, difficulty, selectedTags);
@@ -79,11 +82,16 @@ const LessonBrowser: Components['LessonBrowser'] = ({
         </Col>
       </Row>
       <Row>
-        {lessons?.map(lesson => (
-          <Col key={lesson.id} className="col-auto">
-            <LessonCard lesson={lesson} onClick={handleLessonClick} />
-          </Col>
-        ))}
+        {trainings &&
+          lessons?.map(lesson => (
+            <Col key={lesson.id} className="col-auto">
+              <LessonCard
+                lesson={lesson}
+                onClick={handleLessonClick}
+                owned={isOwned(trainings, lesson.id)}
+              />
+            </Col>
+          ))}
       </Row>
     </Container>
   );

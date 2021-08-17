@@ -3,17 +3,25 @@ import { ui } from '@application';
 import { Lesson } from '@chess-tent/models';
 import LessonThumbnail from './thumbnail';
 
-const { Headline5, Text, Card, Container, Tag } = ui;
+const { Headline5, Text, Card, Container, Tag, Absolute, Button } = ui;
 
 const LessonCard: React.FC<{
   lesson: Lesson;
   onClick: (lesson: Lesson) => void;
-}> = ({ lesson, onClick }) => (
+  owned?: boolean;
+}> = ({ lesson, onClick, owned }) => (
   <Card
     key={lesson.id}
     onClick={() => onClick(lesson)}
     className="cursor-pointer mb-4 shadow-none"
   >
+    {owned && (
+      <Absolute left={10} top={10}>
+        <Button variant="secondary" size="extra-small">
+          Owned
+        </Button>
+      </Absolute>
+    )}
     <LessonThumbnail size="large" difficulty={lesson.difficulty} />
     <Headline5 className="mt-2 mb-2">{lesson.state.title}</Headline5>
     <Text fontSize="extra-small" weight={700} className="mb-1">

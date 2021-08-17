@@ -6,6 +6,7 @@ import {
   VariationStep,
   VariationStepState,
 } from '@types';
+import { Lesson, LessonActivity } from '@chess-tent/models';
 
 export const hasVariationMove = (
   step: MoveStep | VariationStep,
@@ -19,3 +20,6 @@ export const hasVariationMove = (
     return false;
   });
 };
+
+export const isOwned = (activities: LessonActivity[], lessonId: Lesson['id']) =>
+  activities.some(({ subject }) => subject.id === lessonId);

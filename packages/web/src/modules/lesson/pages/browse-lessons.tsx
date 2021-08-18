@@ -24,7 +24,11 @@ const BrowseLessonsPage: React.FC = () => {
 
   return (
     <Page>
-      <LessonBrowser lessons={lessons} onFiltersChange={handleFilterChange} />
+      <LessonBrowser
+        lessons={lessons}
+        onFiltersChange={handleFilterChange}
+        title="Public lessons"
+      />
     </Page>
   );
 };

@@ -14,6 +14,7 @@ const LessonBrowser: Components['LessonBrowser'] = ({
   lessons,
   onFiltersChange,
   editable,
+  title,
 }) => {
   const history = useHistory();
   const [search, setSearch] = useState('');
@@ -46,7 +47,7 @@ const LessonBrowser: Components['LessonBrowser'] = ({
     <Container fluid>
       <Row className="mt-5 mb-4">
         <Col className="text-wrap" md={2} xs={8}>
-          <Headline3 className="m-0">Browse lessons</Headline3>
+          <Headline3 className="m-0">{title}</Headline3>
         </Col>
         <Col>
           <Filters>

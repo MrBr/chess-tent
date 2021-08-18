@@ -37,20 +37,21 @@ export default ({ user }: { user: User }) => {
 
   return (
     <Page>
-      {!!trainings ? (
+      {!trainings || trainings.length === 0 ? (
+        <Coaches />
+      ) : (
         <>
           <MyTrainings trainings={trainings} user={user} />
           <LessonTrainings trainings={trainings} />
           <StudentTrainings trainings={trainings} user={user} />
         </>
-      ) : (
-        <Coaches />
       )}
       <Row noGutters>
         <Col>
           <LessonBrowser
             lessons={lessons}
             onFiltersChange={handleFilterChange}
+            title="Public lessons"
           />
         </Col>
       </Row>

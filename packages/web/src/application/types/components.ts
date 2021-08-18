@@ -357,6 +357,7 @@ export type Components = {
       tags?: Tag[],
     ) => void;
     editable?: boolean;
+    title: string;
   }>;
   LessonChapters: ComponentType<{
     chapters: Chapter[];

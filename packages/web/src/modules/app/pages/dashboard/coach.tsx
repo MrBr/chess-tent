@@ -43,6 +43,7 @@ export default ({ user }: { user: User }) => {
       <LessonBrowser
         lessons={lessons}
         onFiltersChange={handleFilterChange}
+        title="My lessons"
         editable
       />
     </Page>

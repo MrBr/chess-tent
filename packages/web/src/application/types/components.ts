@@ -345,9 +345,10 @@ export type Components = {
     save: Requests['lessonUpdates'];
     onStatusChange?: (status: LessonStatus) => void;
   }>;
-  CoachTrainings: ComponentType<{ trainings: LessonActivity[] }>;
+  MyTrainings: ComponentType<{ trainings: LessonActivity[]; user: User }>;
+  StudentTrainings: ComponentType<{ trainings: LessonActivity[]; user: User }>;
+  LessonTrainings: ComponentType<{ trainings: LessonActivity[] }>;
   TrainingCard: ComponentType<{ training: LessonActivity }>;
-  StudentTrainings: ComponentType<{ trainings: LessonActivity[] }>;
   LessonBrowser: ComponentType<{
     lessons: Lesson[] | null | undefined;
     onFiltersChange?: (

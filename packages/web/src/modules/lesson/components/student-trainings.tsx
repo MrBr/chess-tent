@@ -3,39 +3,60 @@ import { components, ui } from '@application';
 import groupBy from 'lodash/groupBy';
 import { Components } from '@types';
 import { LessonActivity } from '@chess-tent/models';
+import { isStudentTraining } from '../service';
 
-const { CoachCard, TrainingCard } = components;
-const { Headline3, Container, Row, Col } = ui;
+const { TrainingCard, UserAvatar } = components;
+const { Headline3, Container, Row, Col, Headline5, Card } = ui;
 
-const StudentTrainings: Components['StudentTrainings'] = ({ trainings }) => {
-  const groupByMentor = groupBy(
-    trainings,
-    activity => activity?.subject?.owner.id,
+const Trainings = ({ activities }: { activities: LessonActivity[] }) => (
+  <Card className="mb-3" bg="white">
+    <Row>
+      <Col md={3} className="border-right">
+        <Container className="mt-3 ml-2">
+          <UserAvatar size="small" user={activities[0].owner} />
+          <Headline5 className="ml-3" inline>
+            {activities[0].owner.name}
+          </Headline5>
+        </Container>
+      </Col>
+      <Col md={9} className="w-100 pb-3">
+        <Row>
+          {activities.map(activity => (
+            <Col md={6} key={activity.id} className="mt-3">
+              <TrainingCard training={activity} />
+            </Col>
+          ))}
+        </Row>
+      </Col>
+    </Row>
+  </Card>
+);
+
+const StudentTrainings: Components['StudentTrainings'] = ({
+  trainings,
+  user,
+}) => {
+  const studentTrainings = trainings.filter(activity =>
+    isStudentTraining(activity, user.id),
+  );
+  const groupedTrainings = groupBy(
+    studentTrainings,
+    training => training.users[0].id,
   );
 
-  const renderActivities = (activities: LessonActivity[], index: number) => {
-    return (
-      <Row key={index}>
-        <Col md={4} xs={12}>
-          <CoachCard coach={activities[0].subject.owner} />
-        </Col>
-        <Col md={8} xs={12} className="mt-4">
-          <Row>
-            {activities.map(activity => (
-              <Col md={6} xs={12} className="mb-4" key={activity.id}>
-                <TrainingCard training={activity} />
-              </Col>
-            ))}
-          </Row>
-        </Col>
-      </Row>
-    );
-  };
+  if (studentTrainings.length === 0) {
+    return null;
+  }
 
   return (
     <Container fluid>
-      <Headline3 className="ml-3">My trainings</Headline3>
-      {Object.values(groupByMentor).map(renderActivities)}
+      <Headline3>My student trainings</Headline3>
+      <Headline5 className="mt-0" color="subtitle">
+        Mentor your students
+      </Headline5>
+      {Object.entries(groupedTrainings).map(([coachId, activities]) => (
+        <Trainings activities={activities} key={coachId} />
+      ))}
     </Container>
   );
 };

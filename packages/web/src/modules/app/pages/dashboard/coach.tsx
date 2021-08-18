@@ -1,11 +1,16 @@
 import React, { useCallback, useState } from 'react';
-import { components, hooks, ui } from '@application';
+import { components, hooks } from '@application';
 import { Tag, User } from '@chess-tent/models';
 import { LessonsRequest } from '@chess-tent/types';
 
-const { Page, CoachTrainings, LessonBrowser } = components;
+const {
+  Page,
+  StudentTrainings,
+  LessonBrowser,
+  MyTrainings,
+  LessonTrainings,
+} = components;
 const { useMyLessons, useUserTrainings } = hooks;
-const { Headline3 } = ui;
 
 export default ({ user }: { user: User }) => {
   const { value: trainings } = useUserTrainings(user);
@@ -30,8 +35,9 @@ export default ({ user }: { user: User }) => {
     <Page>
       {trainings && (
         <>
-          <Headline3>My trainings</Headline3>
-          <CoachTrainings trainings={trainings} />
+          <StudentTrainings trainings={trainings} user={user} />
+          <MyTrainings trainings={trainings} user={user} />
+          <LessonTrainings trainings={trainings} />
         </>
       )}
       <LessonBrowser

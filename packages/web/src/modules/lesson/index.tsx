@@ -37,9 +37,16 @@ application.register(
   },
 );
 application.register(
-  () => import('./components/coach-trainings'),
+  () => import('./components/my-trainings'),
   module => {
-    application.components.CoachTrainings = module.default;
+    application.components.MyTrainings = module.default;
+  },
+);
+
+application.register(
+  () => import('./components/lesson-trainings'),
+  module => {
+    application.components.LessonTrainings = module.default;
   },
 );
 

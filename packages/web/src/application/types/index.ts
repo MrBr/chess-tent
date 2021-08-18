@@ -17,6 +17,7 @@ import { HOF } from './hof';
 import { Records } from './records';
 
 export * from '@chess-tent/types';
+export * from './activity';
 export * from './hoc';
 export * from './context';
 export * from './chess';

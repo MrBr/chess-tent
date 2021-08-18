@@ -176,6 +176,7 @@ export type LessonPlayground = FunctionComponent<{
   updateStepMode: (mode: ActivityStepMode) => void;
   updateActivityStepState: (state: {}) => void;
   activeStepActivityState: ActivityStepStateBase;
+  comments?: boolean;
 }>;
 
 export type LessonToolboxText = FunctionComponent<{

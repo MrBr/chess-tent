@@ -38,12 +38,13 @@ const Comment = ({ comment }: { comment: ActivityComment }) => {
 
 const DEFAULT_PLAYGROUND_MODE = ActivityStepMode.SOLVING;
 
-export default ({
+const ActivityPlayground = ({
   header,
   tabs,
   updateStepMode,
   updateActivityStepState,
   activeStepActivityState,
+  comments,
 }: ComponentProps<Components['LessonPlayground']>) => {
   const tab = tabs.find(
     ({ mode }) =>
@@ -90,14 +91,16 @@ export default ({
                 ))}
               </Tabs>
             </Col>
-            <Col className="pt-1 col-auto">
-              <Input
-                as="textarea"
-                rows={1}
-                placeholder="Add comment"
-                onKeyDown={handleCommentSubmit}
-              />
-            </Col>
+            {comments && (
+              <Col className="pt-1 col-auto">
+                <Input
+                  as="textarea"
+                  rows={1}
+                  placeholder="Add comment"
+                  onKeyDown={handleCommentSubmit}
+                />
+              </Col>
+            )}
             <Row className="flex-grow-1 mt-3 overflow-y-auto flex-column-reverse no-gutters">
               <Col className="overflow-anchor-none">
                 {activeStepActivityState.comments?.map(comment => (
@@ -111,3 +114,9 @@ export default ({
     </Container>
   );
 };
+
+ActivityPlayground.defaultProps = {
+  comments: true,
+};
+
+export default ActivityPlayground;

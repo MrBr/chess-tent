@@ -25,6 +25,7 @@ import {
   getPreviousStep,
   getStepIndex,
   getStepsCount,
+  isLessonPublicDocument,
   LessonActivity,
   markStepCompleted,
   Step,
@@ -210,6 +211,7 @@ export class ActivityRenderer extends React.Component<
         updateStepMode={this.updateStepMode}
         updateActivityStepState={this.setStepActivityState}
         activeStepActivityState={activityStepState}
+        comments={!isLessonPublicDocument(activity.subject)}
         header={
           <LessonChapters
             chapters={lesson.state.chapters}

@@ -32,6 +32,7 @@ import {
   updateActivityActiveChapter,
   updateActivityStepAnalysis,
   updateActivityStepState,
+  updateAnalysisActiveStepId,
   updateAnalysisStep,
 } from '@chess-tent/models';
 import Footer from './activity-footer';
@@ -112,12 +113,14 @@ export class ActivityRenderer extends React.Component<
       promoted,
     );
 
-    const newAnalysis = addStep(
-      analysis,
-      services.createStep('variation', {
-        position: position,
-        move: notableMove,
-      }),
+    const newStep = services.createStep('variation', {
+      position: position,
+      move: notableMove,
+    });
+
+    const newAnalysis = updateAnalysisActiveStepId(
+      addStep(analysis, newStep),
+      newStep.id,
     );
 
     this.updateStepActivityAnalysis(newAnalysis);

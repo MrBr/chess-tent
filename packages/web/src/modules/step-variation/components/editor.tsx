@@ -1,14 +1,7 @@
 import React, { useCallback } from 'react';
 import { DrawShape } from '@chess-tent/chessground/dist/draw';
-import { addStep, updateStepState, getNextStep } from '@chess-tent/models';
-import {
-  FEN,
-  Move,
-  MoveStep,
-  Piece,
-  VariationModule,
-  VariationStep,
-} from '@types';
+import { addStep, updateStepState, getLastStep } from '@chess-tent/models';
+import { FEN, Move, Piece, VariationModule, VariationStep } from '@types';
 import { components, constants, services, ui } from '@application';
 import BoardSrc from '../images/board.svg';
 
@@ -53,7 +46,7 @@ const boardChange = (
       orientation,
     });
     const updatedStep = updateStepState(
-      addStepNextToTheComments(step, newVariationStep) as VariationStep,
+      addStep(step, newVariationStep) as VariationStep,
       {
         editing: false,
       },
@@ -70,7 +63,7 @@ const boardChange = (
     movedPiece,
   );
 
-  const nextStep = getNextStep(step, step) as MoveStep;
+  const hasMoveStep = getLastStep(step, false).stepType === 'move';
 
   // Move that possibly already exists in the chapter
   const sameMoveStep = getSameMoveVariationStep(step, notableMove);
@@ -80,7 +73,7 @@ const boardChange = (
     return;
   }
 
-  if (nextStep) {
+  if (hasMoveStep) {
     const newMoveStep = createStep('variation', {
       move: notableMove,
       orientation,

@@ -4,7 +4,7 @@ import { CoachEloRange, Tag } from '@chess-tent/models';
 import CoachCard from './coach-card';
 import CoachLevelDropdown from './coach-level-dropdown';
 
-const { useApi, useComponentStateSilent, useIsMobile, useTags } = hooks;
+const { useApi, useComponentStateSilent, useIsMobile } = hooks;
 const { Container, Row, Col, Headline3, SearchBox } = ui;
 const { Filters, TagsSelect } = components;
 
@@ -12,7 +12,6 @@ export default () => {
   const { mounted } = useComponentStateSilent();
   const { fetch: fetchCoaches, response } = useApi(requests.users);
 
-  const tags = useTags();
   const [filter, setFilter] = useState('');
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
   const [elo, setElo] = useState<CoachEloRange | undefined>();
@@ -44,11 +43,10 @@ export default () => {
   );
 
   const onSelectedTagsChange = useCallback(
-    (tagIds: Tag['id'][]) => {
-      const selected = tags.filter(tag => tagIds.some(id => tag.id === id));
-      setSelectedTags(selected);
+    (tagIds: Tag[]) => {
+      setSelectedTags(tagIds);
     },
-    [setSelectedTags, tags],
+    [setSelectedTags],
   );
 
   return (
@@ -74,7 +72,6 @@ export default () => {
               </Col>
               <Col xs={12} md={5}>
                 <TagsSelect
-                  tags={tags}
                   selected={selectedTags}
                   onChange={onSelectedTagsChange}
                 />

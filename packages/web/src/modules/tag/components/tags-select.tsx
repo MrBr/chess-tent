@@ -1,36 +1,32 @@
 import React from 'react';
 import { Tag } from '@chess-tent/models';
 import { TagsSelectProps } from '@types';
-
 import { ui } from '@application';
 import { ValueType } from 'react-select';
 
+import { useTags } from '../hooks';
+
 const { Select } = ui;
 
-class TagsSelect extends React.Component<
-  TagsSelectProps,
-  { editing: boolean }
-> {
-  onChange = (tags: ValueType<Tag>) => {
-    const { onChange } = this.props;
-    onChange && onChange(tags ? (tags as Tag[]).map(({ id }) => id) : []);
-  };
+const TagsSelect = ({ onChange, className, selected }: TagsSelectProps) => {
+  const tags = useTags();
 
-  render() {
-    const { className, tags, selected } = this.props;
-    return (
-      <Select
-        className={className}
-        value={selected}
-        options={tags}
-        getOptionValue={({ id }) => id}
-        getOptionLabel={({ text }) => text}
-        onChange={this.onChange}
-        placeholder="Select tags"
-        isMulti
-      />
-    );
-  }
-}
+  const changeHandle =
+    onChange &&
+    ((tags: ValueType<Tag>) => onChange(tags ? (tags as Tag[]) : []));
+
+  return (
+    <Select
+      className={className}
+      value={selected}
+      options={tags}
+      getOptionValue={({ id }) => id}
+      getOptionLabel={({ text }) => text}
+      onChange={changeHandle}
+      placeholder="Select tags"
+      isMulti
+    />
+  );
+};
 
 export default TagsSelect;

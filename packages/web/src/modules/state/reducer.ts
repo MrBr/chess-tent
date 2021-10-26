@@ -7,6 +7,7 @@ import {
   UPDATE_ENTITY,
 } from '@chess-tent/types';
 import { applyPatches } from '@chess-tent/models';
+import { utils } from '@application';
 
 const appReducer: {
   [key: string]: Reducer;
@@ -45,12 +46,13 @@ const createEntityReducer = <T extends keyof EntitiesState>(
       const updatedEntity =
         // patch can exist but there may be no change
         reducerEntityType && patch?.next?.length && entity
-          ? applyPatches(entity, patch.next)
+          ? utils.normalize(applyPatches(entity, patch.next)).result
           : (action.payload.entities[type][id] as unknown);
       return isEmpty(action.payload.entities[reducerEntityType])
         ? state
         : {
             ...state,
+            // TODO - is this valid - to update related entities (produced by normalization)
             ...action.payload.entities[reducerEntityType],
             [id]: updatedEntity,
           };

@@ -11,7 +11,6 @@ import {
   Difficulty,
   getPreviousStep,
   getLessonChapter,
-  NormalizedLesson,
   removeStep,
   Step,
   Tag,
@@ -65,7 +64,6 @@ const {
   useLocation,
   usePromptModal,
   useHistory,
-  useTags,
   useDiffUpdates,
 } = hooks;
 
@@ -77,7 +75,6 @@ type EditorRendererProps = ComponentProps<Components['Editor']> & {
   location: ReturnType<typeof useLocation>;
   promptModal: ReturnType<typeof usePromptModal>;
   lessonStatus: LessonStatus;
-  tags: Tag[];
   addLessonUpdate: (action: LessonUpdatableAction) => void;
 };
 type EditorRendererState = {
@@ -300,7 +297,7 @@ class EditorRenderer extends React.Component<
     });
   };
 
-  updateTags = (tags: NormalizedLesson['tags']) => {
+  updateTags = (tags: Tag[]) => {
     const { lesson } = this.props;
     const action = serviceAction(updateLesson)(lesson, { tags });
     this.addLessonUpdate(action);
@@ -361,7 +358,6 @@ class EditorRenderer extends React.Component<
       lesson,
       promptModal,
       activeChapter,
-      tags,
       history,
     } = this.props;
     const lessonStatusText = this.renderLessonStatus();
@@ -461,7 +457,6 @@ class EditorRenderer extends React.Component<
                 <Row>
                   <Col>
                     <TagsSelect
-                      tags={tags}
                       selected={lesson.tags}
                       onChange={this.updateTags}
                     />
@@ -523,7 +518,6 @@ const Editor: Components['Editor'] = ({ lesson, save, onStatusChange }) => {
   const { chapters } = lesson.state;
   const location = useLocation();
   const history = useHistory();
-  const tags = useTags();
   const {
     fetch: lessonUpdate,
     error: lessonUpdateError,
@@ -593,7 +587,6 @@ const Editor: Components['Editor'] = ({ lesson, save, onStatusChange }) => {
       history={history}
       promptModal={promptModal}
       save={save}
-      tags={tags}
       addLessonUpdate={handleLessonUpdate}
     />
   );

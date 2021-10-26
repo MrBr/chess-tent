@@ -49,9 +49,7 @@ export default () => {
   const dispatch = useDispatchBatched();
   const { value: user } = useActiveUserRecord();
   const [lessonId, setLessonId] = useState<Lesson['id'] | undefined>();
-  const lesson = useSelector(
-    lessonSelector((lessonId as unknown) as string),
-  ) as Lesson;
+  const lesson = useSelector(lessonSelector(lessonId as string)) as Lesson;
   const history = useHistory();
   const store = useStore();
 
@@ -67,6 +65,9 @@ export default () => {
   const saveLesson = useCallback(
     () =>
       requests.lessonSave(
+        // TODO
+        // Get the latest lesson - using lesson from scope above may update with obsolete lesson
+        // Probably should use updates from argument
         store.getState().entities[TYPE_LESSON][lessonId as string],
       ),
     [lessonId, store],

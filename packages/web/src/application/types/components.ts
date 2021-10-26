@@ -242,9 +242,8 @@ export interface ActivityRendererState {
 
 export interface TagsSelectProps {
   className?: string;
-  tags: Tag[];
   selected?: Tag[];
-  onChange?: (tags: Tag['id'][]) => void;
+  onChange?: (tags: Tag[]) => void;
 }
 
 export enum LessonStatus {

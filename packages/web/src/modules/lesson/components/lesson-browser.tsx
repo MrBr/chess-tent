@@ -7,7 +7,7 @@ import DifficultyDropdown from './difficulty-dropdown';
 import { isOwned } from '../service';
 
 const { Container, Headline3, Row, Col, SearchBox } = ui;
-const { useTags, useHistory, useUserTrainings, useActiveUserRecord } = hooks;
+const { useHistory, useUserTrainings, useActiveUserRecord } = hooks;
 const { TagsSelect, Filters } = components;
 
 const LessonBrowser: Components['LessonBrowser'] = ({
@@ -20,7 +20,6 @@ const LessonBrowser: Components['LessonBrowser'] = ({
   const [search, setSearch] = useState('');
   const [difficulty, setDifficulty] = useState<Difficulty>();
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
-  const tags = useTags();
   const { value: user } = useActiveUserRecord();
   const { value: trainings } = useUserTrainings(user);
 
@@ -29,11 +28,10 @@ const LessonBrowser: Components['LessonBrowser'] = ({
   }, [onFiltersChange, search, difficulty, selectedTags]);
 
   const onSelectedTagsChange = useCallback(
-    (tagIds: Tag['id'][]) => {
-      const selected = tags.filter(tag => tagIds.some(id => tag.id === id));
-      setSelectedTags(selected);
+    (tagIds: Tag[]) => {
+      setSelectedTags(tagIds);
     },
-    [setSelectedTags, tags],
+    [setSelectedTags],
   );
 
   const handleLessonClick = useCallback(
@@ -69,7 +67,6 @@ const LessonBrowser: Components['LessonBrowser'] = ({
                 </Col>
                 <Col xs={12} md={5}>
                   <TagsSelect
-                    tags={tags}
                     onChange={onSelectedTagsChange}
                     selected={selectedTags}
                   />

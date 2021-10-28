@@ -14,7 +14,7 @@ export default () => {
 
   const [filter, setFilter] = useState('');
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
-  const [elo, setElo] = useState<CoachEloRange | undefined>();
+  const [studentElo, setStudentElo] = useState<CoachEloRange | undefined>();
   const isMobile = useIsMobile();
 
   useEffect(() => {
@@ -26,9 +26,9 @@ export default () => {
       coach: true,
       search: filter,
       tagIds: selectedTags.map(it => it.id),
-      elo,
+      studentElo,
     });
-  }, [fetchCoaches, filter, selectedTags, elo]);
+  }, [fetchCoaches, filter, selectedTags, studentElo]);
 
   const cols = response?.data.map(coach => (
     <Col key={coach.id} className="col-auto">
@@ -66,14 +66,8 @@ export default () => {
                 <CoachLevelDropdown
                   id="coach-browser-coach-level"
                   className="mr-2"
-                  onChange={setElo}
+                  onChange={setStudentElo}
                   size="small"
-                />
-              </Col>
-              <Col xs={12} md={5}>
-                <TagsSelect
-                  selected={selectedTags}
-                  onChange={onSelectedTagsChange}
                 />
               </Col>
               <Col className="d-flex align-items-center" xs={12} md={4}>

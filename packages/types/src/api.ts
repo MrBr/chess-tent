@@ -108,7 +108,7 @@ export type Requests = {
       coach?: boolean;
       name?: string;
       search?: string;
-      elo?: CoachEloRange;
+      studentElo?: CoachEloRange;
       tagIds?: Tag['id'][];
     },
     UsersResponse

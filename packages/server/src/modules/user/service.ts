@@ -65,7 +65,7 @@ export const findUsers = (
     coach?: string;
     name?: string;
     search?: string;
-    elo?: {
+    studentElo?: {
       from?: number;
       to?: number;
     };
@@ -77,18 +77,18 @@ export const findUsers = (
     name: filters.name,
   });
 
-  if (filters.elo) {
-    const eloFilter: { $gt?: number; $lte?: number } = {};
-    if (filters.elo.from) {
-      eloFilter['$gt'] = filters.elo.from;
+  if (filters.studentElo) {
+    const studentEloFilter: { $gt?: number; $lte?: number } = {};
+    if (filters.studentElo.from) {
+      studentEloFilter['$gt'] = filters.studentElo.from;
     }
 
-    if (filters.elo.to) {
-      eloFilter['$lte'] = filters.elo.to;
+    if (filters.studentElo.to) {
+      studentEloFilter['$lte'] = filters.studentElo.to;
     }
 
-    if (!_.isEmpty(eloFilter)) {
-      query['state.elo'] = eloFilter;
+    if (!_.isEmpty(studentEloFilter)) {
+      query['state.studentElo'] = studentEloFilter;
     }
   }
 

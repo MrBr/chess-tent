@@ -113,7 +113,7 @@ const initService = (schemaMap: { [key: string]: Schema }) => {
         // Nested relationships denormalization
         freshValue = denormalizeState(
           entityState[attribute],
-          cachedEntityState[attribute],
+          cachedEntityState[attribute] || {},
           prevEntityState?.[attribute],
           type,
           entities,

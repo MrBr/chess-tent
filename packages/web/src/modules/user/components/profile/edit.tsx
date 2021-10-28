@@ -97,7 +97,7 @@ export default withFiles(
                           value={user.state.punchline}
                           as="textarea"
                           rows={2}
-                          name="punchline"
+                          name="state.punchline"
                         />
                       </FormGroup>
                       <FormGroup>

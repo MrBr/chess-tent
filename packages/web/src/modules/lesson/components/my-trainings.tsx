@@ -12,7 +12,7 @@ const { Container, Row, Col, Headline5, Headline3 } = ui;
 const Trainings = ({ activities }: { activities: LessonActivity[] }) => (
   <Row>
     <Col md={4} xs={12}>
-      <CoachCard coach={activities[0].subject.owner} />
+      <CoachCard coach={activities[0].users[0]} />
     </Col>
     <Col md={8} xs={12} className="mt-4">
       <Row>

@@ -28,16 +28,19 @@ export const getMentor = (activity: LessonActivity) => activity.subject.owner;
 
 export const getStudent = (activity: LessonActivity) => activity.users[0];
 
+export const isStudentTraining = (
+  activity: LessonActivity,
+  userId: User['id'],
+) => activity.subject.owner.id === userId && !activity.subject.docId;
+
 export const isMyTraining = (
   activity: LessonActivity,
   userId: User['id'],
   // The condition should probably be more explicit
-) => activity.users.some(({ id }) => id === userId);
-
-export const isStudentTraining = (
-  activity: LessonActivity,
-  userId: User['id'],
-) => activity.owner.id === userId && !activity.subject.docId;
+) =>
+  (activity.owner.id === userId ||
+    activity.users.some(({ id }) => id === userId)) &&
+  !isStudentTraining(activity, userId);
 
 export const isLessonTraining = (activity: LessonActivity) =>
   activity.subject.docId && activity.subject.published;

@@ -50,7 +50,7 @@ const CoachCard: Components['CoachCard'] = ({ coach }) => {
               className="text-truncate"
               weight={500}
             >
-              {coach.state.studentElo && `Uo to ${coach.state.studentElo} elo`}
+              {coach.state.studentElo && `Up to ${coach.state.studentElo} elo`}
             </Text>
           </Col>
           <Col className="col-auto">

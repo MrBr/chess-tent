@@ -16,11 +16,12 @@ import {
   Steps,
   VariationStep,
 } from '@types';
-import { services, components, ui } from '@application';
+import { services, components, ui, constants } from '@application';
 
 const { Col, Row } = ui;
 const { getPiece, createNotableMove } = services;
 const { StepTag, Stepper, StepMove } = components;
+const { START_FEN, KINGS_FEN } = constants;
 
 const boardChange = (
   stepRoot: StepRoot,
@@ -110,6 +111,7 @@ const EditorBoard: MoveModule['EditorBoard'] = ({
     state: {
       shapes,
       move: { position },
+      orientation,
     },
   } = step;
 
@@ -136,6 +138,27 @@ const EditorBoard: MoveModule['EditorBoard'] = ({
       ),
     [stepRoot, step, updateStep, setActiveStep],
   );
+
+  const resetHandle = useCallback(() => {
+    const newVariationStep = services.createStep('variation', {
+      orientation,
+      position: START_FEN,
+      editing: true,
+    });
+    updateStep(addStep(step, newVariationStep));
+    setActiveStep(newVariationStep);
+  }, [updateStep, step, orientation, setActiveStep]);
+
+  const clearHandle = useCallback(() => {
+    const newVariationStep = services.createStep('variation', {
+      orientation,
+      position: KINGS_FEN,
+      editing: true,
+    });
+    updateStep(addStep(step, newVariationStep));
+    setActiveStep(newVariationStep);
+  }, [updateStep, step, orientation, setActiveStep]);
+
   const onFENChange = useCallback(
     (position: FEN) => {
       const newVariation = services.createStep('variation', {
@@ -157,6 +180,8 @@ const EditorBoard: MoveModule['EditorBoard'] = ({
       onPieceRemove={onFENChange}
       onPieceDrop={onFENChange}
       onFENSet={onFENChange}
+      onClear={clearHandle}
+      onReset={resetHandle}
       onShapesChange={updateShapes}
       shapes={shapes}
     />

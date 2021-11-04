@@ -1,37 +1,28 @@
-import React, {
-  ComponentProps,
-  FunctionComponent,
-  useCallback,
-  useMemo,
-} from 'react';
+import React, { FunctionComponent, useCallback, useMemo } from 'react';
 import { services } from '@application';
-import { ExerciseModule, Move, ExerciseArrangePiecesStep } from '@types';
-import { useUpdateExerciseStateProp } from '../../hooks';
+import {
+  Move,
+  ExerciseArrangePiecesStep,
+  Shape,
+  ExerciseSegmentKeys,
+} from '@types';
 import { SegmentBoard } from '../segment';
+import { withSegments } from '../../hoc';
+import { SegmentBoardProps } from '../../types';
 
 const { createFenForward, createNotableMove } = services;
 
-const Editor: FunctionComponent<
-  ComponentProps<ExerciseModule<ExerciseArrangePiecesStep>['EditorBoard']>
-> = ({ step, Chessboard, updateStep }) => {
-  const { task, activeSegment } = step.state;
-  const { position, editing, moves } = task;
-  const segment = step.state[activeSegment];
-  const handleShapes = useUpdateExerciseStateProp(updateStep, step, [
-    activeSegment,
-    'shapes',
-  ]);
-  const updateExerciseTask = useUpdateExerciseStateProp(
-    updateStep,
-    step,
-    'task',
-  );
+const TaskBoard: FunctionComponent<
+  SegmentBoardProps<ExerciseArrangePiecesStep, 'task'>
+> = ({ Chessboard, updateSegment, segment }) => {
+  const { position, editing, moves } = segment;
+  const handleShapes = (shapes: Shape[]) => updateSegment({ shapes });
   const handleChange = useCallback(
     (position, newMove?, piece?, captured?) => {
       if (editing || !newMove) {
         // editing: true - In case new piece is added or removed,
         // turning editing mode on (in case it isn't)
-        updateExerciseTask({ moves: [], editing: true, position });
+        updateSegment({ moves: [], editing: true, position });
         return;
       }
       const movedPiecePrevMove = moves?.find(
@@ -56,9 +47,9 @@ const Editor: FunctionComponent<
       if (!isBackMove) {
         newMoves.push(newNotableMove);
       }
-      updateExerciseTask({ moves: newMoves });
+      updateSegment({ moves: newMoves });
     },
-    [editing, moves, updateExerciseTask],
+    [editing, moves, updateSegment],
   );
   const activePosition = useMemo(
     () =>
@@ -68,26 +59,25 @@ const Editor: FunctionComponent<
 
   const finalShapes = segment?.shapes || [];
   return (
-    <SegmentBoard
-      step={step}
-      updateStep={updateStep}
-      Chessboard={Chessboard}
-      task={
-        <Chessboard
-          allowAllMoves
-          sparePieces
-          fen={activePosition}
-          onMove={handleChange}
-          onPieceRemove={position => handleChange(position)}
-          onPieceDrop={position => handleChange(position)}
-          onShapesChange={handleShapes}
-          shapes={finalShapes}
-          editing={!!editing}
-          onUpdateEditing={editing => updateExerciseTask({ editing })}
-        />
-      }
-    ></SegmentBoard>
+    <Chessboard
+      allowAllMoves
+      sparePieces
+      fen={activePosition}
+      onMove={handleChange}
+      onPieceRemove={position => handleChange(position)}
+      onPieceDrop={position => handleChange(position)}
+      onShapesChange={handleShapes}
+      shapes={finalShapes}
+      editing={!!editing}
+      onUpdateEditing={editing => updateSegment({ editing })}
+    />
   );
 };
 
-export default Editor;
+export default withSegments<
+  SegmentBoardProps<ExerciseArrangePiecesStep, ExerciseSegmentKeys>
+>({
+  task: TaskBoard,
+  explanation: SegmentBoard,
+  hint: SegmentBoard,
+});

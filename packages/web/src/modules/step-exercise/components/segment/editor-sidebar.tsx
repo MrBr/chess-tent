@@ -42,19 +42,21 @@ const EditorSidebar = <T extends ExerciseSteps, K extends ExerciseSegmentKeys>({
     updateSegment({ text } as Partial<T['state'][K]>);
 
   return (
-    <Row
-      noGutters
-      onClick={() => updateActiveSegment(activeSegment)}
-      className="position-relative"
-    >
-      {activeSegment === currentSegmentKey && <ActiveSegmentMark />}
-      <LessonToolboxText
-        defaultText={text}
-        placeholder={placeholder || Placeholders[currentSegmentKey]}
-        onChange={updateText}
-      />
-      {children}
-    </Row>
+    <>
+      <Row
+        noGutters
+        onClick={() => updateActiveSegment(currentSegmentKey)}
+        className="position-relative flex-column"
+      >
+        {activeSegment === currentSegmentKey && <ActiveSegmentMark />}
+        <LessonToolboxText
+          defaultText={text}
+          placeholder={placeholder || Placeholders[currentSegmentKey]}
+          onChange={updateText}
+        />
+        {children}
+      </Row>
+    </>
   );
 };
 

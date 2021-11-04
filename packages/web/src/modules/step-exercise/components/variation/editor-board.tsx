@@ -1,14 +1,15 @@
-import React, { ComponentProps, FunctionComponent, useCallback } from 'react';
+import React, { FunctionComponent, useCallback } from 'react';
 import { services } from '@application';
 import {
-  ExerciseModule,
   ExerciseMove,
+  ExerciseSegmentKeys,
   ExerciseVariationState,
   ExerciseVariationStep,
   Piece,
   Shape,
 } from '@types';
-import { useUpdateExerciseStateProp } from '../../hooks';
+import { SegmentBoardProps } from '../../types';
+import { withSegments } from '../../hoc';
 import { SegmentBoard } from '../segment';
 
 const { getPiece, getTurnColor, setTurnColor, createNotableMove } = services;
@@ -48,41 +49,29 @@ const removeOldLineMoves = (index: number, moves?: ExerciseMove[]) =>
     ? moves.slice(0, moves.length - (moves.length - index) + 1)
     : moves;
 
-const EditorBoard: FunctionComponent<
-  ComponentProps<ExerciseModule<ExerciseVariationStep>['EditorBoard']>
-> = ({ step, Chessboard, updateStep }) => {
-  const { task, activeSegment } = step.state;
+const TaskBoard: FunctionComponent<
+  SegmentBoardProps<ExerciseVariationStep, 'task'>
+> = ({ step, Chessboard, updateSegment }) => {
+  const { task } = step.state;
   const { editing, moves, activeMoveIndex, position } = task;
-  const segment = step.state[activeSegment];
   const activeMove = moves?.[activeMoveIndex as number];
-  const updateExerciseTask = useUpdateExerciseStateProp(
-    updateStep,
-    step,
-    'task',
-  );
-  const updateShapes = useUpdateExerciseStateProp(updateStep, step, [
-    activeSegment,
-    'shapes',
-  ]);
   const handleShapes = useCallback(
     (shapes: Shape[]) => {
-      const isTaskActiveSegment = activeSegment === 'task';
-      if (isTaskActiveSegment && activeMoveIndex !== undefined) {
-        updateExerciseTask({
-          moves: updateMoveShapes(activeMoveIndex, moves, shapes),
-        });
-      } else {
-        updateShapes(shapes);
+      if (activeMoveIndex === undefined) {
+        return;
       }
+      updateSegment({
+        moves: updateMoveShapes(activeMoveIndex, moves, shapes),
+      });
     },
-    [activeMoveIndex, activeSegment, moves, updateExerciseTask, updateShapes],
+    [activeMoveIndex, moves, updateSegment],
   );
   const handleChange = useCallback(
     (newPosition, move?, piece?: Piece, captured?) => {
       if (editing || !move || !piece) {
         // editing: true - In case new piece is added or removed,
         // turning editing mode on (in case it isn't)
-        updateExerciseTask({ moves: [], editing: true, position: newPosition });
+        updateSegment({ moves: [], editing: true, position: newPosition });
         return;
       }
       const currentIndex = activeMoveIndex === undefined ? -1 : activeMoveIndex;
@@ -99,15 +88,13 @@ const EditorBoard: FunctionComponent<
         // Updating base position FEN to match first move color
         updatedTask.position = setTurnColor(position, piece.color);
       }
-      updateExerciseTask(updatedTask);
+      updateSegment(updatedTask);
     },
-    [editing, moves, updateExerciseTask, activeMoveIndex, position],
+    [editing, moves, updateSegment, activeMoveIndex, position],
   );
 
   const activePosition = activeMove?.position || position;
-  const activeShapes = activeMove
-    ? activeMove.shapes || []
-    : segment?.shapes || [];
+  const activeShapes = activeMove?.shapes || [];
 
   const validateMove = useCallback(
     orig => {
@@ -121,27 +108,26 @@ const EditorBoard: FunctionComponent<
   );
 
   return (
-    <SegmentBoard
-      step={step}
-      updateStep={updateStep}
-      Chessboard={Chessboard}
-      task={
-        <Chessboard
-          allowAllMoves
-          sparePieces
-          fen={activePosition}
-          onMove={handleChange}
-          onPieceDrop={position => handleChange(position)}
-          onPieceRemove={position => handleChange(position)}
-          onShapesChange={handleShapes}
-          shapes={activeShapes}
-          validateMove={validateMove}
-          editing={!!editing}
-          onUpdateEditing={editing => updateExerciseTask({ editing })}
-        />
-      }
+    <Chessboard
+      allowAllMoves
+      sparePieces
+      fen={activePosition}
+      onMove={handleChange}
+      onPieceDrop={position => handleChange(position)}
+      onPieceRemove={position => handleChange(position)}
+      onShapesChange={handleShapes}
+      shapes={activeShapes}
+      validateMove={validateMove}
+      editing={!!editing}
+      onUpdateEditing={editing => updateSegment({ editing })}
     />
   );
 };
 
-export default EditorBoard;
+export default withSegments<
+  SegmentBoardProps<ExerciseVariationStep, ExerciseSegmentKeys>
+>({
+  task: TaskBoard,
+  hint: SegmentBoard,
+  explanation: SegmentBoard,
+});

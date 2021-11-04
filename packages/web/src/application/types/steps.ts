@@ -15,7 +15,7 @@ export type MoveModule = StepModule<MoveStep, 'move', { move: NotableMove }>;
 // Variation
 export type VariationStepState = {
   shapes: Shape[];
-  position?: FEN;
+  position: FEN;
   description?: string;
   steps: (VariationStep | DescriptionStep | ExerciseSteps)[];
   editing?: boolean;
@@ -42,26 +42,18 @@ export type DescriptionModule = StepModule<
 >;
 
 // Exercise
-export type Task<T = {}> = {
+export interface Segment {
   text?: string;
   position: FEN;
   shapes?: Shape[];
-} & T;
-export type Explanation = {
-  text?: string;
-  position?: FEN;
-  shapes?: Shape[];
-};
-export type Hint = {
-  text?: string;
-  position?: FEN;
-  shapes?: Shape[];
-};
-export type ExerciseSegments<T = {}> = {
-  explanation?: Explanation;
-  hint?: Hint;
-  task: Task<T>;
-};
+}
+export interface ExerciseSegments<T = {}> {
+  explanation: Segment;
+  hint: Segment;
+  task: Segment & T;
+}
+
+export type ExerciseSegmentKeys = keyof ExerciseSegments;
 
 export type ExerciseMove = NotableMove & { shapes: Shape[] };
 export type ExerciseVariationState = ExerciseSegments<{
@@ -93,8 +85,13 @@ export type ExerciseQuestionActivityState = ActivityExerciseStepState<{
   answer?: string;
 }>;
 
+export type ExerciseQuestionnaireOption = {
+  id: string;
+  correct: boolean;
+  text: string;
+};
 export type ExerciseQuestionnaireState = ExerciseSegments<{
-  options?: { id: string; correct: boolean; text: string }[];
+  options?: ExerciseQuestionnaireOption[];
 }>;
 export type ExerciseQuestionnaireActivityState = ActivityExerciseStepState<{
   selectedOptions?: { [key: number]: boolean };

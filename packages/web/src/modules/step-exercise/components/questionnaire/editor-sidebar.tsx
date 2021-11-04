@@ -1,52 +1,51 @@
 import React, { ReactEventHandler, useCallback } from 'react';
-import { ExerciseQuestionnaireStep, ExerciseToolboxProps } from '@types';
+import { ExerciseQuestionnaireStep, ExerciseSegmentKeys } from '@types';
 import { components, ui, utils } from '@application';
-import { useUpdateExerciseStateProp } from '../../hooks';
 import { SegmentSidebar } from '../segment';
+import { withSegmentSidebars } from '../../hoc';
+import { SegmentToolboxProps } from '../../types';
 
 const { Check, Row, Col, Text, Container, Icon } = ui;
 const { LessonToolboxText } = components;
 
-export default ({
-  step,
-  updateStep,
-}: ExerciseToolboxProps<ExerciseQuestionnaireStep>) => {
-  const updateTaskOptions = useUpdateExerciseStateProp(updateStep, step, [
-    'task',
-    'options',
-  ]);
+const TaskSidebar = (
+  props: SegmentToolboxProps<ExerciseQuestionnaireStep, 'task'>,
+) => {
+  const { step, updateSegment } = props;
 
   const state = step.state.task;
   const addOption: ReactEventHandler = useCallback(
     event => {
       // Used to prevent other actions such as activeSegment from dispatching
       event.stopPropagation();
-      updateTaskOptions([
-        ...(state?.options || []),
-        { id: utils.generateIndex(), text: '', correct: false },
-      ]);
+      updateSegment({
+        options: [
+          ...(state?.options || []),
+          { id: utils.generateIndex(), text: '', correct: false },
+        ],
+      });
     },
-    [state, updateTaskOptions],
+    [state, updateSegment],
   );
 
   const removeOption = useCallback(
     (id: string, event: React.SyntheticEvent<Element, Event>) => {
       event.stopPropagation();
       const options = state?.options?.filter(option => option.id !== id);
-      updateTaskOptions(options);
+      updateSegment({ options });
     },
-    [state, updateTaskOptions],
+    [state, updateSegment],
   );
 
   const updateOption = (id: string, update: {}) => {
     const options = state?.options?.map(option =>
       option.id === id ? { ...option, ...update } : option,
     );
-    updateTaskOptions(options);
+    updateSegment({ options });
   };
 
   return (
-    <SegmentSidebar step={step} updateStep={updateStep}>
+    <SegmentSidebar {...props}>
       <Container className="mt-2">
         {state?.options?.map(({ id, text, correct }, index) => (
           <Row key={id} className="align-items-center">
@@ -80,3 +79,11 @@ export default ({
     </SegmentSidebar>
   );
 };
+
+export default withSegmentSidebars<
+  SegmentToolboxProps<ExerciseQuestionnaireStep, ExerciseSegmentKeys>
+>({
+  task: TaskSidebar,
+  explanation: SegmentSidebar,
+  hint: SegmentSidebar,
+});

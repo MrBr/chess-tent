@@ -1,7 +1,12 @@
-import React from 'react';
-import { ExerciseToolboxProps } from '@types';
+import { ExerciseQuestionStep, ExerciseSegmentKeys } from '@types';
 import { SegmentSidebar } from '../segment';
+import { withSegmentSidebars } from '../../hoc';
+import { SegmentToolboxProps } from '../../types';
 
-export default (props: ExerciseToolboxProps) => {
-  return <SegmentSidebar {...props} />;
-};
+export default withSegmentSidebars<
+  SegmentToolboxProps<ExerciseQuestionStep, ExerciseSegmentKeys>
+>({
+  task: SegmentSidebar,
+  explanation: SegmentSidebar,
+  hint: SegmentSidebar,
+});

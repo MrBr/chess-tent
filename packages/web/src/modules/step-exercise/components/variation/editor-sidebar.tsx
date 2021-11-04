@@ -1,35 +1,30 @@
 import React, { useCallback } from 'react';
-import { ExerciseToolboxProps, ExerciseVariationStep } from '@types';
+import { ExerciseSegmentKeys, ExerciseVariationStep } from '@types';
 import { components, ui } from '@application';
+import { SegmentToolboxProps } from '../../types';
 import { SegmentSidebar } from '../segment';
-import { useUpdateExerciseStateProp } from '../../hooks';
+import { withSegmentSidebars } from '../../hoc';
 
 const { Text, Row } = ui;
 const { StepMove, StepTag } = components;
 
-export default ({
-  step,
-  updateStep,
-}: ExerciseToolboxProps<ExerciseVariationStep>) => {
-  const {
-    task: { moves, activeMoveIndex },
-  } = step.state;
-  const updateActiveMoveIndex = useUpdateExerciseStateProp(updateStep, step, [
-    'task',
-    'activeMoveIndex',
-  ]);
+const TaskSidebar = (
+  props: SegmentToolboxProps<ExerciseVariationStep, 'task'>,
+) => {
+  const { segment, updateSegment } = props;
+  const { moves, activeMoveIndex } = segment;
 
   const handleUpdateActiveMove = useCallback(
-    (index: number, event: React.SyntheticEvent<Element, Event>) => {
+    (activeMoveIndex: number, event: React.SyntheticEvent<Element, Event>) => {
       event.stopPropagation();
-      updateActiveMoveIndex(index);
+      updateSegment({ activeMoveIndex });
     },
-    [updateActiveMoveIndex],
+    [updateSegment],
   );
 
   return (
-    <SegmentSidebar step={step} updateStep={updateStep}>
-      <>
+    <SegmentSidebar {...props}>
+      <Row noGutters>
         <Text fontSize="small">Moves:</Text>
         <Row className="align-items-center m-0">
           <StepTag
@@ -52,7 +47,15 @@ export default ({
             </StepTag>
           ))}
         </Row>
-      </>
+      </Row>
     </SegmentSidebar>
   );
 };
+
+export default withSegmentSidebars<
+  SegmentToolboxProps<ExerciseVariationStep, ExerciseSegmentKeys>
+>({
+  task: TaskSidebar,
+  explanation: SegmentSidebar,
+  hint: SegmentSidebar,
+});

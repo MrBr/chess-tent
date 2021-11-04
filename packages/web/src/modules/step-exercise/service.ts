@@ -3,10 +3,12 @@ import {
   ExerciseModule,
   ExerciseQuestionnaireStep,
   ExerciseQuestionStep,
+  ExerciseSegmentKeys,
   ExerciseSelectSquaresAndPiecesStep,
   ExerciseSteps,
   ExerciseTypes,
   ExerciseVariationStep,
+  FEN,
   MoveStep,
   PieceColor,
   VariationStep,
@@ -28,7 +30,7 @@ const { START_FEN } = constants;
 
 export const createExerciseStepState = <T extends ExerciseSteps>(
   exerciseType: ExerciseTypes,
-  position: string,
+  position: FEN,
   orientation?: PieceColor,
 ): T['state'] => ({
   steps: [],
@@ -112,6 +114,22 @@ export const changeExercise = createService(
     return step;
   },
 );
+
+export const getSegmentKey = (
+  step: ExerciseSteps,
+  segment: ExerciseSteps['state'][ExerciseSegmentKeys],
+): ExerciseSegmentKeys => {
+  if (step.state.task === segment) {
+    return 'task';
+  }
+  if (step.state.explanation === segment) {
+    return 'explanation';
+  }
+  if (step.state.hint === segment) {
+    return 'hint';
+  }
+  throw new Error('Unknown segment');
+};
 
 export const isVariationExerciseStep = (
   step: ExerciseSteps,

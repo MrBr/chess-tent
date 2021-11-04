@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useCallback } from 'react';
 import { ui } from '@application';
 import { isStepCompleted } from '@chess-tent/models';
-import { SegmentActivityProps } from './types';
+import { SegmentActivityProps } from '../../types';
 
 const { Headline4, Button, Headline5, Text } = ui;
 

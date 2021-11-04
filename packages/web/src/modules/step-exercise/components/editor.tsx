@@ -30,6 +30,7 @@ import {
   getPositionAndOrientation,
   changeExercise,
 } from '../service';
+import { useUpdateSegment } from '../hooks';
 
 const { Col, Row, Dropdown } = ui;
 const { StepTag } = components;
@@ -37,20 +38,31 @@ const { StepTag } = components;
 const EditorBoard: FunctionComponent<
   ComponentProps<ExerciseModule['EditorBoard']>
 > = props => {
+  const { activeSegment } = props.step.state;
+  const segment = props.step.state[activeSegment];
+  const updateSegment = useUpdateSegment(
+    props.step,
+    props.updateStep,
+    activeSegment,
+  );
+  const editorProps = { ...props, updateSegment, segment };
+
   if (isVariationExerciseStep(props.step)) {
-    return <VariationEditorBoard {...props} step={props.step} />;
+    return <VariationEditorBoard {...editorProps} step={props.step} />;
   }
   if (isQuestionExerciseStep(props.step)) {
-    return <QuestionEditorBoard {...props} step={props.step} />;
+    return <QuestionEditorBoard {...editorProps} step={props.step} />;
   }
   if (isQuestionnaireExerciseStep(props.step)) {
-    return <QuestionnaireEditorBoard {...props} step={props.step} />;
+    return <QuestionnaireEditorBoard {...editorProps} step={props.step} />;
   }
   if (isSelectSquarePiecesExerciseStep(props.step)) {
-    return <SelectSquaresPiecesEditorBoard {...props} step={props.step} />;
+    return (
+      <SelectSquaresPiecesEditorBoard {...editorProps} step={props.step} />
+    );
   }
   if (isArrangePiecesExerciseStep(props.step)) {
-    return <ArrangePiecesEditorBoard {...props} step={props.step} />;
+    return <ArrangePiecesEditorBoard {...editorProps} step={props.step} />;
   }
   return null;
 };

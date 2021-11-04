@@ -1,50 +1,29 @@
-import React, { ReactElement } from 'react';
-import { StepBoardComponentProps } from '@types';
-import { useUpdateExerciseStateProp } from '../../hooks';
-import { InferUpdateStep, SegmentsProps } from './types';
+import React from 'react';
+import { ExerciseSegmentKeys, ExerciseSteps, FEN, Shape } from '@types';
+import { SegmentBoardProps } from '../../types';
 
-const SegmentBoard = <T extends SegmentsProps>({
+const SegmentBoard = <T extends ExerciseSteps, K extends ExerciseSegmentKeys>({
   step,
-  updateStep,
   Chessboard,
-  ...props
-}: T extends SegmentsProps<infer S>
-  ? InferUpdateStep<
-      T,
-      {
-        task?: ReactElement;
-        explanation?: ReactElement;
-        hint?: ReactElement;
-        Chessboard: StepBoardComponentProps['Chessboard'];
-      }
-    >
-  : never) => {
+  updateSegment,
+}: SegmentBoardProps<T, K>) => {
   const { task, activeSegment, orientation } = step.state;
-  const board = props[activeSegment] as ReactElement;
   const segment = step.state[activeSegment];
-  const updateSegmentPosition = useUpdateExerciseStateProp(updateStep, step, [
-    activeSegment,
-    'position',
-  ]);
-  const updateSegmentShapes = useUpdateExerciseStateProp(updateStep, step, [
-    activeSegment,
-    'shapes',
-  ]);
+  const updateSegmentPosition = (position: FEN) => updateSegment({ position });
+  const updateSegmentShapes = (shapes: Shape[]) =>
+    updateSegment({ shapes } as Partial<T['state'][K]>);
 
-  const finalShapes = segment?.shapes || [];
   return (
-    board || (
-      <Chessboard
-        viewOnly={activeSegment === 'hint'}
-        allowAllMoves
-        sparePieces
-        orientation={orientation}
-        fen={segment?.position || task.position}
-        onShapesChange={updateSegmentShapes}
-        shapes={finalShapes}
-        onChange={updateSegmentPosition}
-      />
-    )
+    <Chessboard
+      viewOnly={activeSegment === 'hint'}
+      allowAllMoves
+      sparePieces
+      orientation={orientation}
+      fen={segment?.position || task.position}
+      onShapesChange={updateSegmentShapes}
+      shapes={segment?.shapes}
+      onChange={updateSegmentPosition}
+    />
   );
 };
 export default SegmentBoard;

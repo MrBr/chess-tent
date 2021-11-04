@@ -1,9 +1,8 @@
-import { ExerciseSteps } from '@types';
+import { ExerciseSegments, ExerciseSteps } from '@types';
 import { useCallback } from 'react';
 import { updateStepState } from '@chess-tent/models';
-import { set } from 'lodash';
 
-export const useUpdateExerciseStep = <T extends ExerciseSteps>(
+export const useUpdateExerciseStepState = <T extends ExerciseSteps>(
   updateStep: (step: T) => void,
   step: T,
 ) => {
@@ -16,22 +15,30 @@ export const useUpdateExerciseStep = <T extends ExerciseSteps>(
   );
 };
 
-export const useUpdateExerciseStateProp = <
-  S extends ExerciseSteps,
-  T extends keyof S['state'],
-  K extends keyof Required<S['state']>[T]
->(
-  updateStep: (step: S) => void,
-  step: S,
-  prop: [T, K] | T,
+export const useUpdateExerciseActiveSegment = <T extends ExerciseSteps>(
+  updateStep: (step: T) => void,
+  step: T,
 ) => {
-  const updateExerciseState = useUpdateExerciseStep(updateStep, step);
+  const updateExerciseState = useUpdateExerciseStepState(updateStep, step);
   return useCallback(
-    (value: Partial<S['state'][T]> | Partial<Required<S['state']>[T][K]>) => {
-      const updatedState = {};
-      set(updatedState, prop, value);
-      updateExerciseState(updatedState);
+    (activeSegment: keyof ExerciseSegments) => {
+      updateExerciseState({ activeSegment } as Partial<T['state']>);
     },
-    [updateExerciseState, prop],
+    [updateExerciseState],
+  );
+};
+
+export const useUpdateSegment = <
+  T extends ExerciseSteps,
+  K extends keyof ExerciseSegments
+>(
+  step: T,
+  updateStep: (step: T) => void,
+  activeSegment: K,
+) => (segmentPatch: Partial<T['state'][K]>) => {
+  updateStep(
+    updateStepState(step, {
+      [activeSegment]: segmentPatch,
+    } as Partial<T['state']>),
   );
 };

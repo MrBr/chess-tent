@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import { isStepCompleted } from '@chess-tent/models';
 import { ChessboardProps } from '@types';
-import { SegmentActivityProps } from './types';
+import { SegmentActivityProps } from '../../types';
 
 const Playground: FunctionComponent<
   SegmentActivityProps & Partial<ChessboardProps>

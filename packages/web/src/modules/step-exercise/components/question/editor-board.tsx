@@ -1,11 +1,8 @@
-import React, { ComponentProps, FunctionComponent } from 'react';
-import { ExerciseModule, ExerciseQuestionStep } from '@types';
 import { SegmentBoard } from '../segment';
+import { withSegments } from '../../hoc';
 
-const Editor: FunctionComponent<
-  ComponentProps<ExerciseModule<ExerciseQuestionStep>['EditorBoard']>
-> = props => {
-  return <SegmentBoard {...props} />;
-};
-
-export default Editor;
+export default withSegments({
+  task: SegmentBoard,
+  explanation: SegmentBoard,
+  hint: SegmentBoard,
+});

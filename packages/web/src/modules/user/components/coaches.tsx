@@ -1,19 +1,18 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { requests, hooks, ui, components } from '@application';
-import { CoachEloRange, Tag } from '@chess-tent/models';
+import { CoachEloRange } from '@chess-tent/models';
 import CoachCard from './coach-card';
 import CoachLevelDropdown from './coach-level-dropdown';
 
 const { useApi, useComponentStateSilent, useIsMobile } = hooks;
 const { Container, Row, Col, Headline3, SearchBox } = ui;
-const { Filters, TagsSelect } = components;
+const { Filters } = components;
 
 export default () => {
   const { mounted } = useComponentStateSilent();
   const { fetch: fetchCoaches, response } = useApi(requests.users);
 
   const [filter, setFilter] = useState('');
-  const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
   const [studentElo, setStudentElo] = useState<CoachEloRange | undefined>();
   const isMobile = useIsMobile();
 
@@ -25,10 +24,9 @@ export default () => {
     fetchCoaches({
       coach: true,
       search: filter,
-      tagIds: selectedTags.map(it => it.id),
       studentElo,
     });
-  }, [fetchCoaches, filter, selectedTags, studentElo]);
+  }, [fetchCoaches, filter, studentElo]);
 
   const cols = response?.data.map(coach => (
     <Col key={coach.id} className="col-auto">
@@ -40,13 +38,6 @@ export default () => {
     <Row className="flex-nowrap overflow-auto">{cols}</Row>
   ) : (
     <Row>{cols}</Row>
-  );
-
-  const onSelectedTagsChange = useCallback(
-    (tagIds: Tag[]) => {
-      setSelectedTags(tagIds);
-    },
-    [setSelectedTags],
   );
 
   return (

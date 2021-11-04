@@ -1,51 +1,61 @@
-import React, { ReactNode } from 'react';
-import { ui } from '@application';
-import { useUpdateExerciseStateProp } from '../../hooks';
-import { InferUpdateStep, SegmentsProps } from './types';
-import EditorSidebarRow from './editor-sidebar-row';
+import React from 'react';
+import { components, ui } from '@application';
+import { ExerciseSegmentKeys, ExerciseSteps } from '@types';
+import styled from '@emotion/styled';
+import { useUpdateExerciseActiveSegment } from '../../hooks';
+import { SegmentToolboxProps } from '../../types';
+import { getSegmentKey } from '../../service';
 
 const { Row } = ui;
+const { LessonToolboxText } = components;
 
-const SegmentSidebar = <T extends SegmentsProps>({
-  children,
+const ActiveSegmentMark = styled.span({
+  borderRadius: '50%',
+  background: '#F44D24',
+  display: 'inline-block',
+  position: 'absolute',
+  top: 7,
+  left: -15,
+  width: 7,
+  height: 7,
+});
+
+const Placeholders: Record<ExerciseSegmentKeys, string> = {
+  task: 'Write task...',
+  explanation: 'Write explanation...',
+  hint: 'Write hint...',
+};
+
+const EditorSidebar = <T extends ExerciseSteps, K extends ExerciseSegmentKeys>({
+  segment,
+  updateSegment,
   step,
+  placeholder,
+  children,
   updateStep,
-}: InferUpdateStep<T, { children?: ReactNode }>) => {
+}: SegmentToolboxProps<T, K>) => {
   const { activeSegment } = step.state;
-  const updateActiveSegment = useUpdateExerciseStateProp(
-    updateStep,
-    step,
-    'activeSegment',
-  );
+  const currentSegmentKey = getSegmentKey(step, segment);
+  const text = segment.text;
+  const updateActiveSegment = useUpdateExerciseActiveSegment(updateStep, step);
+  const updateText = (text: string) =>
+    updateSegment({ text } as Partial<T['state'][K]>);
 
   return (
-    <>
-      <EditorSidebarRow
-        updateStep={updateStep}
-        step={step}
-        segment="task"
-        activeSegment={activeSegment}
-        placeholder="Task description"
+    <Row
+      noGutters
+      onClick={() => updateActiveSegment(activeSegment)}
+      className="position-relative"
+    >
+      {activeSegment === currentSegmentKey && <ActiveSegmentMark />}
+      <LessonToolboxText
+        defaultText={text}
+        placeholder={placeholder || Placeholders[currentSegmentKey]}
+        onChange={updateText}
       />
-      <Row noGutters onClick={() => updateActiveSegment('task')}>
-        {children}
-      </Row>
-      <EditorSidebarRow
-        updateStep={updateStep}
-        step={step}
-        segment="explanation"
-        activeSegment={activeSegment}
-        placeholder="Explanation"
-      />
-      <EditorSidebarRow
-        updateStep={updateStep}
-        step={step}
-        segment="hint"
-        activeSegment={activeSegment}
-        placeholder="Hint"
-      />
-    </>
+      {children}
+    </Row>
   );
 };
 
-export default SegmentSidebar;
+export default EditorSidebar;

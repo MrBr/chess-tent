@@ -8,7 +8,7 @@ import { services, ui } from '@application';
 import { ChessboardFooterProps } from '@types';
 import EditBoardToggle from './edit';
 
-const { Button, Col, Row, Input, Label } = ui;
+const { Button, Col, Row, Input, Label, Tooltip, OverlayTrigger } = ui;
 const { Chess } = services;
 
 const chess = new Chess();
@@ -81,11 +81,15 @@ const Footer: FunctionComponent<ChessboardFooterProps> = ({
           <Label className="mb-0">FEN:</Label>
         </Col>
         <Col>
-          <Input
-            value={fen}
-            onKeyPress={handleFenEnterKeypress}
-            onChange={handleFenChange}
-          />
+          <OverlayTrigger
+            overlay={<Tooltip id="fen">Press enter to confirm</Tooltip>}
+          >
+            <Input
+              value={fen}
+              onKeyPress={handleFenEnterKeypress}
+              onChange={handleFenChange}
+            />
+          </OverlayTrigger>
         </Col>
       </Row>
     </>

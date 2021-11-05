@@ -131,7 +131,6 @@ export interface ChessboardInterface
   prompt: (renderPrompt: ChessboardState['renderPrompt']) => void;
   closePrompt: () => void;
   removeShape: (shape: DrawShape) => void;
-  resetBoard: () => void;
   fen: (
     move?: Move,
     options?: { piece?: Piece; promoted?: PieceRolePromotable },

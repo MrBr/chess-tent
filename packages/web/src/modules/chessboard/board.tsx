@@ -311,13 +311,6 @@ class Chessboard
     this.api.redrawAll();
   }
 
-  resetBoard = () => {
-    this.api.set({
-      fen: this.props.fen,
-    });
-    this.onReset();
-  };
-
   fen = (() => {
     // FEN Memoization
     // Board fen can be requested by multiple methods on a single change (that triggers multiple events).

@@ -42,7 +42,11 @@ export const SocketProvider: ComponentType = props => {
       console.log('Socket disconnected');
       updateSocketConnected(socket.connected);
     });
-  });
+    return () => {
+      socket.removeAllListeners();
+    };
+    // eslint-disable-next-line
+  }, []);
 
   useEffect(() => {
     if (!userId) {

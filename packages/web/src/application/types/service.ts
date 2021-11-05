@@ -9,7 +9,6 @@ import {
   Activity,
   User,
 } from '@chess-tent/models';
-import { History } from 'history';
 import {
   FEN,
   Move,
@@ -22,6 +21,7 @@ import {
   PieceRoleShort,
 } from './chess';
 import { MoveStep, Steps, VariationStep } from './steps';
+import { History } from './router';
 import { GenericArguments } from './_helpers';
 import { ActivityComment, ActivityStepStateBase, StepModule } from './step';
 import { AppAnalysis, NotificationRenderer, StepModules } from './index';

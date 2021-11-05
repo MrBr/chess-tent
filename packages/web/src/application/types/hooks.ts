@@ -20,7 +20,6 @@ import { Action as ReduxAction } from 'redux';
 import { useSelector, useDispatch, useStore } from 'react-redux';
 import { BatchAction } from 'redux-batched-actions';
 import { useParams, useLocation } from 'react-router-dom';
-import { History } from 'history';
 import {
   InferInitRecord,
   RecordHookInit,
@@ -29,6 +28,7 @@ import {
 
 import { GenericArguments } from './_helpers';
 import { Records } from './records';
+import { History } from './router';
 
 export type Hooks = {
   useRecordInit: typeof useRecordInit;

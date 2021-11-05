@@ -1,6 +1,6 @@
 import React, { ComponentType } from 'react';
 import application, { ui } from '@application';
-import { Components, RenderPropComponentType, Services } from '@types';
+import { Components, RenderPropComponentType, Services, History } from '@types';
 import isPropValid from '@emotion/is-prop-valid';
 import {
   Switch,
@@ -12,7 +12,7 @@ import {
   useLocation,
   Router as BaseRouter,
 } from 'react-router-dom';
-import { createBrowserHistory, History, LocationState } from 'history';
+import { createBrowserHistory, LocationState } from 'history';
 import styled from '@emotion/styled';
 
 const { Icon } = ui;

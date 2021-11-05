@@ -36,6 +36,7 @@ export * from './utils';
 export * from './pages';
 export * from './notification';
 export * from './records';
+export * from './router';
 export * from './_helpers';
 
 export type Application = {

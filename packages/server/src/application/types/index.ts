@@ -86,7 +86,7 @@ export type DB = {
     options: {
       multi: boolean;
       arrayFilters: {
-        [x: string]: {
+        [key: string]: {
           $in: string[];
         };
       }[];

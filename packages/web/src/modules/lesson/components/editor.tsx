@@ -33,6 +33,7 @@ import {
   LessonUpdates,
   PieceColor,
   Steps,
+  History,
 } from '@types';
 import { debounce } from 'lodash';
 import { components, hooks, services, state, ui, utils } from '@application';
@@ -71,7 +72,7 @@ type EditorRendererProps = ComponentProps<Components['Editor']> & {
   activeChapter: Chapter;
   activeStep: Steps;
   dispatch: (action: Actions) => void;
-  history: ReturnType<typeof useHistory>;
+  history: History;
   location: ReturnType<typeof useLocation>;
   promptModal: ReturnType<typeof usePromptModal>;
   lessonStatus: LessonStatus;
@@ -98,6 +99,10 @@ class EditorRenderer extends React.Component<
     history: [],
   };
 
+  closeEditor = () => {
+    const history = this.props.history;
+    history.location.state?.from ? history.goBack() : history.replace('/');
+  };
   recordHistoryChange(undoAction: LessonUpdatableAction) {
     const { activeStep, activeChapter } = this.props;
     this.updateHistory([
@@ -353,19 +358,13 @@ class EditorRenderer extends React.Component<
   };
 
   render() {
-    const {
-      activeStep,
-      lesson,
-      promptModal,
-      activeChapter,
-      history,
-    } = this.props;
+    const { activeStep, lesson, promptModal, activeChapter } = this.props;
     const lessonStatusText = this.renderLessonStatus();
 
     return (
       <Container fluid className="px-0 h-100">
         <Absolute left={15} top={15} zIndex={100} className="cursor-pointer">
-          <Text onClick={history.goBack}>Back</Text>
+          <Text onClick={this.closeEditor}>Back</Text>
         </Absolute>
         <Row noGutters className="h-100">
           <Col className="pt-5">

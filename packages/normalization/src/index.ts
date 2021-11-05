@@ -60,8 +60,13 @@ const initService = (schemaMap: { [key: string]: Schema }) => {
       } else if (Array.isArray(relationshipValue)) {
         normalizedRelationshipValue = [];
         for (let i = 0; i < relationshipValue.length; i++) {
-          normalize(relationshipValue[i], entities);
-          normalizedRelationshipValue.push(getId(relationshipValue[i]));
+          let id = relationshipValue[i];
+          if (typeof id !== 'string') {
+            // isn't already normalized
+            id = getId(relationshipValue[i]);
+            normalize(relationshipValue[i], entities);
+          }
+          normalizedRelationshipValue.push(id);
         }
       } else if (typeof relationshipValue === 'string') {
         normalizedRelationshipValue = relationshipValue;

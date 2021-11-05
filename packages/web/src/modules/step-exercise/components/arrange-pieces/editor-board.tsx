@@ -5,6 +5,7 @@ import {
   ExerciseArrangePiecesStep,
   Shape,
   ExerciseSegmentKeys,
+  FEN,
 } from '@types';
 import { SegmentBoard } from '../segment';
 import { withSegments } from '../../hoc';
@@ -15,14 +16,28 @@ const { createFenForward, createNotableMove } = services;
 const TaskBoard: FunctionComponent<
   SegmentBoardProps<ExerciseArrangePiecesStep, 'task'>
 > = ({ Chessboard, updateSegment, segment }) => {
-  const { position, editing, moves } = segment;
+  const { position, editing, moves, shapes } = segment;
+
   const handleShapes = (shapes: Shape[]) => updateSegment({ shapes });
+
+  const boardSetup = useCallback(
+    (position: FEN) => {
+      updateSegment({
+        position,
+        moves: [],
+        shapes: [],
+        editing: true,
+      });
+    },
+    [updateSegment],
+  );
+
   const handleChange = useCallback(
     (position, newMove?, piece?, captured?) => {
       if (editing || !newMove) {
         // editing: true - In case new piece is added or removed,
         // turning editing mode on (in case it isn't)
-        updateSegment({ moves: [], editing: true, position });
+        boardSetup(position);
         return;
       }
       const movedPiecePrevMove = moves?.find(
@@ -49,15 +64,15 @@ const TaskBoard: FunctionComponent<
       }
       updateSegment({ moves: newMoves });
     },
-    [editing, moves, updateSegment],
+    [editing, moves, updateSegment, boardSetup],
   );
+
   const activePosition = useMemo(
     () =>
       createFenForward(position, moves?.map(({ move }) => move as Move) || []),
     [position, moves],
   );
 
-  const finalShapes = segment?.shapes || [];
   return (
     <Chessboard
       allowAllMoves
@@ -67,9 +82,12 @@ const TaskBoard: FunctionComponent<
       onPieceRemove={position => handleChange(position)}
       onPieceDrop={position => handleChange(position)}
       onShapesChange={handleShapes}
-      shapes={finalShapes}
+      shapes={shapes}
       editing={!!editing}
       onUpdateEditing={editing => updateSegment({ editing })}
+      onReset={boardSetup}
+      onClear={boardSetup}
+      onFENSet={boardSetup}
     />
   );
 };

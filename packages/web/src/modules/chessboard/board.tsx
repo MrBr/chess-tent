@@ -34,7 +34,7 @@ import Footer from './footer';
 import { replaceFENPosition, unfreeze, updateMovable } from './_helpers';
 
 const { Evaluator } = components;
-const { START_FEN, MAX_BOARD_SIZE } = constants;
+const { START_FEN, MAX_BOARD_SIZE, KINGS_FEN } = constants;
 const { Modal } = ui;
 const { Chess, createMoveShortObject } = services;
 
@@ -392,12 +392,12 @@ class Chessboard
 
   onReset = () => {
     const { onReset } = this.props;
-    onReset && onReset();
+    onReset && onReset(START_FEN);
   };
 
   onClear = () => {
     const { onClear } = this.props;
-    onClear && onClear();
+    onClear && onClear(KINGS_FEN);
   };
 
   onUpdateEditing = (editing: boolean) => {

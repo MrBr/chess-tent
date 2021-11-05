@@ -82,7 +82,6 @@ export interface ChessboardFooterProps {
 export interface ChessboardProps {
   header?: ReactNode;
   footer?: ReactNode;
-  onReset?: Function;
   evaluate?: boolean;
   size?: string | number;
   // Chessground proxy props
@@ -118,7 +117,8 @@ export interface ChessboardProps {
 
   // Footer props
   onUpdateEditing?: (editing: boolean) => void;
-  onClear?: () => void;
+  onReset?: (FEN: string) => void;
+  onClear?: (FEN: string) => void;
   onFENSet?: (FEN: string) => void;
   onOrientationChange?: (orientation: ChessboardProps['orientation']) => void;
 }

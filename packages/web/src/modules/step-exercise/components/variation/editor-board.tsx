@@ -5,6 +5,7 @@ import {
   ExerciseSegmentKeys,
   ExerciseVariationState,
   ExerciseVariationStep,
+  FEN,
   Piece,
   Shape,
 } from '@types';
@@ -55,6 +56,20 @@ const TaskBoard: FunctionComponent<
   const { task } = step.state;
   const { editing, moves, activeMoveIndex, position } = task;
   const activeMove = moves?.[activeMoveIndex as number];
+
+  const boardSetup = useCallback(
+    (position: FEN) => {
+      updateSegment({
+        position,
+        moves: [],
+        shapes: [],
+        activeMoveIndex: undefined,
+        editing: true,
+      });
+    },
+    [updateSegment],
+  );
+
   const handleShapes = useCallback(
     (shapes: Shape[]) => {
       if (activeMoveIndex === undefined) {
@@ -66,12 +81,13 @@ const TaskBoard: FunctionComponent<
     },
     [activeMoveIndex, moves, updateSegment],
   );
+
   const handleChange = useCallback(
     (newPosition, move?, piece?: Piece, captured?) => {
       if (editing || !move || !piece) {
         // editing: true - In case new piece is added or removed,
         // turning editing mode on (in case it isn't)
-        updateSegment({ moves: [], editing: true, position: newPosition });
+        boardSetup(newPosition);
         return;
       }
       const currentIndex = activeMoveIndex === undefined ? -1 : activeMoveIndex;
@@ -90,7 +106,7 @@ const TaskBoard: FunctionComponent<
       }
       updateSegment(updatedTask);
     },
-    [editing, moves, updateSegment, activeMoveIndex, position],
+    [editing, moves, updateSegment, activeMoveIndex, position, boardSetup],
   );
 
   const activePosition = activeMove?.position || position;
@@ -115,6 +131,9 @@ const TaskBoard: FunctionComponent<
       onMove={handleChange}
       onPieceDrop={position => handleChange(position)}
       onPieceRemove={position => handleChange(position)}
+      onReset={boardSetup}
+      onClear={boardSetup}
+      onFENSet={boardSetup}
       onShapesChange={handleShapes}
       shapes={activeShapes}
       validateMove={validateMove}

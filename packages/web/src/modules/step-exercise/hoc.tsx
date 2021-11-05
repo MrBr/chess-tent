@@ -45,7 +45,7 @@ export const withSegmentSidebars = <T extends SegmentProps>(
       segment,
       updateSegment,
     } as T;
-    return <Segment {...segmentProps} />;
+    return <Segment {...segmentProps} key={segmentKey} />;
   });
 
   return <>{sidebar}</>;

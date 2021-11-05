@@ -19,7 +19,7 @@ import { Select, AsyncSelect } from './Select';
 import Dropdown, { OptionsDropdown } from './Dropdown';
 import { Tooltip } from './Tooltip';
 import { Tag } from './Tag';
-import { Overlay } from './Overlay';
+import { Overlay, OverlayTrigger } from './Overlay';
 import {
   Display1,
   Display2,
@@ -98,6 +98,7 @@ application.ui.SearchBox = SearchBox;
 
 application.ui.Tooltip = Tooltip;
 application.ui.Overlay = Overlay;
+application.ui.OverlayTrigger = OverlayTrigger;
 application.ui.Tag = Tag;
 
 application.ui.Icon = Icon;

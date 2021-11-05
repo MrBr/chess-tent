@@ -29,6 +29,7 @@ import {
   CardProps,
   TooltipProps,
   Overlay as BOverlay,
+  OverlayTrigger as BOverlayTrigger,
   BadgeProps,
 } from 'react-bootstrap';
 import DropdownToggle from 'react-bootstrap/DropdownToggle';
@@ -269,5 +270,6 @@ export type UI = {
   NavDropdown: typeof NavDropdown;
   Tooltip: UIComponent<TooltipProps>;
   Overlay: typeof BOverlay;
+  OverlayTrigger: typeof BOverlayTrigger;
   Tag: UIComponent<BadgeProps>;
 };

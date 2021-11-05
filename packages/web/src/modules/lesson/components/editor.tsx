@@ -21,6 +21,7 @@ import {
   updateLessonChapter,
   updateLessonStep,
   addChapterToLesson,
+  Lesson,
 } from '@chess-tent/models';
 import {
   Actions,
@@ -44,6 +45,7 @@ import { PreviewModal } from './activity-preview';
 import ChaptersDropdown from './chapters-dropdown';
 import RootStepButton from './editor-sidebar-root-step-button';
 import EditorPublishButton from './editor-publish-button';
+import EditorSidebarAdjustableText from './editor-sidebar-adjustable-text';
 
 const { Container, Row, Col, Headline2, Button, Absolute, Text } = ui;
 const { createChapter, updateStepRotation } = services;
@@ -173,9 +175,9 @@ class EditorRenderer extends React.Component<
     });
   };
 
-  updateLessonTitleDebounced = debounce(title => {
+  updateLessonStateDebounced = debounce((state: Partial<Lesson['state']>) => {
     const { lesson } = this.props;
-    const action = serviceAction(updateSubjectState)(lesson, { title });
+    const action = serviceAction(updateSubjectState)(lesson, state);
     this.addLessonUpdate(action);
   }, 500);
 
@@ -187,7 +189,18 @@ class EditorRenderer extends React.Component<
       elem.blur();
       return;
     }
-    this.updateLessonTitleDebounced(elem.innerText);
+    this.updateLessonStateDebounced({ title: elem.innerText });
+  };
+
+  updateLessonDescription = (event: FormEvent<HTMLHeadingElement>) => {
+    const elem = event.target as HTMLHeadingElement;
+    // @ts-ignore
+    if (event.nativeEvent.inputType === 'insertParagraph') {
+      elem.innerText = elem.innerText.trim();
+      elem.blur();
+      return;
+    }
+    this.updateLessonStateDebounced({ description: elem.innerText });
   };
 
   updateLessonDifficulty = (difficulty?: Difficulty) => {
@@ -470,6 +483,14 @@ class EditorRenderer extends React.Component<
                       initialHtml={lesson.state.title}
                       onInput={this.updateLessonTitle}
                       className="mt-4"
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <EditorSidebarAdjustableText
+                      initialHtml={lesson.state.description}
+                      onInput={this.updateLessonDescription}
                     />
                   </Col>
                 </Row>

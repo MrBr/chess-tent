@@ -65,12 +65,16 @@ export const sendActivity: MiddlewareFunction = (req, res, next) => {
     throw new ActivityNotPreparedError();
   }
 
-  socket.sendServerAction(`user-${activity.owner.id}`, {
-    type: PUSH_RECORD,
-    payload: { value: activity },
-    meta: {
-      key: `trainings-${activity.owner.id}`,
-    },
-  });
+  if (res.locals.me.id !== activity.owner.id) {
+    // Don't send lesson to the same user that assign it
+    socket.sendServerAction(`user-${activity.owner.id}`, {
+      type: PUSH_RECORD,
+      payload: { value: activity },
+      meta: {
+        key: `trainings-${activity.owner.id}`,
+      },
+    });
+  }
+
   next();
 };

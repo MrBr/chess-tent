@@ -29,7 +29,6 @@ const Preview = ({ lesson, chapter, step }: PreviewProps) => {
     createActivity('preview', lesson, user, {
       activeStepId: step.id,
       activeChapterId: chapter.id,
-      training: false,
       [step.id]: services.createActivityStepState(),
     }),
   );

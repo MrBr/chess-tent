@@ -5,6 +5,7 @@ import {
   RecordState,
   UPDATE_RECORD,
   PUSH_RECORD,
+  UPDATE_RECORD_META,
 } from '../../types';
 
 export const records: Reducer<RecordState, RecordAction> = (
@@ -20,6 +21,18 @@ export const records: Reducer<RecordState, RecordAction> = (
           meta: {
             ...state[action.meta.key]?.meta,
             ...action.payload.meta,
+          },
+        },
+      };
+    }
+    case UPDATE_RECORD_META: {
+      return {
+        ...state,
+        [action.meta.key]: {
+          ...state[action.meta.key],
+          meta: {
+            ...state[action.meta.key]?.meta,
+            ...action.payload,
           },
         },
       };

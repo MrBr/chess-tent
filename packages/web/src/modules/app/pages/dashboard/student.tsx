@@ -41,9 +41,9 @@ export default ({ user }: { user: User }) => {
         <Coaches />
       ) : (
         <>
-          <MyTrainings trainings={trainings} user={user} />
-          <LessonTrainings trainings={trainings} />
           <StudentTrainings trainings={trainings} user={user} />
+          <MyTrainings trainings={trainings} user={user} />
+          <LessonTrainings trainings={trainings} user={user} />
         </>
       )}
       <Row noGutters>

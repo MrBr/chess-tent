@@ -37,7 +37,7 @@ export default ({ user }: { user: User }) => {
         <>
           <StudentTrainings trainings={trainings} user={user} />
           <MyTrainings trainings={trainings} user={user} />
-          <LessonTrainings trainings={trainings} />
+          <LessonTrainings trainings={trainings} user={user} />
         </>
       )}
       <LessonBrowser

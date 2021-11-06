@@ -1,6 +1,6 @@
 import React from 'react';
 import groupBy from 'lodash/groupBy';
-import { ui, components } from '@application';
+import { ui, components, hooks } from '@application';
 import { Components } from '@types';
 import { LessonActivity } from '@chess-tent/models';
 import { isMyTraining } from '../service';
@@ -8,6 +8,7 @@ import { isMyTraining } from '../service';
 const { TrainingCard, CoachCard } = components;
 
 const { Container, Row, Col, Headline5, Headline3 } = ui;
+const { useCoaches } = hooks;
 
 const Trainings = ({ activities }: { activities: LessonActivity[] }) => (
   <Row>
@@ -27,8 +28,9 @@ const Trainings = ({ activities }: { activities: LessonActivity[] }) => (
 );
 
 const MyTrainings: Components['MyTrainings'] = ({ trainings, user }) => {
+  const { value: coaches } = useCoaches(user);
   const myTrainings = trainings.filter(activity =>
-    isMyTraining(activity, user.id),
+    isMyTraining(activity, coaches || [], user),
   );
   const groupedTrainings = groupBy(myTrainings, activity => activity?.owner.id);
 

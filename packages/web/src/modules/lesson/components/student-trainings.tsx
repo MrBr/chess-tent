@@ -1,5 +1,5 @@
 import React from 'react';
-import { components, ui } from '@application';
+import { components, ui, hooks } from '@application';
 import groupBy from 'lodash/groupBy';
 import { Components } from '@types';
 import { LessonActivity } from '@chess-tent/models';
@@ -7,6 +7,7 @@ import { isStudentTraining } from '../service';
 
 const { TrainingCard, UserAvatar } = components;
 const { Headline3, Container, Row, Col, Headline5, Card } = ui;
+const { useStudents } = hooks;
 
 const Trainings = ({ activities }: { activities: LessonActivity[] }) => (
   <Card className="mb-3" bg="white">
@@ -36,9 +37,11 @@ const StudentTrainings: Components['StudentTrainings'] = ({
   trainings,
   user,
 }) => {
+  const { value: students } = useStudents(user);
   const studentTrainings = trainings.filter(activity =>
-    isStudentTraining(activity, user.id),
+    isStudentTraining(activity, students || [], user),
   );
+
   const groupedTrainings = groupBy(
     studentTrainings,
     training => training.users[0].id,

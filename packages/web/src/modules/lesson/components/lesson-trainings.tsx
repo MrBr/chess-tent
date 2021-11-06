@@ -1,13 +1,23 @@
 import React from 'react';
-import { components, ui } from '@application';
+import { components, ui, hooks } from '@application';
 import { Components } from '@types';
 import { isLessonTraining } from '../service';
 
 const { TrainingCard } = components;
 const { Container, Row, Col, Headline3 } = ui;
+const { useCoaches, useStudents } = hooks;
 
-const LessonTrainings: Components['LessonTrainings'] = ({ trainings }) => {
-  const lessonTrainings = trainings.filter(isLessonTraining);
+const LessonTrainings: Components['LessonTrainings'] = ({
+  trainings,
+  user,
+}) => {
+  // If no related user with the lesson is my coach then
+  // this is just a standalone lesson which user solves on its own
+  const { value: coaches } = useCoaches(user);
+  const { value: students } = useStudents(user);
+  const lessonTrainings = trainings.filter(training =>
+    isLessonTraining(training, [...(students || []), ...(coaches || [])], user),
+  );
 
   if (lessonTrainings.length === 0) {
     return null;

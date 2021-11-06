@@ -40,4 +40,10 @@ application.register(
     application.model.mentorshipSchema = module.mentorshipSchema;
   },
 );
+application.register(
+  () => import('./service'),
+  module => {
+    application.services.isMentorship = module.isMentorship;
+  },
+);
 application.register(() => import('./routes'));

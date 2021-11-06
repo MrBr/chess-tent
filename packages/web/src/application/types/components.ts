@@ -346,7 +346,7 @@ export type Components = {
   }>;
   MyTrainings: ComponentType<{ trainings: LessonActivity[]; user: User }>;
   StudentTrainings: ComponentType<{ trainings: LessonActivity[]; user: User }>;
-  LessonTrainings: ComponentType<{ trainings: LessonActivity[] }>;
+  LessonTrainings: ComponentType<{ trainings: LessonActivity[]; user: User }>;
   TrainingCard: ComponentType<{ training: LessonActivity }>;
   LessonBrowser: ComponentType<{
     lessons: Lesson[] | null | undefined;

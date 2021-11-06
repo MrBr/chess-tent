@@ -8,6 +8,7 @@ import {
   Notification,
   Activity,
   User,
+  Mentorship,
 } from '@chess-tent/models';
 import {
   FEN,
@@ -94,4 +95,9 @@ export type Services = {
     notificationType: Notification['notificationType'],
     renderer: T extends Notification ? NotificationRenderer<T> : never,
   ) => void;
+  isMentorship: (
+    mentorship: Mentorship[],
+    student: User,
+    mentor: User,
+  ) => boolean;
 };

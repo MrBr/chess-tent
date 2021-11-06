@@ -1,6 +1,6 @@
 import { Lesson, Step, updateStepState, User } from '@chess-tent/models';
 import { hooks } from '@application';
-import { useCallback, useContext, useEffect } from 'react';
+import { useCallback, useContext, useEffect, useMemo } from 'react';
 import { Hooks } from '@types';
 import { editorContext } from './context';
 import { userTrainings, lessons, myLessons, lesson } from './record';
@@ -21,10 +21,17 @@ export const useUpdateLessonStepState = <T extends Step>(
 export const useUserTrainings: Hooks['useUserTrainings'] = (user: User) => {
   const record = useRecordInit(userTrainings, `trainings-${user.id}`);
 
+  const filters = useMemo(() => ({ owner: user.id, users: user.id }), [
+    user.id,
+  ]);
+
   useEffect(() => {
-    record.load({ owner: user.id, users: user.id });
+    if (record.get().meta.loading) {
+      return;
+    }
+    record.load(filters);
     // eslint-disable-next-line
-  }, []);
+  }, [filters]);
 
   return record;
 };

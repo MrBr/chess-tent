@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useRef, useCallback, useEffect, useState } from 'react';
 import { hooks, ui, components } from '@application';
 import { Components } from '@types';
 import { Difficulty, Lesson, Tag } from '@chess-tent/models';
@@ -7,7 +7,12 @@ import DifficultyDropdown from './difficulty-dropdown';
 import { isOwned } from '../service';
 
 const { Container, Headline3, Row, Col, SearchBox } = ui;
-const { useHistory, useUserTrainings, useActiveUserRecord } = hooks;
+const {
+  useHistory,
+  useUserTrainings,
+  useActiveUserRecord,
+  useComponentStateSilent,
+} = hooks;
 const { TagsSelect, Filters } = components;
 
 const LessonBrowser: Components['LessonBrowser'] = ({
@@ -17,6 +22,7 @@ const LessonBrowser: Components['LessonBrowser'] = ({
   title,
 }) => {
   const history = useHistory();
+  const { mounted } = useComponentStateSilent();
   const [search, setSearch] = useState('');
   const [difficulty, setDifficulty] = useState<Difficulty>();
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
@@ -24,7 +30,9 @@ const LessonBrowser: Components['LessonBrowser'] = ({
   const { value: trainings } = useUserTrainings(user);
 
   useEffect(() => {
-    onFiltersChange && onFiltersChange(search, difficulty, selectedTags);
+    mounted &&
+      onFiltersChange &&
+      onFiltersChange(search, difficulty, selectedTags);
   }, [onFiltersChange, search, difficulty, selectedTags]);
 
   const onSelectedTagsChange = useCallback(

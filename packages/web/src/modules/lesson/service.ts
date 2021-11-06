@@ -1,4 +1,5 @@
 import { isEqual } from 'lodash';
+import { services } from '@application';
 import {
   MoveStep,
   MoveStepState,
@@ -6,7 +7,9 @@ import {
   VariationStep,
   VariationStepState,
 } from '@types';
-import { Lesson, LessonActivity, User } from '@chess-tent/models';
+import { Lesson, LessonActivity, Mentorship, User } from '@chess-tent/models';
+
+const { isMentorship } = services;
 
 export const hasVariationMove = (
   step: MoveStep | VariationStep,
@@ -28,19 +31,36 @@ export const getMentor = (activity: LessonActivity) => activity.subject.owner;
 
 export const getStudent = (activity: LessonActivity) => activity.users[0];
 
+/**
+ * The function search if any user assigned to the activity is the mentor's student.
+ * If the given user is mentor to any user related to the activity, he can teach them.
+ */
 export const isStudentTraining = (
   activity: LessonActivity,
-  userId: User['id'],
-) => activity.subject.owner.id === userId && !activity.subject.docId;
+  mentorship: Mentorship[],
+  mentor: User,
+) =>
+  isMentorship(mentorship, activity.owner, mentor) ||
+  activity.users.some(user => isMentorship(mentorship, user, mentor));
 
+/**
+ * The function search if any user assigned to the activity is the student's mentor.
+ * The given user has a mentor assigned to activity he can teach him.
+ * My in this context is a student.
+ */
 export const isMyTraining = (
   activity: LessonActivity,
-  userId: User['id'],
+  mentorship: Mentorship[],
+  student: User,
   // The condition should probably be more explicit
 ) =>
-  (activity.owner.id === userId ||
-    activity.users.some(({ id }) => id === userId)) &&
-  !isStudentTraining(activity, userId);
+  isMentorship(mentorship, student, activity.owner) ||
+  activity.users.some(user => isMentorship(mentorship, student, user));
 
-export const isLessonTraining = (activity: LessonActivity) =>
-  activity.subject.docId && activity.subject.published;
+export const isLessonTraining = (
+  activity: LessonActivity,
+  mentorship: Mentorship[],
+  user: User,
+) =>
+  !isStudentTraining(activity, mentorship, user) && // current user not a mentor to anyone
+  !isMyTraining(activity, mentorship, user); // current user not a student to anyone

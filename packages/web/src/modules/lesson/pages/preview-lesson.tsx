@@ -46,7 +46,7 @@ const PreviewLesson = () => {
     if (!lesson) {
       return;
     }
-    newTraining(lesson, user);
+    newTraining(lesson, user, { training: false });
   }, [newTraining, lesson, user]);
 
   const goToLesson = useCallback(() => {

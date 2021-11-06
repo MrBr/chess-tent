@@ -21,11 +21,12 @@ export default () => {
   }, [mounted, fetchCoaches]);
 
   useEffect(() => {
-    fetchCoaches({
-      coach: true,
-      search: filter,
-      studentElo,
-    });
+    mounted &&
+      fetchCoaches({
+        coach: true,
+        search: filter,
+        studentElo,
+      });
   }, [fetchCoaches, filter, studentElo]);
 
   const cols = response?.data.map(coach => (

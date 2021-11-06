@@ -15,12 +15,14 @@ import {
   withRecordDenormalized,
   withRecordDenormalizedCollection,
 } from './recipes';
+import { isInitialized } from './service';
 
 application.hooks.useRecordInit = useRecordInit;
 application.hooks.useRecordSafe = useRecordSafe;
 application.state.actions.pushRecord = pushRecordAction;
 application.state.actions.updateRecord = updateRecordAction;
 application.records.createRecord = createRecord;
+application.records.isInitialized = isInitialized;
 application.records.withRecordBase = withRecordBase;
 application.records.withRecordCollection = withRecordCollection;
 application.records.withRecordApiLoad = withRecordApiLoad;

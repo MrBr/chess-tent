@@ -19,6 +19,7 @@ import {
   RecordBase,
   RecordRecipe,
 } from '@chess-tent/redux-record/types';
+import { isInitialized } from '../../modules/state-records/service';
 
 export type RecipeApiLoad<T extends RequestFetch<any, any>> = {
   load: (...args: Parameters<T>) => void;
@@ -91,6 +92,7 @@ export type Records<T = any> = {
   // Service
   createRecord: typeof CreateRecord;
   getRecordInitByNamespace: typeof getRecordInitByNamespace;
+  isInitialized: <T>(record: RecordBase<T>) => boolean;
 
   // Recipes
   withRecordBase: <V>() => RecordRecipe<RecordBase<V>>;

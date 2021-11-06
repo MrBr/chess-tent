@@ -103,8 +103,9 @@ class EditorRenderer extends React.Component<
 
   closeEditor = () => {
     const history = this.props.history;
-    history.location.state?.from ? history.goBack() : history.replace('/');
+    history.goBack();
   };
+
   recordHistoryChange(undoAction: LessonUpdatableAction) {
     const { activeStep, activeChapter } = this.props;
     this.updateHistory([

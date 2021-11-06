@@ -6,19 +6,18 @@ import {
   SUBSCRIBE_EVENT,
   UNSUBSCRIBE_EVENT,
 } from '@chess-tent/types';
-import { hooks } from '@application';
+import { hooks, constants } from '@application';
 import { useSocketConnected } from './hook';
 
 const { useDispatchBatched, useActiveUserRecord } = hooks;
-const socket = io(
-  `${process.env.REACT_APP_PROTOCOL}${process.env.REACT_APP_DOMAIN}`,
-  {
-    path: '/api/socket.io',
-    secure: process.env.REACT_APP_PROTOCOL === 'https://',
-    transports: ['websocket'], // Needed for build?,
-    autoConnect: false, // Needed to prevent subscribing while user isn't authorised
-  },
-);
+const { APP_URL } = constants;
+
+const socket = io(APP_URL, {
+  path: '/api/socket.io',
+  secure: process.env.REACT_APP_PROTOCOL === 'https://',
+  transports: ['websocket'], // Needed for build?,
+  autoConnect: false, // Needed to prevent subscribing while user isn't authorised
+});
 
 export const sendAction = (action: Actions) =>
   socket.emit(ACTION_EVENT, JSON.stringify(action));

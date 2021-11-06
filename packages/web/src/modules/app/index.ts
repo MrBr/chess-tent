@@ -40,3 +40,5 @@ application.register(
     application.components.App = module.default;
   },
 );
+
+application.constants.APP_URL = `${process.env.REACT_APP_PROTOCOL}${process.env.REACT_APP_DOMAIN}`;

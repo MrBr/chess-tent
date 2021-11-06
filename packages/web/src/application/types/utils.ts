@@ -23,4 +23,5 @@ export type Utils = {
     result: { [key: string]: unknown },
   ) => { [key: string]: unknown };
   downloadAs: typeof saveAs;
+  isLocalReferrer: () => boolean;
 };

@@ -1,6 +1,6 @@
 import React, { ComponentType } from 'react';
-import application, { ui } from '@application';
-import { Components, RenderPropComponentType, Services, History } from '@types';
+import application, { ui, constants } from '@application';
+import { Components, History, RenderPropComponentType, Services } from '@types';
 import isPropValid from '@emotion/is-prop-valid';
 import {
   Switch,
@@ -16,24 +16,25 @@ import { createBrowserHistory, LocationState } from 'history';
 import styled from '@emotion/styled';
 
 const { Icon } = ui;
+const { APP_URL } = constants;
 
 const routes: ComponentType[] = [];
-const history = new Proxy(createBrowserHistory(), {
-  get(target: History, prop: PropertyKey, receiver: any): any {
-    if (prop === 'push') {
-      return (path: string, state: LocationState) =>
-        Reflect.get(
-          target,
-          prop,
-          receiver,
-        )(path, {
-          from: target.location.pathname,
-          ...state,
-        });
-    }
-    return Reflect.get(target, prop, receiver);
+
+const baseHistory = createBrowserHistory<LocationState>();
+const history: History = {
+  ...baseHistory,
+  push(path: string, state?: LocationState) {
+    baseHistory.push(path, {
+      from: history.location.pathname,
+      ...state,
+    });
   },
-});
+  goBack() {
+    // Go back in this case doesn't lead out of the application
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    isLocalReferrer() ? baseHistory.goBack() : history.replace('/');
+  },
+};
 
 const Router: RenderPropComponentType = ({ children }) => {
   return (
@@ -53,7 +54,7 @@ const Router: RenderPropComponentType = ({ children }) => {
 
 const Back = () => {
   const history = useHistory();
-  return <Icon onClick={() => history.go(1)} type="close" />;
+  return <Icon onClick={history.goBack} type="close" />;
 };
 
 const addRoute: Services['addRoute'] = Route => {
@@ -84,6 +85,9 @@ export function useQuery<T extends Record<string, string | undefined>>(): T {
   return query as T;
 }
 
+export const isLocalReferrer = () =>
+  document.referrer.search(APP_URL) > -1 || !!history.location.state?.from;
+
 application.components.Router = Router;
 application.components.Switch = Switch;
 application.components.Route = Route;
@@ -96,3 +100,4 @@ application.hooks.useHistory = useHistory;
 application.hooks.useLocation = useLocation;
 application.hooks.useParams = useParams;
 application.hooks.useQuery = useQuery;
+application.utils.isLocalReferrer = isLocalReferrer;

@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { hooks, ui, components } from '@application';
 import { Components } from '@types';
 import { Difficulty, Lesson, Tag } from '@chess-tent/models';
@@ -33,7 +33,7 @@ const LessonBrowser: Components['LessonBrowser'] = ({
     mounted &&
       onFiltersChange &&
       onFiltersChange(search, difficulty, selectedTags);
-  }, [onFiltersChange, search, difficulty, selectedTags]);
+  }, [onFiltersChange, search, difficulty, selectedTags, mounted]);
 
   const onSelectedTagsChange = useCallback(
     (tagIds: Tag[]) => {

@@ -27,7 +27,7 @@ export default () => {
         search: filter,
         studentElo,
       });
-  }, [fetchCoaches, filter, studentElo]);
+  }, [fetchCoaches, filter, studentElo, mounted]);
 
   const cols = response?.data.map(coach => (
     <Col key={coach.id} className="col-auto">

@@ -28,7 +28,7 @@ history.push = function (path: string, state?: LocationState) {
     from: history.location.pathname,
     ...state,
   });
-}.bind(history);
+};
 history.goBack = function (this: typeof history) {
   // Go back in this case doesn't lead out of the application
   // eslint-disable-next-line @typescript-eslint/no-use-before-define

@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState, useEffect } from 'react';
 import { hooks, services, ui } from '@application';
 import {
   Chapter,
@@ -9,6 +9,8 @@ import {
   Lesson,
   Step,
   LessonActivity,
+  getLessonChapter,
+  updateActivityStepState,
 } from '@chess-tent/models';
 import { Steps } from '@types';
 import { ActivityRenderer } from './activity';
@@ -32,16 +34,36 @@ const Preview = ({ lesson, chapter, step }: PreviewProps) => {
       [step.id]: services.createActivityStepState(),
     }),
   );
+
+  const activeChapter = getLessonChapter(
+    lesson,
+    activity.state.activeChapterId as string,
+  );
   const activeStep = getChildStep(
-    chapter,
-    activity.state.activeStepId || step.id,
+    activeChapter,
+    activity.state.activeStepId as string,
   ) as Steps;
   const activityStepState = activity.state[activeStep.id];
-  const stepsCount = useMemo(() => getStepsCount(chapter), [chapter]);
-  const currentStepIndex = useMemo(() => getStepIndex(chapter, activeStep), [
-    chapter,
-    activeStep,
+  const stepsCount = useMemo(() => getStepsCount(activeChapter), [
+    activeChapter,
   ]);
+
+  useEffect(() => {
+    if (!activityStepState) {
+      const updatedActivity = updateActivityStepState(
+        activity,
+        activeStep.id,
+        services.createActivityStepState(),
+      );
+      updatePreviewActivity(updatedActivity);
+    }
+  }, [activityStepState, activity, activeStep.id]);
+
+  const currentStepIndex = useMemo(
+    () => getStepIndex(activeChapter, activeStep),
+    [activeChapter, activeStep],
+  );
+
   const updateActivity = useCallback(
     service => (...args: Parameters<typeof service>) => {
       updatePreviewActivity(service(...args));
@@ -49,17 +71,24 @@ const Preview = ({ lesson, chapter, step }: PreviewProps) => {
     [updatePreviewActivity],
   );
 
+  if (!activityStepState) {
+    return null;
+  }
+
+  console.log(activity);
+
   return (
     <ActivityRenderer
       activity={activity}
       lesson={lesson}
       analysis={activityStepState.analysis}
       activeStep={activeStep}
-      chapter={chapter}
+      chapter={activeChapter}
       updateActivity={updateActivity}
       stepsCount={stepsCount}
       currentStepIndex={currentStepIndex}
       activityStepState={activityStepState}
+      comments={false}
     />
   );
 };

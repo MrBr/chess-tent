@@ -25,7 +25,6 @@ import {
   getPreviousStep,
   getStepIndex,
   getStepsCount,
-  isLessonPublicDocument,
   LessonActivity,
   markStepCompleted,
   Step,
@@ -53,6 +52,10 @@ export class ActivityRenderer extends React.Component<
   ActivityRendererProps,
   ActivityRendererState
 > {
+  static defaultProps = {
+    comments: true,
+  };
+
   constructor(props: Readonly<ActivityRendererProps>) {
     super(props);
     this.state = {
@@ -65,7 +68,12 @@ export class ActivityRenderer extends React.Component<
     return activityStepState.mode === ActivityStepMode.ANALYSING;
   }
 
-  updateStepMode = (mode: ActivityStepMode) => {
+  /**
+   * Function has to be async to "hack" condition race if multiple activity updates
+   * are happening in the same time.
+   * TODO - there should be clear pattern for stuff like this
+   */
+  updateStepMode = async (mode: ActivityStepMode) => {
     const { updateActivity, activity, activeStep } = this.props;
     updateActivity(updateActivityStepState)(activity, activeStep.id, {
       mode,
@@ -88,12 +96,12 @@ export class ActivityRenderer extends React.Component<
 
   updateStepActivityAnalysis = (analysis: Analysis<Steps>) => {
     const { updateActivity, activity, activeStep } = this.props;
-    !this.isAnalysing() && this.updateStepMode(ActivityStepMode.ANALYSING);
     updateActivity(updateActivityStepAnalysis)(
       activity,
       activeStep.id,
       analysis,
     );
+    !this.isAnalysing() && this.updateStepMode(ActivityStepMode.ANALYSING);
   };
 
   startAnalysingPosition = (
@@ -207,14 +215,15 @@ export class ActivityRenderer extends React.Component<
       chapter,
       activeStep,
       activityStepState,
+      comments,
     } = this.props;
 
     return (
       <LessonPlayground
+        comments={comments}
         updateStepMode={this.updateStepMode}
         updateActivityStepState={this.setStepActivityState}
         activeStepActivityState={activityStepState}
-        comments={!isLessonPublicDocument(activity.subject)}
         header={
           <LessonChapters
             chapters={lesson.state.chapters}

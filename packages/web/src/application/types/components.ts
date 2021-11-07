@@ -233,6 +233,7 @@ export interface ActivityRendererProps {
   analysis: AppAnalysis;
   lesson: Lesson;
   activityStepState: ActivityStepStateBase;
+  comments?: boolean;
 }
 
 export interface ActivityRendererState {

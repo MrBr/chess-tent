@@ -26,6 +26,7 @@ export const updateActivityActiveStep = createService(
 export const updateActivityActiveChapter = createService(
   <T extends Activity>(draft: T, chapter: Chapter): T => {
     draft.state.activeChapterId = chapter.id;
+    draft.state.activeStepId = chapter.state.steps[0].id;
     return draft;
   },
 );

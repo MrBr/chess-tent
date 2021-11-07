@@ -20,21 +20,20 @@ const { APP_URL } = constants;
 
 const routes: ComponentType[] = [];
 
-const baseHistory = createBrowserHistory<LocationState>();
-const history: History = {
-  ...baseHistory,
-  push(path: string, state?: LocationState) {
-    baseHistory.push(path, {
-      from: history.location.pathname,
-      ...state,
-    });
-  },
-  goBack() {
-    // Go back in this case doesn't lead out of the application
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    isLocalReferrer() ? baseHistory.goBack() : history.replace('/');
-  },
-};
+const history: History = createBrowserHistory();
+const basePush = history.push.bind(history);
+const baseGoBack = history.goBack.bind(history);
+history.push = function (path: string, state?: LocationState) {
+  basePush(path, {
+    from: history.location.pathname,
+    ...state,
+  });
+}.bind(history);
+history.goBack = function (this: typeof history) {
+  // Go back in this case doesn't lead out of the application
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
+  isLocalReferrer() ? baseGoBack() : this.replace('/');
+}.bind(history);
 
 const Router: RenderPropComponentType = ({ children }) => {
   return (

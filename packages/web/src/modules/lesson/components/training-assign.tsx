@@ -66,7 +66,9 @@ export default ({ close }: { close: () => void }) => {
               formatOptionLabel={(userOption: User) => (
                 <>
                   <UserAvatar user={userOption} size="small" />
-                  <Text inline>{userOption.name}</Text>
+                  <Text className="ml-2" inline>
+                    {userOption.name}
+                  </Text>
                 </>
               )}
             />

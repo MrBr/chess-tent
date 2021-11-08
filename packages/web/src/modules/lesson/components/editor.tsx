@@ -58,7 +58,7 @@ import EditorAction from './editor-action';
 import EditorSidebarAdjustableText from './editor-sidebar-adjustable-text';
 import { updateEntityAction } from '../../state/actions';
 
-const { Container, Row, Col, Headline2, Button, Absolute, Text, Dropdown } = ui;
+const { Container, Row, Col, Headline2, Absolute, Text, Dropdown } = ui;
 const { createChapter, updateStepRotation } = services;
 const { downloadAs } = utils;
 const {

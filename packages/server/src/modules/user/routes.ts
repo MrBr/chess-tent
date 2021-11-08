@@ -40,6 +40,9 @@ application.service.registerPostRoute(
   // Initial founder message flow
   toLocals('founder', () => getUserService({ id: process.env.FOUNDER_ID })),
   ifThen('founder')(createInitialFounderConversation),
+  ifThen((req, res) => !res.locals.founder)(() =>
+    console.log('Founder not found! Founder id: ', process.env.FOUNDER_ID),
+  ),
   ifThen('conversation')(saveConversation),
 
   sendMail((req, res) => ({

@@ -54,3 +54,6 @@ export const deleteRecordAction = (key: string): RecordDeleteAction => ({
   payload: undefined,
   meta: { key },
 });
+
+// TODO - Until types folder is consolidated export manually actions
+export { UPDATE_RECORD_META, PUSH_RECORD, UPDATE_RECORD, DELETE_RECORD };

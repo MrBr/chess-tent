@@ -7,8 +7,7 @@ import {
   updateMessage,
 } from '@chess-tent/models';
 import { Pagination } from '@chess-tent/types';
-import { MessageModel } from 'modules/message/model';
-import { ConversationModel, depopulate } from './model';
+import { MessageModel, ConversationModel, depopulate } from './model';
 
 const MESSAGES_BUCKET_LIMIT = 50;
 

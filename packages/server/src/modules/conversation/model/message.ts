@@ -1,6 +1,6 @@
 import { Schema } from 'mongoose';
-import { NormalizedMessageBucket, TYPE_MESSAGE } from '@chess-tent/models';
 import { db } from '@application';
+import { NormalizedMessageBucket, TYPE_MESSAGE } from '@chess-tent/models';
 
 const messageSchema = db.createSchema<NormalizedMessageBucket>({
   type: ({

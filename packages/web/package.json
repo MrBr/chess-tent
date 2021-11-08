@@ -48,8 +48,7 @@
     "build": "craco build",
     "test": "craco test",
     "test:dev": "jest",
-    "analyze": "source-map-explorer 'build/static/js/*.js'",
-    "postbuild": "react-snap"
+    "analyze": "source-map-explorer 'build/static/js/*.js'"
   },
   "browserslist": {
     "production": [
@@ -84,7 +83,6 @@
     "craco-alias": "^2.1.1",
     "eslint-plugin-react": "7.x",
     "http-proxy-middleware": "^1.0.6",
-    "react-snap": "^1.23.0",
     "source-map-explorer": "^2.5.0",
     "ts-jest": "^26.4.4",
     "tsconfig-paths-webpack-plugin": "^3.2.0"

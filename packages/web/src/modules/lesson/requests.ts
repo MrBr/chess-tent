@@ -21,10 +21,15 @@ const lessonSave = services.createRequest<Lesson, LessonResponse>(
   '/lesson/save',
 );
 
-const lessonPublish = services.createRequest<
-  [Lesson['id'], Lesson],
-  StatusResponse
->('PUT', (id, body) => ({ url: `/lesson/publish/${id}`, data: body }));
+const lessonPublish = services.createRequest<Lesson['id'], StatusResponse>(
+  'PUT',
+  id => ({ url: `/lesson/publish/${id}` }),
+);
+
+const lessonUnpublish = services.createRequest<Lesson['id'], StatusResponse>(
+  'PUT',
+  id => ({ url: `/lesson/unpublish/${id}` }),
+);
 
 const lessonPatch = services.createRequest<
   [Lesson['id'], Partial<Lesson>],
@@ -57,6 +62,7 @@ requests.trainings = trainings;
 requests.lesson = lesson;
 requests.lessonSave = lessonSave;
 requests.lessonPublish = lessonPublish;
+requests.lessonUnpublish = lessonUnpublish;
 requests.lessons = lessons;
 requests.myLessons = myLessons;
 requests.lessonPatch = lessonPatch;

@@ -8,6 +8,7 @@ import {
   patchLesson,
   updateLesson,
   canAccessLesson,
+  unpublishLesson,
 } from './middleware';
 
 const { identify, sendData, sendStatusOk, toLocals } = middleware;
@@ -28,6 +29,16 @@ application.service.registerPutRoute(
   toLocals('lesson.id', req => req.params.lessonId),
   canEditLesson,
   publishLesson,
+  sendStatusOk,
+);
+
+application.service.registerPutRoute(
+  '/lesson/unpublish/:lessonId',
+  identify,
+  toLocals('lesson', req => req.body),
+  toLocals('lesson.id', req => req.params.lessonId),
+  canEditLesson,
+  unpublishLesson,
   sendStatusOk,
 );
 

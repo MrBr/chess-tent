@@ -23,9 +23,24 @@ export const saveLesson = (lesson: Lesson) =>
     });
   });
 
-export const publishLesson = (lessonId: Lesson['id'], lesson: Lesson) =>
+export const getLesson = (
+  lessonId: Lesson['id'],
+  populate = 'owner tags users',
+): Promise<Lesson | null> =>
   new Promise(resolve => {
-    const newLesson = publishLessonService(depopulate(lesson));
+    LessonModel.findById(lessonId)
+      .populate(populate)
+      .exec((err, result) => {
+        if (err) {
+          throw err;
+        }
+        resolve(result ? result.toObject() : null);
+      });
+  });
+
+export const publishLesson = (lessonId: Lesson['id']) =>
+  new Promise(async resolve => {
+    const lesson = await getLesson(lessonId, '');
     LessonModel.bulkWrite(
       [
         {
@@ -34,8 +49,9 @@ export const publishLesson = (lessonId: Lesson['id'], lesson: Lesson) =>
             update: {
               $setOnInsert: { _id: service.generateIndex() },
               $set: {
+                ...lesson,
                 docId: lessonId,
-                ...newLesson,
+                published: true,
               },
             },
             upsert: true,
@@ -44,8 +60,45 @@ export const publishLesson = (lessonId: Lesson['id'], lesson: Lesson) =>
         {
           updateOne: {
             filter: { _id: lessonId },
-            update: newLesson,
-            upsert: true,
+            update: {
+              $set: {
+                published: true,
+              },
+            },
+          },
+        },
+      ],
+      err => {
+        if (err) {
+          throw err;
+        }
+        resolve();
+      },
+    );
+  });
+
+export const unpublishLesson = (lessonId: Lesson['id']) =>
+  new Promise(resolve => {
+    LessonModel.bulkWrite(
+      [
+        {
+          updateOne: {
+            filter: { docId: lessonId },
+            update: {
+              $set: {
+                published: false,
+              },
+            },
+          },
+        },
+        {
+          updateOne: {
+            filter: { _id: lessonId },
+            update: {
+              $set: {
+                published: false,
+              },
+            },
           },
         },
       ],
@@ -68,20 +121,6 @@ export const patchLesson = (lessonId: Lesson['id'], lesson: Partial<Lesson>) =>
         resolve();
       },
     );
-  });
-
-export const getLesson = (lessonId: Lesson['id']): Promise<Lesson | null> =>
-  new Promise(resolve => {
-    LessonModel.findById(lessonId)
-      .populate('owner')
-      .populate('tags')
-      .populate('users')
-      .exec((err, result) => {
-        if (err) {
-          throw err;
-        }
-        resolve(result ? result.toObject() : null);
-      });
   });
 
 export const updateLessonSteps = (

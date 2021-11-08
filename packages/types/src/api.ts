@@ -117,7 +117,8 @@ export type Requests = {
   updateMe: RequestFetch<Partial<User>, UserResponse>;
   lesson: RequestFetch<[string], LessonResponse>;
   lessonSave: RequestFetch<Lesson, StatusResponse>;
-  lessonPublish: RequestFetch<[Lesson['id'], Lesson], StatusResponse>;
+  lessonPublish: RequestFetch<Lesson['id'], StatusResponse>;
+  lessonUnpublish: RequestFetch<Lesson['id'], StatusResponse>;
   lessonPatch: RequestFetch<[Lesson['id'], Partial<Lesson>], StatusResponse>;
   lessonUpdates: RequestFetch<[Lesson['id'], LessonUpdates], StatusResponse>;
   lessons: RequestFetch<LessonsRequest, LessonsResponse>;

@@ -47,6 +47,14 @@ const publishLesson = createService(
   },
 );
 
+const unpublishLesson = createService(
+  <T extends Lesson | NormalizedLesson>(draft: T): T => {
+    draft.state.status = LessonStateStatus.DRAFT;
+    draft.published = false;
+    return draft;
+  },
+);
+
 const updateLessonChapter = createService(
   <T extends Lesson | NormalizedLesson>(draft: T, chapter: Chapter): T => {
     const chapterIndex = getLessonChapterIndex(draft, chapter.id);
@@ -111,6 +119,7 @@ export {
   getLessonChapter,
   addChapterToLesson,
   publishLesson,
+  unpublishLesson,
   updateLessonChapter,
   updateLessonStep,
   getLessonChapterIndex,

@@ -22,6 +22,8 @@ import {
   updateLessonStep,
   addChapterToLesson,
   Lesson,
+  publishLesson,
+  unpublishLesson,
 } from '@chess-tent/models';
 import {
   Actions,
@@ -37,17 +39,26 @@ import {
   History,
 } from '@types';
 import { debounce } from 'lodash';
-import { components, hooks, services, state, ui, utils } from '@application';
+import {
+  components,
+  hooks,
+  requests,
+  services,
+  state,
+  ui,
+  utils,
+} from '@application';
 import TrainingModal from './training-assign';
 import CollaboratorModal from './lesson-users';
 import Sidebar from './editor-sidebar';
 import { PreviewModal } from './activity-preview';
 import ChaptersDropdown from './chapters-dropdown';
 import RootStepButton from './editor-sidebar-root-step-button';
-import EditorPublishButton from './editor-publish-button';
+import EditorAction from './editor-action';
 import EditorSidebarAdjustableText from './editor-sidebar-adjustable-text';
+import { updateEntityAction } from '../../state/actions';
 
-const { Container, Row, Col, Headline2, Button, Absolute, Text } = ui;
+const { Container, Row, Col, Headline2, Button, Absolute, Text, Dropdown } = ui;
 const { createChapter, updateStepRotation } = services;
 const { downloadAs } = utils;
 const {
@@ -117,6 +128,24 @@ class EditorRenderer extends React.Component<
       ...this.state.history,
     ]);
   }
+
+  publishLesson = () => {
+    const { dispatch } = this.props;
+    const lesson = publishLesson(this.props.lesson);
+    // This shouldn't be undoable hence don't use addLessonUpdate
+    requests.lessonPublish(lesson.id).then(() => {
+      dispatch(updateEntityAction(lesson));
+    });
+  };
+
+  unpublishLesson = () => {
+    const { dispatch } = this.props;
+    const lesson = unpublishLesson(this.props.lesson);
+    // This shouldn't be undoable hence don't use addLessonUpdate
+    requests.lessonUnpublish(lesson.id).then(() => {
+      dispatch(updateEntityAction(lesson));
+    });
+  };
 
   updateHistory(history: EditorRendererState['history']) {
     this.setState({ history });
@@ -322,6 +351,49 @@ class EditorRenderer extends React.Component<
     this.addLessonUpdate(action);
   };
 
+  renderPublishAction() {
+    const { lessonStatus, lesson } = this.props;
+    const tooltip =
+      lessonStatus === LessonStatus.SAVED ||
+      lessonStatus === LessonStatus.INITIAL
+        ? lesson.state.status === LessonStateStatus.DRAFT
+          ? 'Make lesson public'
+          : 'Nothing to publish, no changes made'
+        : 'You`ll be able to publish after the lesson is saved';
+
+    return (
+      <EditorAction
+        id="publish"
+        tooltip={tooltip}
+        onClick={this.publishLesson}
+        disabled={lesson.state.status !== LessonStateStatus.DRAFT}
+      >
+        Publish
+        <Text fontSize="small">
+          Lesson is {lesson.published ? 'published' : 'private'}
+        </Text>
+      </EditorAction>
+    );
+  }
+
+  renderUnpublishAction() {
+    const { lesson } = this.props;
+    const tooltip = lesson.published
+      ? 'Remove lesson from marketplace'
+      : 'Lesson is private';
+
+    return (
+      <EditorAction
+        id="unpublish"
+        tooltip={tooltip}
+        onClick={this.unpublishLesson}
+        disabled={!lesson.published}
+      >
+        Unpublish
+      </EditorAction>
+    );
+  }
+
   renderLessonStatus() {
     const { lessonStatus } = this.props;
     switch (lessonStatus) {
@@ -400,60 +472,68 @@ class EditorRenderer extends React.Component<
               <Container>
                 <Row>
                   <Col>
-                    <EditorPublishButton lesson={lesson} />
-                    <Button
-                      size="extra-small"
-                      className="mr-3"
-                      variant="regular"
-                      onClick={() =>
-                        promptModal(close => <TrainingModal close={close} />)
-                      }
-                    >
-                      Assign lesson
-                    </Button>
-                    <Button
-                      size="extra-small"
-                      className="mr-3"
-                      variant="regular"
-                      onClick={() =>
-                        promptModal(close => (
-                          <CollaboratorModal close={close} lesson={lesson} />
-                        ))
-                      }
-                    >
-                      Collaborators
-                    </Button>
-                    <Button
-                      size="extra-small"
-                      variant="regular"
-                      className="mr-3"
-                      onClick={() =>
-                        promptModal(close => (
-                          <PreviewModal
-                            close={close}
-                            lesson={lesson}
-                            step={activeStep}
-                            chapter={activeChapter}
-                          />
-                        ))
-                      }
-                    >
-                      Preview
-                    </Button>
-                    <Button
-                      size="extra-small"
-                      variant="regular"
-                      onClick={() =>
-                        downloadAs(
-                          new Blob([JSON.stringify(lesson)], {
-                            type: 'text/plain;charset=utf-8',
-                          }),
-                          lesson.state.title + '.json',
-                        )
-                      }
-                    >
-                      Download
-                    </Button>
+                    <Dropdown>
+                      <Dropdown.Toggle>Actions</Dropdown.Toggle>
+                      <Dropdown.Menu>
+                        <EditorAction
+                          id="preview"
+                          tooltip="View lesson as student"
+                          onClick={() =>
+                            promptModal(close => (
+                              <PreviewModal
+                                close={close}
+                                lesson={lesson}
+                                step={activeStep}
+                                chapter={activeChapter}
+                              />
+                            ))
+                          }
+                        >
+                          Preview
+                        </EditorAction>
+                        <EditorAction
+                          id="assign"
+                          tooltip="Assign lesson to student"
+                          onClick={() =>
+                            promptModal(close => (
+                              <TrainingModal close={close} />
+                            ))
+                          }
+                        >
+                          Assign
+                        </EditorAction>
+                        <EditorAction
+                          id="collaborators"
+                          tooltip="Allow other to edit lesson"
+                          onClick={() =>
+                            promptModal(close => (
+                              <CollaboratorModal
+                                close={close}
+                                lesson={lesson}
+                              />
+                            ))
+                          }
+                        >
+                          Collaborators
+                        </EditorAction>
+                        <EditorAction
+                          id="download"
+                          tooltip="Make lesson safe copy"
+                          onClick={() =>
+                            downloadAs(
+                              new Blob([JSON.stringify(lesson)], {
+                                type: 'text/plain;charset=utf-8',
+                              }),
+                              lesson.state.title + '.json',
+                            )
+                          }
+                        >
+                          Download
+                        </EditorAction>
+                        {this.renderPublishAction()}
+                        {this.renderUnpublishAction()}
+                      </Dropdown.Menu>
+                    </Dropdown>
                   </Col>
                 </Row>
                 <Row className="mt-3 mb-3">

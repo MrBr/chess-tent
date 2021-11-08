@@ -122,7 +122,7 @@ export const createInitialFounderConversation = toLocals(
     const messages = [
       `Hi!`,
       `I am Luka. The founder of Chess Tent platform. For the time being I'll be you support :)`,
-      `Chess Tent is truly aiming to be a community driven platform so every feedback is of great value. The platform is still in early phase so don't mind a bug or few. `,
+      `Chess Tent is truly aiming to be a community driven platform, every feedback is of great value. The platform is still in early phase so don't mind a bug or few. `,
       `Feel free to let me know if you have any questions.`,
       `Thank you for signing up! Have a good chess time.`,
     ].map(message =>

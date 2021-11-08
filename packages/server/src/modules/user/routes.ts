@@ -50,7 +50,10 @@ application.service.registerPostRoute(
     to: res.locals.user.email,
     subject: 'Beta Registration',
     html: `<p>Dear ${res.locals.user.name},</p>
-       <p>Thank you for registering. We are still in very early phase and kindly ask for patience and understanding.</p>
+       <p>Thank you for registering. We are still in very early phase and feedback is much appreciated.</p>
+       <p>${
+         res.locals.user.coach ? 'Start teaching at ' : 'Start learning at '
+       } <a href="https://chesstent.com">chesstent.com</a>. </p>
        <p>Best Regards, <br/>Chess Tent Team</p>`,
   })),
   webLogin,

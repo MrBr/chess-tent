@@ -19,7 +19,7 @@ export const withSegments = <T extends SegmentProps>(Segments: Segments<T>) => (
   props: T,
 ) => {
   const { activeSegment } = props.step.state;
-  const Segment = getSegment(Segments, activeSegment);
+  const Segment = getSegment(Segments, activeSegment || 'task');
   return <Segment {...props} />;
 };
 

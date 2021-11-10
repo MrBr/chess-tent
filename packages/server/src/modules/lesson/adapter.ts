@@ -1,6 +1,21 @@
-import { db } from '@application';
+import { db, service } from '@application';
 import { Lesson, Step } from '@chess-tent/models';
 import { AppDocument } from '@types';
+
+const migrateTaskState = (type: 'questionnaire', state: { options?: {}[] }) => {
+  switch (type) {
+    case 'questionnaire':
+      return {
+        ...state,
+        options: state.options?.map(option => ({
+          id: service.generateIndex(),
+          ...option,
+        })),
+      };
+    default:
+      return state;
+  }
+};
 
 const exerciseStepAdapter = async (entity: AppDocument<Lesson>) => {
   if (!entity || (entity.v !== 0 && !!entity.v)) {
@@ -8,6 +23,7 @@ const exerciseStepAdapter = async (entity: AppDocument<Lesson>) => {
   }
   const updateExerciseSteps = (...args: [Step]): Step => {
     const step = args[0] as Step<{
+      exerciseType: 'questionnaire';
       exerciseState: {
         explanation: string;
         question: string;
@@ -19,13 +35,13 @@ const exerciseStepAdapter = async (entity: AppDocument<Lesson>) => {
       hint: {};
     }>;
     if (step.stepType === 'exercise') {
-      const { exerciseState, position, shapes } = step.state;
+      const { exerciseState, position, shapes, exerciseType } = step.state;
       const { explanation, question, ...taskState } = exerciseState || {};
       step.state.task = {
         text: question,
         position: position,
         shapes,
-        ...taskState,
+        ...migrateTaskState(exerciseType, taskState),
       };
       step.state.explanation = {
         text: explanation,

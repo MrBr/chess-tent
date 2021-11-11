@@ -12,6 +12,9 @@ const selectStyle = {
     fontWeight: 400,
     fontSize: 14,
   },
+  '.select__menu': {
+    zIndex: 100,
+  },
   '.select__indicator-separator': {
     display: 'none',
   },

@@ -30,7 +30,7 @@ export default styled(props => {
     background: '#F3F4F5',
   },
   position: 'relative',
-  zIndex: 100,
+  zIndex: 10,
   height: 40,
   marginBottom: 10,
 });

@@ -356,7 +356,7 @@ class EditorRenderer extends React.Component<
     const tooltip =
       lessonStatus === LessonStatus.SAVED ||
       lessonStatus === LessonStatus.INITIAL
-        ? lesson.state.status === LessonStateStatus.DRAFT
+        ? lesson.state.status !== LessonStateStatus.PUBLISHED
           ? 'Make lesson public'
           : 'Nothing to publish, no changes made'
         : 'You`ll be able to publish after the lesson is saved';

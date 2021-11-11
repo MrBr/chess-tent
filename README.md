@@ -71,6 +71,14 @@ TBD
 
 run `yarn build`. The output can be seen in the `build` folder.
 
+## Stockfish (v.12) evaluation
+In order for Stockfish 12 to work certain headers have to be defined on the top document (index.html).
+```
+'Cross-Origin-Opener-Policy': 'same-origin',
+'Cross-Origin-Embedder-Policy': 'require-corp',
+```
+Craco is used to configure devServer and nginx for the production. More on this can be found at https://github.com/nmrugg/stockfish.js/issues/53
+
 ### Monorepo and advantages of this project structure
 
 TBD

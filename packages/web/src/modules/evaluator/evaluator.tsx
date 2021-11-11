@@ -81,7 +81,7 @@ class Evaluator extends React.Component<EvaluatorProps> {
   worker: Worker;
   constructor(props: EvaluatorProps) {
     super(props);
-    this.worker = new Worker('stockfish.js');
+    this.worker = new Worker('/stockfish.js');
     this.worker.onmessage = this.onEngineMessage;
     this.worker.postMessage('uci');
     this.sync();

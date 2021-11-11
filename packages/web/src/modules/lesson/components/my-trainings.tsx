@@ -7,7 +7,7 @@ import { isMyTraining } from '../service';
 
 const { TrainingCard, CoachCard } = components;
 
-const { Container, Row, Col, Headline5, Headline3 } = ui;
+const { Container, Row, Col, Headline3 } = ui;
 const { useCoaches } = hooks;
 
 const Trainings = ({ activities }: { activities: LessonActivity[] }) => (

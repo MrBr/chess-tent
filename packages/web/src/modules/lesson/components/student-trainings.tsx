@@ -53,10 +53,7 @@ const StudentTrainings: Components['StudentTrainings'] = ({
 
   return (
     <Container fluid>
-      <Headline3>My student trainings</Headline3>
-      <Headline5 className="mt-0" color="subtitle">
-        Mentor your students
-      </Headline5>
+      <Headline3>Mentor your students</Headline3>
       {Object.entries(groupedTrainings).map(([coachId, activities]) => (
         <Trainings activities={activities} key={coachId} />
       ))}

@@ -10,10 +10,6 @@
     "compile": "tsc -p tsconfig.build.json"
   },
   "dependencies": {
-    "lodash.mergewith": "^4.6.2",
     "immer": "^9.0.2"
-  },
-  "devDependencies": {
-    "@types/lodash.mergewith": "^4.6.6"
   }
 }

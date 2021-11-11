@@ -1,4 +1,3 @@
-import mergeWith from 'lodash.mergewith';
 import { Step, StepRoot, TYPE_STEP } from './types';
 import { updateSubject } from '../subject';
 import { createService } from '../_helpers';
@@ -245,7 +244,7 @@ function keepArrays(objValue: any, srcValue: any, key: string) {
 
 const updateStepState = createService(
   <T extends Step>(draft: T, state: Partial<T['state']>): T => {
-    mergeWith(draft.state, state, keepArrays);
+    Object.assign(draft.state, state);
     return draft;
   },
 );

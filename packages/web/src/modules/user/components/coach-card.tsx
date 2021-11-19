@@ -58,7 +58,7 @@ const CoachCard: Components['CoachCard'] = ({ coach }) => {
               size="small"
               onClick={() => setConversationParticipant(coach)}
             >
-              Message1
+              Message
             </Button>
           </Col>
         </Row>

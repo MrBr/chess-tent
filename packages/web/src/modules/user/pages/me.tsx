@@ -1,6 +1,8 @@
-import React from 'react';
 import { hooks } from '@application';
-import { Profile, ProfileEdit } from '../components/profile';
+import React from 'react';
+
+import Profile from './profile';
+import ProfileEdit from './edit';
 
 const { useActiveUserRecord, useLocation } = hooks;
 

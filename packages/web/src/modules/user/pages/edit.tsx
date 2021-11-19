@@ -1,10 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { components, hooks, ui, requests, hoc } from '@application';
-import { User } from '@chess-tent/models';
+import { updateSubject, User } from '@chess-tent/models';
 import { FileUploaderProps } from '@types';
 
-const { useApi, useHistory } = hooks;
-const { UserAvatar, Page } = components;
+import EditableUserAvatar from '../components/editable-user-avatar';
+
+const { useApi, useHistory, useDispatchService } = hooks;
+const { Page } = components;
 const { Absolute, Button } = ui;
 const { withFiles } = hoc;
 const {
@@ -21,13 +23,28 @@ const {
 export default withFiles(
   ({ files, openFileDialog, user }: FileUploaderProps & { user: User }) => {
     const history = useHistory();
-    const { fetch: signImage, response: signImageResponse } = useApi(
-      requests.signImageUrl,
-    );
-    const { fetch: uploadImage, response: uploadImageResponse } = useApi(
-      requests.uploadImage,
-    );
+    const dispatch = useDispatchService()(updateSubject);
+    const {
+      fetch: signImage,
+      response: signImageResponse,
+      loading: signingImage,
+      reset: resetSignedImage,
+    } = useApi(requests.signImageUrl);
+    const {
+      fetch: uploadImage,
+      response: uploadImageResponse,
+      loading: uploadingImage,
+      reset: resetUploadedImage,
+    } = useApi(requests.uploadImage);
     const { fetch: updateMe } = useApi(requests.updateMe);
+
+    const updateUser = useCallback(
+      (patch: Partial<User>) => {
+        updateMe(patch);
+        dispatch(user, patch);
+      },
+      [dispatch, updateMe, user],
+    );
 
     useEffect(() => {
       if (files.length === 0) {
@@ -47,13 +64,25 @@ export default withFiles(
 
     useEffect(() => {
       if (uploadImageResponse && signImageResponse) {
-        updateMe({ state: { imageUrl: uploadImageResponse } });
+        resetSignedImage();
+        resetUploadedImage();
+        updateUser({
+          // TODO - find a better way for unique image url
+          //  `t` is added to invalidate cache
+          state: { imageUrl: uploadImageResponse + '?t=' + Date.now() },
+        });
       }
-    }, [uploadImageResponse, signImageResponse, updateMe]);
+    }, [
+      uploadImageResponse,
+      signImageResponse,
+      updateUser,
+      resetUploadedImage,
+      resetSignedImage,
+    ]);
 
     return (
       <Page>
-        <Form initialValues={user} onSubmit={user => updateMe(user)}>
+        <Form initialValues={user} onSubmit={user => updateUser(user)}>
           {({ dirty, handleSubmit, resetForm, values }) => (
             <>
               <Absolute bottom={25} right={25}>
@@ -81,10 +110,10 @@ export default withFiles(
 
               <Row>
                 <Col className="col-auto mt-4">
-                  <UserAvatar
+                  <EditableUserAvatar
                     user={user}
-                    size="large"
                     onClick={openFileDialog}
+                    uploading={signingImage || uploadingImage}
                   />
                 </Col>
                 <Col>

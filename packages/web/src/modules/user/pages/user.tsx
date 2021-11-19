@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { hooks, requests } from '@application';
-import { Profile } from '../components/profile';
 import { user as userRecord } from '../records';
+import Profile from './profile';
 
 const { useParams, useApi, useRecordInit } = hooks;
 

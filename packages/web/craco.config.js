@@ -4,14 +4,12 @@ const path = require('path');
 
 module.exports = {
   devServer: devServer => {
-    console.log(devServer);
-
     return {
       ...devServer,
       headers: {
         ...(devServer.headers || {}),
         'Cross-Origin-Opener-Policy': 'same-origin',
-        'Cross-Origin-Embedder-Policy': 'require-corp',
+        'Cross-Origin-Embedder-Policy': 'unsafe-none | require-corp',
       },
     };
   },

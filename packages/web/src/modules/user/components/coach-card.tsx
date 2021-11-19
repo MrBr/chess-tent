@@ -27,7 +27,7 @@ const CoachCard: Components['CoachCard'] = ({ coach }) => {
     <CoachFrame key={coach.id}>
       <FramedProfile src={coach.state.imageUrl || defaultAvatarSrc} />
       <CardBody>
-        <Row className="flex-column h-100" noGutters>
+        <Row className="flex-column flex-nowrap h-100" noGutters>
           <Col>
             <Headline4
               className="mt-1 mb-0 cursor-pointer"
@@ -58,7 +58,7 @@ const CoachCard: Components['CoachCard'] = ({ coach }) => {
               size="small"
               onClick={() => setConversationParticipant(coach)}
             >
-              Message
+              Message1
             </Button>
           </Col>
         </Row>

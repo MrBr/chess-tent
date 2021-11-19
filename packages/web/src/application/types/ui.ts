@@ -31,6 +31,7 @@ import {
   Overlay as BOverlay,
   OverlayTrigger as BOverlayTrigger,
   BadgeProps,
+  SpinnerProps,
 } from 'react-bootstrap';
 import DropdownToggle from 'react-bootstrap/DropdownToggle';
 import { ErrorMessageProps, Formik } from 'formik';
@@ -177,6 +178,7 @@ export type UI = {
       | 'plus'
       | 'board'
       | 'like'
+      | 'edit'
       | 'chess';
     textual?: boolean;
     size?: 'large' | 'regular' | 'small' | 'extra-small';
@@ -234,6 +236,7 @@ export type UI = {
   }>;
   Dot: UIComponent<{ background?: string }>;
   LoadMore: UIComponent<LoadMoreProps>;
+  Spinner: UIComponent<SpinnerProps>;
   Page: UIComponent<ContainerProps>;
   Tabs: typeof Tabs;
   Tab: typeof Tab;

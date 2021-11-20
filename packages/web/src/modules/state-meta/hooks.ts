@@ -4,9 +4,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectMeta } from './state/selectors';
 import { deleteMetaState, updateMetaState } from './state/actions';
 
+// TODO - implement configurable initial meta
+const initialMeta = Object.freeze({});
+
 export const useMeta: Hooks['useMeta'] = <T>(metaKey: string) => {
   const dispatch = useDispatch();
-  const meta = useSelector(selectMeta(metaKey));
+  const meta = useSelector(selectMeta(metaKey)) || initialMeta;
 
   const update = useCallback(
     (value: T) => {

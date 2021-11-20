@@ -30,6 +30,8 @@ import { GenericArguments } from './_helpers';
 import { Records } from './records';
 import { History } from './router';
 
+type UseMetaReturn<T> = [T, (meta: T) => void, () => void];
+
 export type Hooks = {
   useRecordInit: typeof useRecordInit;
   useRecordSafe: typeof useRecordSafe;
@@ -83,7 +85,7 @@ export type Hooks = {
     error: null | string | {};
     reset: () => void;
   };
-  useMeta: <T>(metaKey: string) => [T, (meta: T) => void, () => void];
+  useMeta: <T>(metaKey: string) => UseMetaReturn<T>;
   useCopyStep: () => [
     boolean,
     (meta: Step) => void,
@@ -96,6 +98,9 @@ export type Hooks = {
   useActivity: <T extends Activity>(
     key: string,
   ) => RecordHookInit<InferInitRecord<Records<T>['activity']>>;
+  useActivityMeta: <T extends Activity>(
+    activity: T,
+  ) => UseMetaReturn<{ showHint?: boolean }>;
   useLessons: (
     key: string,
     filters: LessonsRequest,

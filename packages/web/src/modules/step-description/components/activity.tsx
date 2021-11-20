@@ -3,7 +3,7 @@ import { DescriptionModule } from '@types';
 import { components, ui } from '@application';
 
 const { Icon } = ui;
-const { LessonToolboxText } = components;
+const { LessonToolboxText, LessonPlaygroundCard } = components;
 
 export const ActivityBoard: DescriptionModule['ActivityBoard'] = ({
   Chessboard,
@@ -23,9 +23,12 @@ export const ActivitySidebar: DescriptionModule['ActivitySidebar'] = ({
     state: { description },
   } = step;
   return (
-    <>
+    <LessonPlaygroundCard>
       <Icon type="comment" textual />
-      <LessonToolboxText defaultText={description} placeholder="Type here.." />
-    </>
+      <LessonToolboxText
+        defaultText={description}
+        placeholder="Comment should be here :o"
+      />
+    </LessonPlaygroundCard>
   );
 };

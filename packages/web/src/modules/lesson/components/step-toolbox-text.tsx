@@ -28,7 +28,7 @@ export const ToolboxText: Components['LessonToolboxText'] = styled(
 
     return (
       <Text
-        contentEditable
+        contentEditable={!!onChange}
         {...props}
         initialHtml={defaultText}
         onInput={onTextChange}

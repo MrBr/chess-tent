@@ -57,3 +57,7 @@ body {
 .overflow-anchor-none {
   overflow-anchor: none;
 }
+
+.mh-50 {
+  max-height: 50%;
+}

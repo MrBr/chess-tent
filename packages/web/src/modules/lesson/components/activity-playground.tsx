@@ -73,7 +73,7 @@ const ActivityPlayground = ({
         <Col md={5} xl={4} className="h-100 pr-5 pl-5 ">
           <Row className="h-100 d-flex flex-column flex-nowrap" noGutters>
             <Col className="col-auto mt-5">{header}</Col>
-            <Col xs={4} className="mt-5 mw-100 overflow-y-auto">
+            <Col xs={4} className="mt-5 mw-100 mb-3">
               <Tabs
                 id="activity-tabs"
                 activeKey={tab.mode || DEFAULT_PLAYGROUND_MODE}

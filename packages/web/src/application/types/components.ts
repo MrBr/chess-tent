@@ -178,6 +178,11 @@ export type LessonPlayground = FunctionComponent<{
   comments?: boolean;
 }>;
 
+export type LessonPlaygroundCard = FunctionComponent<{
+  children: ReactNode;
+  className?: string;
+}>;
+
 export type LessonToolboxText = FunctionComponent<{
   onChange?: (text: string) => void;
   defaultText?: string;
@@ -283,6 +288,7 @@ export type Components = {
   StepToolbox: StepToolbox;
   LessonToolboxText: LessonToolboxText;
   LessonPlayground: LessonPlayground;
+  LessonPlaygroundCard: LessonPlaygroundCard;
   StepTag: StepTag;
   StepMove: StepMove;
   PieceIcon: PieceIcon;

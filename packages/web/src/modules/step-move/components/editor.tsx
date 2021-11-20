@@ -13,6 +13,7 @@ import {
   MoveModule,
   MoveStep,
   Piece,
+  PieceRole,
   Steps,
   VariationStep,
 } from '@types';
@@ -32,6 +33,7 @@ const boardChange = (
   newMove: Move,
   movedPiece: Piece,
   captured?: boolean,
+  promoted?: PieceRole,
 ) => {
   const {
     state: { move, orientation },
@@ -64,6 +66,7 @@ const boardChange = (
     moveIndex,
     movedPiece,
     captured,
+    promoted,
   );
 
   const variationStep = getParentStep(stepRoot, step) as VariationStep;
@@ -118,14 +121,19 @@ const EditorBoard: MoveModule['EditorBoard'] = ({
   const updateShapes = useCallback(
     (shapes: DrawShape[]) => {
       const updatedStep = updateStepState(step, { shapes });
-      console.log(updatedStep.state.shapes);
       updateStep(updatedStep);
     },
     [step, updateStep],
   );
 
   const onChangeHandle = useCallback(
-    (newPosition: FEN, newMove: Move, movedPiece: Piece, captured: boolean) =>
+    (
+      newPosition: FEN,
+      newMove: Move,
+      movedPiece: Piece,
+      captured: boolean,
+      promoted?: PieceRole,
+    ) =>
       boardChange(
         stepRoot,
         step,
@@ -135,6 +143,7 @@ const EditorBoard: MoveModule['EditorBoard'] = ({
         newMove,
         movedPiece,
         captured,
+        promoted,
       ),
     [stepRoot, step, updateStep, setActiveStep],
   );

@@ -65,7 +65,7 @@ export interface ChessboardState {
   promotion?: {
     from: Key;
     to: Key;
-    color: PieceColor;
+    piece: Piece;
   };
 }
 

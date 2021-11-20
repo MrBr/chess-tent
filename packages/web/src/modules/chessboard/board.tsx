@@ -36,7 +36,7 @@ import { replaceFENPosition, unfreeze, updateMovable } from './_helpers';
 const { Evaluator } = components;
 const { START_FEN, MAX_BOARD_SIZE, KINGS_FEN } = constants;
 const { Modal } = ui;
-const { Chess, createMoveShortObject, createPiece } = services;
+const { Chess, createMoveShortObject } = services;
 
 export type State = CGState;
 
@@ -450,7 +450,7 @@ class Chessboard
         promotion: {
           from: orig as Key,
           to: dest as Key,
-          color: piece.color,
+          piece: piece,
         },
       });
       return;
@@ -468,8 +468,7 @@ class Chessboard
     if (!promotion) {
       return;
     }
-    const { from, to, color } = promotion;
-    const piece = createPiece(role, color, true);
+    const { from, to, piece } = promotion;
     const capturedPiece = this.chess.get(to);
     this.setState({ promotion: undefined });
     const move = [from, to] as Move;
@@ -524,7 +523,7 @@ class Chessboard
           {promotion && (
             <Promotion
               file={promotion.to}
-              color={promotion.color}
+              color={promotion.piece.color}
               onPromote={this.onPromotion}
               onCancel={this.onPromotionCancel}
             />

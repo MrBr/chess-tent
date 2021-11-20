@@ -1,7 +1,14 @@
 import React, { useCallback } from 'react';
 import { DrawShape } from '@chess-tent/chessground/dist/draw';
 import { addStep, updateStepState, getLastStep } from '@chess-tent/models';
-import { FEN, Move, Piece, VariationModule, VariationStep } from '@types';
+import {
+  FEN,
+  Move,
+  Piece,
+  PieceRole,
+  VariationModule,
+  VariationStep,
+} from '@types';
 import { components, constants, services, ui } from '@application';
 import BoardSrc from '../images/board.svg';
 
@@ -22,6 +29,8 @@ const boardChange = (
   newPosition: FEN,
   newMove?: Move,
   movedPiece?: Piece,
+  captured?: boolean,
+  promoted?: PieceRole,
 ) => {
   const {
     state: { editing, move, position, orientation },
@@ -61,6 +70,8 @@ const boardChange = (
     newMove,
     move ? move.index + 1 : 1,
     movedPiece,
+    captured,
+    promoted,
   );
 
   const hasMoveStep = getLastStep(step, false).stepType === 'move';
@@ -122,7 +133,13 @@ const EditorBoard: VariationModule['EditorBoard'] = ({
   );
 
   const onChangeHandle = useCallback(
-    (newPosition: FEN, newMove?: Move, movedPiece?: Piece) =>
+    (
+      newPosition: FEN,
+      newMove?: Move,
+      movedPiece?: Piece,
+      captured?: boolean,
+      promoted?: PieceRole,
+    ) =>
       boardChange(
         step,
         updateStep,
@@ -130,6 +147,8 @@ const EditorBoard: VariationModule['EditorBoard'] = ({
         newPosition,
         newMove,
         movedPiece,
+        captured,
+        promoted,
       ),
     [step, updateStep, setActiveStep],
   );

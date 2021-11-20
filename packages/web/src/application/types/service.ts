@@ -1,4 +1,4 @@
-import { ChessInstance } from 'chess.js';
+import { ChessInstance, Move as ChessMove } from 'chess.js';
 import { ComponentType, ReactElement } from 'react';
 import { API, ApiMethods } from '@chess-tent/types';
 import {
@@ -54,6 +54,7 @@ export type Services = {
     captured?: boolean,
     promoted?: PieceRole,
   ) => NotableMove;
+  createNotableMovesFromHistory: (history: ChessMove[]) => NotableMove[];
   isSameStepMove: (
     step: VariationStep | MoveStep,
     move: NotableMove,

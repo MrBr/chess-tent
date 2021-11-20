@@ -65,7 +65,7 @@ export interface ChessboardState {
   promotion?: {
     from: Key;
     to: Key;
-    piece: Piece;
+    color: PieceColor;
   };
 }
 
@@ -76,7 +76,8 @@ export interface ChessboardFooterProps {
   onReset: () => void;
   onClear: () => void;
   onRotate: () => void;
-  onFENSet: (FEN: string) => void;
+  onFENSet: (FEN: FEN) => void;
+  onPGN?: (position: FEN, moves: NotableMove[], headers: {}) => void;
 }
 
 export interface ChessboardProps {

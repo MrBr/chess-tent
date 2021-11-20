@@ -7,6 +7,7 @@ import {
   Services,
 } from '@types';
 import { forEachRight } from 'lodash';
+import { Move as ChessMove } from 'chess.js';
 import { transformColorKey, transformPieceTypeToRole } from './helpers';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -96,3 +97,29 @@ export const createNotableMove: Services['createNotableMove'] = (
   captured = false,
   promoted = undefined,
 ) => ({ position, move, index, piece, promoted, captured });
+
+export const createNotableMovesFromHistory: Services['createNotableMovesFromHistory'] = (
+  history: ChessMove[],
+) => {
+  const game = new Chess();
+
+  const moves = history.map((chessMove, moveIndex) => {
+    const { from, to, promotion } = chessMove;
+    game.move(chessMove);
+
+    const position = game.fen();
+    const promoted = promotion
+      ? transformPieceTypeToRole(promotion)
+      : undefined;
+    const captured = !!chessMove.captured;
+    const color = transformColorKey(chessMove.color);
+    const role = transformPieceTypeToRole(chessMove.piece);
+    const piece = createPiece(role, color, !!promotion);
+    const move: Move = [from, to];
+    const index = Math.floor(moveIndex / 2) + 1;
+
+    return createNotableMove(position, move, index, piece, captured, promoted);
+  });
+
+  return moves;
+};

@@ -125,6 +125,7 @@ const Footer: FunctionComponent<ChessboardFooterProps> = ({
               ))
             }
             className="mr-3"
+            disabled={!onPGN}
           >
             PGN
           </Button>

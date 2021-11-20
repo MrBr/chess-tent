@@ -503,6 +503,7 @@ class Chessboard
       size,
       sparePieces,
       footer,
+      onPGN,
     } = this.props;
     const { renderPrompt, promotion } = this.state;
     const sparePiecesElement = sparePieces ? (
@@ -546,7 +547,7 @@ class Chessboard
               onFENSet={this.onFENSet}
               position={fen}
               onRotate={this.onRotate}
-              onPGN={this.onPGN}
+              onPGN={onPGN && this.onPGN}
             />
           ) : (
             footer

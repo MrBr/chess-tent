@@ -35,10 +35,12 @@ const PGNModal = ({
 }) => {
   const inputRef = useRef<HTMLInputElement>();
   const handleImport = () => {
+    close();
     if (inputRef.current) {
       onImport(inputRef.current.value);
     }
   };
+
   return (
     <Modal close={close} show>
       <ModalBody>
@@ -101,11 +103,10 @@ const Footer: FunctionComponent<ChessboardFooterProps> = ({
   const handlePGN = (pgn: string) => {
     const game = new Chess();
     game.load_pgn(pgn);
-    const position = game.fen();
     const history = game.history({ verbose: true });
     const moves = createNotableMovesFromHistory(history);
     const headers = game.header();
-    onPGN && onPGN(position, moves, headers);
+    onPGN && onPGN(moves, headers);
   };
 
   return (

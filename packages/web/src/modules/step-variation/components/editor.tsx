@@ -4,6 +4,7 @@ import { addStep, updateStepState, getLastStep } from '@chess-tent/models';
 import {
   FEN,
   Move,
+  NotableMove,
   Piece,
   PieceRole,
   VariationModule,
@@ -11,6 +12,7 @@ import {
 } from '@types';
 import { components, constants, services, ui } from '@application';
 import BoardSrc from '../images/board.svg';
+import { createStepsFromNotableMoves } from '../../step/service';
 
 const { Col, Row, Img } = ui;
 const { Stepper, StepTag, StepMove } = components;
@@ -152,10 +154,33 @@ const EditorBoard: VariationModule['EditorBoard'] = ({
       ),
     [step, updateStep, setActiveStep],
   );
+
   const onFENChange = useCallback(
     (newPosition: FEN) =>
       boardChange(step, updateStep, setActiveStep, newPosition),
     [step, updateStep, setActiveStep],
+  );
+
+  const onPGN = useCallback(
+    (moves: NotableMove[], { White, Black, Result }) => {
+      const steps = createStepsFromNotableMoves(moves);
+      const description = `${White} - ${Black} ${Result}`;
+      let updatedStep: typeof step;
+      if (step.state.steps.length === 0) {
+        updatedStep = updateStepState(step, {
+          steps,
+          description: step.state.description || description,
+        });
+      } else {
+        const newVariation = createStep('variation', {
+          steps,
+          description,
+        });
+        updatedStep = addStep(step, newVariation);
+      }
+      updateStep(updatedStep);
+    },
+    [step, updateStep],
   );
 
   return (
@@ -173,6 +198,7 @@ const EditorBoard: VariationModule['EditorBoard'] = ({
       editing={!!editing}
       onReset={resetHandle}
       onClear={clearHandle}
+      onPGN={onPGN}
     />
   );
 };

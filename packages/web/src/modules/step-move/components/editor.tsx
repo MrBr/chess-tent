@@ -12,12 +12,14 @@ import {
   Move,
   MoveModule,
   MoveStep,
+  NotableMove,
   Piece,
   PieceRole,
   Steps,
   VariationStep,
 } from '@types';
 import { services, components, ui, constants } from '@application';
+import { createStepsFromNotableMoves } from '../../step/service';
 
 const { Col, Row } = ui;
 const { getPiece, createNotableMove } = services;
@@ -180,6 +182,19 @@ const EditorBoard: MoveModule['EditorBoard'] = ({
     [setActiveStep, step, updateStep],
   );
 
+  const onPGN = useCallback(
+    (moves: NotableMove[], { White, Black, Result }) => {
+      const steps = createStepsFromNotableMoves(moves);
+      const newVariation = services.createStep('variation', {
+        steps,
+        description: `${White} - ${Black} ${Result}`,
+      });
+      const updatedStep = addStep(step, newVariation);
+      updateStep(updatedStep);
+    },
+    [step, updateStep],
+  );
+
   return (
     <Chessboard
       allowAllMoves
@@ -193,6 +208,7 @@ const EditorBoard: MoveModule['EditorBoard'] = ({
       onReset={resetHandle}
       onShapesChange={updateShapes}
       shapes={shapes}
+      onPGN={onPGN}
     />
   );
 };

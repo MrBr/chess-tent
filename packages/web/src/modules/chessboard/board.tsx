@@ -10,6 +10,7 @@ import {
   ExtendedKey,
   PieceRolePromotable,
   FEN,
+  NotableMove,
 } from '@types';
 
 import { ChessInstance } from 'chess.js';
@@ -63,6 +64,7 @@ type ChessgroundMappedPropsType = Record<
     | 'onUpdateEditing'
     | 'onFENSet'
     | 'editing'
+    | 'onPGN'
   >,
   string
 >;
@@ -403,6 +405,11 @@ class Chessboard
     onFENSet && onFENSet(FEN);
   };
 
+  onPGN = (moves: NotableMove[], headers: {}) => {
+    const { onPGN } = this.props;
+    onPGN && onPGN(moves, headers);
+  };
+
   onShapeAdd = (shape: DrawShape) => {};
 
   onShapeRemove = (shape: DrawShape) => {};
@@ -539,6 +546,7 @@ class Chessboard
               onFENSet={this.onFENSet}
               position={fen}
               onRotate={this.onRotate}
+              onPGN={this.onPGN}
             />
           ) : (
             footer

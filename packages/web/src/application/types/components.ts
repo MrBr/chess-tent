@@ -77,7 +77,7 @@ export interface ChessboardFooterProps {
   onClear: () => void;
   onRotate: () => void;
   onFENSet: (FEN: FEN) => void;
-  onPGN?: (position: FEN, moves: NotableMove[], headers: {}) => void;
+  onPGN?: (moves: NotableMove[], headers: {}) => void;
 }
 
 export interface ChessboardProps {
@@ -121,6 +121,7 @@ export interface ChessboardProps {
   onReset?: (FEN: string) => void;
   onClear?: (FEN: string) => void;
   onFENSet?: (FEN: string) => void;
+  onPGN?: (moves: NotableMove[], header: {}) => void;
   onOrientationChange?: (orientation: ChessboardProps['orientation']) => void;
 }
 

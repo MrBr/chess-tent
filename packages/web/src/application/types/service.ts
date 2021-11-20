@@ -59,6 +59,7 @@ export type Services = {
     step: VariationStep | MoveStep,
     move: NotableMove,
   ) => boolean;
+  createStepsFromNotableMoves: (moves: NotableMove[]) => MoveStep[];
   getSameMoveVariationStep: (
     step: VariationStep | MoveStep,
     move: NotableMove,

@@ -9,6 +9,7 @@ import {
   createNotableMove,
   shortenRole,
   createMoveShortObject,
+  createPiece,
 } from './service';
 
 services.Chess = Chess;
@@ -20,3 +21,4 @@ services.setTurnColor = setTurnColor;
 services.createNotableMove = createNotableMove;
 services.shortenRole = shortenRole;
 services.createMoveShortObject = createMoveShortObject;
+services.createPiece = createPiece;

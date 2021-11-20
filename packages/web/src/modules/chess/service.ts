@@ -71,6 +71,12 @@ const shortRoleMap: Record<PieceRole, PieceRoleShort> = {
 export const shortenRole: Services['shortenRole'] = (role: PieceRole) =>
   shortRoleMap[role];
 
+export const createPiece: Services['createPiece'] = (
+  role,
+  color,
+  promoted,
+) => ({ role, color, promoted });
+
 export const createMoveShortObject: Services['createMoveShortObject'] = (
   move,
   promoted,

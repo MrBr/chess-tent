@@ -41,6 +41,11 @@ export type Services = {
     promoted?: PieceRolePromotable,
   ) => MoveShort;
   shortenRole: (role: PieceRole) => PieceRoleShort;
+  createPiece: (
+    role: PieceRole,
+    color: PieceColor,
+    promoted?: boolean,
+  ) => Piece;
   createNotableMove: (
     position: FEN,
     move: Move,

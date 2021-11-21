@@ -19,7 +19,6 @@ export const ToolboxText: Components['LessonToolboxText'] = styled(
           // Don't allow new line without any text it breaks the placeholder
           // Placeholder is shown when there is no text and whitespace breaks it
           e.target.innerHTML = '';
-          return;
         }
         onChange && debouncedTextChange(e.target.innerHTML);
       },

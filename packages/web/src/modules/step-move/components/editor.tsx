@@ -183,11 +183,10 @@ const EditorBoard: MoveModule['EditorBoard'] = ({
   );
 
   const onPGN = useCallback(
-    (moves: NotableMove[], { White, Black, Result }) => {
+    (moves: NotableMove[]) => {
       const steps = createStepsFromNotableMoves(moves);
       const newVariation = services.createStep('variation', {
         steps,
-        description: `${White} - ${Black} ${Result}`,
       });
       const updatedStep = addStep(step, newVariation);
       updateStep(updatedStep);

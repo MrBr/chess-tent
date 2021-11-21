@@ -162,19 +162,16 @@ const EditorBoard: VariationModule['EditorBoard'] = ({
   );
 
   const onPGN = useCallback(
-    (moves: NotableMove[], { White, Black, Result }) => {
+    (moves: NotableMove[]) => {
       const steps = createStepsFromNotableMoves(moves);
-      const description = `${White} - ${Black} ${Result}`;
       let updatedStep: typeof step;
       if (step.state.steps.length === 0) {
         updatedStep = updateStepState(step, {
           steps,
-          description: step.state.description || description,
         });
       } else {
         const newVariation = createStep('variation', {
           steps,
-          description,
         });
         updatedStep = addStep(step, newVariation);
       }

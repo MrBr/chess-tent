@@ -18,6 +18,7 @@ const {
   Headline5,
   Tag,
   Headline3,
+  Absolute,
 } = ui;
 
 const { Layout, Header, Chessboard, UserAvatar } = components;
@@ -66,47 +67,43 @@ const PreviewLesson = () => {
   const sidebar = (
     <Container className="w-75">
       <Card className="mb-4 mt-5 ">
-        {lesson && (
-          <LessonThumbnail size="large" difficulty={lesson.difficulty} />
+        {ownedLessonActivity && (
+          <Absolute left={10} top={10}>
+            <Tag variant="light" className="p-2">
+              <Text inline>Owned</Text>
+            </Tag>
+          </Absolute>
         )}
+        <LessonThumbnail size="large" difficulty={lesson.difficulty} />
         <CardBody className="px-4">
-          {lesson && (
-            <>
-              <Headline5 className="mt-2 mb-3">{lesson.state.title}</Headline5>
-              <Row noGutters>
-                <Col className="col-auto mr-1">
-                  <UserAvatar user={lesson.owner} size="extra-small" />
-                </Col>
-                <Col>
-                  <Text fontSize="small">{lesson.owner.name}</Text>
-                </Col>
-              </Row>
-              <Container className="pl-0 mb-2 mt-2">
-                <Tag pill variant="primary" className="mr-1">
-                  <Text
-                    fontSize="extra-small"
-                    inline
-                    weight={700}
-                    color="inherit"
-                  >
-                    {lesson.difficulty}
-                  </Text>
-                </Tag>
-                {lesson.tags?.map(({ text, id }) => (
-                  <Tag pill key={id} variant="success" className="mr-1">
-                    <Text
-                      fontSize="extra-small"
-                      inline
-                      weight={700}
-                      color="inherit"
-                    >
-                      {text}
-                    </Text>
-                  </Tag>
-                ))}
-              </Container>
-            </>
-          )}
+          <Headline5 className="mt-2 mb-3">{lesson.state.title}</Headline5>
+          <Row noGutters>
+            <Col className="col-auto mr-1">
+              <UserAvatar user={lesson.owner} size="extra-small" />
+            </Col>
+            <Col>
+              <Text fontSize="small">{lesson.owner.name}</Text>
+            </Col>
+          </Row>
+          <Container className="pl-0 mb-2 mt-2">
+            <Tag pill variant="primary" className="mr-1">
+              <Text fontSize="extra-small" inline weight={700} color="inherit">
+                {lesson.difficulty}
+              </Text>
+            </Tag>
+            {lesson.tags?.map(({ text, id }) => (
+              <Tag pill key={id} variant="success" className="mr-1">
+                <Text
+                  fontSize="extra-small"
+                  inline
+                  weight={700}
+                  color="inherit"
+                >
+                  {text}
+                </Text>
+              </Tag>
+            ))}
+          </Container>
           <Text fontSize="small" className="mb-3">
             {lesson?.state.description}
           </Text>
@@ -122,7 +119,7 @@ const PreviewLesson = () => {
             <Col className="col-6 d-flex justify-content-end align-items-center">
               {ownedLessonActivity ? (
                 <Button size="small" onClick={goToLesson} variant="secondary">
-                  Owned
+                  Continue
                 </Button>
               ) : (
                 <Button size="small" onClick={assignLesson}>

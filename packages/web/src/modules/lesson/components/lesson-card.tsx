@@ -3,7 +3,7 @@ import { ui } from '@application';
 import { Lesson } from '@chess-tent/models';
 import LessonThumbnail from './thumbnail';
 
-const { Headline5, Text, Card, Container, Tag, Absolute, Button } = ui;
+const { Headline5, Text, Card, Container, Tag, Absolute } = ui;
 
 const LessonCard: React.FC<{
   lesson: Lesson;
@@ -17,9 +17,9 @@ const LessonCard: React.FC<{
   >
     {owned && (
       <Absolute left={10} top={10}>
-        <Button variant="secondary" size="extra-small">
-          Owned
-        </Button>
+        <Tag variant="light" className="p-2">
+          <Text inline>Owned</Text>
+        </Tag>
       </Absolute>
     )}
     <LessonThumbnail size="large" difficulty={lesson.difficulty} />

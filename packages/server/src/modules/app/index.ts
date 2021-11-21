@@ -20,7 +20,7 @@ const { connect } = db;
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '2mb' }));
 app.use(cors({ origin: process.env.APP_DOMAIN, credentials: true }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
 

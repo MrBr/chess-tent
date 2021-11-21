@@ -34,7 +34,7 @@ const ActiveUserMessages = styled(Text)({
   background: '#F3F4F5',
   borderRadius: 16,
   padding: '1em',
-  textAlign: 'right',
+  alignSelf: 'end',
 });
 
 export default styled(
@@ -103,7 +103,7 @@ export default styled(
           </Col>
         </Row>
         <Row className="flex-grow-1 overflow-y-auto pl-3 pr-3 pb-3 flex-column-reverse">
-          <Col className="overflow-anchor-none">
+          <Col className="overflow-anchor-none d-flex flex-column">
             <LoadMore
               loadMore={loadMoreMessages}
               loading={loading}

@@ -3,6 +3,7 @@ import { ui, hooks, components } from '@application';
 import { isStepCompleted } from '@chess-tent/models';
 
 import { SegmentActivityProps } from '../../types';
+import { hasExplanation, hasHint } from '../../service';
 
 const { Headline4, Button, Headline5, Text } = ui;
 const { useActivityMeta } = hooks;
@@ -30,7 +31,7 @@ const Playground: FunctionComponent<
         />
         {children}
       </LessonPlaygroundCard>
-      {completed && (
+      {completed && hasExplanation(step) && (
         <LessonPlaygroundCard>
           <Headline5 className="mt-2 mb-1">Explanation</Headline5>
           <Text
@@ -41,7 +42,7 @@ const Playground: FunctionComponent<
           />
         </LessonPlaygroundCard>
       )}
-      {hint && (
+      {!completed && hasHint(step) && (
         <LessonPlaygroundCard>
           <Headline5 className="mt-2 ">Hint</Headline5>
           {showHint ? (

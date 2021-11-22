@@ -131,6 +131,12 @@ export const getSegmentKey = (
   throw new Error('Unknown segment');
 };
 
+export const hasExplanation = (step: ExerciseSteps) =>
+  step.state.explanation.text || !!step.state.explanation.shapes?.length;
+
+export const hasHint = (step: ExerciseSteps) =>
+  step.state.hint.text || !!step.state.hint.shapes?.length;
+
 export const isVariationExerciseStep = (
   step: ExerciseSteps,
 ): step is ExerciseVariationStep => step.state.exerciseType === 'variation';

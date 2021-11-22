@@ -45,7 +45,7 @@ const {
   LessonChapters,
 } = components;
 const { useDiffUpdates, useApi, useDispatchService } = hooks;
-const { Button, Absolute } = ui;
+const { Button, Absolute, Headline4 } = ui;
 
 export class ActivityRenderer extends React.Component<
   ActivityRendererProps,
@@ -223,11 +223,14 @@ export class ActivityRenderer extends React.Component<
         activeStepActivityState={activityStepState}
         tabbarFooter={this.renderFooter({})}
         header={
-          <LessonChapters
-            chapters={lesson.state.chapters}
-            activeChapter={chapter}
-            onChange={this.chapterChangeHandler}
-          />
+          <>
+            <Headline4 className="mt-0">Chapters</Headline4>
+            <LessonChapters
+              chapters={lesson.state.chapters}
+              activeChapter={chapter}
+              onChange={this.chapterChangeHandler}
+            />
+          </>
         }
         tabs={[
           {

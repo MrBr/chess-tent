@@ -33,6 +33,7 @@ const EditorSidebar = <T extends ExerciseSteps, K extends ExerciseSegmentKeys>({
   placeholder,
   children,
   updateStep,
+  ...props
 }: SegmentToolboxProps<T, K>) => {
   const { activeSegment } = step.state;
   const currentSegmentKey = getSegmentKey(step, segment);
@@ -41,22 +42,22 @@ const EditorSidebar = <T extends ExerciseSteps, K extends ExerciseSegmentKeys>({
   const updateText = (text: string) =>
     updateSegment({ text } as Partial<T['state'][K]>);
 
+  // NOTE! Passing props for the OverlayTrigger (so that it can trigger tooltip)
   return (
-    <>
-      <Row
-        noGutters
-        onClick={() => updateActiveSegment(currentSegmentKey)}
-        className="position-relative flex-column"
-      >
-        {activeSegment === currentSegmentKey && <ActiveSegmentMark />}
-        <LessonToolboxText
-          defaultText={text}
-          placeholder={placeholder || Placeholders[currentSegmentKey]}
-          onChange={updateText}
-        />
-        {children}
-      </Row>
-    </>
+    <Row
+      noGutters
+      onClick={() => updateActiveSegment(currentSegmentKey)}
+      className="position-relative flex-column"
+      {...props}
+    >
+      {activeSegment === currentSegmentKey && <ActiveSegmentMark />}
+      <LessonToolboxText
+        defaultText={text}
+        placeholder={placeholder || Placeholders[currentSegmentKey]}
+        onChange={updateText}
+      />
+      {children}
+    </Row>
   );
 };
 

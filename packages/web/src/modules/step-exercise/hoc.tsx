@@ -1,8 +1,11 @@
 import React, { ComponentType } from 'react';
 import { ExerciseSegmentKeys, ExerciseToolboxProps } from '@types';
+import { ui } from '@application';
 
 import { SegmentProps } from './types';
 import { useUpdateExerciseStepState } from './hooks';
+
+const { Tooltip, OverlayTrigger } = ui;
 
 // TODO - make more restrictive type, task should expect 'task' segment component
 interface Segments<T extends SegmentProps> {
@@ -45,7 +48,24 @@ export const withSegmentSidebars = <T extends SegmentProps>(
       segment,
       updateSegment,
     } as T;
-    return <Segment {...segmentProps} key={segmentKey} />;
+
+    return (
+      <OverlayTrigger
+        placement="left"
+        trigger="hover"
+        overlay={
+          <Tooltip
+            className="mr-3 text-capitalize"
+            id={`${props.step.id}-${segmentKey}`}
+          >
+            {segmentKey}
+          </Tooltip>
+        }
+        key={segmentKey}
+      >
+        <Segment {...segmentProps} />
+      </OverlayTrigger>
+    );
   });
 
   return <>{sidebar}</>;

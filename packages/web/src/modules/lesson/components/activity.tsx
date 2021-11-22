@@ -16,7 +16,6 @@ import {
 import { components, hooks, requests, services, ui } from '@application';
 import {
   addStep,
-  Analysis,
   Chapter,
   getAnalysisActiveStep,
   getChildStep,
@@ -29,10 +28,10 @@ import {
   markStepCompleted,
   Step,
   updateActivityActiveChapter,
-  updateActivityStepAnalysis,
   updateActivityStepState,
   updateAnalysisActiveStepId,
   updateAnalysisStep,
+  applyNestedPatches,
 } from '@chess-tent/models';
 import Footer from './activity-footer';
 import Header from './activity-header';
@@ -94,12 +93,13 @@ export class ActivityRenderer extends React.Component<
     });
   };
 
-  updateStepActivityAnalysis = (analysis: Analysis<Steps>) => {
+  updateStepActivityAnalysis = <T extends any[], U>(
+    service: (...args: T) => U,
+  ) => (...args: T) => {
     const { updateActivity, activity, activeStep } = this.props;
-    updateActivity(updateActivityStepAnalysis)(
+    updateActivity(applyNestedPatches(service)(...args))(
       activity,
-      activeStep.id,
-      analysis,
+      draft => draft.state[activeStep.id].analysis,
     );
     !this.isAnalysing() && this.updateStepMode(ActivityStepMode.ANALYSING);
   };
@@ -126,12 +126,10 @@ export class ActivityRenderer extends React.Component<
       move: notableMove,
     });
 
-    const newAnalysis = updateAnalysisActiveStepId(
+    this.updateStepActivityAnalysis(updateAnalysisActiveStepId)(
       addStep(analysis, newStep),
       newStep.id,
     );
-
-    this.updateStepActivityAnalysis(newAnalysis);
   };
 
   completeStep = (step: Step) => {
@@ -162,8 +160,7 @@ export class ActivityRenderer extends React.Component<
     const { analysis } = this.props;
     const step = getAnalysisActiveStep(analysis);
     const updatedStep = services.updateStepRotation(step, orientation);
-    const newAnalysis = updateAnalysisStep(analysis, updatedStep);
-    this.updateStepActivityAnalysis(newAnalysis);
+    this.updateStepActivityAnalysis(updateAnalysisStep)(analysis, updatedStep);
   };
 
   renderFooter = (props: Partial<ActivityFooterProps>) => {

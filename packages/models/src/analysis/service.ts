@@ -1,4 +1,3 @@
-import produce, { PatchListener } from 'immer';
 import { Analysis, InferAnalysisStep, TYPE_ANALYSIS } from './types';
 import { getChildStep, Step, updateNestedStep } from '../step';
 import { createService } from '../_helpers';
@@ -19,13 +18,7 @@ const updateAnalysisActiveStepId = createService(
   },
 );
 
-const updateAnalysisStep = <T extends Analysis<any>>(
-  analysis: T,
-  step: Step,
-  patchListener?: PatchListener,
-) => {
-  return updateNestedStep(analysis, step, patchListener);
-};
+const updateAnalysisStep = updateNestedStep;
 
 const createAnalysis = <T extends Step>(
   id: string,

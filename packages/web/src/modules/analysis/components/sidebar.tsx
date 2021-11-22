@@ -24,7 +24,7 @@ class AnalysisSidebar extends Analysis<
             const newStep = services.createStep('variation', {
               position: initialPosition,
             });
-            updateAnalysis(addStep(analysis, newStep));
+            updateAnalysis(addStep)(analysis, newStep);
           }}
         >
           Start Analysis

@@ -61,6 +61,7 @@ export const serviceAction = <T extends (...args: any) => any>(
   const updatedEntity = service(...payload, (next: Patch[], prev: Patch[]) => {
     meta.patch = createReversiblePatch(next, prev);
   }) as Entity;
+  console.log(updatedEntity);
   return updateEntityAction(updatedEntity, meta);
 };
 

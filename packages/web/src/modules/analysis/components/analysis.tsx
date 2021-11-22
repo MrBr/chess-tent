@@ -23,15 +23,15 @@ export default class AnalysisBase<
 > extends React.Component<T> {
   updateStep = (step: Step) => {
     const { updateAnalysis, analysis } = this.props;
-    updateAnalysis(updateAnalysisStep(analysis, step));
+    updateAnalysis(updateAnalysisStep)(analysis, step);
   };
   removeStep = (step: Step) => {
     const { updateAnalysis, analysis } = this.props;
-    updateAnalysis(removeStep(analysis, step, true));
+    updateAnalysis(removeStep)(analysis, step, true);
   };
   setActiveStep = (step: Step) => {
     const { updateAnalysis, analysis } = this.props;
-    updateAnalysis(updateAnalysisActiveStepId(analysis, step.id));
+    updateAnalysis(updateAnalysisActiveStepId)(analysis, step.id);
   };
   startAnalysis = (
     position: FEN,
@@ -50,31 +50,31 @@ export default class AnalysisBase<
       promoted,
     );
 
-    const newAnalysis = addStep(
+    updateAnalysis(addStep)(
       analysis,
       services.createStep('variation', {
         position: position,
         move: notableMove,
       }),
     );
-
-    updateAnalysis(newAnalysis);
   };
+
   renderToolbox: EditorSidebarProps['renderToolbox'] = props => {
     const { analysis } = this.props;
+
     return (
       <StepToolbox
+        showInput
+        comment
         setActiveStep={this.setActiveStep}
         updateStep={this.updateStep}
         removeStep={this.removeStep}
-        add={false}
-        comment={false}
-        exercise={false}
-        showInput={false}
-        paste={false}
         stepRoot={analysis}
         updateChapter={() => {}}
         {...props}
+        add={false}
+        exercise={false}
+        paste={false}
       />
     );
   };

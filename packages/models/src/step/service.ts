@@ -257,8 +257,12 @@ const replaceStep = createService(
 );
 
 const updateNestedStep = createService(
-  <T extends Step | StepRoot>(draft: T, step: Step): T =>
-    replaceStep(draft, step, step) as T,
+  <T extends Step | StepRoot>(draft: T, step: Step): T => {
+    replaceStepRecursive(draft, step, step);
+    // draft.state.steps[0] = step;
+    return draft;
+    // replaceStep(draft, step, step) as T,
+  },
 );
 
 const createStep = <T>(

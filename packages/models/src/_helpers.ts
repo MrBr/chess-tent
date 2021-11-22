@@ -6,6 +6,7 @@ import {
   Patch,
   enablePatches,
   applyPatches,
+  Draft,
 } from 'immer';
 import { Objectish } from 'immer/dist/types/types-internal';
 
@@ -63,6 +64,7 @@ const createService = <T extends any[], U>(
   return (...args): U => {
     let patchListener = args.pop();
     // Making patch listener optional
+    // TODO - this is not valid validation; function is not strict enough
     if (typeof patchListener !== 'function') {
       // No patch listener, returning args to initial value
       args.push(patchListener);
@@ -81,10 +83,41 @@ const createService = <T extends any[], U>(
   };
 };
 
+/**
+ * Use to updated nested substate when the substate is updated with a patchable service.
+ * Rather then creating a new service to updated substate as a whole, this utility enables
+ * partial patch update by using the substate service patch and applying it to the parent.
+ *
+ * Useful when the substate is updated simultaneously from different aspects to avoid overriding
+ * the earlier updates.
+ *
+ * The need for such utility probably indicated a poor architecture. Seems like the normalization
+ * should take care for this. Updating substate as an independent state would solve the problem.
+ */
+const applyNestedPatches = <T extends any[], U>(service: (...args: T) => U) => (
+  ...args: T
+) => <E extends {}>(
+  entity: E,
+  getNestedDraft: (entity: Draft<E>) => {},
+  patchListener?: PatchListener,
+): E => {
+  const meta: { patch?: ReversiblePatch } = {};
+  // @ts-ignore
+  service(...args, (next: Patch[], prev: Patch[]) => {
+    meta.patch = createReversiblePatch(next, prev);
+  });
+
+  const draft = createDraft(entity);
+  applyPatches(getNestedDraft(draft), meta.patch?.next || []);
+
+  return finishDraft(draft, patchListener);
+};
+
 export {
   createService,
   PatchListener,
   Patch,
   createReversiblePatch,
   applyPatches,
+  applyNestedPatches,
 };

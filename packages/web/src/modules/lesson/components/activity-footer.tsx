@@ -47,11 +47,9 @@ export default ({
   prev,
   currentStep,
   stepsCount,
-  children,
 }: ActivityFooterProps) => {
   return (
-    <Container>
-      <Container className="mb-4">{children || <br />}</Container>
+    <Container className="mb-4">
       <ActivityPagination
         next={next}
         prev={prev}

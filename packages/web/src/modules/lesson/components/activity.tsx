@@ -183,7 +183,7 @@ export class ActivityRenderer extends React.Component<
         onMove={this.startAnalysingPosition}
         allowAllMoves
         orientation={activeStep.state.orientation}
-        footer={this.renderFooter({})}
+        footer={null}
         {...props}
         header={<Header lesson={lesson} />}
       />
@@ -221,6 +221,7 @@ export class ActivityRenderer extends React.Component<
         updateStepMode={this.updateStepMode}
         updateActivityStepState={this.setStepActivityState}
         activeStepActivityState={activityStepState}
+        tabbarFooter={this.renderFooter({})}
         header={
           <LessonChapters
             chapters={lesson.state.chapters}

@@ -45,6 +45,7 @@ const ActivityPlayground = ({
   updateActivityStepState,
   activeStepActivityState,
   comments,
+  tabbarFooter,
 }: ComponentProps<Components['LessonPlayground']>) => {
   const tab = tabs.find(
     ({ mode }) =>
@@ -91,6 +92,7 @@ const ActivityPlayground = ({
                 ))}
               </Tabs>
             </Col>
+            {tabbarFooter && <Col className="col-auto">{tabbarFooter}</Col>}
             {comments && (
               <Col className="pt-1 col-auto">
                 <Input

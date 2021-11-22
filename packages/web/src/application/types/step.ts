@@ -80,7 +80,6 @@ export type ActivityFooterProps = {
   prev: () => void;
   stepsCount: number;
   currentStep: number;
-  children?: ReactElement;
 };
 export type ActivityComment = {
   userId: User['id'];

@@ -8,12 +8,11 @@ const { LessonToolboxText, LessonPlaygroundCard } = components;
 export const ActivityBoard: DescriptionModule['ActivityBoard'] = ({
   Chessboard,
   step,
-  Footer,
 }) => {
   const {
     state: { position, shapes },
   } = step;
-  return <Chessboard fen={position} shapes={shapes} footer={<Footer />} />;
+  return <Chessboard fen={position} shapes={shapes} />;
 };
 
 export const ActivitySidebar: DescriptionModule['ActivitySidebar'] = ({

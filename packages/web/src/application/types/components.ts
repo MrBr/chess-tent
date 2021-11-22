@@ -178,6 +178,7 @@ export type LessonPlayground = FunctionComponent<{
   updateActivityStepState: (state: {}) => void;
   activeStepActivityState: ActivityStepStateBase;
   comments?: boolean;
+  tabbarFooter?: ReactNode;
 }>;
 
 export type LessonPlaygroundCard = FunctionComponent<{

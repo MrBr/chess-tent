@@ -4,18 +4,14 @@ import { components } from '@application';
 
 const { StepMove, LessonToolboxText, LessonPlaygroundCard } = components;
 
-const ActivityBoard: MoveModule['ActivityBoard'] = ({
-  Chessboard,
-  step,
-  Footer,
-}) => {
+const ActivityBoard: MoveModule['ActivityBoard'] = ({ Chessboard, step }) => {
   const {
     state: {
       move: { position },
       shapes,
     },
   } = step;
-  return <Chessboard fen={position} shapes={shapes} footer={<Footer />} />;
+  return <Chessboard fen={position} shapes={shapes} />;
 };
 
 const ActivitySidebar: MoveModule['ActivitySidebar'] = ({ step }) => {

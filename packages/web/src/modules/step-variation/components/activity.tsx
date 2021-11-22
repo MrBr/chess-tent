@@ -7,13 +7,12 @@ const { StepMove, LessonToolboxText, LessonPlaygroundCard } = components;
 const ActivityBoard: VariationModule['ActivityBoard'] = ({
   Chessboard,
   step,
-  Footer,
 }) => {
   const {
     state: { move, shapes },
   } = step;
   const position = move ? move.position : (step.state.position as FEN);
-  return <Chessboard fen={position} shapes={shapes} footer={<Footer />} />;
+  return <Chessboard fen={position} shapes={shapes} />;
 };
 
 const ActivitySidebar: VariationModule['ActivitySidebar'] = ({ step }) => {

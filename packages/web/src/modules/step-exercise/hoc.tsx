@@ -3,7 +3,7 @@ import { ExerciseSegmentKeys, ExerciseToolboxProps } from '@types';
 import { ui } from '@application';
 
 import { SegmentProps } from './types';
-import { useUpdateExerciseStepState } from './hooks';
+import { useUpdateSegment } from './hooks';
 
 const { Tooltip, OverlayTrigger } = ui;
 
@@ -29,18 +29,13 @@ export const withSegments = <T extends SegmentProps>(Segments: Segments<T>) => (
 export const withSegmentSidebars = <T extends SegmentProps>(
   Segments: Segments<T>,
 ): ComponentType<ExerciseToolboxProps> => props => {
-  const updateStepState = useUpdateExerciseStepState(
-    props.updateStep,
-    props.step,
-  );
-
   const sidebar = Object.keys(Segments).map(segmentKey => {
     const segment = props.step.state[segmentKey as ExerciseSegmentKeys];
-    const updateSegment = (
-      patch: T extends SegmentProps<infer T, infer K>
-        ? Partial<T['state'][K]>
-        : never,
-    ) => updateStepState({ [segmentKey]: patch });
+    const updateSegment = useUpdateSegment(
+      props.step,
+      props.updateStep,
+      segmentKey as ExerciseSegmentKeys,
+    );
     const Segment = getSegment(Segments, segmentKey as ExerciseSegmentKeys);
     const segmentProps = {
       step: props.step,

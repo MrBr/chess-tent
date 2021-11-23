@@ -36,9 +36,13 @@ export const useUpdateSegment = <
   updateStep: (step: T) => void,
   activeSegment: K,
 ) => (segmentPatch: Partial<T['state'][K]>) => {
+  const updatedSegment: T['state'][keyof ExerciseSegments] = {
+    ...step.state[activeSegment],
+    ...segmentPatch,
+  };
   updateStep(
     updateStepState(step, {
-      [activeSegment]: segmentPatch,
+      [activeSegment]: updatedSegment,
     } as Partial<T['state']>),
   );
 };

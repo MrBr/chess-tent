@@ -8,9 +8,7 @@ import {
   ExerciseSteps,
   ExerciseTypes,
   ExerciseVariationStep,
-  FEN,
   MoveStep,
-  PieceColor,
   VariationStep,
 } from '@types';
 import {
@@ -30,36 +28,36 @@ const { START_FEN } = constants;
 
 export const createExerciseStepState = <T extends ExerciseSteps>(
   exerciseType: ExerciseTypes,
-  position: FEN,
-  orientation?: PieceColor,
+  initialState: Parameters<ExerciseModule<T>['createStep']>[1],
 ): T['state'] => ({
   steps: [],
   exerciseType,
   activeSegment: 'task',
-  orientation,
+  orientation: initialState.orientation,
   task: {
-    position,
+    position: initialState.position,
+    text: initialState.task?.text,
   },
   hint: {
-    position,
+    position: initialState.position,
+    text: initialState.hint?.text,
   },
   explanation: {
-    position,
+    position: initialState.position,
+    text: initialState.explanation?.text,
   },
 });
 
-export const createStep: ExerciseModule<ExerciseSteps>['createStep'] = (
-  id,
-  { position, orientation },
+export const createStep = (
+  id: string,
+  initialState: Parameters<
+    ExerciseModule<ExerciseVariationStep>['createStep']
+  >[1],
 ) =>
   coreCreateStep<ExerciseVariationStep>(
     id,
     stepType,
-    createExerciseStepState<ExerciseVariationStep>(
-      'variation',
-      position,
-      orientation,
-    ),
+    createExerciseStepState<ExerciseVariationStep>('variation', initialState),
   );
 
 export const getParent = (
@@ -95,8 +93,11 @@ export const getInitialExerciseStepState = (
   step: ExerciseSteps,
   exerciseType: ExerciseTypes,
 ) => {
-  const { position, orientation } = getPositionAndOrientation(stepRoot, step);
-  return createExerciseStepState(exerciseType, position, orientation);
+  const { position } = getPositionAndOrientation(stepRoot, step);
+  return createExerciseStepState(exerciseType, {
+    position,
+    ...step.state,
+  });
 };
 
 export const changeExercise = createService(
@@ -105,12 +106,11 @@ export const changeExercise = createService(
     stepRoot: StepRoot<Step<{}, StepType>>,
     exerciseType: ExerciseTypes,
   ): T => {
-    const initialExerciseStepState = getInitialExerciseStepState(
+    step.state = getInitialExerciseStepState(
       stepRoot,
       step,
       exerciseType as ExerciseTypes,
     );
-    step.state = initialExerciseStepState;
     return step;
   },
 );

@@ -61,10 +61,10 @@ export type Services = {
     move: NotableMove,
   ) => boolean;
   createStepsFromNotableMoves: (moves: NotableMove[]) => MoveStep[];
-  getSameMoveVariationStep: (
+  getSameMoveStep: (
     step: VariationStep | MoveStep,
     move: NotableMove,
-  ) => VariationStep | null;
+  ) => VariationStep | MoveStep | null;
   // Add non infrastructural providers
   // Allow modules to inject their own non dependant Providers
   addProvider: (provider: ComponentType) => void;

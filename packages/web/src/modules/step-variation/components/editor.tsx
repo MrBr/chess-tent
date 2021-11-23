@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import { DrawShape } from '@chess-tent/chessground/dist/draw';
 import { addStep, updateStepState, getLastStep } from '@chess-tent/models';
 import {
+  AppStep,
   FEN,
   Move,
   NotableMove,
@@ -19,7 +20,7 @@ const { Stepper, StepTag, StepMove } = components;
 const {
   addStepNextToTheComments,
   createStep,
-  getSameMoveVariationStep,
+  getSameMoveStep,
   createNotableMove,
 } = services;
 const { START_FEN, KINGS_FEN } = constants;
@@ -27,7 +28,7 @@ const { START_FEN, KINGS_FEN } = constants;
 const boardChange = (
   step: VariationStep,
   updateStep: (step: VariationStep) => void,
-  setActiveStep: (step: VariationStep) => void,
+  setActiveStep: (step: AppStep) => void,
   newPosition: FEN,
   newMove?: Move,
   movedPiece?: Piece,
@@ -79,7 +80,7 @@ const boardChange = (
   const hasMoveStep = getLastStep(step, false).stepType === 'move';
 
   // Move that possibly already exists in the chapter
-  const sameMoveStep = getSameMoveVariationStep(step, notableMove);
+  const sameMoveStep = getSameMoveStep(step, notableMove);
 
   if (sameMoveStep) {
     setActiveStep(sameMoveStep);

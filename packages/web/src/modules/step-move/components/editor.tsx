@@ -74,13 +74,10 @@ const boardChange = (
   const variationStep = getParentStep(stepRoot, step) as VariationStep;
   const rightStep = getRightStep(variationStep, step) as VariationStep;
   // Move that possibly already exists in the chapter
-  let sameMoveStep = services.getSameMoveVariationStep(step, notableMove);
-  if (!sameMoveStep) {
-    sameMoveStep =
-      rightStep && services.isSameStepMove(rightStep, notableMove)
-        ? rightStep
-        : null;
-  }
+  const sameMoveStep =
+    services.getSameMoveStep(variationStep, notableMove) ||
+    services.getSameMoveStep(step, notableMove);
+
   if (sameMoveStep) {
     setActiveStep(sameMoveStep);
     return;

@@ -11,7 +11,6 @@ import {
   VariationStep,
 } from '@types';
 import { utils, stepModules } from '@application';
-import { isEqual } from 'lodash';
 
 const createStepModuleStep = <T extends StepType>(
   stepType: T,
@@ -51,21 +50,21 @@ export const stepSchema = {
 export const isSameStepMove: Services['isSameStepMove'] = (
   step: VariationStep | MoveStep,
   move: NotableMove,
-) => {
-  return isEqual(step.state.move, move);
-};
+  // JSON.stringify unifies undefined as the same value (or not defined at all).
+  // That behaviour is correct in this case.
+) => JSON.stringify(step.state.move) === JSON.stringify(move);
 
-export const getSameMoveVariationStep: Services['getSameMoveVariationStep'] = (
+export const getSameMoveStep: Services['getSameMoveStep'] = (
   step: VariationStep | MoveStep,
   move: NotableMove,
 ) => {
   return (
     (step.state.steps.find(childStep => {
-      if (childStep.stepType === 'variation') {
-        return isSameStepMove(childStep as VariationStep, move);
+      if (childStep.stepType === 'variation' || childStep.stepType === 'move') {
+        return isSameStepMove(childStep as VariationStep | MoveStep, move);
       }
       return false;
-    }) as VariationStep) || null
+    }) as MoveStep | VariationStep) || null
   );
 };
 

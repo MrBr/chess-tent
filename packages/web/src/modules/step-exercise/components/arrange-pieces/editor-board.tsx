@@ -33,7 +33,7 @@ const TaskBoard: FunctionComponent<
   );
 
   const handleChange = useCallback(
-    (position, newMove?, piece?, captured?) => {
+    (position, newMove?, piece?, captured?, promoted?) => {
       if (editing || !newMove) {
         // editing: true - In case new piece is added or removed,
         // turning editing mode on (in case it isn't)
@@ -54,6 +54,7 @@ const TaskBoard: FunctionComponent<
         0,
         piece,
         captured,
+        promoted,
       );
       const newMoves: typeof moves = [
         // Remove piece previous move

@@ -27,33 +27,42 @@ export default class AnalysisBase<
   };
   removeStep = (step: Step) => {
     const { updateAnalysis, analysis } = this.props;
-    updateAnalysis(removeStep)(analysis, step, true);
+    updateAnalysis(removeStep)(analysis, step, false);
   };
   setActiveStep = (step: Step) => {
     const { updateAnalysis, analysis } = this.props;
     updateAnalysis(updateAnalysisActiveStepId)(analysis, step.id);
   };
   startAnalysis = (
-    position: FEN,
-    move: Move,
-    piece: Piece,
+    position?: FEN,
+    move?: Move,
+    piece?: Piece,
     captured?: boolean,
     promoted?: PieceRole,
   ) => {
-    const { analysis, updateAnalysis } = this.props;
-    const notableMove = services.createNotableMove(
-      position,
-      move,
-      1,
-      piece,
-      captured,
-      promoted,
-    );
+    const {
+      analysis,
+      updateAnalysis,
+      initialOrientation,
+      initialPosition,
+    } = this.props;
+    const notableMove =
+      position && move && piece
+        ? services.createNotableMove(
+            position,
+            move,
+            1,
+            piece,
+            captured,
+            promoted,
+          )
+        : undefined;
 
     updateAnalysis(addStep)(
       analysis,
       services.createStep('variation', {
-        position: position,
+        position: position || initialPosition,
+        orientation: initialOrientation,
         move: notableMove,
       }),
     );

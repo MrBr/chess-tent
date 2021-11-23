@@ -15,6 +15,7 @@ import {
   Move,
   MoveShort,
   NotableMove,
+  Orientation,
   Piece,
   PieceColor,
   PieceRole,
@@ -91,7 +92,7 @@ export type Services = {
   updateActivityActiveStep: <T extends Activity>(activity: T, step: Steps) => T;
   getStepPosition: (step: Steps) => FEN;
   getStepBoardOrientation: (step: Steps) => PieceColor;
-  updateStepRotation: (step: Steps, orientation?: PieceColor) => Steps;
+  updateStepRotation: (step: Steps, orientation?: Orientation) => Steps;
   addStepNextToTheComments: <T extends Steps>(parentStep: T, step: Steps) => T;
   createChapter: (title?: string, steps?: Step[]) => Chapter;
   history: History;

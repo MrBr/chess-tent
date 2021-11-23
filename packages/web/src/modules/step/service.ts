@@ -1,4 +1,4 @@
-import { FEN, NotableMove, PieceColor, Steps } from '@types';
+import { FEN, NotableMove, Orientation, PieceColor, Steps } from '@types';
 import { addStepToLeft, updateStepState } from '@chess-tent/models';
 import { createStepModuleStep } from './model';
 
@@ -21,7 +21,7 @@ export const getStepBoardOrientation = (step: Steps): PieceColor => {
 
 export const updateStepRotation = (
   step: Steps,
-  orientation?: PieceColor,
+  orientation?: Orientation,
 ): Steps => {
   return updateStepState(step, { orientation });
 };

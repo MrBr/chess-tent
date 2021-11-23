@@ -34,9 +34,9 @@ import {
   LessonStatus,
   LessonUpdatableAction,
   LessonUpdates,
-  PieceColor,
   Steps,
   History,
+  Orientation,
 } from '@types';
 import { debounce } from 'lodash';
 import {
@@ -256,7 +256,7 @@ class EditorRenderer extends React.Component<
     this.addLessonUpdate(action, undoAction);
   };
 
-  updateStepRotation = (orientation?: PieceColor) => {
+  updateStepRotation = (orientation?: Orientation) => {
     const { activeStep } = this.props;
     this.updateStep(updateStepRotation(activeStep, orientation));
   };

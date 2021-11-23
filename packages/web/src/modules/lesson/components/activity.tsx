@@ -8,8 +8,8 @@ import {
   ChessboardProps,
   FEN,
   Move,
+  Orientation,
   Piece,
-  PieceColor,
   PieceRole,
   Steps,
 } from '@types';
@@ -111,6 +111,7 @@ export class ActivityRenderer extends React.Component<
     captured?: boolean,
     promoted?: PieceRole,
   ) => {
+    const { activeStep } = this.props;
     const { analysis } = this.props.activityStepState;
     const notableMove = services.createNotableMove(
       position,
@@ -123,11 +124,13 @@ export class ActivityRenderer extends React.Component<
 
     const newStep = services.createStep('variation', {
       position: position,
+      orientation: activeStep.state.orientation,
       move: notableMove,
     });
 
+    this.updateStepActivityAnalysis(addStep)(analysis, newStep);
     this.updateStepActivityAnalysis(updateAnalysisActiveStepId)(
-      addStep(analysis, newStep),
+      analysis,
       newStep.id,
     );
   };
@@ -156,7 +159,7 @@ export class ActivityRenderer extends React.Component<
       updateActivity(services.updateActivityActiveStep)(activity, prevStep);
   };
 
-  updateStepRotation = (orientation?: PieceColor) => {
+  updateStepRotation = (orientation?: Orientation) => {
     const { analysis } = this.props;
     const step = getAnalysisActiveStep(analysis);
     const updatedStep = services.updateStepRotation(step, orientation);
@@ -305,6 +308,7 @@ export class ActivityRenderer extends React.Component<
                 analysis={analysis}
                 updateAnalysis={this.updateStepActivityAnalysis}
                 initialPosition={services.getStepPosition(activeStep)}
+                initialOrientation={activeStep.state.orientation}
               />
             ),
           },

@@ -19,11 +19,11 @@ import {
   StepToolbox,
 } from './components';
 import { ClassComponent } from './_helpers';
-import { PieceColor } from './chess';
+import { Orientation } from './chess';
 import { AppAnalysis } from './analysis';
 
 export type AppStep<S extends {} = {}, T extends StepType = StepType> = Step<
-  S & { orientation?: PieceColor },
+  S & { orientation?: Orientation },
   T
 >;
 

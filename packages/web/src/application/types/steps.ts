@@ -1,5 +1,5 @@
 import { StepType } from '@chess-tent/models';
-import { FEN, Key, NotableMove, PieceColor, Shape } from './chess';
+import { FEN, Key, NotableMove, Orientation, Shape } from './chess';
 import { StepModule, AppStep, ActivityExerciseStepState } from './step';
 
 // Move
@@ -38,7 +38,7 @@ export type DescriptionStep = AppStep<DescriptionStepState, 'description'>;
 export type DescriptionModule = StepModule<
   DescriptionStep,
   'description',
-  { position: DescriptionStepState['position']; orientation?: PieceColor }
+  { position: DescriptionStepState['position']; orientation?: Orientation }
 >;
 
 // Exercise
@@ -168,7 +168,7 @@ export type ExerciseModule<
 > = StepModule<
   T,
   'exercise',
-  { position: FEN; orientation?: PieceColor },
+  { position: FEN; orientation?: Orientation },
   ExerciseActivityState
 >;
 

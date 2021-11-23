@@ -37,7 +37,7 @@ import {
   ExtendedKey,
   PieceRole,
   PieceRolePromotable,
-  PieceColor,
+  Orientation,
 } from './chess';
 import {
   ActivityStepStateBase,
@@ -87,7 +87,7 @@ export interface ChessboardProps {
   size?: string | number;
   // Chessground proxy props
   viewOnly?: boolean;
-  orientation?: PieceColor;
+  orientation?: Orientation;
   selectablePieces?: boolean;
   resizable?: boolean;
   fen: FEN;

@@ -1,7 +1,7 @@
 import React, { ComponentProps } from 'react';
-import { components, ui, services } from '@application';
+import { components, ui } from '@application';
 import { Components } from '@types';
-import { addStep, getAnalysisActiveStep } from '@chess-tent/models';
+import { getAnalysisActiveStep } from '@chess-tent/models';
 import Analysis from './analysis';
 
 const { Stepper } = components;
@@ -13,20 +13,12 @@ class AnalysisSidebar extends Analysis<
   ComponentProps<Components['AnalysisSidebar']>
 > {
   render() {
-    const { analysis, updateAnalysis, initialPosition } = this.props;
+    const { analysis } = this.props;
     const step = getAnalysisActiveStep(analysis);
 
     if (!step) {
       return (
-        <Button
-          size="extra-small"
-          onClick={() => {
-            const newStep = services.createStep('variation', {
-              position: initialPosition,
-            });
-            updateAnalysis(addStep)(analysis, newStep);
-          }}
-        >
+        <Button size="extra-small" onClick={() => this.startAnalysis()}>
           Start Analysis
         </Button>
       );

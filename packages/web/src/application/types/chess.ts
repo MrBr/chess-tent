@@ -35,6 +35,7 @@ export type NotableMove = {
 export type MoveShort = ShortMove;
 export type MoveMetadata = CG_MOVEMETADATA;
 export type PieceColor = CG_COLOR;
+export type Orientation = CG_COLOR;
 export type PieceColorShort = 'w' | 'b';
 export type PieceRole = CG_ROLE;
 export type PieceRolePromotable = 'knight' | 'rook' | 'bishop' | 'queen';

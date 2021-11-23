@@ -98,6 +98,16 @@ export const createNotableMove: Services['createNotableMove'] = (
   promoted = undefined,
 ) => ({ position, move, index, piece, promoted, captured });
 
+export const isLegalMove: Services['isLegalMove'] = (
+  position,
+  move,
+  promoted?,
+) => {
+  const shortMove = createMoveShortObject(move, promoted);
+  const game = new Chess(position);
+  return !!game.move(shortMove);
+};
+
 export const createNotableMovesFromHistory: Services['createNotableMovesFromHistory'] = (
   history: ChessMove[],
 ) => {

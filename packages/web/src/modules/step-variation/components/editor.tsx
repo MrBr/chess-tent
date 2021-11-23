@@ -7,7 +7,7 @@ import {
   Move,
   NotableMove,
   Piece,
-  PieceRole,
+  PieceRolePromotable,
   VariationModule,
   VariationStep,
 } from '@types';
@@ -22,6 +22,7 @@ const {
   createStep,
   getSameMoveStep,
   createNotableMove,
+  isLegalMove,
 } = services;
 const { START_FEN, KINGS_FEN } = constants;
 
@@ -33,7 +34,7 @@ const boardChange = (
   newMove?: Move,
   movedPiece?: Piece,
   captured?: boolean,
-  promoted?: PieceRole,
+  promoted?: PieceRolePromotable,
 ) => {
   const {
     state: { editing, move, position, orientation },
@@ -50,7 +51,7 @@ const boardChange = (
     return;
   }
 
-  if (!newMove || !movedPiece) {
+  if (!newMove || !movedPiece || !isLegalMove(position, newMove, promoted)) {
     // New piece dropped or removed
     const newVariationStep = createStep('variation', {
       position: newPosition,
@@ -141,7 +142,7 @@ const EditorBoard: VariationModule['EditorBoard'] = ({
       newMove?: Move,
       movedPiece?: Piece,
       captured?: boolean,
-      promoted?: PieceRole,
+      promoted?: PieceRolePromotable,
     ) =>
       boardChange(
         step,

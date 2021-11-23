@@ -15,6 +15,7 @@ import {
   NotableMove,
   Piece,
   PieceRole,
+  PieceRolePromotable,
   Steps,
   VariationStep,
 } from '@types';
@@ -125,26 +126,44 @@ const EditorBoard: MoveModule['EditorBoard'] = ({
     [step, updateStep],
   );
 
+  const onFENChange = useCallback(
+    (position: FEN) => {
+      const newVariation = services.createStep('variation', {
+        position,
+        orientation: step.state.orientation,
+        editing: true,
+      });
+      updateStep(addStep(step, newVariation));
+      setActiveStep(newVariation);
+    },
+    [setActiveStep, step, updateStep],
+  );
+
   const onChangeHandle = useCallback(
     (
       newPosition: FEN,
       newMove: Move,
       movedPiece: Piece,
       captured: boolean,
-      promoted?: PieceRole,
-    ) =>
-      boardChange(
-        stepRoot,
-        step,
-        updateStep,
-        setActiveStep,
-        newPosition,
-        newMove,
-        movedPiece,
-        captured,
-        promoted,
-      ),
-    [stepRoot, step, updateStep, setActiveStep],
+      promoted?: PieceRolePromotable,
+    ) => {
+      if (services.isLegalMove(step.state.move.position, newMove, promoted)) {
+        boardChange(
+          stepRoot,
+          step,
+          updateStep,
+          setActiveStep,
+          newPosition,
+          newMove,
+          movedPiece,
+          captured,
+          promoted,
+        );
+        return;
+      }
+      onFENChange(newPosition);
+    },
+    [stepRoot, step, updateStep, setActiveStep, onFENChange],
   );
 
   const resetHandle = useCallback(() => {
@@ -166,18 +185,6 @@ const EditorBoard: MoveModule['EditorBoard'] = ({
     updateStep(addStep(step, newVariationStep));
     setActiveStep(newVariationStep);
   }, [updateStep, step, orientation, setActiveStep]);
-
-  const onFENChange = useCallback(
-    (position: FEN) => {
-      const newVariation = services.createStep('variation', {
-        position,
-        editing: true,
-      });
-      updateStep(addStep(step, newVariation));
-      setActiveStep(newVariation);
-    },
-    [setActiveStep, step, updateStep],
-  );
 
   const onPGN = useCallback(
     (moves: NotableMove[]) => {

@@ -35,7 +35,6 @@ import {
   Piece,
   Shape,
   ExtendedKey,
-  PieceRole,
   PieceRolePromotable,
   Orientation,
 } from './chess';
@@ -100,7 +99,7 @@ export interface ChessboardProps {
     lastMove: Move,
     piece: Piece,
     captured: boolean,
-    promoted?: PieceRole,
+    promoted?: PieceRolePromotable,
   ) => void;
   onShapesChange?: (shapes: DrawShape[]) => void;
   onShapeAdd?: (shape: DrawShape[]) => void;

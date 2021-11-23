@@ -55,6 +55,11 @@ export type Services = {
     captured?: boolean,
     promoted?: PieceRole,
   ) => NotableMove;
+  isLegalMove: (
+    position: FEN,
+    move: Move,
+    promoted?: PieceRolePromotable,
+  ) => boolean;
   createNotableMovesFromHistory: (history: ChessMove[]) => NotableMove[];
   isSameStepMove: (
     step: VariationStep | MoveStep,

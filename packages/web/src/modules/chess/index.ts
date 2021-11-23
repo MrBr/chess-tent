@@ -11,6 +11,7 @@ import {
   createMoveShortObject,
   createPiece,
   createNotableMovesFromHistory,
+  isLegalMove,
 } from './service';
 
 services.Chess = Chess;
@@ -23,4 +24,5 @@ services.createNotableMove = createNotableMove;
 services.shortenRole = shortenRole;
 services.createMoveShortObject = createMoveShortObject;
 services.createPiece = createPiece;
+services.isLegalMove = isLegalMove;
 services.createNotableMovesFromHistory = createNotableMovesFromHistory;

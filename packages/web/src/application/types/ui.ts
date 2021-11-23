@@ -92,6 +92,7 @@ export type TextProps = {
     | 'inherit';
   fontSize?: FontSize;
   onClick?: ReactEventHandler;
+  onPaste?: ReactEventHandler;
 } & HtmlProps;
 
 export declare interface SearchBoxProps {

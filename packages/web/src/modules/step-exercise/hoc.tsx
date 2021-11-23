@@ -52,7 +52,7 @@ export const withSegmentSidebars = <T extends SegmentProps>(
     return (
       <OverlayTrigger
         placement="left"
-        trigger="hover"
+        trigger="focus"
         overlay={
           <Tooltip
             className="mr-3 text-capitalize"

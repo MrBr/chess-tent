@@ -24,11 +24,22 @@ export const ToolboxText: Components['LessonToolboxText'] = styled(
       },
       [onChange, debouncedTextChange],
     );
+    const onPaste = useCallback(event => {
+      event.preventDefault();
+
+      const text = (
+        event.clipboardData ||
+        ((window as unknown) as { clipboardData: Clipboard }).clipboardData
+      ).getData('text');
+
+      document.execCommand('insertHTML', false, text);
+    }, []);
 
     return (
       <Text
         contentEditable={!!onChange}
         {...props}
+        onPaste={onPaste}
         initialHtml={defaultText}
         onInput={onTextChange}
       />

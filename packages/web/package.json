@@ -21,7 +21,7 @@
     "core-module": "2.0.0",
     "file-saver": "^2.0.5",
     "formik": "^2.1.5",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.19",
     "luxon": "^1.25.0",
     "react": "^16.13.1",
     "react-bootstrap": "^1.4.0",

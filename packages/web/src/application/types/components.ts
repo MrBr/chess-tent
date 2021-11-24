@@ -197,6 +197,7 @@ export type LessonPlaygroundCard = FunctionComponent<{
 
 export type LessonToolboxText = FunctionComponent<{
   onChange?: (text: string) => void;
+  onClick?: () => void;
   defaultText?: string;
   placeholder?: string;
   className?: string;

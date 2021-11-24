@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, ReactEventHandler } from 'react';
 import { Components, Steps } from '@types';
 import { components, hooks, services, ui, utils } from '@application';
 import styled from '@emotion/styled';
@@ -141,10 +141,15 @@ const StepToolbox: Components['StepToolbox'] = ({
     removeStep(step);
   }, [removeStep, step]);
 
+  const handleClick: ReactEventHandler = event => {
+    utils.stopPropagation(event);
+    !active && setActiveStep(step);
+  };
+
   return (
     <Container
       className={`d-flex align-items-center h-100 pr-0 ${className}`}
-      onClick={utils.stopPropagation}
+      onClick={handleClick}
     >
       {(text || active) && showInput && (
         <LessonToolboxText

@@ -14,6 +14,9 @@ export const getDiff = (
 
     const newPath = path + key;
     if (
+      // typeof null === object !?!
+      !!newValue &&
+      !!oldValue &&
       typeof newValue === 'object' &&
       typeof newValue === typeof oldValue &&
       Array.isArray(newValue) === Array.isArray(oldValue) &&

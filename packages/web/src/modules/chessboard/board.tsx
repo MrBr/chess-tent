@@ -209,10 +209,13 @@ class Chessboard
       draggable: {
         deleteOnDropOff: true,
       },
+      premovable: {
+        enabled: false,
+      },
       selectable: { enabled: selectablePieces },
       animation: {
         enabled: animation,
-        duration: 0,
+        duration: 500,
       },
       movable: {
         free: allowAllMoves,
@@ -344,15 +347,19 @@ class Chessboard
           move[1],
         );
       } else if (allowAllMoves) {
-        this.chess.load(
+        const newFen = replaceFENPosition(
+          this.chess.fen(),
+          this.api.getFen(),
+          options?.piece,
+        );
+        const didLoadFen = this.chess.load(
           // Update position and color who's turn is.
           // Useful for variation to automatically start with a correct color.
-          replaceFENPosition(
-            this.chess.fen(),
-            this.api.getFen(),
-            options?.piece,
-          ),
+          newFen,
         );
+        if (!didLoadFen) {
+          throw new Error(`Invalid fen ${newFen}`);
+        }
       } else if (move) {
         const chessMove = createMoveShortObject(move, options?.promoted);
         // Only valid moves are allowed in "play" mode

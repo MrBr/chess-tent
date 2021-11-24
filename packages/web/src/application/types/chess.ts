@@ -6,7 +6,7 @@ import {
   MoveMetadata as CG_MOVEMETADATA,
 } from '@chess-tent/chessground/dist/types';
 import { DrawShape } from '@chess-tent/chessground/dist/draw';
-import { PieceType, ShortMove } from 'chess.js';
+import { PieceType, ShortMove, Comment } from 'chess.js';
 
 export type FEN = CG_FEN;
 export type Piece = CG_PIECE;
@@ -42,3 +42,10 @@ export type PieceRolePromotable = 'knight' | 'rook' | 'bishop' | 'queen';
 export type PieceRoleShort = PieceType;
 export type PieceRoleShortPromotable = 'n' | 'r' | 'b' | 'q';
 export type Shape = DrawShape;
+export type MoveComment = Comment;
+export type PGNHeaders = Partial<
+  Record<
+    'FEN' | 'Event' | 'White' | 'Black' | 'Result' | 'Site' | 'Date' | 'Round',
+    string
+  >
+>;

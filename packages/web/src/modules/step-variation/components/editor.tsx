@@ -5,7 +5,9 @@ import {
   AppStep,
   FEN,
   Move,
+  MoveComment,
   NotableMove,
+  PGNHeaders,
   Piece,
   PieceRolePromotable,
   VariationModule,
@@ -13,7 +15,6 @@ import {
 } from '@types';
 import { components, constants, services, ui } from '@application';
 import BoardSrc from '../images/board.svg';
-import { createStepsFromNotableMoves } from '../../step/service';
 
 const { Col, Row, Img } = ui;
 const { Stepper, StepTag, StepMove } = components;
@@ -23,6 +24,7 @@ const {
   getSameMoveStep,
   createNotableMove,
   isLegalMove,
+  createStepsFromNotableMoves,
 } = services;
 const { START_FEN, KINGS_FEN } = constants;
 
@@ -164,22 +166,29 @@ const EditorBoard: VariationModule['EditorBoard'] = ({
   );
 
   const onPGN = useCallback(
-    (moves: NotableMove[]) => {
-      const steps = createStepsFromNotableMoves(moves);
-      let updatedStep: typeof step;
+    (moves: NotableMove[], headers: PGNHeaders, comments: MoveComment[]) => {
+      const steps = createStepsFromNotableMoves(moves, {
+        comments,
+        orientation: step.state.orientation,
+      });
+      const pgnInitialPosition = headers.FEN;
       if (step.state.steps.length === 0) {
-        updatedStep = updateStepState(step, {
+        const updatedStep = updateStepState(step, {
           steps,
+          position: pgnInitialPosition,
         });
+        updateStep(updatedStep);
       } else {
         const newVariation = createStep('variation', {
           steps,
+          position: pgnInitialPosition,
         });
-        updatedStep = addStep(step, newVariation);
+        const updatedStep = addStep(step, newVariation);
+        setActiveStep(newVariation);
+        updateStep(updatedStep);
       }
-      updateStep(updatedStep);
     },
-    [step, updateStep],
+    [step, updateStep, setActiveStep],
   );
 
   return (

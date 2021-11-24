@@ -10,9 +10,11 @@ import {
 import {
   FEN,
   Move,
+  MoveComment,
   MoveModule,
   MoveStep,
   NotableMove,
+  PGNHeaders,
   Piece,
   PieceRole,
   PieceRolePromotable,
@@ -20,10 +22,9 @@ import {
   VariationStep,
 } from '@types';
 import { services, components, ui, constants } from '@application';
-import { createStepsFromNotableMoves } from '../../step/service';
 
 const { Col, Row } = ui;
-const { getPiece, createNotableMove } = services;
+const { getPiece, createNotableMove, createStepsFromNotableMoves } = services;
 const { StepTag, Stepper, StepMove } = components;
 const { START_FEN, KINGS_FEN } = constants;
 
@@ -187,15 +188,20 @@ const EditorBoard: MoveModule['EditorBoard'] = ({
   }, [updateStep, step, orientation, setActiveStep]);
 
   const onPGN = useCallback(
-    (moves: NotableMove[]) => {
-      const steps = createStepsFromNotableMoves(moves);
+    (moves: NotableMove[], headers: PGNHeaders, comments: MoveComment[]) => {
+      const steps = createStepsFromNotableMoves(moves, {
+        comments,
+        orientation: step.state.orientation,
+      });
       const newVariation = services.createStep('variation', {
         steps,
+        position: headers.FEN,
       });
       const updatedStep = addStep(step, newVariation);
       updateStep(updatedStep);
+      setActiveStep(newVariation);
     },
-    [step, updateStep],
+    [step, updateStep, setActiveStep],
   );
 
   return (

@@ -7,7 +7,6 @@ import {
   Services,
 } from '@types';
 import { forEachRight } from 'lodash';
-import { Move as ChessMove } from 'chess.js';
 import { transformColorKey, transformPieceTypeToRole } from './helpers';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -108,16 +107,18 @@ export const isLegalMove: Services['isLegalMove'] = (
   return !!game.move(shortMove);
 };
 
-export const createNotableMovesFromHistory: Services['createNotableMovesFromHistory'] = (
-  history: ChessMove[],
-) => {
-  const game = new Chess();
+export const createNotableMovesFromGame: Services['createNotableMovesFromGame'] = game => {
+  const history = game.history({ verbose: true });
+  const headers = game.header();
+  const gameReplay = new Chess(headers.FEN);
 
   const moves = history.map((chessMove, moveIndex) => {
     const { from, to, promotion } = chessMove;
-    game.move(chessMove);
+    if (!gameReplay.move(chessMove)) {
+      throw new Error('Invalid move');
+    }
 
-    const position = game.fen();
+    const position = gameReplay.fen();
     const promoted = promotion
       ? transformPieceTypeToRole(promotion)
       : undefined;
@@ -133,3 +134,8 @@ export const createNotableMovesFromHistory: Services['createNotableMovesFromHist
 
   return moves;
 };
+
+export const getComment: Services['getComment'] = (comments, fen) =>
+  comments
+    .find(comment => comment.fen === fen)
+    ?.comment.replace(/ *\[[^\]]*]/g, '');

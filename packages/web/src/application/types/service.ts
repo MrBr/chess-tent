@@ -1,4 +1,4 @@
-import { ChessInstance, Move as ChessMove } from 'chess.js';
+import { ChessInstance } from 'chess.js';
 import { ComponentType, ReactElement } from 'react';
 import { API, ApiMethods } from '@chess-tent/types';
 import {
@@ -13,6 +13,7 @@ import {
 import {
   FEN,
   Move,
+  MoveComment,
   MoveShort,
   NotableMove,
   Orientation,
@@ -60,12 +61,16 @@ export type Services = {
     move: Move,
     promoted?: PieceRolePromotable,
   ) => boolean;
-  createNotableMovesFromHistory: (history: ChessMove[]) => NotableMove[];
+  createNotableMovesFromGame: (game: ChessInstance) => NotableMove[];
+  getComment: (comments: MoveComment[], position: FEN) => string | undefined;
   isSameStepMove: (
     step: VariationStep | MoveStep,
     move: NotableMove,
   ) => boolean;
-  createStepsFromNotableMoves: (moves: NotableMove[]) => MoveStep[];
+  createStepsFromNotableMoves: (
+    moves: NotableMove[],
+    options?: { comments?: MoveComment[]; orientation?: Orientation },
+  ) => MoveStep[];
   getSameMoveStep: (
     step: VariationStep | MoveStep,
     move: NotableMove,

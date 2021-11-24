@@ -17,7 +17,7 @@ export type VariationStepState = {
   shapes: Shape[];
   position: FEN;
   description?: string;
-  steps: (VariationStep | DescriptionStep | ExerciseSteps)[];
+  steps: (VariationStep | DescriptionStep | ExerciseSteps | MoveStep)[];
   editing?: boolean;
   moveIndex?: number;
   // Used for variations derived from previous line.

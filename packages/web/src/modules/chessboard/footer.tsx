@@ -21,7 +21,7 @@ const {
   OverlayTrigger,
   FormGroup,
 } = ui;
-const { Chess, createNotableMovesFromHistory } = services;
+const { Chess, createNotableMovesFromGame } = services;
 const { usePromptModal } = hooks;
 
 const chess = new Chess();
@@ -103,10 +103,10 @@ const Footer: FunctionComponent<ChessboardFooterProps> = ({
   const handlePGN = (pgn: string) => {
     const game = new Chess();
     game.load_pgn(pgn);
-    const history = game.history({ verbose: true });
-    const moves = createNotableMovesFromHistory(history);
+    const moves = createNotableMovesFromGame(game);
     const headers = game.header();
-    onPGN && onPGN(moves, headers);
+    const comments = game.get_comments();
+    onPGN && onPGN(moves, headers, comments);
   };
 
   return (

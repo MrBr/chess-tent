@@ -11,6 +11,7 @@ import {
   PieceRolePromotable,
   FEN,
   NotableMove,
+  MoveComment,
 } from '@types';
 
 import { ChessInstance } from 'chess.js';
@@ -405,9 +406,9 @@ class Chessboard
     onFENSet && onFENSet(FEN);
   };
 
-  onPGN = (moves: NotableMove[], headers: {}) => {
+  onPGN = (moves: NotableMove[], headers: {}, comments: MoveComment[]) => {
     const { onPGN } = this.props;
-    onPGN && onPGN(moves, headers);
+    onPGN && onPGN(moves, headers, comments);
   };
 
   onShapeAdd = (shape: DrawShape) => {};

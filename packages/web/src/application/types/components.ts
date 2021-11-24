@@ -37,6 +37,8 @@ import {
   ExtendedKey,
   PieceRolePromotable,
   Orientation,
+  MoveComment,
+  PGNHeaders,
 } from './chess';
 import {
   ActivityStepStateBase,
@@ -76,7 +78,11 @@ export interface ChessboardFooterProps {
   onClear: () => void;
   onRotate: () => void;
   onFENSet: (FEN: FEN) => void;
-  onPGN?: (moves: NotableMove[], headers: {}) => void;
+  onPGN?: (
+    moves: NotableMove[],
+    headers: PGNHeaders,
+    comments: MoveComment[],
+  ) => void;
 }
 
 export interface ChessboardProps {
@@ -120,7 +126,11 @@ export interface ChessboardProps {
   onReset?: (FEN: string) => void;
   onClear?: (FEN: string) => void;
   onFENSet?: (FEN: string) => void;
-  onPGN?: (moves: NotableMove[], header: {}) => void;
+  onPGN?: (
+    moves: NotableMove[],
+    header: PGNHeaders,
+    comments: MoveComment[],
+  ) => void;
   onOrientationChange?: (orientation: ChessboardProps['orientation']) => void;
 }
 

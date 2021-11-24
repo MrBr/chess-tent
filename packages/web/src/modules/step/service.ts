@@ -1,6 +1,9 @@
-import { FEN, NotableMove, Orientation, PieceColor, Steps } from '@types';
+import { FEN, Orientation, PieceColor, Services, Steps } from '@types';
+import { services } from 'application';
 import { addStepToLeft, updateStepState } from '@chess-tent/models';
 import { createStepModuleStep } from './model';
+
+const { getComment } = services;
 
 export const getStepPosition = (step: Steps): FEN => {
   if (step.stepType === 'variation') {
@@ -36,10 +39,18 @@ export const addStepNextToTheComments = <T extends Steps>(
   return addStepToLeft(parentStep, step, commentsCount) as T;
 };
 
-export const createStepsFromNotableMoves = (moves: NotableMove[]) => {
+export const createStepsFromNotableMoves: Services['createStepsFromNotableMoves'] = (
+  moves,
+  options,
+) => {
+  const comments = options?.comments || [];
+  const orientation = options?.orientation;
+
   return moves.map(move =>
     createStepModuleStep('move', {
+      description: getComment(comments, move.position),
       move,
+      orientation,
     }),
   );
 };

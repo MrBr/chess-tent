@@ -12,11 +12,12 @@ import {
 import { SegmentBoardProps } from '../../types';
 import { withSegments } from '../../hoc';
 import { SegmentBoard } from '../segment';
+import { isFENSetup } from './utils';
 
 const { getPiece, getTurnColor, setTurnColor, createNotableMove } = services;
 
 const updateMoveShapes = (
-  moveIndex: number,
+  moveIndex: number | undefined | null,
   moves: ExerciseMove[] = [],
   shapes: Shape[],
 ): ExerciseMove[] =>
@@ -34,7 +35,7 @@ const addNewMove = (
   moves?: ExerciseMove[],
 ): Partial<ExerciseVariationState['task']> => ({
   moves: [...(moves || []), newMove],
-  activeMoveIndex: moves?.length ? moves.length : 0,
+  activeMoveIndex: moves?.length ? moves.length - 1 : 0,
 });
 
 const resolveNextMoveIndex = (piece: Piece, moves?: ExerciseMove[]) => {
@@ -45,10 +46,17 @@ const resolveNextMoveIndex = (piece: Piece, moves?: ExerciseMove[]) => {
   return index;
 };
 
-const removeOldLineMoves = (index: number, moves?: ExerciseMove[]) =>
-  moves && index < moves.length - 1
+const removeOldLineMoves = (
+  index: number | undefined | null,
+  moves?: ExerciseMove[],
+) => {
+  if (isFENSetup(index)) {
+    return [];
+  }
+  return moves && index < moves.length - 1
     ? moves.slice(0, moves.length - (moves.length - index) + 1)
     : moves;
+};
 
 const TaskBoard: FunctionComponent<
   SegmentBoardProps<ExerciseVariationStep, 'task'>
@@ -90,27 +98,31 @@ const TaskBoard: FunctionComponent<
         boardSetup(newPosition);
         return;
       }
-      const currentIndex = activeMoveIndex === undefined ? -1 : activeMoveIndex;
-      const prevMoves = removeOldLineMoves(currentIndex, moves);
+      const prevMoves = removeOldLineMoves(activeMoveIndex, moves);
       const moveIndex = resolveNextMoveIndex(piece, prevMoves);
+      const notableMove = createNotableMove(
+        newPosition,
+        move,
+        moveIndex,
+        piece,
+        captured,
+        promoted,
+      );
       const updatedTask = addNewMove(
         {
-          ...createNotableMove(
-            newPosition,
-            move,
-            moveIndex,
-            piece,
-            captured,
-            promoted,
-          ),
+          ...notableMove,
           shapes: [],
         },
         prevMoves,
       );
-      if (currentIndex === -1 && piece.color !== getTurnColor(position)) {
+      if (
+        activeMoveIndex === undefined &&
+        piece.color !== getTurnColor(position)
+      ) {
         // Updating base position FEN to match first move color
         updatedTask.position = setTurnColor(position, piece.color);
       }
+      updatedTask.activeMoveIndex = activeMoveIndex ? activeMoveIndex + 1 : 0;
       updateSegment(updatedTask);
     },
     [editing, moves, updateSegment, activeMoveIndex, position, boardSetup],

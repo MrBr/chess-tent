@@ -1,9 +1,11 @@
 import React, { useCallback } from 'react';
 import { ExerciseSegmentKeys, ExerciseVariationStep } from '@types';
 import { components, ui } from '@application';
+
 import { SegmentToolboxProps } from '../../types';
 import { SegmentSidebar } from '../segment';
 import { withSegmentSidebars } from '../../hoc';
+import { isFENSetup } from './utils';
 
 const { Text, Row } = ui;
 const { StepMove, StepTag } = components;
@@ -15,7 +17,10 @@ const TaskSidebar = (
   const { moves, activeMoveIndex } = segment;
 
   const handleUpdateActiveMove = useCallback(
-    (activeMoveIndex: number, event: React.SyntheticEvent<Element, Event>) => {
+    (
+      activeMoveIndex: number | undefined | null,
+      event: React.SyntheticEvent<Element, Event>,
+    ) => {
       event.stopPropagation();
       updateSegment({ activeMoveIndex });
     },
@@ -28,9 +33,9 @@ const TaskSidebar = (
         <Text fontSize="small">Moves:</Text>
         <Row className="align-items-center m-0">
           <StepTag
-            active={activeMoveIndex === -1}
+            active={isFENSetup(activeMoveIndex)}
             collapse
-            onClick={event => handleUpdateActiveMove(-1, event)}
+            onClick={event => handleUpdateActiveMove(null, event)}
           >
             <Text className="mb-0" fontSize="small" color="title">
               FEN

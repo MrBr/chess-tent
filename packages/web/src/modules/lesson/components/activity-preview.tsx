@@ -75,8 +75,6 @@ const Preview = ({ lesson, chapter, step }: PreviewProps) => {
     return null;
   }
 
-  console.log(activity);
-
   return (
     <ActivityRenderer
       activity={activity}

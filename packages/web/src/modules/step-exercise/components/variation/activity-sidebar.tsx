@@ -6,6 +6,7 @@ import {
   ExerciseVariationStep,
   Move,
 } from '@types';
+import { isStepCompleted } from '@chess-tent/models';
 import { isCorrectActivityMove } from './utils';
 import { SegmentActivitySidebar } from '../segment';
 
@@ -14,28 +15,29 @@ const { Text } = ui;
 const Playground: FunctionComponent<
   ComponentProps<ExerciseModule<ExerciseVariationStep>['ActivitySidebar']>
 > = props => {
-  const { step, stepActivityState } = props;
+  const { activity, step, stepActivityState, setStepActivityState } = props;
   const {
     activeMoveIndex,
-    moves: activityMoves,
+    correct,
   } = stepActivityState as ExerciseVariationActivityState;
   const { task } = step.state;
-  const moveToPlayIndex = activeMoveIndex ? activeMoveIndex + 1 : 0;
+  const moveToPlayIndex = activeMoveIndex || 0;
   const stepToPlayMove = task.moves?.[moveToPlayIndex];
-  const activityActiveMove =
-    activeMoveIndex !== undefined ? activityMoves?.[activeMoveIndex] : null;
-  const isCorrectActiveMove = activityActiveMove?.move
-    ? isCorrectActivityMove(
-        activityActiveMove.move,
-        stepToPlayMove?.move as Move,
-      )
-    : false;
+  const completed = isStepCompleted(activity, step);
+
+  const reset = () =>
+    setStepActivityState({ move: null, activeMoveIndex: null, correct: null });
+
   return (
-    <SegmentActivitySidebar title="Play the sequence" {...props}>
+    <SegmentActivitySidebar
+      title="Play the sequence"
+      {...props}
+      onReset={reset}
+    >
       <Text>
-        {isCorrectActiveMove
+        {correct && !completed
           ? 'Excellent, continue..'
-          : !!activityActiveMove
+          : correct === false
           ? 'Wrong move, try again'
           : stepToPlayMove
           ? stepToPlayMove.piece?.color + ' to play'

@@ -6,7 +6,9 @@ export const isCorrectActivityMove = (
 ): boolean =>
   stepMove?.[0] === activityMove[0] && stepMove?.[1] === activityMove[1];
 
-export const isVariationCompleted = (
-  isCorrectActiveMove: boolean,
-  stepToPlayMove: NotableMove | undefined,
-) => isCorrectActiveMove && !stepToPlayMove;
+export const isFENSetup = (
+  activityIndex: number | undefined | null,
+): activityIndex is undefined | null => activityIndex !== 0 && !activityIndex;
+
+export const isVariationCompleted = (stepToPlayMove: NotableMove | undefined) =>
+  !stepToPlayMove;

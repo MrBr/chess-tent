@@ -5,19 +5,25 @@ import { isStepCompleted } from '@chess-tent/models';
 import { SegmentActivityProps } from '../../types';
 import { hasExplanation, hasHint } from '../../service';
 
-const { Headline4, Button, Headline5, Text } = ui;
+const { Headline4, Button, Headline5, Text, Row, Col } = ui;
 const { useActivityMeta } = hooks;
 const { LessonPlaygroundCard } = components;
 
 const Playground: FunctionComponent<
-  SegmentActivityProps & { title: string }
-> = ({ step, activity, children, title }) => {
+  SegmentActivityProps & { title: string; onReset?: () => void }
+> = ({ step, activity, children, title, onReset, setStepActivityState }) => {
   const [{ showHint }, updateActivityMeta] = useActivityMeta(activity);
   const { task, explanation, hint } = step.state;
   const completed = isStepCompleted(activity, step);
   const handleShowHint = useCallback(() => {
     updateActivityMeta({ showHint: true });
   }, [updateActivityMeta]);
+
+  const reset = useCallback(() => {
+    setStepActivityState({});
+  }, [updateActivityMeta]);
+
+  const resetHandle = onReset;
 
   return (
     <>
@@ -30,6 +36,19 @@ const Playground: FunctionComponent<
           initialHtml={task.text}
         />
         {children}
+        {resetHandle && (
+          <Row>
+            <Col>
+              <Button
+                size="extra-small"
+                variant="regular"
+                onClick={resetHandle}
+              >
+                Reset
+              </Button>
+            </Col>
+          </Row>
+        )}
       </LessonPlaygroundCard>
       {completed && hasExplanation(step) && (
         <LessonPlaygroundCard>

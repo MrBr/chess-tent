@@ -59,10 +59,11 @@ export type ExerciseMove = NotableMove & { shapes: Shape[] };
 export type ExerciseVariationState = ExerciseSegments<{
   editing?: boolean;
   moves?: ExerciseMove[];
-  activeMoveIndex?: number;
+  activeMoveIndex?: number | null;
 }>;
 export type ExerciseVariationActivityState = ActivityExerciseStepState<{
-  moves?: { [key: number]: NotableMove };
+  move?: NotableMove;
+  correct?: boolean;
   activeMoveIndex?: number;
 }>;
 

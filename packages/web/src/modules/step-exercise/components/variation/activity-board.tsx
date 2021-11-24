@@ -1,19 +1,14 @@
-import React, {
-  ComponentProps,
-  FunctionComponent,
-  useCallback,
-  useMemo,
-} from 'react';
-import { services } from '@application';
+import React, { ComponentProps, FunctionComponent, useCallback } from 'react';
 import {
   ExerciseModule,
   ExerciseVariationActivityState,
   ExerciseVariationStep,
 } from '@types';
+import { services } from '@application';
 import { isCorrectActivityMove, isVariationCompleted } from './utils';
 import { SegmentActivityBoard } from '../segment';
 
-const { createFenForward } = services;
+const { createNotableMove } = services;
 
 const Playground: FunctionComponent<
   ComponentProps<ExerciseModule<ExerciseVariationStep>['ActivityBoard']>
@@ -22,58 +17,62 @@ const Playground: FunctionComponent<
   const { position } = step.state.task;
   const {
     activeMoveIndex,
-    moves: activityMoves,
+    move,
+    correct,
   } = stepActivityState as ExerciseVariationActivityState;
-  const { moves: exerciseMoves } = step.state.task;
-  const moveToPlayIndex = activeMoveIndex ? activeMoveIndex + 1 : 0;
-  const stepToPlayMove = exerciseMoves?.[moveToPlayIndex];
-  const activeMoves = exerciseMoves?.map(
-    (move, index) => activityMoves?.[index] || move,
-  );
-  const activePosition = useMemo(() => {
-    return activeMoveIndex !== undefined && activeMoves
-      ? createFenForward(
-          position,
-          activeMoves
-            .slice(0, activeMoveIndex + 1)
-            .map(notableMove => notableMove.move),
-        )
-      : position;
-  }, [position, activeMoveIndex, activeMoves]);
+  const { moves } = step.state.task;
+  const activePosition =
+    (!correct && move?.position) ||
+    (activeMoveIndex && moves
+      ? moves[activeMoveIndex - 1]?.position
+      : position);
+
   const handleMove = useCallback(
-    (position, move, piece, captured) => {
-      const correctMove = isCorrectActivityMove(move, stepToPlayMove?.move);
-      const activeMoveIndex = correctMove
-        ? moveToPlayIndex + 1
+    (position, move, piece, captured, promoted) => {
+      const moveToPlayIndex = activeMoveIndex || 0;
+      const stepToPlayMove = moves?.[moveToPlayIndex];
+      // TODO - promotion
+      const correct = isCorrectActivityMove(move, stepToPlayMove?.move);
+      const newActiveMoveIndex = correct
+        ? moveToPlayIndex + 2
         : moveToPlayIndex;
       // Skipping next move from the variation as it's played by the "computer"
-      const nextUSerMove = activeMoves?.[activeMoveIndex + 1];
-
-      if (isVariationCompleted(correctMove, nextUSerMove)) {
+      const nextUserMove = moves?.[newActiveMoveIndex];
+      console.log(newActiveMoveIndex, nextUserMove);
+      if (!correct) {
+        setTimeout(() => {
+          setStepActivityState({
+            move: null,
+          });
+        }, 400);
+      }
+      if (correct && isVariationCompleted(nextUserMove)) {
         completeStep(step);
       }
 
+      console.log(correct, move, moves, moveToPlayIndex, activeMoveIndex);
       setStepActivityState({
-        moves: {
-          ...activityMoves,
-          [moveToPlayIndex]: { move, piece, captured },
-        },
-        activeMoveIndex,
+        move: createNotableMove(
+          position,
+          move,
+          moveToPlayIndex,
+          captured,
+          promoted,
+        ),
+        correct,
+        activeMoveIndex: newActiveMoveIndex,
       });
     },
-    [
-      activeMoves,
-      activityMoves,
-      completeStep,
-      moveToPlayIndex,
-      setStepActivityState,
-      step,
-      stepToPlayMove,
-    ],
+    [moves, completeStep, setStepActivityState, step, activeMoveIndex],
   );
 
   return (
-    <SegmentActivityBoard fen={activePosition} onMove={handleMove} {...props} />
+    <SegmentActivityBoard
+      fen={activePosition}
+      onMove={handleMove}
+      {...props}
+      allowAllMoves={false}
+    />
   );
 };
 

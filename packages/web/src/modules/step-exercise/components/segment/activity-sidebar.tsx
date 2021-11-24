@@ -11,19 +11,13 @@ const { LessonPlaygroundCard } = components;
 
 const Playground: FunctionComponent<
   SegmentActivityProps & { title: string; onReset?: () => void }
-> = ({ step, activity, children, title, onReset, setStepActivityState }) => {
+> = ({ step, activity, children, title, onReset }) => {
   const [{ showHint }, updateActivityMeta] = useActivityMeta(activity);
   const { task, explanation, hint } = step.state;
   const completed = isStepCompleted(activity, step);
   const handleShowHint = useCallback(() => {
     updateActivityMeta({ showHint: true });
   }, [updateActivityMeta]);
-
-  const reset = useCallback(() => {
-    setStepActivityState({});
-  }, [updateActivityMeta]);
-
-  const resetHandle = onReset;
 
   return (
     <>
@@ -36,14 +30,10 @@ const Playground: FunctionComponent<
           initialHtml={task.text}
         />
         {children}
-        {resetHandle && (
+        {onReset && (
           <Row>
             <Col>
-              <Button
-                size="extra-small"
-                variant="regular"
-                onClick={resetHandle}
-              >
+              <Button size="extra-small" variant="regular" onClick={onReset}>
                 Reset
               </Button>
             </Col>

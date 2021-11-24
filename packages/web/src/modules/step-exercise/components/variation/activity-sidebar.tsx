@@ -4,10 +4,8 @@ import {
   ExerciseModule,
   ExerciseVariationActivityState,
   ExerciseVariationStep,
-  Move,
 } from '@types';
 import { isStepCompleted } from '@chess-tent/models';
-import { isCorrectActivityMove } from './utils';
 import { SegmentActivitySidebar } from '../segment';
 
 const { Text } = ui;

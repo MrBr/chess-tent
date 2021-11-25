@@ -9,7 +9,7 @@ module.exports = {
       headers: {
         ...(devServer.headers || {}),
         'Cross-Origin-Opener-Policy': 'same-origin',
-        'Cross-Origin-Embedder-Policy': 'unsafe-none | require-corp',
+        'Cross-Origin-Embedder-Policy': 'require-corp',
       },
     };
   },

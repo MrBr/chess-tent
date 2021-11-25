@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useMemo } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { components, hooks, ui, requests, hoc } from '@application';
 import { updateSubject, User } from '@chess-tent/models';
 import { FileUploaderProps } from '@types';
@@ -80,12 +80,11 @@ export default withFiles(
       resetSignedImage,
     ]);
 
-    const constUser = useMemo(() => user, []);
     return (
       <Page>
         <Form
           enableReinitialize
-          initialValues={constUser}
+          initialValues={user}
           onSubmit={user => updateUser(user)}
         >
           {({ dirty, handleSubmit, resetForm, values }) => (

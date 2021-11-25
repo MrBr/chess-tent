@@ -12,7 +12,6 @@ export const generateImageSignedUrl: MiddlewareFunction = (req, res, next) => {
     ACL: 'public-read',
   })
     .then(url => {
-      console.log(url);
       res.locals.url = url;
       next();
     })

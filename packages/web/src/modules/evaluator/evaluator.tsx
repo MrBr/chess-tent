@@ -111,12 +111,12 @@ class Evaluator extends React.Component<EvaluatorProps> {
     }
   };
 
-  sync() {
+  sync = () => {
     const { position, evaluate, depth } = this.props;
     this.worker.postMessage('ucinewgame');
     this.worker.postMessage(`position fen ${position}`);
     evaluate && this.worker.postMessage(`go depth ${depth}`);
-  }
+  };
 
   stopEvaluation() {
     this.worker.postMessage('stop');

@@ -522,14 +522,12 @@ class Chessboard
     ) : null;
     return (
       <>
-        {false && (
-          <Evaluator
-            evaluate={evaluate}
-            position={fen}
-            onBestMoveChange={console.log}
-            onEvaluationChange={console.log}
-          />
-        )}
+        <Evaluator
+          evaluate={evaluate}
+          position={fen}
+          onBestMoveChange={console.log}
+          onEvaluationChange={console.log}
+        />
         <BoardHeader width={size as string}>{header}</BoardHeader>
         <BoardContainer
           size={size as string}

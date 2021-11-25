@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useMemo } from 'react';
 import { components, hooks, ui, requests, hoc } from '@application';
 import { updateSubject, User } from '@chess-tent/models';
 import { FileUploaderProps } from '@types';
@@ -23,7 +23,7 @@ const {
 export default withFiles(
   ({ files, openFileDialog, user }: FileUploaderProps & { user: User }) => {
     const history = useHistory();
-    const dispatch = useDispatchService()(updateSubject);
+    const updateUserLocal = useDispatchService()(updateSubject);
     const {
       fetch: signImage,
       response: signImageResponse,
@@ -40,10 +40,11 @@ export default withFiles(
 
     const updateUser = useCallback(
       (patch: Partial<User>) => {
+        console.log(patch);
         updateMe(patch);
-        dispatch(user, patch);
+        updateUserLocal(user, patch);
       },
-      [dispatch, updateMe, user],
+      [updateUserLocal, updateMe, user],
     );
 
     useEffect(() => {
@@ -66,11 +67,10 @@ export default withFiles(
       if (uploadImageResponse && signImageResponse) {
         resetSignedImage();
         resetUploadedImage();
-        updateUser({
-          // TODO - find a better way for unique image url
-          //  `t` is added to invalidate cache
-          state: { imageUrl: uploadImageResponse + '?t=' + Date.now() },
-        });
+        // TODO - find a better way for unique image url
+        //  `t` is added to invalidate cache
+        const imageUrl = uploadImageResponse + '?t=' + Date.now();
+        updateUser({ state: { imageUrl } });
       }
     }, [
       uploadImageResponse,
@@ -80,9 +80,14 @@ export default withFiles(
       resetSignedImage,
     ]);
 
+    const constUser = useMemo(() => user, []);
     return (
       <Page>
-        <Form initialValues={user} onSubmit={user => updateUser(user)}>
+        <Form
+          enableReinitialize
+          initialValues={constUser}
+          onSubmit={user => updateUser(user)}
+        >
           {({ dirty, handleSubmit, resetForm, values }) => (
             <>
               <Absolute bottom={25} right={25}>
@@ -99,6 +104,7 @@ export default withFiles(
                 <Button
                   variant={dirty ? 'secondary' : 'regular'}
                   disabled={!dirty}
+                  type="button"
                   onClick={() => {
                     handleSubmit();
                     resetForm({ values });

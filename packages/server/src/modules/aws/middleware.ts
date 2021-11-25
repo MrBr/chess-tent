@@ -1,5 +1,5 @@
-import { getSignedUrl } from './service';
 import { MiddlewareFunction } from '@types';
+import { getSignedUrl } from './service';
 
 const DEFAULT_SIGNED_URL_EXPIRATION_TIME = 60 * 2; // 2 min
 
@@ -12,6 +12,7 @@ export const generateImageSignedUrl: MiddlewareFunction = (req, res, next) => {
     ACL: 'public-read',
   })
     .then(url => {
+      console.log(url);
       res.locals.url = url;
       next();
     })

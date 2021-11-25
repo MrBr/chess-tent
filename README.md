@@ -71,14 +71,21 @@ TBD
 
 run `yarn build`. The output can be seen in the `build` folder.
 
-## Stockfish (v.12) evaluation
-In order for Stockfish 12 to work certain headers have to be defined on the top document (index.html).
+## Stockfish (v.14) evaluation
+In order for Stockfish 14 to work certain headers have to be defined on the top document (index.html).
 ```
 'Cross-Origin-Opener-Policy': 'same-origin',
 'Cross-Origin-Embedder-Policy': 'require-corp',
 ```
 Craco is used to configure devServer and nginx for the production. More on this can be found at https://github.com/nmrugg/stockfish.js/issues/53
+<br> This issue was partially a reason for creating S3 proxy. The problem is to add needed headers to S3.
 
-### Monorepo and advantages of this project structure
+## Server
+Details specific to chesstent.com setup
+### SSL 
+Letsencryp
 
-TBD
+### Nginx
+
+### S3 proxy
+This is specific thing, add primarily so that headers S3 headers can be controlled. All in all it seems like useful thing for the future.

@@ -1,4 +1,11 @@
 import { service } from '@application';
 
-export const getSignedUrl = (options: any) =>
-  service.fileStorage.getSignedUrlPromise('putObject', options);
+import { transformS3UrlToS3ProxyUrl } from './utils';
+
+export const getSignedUrl = async (options: any) => {
+  const signedUrl = await service.fileStorage.getSignedUrlPromise(
+    'putObject',
+    options,
+  );
+  return transformS3UrlToS3ProxyUrl(signedUrl);
+};

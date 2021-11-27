@@ -101,6 +101,7 @@ export type Hooks = {
   useActivityMeta: <T extends Activity>(
     activity: T,
   ) => UseMetaReturn<{ showHint?: boolean }>;
+  useLessonMeta: (activity: Lesson) => UseMetaReturn<{ evaluation?: boolean }>;
   useLessons: (
     key: string,
     filters: LessonsRequest,

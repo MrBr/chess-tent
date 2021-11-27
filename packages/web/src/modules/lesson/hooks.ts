@@ -83,3 +83,7 @@ export const useEditor = () => {
   }
   return context;
 };
+
+export const useLessonMeta: Hooks['useLessonMeta'] = activity => {
+  return hooks.useMeta(`lesson-${activity.id}`);
+};

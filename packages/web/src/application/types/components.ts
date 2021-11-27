@@ -88,7 +88,6 @@ export interface ChessboardFooterProps {
 export interface ChessboardProps {
   header?: ReactNode;
   footer?: ReactNode;
-  evaluate?: boolean;
   size?: string | number;
   // Chessground proxy props
   viewOnly?: boolean;

@@ -1,5 +1,8 @@
 import React, { ComponentType } from 'react';
 import { Move, Key, Components } from '@types';
+import { ui } from '@application';
+
+const { ToggleButton } = ui;
 
 type EvaluatorProps = Components['Evaluator'] extends ComponentType<infer U>
   ? U
@@ -123,7 +126,12 @@ class Evaluator extends React.Component<EvaluatorProps> {
   }
 
   render() {
-    return null;
+    const { evaluate } = this.props;
+    return (
+      <ToggleButton checked={evaluate} size="extra-small">
+        Engine
+      </ToggleButton>
+    );
   }
 }
 

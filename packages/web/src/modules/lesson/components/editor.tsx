@@ -68,6 +68,7 @@ const {
   DifficultyDropdown,
   TagsSelect,
   StepToolbox,
+  Evaluator,
 } = components;
 const {
   actions: { serviceAction },
@@ -411,6 +412,10 @@ class EditorRenderer extends React.Component<
   renderChessboard = (props: ChessboardProps) => {
     const { activeStep } = this.props;
     const lessonStatusText = this.renderLessonStatus();
+    // TODO - Evaluation
+    // - lines
+    // - shapes
+    // - evaluation (top line)
     return (
       <Chessboard
         orientation={activeStep.state.orientation}
@@ -418,7 +423,17 @@ class EditorRenderer extends React.Component<
         {...props}
         header={
           <>
-            {props.header || lessonStatusText}
+            <Row>
+              <Col> {props.header || lessonStatusText}</Col>
+              <Col className="col-auto">
+                <Evaluator
+                  evaluate={false}
+                  position={props.fen}
+                  onBestMoveChange={console.log}
+                  onEvaluationChange={console.log}
+                />
+              </Col>
+            </Row>
             <Absolute right={20} top={20} onClick={this.undoUpdate}>
               Undo
             </Absolute>

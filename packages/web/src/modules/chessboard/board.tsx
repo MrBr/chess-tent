@@ -1,4 +1,4 @@
-import { ui, components, constants, services } from '@application';
+import { ui, constants, services } from '@application';
 import {
   ChessboardProps,
   ChessboardState,
@@ -35,7 +35,6 @@ import Promotion from './promotion';
 import Footer from './footer';
 import { replaceFENPosition, unfreeze, updateMovable } from './_helpers';
 
-const { Evaluator } = components;
 const { START_FEN, MAX_BOARD_SIZE, KINGS_FEN } = constants;
 const { Modal } = ui;
 const { Chess, createMoveShortObject } = services;
@@ -506,7 +505,6 @@ class Chessboard
     const {
       header,
       fen,
-      evaluate,
       editing,
       size,
       sparePieces,
@@ -522,12 +520,6 @@ class Chessboard
     ) : null;
     return (
       <>
-        <Evaluator
-          evaluate={evaluate}
-          position={fen}
-          onBestMoveChange={console.log}
-          onEvaluationChange={console.log}
-        />
         <BoardHeader width={size as string}>{header}</BoardHeader>
         <BoardContainer
           size={size as string}

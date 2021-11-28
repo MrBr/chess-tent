@@ -138,4 +138,5 @@ export const createNotableMovesFromGame: Services['createNotableMovesFromGame'] 
 export const getComment: Services['getComment'] = (comments, fen) =>
   comments
     .find(comment => comment.fen === fen)
-    ?.comment.replace(/ *\[[^\]]*]/g, '');
+    ?.comment.replace(/ *\[[^\]]*]/g, '')
+    .trim() || undefined;

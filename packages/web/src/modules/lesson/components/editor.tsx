@@ -59,7 +59,7 @@ import EditorSidebarAdjustableText from './editor-sidebar-adjustable-text';
 import { updateEntityAction } from '../../state/actions';
 
 const { Container, Row, Col, Headline2, Absolute, Text, Dropdown } = ui;
-const { createChapter, updateStepRotation } = services;
+const { createChapter, updateStepRotation, logException } = services;
 const { downloadAs } = utils;
 const {
   Stepper,
@@ -112,6 +112,15 @@ class EditorRenderer extends React.Component<
   state: EditorRendererState = {
     history: [],
   };
+
+  componentDidCatch(error: Error) {
+    // You can also log the error to an error reporting service
+    // logErrorToMyService(error, errorInfo);
+    alert('Error happened. Reverting the last change.');
+    logException(error);
+    this.undoUpdate();
+    this.setActiveStepHandler();
+  }
 
   closeEditor = () => {
     const history = this.props.history;
@@ -191,9 +200,9 @@ class EditorRenderer extends React.Component<
     this.addLessonUpdate(prev.undoAction);
   };
 
-  setActiveStepHandler = (step: Step) => {
+  setActiveStepHandler = (step?: Step) => {
     const { activeChapter } = this.props;
-    this.setActiveChapterHandler(activeChapter, step.id);
+    this.setActiveChapterHandler(activeChapter, step?.id);
   };
 
   setActiveChapterHandler = (chapter: Chapter, activeStepId?: Step['id']) => {

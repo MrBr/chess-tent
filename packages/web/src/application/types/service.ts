@@ -118,4 +118,5 @@ export type Services = {
     student: User,
     mentor: User,
   ) => boolean;
+  logException: (exception: Error) => void;
 };

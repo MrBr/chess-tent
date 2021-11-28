@@ -1,3 +1,4 @@
+import { services } from '@application';
 import * as Sentry from '@sentry/react';
 import { Integrations } from '@sentry/tracing';
 
@@ -12,3 +13,8 @@ Sentry.init({
     process.env.REACT_APP_SENTRY_SAMPLE_RATE as string,
   ),
 });
+
+services.logException = exception => {
+  console.error(exception);
+  Sentry.captureException(exception);
+};

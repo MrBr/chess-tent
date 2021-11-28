@@ -127,6 +127,11 @@ class Evaluator extends React.Component<EvaluatorProps> {
 
   render() {
     const { evaluate, onChange } = this.props;
+
+    if (!onChange) {
+      return null;
+    }
+
     return (
       <ToggleButton checked={evaluate} onChange={onChange} size="extra-small">
         Engine

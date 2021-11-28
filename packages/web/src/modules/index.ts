@@ -29,3 +29,4 @@ application.register(() => import('./analysis'));
 application.register(() => import('./notification'));
 application.register(() => import('./subject'));
 application.register(() => import('./mobile'));
+application.register(() => import('./sentry'));

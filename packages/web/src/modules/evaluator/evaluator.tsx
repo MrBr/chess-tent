@@ -126,9 +126,9 @@ class Evaluator extends React.Component<EvaluatorProps> {
   }
 
   render() {
-    const { evaluate } = this.props;
+    const { evaluate, onChange } = this.props;
     return (
-      <ToggleButton checked={evaluate} size="extra-small">
+      <ToggleButton checked={evaluate} onChange={onChange} size="extra-small">
         Engine
       </ToggleButton>
     );

@@ -356,6 +356,7 @@ export type Components = {
       variation: Move[],
       depth: number,
     ) => void;
+    onChange?: () => void;
     // Best move is not reliable in sense that
     // after position changed it can still provide best move for the previous position
     onBestMoveChange?: (bestMove: Move, ponder?: Move) => void;

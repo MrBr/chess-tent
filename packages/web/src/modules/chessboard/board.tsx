@@ -503,6 +503,10 @@ class Chessboard
   };
 
   onReset = () => {
+    if (this.props.viewOnly) {
+      return;
+    }
+
     const fen = START_FEN;
     if (!this.props.onReset) {
       this.unhandledFenChange(fen);
@@ -512,6 +516,10 @@ class Chessboard
   };
 
   onClear = () => {
+    if (this.props.viewOnly) {
+      return;
+    }
+
     const fen = KINGS_FEN;
     if (!this.props.onClear) {
       this.unhandledFenChange(fen);
@@ -521,6 +529,10 @@ class Chessboard
   };
 
   onFENSet = (FEN: string) => {
+    if (this.props.viewOnly) {
+      return;
+    }
+
     if (!this.props.onFENSet) {
       this.unhandledFenChange(FEN);
       return;

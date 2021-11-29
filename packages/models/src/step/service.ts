@@ -113,10 +113,6 @@ const getRightStep = (
       return parent.state.steps[index + 1] || null;
     }
 
-    const nextStep = getRightStep(step, cursorStep);
-    if (nextStep) {
-      return nextStep;
-    }
     index += 1;
   }
   return null;

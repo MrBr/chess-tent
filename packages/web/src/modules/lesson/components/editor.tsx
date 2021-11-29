@@ -113,6 +113,11 @@ class EditorRenderer extends React.Component<
     history: [],
   };
 
+  static getDerivedStateFromError() {
+    // So that React doesn't complain
+    return {};
+  }
+
   componentDidCatch(error: Error) {
     // You can also log the error to an error reporting service
     // logErrorToMyService(error, errorInfo);

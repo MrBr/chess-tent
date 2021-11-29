@@ -1,4 +1,4 @@
-import produce, { PatchListener } from 'immer';
+import { PatchListener } from 'immer';
 import {
   Difficulty,
   Lesson,
@@ -7,7 +7,7 @@ import {
   TYPE_LESSON,
 } from './types';
 import { User } from '../user';
-import { getChildStep, getStepIndex, Step } from '../step';
+import { Step } from '../step';
 import { Chapter, updateChapterStep } from '../chapter';
 import { Tag } from '../tag';
 import { updateSubject } from '../subject';

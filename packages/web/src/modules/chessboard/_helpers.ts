@@ -18,6 +18,9 @@ export function replaceFENPosition(
       ? 'b'
       : 'w'
     : fenComponents[1];
+  // en passant
+  fenComponents[3] = '-';
+
   return fenComponents.join(' ');
 }
 

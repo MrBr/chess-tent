@@ -9,9 +9,9 @@ import {
   Key,
   ExtendedKey,
   PieceRolePromotable,
-  FEN,
   NotableMove,
   MoveComment,
+  FEN,
 } from '@types';
 
 import { ChessInstance } from 'chess.js';
@@ -159,7 +159,6 @@ class Chessboard
   boardHost: RefObject<HTMLDivElement> = React.createRef();
   api: Api = new Proxy({}, {}) as Api;
   chess: ChessInstance;
-  currentRenderFen: FEN | null;
   state: ChessboardState = {
     renderPrompt: undefined,
     promotion: undefined,
@@ -181,10 +180,6 @@ class Chessboard
   constructor(props: ChessboardProps) {
     super(props);
     this.chess = new Chess();
-    // FEN Memoization
-    // Board fen can be requested by multiple methods on a single change (that triggers multiple events).
-    // This memoization prevents multiple calculations and potential fen overrides on a single change.
-    this.currentRenderFen = null;
   }
 
   componentDidMount() {
@@ -240,7 +235,7 @@ class Chessboard
       },
       events: {
         // Control change event because chessground doesn't handle well all FEN changes.
-        // change: this.onChange,
+        // change: this.unhandledFenChange,
         dropNewPiece: this.onPieceDrop,
         removePiece: this.onPieceRemove,
       },
@@ -271,10 +266,7 @@ class Chessboard
     // TODO - edit Chessground
     shapes && this.api.setShapes(shapes);
 
-    if (finalConfig.fen) {
-      this.chess.load(finalConfig.fen);
-      this.currentRenderFen = null;
-    }
+    finalConfig.fen && this.chess.load(finalConfig.fen);
   }
 
   prompt(renderPrompt: ChessboardState['renderPrompt']) {
@@ -329,45 +321,45 @@ class Chessboard
     options?: { piece?: Piece; promoted?: PieceRolePromotable },
   ) => {
     const { allowAllMoves } = this.props;
-    const fen = this.api.getFen();
-    if (fen === this.currentRenderFen) {
-      return this.chess.fen();
-    }
-    this.currentRenderFen = fen;
+
+    const oldFen = this.chess.fen();
+    const lastRenderChess = new Chess(oldFen);
+
     if (move && allowAllMoves && options?.promoted) {
       const { promotion } = createMoveShortObject(move, options?.promoted);
-      const piece = this.chess.get(move[0]);
-      if (!piece || !promotion) {
-        return this.currentRenderFen;
+      const piece = lastRenderChess.get(move[0]);
+      if (piece && promotion) {
+        lastRenderChess.remove(move[0]);
+        lastRenderChess.put(
+          {
+            type: promotion,
+            color: piece.color,
+          },
+          move[1],
+        );
       }
-      this.chess.remove(move[0]);
-      this.chess.put(
-        {
-          type: promotion,
-          color: piece.color,
-        },
-        move[1],
-      );
     } else if (allowAllMoves) {
+      const fenPieces = this.api.getFen();
       const newFen = replaceFENPosition(
-        this.chess.fen(),
-        this.api.getFen(),
+        lastRenderChess.fen(),
+        fenPieces,
         options?.piece,
       );
-      const didLoadFen = this.chess.load(
+      const didLoadFen = lastRenderChess.load(
         // Update position and color who's turn is.
         // Useful for variation to automatically start with a correct color.
         newFen,
       );
       if (!didLoadFen) {
-        throw new Error(`Invalid fen ${newFen}`);
+        const fenInfo = lastRenderChess.validate_fen(newFen);
+        throw new Error(`Invalid fen ${newFen}. Error: ${fenInfo.error}`);
       }
     } else if (move) {
       const chessMove = createMoveShortObject(move, options?.promoted);
       // Only valid moves are allowed in "play" mode
-      this.chess.move(chessMove);
+      lastRenderChess.move(chessMove);
     }
-    return this.chess.fen();
+    return lastRenderChess.fen();
   };
 
   move(from: Key, to: Key) {
@@ -394,24 +386,9 @@ class Chessboard
     onOrientationChange && onOrientationChange(this.api.state.orientation);
   };
 
-  onReset = () => {
-    const { onReset } = this.props;
-    onReset && onReset(START_FEN);
-  };
-
-  onClear = () => {
-    const { onClear } = this.props;
-    onClear && onClear(KINGS_FEN);
-  };
-
   onUpdateEditing = (editing: boolean) => {
     const { onUpdateEditing } = this.props;
     onUpdateEditing && onUpdateEditing(editing);
-  };
-
-  onFENSet = (FEN: string) => {
-    const { onFENSet } = this.props;
-    onFENSet && onFENSet(FEN);
   };
 
   onPGN = (moves: NotableMove[], headers: {}, comments: MoveComment[]) => {
@@ -431,33 +408,58 @@ class Chessboard
     return this.props.onShapesChange(...args);
   };
 
-  onChange = () => {
+  onPromotionCancel = () => {
+    this.setConfig({ fen: this.chess.fen() });
+    this.setState({ promotion: undefined });
+  };
+
+  onSparePieceDrag = (piece: Piece, event: MouchEvent) => {
+    this.api.dragNewPiece(piece, event);
+  };
+
+  /**
+   * Fallback event when specific event handler hasn't been defined.
+   * Used for "generic" position updates on all position changing events.
+   *
+   * Don't use this function directly on the board events, only as fallback!
+   * Board fen isn't formatted properly.
+   * @param fen
+   */
+  unhandledFenChange = (fen: FEN) => {
     if (!this.props.onChange) {
+      console.warn(
+        `Position changed but no handler is listening to the change. 
+        This will result in unsynced position on the board and in the props`,
+      );
       return;
     }
-    const fen = this.fen();
     this.props.onChange(fen);
   };
 
+  /**
+   * Position changing event handlers.
+   * All events that affect position should be defined bellow.
+   */
   onPieceDrop = (piece: Piece, key: ExtendedKey) => {
+    const fen = this.fen();
     if (!this.props.onPieceDrop) {
+      this.unhandledFenChange(fen);
       return;
     }
-    const fen = this.fen();
-    this.onChange();
     this.props.onPieceDrop(fen, piece, key as Key);
   };
 
   onPieceRemove = (piece: Piece, key: ExtendedKey) => {
+    const fen = this.fen();
     if (!this.props.onPieceRemove) {
+      this.unhandledFenChange(fen);
       return;
     }
-    const fen = this.fen();
-    this.onChange();
     this.props.onPieceRemove(fen, piece, key as Key);
   };
 
   onMove = (orig: ExtendedKey, dest: ExtendedKey, metadata: MoveMetadata) => {
+    const { onMove } = this.props;
     const lastMove = this.api.state.lastMove as Move;
     const piece = this.api.state.pieces[lastMove[1]] as Piece;
     const rank = parseInt(dest.charAt(1));
@@ -471,12 +473,14 @@ class Chessboard
       });
       return;
     }
+
     const fen = this.fen(lastMove, { piece });
-    this.onChange();
-    if (!this.props.onMove) {
+
+    if (!onMove) {
+      this.unhandledFenChange(fen);
       return;
     }
-    this.props.onMove(fen, lastMove, piece, !!metadata.captured);
+    onMove(fen, lastMove, piece, !!metadata.captured);
   };
 
   onPromotion = (role: PieceRolePromotable) => {
@@ -484,23 +488,44 @@ class Chessboard
     if (!promotion) {
       return;
     }
+
     const { from, to, piece } = promotion;
     const capturedPiece = this.chess.get(to);
     this.setState({ promotion: undefined });
     const move = [from, to] as Move;
     const fen = this.fen(move, { promoted: role });
 
-    this.props.onMove &&
-      this.props.onMove(fen, move, piece, !!capturedPiece, role);
+    if (!this.props.onMove) {
+      this.unhandledFenChange(fen);
+      return;
+    }
+    this.props.onMove(fen, move, piece, !!capturedPiece, role);
   };
 
-  onPromotionCancel = () => {
-    this.setConfig({ fen: this.chess.fen() });
-    this.setState({ promotion: undefined });
+  onReset = () => {
+    const fen = START_FEN;
+    if (!this.props.onReset) {
+      this.unhandledFenChange(fen);
+      return;
+    }
+    this.props.onReset(fen);
   };
 
-  onSparePieceDrag = (piece: Piece, event: MouchEvent) => {
-    this.api.dragNewPiece(piece, event);
+  onClear = () => {
+    const fen = KINGS_FEN;
+    if (!this.props.onClear) {
+      this.unhandledFenChange(fen);
+      return;
+    }
+    this.props.onClear(fen);
+  };
+
+  onFENSet = (FEN: string) => {
+    if (!this.props.onFENSet) {
+      this.unhandledFenChange(FEN);
+      return;
+    }
+    this.props.onFENSet(FEN);
   };
 
   render() {

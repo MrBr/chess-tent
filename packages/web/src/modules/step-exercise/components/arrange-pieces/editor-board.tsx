@@ -4,14 +4,17 @@ import {
   Move,
   ExerciseArrangePiecesStep,
   Shape,
-  ExerciseSegmentKeys,
   FEN,
+  NotableMove,
 } from '@types';
 import { SegmentBoard } from '../segment';
-import { withSegments } from '../../hoc';
+import { withSegmentBoards } from '../../hoc';
 import { SegmentBoardProps } from '../../types';
 
 const { createFenForward, createNotableMove } = services;
+
+const getActivePosition = (position: FEN, moves?: NotableMove[]) =>
+  createFenForward(position, moves?.map(({ move }) => move as Move) || []);
 
 const TaskBoard: FunctionComponent<
   SegmentBoardProps<ExerciseArrangePiecesStep, 'task'>
@@ -68,11 +71,10 @@ const TaskBoard: FunctionComponent<
     [editing, moves, updateSegment, boardSetup],
   );
 
-  const activePosition = useMemo(
-    () =>
-      createFenForward(position, moves?.map(({ move }) => move as Move) || []),
-    [position, moves],
-  );
+  const activePosition = useMemo(() => getActivePosition(position, moves), [
+    position,
+    moves,
+  ]);
 
   return (
     <Chessboard
@@ -93,10 +95,19 @@ const TaskBoard: FunctionComponent<
   );
 };
 
-export default withSegments<
-  SegmentBoardProps<ExerciseArrangePiecesStep, ExerciseSegmentKeys>
->({
+const ArrangePiecesSegmentBoard = (
+  props: SegmentBoardProps<ExerciseArrangePiecesStep>,
+) => {
+  const { moves, position } = props.step.state.task;
+  const activePosition = useMemo(() => getActivePosition(position, moves), [
+    position,
+    moves,
+  ]);
+  return <SegmentBoard {...props} position={activePosition} />;
+};
+
+export default withSegmentBoards<ExerciseArrangePiecesStep>({
   task: TaskBoard,
-  explanation: SegmentBoard,
-  hint: SegmentBoard,
+  explanation: ArrangePiecesSegmentBoard,
+  hint: ArrangePiecesSegmentBoard,
 });

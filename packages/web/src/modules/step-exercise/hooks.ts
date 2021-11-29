@@ -1,4 +1,9 @@
-import { ExerciseSegments, ExerciseSteps } from '@types';
+import {
+  ExerciseSegmentKeys,
+  ExerciseSegments,
+  ExerciseStep,
+  ExerciseSteps,
+} from '@types';
 import { useCallback } from 'react';
 import { updateStepState } from '@chess-tent/models';
 
@@ -29,14 +34,14 @@ export const useUpdateExerciseActiveSegment = <T extends ExerciseSteps>(
 };
 
 export const useUpdateSegment = <
-  T extends ExerciseSteps,
+  T extends ExerciseStep<any, any>,
   K extends keyof ExerciseSegments
 >(
   step: T,
   updateStep: (step: T) => void,
   activeSegment: K,
 ) => (segmentPatch: Partial<T['state'][K]>) => {
-  const updatedSegment: T['state'][keyof ExerciseSegments] = {
+  const updatedSegment: T['state'][ExerciseSegmentKeys] = {
     ...step.state[activeSegment],
     ...segmentPatch,
   };

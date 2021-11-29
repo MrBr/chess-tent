@@ -1,10 +1,10 @@
 import React, { useCallback } from 'react';
-import { ExerciseSegmentKeys, ExerciseVariationStep } from '@types';
+import { ExerciseVariationStep } from '@types';
 import { components, ui } from '@application';
 
 import { SegmentToolboxProps } from '../../types';
 import { SegmentSidebar } from '../segment';
-import { withSegmentSidebars } from '../../hoc';
+import { withSegmentBoardsidebars } from '../../hoc';
 import { isFENSetup } from './utils';
 
 const { Text, Row } = ui;
@@ -57,9 +57,7 @@ const TaskSidebar = (
   );
 };
 
-export default withSegmentSidebars<
-  SegmentToolboxProps<ExerciseVariationStep, ExerciseSegmentKeys>
->({
+export default withSegmentBoardsidebars<ExerciseVariationStep>({
   task: TaskSidebar,
   explanation: SegmentSidebar,
   hint: SegmentSidebar,

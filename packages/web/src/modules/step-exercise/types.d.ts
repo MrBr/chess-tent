@@ -4,16 +4,16 @@ import {
   ExerciseActivityState,
   ExerciseSegments,
   ExerciseSegmentKeys,
-  ExerciseSteps,
   ExerciseToolboxProps,
   StepBoardComponentProps,
   AppStep,
+  ExerciseStep,
 } from '@types';
 import { Activity } from '@chess-tent/models';
 
 export type SegmentProps<
-  T extends ExerciseSteps = ExerciseSteps,
-  S extends keyof ExerciseSegments = keyof ExerciseSegments
+  T extends ExerciseStep,
+  S extends ExerciseSegmentKeys
 > = {
   step: T;
   segment: T['state'][S];
@@ -22,18 +22,18 @@ export type SegmentProps<
 };
 
 export type SegmentBoardProps<
-  T extends ExerciseSteps,
-  S extends ExerciseSegmentKeys
+  T extends ExerciseStep,
+  S extends ExerciseSegmentKeys = ExerciseSegmentKeys
 > = SegmentProps<T, S> & StepBoardComponentProps & EditorProps;
 
 export type SegmentToolboxProps<
-  T extends ExerciseSteps = ExerciseSteps,
+  T extends ExerciseStep,
   S extends keyof ExerciseSegments
 > = SegmentProps<T, S> &
   ExerciseToolboxProps & { children?: ReactNode; placeholder?: string };
 
-export type SegmentActivityProps = {
-  step: ExerciseSteps;
+export type SegmentActivityProps<T extends ExerciseStep> = {
+  step: ExerciseStep;
   Chessboard: StepBoardComponentProps['Chessboard'];
   stepActivityState: ExerciseActivityState;
   activity: Activity;

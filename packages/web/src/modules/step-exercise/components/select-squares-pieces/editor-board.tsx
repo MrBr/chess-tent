@@ -1,7 +1,7 @@
 import { SegmentBoard } from '../segment';
-import { withSegments } from '../../hoc';
+import { withSegmentBoards } from '../../hoc';
 
-export default withSegments({
+export default withSegmentBoards({
   task: SegmentBoard,
   explanation: SegmentBoard,
   hint: SegmentBoard,

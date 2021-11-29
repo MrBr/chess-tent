@@ -2,7 +2,7 @@ import React from 'react';
 import { ExerciseArrangePiecesStep } from '@types';
 import { ui, components } from '@application';
 import { SegmentSidebar } from '../segment';
-import { withSegmentSidebars } from '../../hoc';
+import { withSegmentBoardsidebars } from '../../hoc';
 import { SegmentToolboxProps } from '../../types';
 
 const { Container, Text } = ui;
@@ -28,9 +28,7 @@ const TaskSidebar = (
     </SegmentSidebar>
   );
 };
-export default withSegmentSidebars<
-  SegmentToolboxProps<ExerciseArrangePiecesStep, 'task'>
->({
+export default withSegmentBoardsidebars<ExerciseArrangePiecesStep>({
   task: TaskSidebar,
   explanation: SegmentSidebar,
   hint: SegmentSidebar,

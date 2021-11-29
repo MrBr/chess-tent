@@ -1,33 +1,39 @@
-import React, { ComponentType } from 'react';
-import { ExerciseSegmentKeys, ExerciseToolboxProps } from '@types';
+import React, { ComponentType, ComponentProps } from 'react';
+import {
+  ExerciseSegmentKeys,
+  ExerciseStep,
+  ExerciseToolboxProps,
+} from '@types';
 import { ui } from '@application';
 
-import { SegmentProps } from './types';
+import { SegmentBoardProps, SegmentProps } from './types';
 import { useUpdateSegment } from './hooks';
 
 const { Tooltip, OverlayTrigger } = ui;
 
 // TODO - make more restrictive type, task should expect 'task' segment component
-interface Segments<T extends SegmentProps> {
-  task: ComponentType<T>;
-  explanation: ComponentType<T>;
-  hint: ComponentType<T>;
+interface BoardSegments<T extends ExerciseStep<any, any>> {
+  task: ComponentType<SegmentBoardProps<T, 'task'>>;
+  explanation: ComponentType<SegmentBoardProps<T, 'explanation'>>;
+  hint: ComponentType<SegmentBoardProps<T, 'hint'>>;
 }
-const getSegment = <T extends SegmentProps>(
-  Segments: Segments<T>,
-  activeSegment: ExerciseSegmentKeys,
-) => Segments[activeSegment];
 
-export const withSegments = <T extends SegmentProps>(Segments: Segments<T>) => (
-  props: T,
-) => {
+interface SidebarSegments<T extends ExerciseStep<any, any>> {
+  task: ComponentType<SegmentProps<T, 'task'>>;
+  explanation: ComponentType<SegmentProps<T, 'explanation'>>;
+  hint: ComponentType<SegmentProps<T, 'hint'>>;
+}
+
+export const withSegmentBoards = <T extends ExerciseStep<any, any>>(
+  Segments: BoardSegments<T>,
+) => (props: SegmentBoardProps<T, ExerciseSegmentKeys>) => {
   const { activeSegment } = props.step.state;
-  const Segment = getSegment(Segments, activeSegment || 'task');
+  const Segment = Segments[(activeSegment || 'task') as ExerciseSegmentKeys];
   return <Segment {...props} />;
 };
 
-export const withSegmentSidebars = <T extends SegmentProps>(
-  Segments: Segments<T>,
+export const withSegmentBoardsidebars = <T extends ExerciseStep<any, any>>(
+  Segments: SidebarSegments<T>,
 ): ComponentType<ExerciseToolboxProps> => props => {
   const sidebar = Object.keys(Segments).map(segmentKey => {
     const segment = props.step.state[segmentKey as ExerciseSegmentKeys];
@@ -36,13 +42,13 @@ export const withSegmentSidebars = <T extends SegmentProps>(
       props.updateStep,
       segmentKey as ExerciseSegmentKeys,
     );
-    const Segment = getSegment(Segments, segmentKey as ExerciseSegmentKeys);
+    const Segment = Segments[segmentKey as ExerciseSegmentKeys];
     const segmentProps = {
       step: props.step,
       updateStep: props.updateStep,
       segment,
       updateSegment,
-    } as T;
+    } as ComponentProps<typeof Segment>;
 
     return (
       <OverlayTrigger

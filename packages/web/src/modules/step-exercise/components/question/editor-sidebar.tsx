@@ -1,11 +1,8 @@
-import { ExerciseQuestionStep, ExerciseSegmentKeys } from '@types';
+import { ExerciseQuestionStep } from '@types';
 import { SegmentSidebar } from '../segment';
-import { withSegmentSidebars } from '../../hoc';
-import { SegmentToolboxProps } from '../../types';
+import { withSegmentBoardsidebars } from '../../hoc';
 
-export default withSegmentSidebars<
-  SegmentToolboxProps<ExerciseQuestionStep, ExerciseSegmentKeys>
->({
+export default withSegmentBoardsidebars<ExerciseQuestionStep>({
   task: SegmentSidebar,
   explanation: SegmentSidebar,
   hint: SegmentSidebar,

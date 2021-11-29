@@ -1,13 +1,13 @@
 import React, { FunctionComponent } from 'react';
 import { isStepCompleted } from '@chess-tent/models';
-import { ChessboardProps } from '@types';
+import { ChessboardProps, ExerciseSteps } from '@types';
 import { hooks } from '@application';
 import { SegmentActivityProps } from '../../types';
 
 const { useActivityMeta } = hooks;
 
 const Playground: FunctionComponent<
-  SegmentActivityProps & Partial<ChessboardProps>
+  SegmentActivityProps<ExerciseSteps> & Partial<ChessboardProps>
 > = ({ step, Chessboard, activity, ...props }) => {
   const [{ showHint }] = useActivityMeta(activity);
   const completed = isStepCompleted(activity, step);
@@ -16,11 +16,15 @@ const Playground: FunctionComponent<
     : showHint
     ? step.state.hint
     : step.state.task;
+  const activeShapes =
+    showHint && !completed
+      ? [...(activeSegment.shapes || []), ...(step.state.hint.shapes || [])]
+      : activeSegment.shapes;
 
   return (
     <Chessboard
-      fen={activeSegment?.position || step.state.task.position}
-      shapes={activeSegment?.shapes}
+      fen={step.state.task.position}
+      shapes={activeShapes}
       animation
       {...props}
     />

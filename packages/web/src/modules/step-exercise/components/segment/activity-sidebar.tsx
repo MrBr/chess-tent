@@ -1,6 +1,7 @@
 import React, { FunctionComponent, useCallback } from 'react';
 import { ui, hooks, components } from '@application';
 import { isStepCompleted } from '@chess-tent/models';
+import { ExerciseSteps } from '@types';
 
 import { SegmentActivityProps } from '../../types';
 import { hasExplanation, hasHint } from '../../service';
@@ -10,7 +11,7 @@ const { useActivityMeta } = hooks;
 const { LessonPlaygroundCard } = components;
 
 const Playground: FunctionComponent<
-  SegmentActivityProps & { title: string; onReset?: () => void }
+  SegmentActivityProps<ExerciseSteps> & { title: string; onReset?: () => void }
 > = ({ step, activity, children, title, onReset }) => {
   const [{ showHint }, updateActivityMeta] = useActivityMeta(activity);
   const { task, explanation, hint } = step.state;

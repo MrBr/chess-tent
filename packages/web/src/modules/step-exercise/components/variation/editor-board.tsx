@@ -2,7 +2,6 @@ import React, { FunctionComponent, useCallback } from 'react';
 import { services } from '@application';
 import {
   ExerciseMove,
-  ExerciseSegmentKeys,
   ExerciseVariationState,
   ExerciseVariationStep,
   FEN,
@@ -10,7 +9,7 @@ import {
   Shape,
 } from '@types';
 import { SegmentBoardProps } from '../../types';
-import { withSegments } from '../../hoc';
+import { withSegmentBoards } from '../../hoc';
 import { SegmentBoard } from '../segment';
 import { isFENSetup } from './utils';
 
@@ -58,12 +57,25 @@ const removeOldLineMoves = (
     : moves;
 };
 
+const getActiveMove = (step: ExerciseVariationStep) => {
+  const { task } = step.state;
+  const { moves, activeMoveIndex } = task;
+  return moves?.[activeMoveIndex as number];
+};
+
+const getActivePosition = (step: ExerciseVariationStep) => {
+  const { task } = step.state;
+  const { moves, activeMoveIndex, position } = task;
+  const activeMove = moves?.[activeMoveIndex as number];
+  return activeMove?.position || position;
+};
+
 const TaskBoard: FunctionComponent<
   SegmentBoardProps<ExerciseVariationStep, 'task'>
 > = ({ step, Chessboard, updateSegment }) => {
   const { task } = step.state;
   const { editing, moves, activeMoveIndex, position } = task;
-  const activeMove = moves?.[activeMoveIndex as number];
+  const activeMove = getActiveMove(step);
 
   const boardSetup = useCallback(
     (position: FEN) => {
@@ -128,7 +140,7 @@ const TaskBoard: FunctionComponent<
     [editing, moves, updateSegment, activeMoveIndex, position, boardSetup],
   );
 
-  const activePosition = activeMove?.position || position;
+  const activePosition = getActivePosition(step);
   const activeShapes = activeMove?.shapes || [];
 
   const validateMove = useCallback(
@@ -162,10 +174,15 @@ const TaskBoard: FunctionComponent<
   );
 };
 
-export default withSegments<
-  SegmentBoardProps<ExerciseVariationStep, ExerciseSegmentKeys>
->({
+const VariationSegmentBoard = (
+  props: SegmentBoardProps<ExerciseVariationStep>,
+) => {
+  const activePosition = getActivePosition(props.step);
+  return <SegmentBoard {...props} position={activePosition} />;
+};
+
+export default withSegmentBoards<ExerciseVariationStep>({
   task: TaskBoard,
-  hint: SegmentBoard,
-  explanation: SegmentBoard,
+  hint: VariationSegmentBoard,
+  explanation: VariationSegmentBoard,
 });

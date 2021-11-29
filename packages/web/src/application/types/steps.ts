@@ -44,13 +44,12 @@ export type DescriptionModule = StepModule<
 // Exercise
 export interface Segment {
   text?: string;
-  position: FEN;
   shapes?: Shape[];
 }
 export interface ExerciseSegments<T = {}> {
   explanation: Segment;
   hint: Segment;
-  task: Segment & T;
+  task: Segment & T & { position: FEN };
 }
 
 export type ExerciseSegmentKeys = keyof ExerciseSegments;

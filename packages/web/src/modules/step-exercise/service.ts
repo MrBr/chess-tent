@@ -39,11 +39,9 @@ export const createExerciseStepState = <T extends ExerciseSteps>(
     text: initialState.task?.text,
   },
   hint: {
-    position: initialState.position,
     text: initialState.hint?.text,
   },
   explanation: {
-    position: initialState.position,
     text: initialState.explanation?.text,
   },
 });

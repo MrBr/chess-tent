@@ -1,8 +1,8 @@
 import React, { ReactEventHandler, useCallback } from 'react';
-import { ExerciseQuestionnaireStep, ExerciseSegmentKeys } from '@types';
+import { ExerciseQuestionnaireStep } from '@types';
 import { components, ui, utils } from '@application';
 import { SegmentSidebar } from '../segment';
-import { withSegmentSidebars } from '../../hoc';
+import { withSegmentBoardsidebars } from '../../hoc';
 import { SegmentToolboxProps } from '../../types';
 
 const { Check, Row, Col, Text, Container, Icon } = ui;
@@ -80,9 +80,7 @@ const TaskSidebar = (
   );
 };
 
-export default withSegmentSidebars<
-  SegmentToolboxProps<ExerciseQuestionnaireStep, ExerciseSegmentKeys>
->({
+export default withSegmentBoardsidebars<ExerciseQuestionnaireStep>({
   task: TaskSidebar,
   explanation: SegmentSidebar,
   hint: SegmentSidebar,

@@ -8,7 +8,7 @@ const { useActivityMeta } = hooks;
 
 const Playground: FunctionComponent<
   SegmentActivityProps & Partial<ChessboardProps>
-> = ({ step, Chessboard, activity, stepActivityState, ...props }) => {
+> = ({ step, Chessboard, activity, ...props }) => {
   const [{ showHint }] = useActivityMeta(activity);
   const completed = isStepCompleted(activity, step);
   const activeSegment = completed

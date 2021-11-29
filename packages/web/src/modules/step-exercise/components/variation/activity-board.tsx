@@ -38,7 +38,7 @@ const Playground: FunctionComponent<
         : moveToPlayIndex;
       // Skipping next move from the variation as it's played by the "computer"
       const nextUserMove = moves?.[newActiveMoveIndex];
-      console.log(newActiveMoveIndex, nextUserMove);
+
       if (!correct) {
         setTimeout(() => {
           setStepActivityState({
@@ -46,11 +46,11 @@ const Playground: FunctionComponent<
           });
         }, 400);
       }
+
       if (correct && isVariationCompleted(nextUserMove)) {
         completeStep(step);
       }
 
-      console.log(correct, move, moves, moveToPlayIndex, activeMoveIndex);
       setStepActivityState({
         move: createNotableMove(
           position,

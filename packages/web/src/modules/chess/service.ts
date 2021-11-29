@@ -60,6 +60,12 @@ export const setTurnColor: Services['setTurnColor'] = (position, color) => {
   return fenChunks.join(' ');
 };
 
+export const switchTurnColor: Services['switchTurnColor'] = position => {
+  const fenChunks = position.split(' ');
+  fenChunks[1] = fenChunks[1] === 'w' ? 'b' : 'w';
+  return fenChunks.join(' ');
+};
+
 const shortRoleMap: Record<PieceRole, PieceRoleShort> = {
   knight: 'n',
   king: 'k',

@@ -13,6 +13,7 @@ import {
   createNotableMovesFromGame,
   isLegalMove,
   getComment,
+  switchTurnColor,
 } from './service';
 
 services.Chess = Chess;
@@ -22,6 +23,7 @@ services.getPiece = getPiece;
 services.getTurnColor = getTurnColor;
 services.setTurnColor = setTurnColor;
 services.createNotableMove = createNotableMove;
+services.switchTurnColor = switchTurnColor;
 services.shortenRole = shortenRole;
 services.createMoveShortObject = createMoveShortObject;
 services.createPiece = createPiece;

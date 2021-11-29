@@ -38,6 +38,7 @@ export type Services = {
   getPiece: (position: FEN, square: string) => Piece | null;
   getTurnColor: (position: FEN) => PieceColor;
   setTurnColor: (position: FEN, color: PieceColor) => FEN;
+  switchTurnColor: (position: FEN) => FEN;
   createMoveShortObject: (
     move: Move,
     promoted?: PieceRolePromotable,

@@ -39,6 +39,7 @@ import {
   Orientation,
   MoveComment,
   PGNHeaders,
+  MovableColor,
 } from './chess';
 import {
   ActivityStepStateBase,
@@ -119,6 +120,7 @@ export interface ChessboardProps {
   sparePieces?: boolean;
   editing?: boolean;
   allowAllMoves?: boolean;
+  movableColor?: MovableColor;
 
   // Footer props
   onUpdateEditing?: (editing: boolean) => void;

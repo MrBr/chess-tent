@@ -1,8 +1,9 @@
-import { FEN, Key, Piece } from '@types';
+import { FEN, Key, MovableColor, Piece } from '@types';
 import { ChessInstance } from 'chess.js';
 import { Config } from '@chess-tent/chessground/dist/config';
 import { services } from '@application';
 import isNil from 'lodash/isNil';
+import { getTurnColor, switchTurnColor } from '../chess/service';
 
 const { Chess } = services;
 
@@ -26,6 +27,7 @@ export function replaceFENPosition(
 
 export function toDests(
   position: FEN,
+  bothColors?: boolean,
 ): {
   [key: string]: Key[];
 } {
@@ -35,18 +37,28 @@ export function toDests(
     const ms = chess.moves({ square: s, verbose: true });
     if (ms.length) dests[s] = ms.map(m => m.to);
   });
-  return dests;
+
+  const oppositeColorMoves = bothColors
+    ? toDests(switchTurnColor(position))
+    : {};
+
+  return { ...dests, ...oppositeColorMoves };
 }
 
-export function updateMovable(config: Config, fen: FEN): Config {
-  const turnColor = fen.split(' ')[1] === 'w' ? 'white' : 'black';
+export function updateMovable(
+  config: Config,
+  fen: FEN,
+  movableColor?: MovableColor,
+): Config {
+  const turnColor = getTurnColor(fen);
   return {
     ...config,
     turnColor,
     movable: {
       ...config.movable,
-      dests: toDests(fen),
-      color: turnColor,
+      free: true,
+      dests: toDests(fen, movableColor === 'both'),
+      color: movableColor || turnColor,
     },
   };
 }

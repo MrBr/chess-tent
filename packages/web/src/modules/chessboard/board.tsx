@@ -80,10 +80,8 @@ const ChessgroundMappedProps: ChessgroundMappedPropsType = {
   resizable: 'resizable',
   eraseDrawableOnClick: 'drawable.eraseOnClick',
   animation: 'animation.enabled',
-  allowAllMoves: (props, update) => {
-    _.set(update, 'movable.free', !!props.allowAllMoves);
-    props.allowAllMoves && _.set(update, 'movable.color', 'both');
-  },
+  allowAllMoves: 'movable.free',
+  movableColor: 'movable.color',
   orientation: 'orientation',
 };
 
@@ -199,6 +197,7 @@ class Chessboard
       allowAllMoves,
       orientation,
       shapes,
+      movableColor,
     } = this.props;
 
     if (!this.boardHost.current) {
@@ -222,9 +221,11 @@ class Chessboard
         enabled: animation,
         duration: 500,
       },
+      // turnColor: getTurnColor(fen),
       movable: {
         free: allowAllMoves,
         validate: this.validateMove,
+        color: movableColor,
         events: {
           after: this.onMove,
         },
@@ -255,7 +256,13 @@ class Chessboard
   setConfig(config: Partial<Config>) {
     let finalConfig = this.props.allowAllMoves
       ? config
-      : updateMovable(config, config.fen || this.props.fen);
+      : // Chessground needs legal moves list in "strict mode";
+        // Legal moves are resolved bellow
+        updateMovable(
+          config,
+          config.fen || this.props.fen,
+          config.movable?.color || this.props.movableColor,
+        );
     // Chessground for some reason mutates config, on the other hand
     // Immer freezes passed values. All that leads to forbidden mutations.
     // In order to allow Chessground to work as planned passed object
@@ -272,8 +279,6 @@ class Chessboard
     // TODO - edit Chessground
     shapes && this.api.setShapes(shapes);
 
-    console.log(finalConfig);
-    console.log(this.getState());
     finalConfig.fen && this.chess.load(finalConfig.fen);
   }
 
@@ -298,7 +303,7 @@ class Chessboard
           keyof ChessgroundMappedPropsType,
           ChessgroundMapper,
         ];
-        if (mapper && prevProps[propName] !== this.props[propName]) {
+        if (prevProps[propName] !== this.props[propName]) {
           const updateConfig =
             typeof mapper === 'function'
               ? mapper

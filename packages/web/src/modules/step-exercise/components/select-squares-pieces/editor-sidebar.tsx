@@ -1,7 +1,7 @@
 import { SegmentSidebar } from '../segment';
-import { withSegmentBoardsidebars } from '../../hoc';
+import { withSegmentSidebars } from '../../hoc';
 
-export default withSegmentBoardsidebars({
+export default withSegmentSidebars({
   task: SegmentSidebar,
   explanation: SegmentSidebar,
   hint: SegmentSidebar,

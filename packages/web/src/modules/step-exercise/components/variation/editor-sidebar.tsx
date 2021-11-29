@@ -4,7 +4,7 @@ import { components, ui } from '@application';
 
 import { SegmentToolboxProps } from '../../types';
 import { SegmentSidebar } from '../segment';
-import { withSegmentBoardsidebars } from '../../hoc';
+import { withSegmentSidebars } from '../../hoc';
 import { isFENSetup } from './utils';
 
 const { Text, Row } = ui;
@@ -57,7 +57,7 @@ const TaskSidebar = (
   );
 };
 
-export default withSegmentBoardsidebars<ExerciseVariationStep>({
+export default withSegmentSidebars<ExerciseVariationStep>({
   task: TaskSidebar,
   explanation: SegmentSidebar,
   hint: SegmentSidebar,

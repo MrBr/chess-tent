@@ -2,7 +2,7 @@ import React, { ReactEventHandler, useCallback } from 'react';
 import { ExerciseQuestionnaireStep } from '@types';
 import { components, ui, utils } from '@application';
 import { SegmentSidebar } from '../segment';
-import { withSegmentBoardsidebars } from '../../hoc';
+import { withSegmentSidebars } from '../../hoc';
 import { SegmentToolboxProps } from '../../types';
 
 const { Check, Row, Col, Text, Container, Icon } = ui;
@@ -80,7 +80,7 @@ const TaskSidebar = (
   );
 };
 
-export default withSegmentBoardsidebars<ExerciseQuestionnaireStep>({
+export default withSegmentSidebars<ExerciseQuestionnaireStep>({
   task: TaskSidebar,
   explanation: SegmentSidebar,
   hint: SegmentSidebar,

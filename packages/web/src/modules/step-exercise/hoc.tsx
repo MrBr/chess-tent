@@ -11,6 +11,17 @@ import { useUpdateSegment } from './hooks';
 
 const { Tooltip, OverlayTrigger } = ui;
 
+const sidebarSegmentTooltipModifiers = {
+  modifiers: [
+    {
+      name: 'offset',
+      options: {
+        offset: [0, 15],
+      },
+    },
+  ],
+};
+
 // TODO - make more restrictive type, task should expect 'task' segment component
 interface BoardSegments<T extends ExerciseStep<any, any>> {
   task: ComponentType<SegmentBoardProps<T, 'task'>>;
@@ -32,7 +43,7 @@ export const withSegmentBoards = <T extends ExerciseStep<any, any>>(
   return <Segment {...props} />;
 };
 
-export const withSegmentBoardsidebars = <T extends ExerciseStep<any, any>>(
+export const withSegmentSidebars = <T extends ExerciseStep<any, any>>(
   Segments: SidebarSegments<T>,
 ): ComponentType<ExerciseToolboxProps> => props => {
   const sidebar = Object.keys(Segments).map(segmentKey => {
@@ -54,9 +65,10 @@ export const withSegmentBoardsidebars = <T extends ExerciseStep<any, any>>(
       <OverlayTrigger
         placement="left"
         trigger="focus"
+        popperConfig={sidebarSegmentTooltipModifiers}
         overlay={
           <Tooltip
-            className="mr-3 text-capitalize"
+            className="text-capitalize"
             id={`${props.step.id}-${segmentKey}`}
           >
             {segmentKey}

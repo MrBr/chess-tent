@@ -159,6 +159,7 @@ class Chessboard
   boardHost: RefObject<HTMLDivElement> = React.createRef();
   api: Api = new Proxy({}, {}) as Api;
   chess: ChessInstance;
+  currentRenderFen: FEN | null;
   state: ChessboardState = {
     renderPrompt: undefined,
     promotion: undefined,
@@ -180,6 +181,10 @@ class Chessboard
   constructor(props: ChessboardProps) {
     super(props);
     this.chess = new Chess();
+    // FEN Memoization
+    // Board fen can be requested by multiple methods on a single change (that triggers multiple events).
+    // This memoization prevents multiple calculations and potential fen overrides on a single change.
+    this.currentRenderFen = null;
   }
 
   componentDidMount() {
@@ -266,7 +271,10 @@ class Chessboard
     // TODO - edit Chessground
     shapes && this.api.setShapes(shapes);
 
-    finalConfig.fen && this.chess.load(finalConfig.fen);
+    if (finalConfig.fen) {
+      this.chess.load(finalConfig.fen);
+      this.currentRenderFen = null;
+    }
   }
 
   prompt(renderPrompt: ChessboardState['renderPrompt']) {
@@ -316,57 +324,51 @@ class Chessboard
     this.api.redrawAll();
   }
 
-  fen = (() => {
-    // FEN Memoization
-    // Board fen can be requested by multiple methods on a single change (that triggers multiple events).
-    // This memoization prevents multiple calculations and potential fen overrides on a single change.
-    let lastFen: FEN;
-    return (
-      move?: Move,
-      options?: { piece?: Piece; promoted?: PieceRolePromotable },
-    ) => {
-      const { allowAllMoves } = this.props;
-      const fen = this.api.getFen();
-      if (fen === lastFen) {
-        return this.chess.fen();
-      }
-      lastFen = fen;
-      if (move && allowAllMoves && options?.promoted) {
-        const { promotion } = createMoveShortObject(move, options?.promoted);
-        const piece = this.chess.get(move[0]);
-        if (!piece || !promotion) {
-          return lastFen;
-        }
-        this.chess.remove(move[0]);
-        this.chess.put(
-          {
-            type: promotion,
-            color: piece.color,
-          },
-          move[1],
-        );
-      } else if (allowAllMoves) {
-        const newFen = replaceFENPosition(
-          this.chess.fen(),
-          this.api.getFen(),
-          options?.piece,
-        );
-        const didLoadFen = this.chess.load(
-          // Update position and color who's turn is.
-          // Useful for variation to automatically start with a correct color.
-          newFen,
-        );
-        if (!didLoadFen) {
-          throw new Error(`Invalid fen ${newFen}`);
-        }
-      } else if (move) {
-        const chessMove = createMoveShortObject(move, options?.promoted);
-        // Only valid moves are allowed in "play" mode
-        this.chess.move(chessMove);
-      }
+  fen = (
+    move?: Move,
+    options?: { piece?: Piece; promoted?: PieceRolePromotable },
+  ) => {
+    const { allowAllMoves } = this.props;
+    const fen = this.api.getFen();
+    if (fen === this.currentRenderFen) {
       return this.chess.fen();
-    };
-  })();
+    }
+    this.currentRenderFen = fen;
+    if (move && allowAllMoves && options?.promoted) {
+      const { promotion } = createMoveShortObject(move, options?.promoted);
+      const piece = this.chess.get(move[0]);
+      if (!piece || !promotion) {
+        return this.currentRenderFen;
+      }
+      this.chess.remove(move[0]);
+      this.chess.put(
+        {
+          type: promotion,
+          color: piece.color,
+        },
+        move[1],
+      );
+    } else if (allowAllMoves) {
+      const newFen = replaceFENPosition(
+        this.chess.fen(),
+        this.api.getFen(),
+        options?.piece,
+      );
+      const didLoadFen = this.chess.load(
+        // Update position and color who's turn is.
+        // Useful for variation to automatically start with a correct color.
+        newFen,
+      );
+      if (!didLoadFen) {
+        throw new Error(`Invalid fen ${newFen}`);
+      }
+    } else if (move) {
+      const chessMove = createMoveShortObject(move, options?.promoted);
+      // Only valid moves are allowed in "play" mode
+      this.chess.move(chessMove);
+    }
+    return this.chess.fen();
+  };
 
   move(from: Key, to: Key) {
     this.api.move(from, to);

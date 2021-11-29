@@ -41,6 +41,9 @@ const { Chess, createMoveShortObject } = services;
 
 export type State = CGState;
 
+type ChessgroundMapper =
+  | string
+  | ((props: ChessboardProps, config: Partial<Api>) => void);
 type ChessgroundMappedPropsType = Record<
   keyof Omit<
     ChessboardProps,
@@ -66,7 +69,7 @@ type ChessgroundMappedPropsType = Record<
     | 'editing'
     | 'onPGN'
   >,
-  string
+  ChessgroundMapper
 >;
 
 const ChessgroundMappedProps: ChessgroundMappedPropsType = {
@@ -77,7 +80,10 @@ const ChessgroundMappedProps: ChessgroundMappedPropsType = {
   resizable: 'resizable',
   eraseDrawableOnClick: 'drawable.eraseOnClick',
   animation: 'animation.enabled',
-  allowAllMoves: 'movable.free',
+  allowAllMoves: (props, update) => {
+    _.set(update, 'movable.free', !!props.allowAllMoves);
+    props.allowAllMoves && _.set(update, 'movable.color', 'both');
+  },
   orientation: 'orientation',
 };
 
@@ -266,6 +272,8 @@ class Chessboard
     // TODO - edit Chessground
     shapes && this.api.setShapes(shapes);
 
+    console.log(finalConfig);
+    console.log(this.getState());
     finalConfig.fen && this.chess.load(finalConfig.fen);
   }
 
@@ -286,15 +294,16 @@ class Chessboard
   syncChessgroundState(prevProps: ChessboardProps) {
     const patch = Object.entries(ChessgroundMappedProps).reduce<{}>(
       (update, entry) => {
-        const [propName, chessGroundStatePropPath] = entry as [
+        const [propName, mapper] = entry as [
           keyof ChessgroundMappedPropsType,
-          string,
+          ChessgroundMapper,
         ];
-        if (
-          ChessgroundMappedProps[propName] &&
-          prevProps[propName] !== this.props[propName]
-        ) {
-          _.set(update, chessGroundStatePropPath, this.props[propName]);
+        if (mapper && prevProps[propName] !== this.props[propName]) {
+          const updateConfig =
+            typeof mapper === 'function'
+              ? mapper
+              : () => _.set(update, mapper, this.props[propName]);
+          updateConfig(this.props, update);
         }
         return update;
       },

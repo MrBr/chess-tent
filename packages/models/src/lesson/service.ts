@@ -7,11 +7,11 @@ import {
   TYPE_LESSON,
 } from './types';
 import { User } from '../user';
-import { Step } from '../step';
+import { getChildStep, getStepIndex, Step } from '../step';
 import { Chapter, updateChapterStep } from '../chapter';
 import { Tag } from '../tag';
 import { updateSubject } from '../subject';
-import { createService } from '../_helpers';
+import { applyNestedPatches, createService } from '../_helpers';
 
 const isLesson = (entity: unknown) =>
   Object.getOwnPropertyDescriptor(entity, 'type')?.value === TYPE_LESSON;
@@ -63,17 +63,18 @@ const updateLessonChapter = createService(
   },
 );
 
-const updateLessonStep = createService(
-  <T extends Lesson | NormalizedLesson>(
-    draft: T,
-    chapter: Chapter,
-    step: Step,
-  ): T => {
-    const chapterIndex = getLessonChapterIndex(draft, chapter.id);
-    draft.state.chapters[chapterIndex] = updateChapterStep(chapter, step);
-    return draft;
-  },
-);
+const updateLessonStep = (
+  lesson: Lesson,
+  chapter: Chapter,
+  step: Step,
+  patchListener?: PatchListener,
+) => {
+  return applyNestedPatches(updateChapterStep)(chapter, step)(
+    lesson,
+    draft => draft.state.chapters[getLessonChapterIndex(draft, chapter.id)],
+    patchListener,
+  );
+};
 
 const updateLesson = (
   lesson: Lesson | NormalizedLesson,

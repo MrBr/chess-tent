@@ -29,6 +29,7 @@ const {
   useUserTrainings,
   useActiveUserRecord,
   useHistory,
+  useIsMobile,
 } = hooks;
 
 const PreviewLesson = () => {
@@ -38,6 +39,7 @@ const PreviewLesson = () => {
   const [chapter, setActiveChapter] = useState<Chapter>();
   const { value: user } = useActiveUserRecord();
   const { new: newTraining, value: activities } = useUserTrainings(user);
+  const isMobile = useIsMobile();
 
   const ownedLessonActivity = activities?.find(
     ({ subject }) => subject.id === lessonId,
@@ -149,7 +151,7 @@ const PreviewLesson = () => {
       <Layout
         className="extended-sidebar"
         header={<Header />}
-        sidebar={sidebar}
+        sidebar={isMobile ? null : sidebar}
       >
         <Chessboard
           fen={firstStep.state.position as string}
@@ -158,6 +160,7 @@ const PreviewLesson = () => {
           viewOnly
           header={boardHeader}
         />
+        {isMobile && sidebar}
       </Layout>
     </Page>
   );

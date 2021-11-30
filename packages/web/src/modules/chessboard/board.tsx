@@ -33,7 +33,8 @@ import { Config } from '@chess-tent/chessground/dist/config';
 import { SparePieces } from './spare-pieces';
 import Promotion from './promotion';
 import Footer from './footer';
-import { replaceFENPosition, unfreeze, updateMovable } from './_helpers';
+import { replaceFENPosition, toDests, unfreeze } from './_helpers';
+import { getTurnColor } from '../chess/service';
 
 const { START_FEN, MAX_BOARD_SIZE, KINGS_FEN } = constants;
 const { Modal } = ui;
@@ -43,7 +44,7 @@ export type State = CGState;
 
 type ChessgroundMapper =
   | string
-  | ((props: ChessboardProps, config: Partial<Api>) => void);
+  | ((props: ChessboardProps, config: Partial<Config>) => void);
 type ChessgroundMappedPropsType = Record<
   keyof Omit<
     ChessboardProps,
@@ -74,13 +75,34 @@ type ChessgroundMappedPropsType = Record<
 
 const ChessgroundMappedProps: ChessgroundMappedPropsType = {
   viewOnly: 'viewOnly',
-  fen: 'fen',
+  fen: (props, update) => {
+    // Chessground needs legal moves list in "strict mode";
+    // Legal moves are resolved bellow
+    const dests = props.allowAllMoves
+      ? null
+      : toDests(props.fen, props.movableColor === 'both');
+    const turnColor = getTurnColor(props.fen);
+
+    _.set(update, 'fen', props.fen);
+    _.set(update, 'movable.dests', dests);
+    _.set(update, 'turnColor', turnColor);
+  },
   shapes: 'drawable.shapes',
   selectablePieces: 'selectable.enabled',
   resizable: 'resizable',
   eraseDrawableOnClick: 'drawable.eraseOnClick',
   animation: 'animation.enabled',
-  allowAllMoves: 'movable.free',
+  allowAllMoves: (props, update) => {
+    _.set(update, 'movable.free', props.allowAllMoves);
+    _.set(
+      update,
+      'movable.color',
+      props.movableColor || props.allowAllMoves
+        ? 'both'
+        : getTurnColor(props.fen),
+    );
+    (ChessgroundMappedProps.fen as Function)(props, update);
+  },
   movableColor: 'movable.color',
   orientation: 'orientation',
 };
@@ -179,6 +201,7 @@ class Chessboard
     edit: false,
     orientation: 'white',
     shapes: [],
+    allowAllMoves: true,
   };
 
   constructor(props: ChessboardProps) {
@@ -187,56 +210,35 @@ class Chessboard
   }
 
   componentDidMount() {
-    const {
-      animation,
-      fen,
-      viewOnly,
-      eraseDrawableOnClick,
-      selectablePieces,
-      resizable,
-      allowAllMoves,
-      orientation,
-      shapes,
-      movableColor,
-    } = this.props;
+    const { fen } = this.props;
 
     if (!this.boardHost.current) {
       return;
     }
 
     this.api = Chessground(this.boardHost.current, { fen });
+    // Use only to set static values (for now)
     this.setConfig({
-      viewOnly,
-      fen,
-      resizable,
-      orientation,
       draggable: {
         deleteOnDropOff: true,
       },
       premovable: {
         enabled: false,
       },
-      selectable: { enabled: selectablePieces },
       animation: {
-        enabled: animation,
         duration: 500,
       },
-      // turnColor: getTurnColor(fen),
       movable: {
-        free: allowAllMoves,
         validate: this.validateMove,
-        color: movableColor,
         events: {
           after: this.onMove,
         },
       },
       drawable: {
-        shapes: shapes,
         validate: this.validateDrawable,
         onChange: this.onShapesChange,
         visible: true,
         enabled: true,
-        eraseOnClick: eraseDrawableOnClick,
         onAdd: this.onShapeAdd,
         onRemove: this.onShapeRemove,
       },
@@ -247,6 +249,8 @@ class Chessboard
         removePiece: this.onPieceRemove,
       },
     });
+    // Map variable values (props)
+    this.syncChessgroundState({});
   }
 
   /**
@@ -254,20 +258,11 @@ class Chessboard
    * @param config
    */
   setConfig(config: Partial<Config>) {
-    let finalConfig = this.props.allowAllMoves
-      ? config
-      : // Chessground needs legal moves list in "strict mode";
-        // Legal moves are resolved bellow
-        updateMovable(
-          config,
-          config.fen || this.props.fen,
-          config.movable?.color || this.props.movableColor,
-        );
     // Chessground for some reason mutates config, on the other hand
     // Immer freezes passed values. All that leads to forbidden mutations.
     // In order to allow Chessground to work as planned passed object
     // must be mutable and thus reference must be broken between prop and config values.
-    finalConfig = unfreeze(finalConfig);
+    const finalConfig = unfreeze(config);
 
     const shapes = finalConfig.drawable?.shapes;
     if (finalConfig.drawable?.shapes) {
@@ -279,6 +274,8 @@ class Chessboard
     // TODO - edit Chessground
     shapes && this.api.setShapes(shapes);
 
+    console.log(finalConfig);
+    console.log(this.api.state);
     finalConfig.fen && this.chess.load(finalConfig.fen);
   }
 
@@ -296,7 +293,7 @@ class Chessboard
     this.syncChessgroundState(prevProps);
   }
 
-  syncChessgroundState(prevProps: ChessboardProps) {
+  syncChessgroundState(prevProps: Partial<ChessboardProps>) {
     const patch = Object.entries(ChessgroundMappedProps).reduce<{}>(
       (update, entry) => {
         const [propName, mapper] = entry as [

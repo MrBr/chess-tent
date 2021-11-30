@@ -61,6 +61,7 @@ export type Services = {
     position: FEN,
     move: Move,
     promoted?: PieceRolePromotable,
+    bothColors?: boolean,
   ) => boolean;
   createNotableMovesFromGame: (game: ChessInstance) => NotableMove[];
   getComment: (comments: MoveComment[], position: FEN) => string | undefined;

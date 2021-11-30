@@ -107,10 +107,18 @@ export const isLegalMove: Services['isLegalMove'] = (
   position,
   move,
   promoted?,
+  bothColors?,
 ) => {
   const shortMove = createMoveShortObject(move, promoted);
   const game = new Chess(position);
-  return !!game.move(shortMove);
+  if (!!game.move(shortMove)) {
+    return true;
+  }
+  if (!bothColors) {
+    return false;
+  }
+  const reversedColorGame = new Chess(switchTurnColor(position));
+  return !!reversedColorGame.move(shortMove);
 };
 
 export const createNotableMovesFromGame: Services['createNotableMovesFromGame'] = game => {

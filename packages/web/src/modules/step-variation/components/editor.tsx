@@ -53,7 +53,11 @@ const boardChange = (
     return;
   }
 
-  if (!newMove || !movedPiece || !isLegalMove(position, newMove, promoted)) {
+  if (
+    !newMove ||
+    !movedPiece ||
+    !isLegalMove(position, newMove, promoted, true)
+  ) {
     // New piece dropped or removed
     const newVariationStep = createStep('variation', {
       position: newPosition,

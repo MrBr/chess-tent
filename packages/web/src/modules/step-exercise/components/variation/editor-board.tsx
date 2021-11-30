@@ -13,7 +13,11 @@ import { withSegmentBoards } from '../../hoc';
 import { SegmentBoard } from '../segment';
 import { isFENSetup } from './utils';
 
-const { getPiece, getTurnColor, setTurnColor, createNotableMove } = services;
+const { getTurnColor, switchTurnColor, createNotableMove } = services;
+
+const isPositionSetupIndex = (
+  activeMoveIndex: ExerciseVariationStep['state']['task']['activeMoveIndex'],
+) => activeMoveIndex === null || activeMoveIndex === undefined;
 
 const updateMoveShapes = (
   moveIndex: number | undefined | null,
@@ -120,7 +124,7 @@ const TaskBoard: FunctionComponent<
         captured,
         promoted,
       );
-      const updatedTask = addNewMove(
+      const taskPatch = addNewMove(
         {
           ...notableMove,
           shapes: [],
@@ -128,14 +132,18 @@ const TaskBoard: FunctionComponent<
         prevMoves,
       );
       if (
-        activeMoveIndex === undefined &&
+        isPositionSetupIndex(activeMoveIndex) &&
+        // Initial position move color doesn't match moved piece color
         piece.color !== getTurnColor(position)
       ) {
         // Updating base position FEN to match first move color
-        updatedTask.position = setTurnColor(position, piece.color);
+        taskPatch.position = switchTurnColor(position);
       }
-      updatedTask.activeMoveIndex = activeMoveIndex ? activeMoveIndex + 1 : 0;
-      updateSegment(updatedTask);
+      taskPatch.activeMoveIndex =
+        activeMoveIndex !== undefined && activeMoveIndex !== null
+          ? activeMoveIndex + 1
+          : 0;
+      updateSegment(taskPatch);
     },
     [editing, moves, updateSegment, activeMoveIndex, position, boardSetup],
   );
@@ -143,20 +151,15 @@ const TaskBoard: FunctionComponent<
   const activePosition = getActivePosition(step);
   const activeShapes = activeMove?.shapes || [];
 
-  const validateMove = useCallback(
-    orig => {
-      if (editing) {
-        return true;
-      }
-      const piece = getPiece(activePosition, orig);
-      return activeMove?.piece?.color !== piece?.color;
-    },
-    [activePosition, activeMove, editing],
-  );
+  const color = isPositionSetupIndex(activeMoveIndex)
+    ? 'both'
+    : getTurnColor(activePosition);
 
   return (
     <Chessboard
-      allowAllMoves
+      allowAllMoves={!!editing}
+      editing={!!editing}
+      movableColor={color}
       sparePieces
       fen={activePosition}
       onMove={handleChange}
@@ -167,8 +170,6 @@ const TaskBoard: FunctionComponent<
       onFENSet={boardSetup}
       onShapesChange={handleShapes}
       shapes={activeShapes}
-      validateMove={validateMove}
-      editing={!!editing}
       onUpdateEditing={editing => updateSegment({ editing })}
     />
   );

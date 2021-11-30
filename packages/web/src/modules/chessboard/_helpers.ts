@@ -1,9 +1,8 @@
-import { FEN, Key, MovableColor, Piece } from '@types';
+import { FEN, Key, Piece } from '@types';
 import { ChessInstance } from 'chess.js';
-import { Config } from '@chess-tent/chessground/dist/config';
 import { services } from '@application';
 import isNil from 'lodash/isNil';
-import { getTurnColor, switchTurnColor } from '../chess/service';
+import { switchTurnColor } from '../chess/service';
 
 const { Chess } = services;
 
@@ -43,24 +42,6 @@ export function toDests(
     : {};
 
   return { ...dests, ...oppositeColorMoves };
-}
-
-export function updateMovable(
-  config: Config,
-  fen: FEN,
-  movableColor?: MovableColor,
-): Config {
-  const turnColor = getTurnColor(fen);
-  return {
-    ...config,
-    turnColor,
-    movable: {
-      ...config.movable,
-      free: true,
-      dests: toDests(fen, movableColor === 'both'),
-      color: movableColor || turnColor,
-    },
-  };
 }
 
 export function unfreeze<T>(value: T): T {

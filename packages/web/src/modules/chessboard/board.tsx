@@ -34,7 +34,7 @@ import { SparePieces } from './spare-pieces';
 import Promotion from './promotion';
 import Footer from './footer';
 import { replaceFENPosition, toDests, unfreeze } from './_helpers';
-import { getTurnColor } from '../chess/service';
+import { getPiece, getTurnColor, switchTurnColor } from '../chess/service';
 
 const { START_FEN, MAX_BOARD_SIZE, KINGS_FEN } = constants;
 const { Modal } = ui;
@@ -274,8 +274,6 @@ class Chessboard
     // TODO - edit Chessground
     shapes && this.api.setShapes(shapes);
 
-    console.log(finalConfig);
-    console.log(this.api.state);
     finalConfig.fen && this.chess.load(finalConfig.fen);
   }
 
@@ -331,17 +329,17 @@ class Chessboard
     move?: Move,
     options?: { piece?: Piece; promoted?: PieceRolePromotable },
   ) => {
-    const { allowAllMoves } = this.props;
+    const { allowAllMoves, movableColor } = this.props;
 
     const oldFen = this.chess.fen();
-    const lastRenderChess = new Chess(oldFen);
+    const chess = new Chess(oldFen);
 
     if (move && allowAllMoves && options?.promoted) {
       const { promotion } = createMoveShortObject(move, options?.promoted);
-      const piece = lastRenderChess.get(move[0]);
+      const piece = chess.get(move[0]);
       if (piece && promotion) {
-        lastRenderChess.remove(move[0]);
-        lastRenderChess.put(
+        chess.remove(move[0]);
+        chess.put(
           {
             type: promotion,
             color: piece.color,
@@ -351,26 +349,32 @@ class Chessboard
       }
     } else if (allowAllMoves) {
       const fenPieces = this.api.getFen();
-      const newFen = replaceFENPosition(
-        lastRenderChess.fen(),
-        fenPieces,
-        options?.piece,
-      );
-      const didLoadFen = lastRenderChess.load(
+      const newFen = replaceFENPosition(chess.fen(), fenPieces, options?.piece);
+      const didLoadFen = chess.load(
         // Update position and color who's turn is.
         // Useful for variation to automatically start with a correct color.
         newFen,
       );
       if (!didLoadFen) {
-        const fenInfo = lastRenderChess.validate_fen(newFen);
+        const fenInfo = chess.validate_fen(newFen);
         throw new Error(`Invalid fen ${newFen}. Error: ${fenInfo.error}`);
       }
     } else if (move) {
       const chessMove = createMoveShortObject(move, options?.promoted);
+      const piece = getPiece(oldFen, move[0]);
       // Only valid moves are allowed in "play" mode
-      lastRenderChess.move(chessMove);
+      let validMove =
+        piece?.color === getTurnColor(oldFen) && chess.move(chessMove);
+      if (!validMove && movableColor === 'both') {
+        // NOTE - chess position is changed
+        chess.load(switchTurnColor(oldFen));
+        validMove = chess.move(chessMove);
+      }
+      if (!validMove) {
+        throw new Error(`Invalid move ${move}.`);
+      }
     }
-    return lastRenderChess.fen();
+    return chess.fen();
   };
 
   move(from: Key, to: Key) {

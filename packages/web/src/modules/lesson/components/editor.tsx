@@ -68,7 +68,6 @@ const {
   DifficultyDropdown,
   TagsSelect,
   StepToolbox,
-  Evaluator,
 } = components;
 const {
   actions: { serviceAction },
@@ -99,6 +98,7 @@ type EditorRendererState = {
     activeStepId: Step['id'];
     activeChapterId: Chapter['id'];
   }[];
+  evaluating: boolean;
 };
 
 /**
@@ -111,6 +111,7 @@ class EditorRenderer extends React.Component<
 > {
   state: EditorRendererState = {
     history: [],
+    evaluating: false,
   };
 
   static getDerivedStateFromError() {
@@ -126,6 +127,11 @@ class EditorRenderer extends React.Component<
     this.undoUpdate();
     this.setActiveStepHandler();
   }
+
+  toggleEvaluation = () => {
+    const { evaluating } = this.state;
+    this.setState({ evaluating: !evaluating });
+  };
 
   closeEditor = () => {
     const history = this.props.history;
@@ -425,28 +431,23 @@ class EditorRenderer extends React.Component<
 
   renderChessboard = (props: ChessboardProps) => {
     const { activeStep } = this.props;
+    const { evaluating } = this.state;
     const lessonStatusText = this.renderLessonStatus();
     // TODO - Evaluation
     // - lines
     // - shapes
-    // - evaluation (top line)
+    // - evaluation + best move (top line)
     return (
       <Chessboard
         orientation={activeStep.state.orientation}
         onOrientationChange={this.updateStepRotation}
         {...props}
+        onToggleEvaluation={this.toggleEvaluation}
+        evaluation={evaluating}
         header={
           <>
             <Row>
               <Col> {props.header || lessonStatusText}</Col>
-              <Col className="col-auto">
-                <Evaluator
-                  evaluate={false}
-                  position={props.fen}
-                  onBestMoveChange={console.log}
-                  onEvaluationChange={console.log}
-                />
-              </Col>
             </Row>
             <Absolute right={20} top={20} onClick={this.undoUpdate}>
               Undo

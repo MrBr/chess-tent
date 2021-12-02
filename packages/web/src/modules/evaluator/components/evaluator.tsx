@@ -1,5 +1,5 @@
 import React, { ComponentType } from 'react';
-import { Move, Key, Components } from '@types';
+import { Components, UciMove } from '@types';
 import { ui } from '@application';
 
 const { ToggleButton } = ui;
@@ -8,23 +8,19 @@ type EvaluatorProps = Components['Evaluator'] extends ComponentType<infer U>
   ? U
   : never;
 
-type InfoParam = 'score' | 'depth' | 'pv';
+type InfoParam = 'score' | 'depth' | 'pv' | 'multipv';
 type ScoreParam = 'cp' | 'mate';
 type BestMoveParam = 'bestmove' | 'ponder';
 type EngineAction = 'info' | 'bestmove';
 type EngineLine = string;
-
-const engineMoveToMove = (engineMove: string): Move => {
-  const from = (engineMove[0] + engineMove[1]) as Key;
-  const to = (engineMove[2] + engineMove[3]) as Key;
-  return [from, to];
-};
 
 const getInfoValues = (data: EngineLine, param: InfoParam): string[] => {
   const params = data.split(' ');
   const paramIndex = params.findIndex(item => item === param);
   switch (param) {
     case 'depth':
+      return [params[paramIndex + 1]];
+    case 'multipv':
       return [params[paramIndex + 1]];
     case 'pv':
       const bmcIndex = params.findIndex(item => item === 'bmc');
@@ -39,7 +35,7 @@ const getInfoValues = (data: EngineLine, param: InfoParam): string[] => {
 const getBestMoveValue = (
   data: EngineLine,
   param: BestMoveParam,
-): Move | undefined => {
+): UciMove | undefined => {
   const params = data.split(' ');
   const paramIndex = params.findIndex(item => item === param);
 
@@ -47,38 +43,43 @@ const getBestMoveValue = (
     return;
   }
 
-  const paramValue = params[paramIndex + 1];
-  return engineMoveToMove(paramValue);
+  return params[paramIndex + 1];
 };
 
-const isInfo = (data: EngineLine) => {
-  return /^info/.test(data);
+const isLineValuation = (data: EngineLine) => {
+  return / pv /.test(data);
 };
+
 const isBestMove = (data: EngineLine) => {
   return /^bestmove/.test(data);
 };
 
-const getScore = (data: EngineLine): [string, boolean] => {
+const getScore = (data: EngineLine): [number, boolean] => {
   const [scoreType, scoreValue] = getInfoValues(data, 'score');
   if (scoreType === 'mate') {
-    return [scoreValue, true];
+    return [parseInt(scoreValue), true];
   }
   const cp = parseInt(scoreValue);
-  return [(cp / 100).toFixed(2), false];
+  return [parseFloat((cp / 100).toFixed(2)), false];
 };
 
 const getDepth = (data: EngineLine) => {
   return parseInt(getInfoValues(data, 'depth')[0]);
 };
 
-const getVariation = (data: EngineLine): Move[] => {
-  return getInfoValues(data, 'pv').map(engineMoveToMove);
+const getLineIndex = (data: EngineLine) => {
+  return parseInt(getInfoValues(data, 'multipv')[0]);
+};
+
+const getVariation = (data: EngineLine): UciMove[] => {
+  return getInfoValues(data, 'pv');
 };
 
 class Evaluator extends React.Component<EvaluatorProps> {
   static defaultProps = {
     evaluate: true,
     depth: 18,
+    lines: 2,
   };
 
   worker: Worker;
@@ -88,6 +89,10 @@ class Evaluator extends React.Component<EvaluatorProps> {
     this.worker.onmessage = this.onEngineMessage;
     this.worker.postMessage('uci');
     this.sync();
+  }
+
+  componentWillUnmount() {
+    this.worker.terminate();
   }
 
   componentDidUpdate(prevProps: EvaluatorProps): void {
@@ -102,11 +107,20 @@ class Evaluator extends React.Component<EvaluatorProps> {
 
   onEngineMessage = ({ data }: MessageEvent) => {
     const { onBestMoveChange, onEvaluationChange } = this.props;
-    if (onEvaluationChange && isInfo(data)) {
+
+    if (onEvaluationChange && isLineValuation(data)) {
       const [score, isMate] = getScore(data);
       const depth = getDepth(data);
       const variation = getVariation(data);
-      depth && score && onEvaluationChange(score, isMate, variation, depth);
+      const lineIndex = getLineIndex(data);
+      console.log(data);
+      onEvaluationChange({
+        score,
+        isMate,
+        variation,
+        lineIndex,
+        depth,
+      });
     } else if (onBestMoveChange && isBestMove(data)) {
       const bestMove = getBestMoveValue(data, 'bestmove');
       const ponder = getBestMoveValue(data, 'ponder');
@@ -115,9 +129,10 @@ class Evaluator extends React.Component<EvaluatorProps> {
   };
 
   sync = () => {
-    const { position, evaluate, depth } = this.props;
+    const { position, evaluate, depth, lines } = this.props;
     this.worker.postMessage('ucinewgame');
     this.worker.postMessage(`position fen ${position}`);
+    this.worker.postMessage(`setoption name MultiPV value ${lines}`);
     evaluate && this.worker.postMessage(`go depth ${depth}`);
   };
 
@@ -126,14 +141,14 @@ class Evaluator extends React.Component<EvaluatorProps> {
   }
 
   render() {
-    const { evaluate, onChange } = this.props;
+    const { evaluate, onToggle } = this.props;
 
-    if (!onChange) {
+    if (!onToggle) {
       return null;
     }
 
     return (
-      <ToggleButton checked={evaluate} onChange={onChange} size="extra-small">
+      <ToggleButton checked={evaluate} onChange={onToggle} size="extra-small">
         Engine
       </ToggleButton>
     );

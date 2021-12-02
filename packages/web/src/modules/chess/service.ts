@@ -1,7 +1,10 @@
 import {
   FEN,
+  Key,
   Move,
+  MoveShort,
   PieceRole,
+  PieceRolePromotable,
   PieceRoleShort,
   PieceRoleShortPromotable,
   Services,
@@ -74,6 +77,12 @@ const shortRoleMap: Record<PieceRole, PieceRoleShort> = {
   pawn: 'p',
   bishop: 'b',
 };
+
+export const extendRole: Services['extendRole'] = (role: PieceRoleShort) =>
+  Object.entries<PieceRoleShort>(shortRoleMap).find(
+    ([, shortRole]) => shortRole === role,
+  )?.[0] as PieceRole;
+
 export const shortenRole: Services['shortenRole'] = (role: PieceRole) =>
   shortRoleMap[role];
 
@@ -154,3 +163,12 @@ export const getComment: Services['getComment'] = (comments, fen) =>
     .find(comment => comment.fen === fen)
     ?.comment.replace(/ *\[[^\]]*]/g, '')
     .trim() || undefined;
+
+export const uciToSan = (engineMove: string): MoveShort => {
+  const from = (engineMove[0] + engineMove[1]) as Key;
+  const to = (engineMove[2] + engineMove[3]) as Key;
+  const promoted = extendRole(
+    engineMove[4] as PieceRoleShort,
+  ) as PieceRolePromotable;
+  return createMoveShortObject([from, to], promoted);
+};

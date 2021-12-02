@@ -14,6 +14,8 @@ import {
   isLegalMove,
   getComment,
   switchTurnColor,
+  extendRole,
+  uciToSan,
 } from './service';
 
 services.Chess = Chess;
@@ -24,7 +26,9 @@ services.getTurnColor = getTurnColor;
 services.setTurnColor = setTurnColor;
 services.createNotableMove = createNotableMove;
 services.switchTurnColor = switchTurnColor;
+services.extendRole = extendRole;
 services.shortenRole = shortenRole;
+services.uciToSan = uciToSan;
 services.createMoveShortObject = createMoveShortObject;
 services.createPiece = createPiece;
 services.isLegalMove = isLegalMove;

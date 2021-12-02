@@ -15,3 +15,9 @@ application.register(
     application.components.ChessboardFooter = module.default;
   },
 );
+application.register(
+  () => import('./service'),
+  module => {
+    application.services.createMoveShape = module.createMoveShape;
+  },
+);

@@ -40,6 +40,7 @@ import {
   MoveComment,
   PGNHeaders,
   MovableColor,
+  UciMove,
 } from './chess';
 import {
   ActivityStepStateBase,
@@ -64,6 +65,7 @@ import {
 
 export interface ChessboardState {
   renderPrompt?: (close: () => void) => ReactElement;
+  evaluations: Record<string, Evaluation>;
   promotion?: {
     from: Key;
     to: Key;
@@ -90,6 +92,9 @@ export interface ChessboardProps {
   header?: ReactNode;
   footer?: ReactNode;
   size?: string | number;
+  onToggleEvaluation?: () => void;
+  evaluation?: boolean;
+
   // Chessground proxy props
   viewOnly?: boolean;
   orientation?: Orientation;
@@ -274,6 +279,14 @@ export enum LessonStatus {
   INITIAL,
 }
 
+export interface Evaluation {
+  score: number;
+  isMate: boolean;
+  variation: UciMove[];
+  lineIndex: number;
+  depth: number;
+}
+
 export type NotificationComponent<T extends Notification> = ComponentType<{
   notification: T;
 }>;
@@ -347,21 +360,23 @@ export type Components = {
       ? P & { component: T; step: S }
       : never,
   ) => ReactElement;
+  EvaluationLines: ComponentType<{
+    evaluation: Evaluation;
+    className?: string;
+    position: FEN;
+  }>;
+  EvaluationBar: ComponentType<{ evaluation: Evaluation; className?: string }>;
   Evaluator: ComponentType<{
     position: FEN;
     evaluate?: boolean;
     depth?: number;
+    lines?: number;
     // Evaluator is making sure that updates are thrown for the latest position only
-    onEvaluationChange?: (
-      score: string,
-      isMate: boolean,
-      variation: Move[],
-      depth: number,
-    ) => void;
-    onChange?: () => void;
+    onEvaluationChange?: (evaluation: Evaluation) => void;
+    onToggle?: () => void;
     // Best move is not reliable in sense that
     // after position changed it can still provide best move for the previous position
-    onBestMoveChange?: (bestMove: Move, ponder?: Move) => void;
+    onBestMoveChange?: (bestMove: UciMove, ponder?: UciMove) => void;
   }>;
   Editor: ComponentType<{
     lesson: Lesson;

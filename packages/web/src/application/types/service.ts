@@ -22,12 +22,18 @@ import {
   PieceRole,
   PieceRolePromotable,
   PieceRoleShort,
+  Shape,
 } from './chess';
 import { MoveStep, Steps, VariationStep } from './steps';
 import { History } from './router';
 import { GenericArguments } from './_helpers';
 import { ActivityComment, ActivityStepStateBase, StepModule } from './step';
-import { AppAnalysis, NotificationRenderer, StepModules } from './index';
+import {
+  AppAnalysis,
+  Evaluation,
+  NotificationRenderer,
+  StepModules,
+} from './index';
 
 export type Services = {
   Chess: {
@@ -35,15 +41,19 @@ export type Services = {
   };
   createFenForward: (fen: FEN, moves: Move[]) => FEN;
   createFenBackward: (fen: FEN, moves: Move[]) => FEN;
+  createMoveShape: (move: Move, opponent: boolean, lineWidth?: number) => Shape;
+  createPonderMoveShape: (evaluation: Evaluation) => Shape;
   getPiece: (position: FEN, square: string) => Piece | null;
   getTurnColor: (position: FEN) => PieceColor;
   setTurnColor: (position: FEN, color: PieceColor) => FEN;
   switchTurnColor: (position: FEN) => FEN;
+  uciToSan: (uciMove: string) => MoveShort;
   createMoveShortObject: (
     move: Move,
     promoted?: PieceRolePromotable,
   ) => MoveShort;
   shortenRole: (role: PieceRole) => PieceRoleShort;
+  extendRole: (role: PieceRoleShort) => PieceRole;
   createPiece: (
     role: PieceRole,
     color: PieceColor,
@@ -121,4 +131,6 @@ export type Services = {
     mentor: User,
   ) => boolean;
   logException: (exception: Error) => void;
+  getEvaluationBestMove: (evaluation: Evaluation) => MoveShort;
+  getEvaluationPonderMove: (evaluation: Evaluation) => MoveShort;
 };

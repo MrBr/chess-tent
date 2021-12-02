@@ -1,4 +1,4 @@
-import { ui, constants, services } from '@application';
+import { components, ui, constants, services } from '@application';
 import {
   ChessboardProps,
   ChessboardState,
@@ -12,6 +12,7 @@ import {
   NotableMove,
   MoveComment,
   FEN,
+  Evaluation,
 } from '@types';
 
 import { ChessInstance } from 'chess.js';
@@ -37,19 +38,26 @@ import { replaceFENPosition, toDests, unfreeze } from './_helpers';
 import { getPiece, getTurnColor, switchTurnColor } from '../chess/service';
 
 const { START_FEN, MAX_BOARD_SIZE, KINGS_FEN } = constants;
-const { Modal } = ui;
-const { Chess, createMoveShortObject } = services;
+const { Modal, Absolute } = ui;
+const {
+  Chess,
+  createMoveShortObject,
+  getEvaluationBestMove,
+  createMoveShape,
+} = services;
+const { Evaluator, EvaluationBar, EvaluationLines } = components;
 
 export type State = CGState;
 
 type ChessgroundMapper =
   | string
-  | ((props: ChessboardProps, config: Partial<Config>) => void);
+  | ((props: ChessboardProps, config: Partial<Config>, api: Api) => void);
 type ChessgroundMappedPropsType = Record<
   keyof Omit<
     ChessboardProps,
     | 'header'
     | 'footer'
+    | 'onToggleEvaluation'
     | 'onReset'
     | 'onChange'
     | 'onMove'
@@ -92,6 +100,9 @@ const ChessgroundMappedProps: ChessgroundMappedPropsType = {
   resizable: 'resizable',
   eraseDrawableOnClick: 'drawable.eraseOnClick',
   animation: 'animation.enabled',
+  evaluation: (props, update, api) => {
+    api.setAutoShapes([]);
+  },
   allowAllMoves: (props, update) => {
     _.set(update, 'movable.free', props.allowAllMoves);
     _.set(
@@ -188,6 +199,7 @@ class Chessboard
   state: ChessboardState = {
     renderPrompt: undefined,
     promotion: undefined,
+    evaluations: {},
   };
   static defaultProps = {
     evaluate: false,
@@ -303,7 +315,7 @@ class Chessboard
             typeof mapper === 'function'
               ? mapper
               : () => _.set(update, mapper, this.props[propName]);
-          updateConfig(this.props, update);
+          updateConfig(this.props, update, this.api);
         }
         return update;
       },
@@ -315,6 +327,29 @@ class Chessboard
   getState() {
     return this.api.state;
   }
+
+  getBestEvaluation() {
+    return this.state.evaluations[1];
+  }
+
+  updateEvaluation = (evaluation: Evaluation) => {
+    if (!this.props.evaluation) {
+      return;
+    }
+
+    const evaluations: ChessboardState['evaluations'] = {
+      ...this.state.evaluations,
+      [evaluation.lineIndex]: evaluation,
+    };
+
+    this.setState({ evaluations });
+    const shapes = Object.values(evaluations)
+      .map(getEvaluationBestMove)
+      .filter(Boolean)
+      .map(move => createMoveShape([move.from, move.to], false, 20));
+
+    this.api.setAutoShapes(shapes);
+  };
 
   removeShape(shape: DrawShape) {
     this.api.state.drawable.shapes = this.api.state.drawable.shapes.filter(
@@ -564,17 +599,39 @@ class Chessboard
       sparePieces,
       footer,
       onPGN,
+      onToggleEvaluation,
+      evaluation,
     } = this.props;
-    const { renderPrompt, promotion } = this.state;
+    const { renderPrompt, promotion, evaluations } = this.state;
+
+    const bestEvaluation = this.getBestEvaluation();
     const sparePiecesElement = sparePieces ? (
       <SparePieces
         onDragStart={this.onSparePieceDrag}
         className="spare-pieces"
       />
     ) : null;
+
     return (
       <>
         <BoardHeader width={size as string}>{header}</BoardHeader>
+        <BoardHeader width={size as string} className="position-relative">
+          <Absolute right={10} top={-40}>
+            <Evaluator
+              position={fen}
+              evaluate={evaluation}
+              onToggle={onToggleEvaluation}
+              onEvaluationChange={this.updateEvaluation}
+            />
+          </Absolute>
+          {evaluation && bestEvaluation && (
+            <EvaluationBar evaluation={bestEvaluation} />
+          )}
+          {evaluation &&
+            Object.values(evaluations).map(evaluation => (
+              <EvaluationLines evaluation={evaluation} position={fen} />
+            ))}
+        </BoardHeader>
         <BoardContainer
           size={size as string}
           boardRef={this.boardHost}

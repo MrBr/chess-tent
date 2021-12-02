@@ -32,6 +32,7 @@ export type NotableMove = {
   index: number;
   position: FEN;
 };
+export type UciMove = string;
 export type MoveShort = ShortMove;
 export type MoveMetadata = CG_MOVEMETADATA;
 export type PieceColor = CG_COLOR;

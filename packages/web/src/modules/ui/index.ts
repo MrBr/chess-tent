@@ -41,6 +41,7 @@ import { Toast, ToastBody, ToastHeader } from './Toast';
 import { Dot } from './Dot';
 import LoadMore from './LoadMore';
 import Spinner from './Spinner';
+import ProgressBar from './ProgressBar';
 import { withFiles, withHtml } from './hoc';
 
 application.hoc.withFiles = withFiles;
@@ -101,6 +102,7 @@ application.ui.Tooltip = Tooltip;
 application.ui.Overlay = Overlay;
 application.ui.OverlayTrigger = OverlayTrigger;
 application.ui.Tag = Tag;
+application.ui.ProgressBar = ProgressBar;
 
 application.ui.Icon = Icon;
 application.ui.Dot = Dot;

@@ -32,6 +32,7 @@ import {
   OverlayTrigger as BOverlayTrigger,
   BadgeProps,
   SpinnerProps,
+  ProgressBarProps,
 } from 'react-bootstrap';
 import DropdownToggle from 'react-bootstrap/DropdownToggle';
 import { ErrorMessageProps, Formik } from 'formik';
@@ -276,4 +277,5 @@ export type UI = {
   Overlay: typeof BOverlay;
   OverlayTrigger: typeof BOverlayTrigger;
   Tag: UIComponent<BadgeProps>;
+  ProgressBar: UIComponent<ProgressBarProps>;
 };

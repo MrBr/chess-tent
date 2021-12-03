@@ -92,6 +92,12 @@ class Chessboard
 
   componentDidMount() {
     const { fen } = this.props;
+    const { promotion, update } = this.context;
+
+    if (promotion) {
+      // reset context;
+      update({ promotion: null });
+    }
 
     if (!this.boardHost.current) {
       return;
@@ -159,19 +165,28 @@ class Chessboard
   }
 
   prompt(renderPrompt: ChessboardContext['renderPrompt']) {
-    this.setState({
+    this.context.update({
       renderPrompt,
     });
   }
 
   closePrompt = () => {
-    this.setState({ renderPrompt: undefined });
+    this.context.update({ renderPrompt: undefined });
   };
 
   componentDidUpdate(prevProps: ChessboardProps) {
+    const { fen } = this.props;
+    const { promotion, update } = this.context;
+    if (fen !== prevProps.fen && promotion) {
+      update({ promotion: null });
+    }
     this.syncChessgroundState(prevProps);
   }
 
+  /**
+   * Have in mind that mapper can have functions to change chessground state dynamically.
+   * Those changes aren't seen here. Look at helpers for that
+   */
   syncChessgroundState(prevProps: Partial<ChessboardProps>) {
     const patch = Object.entries(ChessgroundMappedProps).reduce<{}>(
       (update, entry) => {
@@ -359,7 +374,7 @@ class Chessboard
 
   onPromotionCancel = () => {
     this.setConfig({ fen: this.chess.fen() });
-    this.setState({ promotion: undefined });
+    this.context.update({ promotion: null });
   };
 
   onSparePieceDrag = (piece: Piece, event: MouchEvent) => {
@@ -413,7 +428,7 @@ class Chessboard
     const piece = this.api.state.pieces[lastMove[1]] as Piece;
     const rank = parseInt(dest.charAt(1));
     if (piece.role === 'pawn' && (rank === 1 || rank === 8)) {
-      this.setState({
+      this.context.update({
         promotion: {
           from: orig as Key,
           to: dest as Key,
@@ -435,7 +450,7 @@ class Chessboard
 
   onPromotion = ({ from, to, piece }: Promotion, role: PieceRolePromotable) => {
     const capturedPiece = this.chess.get(to);
-    this.setState({ promotion: undefined });
+    this.context.update({ promotion: null });
     const move = [from, to] as Move;
     const fen = this.fen(move, { promoted: role });
 

@@ -21,7 +21,7 @@ export type EditorContext =
 
 export interface ChessboardContext {
   renderPrompt?: (close: () => void) => ReactElement;
-  promotion?: Promotion;
+  promotion?: Promotion | null;
   evaluate?: boolean;
   evaluations: Record<string, Evaluation>;
   update: (state: Partial<ChessboardContext>) => void;

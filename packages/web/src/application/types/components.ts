@@ -363,7 +363,7 @@ export type Components = {
   EvaluationLines: ComponentType<{
     evaluation: Evaluation;
     className?: string;
-    onMoveClick?: (move: NotableMove) => void;
+    onMoveClick?: (move: NotableMove[]) => void;
   }>;
   EvaluationBar: ComponentType<{ evaluation: Evaluation; className?: string }>;
   Evaluator: ComponentType<{

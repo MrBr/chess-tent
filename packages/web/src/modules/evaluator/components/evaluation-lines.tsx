@@ -11,11 +11,18 @@ const EvaluationLines: Components['EvaluationLines'] = ({
   onMoveClick,
 }) => {
   const notableMoves = getEvaluationMoves(evaluation);
+  const handleMoveClick = (index: number) => {
+    if (!onMoveClick) {
+      return;
+    }
+    const movesToPlay = notableMoves.splice(0, index + 1);
+    onMoveClick(movesToPlay);
+  };
   return (
     <Container>
-      {notableMoves.map(move => (
+      {notableMoves.map((move, index) => (
         <StepMove
-          onClick={onMoveClick}
+          onClick={() => handleMoveClick(index)}
           key={move.position}
           className="small"
           move={move}

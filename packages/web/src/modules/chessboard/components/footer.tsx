@@ -5,7 +5,7 @@ import React, {
   useState,
   useRef,
 } from 'react';
-import { services, ui, hooks } from '@application';
+import { services, ui, hooks, constants } from '@application';
 import { ChessboardFooterProps } from '@types';
 import EditBoardToggle from './edit';
 
@@ -22,6 +22,7 @@ const {
   FormGroup,
 } = ui;
 const { Chess, createNotableMovesFromGame } = services;
+const { START_FEN } = constants;
 const { usePromptModal } = hooks;
 
 const chess = new Chess();
@@ -105,6 +106,9 @@ const Footer: FunctionComponent<ChessboardFooterProps> = ({
     game.load_pgn(pgn);
     const moves = createNotableMovesFromGame(game);
     const headers = game.header();
+    // Should always be FEN it makes life easier
+    // TODO - make this typesafe
+    headers.FEN = headers.FEN || START_FEN;
     const comments = game.get_comments();
     onPGN && onPGN(moves, headers, comments);
   };

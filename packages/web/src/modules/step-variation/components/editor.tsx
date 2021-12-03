@@ -119,7 +119,7 @@ const EditorBoard: VariationModule['EditorBoard'] = ({
   setActiveStep,
 }) => {
   const {
-    state: { shapes, editing, move },
+    state: { shapes, editing, move, orientation },
   } = step;
 
   const position = move ? move.position : (step.state.position as FEN);
@@ -173,7 +173,7 @@ const EditorBoard: VariationModule['EditorBoard'] = ({
     (moves: NotableMove[], headers: PGNHeaders, comments: MoveComment[]) => {
       const steps = createStepsFromNotableMoves(moves, {
         comments,
-        orientation: step.state.orientation,
+        orientation,
       });
       const pgnInitialPosition = headers.FEN;
       if (step.state.steps.length === 0) {
@@ -183,16 +183,20 @@ const EditorBoard: VariationModule['EditorBoard'] = ({
         });
         updateStep(updatedStep);
       } else {
+        const move = position === pgnInitialPosition ? moves[0] : undefined;
+        const variationSteps = move ? steps.splice(1) : steps;
         const newVariation = createStep('variation', {
-          steps,
+          steps: variationSteps,
           position: pgnInitialPosition,
+          orientation,
+          move,
         });
         const updatedStep = addStep(step, newVariation);
         setActiveStep(newVariation);
         updateStep(updatedStep);
       }
     },
-    [step, updateStep, setActiveStep],
+    [step, updateStep, setActiveStep, orientation, position],
   );
 
   return (

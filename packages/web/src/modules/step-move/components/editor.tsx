@@ -191,17 +191,21 @@ const EditorBoard: MoveModule['EditorBoard'] = ({
     (moves: NotableMove[], headers: PGNHeaders, comments: MoveComment[]) => {
       const steps = createStepsFromNotableMoves(moves, {
         comments,
-        orientation: step.state.orientation,
+        orientation,
       });
+      const move = position === headers.FEN ? moves[0] : undefined;
+      const variationSteps = move ? steps.splice(1) : steps;
       const newVariation = services.createStep('variation', {
-        steps,
+        steps: variationSteps,
         position: headers.FEN,
+        move,
+        orientation,
       });
       const updatedStep = addStep(step, newVariation);
       updateStep(updatedStep);
       setActiveStep(newVariation);
     },
-    [step, updateStep, setActiveStep],
+    [step, updateStep, setActiveStep, orientation, position],
   );
 
   return (

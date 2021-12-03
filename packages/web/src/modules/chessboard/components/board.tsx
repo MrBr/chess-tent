@@ -197,14 +197,12 @@ class Chessboard
     return this.api.state;
   }
 
-  onEvaluationMove = ({
-    move,
-    captured,
-    promoted,
-    piece,
-    position,
-  }: NotableMove) => {
-    if (this.props.onMove) {
+  onEvaluationMove = (moves: NotableMove[]) => {
+    const { fen } = this.props;
+    if (this.props.onMove && moves.length === 1) {
+      // Next engine move shouldn't be looked at as a variation
+      // Single move in evaluation line is for sure next.
+      const { position, move, piece, captured, promoted } = moves[0];
       this.props.onMove(
         position,
         move,
@@ -212,8 +210,10 @@ class Chessboard
         !!captured,
         promoted as PieceRolePromotable,
       );
-    } else if (this.props.onChange) {
-      this.props.onChange(position);
+    } else if (this.props.onPGN) {
+      // This is useful trick for the moment
+      // evaluation variation can be considered as a variation
+      this.props.onPGN(moves, { FEN: fen }, []);
     } else {
       console.warn('Nothing handling evaluation move.');
     }

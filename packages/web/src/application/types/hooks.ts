@@ -85,7 +85,7 @@ export type Hooks = {
     error: null | string | {};
     reset: () => void;
   };
-  useMeta: <T>(metaKey: string) => UseMetaReturn<T>;
+  useMeta: <T>(metaKey: string, defaultValue?: T) => UseMetaReturn<T>;
   useCopyStep: () => [
     boolean,
     (meta: Step) => void,

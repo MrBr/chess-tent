@@ -7,9 +7,12 @@ import { deleteMetaState, updateMetaState } from './state/actions';
 // TODO - implement configurable initial meta
 const initialMeta = Object.freeze({});
 
-export const useMeta: Hooks['useMeta'] = <T>(metaKey: string) => {
+export const useMeta: Hooks['useMeta'] = <T>(
+  metaKey: string,
+  defaultValue?: T,
+) => {
   const dispatch = useDispatch();
-  const meta = useSelector(selectMeta(metaKey)) || initialMeta;
+  const meta = useSelector(selectMeta(metaKey)) || defaultValue || initialMeta;
 
   const update = useCallback(
     (value: T) => {

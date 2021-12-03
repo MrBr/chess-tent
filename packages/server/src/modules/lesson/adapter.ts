@@ -18,7 +18,7 @@ const migrateTaskState = (type: 'questionnaire', state: { options?: {}[] }) => {
 };
 
 const exerciseStepAdapter = async (entity: AppDocument<Lesson>) => {
-  if (!entity || (entity.v !== 0 && !!entity.v)) {
+  if (!entity || (entity.v !== 0 && !!entity.v) || !entity.state) {
     return false;
   }
   const updateExerciseSteps = (...args: [Step]): Step => {
@@ -33,6 +33,7 @@ const exerciseStepAdapter = async (entity: AppDocument<Lesson>) => {
       task: {};
       explanation: {};
       hint: {};
+      activeSegment: string;
     }>;
     if (step.stepType === 'exercise') {
       const { exerciseState, position, shapes, exerciseType } = step.state;
@@ -66,4 +67,36 @@ const exerciseStepAdapter = async (entity: AppDocument<Lesson>) => {
   return entity;
 };
 
-export const lessonAdapter = db.createAdapter(exerciseStepAdapter);
+const exerciseActiveSegmentAdapter = async (entity: AppDocument<Lesson>) => {
+  if (!entity || entity.v !== 1 || !entity.state) {
+    return false;
+  }
+  const updateExerciseSteps = (...args: [Step]): Step => {
+    const step = args[0] as Step<{
+      exerciseType: string;
+      activeSegment: string;
+    }>;
+    if (step.stepType === 'exercise') {
+      step.state.activeSegment = step.state.activeSegment || 'task';
+    }
+    step.state.steps.map(updateExerciseSteps);
+    return step as Step;
+  };
+
+  entity.state.chapters = entity.state.chapters.map(chapter => ({
+    ...chapter,
+    state: {
+      ...chapter.state,
+      steps: chapter.state.steps.map(updateExerciseSteps),
+    },
+  }));
+
+  entity.v = 2;
+  entity.markModified('state.chapters');
+  return entity;
+};
+
+export const lessonAdapter = db.createAdapter(
+  exerciseStepAdapter,
+  exerciseActiveSegmentAdapter,
+);

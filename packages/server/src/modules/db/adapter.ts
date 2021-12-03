@@ -4,24 +4,17 @@ import { Schema } from 'mongoose';
 export const createAdapter = <T extends EntityDocument>(
   ...updaters: Updater<T>[]
 ) => async (entity: T): Promise<T | false> => {
-  let updatedEntity: false | T = false;
-  const newerUpdaters = [];
+  const version = entity.v;
+  let lastEntity = entity;
 
   for (const update of updaters) {
-    updatedEntity = await update(entity);
+    const updatedEntity = await update(lastEntity);
     if (updatedEntity) {
-      break;
+      lastEntity = updatedEntity;
     }
-    newerUpdaters.push(update);
   }
 
-  let update = newerUpdaters.pop();
-  while (update && !!updatedEntity) {
-    updatedEntity = await update(updatedEntity);
-    update = newerUpdaters.pop();
-  }
-
-  return updatedEntity;
+  return version === lastEntity.v ? false : lastEntity;
 };
 
 export const applyAdapter = <T extends EntityDocument>(

@@ -623,6 +623,7 @@ class EditorRenderer extends React.Component<
               </Col>
               <RootStepButton
                 updateChapter={this.updateChapter}
+                setActiveStep={this.setActiveStepHandler}
                 chapter={activeChapter}
                 className="mt-4"
               />

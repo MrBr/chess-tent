@@ -1,17 +1,23 @@
 import React, { useCallback } from 'react';
 import { constants, services, ui } from '@application';
-import { addStep, Chapter } from '@chess-tent/models';
+import { addStep, Chapter, Step } from '@chess-tent/models';
 
 const { Dropdown } = ui;
 const { START_FEN } = constants;
 
 export interface RootStepButtonProps {
   updateChapter: (chapter: Chapter) => void;
+  setActiveStep: (step: Step) => void;
   chapter: Chapter;
   className?: string;
 }
 
-export default ({ updateChapter, chapter, className }: RootStepButtonProps) => {
+export default ({
+  updateChapter,
+  chapter,
+  className,
+  setActiveStep,
+}: RootStepButtonProps) => {
   const addNewRootStep = useCallback(
     (stepType: string | null) => {
       if (!stepType) {
@@ -24,8 +30,9 @@ export default ({ updateChapter, chapter, className }: RootStepButtonProps) => {
         },
       );
       updateChapter(addStep(chapter, newStep));
+      setActiveStep(newStep);
     },
-    [updateChapter, chapter],
+    [updateChapter, chapter, setActiveStep],
   );
   return (
     <Dropdown onSelect={addNewRootStep} className={`${className} w-25`}>

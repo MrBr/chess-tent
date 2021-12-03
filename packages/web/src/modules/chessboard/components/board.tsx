@@ -1,7 +1,7 @@
-import { components, ui, constants, services, hooks } from '@application';
+import { components, ui, constants, services } from '@application';
 import {
   ChessboardProps,
-  ChessboardState,
+  ChessboardContext,
   Move,
   Piece,
   ChessboardInterface,
@@ -14,18 +14,10 @@ import {
   FEN,
   Evaluation,
   Promotion,
-  ChessboardMeta,
-  Components,
 } from '@types';
 
 import { ChessInstance } from 'chess.js';
-import React, {
-  Component,
-  FunctionComponent,
-  ReactElement,
-  RefObject,
-} from 'react';
-import styled from '@emotion/styled';
+import React, { Component, RefObject } from 'react';
 import { Chessground } from '@chess-tent/chessground';
 import _ from 'lodash';
 import { Api } from '@chess-tent/chessground/dist/api';
@@ -36,169 +28,32 @@ import { Config } from '@chess-tent/chessground/dist/config';
 
 import { SparePieces } from './spare-pieces';
 import PromotionPrompt from './promotion';
+import BoardContainer from './board-container';
+import BoardHeader from './board-header';
+import BoardFooter from './board-footer';
 import Footer from './footer';
-import { replaceFENPosition, toDests, unfreeze } from './_helpers';
-import { getPiece, getTurnColor, switchTurnColor } from '../chess/service';
+import {
+  ChessgroundMappedProps,
+  replaceFENPosition,
+  unfreeze,
+} from '../_helpers';
+import { ChessgroundMappedPropsType, ChessgroundMapper } from '../types';
+import { BoardContext } from '../context';
 
-const { START_FEN, MAX_BOARD_SIZE, KINGS_FEN } = constants;
-const { useMeta } = hooks;
+const { START_FEN, KINGS_FEN } = constants;
 const { Modal, Absolute } = ui;
 const {
   Chess,
   createMoveShortObject,
   getEvaluationBestMove,
   createMoveShape,
+  getPiece,
+  getTurnColor,
+  switchTurnColor,
 } = services;
 const { Evaluator, EvaluationBar, EvaluationLines } = components;
 
 export type State = CGState;
-// Meta represents chessboard "global" state
-// Because board is wrapped with different component in each step
-// it gets unmounted and loses local state. State which should be persisted through
-// different steps should be saved in the meta.
-export type PrivateChessboardProps = {
-  updateMeta: (meta: ChessboardMeta) => void;
-  meta: ChessboardMeta;
-};
-
-type ChessgroundMapper =
-  | string
-  | ((
-      props: ChessboardProps & PrivateChessboardProps,
-      config: Partial<Config>,
-      api: Api,
-    ) => void);
-type ChessgroundMappedPropsType = Record<
-  keyof Omit<
-    ChessboardProps,
-    | 'header'
-    | 'footer'
-    | 'onToggleEvaluation'
-    | 'onReset'
-    | 'onChange'
-    | 'onMove'
-    | 'onShapesChange'
-    | 'onShapeAdd'
-    | 'onShapeRemove'
-    | 'validateMove'
-    | 'validateDrawable'
-    | 'evaluate'
-    | 'size'
-    | 'sparePieces'
-    | 'onPieceDrop'
-    | 'onPieceRemove'
-    | 'onClear'
-    | 'onOrientationChange'
-    | 'onUpdateEditing'
-    | 'onFENSet'
-    | 'editing'
-    | 'onPGN'
-    | 'updateMeta'
-    | 'meta'
-  >,
-  ChessgroundMapper
->;
-
-const ChessgroundMappedProps: ChessgroundMappedPropsType = {
-  viewOnly: 'viewOnly',
-  fen: (props, update) => {
-    // Chessground needs legal moves list in "strict mode";
-    // Legal moves are resolved bellow
-    const dests = props.allowAllMoves
-      ? null
-      : toDests(props.fen, props.movableColor === 'both');
-    const turnColor = getTurnColor(props.fen);
-
-    _.set(update, 'fen', props.fen);
-    _.set(update, 'movable.dests', dests);
-    _.set(update, 'turnColor', turnColor);
-  },
-  shapes: 'drawable.shapes',
-  selectablePieces: 'selectable.enabled',
-  resizable: 'resizable',
-  eraseDrawableOnClick: 'drawable.eraseOnClick',
-  animation: 'animation.enabled',
-  allowAllMoves: (props, update) => {
-    _.set(update, 'movable.free', props.allowAllMoves);
-    _.set(
-      update,
-      'movable.color',
-      props.movableColor || props.allowAllMoves
-        ? 'both'
-        : getTurnColor(props.fen),
-    );
-    (ChessgroundMappedProps.fen as Function)(props, update);
-  },
-  movableColor: 'movable.color',
-  orientation: 'orientation',
-};
-
-const BoardHeader = styled.div<{
-  width: string | number;
-  height?: string | number;
-}>(
-  {
-    margin: '1em auto',
-    maxWidth: MAX_BOARD_SIZE,
-  },
-  ({ width, height }) => ({ width, height }),
-);
-
-const BoardContainer = styled<
-  FunctionComponent<{
-    size: string | number;
-    className?: string;
-    boardRef: RefObject<any>;
-    boardExtras?: ReactElement | null;
-  }>
->(props => (
-  <div className={props.className}>
-    <div className="board-height">
-      {props.boardExtras}
-      <div ref={props.boardRef} className="board" />
-    </div>
-    {props.children}
-  </div>
-))(({ size }) => ({
-  '& > .board-height': {
-    paddingTop: '100%',
-  },
-  '& .board-height > .board': {
-    position: 'absolute',
-    width: '100%',
-  },
-  '.spare-pieces': {
-    '.piece': {
-      width: '6%',
-      paddingTop: '6%',
-      marginBottom: '2%',
-      backgroundPosition: 'center',
-      backgroundSize: 'cover',
-    },
-    width: '100%',
-    position: 'absolute',
-    left: 0,
-    top: '50%',
-    transform: 'translateX(calc(-6% - 20px)) translateY(-50%)',
-  },
-  zIndex: 10, // important for dragged piece to cover spare piece base
-  width: size,
-  position: 'relative',
-  margin: 'auto',
-  maxWidth: MAX_BOARD_SIZE,
-  maxHeight: MAX_BOARD_SIZE,
-  boxSizing: 'content-box',
-}));
-
-const BoardFooter = styled.div<{
-  width: string | number;
-}>(
-  {
-    margin: '1em auto',
-    maxWidth: MAX_BOARD_SIZE,
-  },
-  ({ width }) => ({ width }),
-);
 
 // Chessground resizing expects custom event to be
 // triggered on the document.body once resizing occur.
@@ -207,15 +62,14 @@ window.addEventListener('resize', () =>
 );
 
 class Chessboard
-  extends Component<ChessboardProps & PrivateChessboardProps, ChessboardState>
+  extends Component<ChessboardProps>
   implements ChessboardInterface {
   boardHost: RefObject<HTMLDivElement> = React.createRef();
   api: Api = new Proxy({}, {}) as Api;
   chess: ChessInstance;
-  state: ChessboardState = {
-    renderPrompt: undefined,
-    promotion: undefined,
-  };
+  // @ts-ignore
+  context: ChessboardContext;
+  static contextType = BoardContext;
   static defaultProps = {
     evaluate: false,
     viewOnly: false,
@@ -229,13 +83,9 @@ class Chessboard
     orientation: 'white',
     shapes: [],
     allowAllMoves: true,
-    meta: {
-      evaluate: false,
-      evaluations: {},
-    },
   };
 
-  constructor(props: ChessboardProps & PrivateChessboardProps) {
+  constructor(props: ChessboardProps) {
     super(props);
     this.chess = new Chess();
   }
@@ -308,7 +158,7 @@ class Chessboard
     finalConfig.fen && this.chess.load(finalConfig.fen);
   }
 
-  prompt(renderPrompt: ChessboardState['renderPrompt']) {
+  prompt(renderPrompt: ChessboardContext['renderPrompt']) {
     this.setState({
       renderPrompt,
     });
@@ -370,33 +220,28 @@ class Chessboard
   };
 
   toggleEvaluation = () => {
-    const { updateMeta, meta } = this.props;
-    const evaluate = !meta.evaluate;
-    const evaluations = meta.evaluations;
-    updateMeta({ evaluate, evaluations });
+    const { update, evaluate, evaluations } = this.context;
+    update({ evaluate: !evaluate, evaluations });
     this.api.setAutoShapes([]);
   };
 
   getBestEvaluation() {
-    const {
-      meta: { evaluations },
-    } = this.props;
+    const { evaluations } = this.context;
     return evaluations[1];
   }
 
   updateEvaluation = (evaluation: Evaluation) => {
-    const { updateMeta, meta } = this.props;
-    const { evaluate } = meta;
+    const { evaluate, update } = this.context;
     if (!evaluate) {
       return;
     }
 
-    const evaluations: ChessboardMeta['evaluations'] = {
-      ...meta.evaluations,
+    const evaluations: ChessboardContext['evaluations'] = {
+      ...this.context.evaluations,
       [evaluation.lineIndex]: evaluation,
     };
 
-    updateMeta({ evaluations, evaluate });
+    update({ evaluations, evaluate });
     const shapes = Object.values(evaluations)
       .map(getEvaluationBestMove)
       .filter(Boolean)
@@ -648,10 +493,8 @@ class Chessboard
       sparePieces,
       footer,
       onPGN,
-      meta,
     } = this.props;
-    const { renderPrompt, promotion } = this.state;
-    const { evaluate, evaluations } = meta;
+    const { renderPrompt, promotion, evaluate, evaluations } = this.context;
 
     const bestEvaluation = this.getBestEvaluation();
     const sparePiecesElement = sparePieces ? (
@@ -731,17 +574,4 @@ class Chessboard
   }
 }
 
-const ChessboardWithMeta = (React.forwardRef<Chessboard, ChessboardProps>(
-  (props, ref) => {
-    const [meta, updateMeta] = useMeta<ChessboardMeta>(
-      `editor-board`,
-      Chessboard.defaultProps.meta,
-    );
-
-    return (
-      <Chessboard ref={ref} {...props} updateMeta={updateMeta} meta={meta} />
-    );
-  },
-) as unknown) as Components['Chessboard'];
-
-export default ChessboardWithMeta;
+export default Chessboard;

@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { Chapter, Lesson, Step } from '@chess-tent/models';
+import { Promotion } from './chess';
+import { Evaluation } from './components';
 
 export type EditorContext =
   | {
@@ -16,6 +18,14 @@ export type EditorContext =
       removeStep: (step: Step) => void;
     }
   | undefined;
+
+export interface ChessboardContext {
+  renderPrompt?: (close: () => void) => ReactElement;
+  promotion?: Promotion;
+  evaluate?: boolean;
+  evaluations: Record<string, Evaluation>;
+  update: (state: Partial<ChessboardContext>) => void;
+}
 
 export type Context = {
   editorContext: React.Context<EditorContext>;

@@ -2,9 +2,10 @@ import { FEN, Key, Piece } from '@types';
 import { ChessInstance } from 'chess.js';
 import { services } from '@application';
 import isNil from 'lodash/isNil';
-import { switchTurnColor } from '../chess/service';
+import _set from 'lodash/set';
+import { ChessgroundMappedPropsType } from './types';
 
-const { Chess } = services;
+const { Chess, getTurnColor, switchTurnColor } = services;
 
 export function replaceFENPosition(
   fen: FEN,
@@ -59,3 +60,37 @@ export function unfreeze<T>(value: T): T {
     : value) as T;
   return newValue;
 }
+
+export const ChessgroundMappedProps: ChessgroundMappedPropsType = {
+  viewOnly: 'viewOnly',
+  fen: (props, update) => {
+    // Chessground needs legal moves list in "strict mode";
+    // Legal moves are resolved bellow
+    const dests = props.allowAllMoves
+      ? null
+      : toDests(props.fen, props.movableColor === 'both');
+    const turnColor = getTurnColor(props.fen);
+
+    _set(update, 'fen', props.fen);
+    _set(update, 'movable.dests', dests);
+    _set(update, 'turnColor', turnColor);
+  },
+  shapes: 'drawable.shapes',
+  selectablePieces: 'selectable.enabled',
+  resizable: 'resizable',
+  eraseDrawableOnClick: 'drawable.eraseOnClick',
+  animation: 'animation.enabled',
+  allowAllMoves: (props, update) => {
+    _set(update, 'movable.free', props.allowAllMoves);
+    _set(
+      update,
+      'movable.color',
+      props.movableColor || props.allowAllMoves
+        ? 'both'
+        : getTurnColor(props.fen),
+    );
+    (ChessgroundMappedProps.fen as Function)(props, update);
+  },
+  movableColor: 'movable.color',
+  orientation: 'orientation',
+};

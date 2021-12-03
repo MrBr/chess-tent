@@ -68,6 +68,7 @@ const {
   DifficultyDropdown,
   TagsSelect,
   StepToolbox,
+  ChessboardContextProvider,
 } = components;
 const {
   actions: { serviceAction },
@@ -470,19 +471,21 @@ class EditorRenderer extends React.Component<
         </Absolute>
         <Row noGutters className="h-100">
           <Col className="pt-5">
-            <StepRenderer
-              key={lesson.id}
-              step={activeStep}
-              component="EditorBoard"
-              activeStep={activeStep}
-              setActiveStep={this.setActiveStepHandler}
-              stepRoot={activeChapter}
-              status={lessonStatusText}
-              Chessboard={this.renderChessboard}
-              updateChapter={this.updateChapter}
-              updateStep={this.updateStep}
-              removeStep={this.deleteStep}
-            />
+            <ChessboardContextProvider>
+              <StepRenderer
+                key={lesson.id}
+                step={activeStep}
+                component="EditorBoard"
+                activeStep={activeStep}
+                setActiveStep={this.setActiveStepHandler}
+                stepRoot={activeChapter}
+                status={lessonStatusText}
+                Chessboard={this.renderChessboard}
+                updateChapter={this.updateChapter}
+                updateStep={this.updateStep}
+                removeStep={this.deleteStep}
+              />
+            </ChessboardContextProvider>
           </Col>
           <Col md={6} lg={4} className="mh-100">
             <Sidebar>

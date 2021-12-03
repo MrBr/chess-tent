@@ -8,7 +8,7 @@ import {
 import { components, hooks, services, ui } from '@application';
 
 const { Tabs, Tab, Container, Col, Row, Input, Text } = ui;
-const { UserAvatar } = components;
+const { UserAvatar, ChessboardContextProvider } = components;
 const { useUser, useActiveUserRecord } = hooks;
 const { createActivityComment } = services;
 
@@ -70,7 +70,9 @@ const ActivityPlayground = ({
   return (
     <Container fluid className="h-100 overflow-y-auto">
       <Row className="h-100">
-        <Col className="pt-5">{tab.board}</Col>
+        <Col className="pt-5">
+          <ChessboardContextProvider>{tab.board}</ChessboardContextProvider>
+        </Col>
         <Col md={5} xl={4} className="h-100 pr-5 pl-5 ">
           <Row className="h-100 d-flex flex-column flex-nowrap" noGutters>
             <Col className="col-auto mt-5">{header}</Col>

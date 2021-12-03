@@ -41,7 +41,6 @@ import {
   PGNHeaders,
   MovableColor,
   UciMove,
-  Promotion,
 } from './chess';
 import {
   ActivityStepStateBase,
@@ -58,16 +57,12 @@ import { ClassComponent } from './_helpers';
 import { OptionsDropdownProps, ButtonProps, UI } from './ui';
 import {
   AppAnalysis,
+  ChessboardContext,
   Hooks,
   NotificationView,
   StepModules,
   Steps,
 } from './index';
-
-export interface ChessboardState {
-  renderPrompt?: (close: () => void) => ReactElement;
-  promotion?: Promotion;
-}
 
 export interface ChessboardFooterProps {
   editing: boolean;
@@ -84,10 +79,6 @@ export interface ChessboardFooterProps {
   ) => void;
 }
 
-export interface ChessboardMeta {
-  evaluate?: boolean;
-  evaluations: Record<string, Evaluation>;
-}
 export interface ChessboardProps {
   header?: ReactNode;
   footer?: ReactNode;
@@ -138,12 +129,20 @@ export interface ChessboardProps {
   onOrientationChange?: (orientation: ChessboardProps['orientation']) => void;
 }
 
-export interface ChessboardInterface
-  extends Component<ChessboardProps, ChessboardState> {
+/**
+ * Chessboard should be stateless.
+ * Current step module implementation (with each step having it's own component) causes Chessboard to unmount
+ * when step type changes. This primarily affect state (state gets removed).
+ * Having stateless chessboard solve the issue because the state is moved to parent,
+ * becoming contextual. This is useful as well so that certain board options can
+ * be configured through the context as well.
+ * Having chessboard state in store, making it global is somewhat ugly?!
+ */
+export interface ChessboardInterface extends Component<ChessboardProps> {
   boardHost: RefObject<HTMLDivElement>;
   api: Api;
-  state: ChessboardState;
-  prompt: (renderPrompt: ChessboardState['renderPrompt']) => void;
+  context: ChessboardContext;
+  prompt: (renderPrompt: ChessboardContext['renderPrompt']) => void;
   closePrompt: () => void;
   removeShape: (shape: DrawShape) => void;
   fen: (
@@ -312,6 +311,7 @@ export type Components = {
     sidebar?: ReactElement | null;
   }>;
   Chessboard: ClassComponent<ChessboardInterface>;
+  ChessboardContextProvider: ComponentType;
   ChessboardFooter: ComponentType<ChessboardFooterProps>;
   Stepper: FunctionComponent<StepperProps>;
   StepToolbox: StepToolbox;

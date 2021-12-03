@@ -4,13 +4,13 @@ import './style.css';
 import './themes/default.css';
 
 application.register(
-  () => import('./board'),
+  () => import('./components/board'),
   module => {
     application.components.Chessboard = module.default;
   },
 );
 application.register(
-  () => import('./footer'),
+  () => import('./components/footer'),
   module => {
     application.components.ChessboardFooter = module.default;
   },
@@ -19,5 +19,12 @@ application.register(
   () => import('./service'),
   module => {
     application.services.createMoveShape = module.createMoveShape;
+  },
+);
+application.register(
+  () => import('./context'),
+  module => {
+    application.components.ChessboardContextProvider =
+      module.ChessboardContextProvider;
   },
 );

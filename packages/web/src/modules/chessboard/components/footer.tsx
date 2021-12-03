@@ -103,10 +103,17 @@ const Footer: FunctionComponent<ChessboardFooterProps> = ({
 
   const handlePGN = (pgn: string) => {
     const game = new Chess();
-    game.load_pgn(pgn);
+    let formattedPgn = pgn;
+    if (/FEN/.test(pgn) && !/SetUp/.test(pgn)) {
+      // Chess.js requires SetUp property in PGN to load the provided fen
+      // This is a non-standard property and many PNGs doesn't have it even if the position isn't initial
+      // Chess class has to change initial position to be able to produce valid moves if FEN is provided.
+      formattedPgn = `[SetUp "1"]\n${formattedPgn}`;
+    }
+    game.load_pgn(formattedPgn);
     const moves = createNotableMovesFromGame(game);
     const headers = game.header();
-    // Should always be FEN it makes life easier
+    // Should always have FEN it makes life easier
     // TODO - make this typesafe
     headers.FEN = headers.FEN || START_FEN;
     const comments = game.get_comments();

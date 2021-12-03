@@ -1,16 +1,18 @@
 import styled from '@emotion/styled';
 import React, { FunctionComponent } from 'react';
-import { PieceColor, PieceRolePromotable } from '@types';
+import { PieceRolePromotable, Promotion } from '@types';
 
 export default styled<
   FunctionComponent<{
-    color: PieceColor;
+    promotion: Promotion;
     className?: string;
-    file: string;
-    onPromote: (role: PieceRolePromotable) => void;
+    onPromote: (promotion: Promotion, role: PieceRolePromotable) => void;
     onCancel: () => void;
   }>
->(({ className, color, onPromote, onCancel }) => {
+>(({ className, promotion, onPromote, onCancel }) => {
+  const {
+    piece: { color },
+  } = promotion;
   const roles: PieceRolePromotable[] = ['bishop', 'knight', 'rook', 'queen'];
   return (
     <div className={className} onContextMenu={onCancel} onClick={onCancel}>
@@ -21,7 +23,7 @@ export default styled<
               className={`piece ${color} ${role}`}
               onClick={event => {
                 event.stopPropagation();
-                onPromote(role);
+                onPromote(promotion, role);
               }}
             />
           </div>
@@ -62,9 +64,9 @@ export default styled<
     zIndex: 100,
     top: 0,
   },
-  ({ file }) => ({
+  ({ promotion }) => ({
     '.promotion-pieces': {
-      left: `${(parseInt(file.charAt(1)) as number) * 12.5}%`,
+      left: `${(parseInt(promotion.to.charAt(1)) as number) * 12.5}%`,
     },
   }),
 );

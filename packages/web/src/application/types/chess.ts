@@ -45,6 +45,12 @@ export type PieceRoleShort = PieceType;
 export type PieceRoleShortPromotable = 'n' | 'r' | 'b' | 'q';
 export type Shape = DrawShape;
 export type MoveComment = Comment;
+export type Promotion = {
+  from: Key;
+  to: Key;
+  piece: Piece;
+  captured?: boolean;
+};
 export type PGNHeaders = Partial<
   Record<
     'FEN' | 'Event' | 'White' | 'Black' | 'Result' | 'Site' | 'Date' | 'Round',

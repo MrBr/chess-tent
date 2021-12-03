@@ -24,8 +24,9 @@ const StepMoveComponent: StepMove = ({
   prefix,
   suffix,
   blackIndexSign,
+  onClick,
 }) => (
-  <span className={className}>
+  <span className={className} onClick={() => onClick && onClick(move)}>
     {prefix}
     {move.index &&
       (move.piece?.color === 'black' ? blackIndexSign : `${move.index}.`)}

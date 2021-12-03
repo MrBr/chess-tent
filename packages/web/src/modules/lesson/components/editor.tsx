@@ -98,7 +98,6 @@ type EditorRendererState = {
     activeStepId: Step['id'];
     activeChapterId: Chapter['id'];
   }[];
-  evaluating: boolean;
 };
 
 /**
@@ -111,10 +110,10 @@ class EditorRenderer extends React.Component<
 > {
   state: EditorRendererState = {
     history: [],
-    evaluating: false,
   };
 
   static getDerivedStateFromError() {
+    // TODO - handle error on UI?
     // So that React doesn't complain
     return {};
   }
@@ -122,16 +121,9 @@ class EditorRenderer extends React.Component<
   componentDidCatch(error: Error) {
     // You can also log the error to an error reporting service
     // logErrorToMyService(error, errorInfo);
-    alert('Error happened. Reverting the last change.');
     logException(error);
-    this.undoUpdate();
     this.setActiveStepHandler();
   }
-
-  toggleEvaluation = () => {
-    const { evaluating } = this.state;
-    this.setState({ evaluating: !evaluating });
-  };
 
   closeEditor = () => {
     const history = this.props.history;
@@ -430,20 +422,14 @@ class EditorRenderer extends React.Component<
   }
 
   renderChessboard = (props: ChessboardProps) => {
-    const { activeStep } = this.props;
-    const { evaluating } = this.state;
+    const { activeStep, lesson } = this.props;
     const lessonStatusText = this.renderLessonStatus();
-    // TODO - Evaluation
-    // - lines
-    // - shapes
-    // - evaluation + best move (top line)
     return (
       <Chessboard
+        key={lesson.id}
         orientation={activeStep.state.orientation}
         onOrientationChange={this.updateStepRotation}
         {...props}
-        onToggleEvaluation={this.toggleEvaluation}
-        evaluation={evaluating}
         header={
           <>
             <Row>
@@ -485,6 +471,7 @@ class EditorRenderer extends React.Component<
         <Row noGutters className="h-100">
           <Col className="pt-5">
             <StepRenderer
+              key={lesson.id}
               step={activeStep}
               component="EditorBoard"
               activeStep={activeStep}

@@ -41,6 +41,7 @@ import {
   PGNHeaders,
   MovableColor,
   UciMove,
+  Promotion,
 } from './chess';
 import {
   ActivityStepStateBase,
@@ -65,12 +66,7 @@ import {
 
 export interface ChessboardState {
   renderPrompt?: (close: () => void) => ReactElement;
-  evaluations: Record<string, Evaluation>;
-  promotion?: {
-    from: Key;
-    to: Key;
-    piece: Piece;
-  };
+  promotion?: Promotion;
 }
 
 export interface ChessboardFooterProps {
@@ -88,12 +84,14 @@ export interface ChessboardFooterProps {
   ) => void;
 }
 
+export interface ChessboardMeta {
+  evaluate?: boolean;
+  evaluations: Record<string, Evaluation>;
+}
 export interface ChessboardProps {
   header?: ReactNode;
   footer?: ReactNode;
   size?: string | number;
-  onToggleEvaluation?: () => void;
-  evaluation?: boolean;
 
   // Chessground proxy props
   viewOnly?: boolean;
@@ -213,6 +211,7 @@ export type LessonToolboxText = FunctionComponent<{
 export type StepMove = FunctionComponent<{
   className?: string;
   showIndex?: boolean;
+  onClick?: (move: NotableMove) => void;
   prefix?: string | ReactElement;
   suffix?: string | ReactElement;
   blackIndexSign?: string | ReactElement;
@@ -285,6 +284,7 @@ export interface Evaluation {
   variation: UciMove[];
   lineIndex: number;
   depth: number;
+  position: FEN;
 }
 
 export type NotificationComponent<T extends Notification> = ComponentType<{
@@ -363,7 +363,7 @@ export type Components = {
   EvaluationLines: ComponentType<{
     evaluation: Evaluation;
     className?: string;
-    position: FEN;
+    onMoveClick?: (move: NotableMove) => void;
   }>;
   EvaluationBar: ComponentType<{ evaluation: Evaluation; className?: string }>;
   Evaluator: ComponentType<{

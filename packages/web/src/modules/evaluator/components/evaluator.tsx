@@ -79,7 +79,7 @@ class Evaluator extends React.Component<EvaluatorProps> {
   static defaultProps = {
     evaluate: true,
     depth: 18,
-    lines: 2,
+    lines: 1,
   };
 
   worker: Worker;
@@ -106,21 +106,24 @@ class Evaluator extends React.Component<EvaluatorProps> {
   }
 
   onEngineMessage = ({ data }: MessageEvent) => {
-    const { onBestMoveChange, onEvaluationChange } = this.props;
+    const { onBestMoveChange, onEvaluationChange, position } = this.props;
 
     if (onEvaluationChange && isLineValuation(data)) {
       const [score, isMate] = getScore(data);
       const depth = getDepth(data);
       const variation = getVariation(data);
       const lineIndex = getLineIndex(data);
-      console.log(data);
-      onEvaluationChange({
-        score,
-        isMate,
-        variation,
-        lineIndex,
-        depth,
-      });
+      // Variations with no moves only cause problem.
+      // This constraint makes code later on much simple without big side effect
+      variation.length > 0 &&
+        onEvaluationChange({
+          score,
+          isMate,
+          variation,
+          lineIndex,
+          depth,
+          position,
+        });
     } else if (onBestMoveChange && isBestMove(data)) {
       const bestMove = getBestMoveValue(data, 'bestmove');
       const ponder = getBestMoveValue(data, 'ponder');

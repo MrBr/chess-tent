@@ -35,7 +35,12 @@ const StepComponentRenderer: Components['StepRenderer'] = ({
 }) => {
   const Component = stepModules[step.stepType][component];
   const stepProps = otherProps as ComponentProps<typeof Component>;
-  return <Component key={step.id} step={step} {...(stepProps as any)} />;
+  // Don't add key prop here
+  // Changing step doesn't mean necessary that component has to unmount
+  // It should be faster to let react conclude when to unmount
+  // Unmount will happen for sure when switching between step types because the component itself is different.
+  // My guess is that "hooks" don't allow reusing different component on the same key
+  return <Component step={step} {...(stepProps as any)} />;
 };
 
 export const stepSchema = {

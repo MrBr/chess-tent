@@ -1,6 +1,7 @@
 import React, { ComponentType } from 'react';
-import { Components, UciMove } from '@types';
+import { Components, PieceColor, UciMove } from '@types';
 import { ui } from '@application';
+import { getTurnColor } from '../../chess/service';
 
 const { ToggleButton } = ui;
 
@@ -54,12 +55,13 @@ const isBestMove = (data: EngineLine) => {
   return /^bestmove/.test(data);
 };
 
-const getScore = (data: EngineLine): [number, boolean] => {
+const getScore = (data: EngineLine, color: PieceColor): [number, boolean] => {
   const [scoreType, scoreValue] = getInfoValues(data, 'score');
+  const scoreCoefficient = color === 'black' ? -1 : 1;
   if (scoreType === 'mate') {
-    return [parseInt(scoreValue), true];
+    return [parseInt(scoreValue) * scoreCoefficient, true];
   }
-  const cp = parseInt(scoreValue);
+  const cp = parseInt(scoreValue) * scoreCoefficient;
   return [parseFloat((cp / 100).toFixed(2)), false];
 };
 
@@ -80,6 +82,8 @@ class Evaluator extends React.Component<EvaluatorProps> {
     evaluate: true,
     depth: 18,
     lines: 1,
+    // Min depth must be at least 0!
+    minDepth: 10,
   };
 
   worker: Worker;
@@ -106,18 +110,24 @@ class Evaluator extends React.Component<EvaluatorProps> {
   }
 
   onEngineMessage = ({ data }: MessageEvent) => {
-    const { onBestMoveChange, onEvaluationChange, position } = this.props;
+    const {
+      onBestMoveChange,
+      onEvaluationChange,
+      position,
+      minDepth,
+    } = this.props;
 
     if (onEvaluationChange && isLineValuation(data)) {
-      const [score, isMate] = getScore(data);
+      const [score, isMate] = getScore(data, getTurnColor(position));
       const depth = getDepth(data);
       const variation = getVariation(data);
       const lineIndex = getLineIndex(data);
       // Variations with no moves only cause problem.
-      // This constraint makes code later on much simple without big side effect
-      variation.length > 0 &&
+      // This constraint makes code later on much simple without big side effect.
+      // Avoiding low depths makes evaluation jump less.
+      variation.length > (minDepth as number) &&
         onEvaluationChange({
-          score,
+          score: score,
           isMate,
           variation,
           lineIndex,
@@ -136,6 +146,7 @@ class Evaluator extends React.Component<EvaluatorProps> {
     this.worker.postMessage('ucinewgame');
     this.worker.postMessage(`position fen ${position}`);
     this.worker.postMessage(`setoption name MultiPV value ${lines}`);
+    this.worker.postMessage(`setoption name UCI_AnalyseMode value true`);
     evaluate && this.worker.postMessage(`go depth ${depth}`);
   };
 

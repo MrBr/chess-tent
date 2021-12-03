@@ -371,6 +371,7 @@ export type Components = {
     evaluate?: boolean;
     depth?: number;
     lines?: number;
+    minDepth?: number;
     // Evaluator is making sure that updates are thrown for the latest position only
     onEvaluationChange?: (evaluation: Evaluation) => void;
     onToggle?: () => void;

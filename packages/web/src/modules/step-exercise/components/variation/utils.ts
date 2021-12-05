@@ -1,15 +1,13 @@
 import {
   ExerciseVariationActivityState,
   ExerciseVariationStep,
-  Move,
   NotableMove,
 } from '@types';
 
 export const isCorrectActivityMove = (
-  activityMove: Move,
-  stepMove?: Move,
-): boolean =>
-  stepMove?.[0] === activityMove[0] && stepMove?.[1] === activityMove[1];
+  activityMove: NotableMove,
+  stepMove?: NotableMove,
+): boolean => activityMove.position === stepMove?.position;
 
 export const isFENSetup = (
   activityIndex: number | undefined | null,

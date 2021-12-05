@@ -27,9 +27,15 @@ const Playground: FunctionComponent<
   const handleMove = useCallback(
     (position, move, piece, captured, promoted) => {
       const moveToPlayIndex = activeMoveIndex || 0;
+      const notableMove = createNotableMove(
+        position,
+        move,
+        moveToPlayIndex,
+        captured,
+        promoted,
+      );
       const stepToPlayMove = moves?.[moveToPlayIndex];
-      // TODO - promotion
-      const correct = isCorrectActivityMove(move, stepToPlayMove?.move);
+      const correct = isCorrectActivityMove(notableMove, stepToPlayMove);
       const newActiveMoveIndex = correct
         ? moveToPlayIndex + 2
         : moveToPlayIndex;
@@ -37,6 +43,9 @@ const Playground: FunctionComponent<
       const nextUserMove = moves?.[newActiveMoveIndex];
 
       if (!correct) {
+        // Timeout is here for a reason
+        // It makes figure move smoothly back after the wrong move
+        // TODO - find a generic way for doing this?
         setTimeout(() => {
           setStepActivityState({
             move: null,
@@ -49,13 +58,7 @@ const Playground: FunctionComponent<
       }
 
       setStepActivityState({
-        move: createNotableMove(
-          position,
-          move,
-          moveToPlayIndex,
-          captured,
-          promoted,
-        ),
+        move: notableMove,
         correct,
         activeMoveIndex: newActiveMoveIndex,
       });

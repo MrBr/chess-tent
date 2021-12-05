@@ -5,6 +5,7 @@ import DifficultyDropdown from './components/difficulty-dropdown';
 import { editorContext } from './context';
 
 application.register(() => import('./state/reducer'));
+application.register(() => import('./state/middleware'));
 application.register(() => import('./routes'));
 application.register(() => import('./requests'));
 

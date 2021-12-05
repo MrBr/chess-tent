@@ -11,8 +11,10 @@ export const middleware: Middleware = store => next => action => {
     action.meta.push &&
     action.payload.value?.subject?.type === TYPE_LESSON
   ) {
-    // Intercept server push action and handle it through the record
-    // TODO - probably using the action it self to trigger
+    // Normalized records can't be set directly to the redux.
+    // Received value is denormalized and has to be normalized first.
+    // TODO - find a better way to handle this scenario
+    //  probably there should be option to extend record reducer
     const { value } = action.payload;
     const { key } = action.meta;
     userTrainings(store, key).push(value);

@@ -5,7 +5,11 @@ import {
   ExerciseVariationStep,
 } from '@types';
 import { services } from '@application';
-import { isCorrectActivityMove, isVariationCompleted } from './utils';
+import {
+  getActivityPosition,
+  isCorrectActivityMove,
+  isVariationCompleted,
+} from './utils';
 import { SegmentActivityBoard } from '../segment';
 
 const { createNotableMove } = services;
@@ -14,18 +18,11 @@ const Playground: FunctionComponent<
   ComponentProps<ExerciseModule<ExerciseVariationStep>['ActivityBoard']>
 > = props => {
   const { step, stepActivityState, setStepActivityState, completeStep } = props;
-  const { position } = step.state.task;
   const {
     activeMoveIndex,
-    move,
-    correct,
   } = stepActivityState as ExerciseVariationActivityState;
   const { moves } = step.state.task;
-  const activePosition =
-    (!correct && move?.position) ||
-    (activeMoveIndex && moves
-      ? moves[activeMoveIndex - 1]?.position
-      : position);
+  const activePosition = getActivityPosition(step, stepActivityState);
 
   const handleMove = useCallback(
     (position, move, piece, captured, promoted) => {

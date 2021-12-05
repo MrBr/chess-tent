@@ -111,6 +111,9 @@ export interface ChessboardProps {
   ) => boolean;
   eraseDrawableOnClick?: boolean;
   shapes?: Shape[];
+  // Used for static board shapes;
+  // static in terms that user doesn't control them
+  autoShapes?: Shape[];
   sparePieces?: boolean;
   editing?: boolean;
   allowAllMoves?: boolean;
@@ -150,6 +153,7 @@ export interface ChessboardInterface extends Component<ChessboardProps> {
     options?: { piece?: Piece; promoted?: PieceRolePromotable },
   ) => FEN;
   move: (from: Key, to: Key) => void;
+  syncAutoShapes: () => void;
 }
 
 export type StepperProps = {

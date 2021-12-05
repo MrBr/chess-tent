@@ -12,7 +12,7 @@ export const ActivityBoard: DescriptionModule['ActivityBoard'] = ({
   const {
     state: { position, shapes },
   } = step;
-  return <Chessboard fen={position} shapes={shapes} />;
+  return <Chessboard fen={position} autoShapes={shapes} />;
 };
 
 export const ActivitySidebar: DescriptionModule['ActivitySidebar'] = ({

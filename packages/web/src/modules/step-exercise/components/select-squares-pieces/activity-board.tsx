@@ -51,7 +51,7 @@ const Playground: FunctionComponent<
 
   return (
     <SegmentActivityBoard
-      shapes={selectedShapes}
+      autoShapes={selectedShapes}
       animation
       onShapesChange={handleShapesChange}
       validateDrawable={validateShapes}

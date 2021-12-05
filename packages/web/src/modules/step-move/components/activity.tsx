@@ -11,7 +11,7 @@ const ActivityBoard: MoveModule['ActivityBoard'] = ({ Chessboard, step }) => {
       shapes,
     },
   } = step;
-  return <Chessboard fen={position} shapes={shapes} />;
+  return <Chessboard fen={position} autoShapes={shapes} />;
 };
 
 const ActivitySidebar: MoveModule['ActivitySidebar'] = ({ step }) => {

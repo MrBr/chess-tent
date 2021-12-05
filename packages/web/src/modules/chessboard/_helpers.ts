@@ -63,33 +63,34 @@ export function unfreeze<T>(value: T): T {
 
 export const ChessgroundMappedProps: ChessgroundMappedPropsType = {
   viewOnly: 'viewOnly',
-  fen: (props, update) => {
+  fen: (board, update) => {
     // Chessground needs legal moves list in "strict mode";
     // Legal moves are resolved bellow
-    const dests = props.allowAllMoves
+    const dests = board.props.allowAllMoves
       ? null
-      : toDests(props.fen, props.movableColor === 'both');
-    const turnColor = getTurnColor(props.fen);
+      : toDests(board.props.fen, board.props.movableColor === 'both');
+    const turnColor = getTurnColor(board.props.fen);
 
-    _set(update, 'fen', props.fen);
+    _set(update, 'fen', board.props.fen);
     _set(update, 'movable.dests', dests);
     _set(update, 'turnColor', turnColor);
   },
   shapes: 'drawable.shapes',
+  autoShapes: board => board.syncAutoShapes(),
   selectablePieces: 'selectable.enabled',
   resizable: 'resizable',
   eraseDrawableOnClick: 'drawable.eraseOnClick',
   animation: 'animation.enabled',
-  allowAllMoves: (props, update) => {
-    _set(update, 'movable.free', props.allowAllMoves);
+  allowAllMoves: (board, update) => {
+    _set(update, 'movable.free', board.props.allowAllMoves);
     _set(
       update,
       'movable.color',
-      props.movableColor || props.allowAllMoves
+      board.props.movableColor || board.props.allowAllMoves
         ? 'both'
-        : getTurnColor(props.fen),
+        : getTurnColor(board.props.fen),
     );
-    (ChessgroundMappedProps.fen as Function)(props, update);
+    (ChessgroundMappedProps.fen as Function)(board, update);
   },
   movableColor: 'movable.color',
   orientation: 'orientation',

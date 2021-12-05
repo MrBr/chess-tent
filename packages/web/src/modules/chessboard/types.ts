@@ -1,10 +1,10 @@
-import { ChessboardProps } from '@types';
+import { ChessboardInterface, ChessboardProps } from '@types';
 import { Config } from '@chess-tent/chessground/dist/config';
 import { Api } from '@chess-tent/chessground/dist/api';
 
 export type ChessgroundMapper =
   | string
-  | ((props: ChessboardProps, config: Partial<Config>, api: Api) => void);
+  | ((boardRef: ChessboardInterface, config: Partial<Config>) => void);
 export type ChessgroundMappedPropsType = Record<
   keyof Omit<
     ChessboardProps,
@@ -30,8 +30,6 @@ export type ChessgroundMappedPropsType = Record<
     | 'onFENSet'
     | 'editing'
     | 'onPGN'
-    | 'updateMeta'
-    | 'meta'
   >,
   ChessgroundMapper
 >;

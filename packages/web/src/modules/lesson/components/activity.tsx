@@ -196,6 +196,11 @@ export class ActivityRenderer extends React.Component<
   renderAnalysisBoard = (props: ChessboardProps) => {
     const { lesson, analysis } = this.props;
     const step = getAnalysisActiveStep(analysis);
+
+    if (props.shapes) {
+      console.warn('Prop autoShapes should be used in activity.');
+    }
+
     return (
       <Chessboard
         allowAllMoves

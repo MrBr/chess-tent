@@ -199,13 +199,32 @@ class Chessboard
             typeof mapper === 'function'
               ? mapper
               : () => _.set(update, mapper, this.props[propName]);
-          updateConfig(this.props, update, this.api);
+          updateConfig(this, update);
         }
         return update;
       },
       {},
     );
     Object.keys(patch).length > 0 && this.setConfig(patch);
+  }
+
+  /**
+   * Life is hard.
+   * Auto shapes are used for user uncontrolled shapes.
+   * Because auto shapes are defined through both context and props this sync is needed.
+   * Context change is undetectable (no prevContext) hence has to be set on the fly.
+   * Props autoShapes change is easily detected but it needs context value.
+   * This method reconcile props and context and as such should be exclusively used for setting autoShapes.
+   */
+  syncAutoShapes() {
+    const propsAutoShapes = this.props.autoShapes || [];
+
+    const evaluationShapes = Object.values(this.context.evaluations)
+      .map(getEvaluationBestMove)
+      .filter(Boolean)
+      .map(move => createMoveShape([move.from, move.to], false, 20));
+
+    this.api.setAutoShapes([...propsAutoShapes, ...evaluationShapes]);
   }
 
   getState() {
@@ -237,7 +256,7 @@ class Chessboard
   toggleEvaluation = () => {
     const { update, evaluate, evaluations } = this.context;
     update({ evaluate: !evaluate, evaluations });
-    this.api.setAutoShapes([]);
+    this.syncAutoShapes();
   };
 
   getBestEvaluation() {
@@ -257,12 +276,6 @@ class Chessboard
     };
 
     update({ evaluations, evaluate });
-    const shapes = Object.values(evaluations)
-      .map(getEvaluationBestMove)
-      .filter(Boolean)
-      .map(move => createMoveShape([move.from, move.to], false, 20));
-
-    this.api.setAutoShapes(shapes);
   };
 
   removeShape(shape: DrawShape) {

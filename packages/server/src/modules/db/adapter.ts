@@ -4,6 +4,9 @@ import { Schema } from 'mongoose';
 export const createAdapter = <T extends EntityDocument>(
   ...updaters: Updater<T>[]
 ) => async (entity: T): Promise<T | false> => {
+  if (!entity) {
+    return false;
+  }
   const version = entity.v;
   let lastEntity = entity;
 

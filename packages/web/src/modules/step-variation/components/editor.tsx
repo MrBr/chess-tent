@@ -25,6 +25,7 @@ const {
   createNotableMove,
   isLegalMove,
   createStepsFromNotableMoves,
+  getNextMoveIndex,
 } = services;
 const { START_FEN, KINGS_FEN } = constants;
 
@@ -39,10 +40,11 @@ const boardChange = (
   promoted?: PieceRolePromotable,
 ) => {
   const {
-    state: { editing, move, position, orientation },
+    state: { editing, move, orientation },
   } = step;
+  const position = move?.position || step.state.position;
 
-  if (editing && position) {
+  if (editing) {
     updateStep(
       updateStepState(step, {
         position: newPosition,
@@ -53,10 +55,12 @@ const boardChange = (
     return;
   }
 
+  const bothColorsCanPlay = !move;
+
   if (
     !newMove ||
     !movedPiece ||
-    !isLegalMove(position, newMove, promoted, true)
+    !isLegalMove(position, newMove, promoted, bothColorsCanPlay)
   ) {
     // New piece dropped or removed
     const newVariationStep = createStep('variation', {
@@ -65,7 +69,7 @@ const boardChange = (
       orientation,
     });
     const updatedStep = updateStepState(
-      addStep(step, newVariationStep) as VariationStep,
+      addStepNextToTheComments(step, newVariationStep) as VariationStep,
       {
         editing: false,
       },
@@ -75,16 +79,18 @@ const boardChange = (
     return;
   }
 
+  const nextMoveIndex = getNextMoveIndex(move);
   const notableMove = createNotableMove(
     newPosition,
     newMove,
-    move ? move.index + 1 : 1,
+    nextMoveIndex,
     movedPiece,
     captured,
     promoted,
   );
 
   const hasMoveStep = getLastStep(step, false).stepType === 'move';
+  const isMoveVariation = !!move;
 
   // Move that possibly already exists in the chapter
   const sameMoveStep = getSameMoveStep(step, notableMove);
@@ -94,7 +100,10 @@ const boardChange = (
     return;
   }
 
-  if (hasMoveStep) {
+  if (
+    hasMoveStep ||
+    (isMoveVariation && move?.piece.color === notableMove.piece.color)
+  ) {
     const newMoveStep = createStep('variation', {
       move: notableMove,
       orientation,

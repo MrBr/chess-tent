@@ -172,3 +172,10 @@ export const uciToSan = (engineMove: string): MoveShort => {
   ) as PieceRolePromotable;
   return createMoveShortObject([from, to], promoted);
 };
+
+export const getNextMoveIndex: Services['getNextMoveIndex'] = prevMove => {
+  if (!prevMove) {
+    return 1;
+  }
+  return prevMove.piece.color === 'black' ? prevMove.index + 1 : prevMove.index;
+};

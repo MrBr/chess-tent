@@ -24,7 +24,7 @@ import {
 import { services, components, ui, constants } from '@application';
 
 const { Col, Row } = ui;
-const { getPiece, createNotableMove, createStepsFromNotableMoves } = services;
+const { createNotableMove, createStepsFromNotableMoves } = services;
 const { StepTag, Stepper, StepMove } = components;
 const { START_FEN, KINGS_FEN } = constants;
 
@@ -42,15 +42,10 @@ const boardChange = (
   const {
     state: { move, orientation },
   } = step;
-  const { position } = move;
 
-  const moveIndex =
-    movedPiece.color === 'white'
-      ? step.state.move.index + 1
-      : step.state.move.index;
+  const moveIndex = services.getNextMoveIndex(move);
 
-  const previousPiece = getPiece(position, move.move[1]) as Piece;
-  if (movedPiece.color === previousPiece.color) {
+  if (movedPiece.color === move.piece.color) {
     // New example
     const newVariationStep = services.createStep('variation', {
       editing: true,

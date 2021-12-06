@@ -152,6 +152,7 @@ class Chessboard
     const finalConfig = unfreeze(config);
 
     const shapes = finalConfig.drawable?.shapes;
+    // Shapes are few lines later
     if (finalConfig.drawable?.shapes) {
       delete finalConfig.drawable.shapes;
     }
@@ -297,6 +298,8 @@ class Chessboard
     const chess = new Chess(oldFen);
 
     if (move && allowAllMoves && options?.promoted) {
+      // This only handles if promotion is actually an "illegal" move
+      // in case board is edited
       const { promotion } = createMoveShortObject(move, options?.promoted);
       const piece = chess.get(move[0]);
       if (piece && promotion) {
@@ -465,7 +468,7 @@ class Chessboard
     const capturedPiece = this.chess.get(to);
     this.context.update({ promotion: null });
     const move = [from, to] as Move;
-    const fen = this.fen(move, { promoted: role });
+    const fen = this.fen(move, { piece, promoted: role });
 
     if (!this.props.onMove) {
       this.unhandledFenChange(fen);

@@ -18,7 +18,7 @@ export default styled<
     <div className={className} onContextMenu={onCancel} onClick={onCancel}>
       <div className="promotion-pieces">
         {roles.map(role => (
-          <div className="promotion-piece">
+          <div className="promotion-piece" key={role}>
             <span
               className={`piece ${color} ${role}`}
               onClick={event => {

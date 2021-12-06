@@ -16,6 +16,7 @@ import {
   switchTurnColor,
   extendRole,
   uciToSan,
+  getNextMoveIndex,
 } from './service';
 
 services.Chess = Chess;
@@ -34,3 +35,4 @@ services.createPiece = createPiece;
 services.isLegalMove = isLegalMove;
 services.createNotableMovesFromGame = createNotableMovesFromGame;
 services.getComment = getComment;
+services.getNextMoveIndex = getNextMoveIndex;

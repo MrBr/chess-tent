@@ -27,6 +27,25 @@ export const sendData: Middleware['sendData'] = (localProp: string) => (
   res.json({ data: res.locals[localProp] });
 };
 
+export const catchError: Middleware['catchError'] = middleware => async (
+  ...args
+) => {
+  const next = args[2];
+  try {
+    await middleware(args[0], args[1], () => {
+      next();
+    });
+  } catch (e) {
+    console.error(
+      `The error has been intercepted by the catch middleware.
+       Usually sign the error isn't critical.
+       `,
+      e,
+    );
+    next();
+  }
+};
+
 export const validate: Middleware['validate'] = validate => (...args) => {
   const next = args[2];
   try {
@@ -54,30 +73,5 @@ export const toLocals: Middleware['toLocals'] = (localsKey, value) => async (
     }
   }
   set(args[1].locals, localsKey, localValue);
-  next();
-};
-
-export const ifThen: Middleware['ifThen'] = condition => func => async (
-  ...args
-) => {
-  const res = args[1];
-  const next = args[2];
-
-  let isValid;
-
-  if (typeof condition === 'function') {
-    try {
-      isValid = await condition(...args);
-    } catch (e) {
-      return next(e);
-    }
-  } else {
-    isValid = res.locals[condition];
-  }
-
-  if (isValid) {
-    await func(...args);
-  }
-
   next();
 };

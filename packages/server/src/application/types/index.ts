@@ -25,6 +25,7 @@ import {
   SyncAction,
 } from '@chess-tent/types';
 import { RecordAction } from '@chess-tent/redux-record/types';
+import { createInitialFounderConversation } from '../../modules/conversation/middleware';
 
 export type AppDocument<T> = T & Document & { v: number };
 export type EntityDocument<T = Entity> = AppDocument<T>;
@@ -162,13 +163,21 @@ export type Middleware = {
           res: Parameters<MiddlewareFunction>[1],
         ) => any),
   ) => MiddlewareFunction;
+  // A middleware which catches middleware error and continues with the flow.
+  // Usually if middleware throws it will break chain.
+  // Useful to intercept non-blocking errors.
+  catchError: (
+    middleware: MiddlewareFunction,
+  ) => (...args: Parameters<RequestHandler>) => void;
   webLogin: (...args: Parameters<RequestHandler>) => void;
   webLogout: (...args: Parameters<RequestHandler>) => void;
   sendStatusOk: (...args: Parameters<RequestHandler>) => void;
   sendNotification: (...args: Parameters<RequestHandler>) => void;
   createNotification: (...args: Parameters<RequestHandler>) => void;
   updateNotifications: (...args: Parameters<RequestHandler>) => void;
-  saveConversation: (...args: Parameters<RequestHandler>) => void;
+  createInitialFounderConversation: (
+    ...args: Parameters<RequestHandler>
+  ) => void;
   addMentor: (...args: Parameters<RequestHandler>) => void;
   getUser: (...args: Parameters<RequestHandler>) => void;
   adapter<T extends EntityDocument>(
@@ -183,11 +192,6 @@ export type Middleware = {
       | object
       | []
       | ((...args: Parameters<RequestHandler>) => void),
-  ) => (...args: Parameters<RequestHandler>) => void;
-  ifThen: (
-    condition: string | ((...args: Parameters<RequestHandler>) => boolean),
-  ) => (
-    func: (...args: Parameters<RequestHandler>) => void,
   ) => (...args: Parameters<RequestHandler>) => void;
 };
 export type MiddlewareFunction = (...args: Parameters<RequestHandler>) => void;

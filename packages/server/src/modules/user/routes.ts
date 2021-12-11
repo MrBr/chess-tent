@@ -8,13 +8,11 @@ import {
   findUsers,
   getUser,
   updateUserActivity,
-  createInitialFounderConversation,
 } from './middleware';
 import { getUser as getUserService } from './service';
 import { UserAlreadyActivated, UserAlreadyExists } from './errors';
 
 const {
-  ifThen,
   sendData,
   identify,
   webLogin,
@@ -24,8 +22,21 @@ const {
   sendMail,
   validate,
   addMentor,
-  saveConversation,
+  createInitialFounderConversation,
+  catchError,
 } = middleware;
+
+const welcomeMailMiddleware = sendMail((req, res) => ({
+  from: 'Chess Tent <noreply@chesstent.com>',
+  to: res.locals.user.email,
+  subject: 'Beta Registration',
+  html: `<p>Dear ${res.locals.user.name},</p>
+       <p>Thank you for registering. We are still in very early phase and feedback is much appreciated.</p>
+       <p>${
+         res.locals.user.coach ? 'Start teaching at ' : 'Start learning at '
+       } <a href="https://chesstent.com">chesstent.com</a>. </p>
+       <p>Best Regards, <br/>Chess Tent Team</p>`,
+}));
 
 application.service.registerPostRoute(
   '/register',
@@ -39,23 +50,9 @@ application.service.registerPostRoute(
   addMentor,
   // Initial founder message flow
   toLocals('founder', () => getUserService({ id: process.env.FOUNDER_ID })),
-  ifThen('founder')(createInitialFounderConversation),
-  ifThen((req, res) => !res.locals.founder)(() =>
-    console.log('Founder not found! Founder id: ', process.env.FOUNDER_ID),
-  ),
-  ifThen('conversation')(saveConversation),
+  createInitialFounderConversation,
 
-  sendMail((req, res) => ({
-    from: 'Chess Tent <noreply@chesstent.com>',
-    to: res.locals.user.email,
-    subject: 'Beta Registration',
-    html: `<p>Dear ${res.locals.user.name},</p>
-       <p>Thank you for registering. We are still in very early phase and feedback is much appreciated.</p>
-       <p>${
-         res.locals.user.coach ? 'Start teaching at ' : 'Start learning at '
-       } <a href="https://chesstent.com">chesstent.com</a>. </p>
-       <p>Best Regards, <br/>Chess Tent Team</p>`,
-  })),
+  catchError(welcomeMailMiddleware),
   webLogin,
   sendData('user'),
 );

@@ -5,6 +5,7 @@ application.register(() => import('./socket'));
 application.register(
   () => import('./middleware'),
   module => {
-    application.middleware.saveConversation = module.saveConversation;
+    application.middleware.createInitialFounderConversation =
+      module.createInitialFounderConversation;
   },
 );

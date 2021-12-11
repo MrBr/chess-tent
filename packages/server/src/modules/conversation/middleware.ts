@@ -1,6 +1,11 @@
 import { MiddlewareFunction } from '@types';
+import application from '@application';
 import { Pagination } from '@chess-tent/types';
-import { Conversation } from '@chess-tent/models';
+import {
+  Conversation,
+  createConversation,
+  createMessage,
+} from '@chess-tent/models';
 import * as service from './service';
 import { UnauthorizedConversationEditError } from './errors';
 
@@ -69,4 +74,43 @@ export const canEditConversation: MiddlewareFunction = (req, res, next) => {
       throw new UnauthorizedConversationEditError();
     })
     .catch(next);
+};
+
+export const createInitialFounderConversation: MiddlewareFunction = async (
+  req,
+  res,
+  next,
+) => {
+  const { founder, user } = res.locals;
+  const participants = [user, founder];
+  if (!founder) {
+    console.log(
+      `Founder not found! Founder id: ${
+        process.env.FOUNDER_ID
+          ? process.env.FOUNDER_ID
+          : 'env FOUNDER_ID not defined.'
+      }.
+      Founder is used to send the first message and it's not necessary for development.`,
+    );
+    next();
+    return;
+  }
+
+  const messages = [
+    `Hi!`,
+    `I am Luka. The founder of Chess Tent platform. For the time being I'll be you support :)`,
+    `Chess Tent is truly aiming to be a community driven platform, every feedback is of great value. The platform is still in early phase so don't mind a bug or few. `,
+    `Feel free to let me know if you have any questions.`,
+    `Thank you for signing up! Have a good chess time.`,
+  ].map(message =>
+    createMessage(application.service.generateIndex(), founder, message),
+  );
+
+  const conversation = createConversation(
+    application.service.generateIndex(),
+    participants,
+    messages,
+  );
+  await service.saveConversation(conversation);
+  next();
 };

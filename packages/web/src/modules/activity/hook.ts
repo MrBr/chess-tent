@@ -24,7 +24,3 @@ export const useActivity: Hooks['useActivity'] = <T extends Activity>(
 
   return record;
 };
-
-export const useActivityMeta = <T extends Activity>(activity: T) => {
-  return hooks.useMeta<{ showHint?: boolean }>(`activity-${activity.id}`);
-};

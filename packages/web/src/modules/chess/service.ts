@@ -179,3 +179,6 @@ export const getNextMoveIndex: Services['getNextMoveIndex'] = prevMove => {
   }
   return prevMove.piece.color === 'black' ? prevMove.index + 1 : prevMove.index;
 };
+
+export const getFenPosition: Services['getFenPosition'] = fen =>
+  fen.split(' ')[0];

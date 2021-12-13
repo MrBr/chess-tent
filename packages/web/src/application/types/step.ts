@@ -98,7 +98,8 @@ export type ActivityStepStateBase = {
 };
 
 export type ActivityStepState<T extends {}> = T & ActivityStepStateBase;
-export type ActivityExerciseStepState<T extends {}> = T & ActivityStepStateBase;
+export type ActivityExerciseStepState<T extends {}> = T &
+  ActivityStepStateBase & { showHint?: boolean };
 export type ActivityProps<ACTIVITY_STATE> = {
   // TODO - update name to updateStepActivityState
   setStepActivityState: (state: {}) => void;

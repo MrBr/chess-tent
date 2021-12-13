@@ -15,7 +15,6 @@ application.register(
   () => import('./hook'),
   module => {
     application.hooks.useActivity = module.useActivity;
-    application.hooks.useActivityMeta = module.useActivityMeta;
   },
 );
 application.register(

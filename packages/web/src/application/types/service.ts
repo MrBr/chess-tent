@@ -76,6 +76,7 @@ export type Services = {
   createNotableMovesFromGame: (game: ChessInstance) => NotableMove[];
   getComment: (comments: MoveComment[], position: FEN) => string | undefined;
   getNextMoveIndex: (prevMove?: NotableMove | null) => number;
+  getFenPosition: (fen: string) => string;
   isSameStepMove: (
     step: VariationStep | MoveStep,
     move: NotableMove,

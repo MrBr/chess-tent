@@ -98,9 +98,6 @@ export type Hooks = {
   useActivity: <T extends Activity>(
     key: string,
   ) => RecordHookInit<InferInitRecord<Records<T>['activity']>>;
-  useActivityMeta: <T extends Activity>(
-    activity: T,
-  ) => UseMetaReturn<{ showHint?: boolean }>;
   useLessonMeta: (activity: Lesson) => UseMetaReturn<{ evaluation?: boolean }>;
   useLessons: (
     key: string,

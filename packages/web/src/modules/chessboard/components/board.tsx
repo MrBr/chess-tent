@@ -103,9 +103,9 @@ class Chessboard
       return;
     }
 
-    this.api = Chessground(this.boardHost.current, { fen });
     // Use only to set static values (for now)
-    this.setConfig({
+    this.api = Chessground(this.boardHost.current, {
+      fen,
       draggable: {
         deleteOnDropOff: true,
       },
@@ -136,6 +136,7 @@ class Chessboard
         removePiece: this.onPieceRemove,
       },
     });
+
     // Map variable values (props)
     this.syncChessgroundState({});
   }
@@ -380,13 +381,18 @@ class Chessboard
 
   onShapeRemove = (shape: DrawShape) => {};
 
-  onShapesChange: ChessboardProps['onShapesChange'] = (...args) => {
+  onShapesChange: ChessboardProps['onShapesChange'] = _.debounce(shapes => {
     if (!this.props.onShapesChange) {
       return;
     }
 
-    return this.props.onShapesChange(...args);
-  };
+    // Breaking reference
+    // In rare cases a conditional race can occur when new shape is drawn
+    // just after the reference is being frozen by the immer.
+    // The issue is caused because chessground isn't behaving in immutable way.
+    const newShapes = [...shapes];
+    return this.props.onShapesChange(newShapes);
+  }, 500);
 
   onPromotionCancel = () => {
     this.setConfig({ fen: this.chess.fen() });

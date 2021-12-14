@@ -69,6 +69,9 @@ class Chessboard
   chess: ChessInstance;
   // @ts-ignore
   context: ChessboardContext;
+  // There is no easy way to detect context change.
+  // prevContext is artificial made to be able to detect context change.
+  prevContext?: ChessboardContext;
   static contextType = BoardContext;
   static defaultProps = {
     evaluate: false,
@@ -183,6 +186,11 @@ class Chessboard
       update({ promotion: null });
     }
     this.syncChessgroundState(prevProps);
+
+    if (this.prevContext !== this.context) {
+      this.syncAutoShapes();
+    }
+    this.prevContext = this.context;
   }
 
   /**
@@ -221,7 +229,8 @@ class Chessboard
   syncAutoShapes() {
     const propsAutoShapes = this.props.autoShapes || [];
 
-    const evaluationShapes = Object.values(this.context.evaluations)
+    const evaluations = this.context.evaluate ? this.context.evaluations : [];
+    const evaluationShapes = Object.values(evaluations)
       .map(getEvaluationBestMove)
       .filter(Boolean)
       .map(move => createMoveShape([move.from, move.to], false, 20));
@@ -258,7 +267,6 @@ class Chessboard
   toggleEvaluation = () => {
     const { update, evaluate, evaluations } = this.context;
     update({ evaluate: !evaluate, evaluations });
-    this.syncAutoShapes();
   };
 
   getBestEvaluation() {

@@ -201,10 +201,11 @@ export class ActivityRenderer extends React.Component<
   };
 
   renderAnalysisBoard = (props: ChessboardProps) => {
-    const { lesson, analysis } = this.props;
+    const { lesson, analysis, activityStepState } = this.props;
     const step = getAnalysisActiveStep(analysis);
 
-    if (props.shapes) {
+    // Only applicable to the step ActivityBoard components
+    if (props.shapes && activityStepState.mode === ActivityStepMode.SOLVING) {
       console.warn('Prop autoShapes should be used in activity.');
     }
 

@@ -19,7 +19,7 @@ import {
   StepToolbox,
 } from './components';
 import { ClassComponent } from './_helpers';
-import { Orientation } from './chess';
+import { Orientation, Shape } from './chess';
 import { AppAnalysis } from './analysis';
 
 export type AppStep<S extends {} = {}, T extends StepType = StepType> = Step<
@@ -95,6 +95,7 @@ export type ActivityStepStateBase = {
   analysis: AppAnalysis;
   comments?: ActivityComment[];
   mode: ActivityStepMode;
+  shapes?: Shape[];
 };
 
 export type ActivityStepState<T extends {}> = T & ActivityStepStateBase;

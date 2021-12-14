@@ -9,16 +9,7 @@ const { useApi, useHistory, useDispatchService } = hooks;
 const { Page } = components;
 const { Absolute, Button } = ui;
 const { withFiles } = hoc;
-const {
-  Col,
-  Row,
-  Headline3,
-  Headline4,
-  InputGroup,
-  Form,
-  FormGroup,
-  Label,
-} = ui;
+const { Col, Row, Headline4, InputGroup, Form, FormGroup, Label } = ui;
 
 export default withFiles(
   ({ files, openFileDialog, user }: FileUploaderProps & { user: User }) => {
@@ -40,7 +31,6 @@ export default withFiles(
 
     const updateUser = useCallback(
       (patch: Partial<User>) => {
-        console.log(patch);
         updateMe(patch);
         updateUserLocal(user, patch);
       },
@@ -122,13 +112,15 @@ export default withFiles(
                   />
                 </Col>
                 <Col>
-                  <Headline3>{user.name}</Headline3>
+                  <FormGroup>
+                    <Headline4>Name</Headline4>
+                    <Form.Input name="name" />
+                  </FormGroup>
                   {user.coach && (
                     <>
                       <FormGroup>
                         <Label>Punchline</Label>
                         <Form.Input
-                          value={user.state.punchline}
                           as="textarea"
                           rows={2}
                           name="state.punchline"
@@ -136,20 +128,12 @@ export default withFiles(
                       </FormGroup>
                       <FormGroup>
                         <Label>Preferred elo</Label>
-                        <Form.Input
-                          value={user.state.studentElo}
-                          name="state.studentElo"
-                          type="number"
-                        />
+                        <Form.Input name="state.studentElo" type="number" />
                       </FormGroup>
                       <FormGroup>
                         <Label>Pricing</Label>
                         <InputGroup>
-                          <Form.Input
-                            value={user.state.pricing}
-                            name="state.pricing"
-                            type="number"
-                          />
+                          <Form.Input name="state.pricing" type="number" />
                           <InputGroup.Append>
                             <InputGroup.Text>$/hr</InputGroup.Text>
                           </InputGroup.Append>
@@ -157,17 +141,11 @@ export default withFiles(
                       </FormGroup>
                       <FormGroup>
                         <Label>Availability</Label>
-                        <Form.Input
-                          value={user.state.availability}
-                          name="state.availability"
-                        />
+                        <Form.Input name="state.availability" />
                       </FormGroup>
                       <FormGroup>
                         <Label>Speciality</Label>
-                        <Form.Input
-                          value={user.state.speciality}
-                          name="state.speciality"
-                        />
+                        <Form.Input name="state.speciality" />
                       </FormGroup>
                     </>
                   )}
@@ -175,12 +153,7 @@ export default withFiles(
                 <Col>
                   <Headline4>About me</Headline4>
                   <FormGroup>
-                    <Form.Input
-                      as="textarea"
-                      rows={5}
-                      value={user.state.about}
-                      name="state.about"
-                    />
+                    <Form.Input as="textarea" rows={5} name="state.about" />
                   </FormGroup>
                 </Col>
                 <Col>
@@ -189,7 +162,6 @@ export default withFiles(
                     <Form.Input
                       as="textarea"
                       rows={5}
-                      value={user.state.playingExperience}
                       name="state.playingExperience"
                     />
                   </FormGroup>
@@ -201,7 +173,6 @@ export default withFiles(
                       <Form.Input
                         as="textarea"
                         rows={5}
-                        value={user.state.teachingExperience}
                         name="state.teachingExperience"
                       />
                     </FormGroup>
@@ -210,7 +181,6 @@ export default withFiles(
                       <Form.Input
                         as="textarea"
                         rows={5}
-                        value={user.state.teachingMethodology}
                         name="state.teachingMethodology"
                       />
                     </FormGroup>

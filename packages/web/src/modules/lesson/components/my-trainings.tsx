@@ -32,7 +32,10 @@ const MyTrainings: Components['MyTrainings'] = ({ trainings, user }) => {
   const myTrainings = trainings.filter(activity =>
     isMyTraining(activity, coaches || [], user),
   );
-  const groupedTrainings = groupBy(myTrainings, activity => activity?.owner.id);
+  const groupedTrainings = groupBy(
+    myTrainings,
+    activity => activity?.users[0]?.id,
+  );
 
   if (myTrainings.length === 0) {
     return null;

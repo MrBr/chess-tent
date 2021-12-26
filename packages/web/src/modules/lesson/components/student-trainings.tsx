@@ -44,7 +44,7 @@ const StudentTrainings: Components['StudentTrainings'] = ({
 
   const groupedTrainings = groupBy(
     studentTrainings,
-    training => training.users[0].id,
+    training => training.owner.id,
   );
 
   if (studentTrainings.length === 0) {

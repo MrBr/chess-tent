@@ -17,6 +17,7 @@ import {
   extendRole,
   uciToSan,
   getNextMoveIndex,
+  getFenPosition,
 } from './service';
 
 services.Chess = Chess;
@@ -36,3 +37,4 @@ services.isLegalMove = isLegalMove;
 services.createNotableMovesFromGame = createNotableMovesFromGame;
 services.getComment = getComment;
 services.getNextMoveIndex = getNextMoveIndex;
+services.getFenPosition = getFenPosition;

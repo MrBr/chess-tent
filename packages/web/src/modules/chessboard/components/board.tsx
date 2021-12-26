@@ -69,6 +69,9 @@ class Chessboard
   chess: ChessInstance;
   // @ts-ignore
   context: ChessboardContext;
+  // There is no easy way to detect context change.
+  // prevContext is artificial made to be able to detect context change.
+  prevContext?: ChessboardContext;
   static contextType = BoardContext;
   static defaultProps = {
     evaluate: false,
@@ -103,9 +106,9 @@ class Chessboard
       return;
     }
 
-    this.api = Chessground(this.boardHost.current, { fen });
     // Use only to set static values (for now)
-    this.setConfig({
+    this.api = Chessground(this.boardHost.current, {
+      fen,
       draggable: {
         deleteOnDropOff: true,
       },
@@ -136,6 +139,7 @@ class Chessboard
         removePiece: this.onPieceRemove,
       },
     });
+
     // Map variable values (props)
     this.syncChessgroundState({});
   }
@@ -182,6 +186,11 @@ class Chessboard
       update({ promotion: null });
     }
     this.syncChessgroundState(prevProps);
+
+    if (this.prevContext !== this.context) {
+      this.syncAutoShapes();
+    }
+    this.prevContext = this.context;
   }
 
   /**
@@ -220,7 +229,8 @@ class Chessboard
   syncAutoShapes() {
     const propsAutoShapes = this.props.autoShapes || [];
 
-    const evaluationShapes = Object.values(this.context.evaluations)
+    const evaluations = this.context.evaluate ? this.context.evaluations : [];
+    const evaluationShapes = Object.values(evaluations)
       .map(getEvaluationBestMove)
       .filter(Boolean)
       .map(move => createMoveShape([move.from, move.to], false, 20));
@@ -257,7 +267,6 @@ class Chessboard
   toggleEvaluation = () => {
     const { update, evaluate, evaluations } = this.context;
     update({ evaluate: !evaluate, evaluations });
-    this.syncAutoShapes();
   };
 
   getBestEvaluation() {
@@ -380,13 +389,18 @@ class Chessboard
 
   onShapeRemove = (shape: DrawShape) => {};
 
-  onShapesChange: ChessboardProps['onShapesChange'] = (...args) => {
+  onShapesChange: ChessboardProps['onShapesChange'] = _.debounce(shapes => {
     if (!this.props.onShapesChange) {
       return;
     }
 
-    return this.props.onShapesChange(...args);
-  };
+    // Breaking reference
+    // In rare cases a conditional race can occur when new shape is drawn
+    // just after the reference is being frozen by the immer.
+    // The issue is caused because chessground isn't behaving in immutable way.
+    const newShapes = [...shapes];
+    return this.props.onShapesChange(newShapes);
+  }, 500);
 
   onPromotionCancel = () => {
     this.setConfig({ fen: this.chess.fen() });

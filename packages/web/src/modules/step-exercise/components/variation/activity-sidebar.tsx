@@ -27,11 +27,7 @@ const Playground: FunctionComponent<
     setStepActivityState({ move: null, activeMoveIndex: null, correct: null });
 
   return (
-    <SegmentActivitySidebar
-      title="Play the sequence"
-      {...props}
-      onReset={reset}
-    >
+    <SegmentActivitySidebar title="Task" {...props} onReset={reset}>
       <Text>
         {correct && !completed
           ? 'Excellent, continue..'

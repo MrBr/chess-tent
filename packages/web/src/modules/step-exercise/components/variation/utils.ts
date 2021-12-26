@@ -3,11 +3,16 @@ import {
   ExerciseVariationStep,
   NotableMove,
 } from '@types';
+import { services } from '@application';
+
+const { getFenPosition } = services;
 
 export const isCorrectActivityMove = (
   activityMove: NotableMove,
   stepMove?: NotableMove,
-): boolean => activityMove.position === stepMove?.position;
+): boolean =>
+  !!stepMove &&
+  getFenPosition(stepMove.position) === getFenPosition(activityMove.position);
 
 export const isFENSetup = (
   activityIndex: number | undefined | null,

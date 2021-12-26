@@ -45,7 +45,7 @@ const createEntityReducer = <T extends keyof EntitiesState>(
       // basically first update doesn't have to be taken into an account for the second, meaning, the next update used stale state in update which in the end overrides previous action
       const updatedEntity =
         // patch can exist but there may be no change
-        reducerEntityType && patch?.next?.length && entity
+        reducerEntityType === type && patch?.next?.length && entity
           ? utils.normalize(applyPatches(entity, patch.next)).result
           : (action.payload.entities[type][id] as unknown);
       return isEmpty(action.payload.entities[reducerEntityType])

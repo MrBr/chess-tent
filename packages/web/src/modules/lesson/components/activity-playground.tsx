@@ -68,15 +68,15 @@ const ActivityPlayground = ({
     [activeStepActivityState.comments, activeUser, updateActivityStepState],
   );
   return (
-    <Container fluid className="h-100 overflow-y-auto">
+    <Container fluid className="h-100">
       <Row className="h-100">
         <Col className="pt-5">
           <ChessboardContextProvider>{tab.board}</ChessboardContextProvider>
         </Col>
-        <Col md={5} xl={4} className="h-100 pr-5 pl-5 ">
+        <Col md={5} xl={4} className="h-100 pr-5 pl-5">
           <Row className="h-100 d-flex flex-column flex-nowrap" noGutters>
             <Col className="col-auto mt-5">{header}</Col>
-            <Col xs={4} className="mt-5 mw-100 mb-3">
+            <Col xs={6} className="mt-5 mw-100 mb-3 overflow-y-auto">
               <Tabs
                 id="activity-tabs"
                 activeKey={tab.mode || DEFAULT_PLAYGROUND_MODE}

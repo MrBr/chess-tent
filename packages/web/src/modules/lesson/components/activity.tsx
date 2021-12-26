@@ -11,6 +11,7 @@ import {
   Orientation,
   Piece,
   PieceRole,
+  Shape,
   Steps,
 } from '@types';
 import { components, hooks, requests, services, ui } from '@application';
@@ -166,6 +167,10 @@ export class ActivityRenderer extends React.Component<
     this.updateStepActivityAnalysis(updateAnalysisStep)(analysis, updatedStep);
   };
 
+  updateStepShapes = (shapes: Shape[]) => {
+    this.setStepActivityState({ shapes });
+  };
+
   renderFooter = (props: Partial<ActivityFooterProps>) => {
     const { stepsCount, currentStepIndex } = this.props;
     return (
@@ -180,13 +185,15 @@ export class ActivityRenderer extends React.Component<
   };
 
   renderActivityBoard = (props: ChessboardProps) => {
-    const { lesson, activeStep } = this.props;
+    const { lesson, activeStep, activityStepState } = this.props;
     return (
       <Chessboard
         onMove={this.startAnalysingPosition}
         allowAllMoves
         orientation={activeStep.state.orientation}
         footer={null}
+        onShapesChange={this.updateStepShapes}
+        shapes={activityStepState.shapes}
         {...props}
         header={<Header lesson={lesson} />}
       />
@@ -194,10 +201,11 @@ export class ActivityRenderer extends React.Component<
   };
 
   renderAnalysisBoard = (props: ChessboardProps) => {
-    const { lesson, analysis } = this.props;
+    const { lesson, analysis, activityStepState } = this.props;
     const step = getAnalysisActiveStep(analysis);
 
-    if (props.shapes) {
+    // Only applicable to the step ActivityBoard components
+    if (props.shapes && activityStepState.mode === ActivityStepMode.SOLVING) {
       console.warn('Prop autoShapes should be used in activity.');
     }
 

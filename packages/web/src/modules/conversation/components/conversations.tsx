@@ -1,6 +1,7 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, FunctionComponent } from 'react';
 import { components, hooks, state, ui, utils, records } from '@application';
 import { createConversation, User } from '@chess-tent/models';
+import styled from '@emotion/styled';
 import { sortBy, last } from 'lodash';
 import Conversation from './conversation';
 import { selectConversationByUsers } from '../state/selectors';
@@ -18,6 +19,48 @@ const {
   useConversationParticipant,
 } = hooks;
 const { generateIndex } = utils;
+
+const ConversationRow: FunctionComponent<{
+  participant: User;
+  setParticipant: (user: User) => void;
+  read: boolean;
+  lastMessage?: string;
+}> = styled(({ participant, setParticipant, read, lastMessage, className }) => (
+  <Row
+    onClick={() => setParticipant(participant)}
+    key={participant.id}
+    className={className}
+    noGutters
+  >
+    <Col className="col-auto d-flex align-items-center pr-0">
+      <UserAvatar user={participant} />
+    </Col>
+    <Col className="text-truncate">
+      <Text
+        weight={700}
+        className="m-0 text-truncate"
+        fontSize="small"
+        color="title"
+      >
+        {participant.name}
+      </Text>
+      <Text
+        className="m-0 text-truncate"
+        fontSize="small"
+        color="title"
+        weight={read ? 400 : 700}
+      >
+        {lastMessage}
+      </Text>
+    </Col>
+  </Row>
+))({
+  ':hover': {
+    background: '#e7e7e7',
+  },
+  cursor: 'pointer',
+  padding: '0.75em 1.5em',
+});
 
 export default () => {
   const dispatch = useDispatchBatched();
@@ -63,8 +106,8 @@ export default () => {
   );
 
   return (
-    <Container className="h-100 overflow-y-auto pl-5 pr-5">
-      <Headline3 className="mb-5">Messages</Headline3>
+    <Container className="h-100 overflow-y-auto p-0">
+      <Headline3 className="mb-5 pl-5 pr-5">Messages</Headline3>
       {participant && conversation && (
         <Conversation
           activeUser={activeUser}
@@ -79,37 +122,12 @@ export default () => {
           (conversation.users[0] as User); // User sends messages to himself
         const lastMessage = last(conversation.messages);
         return (
-          <Row
-            onClick={() => setParticipant(participant)}
-            key={participant.id}
-            className="mb-4"
-          >
-            <Col className="col-auto d-flex align-items-center pr-0">
-              <UserAvatar user={participant} />
-            </Col>
-            <Col className="text-truncate">
-              <Text
-                weight={700}
-                className="m-0 text-truncate"
-                fontSize="small"
-                color="title"
-              >
-                {participant.name}
-              </Text>
-              <Text
-                className="m-0 text-truncate"
-                fontSize="small"
-                color="title"
-                weight={
-                  lastMessage?.read || lastMessage?.owner === activeUser.id
-                    ? 400
-                    : 700
-                }
-              >
-                {lastMessage?.message}
-              </Text>
-            </Col>
-          </Row>
+          <ConversationRow
+            participant={participant}
+            setParticipant={setParticipant}
+            read={lastMessage?.read || lastMessage?.owner === activeUser.id}
+            lastMessage={lastMessage?.message}
+          />
         );
       })}
     </Container>

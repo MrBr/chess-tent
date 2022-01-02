@@ -14,7 +14,11 @@ import { Constants } from './constants';
 import { Context } from './context';
 import { HOF } from './hof';
 import { Records } from './records';
+<<<<<<< HEAD
 import { Requests } from './requests';
+=======
+import { RTC } from './rtc';
+>>>>>>> 234ce9a (Implement basic PoC of conferencing (needs refactor))
 
 export * from '@chess-tent/types';
 export * from './activity';
@@ -39,6 +43,7 @@ export * from './notification';
 export * from './records';
 export * from './router';
 export * from './requests';
+export * from './rtc';
 export * from './_helpers';
 
 export type Application = {
@@ -61,4 +66,5 @@ export type Application = {
   hof: HOF;
   records: Records;
   context: Context;
+  rtc: RTC;
 };

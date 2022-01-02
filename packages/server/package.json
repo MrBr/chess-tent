@@ -43,6 +43,7 @@
     "module-alias": "^2.2.2",
     "mongodb": "^3.5.7",
     "mongoose": "^5.10.13",
+    "react-rtc-real": "^1.11.22",
     "rxjs": "^6.5.5",
     "socket.io": "^4.4.1",
     "uuid": "^3.4.0",

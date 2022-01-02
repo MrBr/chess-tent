@@ -16,6 +16,7 @@ import {
   HOC,
   Context,
   Records,
+  RTC,
 } from '@types';
 import { HOF } from './types/hof';
 
@@ -43,6 +44,7 @@ const constants = createNamespace({
   MOBILE_ROOT_KEY: 'mobile-root',
   MAX_BOARD_SIZE: 670,
 }) as Constants;
+const rtc = createNamespace({}) as RTC;
 
 const application: Application = createNamespace({
   context,
@@ -63,6 +65,7 @@ const application: Application = createNamespace({
   hoc,
   hof,
   records,
+  rtc,
 }) as Application;
 
 export {
@@ -83,4 +86,5 @@ export {
   context,
   hof,
   records,
+  rtc,
 };

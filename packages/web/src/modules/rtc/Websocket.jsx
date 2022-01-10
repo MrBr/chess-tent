@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
+
 import {
   TYPE_CONNECTION,
   TYPE_OFFER,
   TYPE_ANSWER,
   TYPE_NEW_USER,
   TYPE_ICECANDIDATE,
-} from './functions/constants';
+} from './constants';
 
+// TODO: refactor into hook
 class Websocket extends Component {
   setupConnection = () => {
     const {

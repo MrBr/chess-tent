@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import 'core-js/stable';
 import 'regenerator-runtime';
 
-import RTCVideo from './RTCVideo';
-import { Form } from './Form';
+import { RTCVideo } from './RTCVideo';
 import Websocket from './Websocket';
 import PeerConnection from './PeerConnection';
 
@@ -12,13 +11,9 @@ import {
   DEFAULT_ICE_SERVERS,
   TYPE_ROOM,
   TYPE_ANSWER,
-} from './functions/constants';
-import {
-  buildServers,
-  generateRoomKey,
-  createMessage,
-  createPayload,
-} from './functions/utils';
+} from './constants';
+
+import { buildServers, createMessage, createPayload } from './helpers';
 
 class RTCMesh extends Component {
   constructor(props) {
@@ -36,9 +31,7 @@ class RTCMesh extends Component {
       roomKey: null,
       socketID: null,
       connectionStarted: false,
-      text: '',
     };
-    this.wantCamera = true;
     this.socket = new WebSocket(this.props.URL);
     this.rtcPeerConnection = new RTCPeerConnection({
       iceServers: this.state.iceServers,
@@ -49,15 +42,9 @@ class RTCMesh extends Component {
     const { mediaConstraints, localMediaStream } = this.state;
     try {
       if (!localMediaStream) {
-        let mediaStream;
-        if (this.wantCamera)
-          mediaStream = await navigator.mediaDevices.getUserMedia(
-            mediaConstraints,
-          );
-        else
-          mediaStream = await navigator.mediaDevices.getDisplayMedia(
-            mediaConstraints,
-          );
+        const mediaStream = await navigator.mediaDevices.getUserMedia(
+          mediaConstraints,
+        );
 
         return fromHandleOffer === true
           ? mediaStream
@@ -73,7 +60,11 @@ class RTCMesh extends Component {
     const { payload } = data;
     await this.rtcPeerConnection.setRemoteDescription(payload.message);
     let mediaStream = localMediaStream;
-    if (!mediaStream) mediaStream = await this.openCamera(true);
+
+    if (!mediaStream) {
+      mediaStream = await this.openCamera(true);
+    }
+
     this.setState(
       { connectionStarted: true, localMediaStream: mediaStream },
       async function () {
@@ -97,39 +88,6 @@ class RTCMesh extends Component {
     await this.rtcPeerConnection.addIceCandidate(candidate);
   };
 
-  handleShareDisplay = async () => {
-    this.wantCamera = !this.wantCamera;
-    if (this.state.connectionStarted) {
-      const { mediaConstraints, localMediaStream } = this.state;
-      let mediaStream;
-      if (this.wantCamera)
-        mediaStream = await navigator.mediaDevices.getUserMedia(
-          mediaConstraints,
-        );
-      else
-        mediaStream = await navigator.mediaDevices.getDisplayMedia(
-          mediaConstraints,
-        );
-
-      const screenStream = mediaStream.getVideoTracks()[0];
-      const transceiver = this.rtcPeerConnection.getTransceivers()[0];
-      localMediaStream.removeTrack(localMediaStream.getTracks()[0]);
-      localMediaStream.addTrack(screenStream);
-      transceiver['sender'].replaceTrack(screenStream);
-    }
-  };
-
-  sendRoomKey = () => {
-    const { roomKey, socketID } = this.state;
-    if (!roomKey) {
-      const key = generateRoomKey();
-      const roomData = createMessage(TYPE_ROOM, createPayload(key, socketID));
-      this.setState({ roomKey: key });
-      this.socket.send(JSON.stringify(roomData));
-      alert(key);
-    }
-  };
-
   handleSocketConnection = socketID => {
     this.setState({ socketID });
   };
@@ -145,32 +103,24 @@ class RTCMesh extends Component {
     this.setState({ remoteMediaStream });
   };
 
-  handleSubmit = event => {
-    event.preventDefault();
-    const { text, socketID } = this.state;
-    // send the roomKey
-    // Remove leading and trailing whitespace
-    if (text.trim()) {
-      const roomKeyMessage = createMessage(
-        TYPE_ROOM,
-        createPayload(text, socketID),
-      );
-      this.socket.send(JSON.stringify(roomKeyMessage));
-    }
-    this.setState({ text: '', roomKey: text.trim() });
-  };
+  handleStartConferencing = async () => {
+    await this.openCamera();
 
-  handleChange = event => {
-    this.setState({
-      text: event.target.value,
-    });
+    const { activityId } = this.props;
+    const { socketID } = this.state;
+
+    const roomKeyMessage = createMessage(
+      TYPE_ROOM,
+      createPayload(activityId, socketID),
+    );
+    this.socket.send(JSON.stringify(roomKeyMessage));
+    this.setState({ roomKey: activityId });
   };
 
   render() {
     const {
       localMediaStream,
       remoteMediaStream,
-      text,
       roomKey,
       socketID,
       iceServers,
@@ -201,17 +151,9 @@ class RTCMesh extends Component {
         <RTCVideo mediaStream={localMediaStream} />
         <RTCVideo mediaStream={remoteMediaStream} />
         <div style={{ height: 10, width: '100%' }} />
-        <Form
-          handleSubmit={this.handleSubmit}
-          handleChange={this.handleChange}
-          hasRoomKey={roomKey}
-          text={text}
-        />
-
         <section style={{ display: 'flex', gap: 10 }}>
-          <button onClick={this.handleShareDisplay}>Share Screen</button>
           <div
-            onClick={this.openCamera}
+            onClick={this.handleStartConferencing}
             style={{
               width: 30,
               height: 30,

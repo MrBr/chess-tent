@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 
-import { createMessage, createPayload } from './functions/utils';
-import { TYPE_OFFER, TYPE_ICECANDIDATE } from './functions/constants';
+import { createMessage, createPayload } from './helpers';
+import { TYPE_OFFER, TYPE_ICECANDIDATE } from './constants';
 
+// TODO: refactor into hook
 class PeerConnection extends Component {
   addMediaStreamTrack = async () => {
     const { localMediaStream, rtcPeerConnection } = this.props;

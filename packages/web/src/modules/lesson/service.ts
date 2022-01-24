@@ -41,6 +41,7 @@ export const isStudentTraining = (
   mentor: User,
 ) =>
   // Weird case when coaches are mentors to each other?!
+  activity.users.length > 0 &&
   activity.owner.id !== mentor.id &&
   (isMentorship(mentorship, activity.owner, mentor) ||
     activity.users.some(student => isMentorship(mentorship, student, mentor)));
@@ -56,8 +57,9 @@ export const isMyTraining = (
   student: User,
   // The condition should probably be more explicit
 ) =>
-  activity.owner.id === student.id ||
-  activity.users.some(mentor => isMentorship(mentorship, student, mentor));
+  activity.users.length > 0 &&
+  (activity.owner.id === student.id ||
+    activity.users.some(mentor => isMentorship(mentorship, student, mentor)));
 
 export const isLessonTraining = (
   activity: LessonActivity,

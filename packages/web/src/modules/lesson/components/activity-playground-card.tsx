@@ -1,8 +1,10 @@
 import React from 'react';
 import styled from '@emotion/styled';
 
-export default styled(({ children, className }) => (
-  <div className={className}>{children}</div>
+export default styled(({ children, className, onClick }) => (
+  <div className={className} onClick={onClick}>
+    {children}
+  </div>
 ))({
   padding: '8px 12px',
   marginBottom: 16,

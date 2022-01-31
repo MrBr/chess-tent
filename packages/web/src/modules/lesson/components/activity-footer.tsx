@@ -3,14 +3,12 @@ import { ui } from '@application';
 import { ActivityFooterProps } from '@types';
 import styled from '@emotion/styled';
 
-const { Container, Button, Text } = ui;
+const { Container, Button } = ui;
 
 const ActivityPagination = styled(
   ({
     prev,
     next,
-    currentStep,
-    stepsCount,
     className,
   }: {
     prev?: () => void;
@@ -24,9 +22,6 @@ const ActivityPagination = styled(
         <Button onClick={prev} variant="regular" size="extra-small">
           Prev
         </Button>
-        <Text inline className="mb-0" fontSize="extra-small" weight={700}>
-          {currentStep} / {stepsCount}
-        </Text>
         <Button onClick={next} variant="regular" size="extra-small">
           Next
         </Button>
@@ -47,15 +42,14 @@ export default ({
   prev,
   currentStep,
   stepsCount,
-}: ActivityFooterProps) => {
-  return (
-    <Container className="mb-4">
-      <ActivityPagination
-        next={next}
-        prev={prev}
-        currentStep={currentStep}
-        stepsCount={stepsCount}
-      />
-    </Container>
-  );
-};
+  className,
+}: ActivityFooterProps) => (
+  <Container className={className}>
+    <ActivityPagination
+      next={next}
+      prev={prev}
+      currentStep={currentStep}
+      stepsCount={stepsCount}
+    />
+  </Container>
+);

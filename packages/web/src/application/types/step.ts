@@ -80,6 +80,7 @@ export type ActivityFooterProps = {
   prev: () => void;
   stepsCount: number;
   currentStep: number;
+  className?: string;
 };
 export type ActivityComment = {
   userId: User['id'];

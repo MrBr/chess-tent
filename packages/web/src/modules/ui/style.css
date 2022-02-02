@@ -2,6 +2,7 @@
 
 html {
   font-size: 100%; /*16px*/
+  overflow-x: hidden;
 }
 
 @media only screen and (max-width: 991.98px) {

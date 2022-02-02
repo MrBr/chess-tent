@@ -30,3 +30,9 @@ application.register(
     application.components.Page = module.default;
   },
 );
+application.register(
+  () => import('./logo'),
+  module => {
+    application.components.Logo = module.default;
+  },
+);

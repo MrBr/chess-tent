@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.build.json",
+  "compilerOptions": {
+    "declarationDir": "./dist",
+    "outDir": "./dist",
+    "esModuleInterop": true,
+    "baseUrl": ".",
+    "jsx": "react",
+    "module": "CommonJS"
+  },
+  "include": [
+    "src/**/*",
+    "types/**/*"
+  ]
+}

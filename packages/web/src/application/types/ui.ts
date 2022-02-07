@@ -210,7 +210,7 @@ export type UI = {
     Header: typeof Dropdown['Header'];
   };
   OptionsDropdown: ComponentType<OptionsDropdownProps<any>>;
-  Avatar: ComponentType<{
+  Avatar: UIComponent<{
     src: string | undefined;
     size?: 'regular' | 'small' | 'large' | 'extra-small';
     onClick?: ReactEventHandler;

@@ -8,8 +8,9 @@ import findALesson from '../images/find-a-lesson.png';
 import Topbar from '../components/topbar';
 import Header from '../components/header';
 import Section from '../components/section';
+import Button from '../components/button';
 
-const { Headline3, Container, Row, Col, Button, Text, Headline1, Img } = ui;
+const { Headline3, Container, Row, Col, Text, Headline1, Img } = ui;
 const { Link } = components;
 
 export const LandingPage = () => {

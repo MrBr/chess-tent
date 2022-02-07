@@ -17,6 +17,11 @@ export type Utils = {
     screenSize: 'xs' | 'sm' | 'md' | 'lg' | 'xl',
     style: CSSObject,
   ) => CSSObject;
+  mobileStyleEnhancer: (style: CSSObject) => CSSObject;
+  propEnhancer: <T extends {}>(
+    prop: string | ((props: T) => string),
+    style: Record<string, CSSObject>,
+  ) => CSSObject;
   getDiff: (
     oldSubject: {} | unknown[],
     newSubject: {} | unknown[],

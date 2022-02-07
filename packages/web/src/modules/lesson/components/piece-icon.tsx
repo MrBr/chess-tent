@@ -2,7 +2,7 @@ import React from 'react';
 import { PieceIcon } from '@types';
 import styled from '@emotion/styled';
 
-const PieceIconComponent: PieceIcon = styled(({ className, piece }) => (
+const PieceIconComponent = styled<PieceIcon>(({ className, piece }) => (
   <span className={`${className} piece ${piece.color} ${piece.role}`} />
 ))({
   display: 'inline-block',

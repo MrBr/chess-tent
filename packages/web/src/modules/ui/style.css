@@ -1,5 +1,29 @@
 @import url('https://fonts.googleapis.com/css?family=Inter:500,700');
 
+:root {
+  --primary-color: linear-gradient(90deg, #5AD9AB 0%, #26D95C 100%);;
+  --secondary-color: #F45924;
+
+  --bg-color: #FAFBFB;
+
+  --black-color: #182235;
+  --light-color: #FFFFFF;
+
+  --grey-800: #2F3849;
+  --grey-700: #6B7280;
+  --grey-600: #C1C4CA;
+  --grey-500: #D0D2D6;
+  --grey-400: #DFE0E3;
+  --grey-300: #EDEEF0;;
+  --grey-200: #FDFDFD;
+
+  --success-color: #00B67A;
+  --error-color: #FF6B57;
+  --warning-color: #ECB832;
+  --link-color: #3076FF;
+}
+
+
 html {
   font-size: 100%; /*16px*/
   overflow-x: hidden;

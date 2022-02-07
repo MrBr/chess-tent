@@ -20,12 +20,15 @@ const {
 } = hooks;
 const { generateIndex } = utils;
 
-const ConversationRow: FunctionComponent<{
-  participant: User;
-  setParticipant: (user: User) => void;
-  read: boolean;
-  lastMessage?: string;
-}> = styled(({ participant, setParticipant, read, lastMessage, className }) => (
+const ConversationRow = styled<
+  FunctionComponent<{
+    participant: User;
+    setParticipant: (user: User) => void;
+    read: boolean;
+    lastMessage?: string;
+    className?: string;
+  }>
+>(({ participant, setParticipant, read, lastMessage, className }) => (
   <Row
     onClick={() => setParticipant(participant)}
     key={participant.id}

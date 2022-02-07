@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from '@emotion/styled';
+import { UIComponent } from '@types';
 
-export default styled(({ children, className }) => (
+export default styled<UIComponent>(({ children, className }) => (
   <div className={className}>{children}</div>
 ))({
   padding: '8px 12px',

@@ -86,7 +86,7 @@ Button.defaultProps = {
   size: 'regular',
 };
 
-export const ToggleButton: UI['ToggleButton'] = styled(
+export const ToggleButton = styled<UI['ToggleButton']>(
   ({ className, children, defaultChecked, onChange, checked }) => (
     <label className={className}>
       <input

@@ -1,6 +1,7 @@
 import React from 'react';
 import { ui } from '@application';
 import styled from '@emotion/styled';
+import { UIComponent } from '@types';
 
 import headerLeftUrl from '../images/header-left.png';
 import headerRightUrl from '../images/header-right.png';
@@ -8,7 +9,7 @@ import headerArrowUrl from '../images/header-arrow.svg';
 
 const { Headline3, Row, Col, Container, Display2, Button } = ui;
 
-const Header = styled(({ className }) => (
+const Header = styled<UIComponent>(({ className }) => (
   <Container className={className}>
     <Row>
       <Col md={{ offset: 2, span: 8 }}>

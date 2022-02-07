@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import React from 'react';
 import { StepTag } from '@types';
 
-export default styled(({ children, className, onClick }) => (
+export default styled<StepTag>(({ children, className, onClick }) => (
   <span className={className} onClick={onClick}>
     <span>{children}</span>
   </span>
@@ -21,4 +21,4 @@ export default styled(({ children, className, onClick }) => (
   overflow: 'hidden',
   fontSize: 11 / 16 + 'em',
   fontWeight: 700,
-})) as StepTag;
+}));

@@ -3,7 +3,7 @@ import { v4 as uuid } from 'uuid';
 import { saveAs } from 'file-saver';
 import { useComponentState, useComponentStateSilent } from './hooks';
 import { getEntitySchema, getTypeSchema } from './model';
-import { mediaQueryEnhancer } from './enhancers';
+import { mediaQueryEnhancer, mobileStyleEnhancer } from './enhancers';
 import { getDiff } from './utils';
 
 application.utils.generateIndex = uuid;
@@ -17,6 +17,7 @@ application.utils.getTypeSchema = getTypeSchema;
 application.utils.downloadAs = saveAs;
 
 application.utils.mediaQueryEnhancer = mediaQueryEnhancer;
+application.utils.mobileStyleEnhancer = mobileStyleEnhancer;
 
 application.utils.getDiff = getDiff;
 

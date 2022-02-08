@@ -5,8 +5,6 @@ import Col from 'react-bootstrap/Col';
 import styled from '@emotion/styled';
 import { UIComponent } from '@types';
 
-const Page = styled<UIComponent>(props => <Container fluid {...props} />)({
-  padding: '0 6.25em',
-});
+const Page = styled<UIComponent>(props => <Container fluid {...props} />)``;
 
 export { Container, Row, Col, Page };

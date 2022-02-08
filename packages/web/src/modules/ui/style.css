@@ -24,7 +24,7 @@
 }
 
 
-html {
+html, body {
   font-size: 100%; /*16px*/
   overflow-x: hidden;
 }

@@ -1,5 +1,6 @@
 import React from 'react';
 import { ui, components } from '@application';
+import { css } from '@chess-tent/styled-props';
 
 import lessonsUrl from '../images/lessons.png';
 import getACoachUrl from '../images/get-a-coach.png';
@@ -10,12 +11,20 @@ import Header from '../components/header';
 import Section from '../components/section';
 import Button from '../components/button';
 
-const { Headline3, Container, Row, Col, Text, Headline1, Img } = ui;
+const { Headline3, Container, Row, Col, Text, Headline1, Img, Page } = ui;
 const { Link } = components;
+
+const { className } = css`
+  @media screen and (max-width: 768px) {
+    img {
+      width: 100%;
+    }
+  }
+`;
 
 export const LandingPage = () => {
   return (
-    <>
+    <Page className={className}>
       <Topbar />
       <Section>
         <Header />
@@ -104,7 +113,7 @@ export const LandingPage = () => {
           </Row>
         </Container>
       </Section>
-    </>
+    </Page>
   );
 };
 

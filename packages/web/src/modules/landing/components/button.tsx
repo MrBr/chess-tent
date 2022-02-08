@@ -61,7 +61,6 @@ const Button = styled.button.css<ButtonProps>`
     outline: none;
   }
   
-  
   ${sizes}
   ${variants}
 `;

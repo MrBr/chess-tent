@@ -31,8 +31,7 @@ const resolveClassNames = <T extends { className?: string }>(
     [[], []],
   );
   const className = css(styles, ...styleVariables);
-  console.log(className);
-  return (props: T) => {
+  return (props: T): CssDescriptor => {
     const dynamicClassNames = {} as Record<string, string | boolean>;
     for (const key in mappedProps) {
       const value = props[key];
@@ -45,7 +44,6 @@ const resolveClassNames = <T extends { className?: string }>(
         ? compositeStyle(props).className
         : compositeStyle.className,
     );
-    console.log(compositeClassNames);
     return {
       className: cn(
         className,

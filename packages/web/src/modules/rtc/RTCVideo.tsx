@@ -1,10 +1,10 @@
 import React, { useCallback } from 'react';
 
-export interface RTCVideProps {
+export interface RTCVideoProps {
   mediaStream?: MediaStream;
 }
 
-export const RTCVideo: React.FC<RTCVideProps> = ({ mediaStream }) => {
+export const RTCVideo: React.FC<RTCVideoProps> = ({ mediaStream }) => {
   const addMediaStream = useCallback(
     (video: HTMLVideoElement | null) => {
       if (mediaStream && video) {

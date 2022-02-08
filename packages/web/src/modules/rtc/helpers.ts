@@ -14,7 +14,7 @@ export const createMessage = <T>(type: string, payload: T) => ({
 export const createPayload = (
   roomKey: string,
   socketID: string,
-  message = null,
+  message?: unknown,
 ) => ({
   roomKey,
   socketID,

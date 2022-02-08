@@ -170,9 +170,12 @@ export type UI = {
     type:
       | 'close'
       | 'comment'
+      | 'enter'
+      | 'exit'
       | 'notification'
       | 'search'
       | 'home'
+      | 'microphone'
       | 'crown'
       | 'plus'
       | 'board'

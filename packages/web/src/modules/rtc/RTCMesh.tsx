@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo } from 'react';
 import { useImmer } from 'use-immer';
 import 'core-js/stable';
 import 'regenerator-runtime';
+import { ui } from '@application';
 
 import { RTCVideo } from './RTCVideo';
 import Websocket from './Websocket';
@@ -15,6 +16,8 @@ import {
 } from './constants';
 
 import { buildServers, createMessage, createPayload } from './helpers';
+
+const { Icon } = ui;
 
 interface RequiredProps {
   activityId: string;
@@ -32,6 +35,7 @@ type State = Partial<{
   iceServers: { urls: string }[];
   localMediaStream: MediaStream;
   mediaConstraints: { video: boolean; audio: boolean };
+  muted?: boolean;
   remoteMediaStream: MediaStream;
   roomKey: string;
   socketId: string;
@@ -178,6 +182,19 @@ const RTCMesh = ({
     });
   }, [setState, state]);
 
+  const handleMuteUnmute = useCallback(() => {
+    const { localMediaStream, muted } = state;
+
+    // eslint-disable-next-line no-unused-expressions
+    localMediaStream?.getAudioTracks().forEach(audioTrack => {
+      audioTrack.enabled = !!muted;
+    });
+
+    setState(draft => {
+      draft.muted = !muted;
+    });
+  }, [setState, state]);
+
   useEffect(() => {
     const { connectionStarted, localMediaStream, roomKey, socketId } = state;
 
@@ -226,23 +243,47 @@ const RTCMesh = ({
       <div style={{ height: 10, width: '100%' }} />
       <section style={{ display: 'flex', gap: 10 }}>
         <div
+          className="d-flex justify-content-center align-items-center"
           onClick={handleStartConferencing}
           style={{
-            width: 30,
-            height: 30,
-            background: 'green',
+            cursor: 'pointer',
+            width: 40,
+            height: 40,
+            background: 'rgba(0, 200, 0, 0.9)',
             borderRadius: '100%',
+            paddingBottom: 3,
           }}
-        ></div>
+        >
+          <Icon color="white" type="enter" />
+        </div>
         <div
+          className="d-flex justify-content-center align-items-center"
           style={{
-            width: 30,
-            height: 30,
-            background: 'red',
+            cursor: 'pointer',
+            width: 40,
+            height: 40,
+            background: state.muted ? 'gray' : 'rgba(0, 0, 200, 0.9)',
             borderRadius: '100%',
+            paddingBottom: 3,
+          }}
+          onClick={handleMuteUnmute}
+        >
+          <Icon color="white" type="microphone" />
+        </div>
+        <div
+          className="d-flex justify-content-center align-items-center"
+          style={{
+            cursor: 'pointer',
+            width: 40,
+            height: 40,
+            background: 'rgba(200, 0, 0, 0.9)',
+            borderRadius: '100%',
+            paddingBottom: 3,
           }}
           onClick={handleStopConferencing}
-        ></div>
+        >
+          <Icon color="white" type="exit" />
+        </div>
       </section>
     </>
   );

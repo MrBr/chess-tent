@@ -13,23 +13,33 @@ export type StyledProxyTarget = { [key: string]: any } & {
   Component?: string | ComponentType;
 };
 
-export type CssDescriptor = { className: string };
+export type DynamicClassNameResolver<T extends {}> = (props: T) => string;
+export type DynamicCssDescriptorResolver<T extends {}> = (
+  props: T,
+) => CssDescriptor<T>;
 
-export type DynamicCssDescriptor<T extends {}> = (props: T) => CssDescriptor;
+export type CssDescriptor<T> = {
+  className: string;
+  staticStyle: string;
+  resolveDynamicClassNames: DynamicClassNameResolver<T>;
+};
+
 export type CompositeStyle<T extends { className?: string }> =
   | string
-  | DynamicCssDescriptor<T>
   | number
-  | CssDescriptor;
+  | TemplateStringsArray
+  | DynamicClassNameResolver<T>
+  | DynamicCssDescriptorResolver<T>
+  | CssDescriptor<T>;
 
 export type ClassNamesCssResult = <T>(
   style: TemplateStringsArray,
-  ...dynamicStyles: (string | DynamicCssDescriptor<T>)[]
-) => T extends {} ? DynamicCssDescriptor<T> : string;
+  ...dynamicStyles: CompositeStyle<T>[]
+) => CssDescriptor<T>;
 
 export type ComponentCssResult<BaseProps = {}> = <CustomProps extends {}>(
   style: TemplateStringsArray,
-  ...dynamicStyles: (string | DynamicCssDescriptor<BaseProps & CustomProps>)[]
+  ...dynamicStyles: CompositeStyle<BaseProps & CustomProps>[]
 ) => ComponentType<BaseProps & CustomProps>;
 
 export type WithCss<T extends {}, CssReturnType extends {}> = {
@@ -51,6 +61,7 @@ export interface Styled {
 
   // Composite style initializer
   props: RecursiveWithCss<ClassNamesCssResult>;
+  css: ClassNamesCssResult;
 
   // Base components
   button: RecursiveWithCss<

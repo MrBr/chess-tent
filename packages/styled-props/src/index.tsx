@@ -3,26 +3,46 @@ import { css } from '@emotion/css';
 import cn from 'classnames';
 import {
   CssDescriptor,
-  DynamicCssDescriptor,
+  DynamicClassNameResolver,
   CompositeStyle,
   CLASSNAME_MAP,
   Styled,
   StyledProxyTarget,
+  DynamicCssDescriptorResolver,
 } from '../types';
 
-function isCssDescriptor(compositeStyle: any): compositeStyle is CssDescriptor {
-  return !!compositeStyle?.className;
+function createCssDescriptor<T extends { className?: string }>(
+  styles: TemplateStringsArray,
+  variables: any[],
+  resolveDynamicClassNames: CssDescriptor<T>['resolveDynamicClassNames'],
+): CssDescriptor<T> {
+  return {
+    get className() {
+      return css(styles, ...variables);
+    },
+    staticStyle: String.raw(styles, ...variables),
+    resolveDynamicClassNames,
+  };
 }
 
-const resolveClassNames = <T extends { className?: string }>(
+function isCssDescriptor<T extends { className?: string }>(
+  compositeStyle: any,
+): compositeStyle is CssDescriptor<T> {
+  return !!compositeStyle?.staticStyle;
+}
+
+export const resolveClassNames = <T extends { className?: string }>(
   mappedProps: Partial<T>,
 ) => (styles: TemplateStringsArray, ...variables: CompositeStyle<T>[]) => {
   const [styleVariables, compositeStyles] = variables.reduce<
-    [any[], (DynamicCssDescriptor<T> | CssDescriptor)[]]
+    [any[], (DynamicClassNameResolver<T> | DynamicCssDescriptorResolver<T>)[]]
   >(
     (res, variable) => {
-      if (isCssDescriptor(variable) || typeof variable === 'function') {
+      if (typeof variable === 'function') {
         res[1].push(variable);
+      } else if (isCssDescriptor(variable)) {
+        res[1].push(variable.resolveDynamicClassNames);
+        res[0].push(variable.staticStyle);
       } else {
         res[0].push(variable);
       }
@@ -30,8 +50,7 @@ const resolveClassNames = <T extends { className?: string }>(
     },
     [[], []],
   );
-  const className = css(styles, ...styleVariables);
-  return (props: T): CssDescriptor => {
+  const resolveDynamicClassNames = (props: T): string => {
     const dynamicClassNames = {} as Record<string, string | boolean>;
     for (const key in mappedProps) {
       const value = props[key];
@@ -39,20 +58,16 @@ const resolveClassNames = <T extends { className?: string }>(
       dynamicClassNames[propClassName] =
         typeof value === 'string' ? value : !!value;
     }
-    const compositeClassNames = compositeStyles.map(compositeStyle =>
-      typeof compositeStyle === 'function'
-        ? compositeStyle(props).className
-        : compositeStyle.className,
-    );
-    return {
-      className: cn(
-        className,
-        dynamicClassNames,
-        props.className,
-        ...compositeClassNames,
-      ),
-    };
+    const compositeClassNames = compositeStyles.map(compositeStyle => {
+      const composite = compositeStyle(props);
+      if (typeof composite === 'string') {
+        return composite;
+      }
+      return composite.className;
+    });
+    return cn(dynamicClassNames, ...compositeClassNames);
   };
+  return createCssDescriptor(styles, styleVariables, resolveDynamicClassNames);
 };
 
 const renderWithClassNames = <T extends { className?: string }>(
@@ -61,13 +76,17 @@ const renderWithClassNames = <T extends { className?: string }>(
   styles: TemplateStringsArray,
   ...variables: CompositeStyle<T>[]
 ) => {
-  const resolveClassNameCached = resolveClassNames(mappedProps)(
-    styles,
-    ...variables,
-  );
+  const { resolveDynamicClassNames, className } = resolveClassNames<T>(
+    mappedProps,
+  )(styles, ...variables);
   return (props: T) => {
-    const { className } = resolveClassNameCached(props);
-    return <Component {...props} className={className} />;
+    const dynamicClassNames = resolveDynamicClassNames(props);
+    return (
+      <Component
+        {...props}
+        className={cn(props.className, className, dynamicClassNames)}
+      />
+    );
   };
 };
 
@@ -124,16 +143,17 @@ styled = new Proxy(styled, {
           },
         },
       );
+    } else if (p === 'css') {
+      return resolveClassNames({});
     }
+
     return Reflect.get(target, p, receiver);
   },
 });
 
 const cssDescriptorCreator = (
-  style: TemplateStringsArray,
+  styles: TemplateStringsArray,
   ...args: any[]
-): CssDescriptor => ({
-  className: css(style, ...args),
-});
+): CssDescriptor<any> => createCssDescriptor(styles, [...args], () => '');
 export { cssDescriptorCreator as css };
 export default styled;

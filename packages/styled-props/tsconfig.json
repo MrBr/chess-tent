@@ -3,6 +3,20 @@
   "compilerOptions": {
     "baseUrl": ".",
     "outDir": "./dist",
-    "jsx": "react"
+    "jsx": "react",
+    "module": "esnext",
+    "isolatedModules": true,
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "noEmit": true
   },
+  "exclude": [
+    "dist"
+  ],
+  "include": [
+    "src"
+  ]
 }

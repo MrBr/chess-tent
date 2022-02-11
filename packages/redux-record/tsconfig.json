@@ -7,4 +7,5 @@
       "@types": ["types"]
     }
   },
+  "exclude": ["dist"]
 }

@@ -6,6 +6,7 @@ import {
   ReactEventHandler,
   ReactNode,
   RefObject,
+  ElementType,
 } from 'react';
 import {
   ColProps,
@@ -65,35 +66,21 @@ export interface ConfirmProps {
   onCancel: () => void;
 }
 
-type FontSize =
-  | 'base'
-  | 'small'
-  | 'extra-small'
-  | 'display1'
-  | 'display2'
-  | 'headline1'
-  | 'headline2'
-  | 'headline3'
-  | 'headline4'
-  | 'headline5'
-  | 'headline6';
+type FontSize = 'base' | 'small' | 'extra-small' | 'large';
 
 export type TextProps = {
   children?: ReactNode | ReactElement[];
   className?: string;
   inline?: boolean;
   weight?: number;
-  align?: 'center' | 'left' | 'right';
-  color?:
-    | 'title'
-    | 'subtitle'
-    | 'alt'
-    | 'alt-title'
-    | 'alt-subtitle'
-    | 'inherit';
+  inherit?: boolean;
   fontSize?: FontSize;
+  align?: 'center' | 'left' | 'right';
+  color?: 'primary' | 'secondary' | 'title' | 'inherit';
+
   onClick?: ReactEventHandler;
   onPaste?: ReactEventHandler;
+  as?: ElementType;
 } & HtmlProps;
 
 export declare interface SearchBoxProps {
@@ -161,8 +148,7 @@ export type UI = {
   };
   SearchBox: UIComponent<SearchBoxProps>;
   Text: UIComponent<TextProps>;
-  Display1: UIComponent<TextProps>;
-  Display2: UIComponent<TextProps>;
+  Hero: UIComponent<TextProps>;
   Headline1: UIComponent<TextProps>;
   Headline2: UIComponent<TextProps>;
   Headline3: UIComponent<TextProps>;

@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Inter:500,700');
 
 :root {
-  --primary-color: linear-gradient(90deg, #5AD9AB 0%, #26D95C 100%);;
+  --primary-color: #26D95C;
   --secondary-color: #F45924;
 
   --bg-color: #FAFBFB;
@@ -21,6 +21,8 @@
   --error-color: #FF6B57;
   --warning-color: #ECB832;
   --link-color: #3076FF;
+
+  --primary-gradient: linear-gradient(90deg, #5AD9AB 0%, #26D95C 100%);
 }
 
 

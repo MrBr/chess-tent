@@ -41,10 +41,9 @@ const Playground: FunctionComponent<
   }, [completeStep, step]);
 
   const InitialHtmlText = ({ initialHtml }: { initialHtml?: string }) =>
-    useMemo(
-      () => <Text className="m-0" color="subtitle" initialHtml={initialHtml} />,
-      [initialHtml],
-    );
+    useMemo(() => <Text className="m-0" initialHtml={initialHtml} />, [
+      initialHtml,
+    ]);
 
   return (
     <SegmentActivitySidebar title="Question" {...props}>

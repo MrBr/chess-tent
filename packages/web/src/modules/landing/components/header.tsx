@@ -9,7 +9,7 @@ import headerArrowUrl from '../images/header-arrow.svg';
 
 import Button from './button';
 
-const { Headline3, Row, Col, Container, Display2 } = ui;
+const { Row, Col, Container, Hero, Text } = ui;
 
 const Header = styled<UIComponent>(({ className }) => (
   <Container className={className}>
@@ -18,13 +18,14 @@ const Header = styled<UIComponent>(({ className }) => (
         <img src={headerLeftUrl} alt="" className="header-left" />
         <img src={headerRightUrl} alt="" className="header-right" />
         <img src={headerArrowUrl} alt="" className="header-arrow" />
-        <Display2 className="text-center">
-          Have serious skills and wish to teach chess?
-        </Display2>
-        <Headline3 className="text-center">
+        <Hero align="center">
+          Have serious skills and wish to teach{' '}
+          <Text color="primary">chess?</Text>
+        </Hero>
+        <Text align="center" fontSize="large">
           Create engaging chess lessons and build your audience. Join early beta
           and help us build flexible creator platform.
-        </Headline3>
+        </Text>
         <Button className="m-auto d-block">Get beta access</Button>
       </Col>
     </Row>

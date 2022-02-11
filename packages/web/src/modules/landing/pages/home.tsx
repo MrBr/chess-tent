@@ -7,15 +7,49 @@ import getACoachUrl from '../images/get-a-coach.png';
 import findALesson from '../images/find-a-lesson.png';
 
 import Topbar from '../components/topbar';
-import Header from '../components/header';
 import Section from '../components/section';
 import Button from '../components/button';
+import headerLeftUrl from '../images/header-left.png';
+import headerRightUrl from '../images/header-right.png';
+import headerArrowUrl from '../images/header-arrow.svg';
 
-const { Headline3, Container, Row, Col, Text, Headline1, Img, Page } = ui;
+const { Headline3, Container, Row, Col, Text, Headline1, Img, Page, Hero } = ui;
 const { Link } = components;
 
 const { className } = css`
+  .header-left {
+    position: absolute;
+    left: 0;
+    transform: translateX(-100%);
+  }
+  .header-right {
+    position: absolute;
+    right: 0;
+    transform: translateX(100%);
+  }
+  .header-arrow {
+    position: absolute;
+    right: 0;
+    transform: translateX(100%);
+  }
+
   @media screen and (max-width: 768px) {
+    .header-left {
+      position: absolute;
+      left: 0;
+      transform: translateX(-100%);
+    }
+    .header-right {
+      position: absolute;
+      right: 0;
+      transform: translateX(100%);
+    }
+    .header-arrow {
+      position: absolute;
+      right: 0;
+      transform: translateX(100%);
+    }
+
     img {
       width: 100%;
     }
@@ -27,7 +61,26 @@ export const LandingPage = () => {
     <Page className={className}>
       <Topbar />
       <Section>
-        <Header />
+        <Container>
+          <Row>
+            <Col md={{ offset: 2, span: 8 }}>
+              <img src={headerLeftUrl} alt="" className="header-left" />
+              <img src={headerRightUrl} alt="" className="header-right" />
+              <img src={headerArrowUrl} alt="" className="header-arrow" />
+              <Hero align="center">
+                Have serious skills and wish to teach{' '}
+                <Text color="primary" inherit>
+                  chess?
+                </Text>
+              </Hero>
+              <Text align="center" fontSize="large">
+                Create engaging chess lessons and build your audience. Join
+                early beta and help us build flexible creator platform.
+              </Text>
+              <Button className="m-auto d-block">Get beta access</Button>
+            </Col>
+          </Row>
+        </Container>
       </Section>
       <Section alt>
         <Container>

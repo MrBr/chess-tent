@@ -89,7 +89,12 @@ const PreviewLesson = () => {
           </Row>
           <Container className="pl-0 mb-2 mt-2">
             <Tag pill variant="primary" className="mr-1">
-              <Text fontSize="extra-small" inline weight={700} color="inherit">
+              <Text
+                fontSize="extra-small"
+                as="span"
+                weight={700}
+                color="inherit"
+              >
                 {lesson.difficulty}
               </Text>
             </Tag>

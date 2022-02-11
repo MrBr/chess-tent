@@ -30,7 +30,7 @@ const LessonCard: React.FC<{
     <Container className="pl-0">
       {lesson.tags?.map(({ text, id }) => (
         <Tag pill key={id} variant="success" className="mr-1">
-          <Text fontSize="extra-small" inline weight={700} color="inherit">
+          <Text fontSize="extra-small" as="span" weight={700} color="inherit">
             {text}
           </Text>
         </Tag>

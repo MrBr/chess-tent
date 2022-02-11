@@ -52,7 +52,7 @@ export default ({ close, lesson }: { close: () => void; lesson: Lesson }) => {
             </>
           )}
         />
-        <Text inline fontSize="small" className="mt-3">
+        <Text as="span" fontSize="small" className="mt-3">
           {loading ? 'Saving' : !!assignResponse ? 'Collaborators saved' : null}
         </Text>
       </ModalBody>

@@ -21,8 +21,7 @@ import { Tooltip } from './Tooltip';
 import { Tag } from './Tag';
 import { Overlay, OverlayTrigger } from './Overlay';
 import {
-  Display1,
-  Display2,
+  Hero,
   Headline1,
   Headline2,
   Headline3,
@@ -87,8 +86,7 @@ application.ui.Col = Col;
 
 application.ui.Absolute = Absolute;
 
-application.ui.Display1 = Display1;
-application.ui.Display2 = Display2;
+application.ui.Hero = Hero;
 application.ui.Headline1 = Headline1;
 application.ui.Headline2 = Headline2;
 application.ui.Headline3 = Headline3;

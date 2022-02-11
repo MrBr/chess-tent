@@ -24,7 +24,7 @@ const ActivityPagination = styled(
         <Button onClick={prev} variant="regular" size="extra-small">
           Prev
         </Button>
-        <Text inline className="mb-0" fontSize="extra-small" weight={700}>
+        <Text as="span" className="mb-0" fontSize="extra-small" weight={700}>
           {currentStep} / {stepsCount}
         </Text>
         <Button onClick={next} variant="regular" size="extra-small">

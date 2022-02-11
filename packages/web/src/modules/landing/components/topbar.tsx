@@ -19,7 +19,7 @@ const Topbar = () => (
       </Col>
       <Col>
         <Link to="/login" ghost>
-          <Button>Login</Button>
+          <Button size="small">Login</Button>
         </Link>
       </Col>
     </Row>

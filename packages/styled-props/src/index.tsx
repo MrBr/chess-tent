@@ -149,11 +149,20 @@ styled = new Proxy(styled, {
 
     return Reflect.get(target, p, receiver);
   },
-});
+}) as Styled;
+
+const useCss = <T extends {}>(cssDescriptor: CssDescriptor<T>) => (
+  props: T,
+) => {
+  const className = cssDescriptor.className;
+  const dynamicClassNames = cssDescriptor.resolveDynamicClassNames(props);
+  return cn(className, dynamicClassNames);
+};
 
 const cssDescriptorCreator = (
   styles: TemplateStringsArray,
   ...args: any[]
 ): CssDescriptor<any> => createCssDescriptor(styles, [...args], () => '');
-export { cssDescriptorCreator as css };
+
+export { cssDescriptorCreator as css, useCss };
 export default styled;

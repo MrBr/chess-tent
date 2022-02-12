@@ -54,10 +54,9 @@ export type RecursiveWithCss<T> = WithCss<
 >;
 
 export interface Styled {
-  <T extends {}>(component: ComponentType<T>): RecursiveWithCss<
+  <T extends {}>(component: ComponentType<T> | string): RecursiveWithCss<
     ComponentCssResult<T>
   >;
-  <T extends {}>(component: string): RecursiveWithCss<ComponentCssResult<T>>;
 
   // Composite style initializer
   props: RecursiveWithCss<ClassNamesCssResult>;

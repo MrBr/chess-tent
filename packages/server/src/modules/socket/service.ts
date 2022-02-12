@@ -12,8 +12,7 @@ import {
 } from '@chess-tent/types';
 import { RecordAction } from '@chess-tent/redux-record/types';
 
-// @ts-ignore
-const SignalServer = require('react-rtc-real/server/SignalServer.js');
+import { SignalServer } from './signal-server';
 
 let io: Server;
 

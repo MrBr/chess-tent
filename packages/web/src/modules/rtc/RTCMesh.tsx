@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
+import io from 'socket.io-client';
 import { useImmer } from 'use-immer';
-import 'core-js/stable';
-import 'regenerator-runtime';
-import { ui } from '@application';
+
+import { constants, ui } from '@application';
 
 import { RTCVideo } from './RTCVideo';
 import Websocket from './Websocket';
@@ -17,11 +17,19 @@ import {
 
 import { buildServers, createMessage, createPayload } from './helpers';
 
+const { APP_URL } = constants;
 const { Icon } = ui;
+
+// TODO: use scoped function instead of exposing this here
+const socket = io(APP_URL, {
+  path: '/api/socket.io',
+  secure: process.env.REACT_APP_PROTOCOL === 'https://',
+  transports: ['websocket'], // Needed for build?,
+  autoConnect: false, // Needed to prevent subscribing while user isn't authorised
+});
 
 interface RequiredProps {
   activityId: string;
-  webSocketUrl: string;
 }
 
 export type RTCMeshProps = RequiredProps &
@@ -45,14 +53,12 @@ const RTCMesh = ({
   activityId,
   iceServerUrls,
   mediaConstraints,
-  webSocketUrl,
 }: RTCMeshProps) => {
   const [state, setState] = useImmer<State>({
     iceServers: buildServers(iceServerUrls) || DEFAULT_ICE_SERVERS,
     mediaConstraints: mediaConstraints || DEFAULT_CONSTRAINTS,
   });
 
-  const socket = useMemo(() => new WebSocket(webSocketUrl), [webSocketUrl]);
   const rtcPeerConnection = useMemo(
     () =>
       new RTCPeerConnection({
@@ -169,7 +175,7 @@ const RTCMesh = ({
     setState(draft => {
       draft.roomKey = activityId;
     });
-  }, [activityId, openCamera, setState, socket, state]);
+  }, [activityId, openCamera, setState, state]);
 
   const handleStopConferencing = useCallback(() => {
     const { localMediaStream } = state;
@@ -215,7 +221,15 @@ const RTCMesh = ({
 
       // TODO: disconnect on unmount (WebSocket / P2P)
     }
-  }, [rtcPeerConnection, socket, state]);
+  }, [rtcPeerConnection, state]);
+
+  useEffect(() => {
+    socket.connect();
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   const sendMessage = socket.send.bind(socket);
 

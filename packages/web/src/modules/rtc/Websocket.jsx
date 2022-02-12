@@ -8,7 +8,7 @@ import {
   TYPE_ICECANDIDATE,
 } from './constants';
 
-// TODO: refactor into hook
+// TODO: refactor and move to hooks (like useSocketSubscribe)
 class Websocket extends Component {
   setupConnection = () => {
     const {
@@ -20,44 +20,33 @@ class Websocket extends Component {
       handleIceCandidate,
     } = this.props;
 
-    socket.onopen = () => {
-      console.log('Websocket connected');
-    };
+    socket.on('message', message => {
+      try {
+        const data = JSON.parse(message);
 
-    socket.onmessage = message => {
-      console.log('Recieving Websocket message: ', message);
-      const data = JSON.parse(message.data);
-      switch (data.type) {
-        case TYPE_NEW_USER:
-          handleSocketConnection(data.id);
-          break;
-        case TYPE_CONNECTION:
-          handleConnectionReady(data);
-          break;
-        case TYPE_OFFER:
-          console.log('case Offer');
-          handleOffer(data);
-          break;
-        case TYPE_ANSWER:
-          console.log('case Answer');
-          handleAnswer(data);
-          break;
-        case TYPE_ICECANDIDATE:
-          console.log('case Ice Candidate');
-          handleIceCandidate(data);
-          break;
-        default:
-          console.error('Recieving message failed');
-      }
-    };
+        if (!('type' in data)) return;
 
-    socket.onclose = event => {
-      console.log('Websocket closed: ', event);
-    };
-
-    socket.onerror = error => {
-      console.error('Websocket error: ', error);
-    };
+        switch (data.type) {
+          case TYPE_NEW_USER:
+            handleSocketConnection(data.id);
+            break;
+          case TYPE_CONNECTION:
+            handleConnectionReady(data);
+            break;
+          case TYPE_OFFER:
+            handleOffer(data);
+            break;
+          case TYPE_ANSWER:
+            handleAnswer(data);
+            break;
+          case TYPE_ICECANDIDATE:
+            handleIceCandidate(data);
+            break;
+          default:
+            console.error('Receiving message failed');
+        }
+      } catch {}
+    });
   };
 
   componentDidMount() {

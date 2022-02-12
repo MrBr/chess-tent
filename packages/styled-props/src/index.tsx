@@ -16,11 +16,14 @@ function createCssDescriptor<T extends { className?: string }>(
   variables: any[],
   resolveDynamicClassNames: CssDescriptor<T>['resolveDynamicClassNames'],
 ): CssDescriptor<T> {
+  const staticStyle = String.raw(styles, ...variables);
   return {
     get className() {
-      return css(styles, ...variables);
+      // Has to use static style. Variables are already resolved in this phase.
+      // Case with multiple styles and without variables CSS function can't resolve properly
+      return css(staticStyle);
     },
-    staticStyle: String.raw(styles, ...variables),
+    staticStyle: staticStyle,
     resolveDynamicClassNames,
   };
 }

@@ -40,10 +40,7 @@ describe('styled', () => {
             fontSize: black;
           }
         `;
-    const {
-      resolveDynamicClassNames,
-      className,
-    } = resolveClassNames<TestProps>({})`
+    const { resolveDynamicClassNames } = resolveClassNames<TestProps>({})`
     background: red;
     ${color}
     ${size}

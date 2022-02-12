@@ -14,6 +14,8 @@ import headerArrowUrl from '../images/header-arrow.svg';
 
 const {
   Headline3,
+  Headline5,
+  Headline2,
   Container,
   Row,
   Col,
@@ -23,6 +25,7 @@ const {
   Page,
   Hero,
   Button,
+  Icon,
 } = ui;
 const { Link } = components;
 
@@ -96,16 +99,18 @@ export const LandingPage = () => {
         <Container>
           <Row>
             <Col md={6} sm={12}>
-              <Headline3>Express yourself as if the board is real!</Headline3>
-              <Headline1>
+              <Text fontSize="small" color="secondary" weight={700}>
+                Express yourself as if the board is real!
+              </Text>
+              <Headline2>
                 Create Engaging Lessons and Build Your Audience
-              </Headline1>
-              <Text>
+              </Headline2>
+              <Text fontSize="small">
                 Anyone who trained chess knows how much questions needs to be
                 asked in a lesson or a training and for the first time you can
                 do it.
               </Text>
-              <Text>
+              <Text fontSize="small">
                 Create the most interactive online lessons and training. Become
                 visible to chess players.
               </Text>
@@ -123,18 +128,24 @@ export const LandingPage = () => {
         <Container>
           <Row>
             <Col md={6} sm={12}>
-              <Headline1>Get a coach!</Headline1>
-              <Headline3>
+              <Headline2>Get a coach!</Headline2>
+              <Text fontSize="small" weight={700}>
                 Unique lessons editor provides a simple way to create custom
                 tailored trainings and lessons.
-              </Headline3>
-              <Text>Live training</Text>
+              </Text>
+              <Headline5>
+                <Icon type="board" color="primary" className="mr-2" />
+                Live training
+              </Headline5>
               <Text>
                 The best way to improve your chess skills. Coach guides and
                 tailors training that fits your skill. Train in the real time
                 online.
               </Text>
-              <Text>Solo training</Text>
+              <Headline5>
+                <Icon type="board" color="primary" className="mr-2" /> Solo
+                training
+              </Headline5>
               <Text>
                 Practice when you can. Solve standalone lessons or get custom
                 tailored training by your new mentor.

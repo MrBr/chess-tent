@@ -59,7 +59,7 @@ const color = styled.props.color.css`
     color: var(--black-color);
   }
 
-  color: var(--grey-800);
+  color: var(--grey-800-color);
 `;
 
 const dynamicStyle = (props: TextProps) =>

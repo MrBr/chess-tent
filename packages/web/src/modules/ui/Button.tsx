@@ -26,7 +26,7 @@ const variants = styled.props.variant.disabled.css<
   }
 
   &.disabled {
-    background: var(--grey-500);
+    background: var(--grey-500-color);
   }
 `;
 

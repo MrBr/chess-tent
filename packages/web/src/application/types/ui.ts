@@ -170,6 +170,7 @@ export type UI = {
       | 'chess';
     textual?: boolean;
     size?: 'large' | 'regular' | 'small' | 'extra-small';
+    color?: 'primary' | 'secondary' | 'black' | 'grey-700';
   }>;
   Img: ComponentType<
     {

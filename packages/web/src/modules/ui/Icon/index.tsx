@@ -1,74 +1,68 @@
 import React, { ComponentProps } from 'react';
-import { FunctionComponent } from 'react';
 import { UI } from '@types';
-import styled from '@emotion/styled';
+import styled, { css } from '@chess-tent/styled-props';
 import * as iconsMap from './iconMap';
 
 type IconProps = ComponentProps<UI['Icon']>;
 
-const sizeEnhancer = (props: IconProps) => {
-  if (props.textual) {
-    return;
+const Icon = styled<IconProps>(({ type, className, onClick }) => {
+  const IconSvgComponent = iconsMap[type];
+  return (
+    <span className={className} onClick={onClick}>
+      <IconSvgComponent className="svg-icon" />
+    </span>
+  );
+}).size.textual.color.css`
+  display: inline-block;
+  
+  .svg-icon {
+    width: 100%;
+    height: 100%;
   }
-  switch (props.size) {
-    case 'large':
-      return {
-        width: 36,
-        height: 36,
-      };
-    case 'small':
-      return {
-        width: 16,
-        height: 16,
-      };
-    case 'extra-small':
-      return {
-        width: 10,
-        height: 10,
-      };
-    case 'regular':
-    default:
-      return {
-        width: 24,
-        height: 24,
-      };
+
+  ${({ color }) =>
+    css`
+      color: var(--${color}-color);
+    `}
+
+  &.large {
+    width: 36px;
+    height: 36px;
   }
+
+  &.small {
+    width: 16px;
+    height: 16px;
+  }
+
+  &.extra-small {
+    width: 10px;
+    height: 10px;
+  }
+
+  &.regular {
+    width: 24px;
+    height: 24px;
+  }
+
+  &.textual {
+    .svg-icon {
+      width: auto;
+      height: auto;
+    }
+
+    font-size: inherit;
+    color: inherit;
+    line-height: inherit;
+    vertical-align: sub;
+    min-width: 20px;
+    min-height: 20px;
+  }
+`;
+
+Icon.defaultProps = {
+  color: 'grey-700',
+  size: 'regular',
 };
-
-const textualEnhancer = (props: IconProps) =>
-  props.textual && {
-    '.svg-icon': {
-      width: 'auto',
-      height: 'auto',
-    },
-    fontSize: 'inherit',
-    color: 'inherit',
-    lineHeight: 'inherit',
-    verticalAlign: 'sub',
-    minWidth: '20px',
-    minHeight: '20px',
-  };
-
-const Icon = styled<FunctionComponent<IconProps>>(
-  ({ type, className, onClick }) => {
-    const IconSvgComponent = iconsMap[type];
-    return (
-      <span className={className} onClick={onClick}>
-        <IconSvgComponent className="svg-icon" />
-      </span>
-    );
-  },
-)<IconProps>(
-  {
-    '.svg-icon': {
-      width: '100%',
-      height: '100%',
-    },
-    color: '#BABDC2',
-    display: 'inline-block',
-  },
-  sizeEnhancer,
-  textualEnhancer,
-);
 
 export default Icon;

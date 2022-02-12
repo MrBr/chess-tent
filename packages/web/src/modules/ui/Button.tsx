@@ -1,119 +1,114 @@
 import React, { ComponentProps } from 'react';
-import styled from '@emotion/styled';
+import styled, { useCss } from '@chess-tent/styled-props';
 import { ButtonProps, UI } from '@types';
-import { BorderRadiusProps, getBorderRadiusSize } from './enhancers';
 
-const buttonPadding = (size: ButtonProps['size']) => {
-  switch (size) {
-    case 'extra-small':
-      return '4px 8px 5px';
-    case 'small':
-      return '7px 16px 8px';
-    case 'large':
-      return '29px 48px 30px';
-    default:
-      return '15px 24px 14px';
+const variants = styled.props.variant.disabled.css<
+  Pick<ButtonProps, 'variant' | 'disabled'>
+>`
+  &.danger {
+    color: var(--light-color);
+    background: var(--error-color);
   }
-};
 
-const buttonTextSize = (size: ButtonProps['size']) => {
-  switch (size) {
-    case 'extra-small':
-      return '0.75em';
-    case 'small':
-      return '0.875em';
-    case 'large':
-      return '1.4375em';
-    default:
-      return '1em';
+  &.primary {
+    color: var(--light-color);
+    background: var(--primary-gradient);
   }
-};
 
-const buttonBackground = (variant: ButtonProps['variant']) => {
-  switch (variant) {
-    case 'danger':
-      return 'linear-gradient(90deg, #F46F24 0%, #F44D24 100%)';
-    case 'secondary':
-      return 'linear-gradient(90deg, #F46F24 0%, #F44D24 100%)';
-    case 'regular':
-      return '#E8E9EB';
-    case 'ghost':
-      return 'transparent';
-    case 'primary':
-    default:
-      return 'linear-gradient(90deg, #5AD9AB 0%, #26D95C 100%)';
+  &.secondary {
+    color: var(--light-color);
+    background: var(--secondary-color);
   }
-};
 
-const buttonTextColor = (variant: ButtonProps['variant']) => {
-  switch (variant) {
-    case 'danger':
-      return '#FFFFFF';
-    case 'secondary':
-      return '#FFFFFF';
-    case 'regular':
-      return '#2F3849';
-    default:
-      return '#182235';
+  &.ghost {
+    color: var(--dark-color);
+    background: transparent;
   }
-};
 
-const buttonVariantEnhancer = (props: ButtonProps) => ({
-  background: buttonBackground(props.variant),
-  color: buttonTextColor(props.variant),
-});
+  &.disabled {
+    background: var(--grey-500);
+  }
+`;
 
-const buttonSizeEnhancer = (props: ButtonProps) => ({
-  padding: buttonPadding(props.size),
-  fontSize: buttonTextSize(props.size),
-  borderRadius: getBorderRadiusSize(
-    props.size as BorderRadiusProps['borderRadius'],
-  ),
-});
+const sizes = styled.props.size.css<Pick<ButtonProps, 'size'>>`
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  &.large {
+    height: 64px;
+    border-radius: 10px;
+    padding: 0 60px;
+  }
 
-export const Button = styled.button<ButtonProps>(
-  {
-    '&:focus': {
-      outline: 'none',
-    },
-    fontWeight: 700,
-    border: 'none',
-  },
-  buttonSizeEnhancer,
-  buttonVariantEnhancer,
-);
+  &.regular {
+    height: 50px;
+    border-radius: 8px;
+    padding: 0 60px;
+  }
+
+  &.small {
+    height: 42px;
+    border-radius: 6px;
+    padding: 0 30px;
+  }
+`;
+
+export const Button = styled.button.css<ButtonProps>`
+  font-weight: 700;
+  font-size: 16px;
+
+  &:focus {
+    outline: none;
+  }
+
+  ${sizes}
+  ${variants}
+`;
+
 Button.defaultProps = {
-  size: 'regular',
+  size: 'large',
+  variant: 'primary',
 };
 
-export const ToggleButton = styled<UI['ToggleButton']>(
-  ({ className, children, defaultChecked, onChange, checked }) => (
-    <label className={className}>
-      <input
-        type="checkbox"
-        defaultChecked={defaultChecked}
-        onChange={onChange}
-        checked={checked}
-      />
-      <span className="toggle-button">{children}</span>
-    </label>
-  ),
-)<ComponentProps<UI['ToggleButton']>>(props => ({
-  input: {
-    opacity: 0,
-    width: 0,
-    height: 0,
+const toggle = styled.props.checked.css<ButtonProps>`
+  display: inline-block;
+  user-select: none;
+  cursor: pointer;
+
+  &.checked {
+    ${variants}
+  }
+  
+  ${sizes}
+`;
+
+export const ToggleButton = styled<ComponentProps<UI['ToggleButton']>>(
+  props => {
+    const { className, children, defaultChecked, onChange, checked } = props;
+    const buttonClassName = useCss(toggle)(props);
+    return (
+      <label className={className}>
+        <input
+          type="checkbox"
+          defaultChecked={defaultChecked}
+          onChange={onChange}
+          checked={checked}
+        />
+        <span className={buttonClassName}>{children}</span>
+      </label>
+    );
   },
-  '.toggle-button': {
-    display: 'inline-block',
-    userSelect: 'none',
-    cursor: 'pointer',
-    ...buttonSizeEnhancer(props),
-  },
-  'input:checked + .toggle-button': {
-    ...buttonVariantEnhancer(props),
-  },
-}));
+).css`
+  input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+`;
+
 ToggleButton.defaultProps = {
   size: 'regular',
+  variant: 'primary',
 };

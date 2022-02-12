@@ -28,6 +28,12 @@ export const SEND_NOTIFICATION = 'SEND_NOTIFICATION';
 export const SEND_MESSAGE = 'SEND_MESSAGE';
 export const SEND_PATCH = 'SEND_PATCH';
 
+export const CONFERENCING_ANSWER = 'CONFERENCING_ANSWER';
+export const CONFERENCING_CONNECTION = 'CONFERENCING_CONNECTION';
+export const CONFERENCING_ICECANDIDATE = 'CONFERENCING_ICECANDIDATE';
+export const CONFERENCING_OFFER = 'CONFERENCING_OFFER';
+export const CONFERENCING_ROOM = 'CONFERENCING_ROOM';
+
 export type Action<T, P, M = {}> = {
   type: T;
   payload: P;
@@ -149,6 +155,34 @@ export type RoomUsersAction = Action<
 
 export type SocketAction = RoomUsersAction;
 
+export type RoomAction = Action<typeof CONFERENCING_ROOM, { roomKey: string }>;
+
+export type ConnectionAction = Action<
+  typeof CONFERENCING_CONNECTION,
+  { startConnection?: boolean }
+>;
+
+export type OfferAction = Action<
+  typeof CONFERENCING_OFFER,
+  { message: RTCSessionDescriptionInit }
+>;
+
+export type AnswerAction = Action<
+  typeof CONFERENCING_ANSWER,
+  { message: RTCSessionDescriptionInit }
+>;
+
+export type ICECandidateAction = Action<
+  typeof CONFERENCING_ICECANDIDATE,
+  { message: string }
+>;
+
+export type ConferencingAction =
+  | RoomAction
+  | ConnectionAction
+  | OfferAction
+  | AnswerAction;
+
 export type Actions =
   | UpdateEntityAction
   | SyncAction
@@ -160,4 +194,5 @@ export type Actions =
   | LessonAction
   | UserAction
   | SocketAction
-  | ActivityAction<any>;
+  | ActivityAction<any>
+  | ConferencingAction;

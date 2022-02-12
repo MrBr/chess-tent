@@ -12,7 +12,7 @@ import {
 } from '@chess-tent/types';
 import { RecordAction } from '@chess-tent/redux-record/types';
 
-import { SignalServer } from './signal-server';
+import { initSignalServer } from './signal-server';
 
 let io: Server;
 
@@ -58,11 +58,6 @@ const dispatch = (stream: SocketStream) => {
 const init: SocketService['init'] = server => {
   io = new Server(server, { path: process.env.SOCKET_BASE_PATH });
 
-  const signal = new SignalServer({ server });
-  signal.connect();
-
-  return;
-
   io.on(CONNECTION_EVENT, function (client) {
     dispatch({ client, event: CONNECTION_EVENT });
 
@@ -81,6 +76,8 @@ const init: SocketService['init'] = server => {
   io.of('/').adapter.on('leave-room', (room, clientId) => {
     dispatch({ clientId, data: room, event: UNSUBSCRIBED_EVENT });
   });
+
+  initSignalServer(io);
 };
 
 const getRoomUsers: SocketService['getRoomUsers'] = room => {

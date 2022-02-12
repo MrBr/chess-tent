@@ -1,13 +1,17 @@
 import React, { Component } from 'react';
+import {
+  CONFERENCING_ICECANDIDATE,
+  CONFERENCING_OFFER,
+} from '@chess-tent/types';
 
 import { createMessage, createPayload } from './helpers';
-import { TYPE_OFFER, TYPE_ICECANDIDATE } from './constants';
 
-// TODO: refactor into hook
+// TODO: refactor into hook and add removal logic
+// TODO: we only use message in payload
 class PeerConnection extends Component {
   addMediaStreamTrack = async () => {
     const { localMediaStream, rtcPeerConnection } = this.props;
-    console.log('addMediaStream: ', localMediaStream);
+
     if (localMediaStream) {
       await localMediaStream.getTracks().forEach(mediaStreamTrack => {
         rtcPeerConnection.addTrack(mediaStreamTrack);
@@ -16,16 +20,16 @@ class PeerConnection extends Component {
   };
 
   handleOnNegotiationNeeded = async () => {
-    const { sendMessage, roomInfo, rtcPeerConnection } = this.props;
+    const { activityId, sendMessage, rtcPeerConnection } = this.props;
     try {
       const offer = await rtcPeerConnection.createOffer();
       await rtcPeerConnection.setLocalDescription(offer);
       const payload = createPayload(
-        roomInfo.roomKey,
-        roomInfo.socketID,
+        activityId,
+        undefined,
         rtcPeerConnection.localDescription,
       );
-      const offerMessage = createMessage(TYPE_OFFER, payload);
+      const offerMessage = createMessage(CONFERENCING_OFFER, payload);
       sendMessage(JSON.stringify(offerMessage));
     } catch (error) {
       console.error('handleNegotiationNeeded Error: ', error);
@@ -34,14 +38,17 @@ class PeerConnection extends Component {
 
   handleOnIceEvent = rtcPeerConnectionIceEvent => {
     if (rtcPeerConnectionIceEvent.candidate) {
-      const { sendMessage, roomInfo } = this.props;
+      const { activityId, sendMessage } = this.props;
       const { candidate } = rtcPeerConnectionIceEvent;
       const payload = createPayload(
-        roomInfo.roomKey,
-        roomInfo.socketID,
+        activityId,
+        undefined,
         JSON.stringify(candidate),
       );
-      const iceCandidateMessage = createMessage(TYPE_ICECANDIDATE, payload);
+      const iceCandidateMessage = createMessage(
+        CONFERENCING_ICECANDIDATE,
+        payload,
+      );
       sendMessage(JSON.stringify(iceCandidateMessage));
     }
   };

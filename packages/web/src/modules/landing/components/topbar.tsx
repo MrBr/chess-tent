@@ -1,9 +1,7 @@
 import React from 'react';
 import { ui, components } from '@application';
 
-import Button from './button';
-
-const { Row, Col, Container } = ui;
+const { Row, Col, Container, Button } = ui;
 const { Link, Logo } = components;
 
 const Topbar = () => (

@@ -8,12 +8,22 @@ import findALesson from '../images/find-a-lesson.png';
 
 import Topbar from '../components/topbar';
 import Section from '../components/section';
-import Button from '../components/button';
 import headerLeftUrl from '../images/header-left.png';
 import headerRightUrl from '../images/header-right.png';
 import headerArrowUrl from '../images/header-arrow.svg';
 
-const { Headline3, Container, Row, Col, Text, Headline1, Img, Page, Hero } = ui;
+const {
+  Headline3,
+  Container,
+  Row,
+  Col,
+  Text,
+  Headline1,
+  Img,
+  Page,
+  Hero,
+  Button,
+} = ui;
 const { Link } = components;
 
 const { className } = css`

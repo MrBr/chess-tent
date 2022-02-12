@@ -7,9 +7,7 @@ import headerLeftUrl from '../images/header-left.png';
 import headerRightUrl from '../images/header-right.png';
 import headerArrowUrl from '../images/header-arrow.svg';
 
-import Button from './button';
-
-const { Row, Col, Container, Hero, Text } = ui;
+const { Row, Col, Container, Hero, Text, Button } = ui;
 
 const Header = styled<UIComponent>(({ className }) => (
   <Container className={className}>

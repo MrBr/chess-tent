@@ -17,7 +17,7 @@ export type Utils = {
     screenSize: 'xs' | 'sm' | 'md' | 'lg' | 'xl',
     style: CSSObject,
   ) => CSSObject;
-  mobileStyleEnhancer: (style: CSSObject) => CSSObject;
+  mobileCss: (style: TemplateStringsArray) => string;
   propEnhancer: <T extends {}>(
     prop: string | ((props: T) => string),
     style: Record<string, CSSObject>,

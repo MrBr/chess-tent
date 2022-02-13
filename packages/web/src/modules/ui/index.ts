@@ -42,6 +42,7 @@ import LoadMore from './LoadMore';
 import Spinner from './Spinner';
 import ProgressBar from './ProgressBar';
 import { withFiles, withHtml } from './hoc';
+import { mobileCss } from './enhancers';
 
 application.hoc.withFiles = withFiles;
 application.hoc.withHtml = withHtml;
@@ -107,3 +108,5 @@ application.ui.Dot = Dot;
 
 application.ui.LoadMore = LoadMore;
 application.ui.Spinner = Spinner;
+
+application.utils.mobileCss = mobileCss;

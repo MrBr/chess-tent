@@ -30,7 +30,3 @@ export const mediaQueryEnhancer: Utils['mediaQueryEnhancer'] = (
     [`@media ${query}`]: style,
   };
 };
-
-export const mobileStyleEnhancer: Utils['mobileStyleEnhancer'] = style => ({
-  [`@media screen and (max-width: 767px)`]: style,
-});

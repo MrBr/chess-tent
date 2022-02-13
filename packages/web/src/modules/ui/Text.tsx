@@ -2,9 +2,10 @@ import React, { ComponentType } from 'react';
 import styled, { css } from '@chess-tent/styled-props';
 import { TextProps } from '@types';
 import { withHtml } from './hoc';
+import { mobileCss } from './enhancers';
 
 const inherit = styled.props.inherit.css`
-  & &, &.inherit {
+ &.inherit {
     font-size: inherit;
     color: inherit;
     line-height: inherit;
@@ -29,21 +30,21 @@ const size = styled.props.fontSize.css`
     font-size: 16px;
   }
 
-  @media screen and (max-width: 768px) {
-    font-size: 18px;
+ ${mobileCss`
+   font-size: 18px;
 
-    &.large {
-      font-size: 20px;
-    }
+   &.large {
+     font-size: 20px;
+   }
 
-    &.small {
-      font-size: 16px;
-    }
+   &.small {
+     font-size: 16px;
+   }
 
-    &.extra-small {
-      font-size: 14px;
-    }
-  }
+   &.extra-small {
+     font-size: 14px;
+   }
+ `}
 `;
 
 const color = styled.props.color.css`
@@ -69,8 +70,8 @@ const dynamicStyle = (props: TextProps) =>
   `;
 
 const BaseText: ComponentType<TextProps> = withHtml<TextProps>(
-  ({ inline, initialHtml, as, ...textProps }) => {
-    const Component = as || 'p';
+  ({ inline, inherit, initialHtml, as, ...textProps }) => {
+    const Component = as || (inherit ? 'span' : 'p');
     return <Component {...textProps} />;
   },
 );
@@ -89,14 +90,6 @@ const headingStyle = styled.css<TextProps>`
   ${color}
   ${dynamicStyle}
 `;
-
-const mobileCss = (style: TemplateStringsArray) => {
-  return css`
-    @media screen and (max-width: 768px) {
-      ${style}
-    }
-  `;
-};
 
 const Hero = styled(BaseText).css`
   font-size: 60px;

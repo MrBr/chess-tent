@@ -1,5 +1,5 @@
 import React from 'react';
-import { ui, components } from '@application';
+import { ui, components, utils } from '@application';
 import { css } from '@chess-tent/styled-props';
 
 import lessonsUrl from '../images/lessons.png';
@@ -8,6 +8,7 @@ import findALesson from '../images/find-a-lesson.png';
 
 import Topbar from '../components/topbar';
 import Section from '../components/section';
+import Footer from '../components/footer';
 import headerLeftUrl from '../images/header-left.png';
 import headerRightUrl from '../images/header-right.png';
 import headerArrowUrl from '../images/header-arrow.svg';
@@ -27,6 +28,7 @@ const {
   Button,
   Icon,
 } = ui;
+const { mobileCss } = utils;
 const { Link } = components;
 
 const { className } = css`
@@ -46,7 +48,7 @@ const { className } = css`
     transform: translateX(100%);
   }
 
-  @media screen and (max-width: 768px) {
+  ${mobileCss`
     .header-left {
       position: absolute;
       left: 0;
@@ -63,10 +65,10 @@ const { className } = css`
       transform: translateX(100%);
     }
 
-    img {
+    img.section-image {
       width: 100%;
     }
-  }
+  `}
 `;
 
 export const LandingPage = () => {
@@ -95,7 +97,7 @@ export const LandingPage = () => {
           </Row>
         </Container>
       </Section>
-      <Section alt>
+      <Section fill>
         <Container>
           <Row>
             <Col md={6} sm={12}>
@@ -119,7 +121,12 @@ export const LandingPage = () => {
               </Link>
             </Col>
             <Col md={{ offset: 1, span: 5 }} sm={12}>
-              <Img src={lessonsUrl} alt="" width="auto" />
+              <Img
+                src={lessonsUrl}
+                alt=""
+                width="auto"
+                className="section-image"
+              />
             </Col>
           </Row>
         </Container>
@@ -152,7 +159,12 @@ export const LandingPage = () => {
               </Text>
             </Col>
             <Col md={{ offset: 1, span: 5 }} sm={12}>
-              <Img src={getACoachUrl} alt="" width="auto" />
+              <Img
+                src={getACoachUrl}
+                alt=""
+                width="auto"
+                className="section-image"
+              />
             </Col>
           </Row>
         </Container>
@@ -165,7 +177,7 @@ export const LandingPage = () => {
               <Img
                 src={findALesson}
                 alt=""
-                className="float-right"
+                className="float-right section-image"
                 width="auto"
               />
             </Col>
@@ -187,6 +199,7 @@ export const LandingPage = () => {
           </Row>
         </Container>
       </Section>
+      <Footer />
     </Page>
   );
 };

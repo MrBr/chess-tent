@@ -1,10 +1,10 @@
-import styled from '@emotion/styled';
+import styled from '@chess-tent/styled-props';
 
 import logoUrl from '../images/logo.svg';
 
-const Logo = styled.img({
-  width: 150,
-});
+const Logo = styled.img.css`
+  width: 150px;
+`;
 
 Logo.defaultProps = {
   src: logoUrl,

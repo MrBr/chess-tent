@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react';
-import { UI } from '@types';
+import { UI, Utils } from '@types';
 
 export interface BorderRadiusProps {
   borderRadius: 'large' | 'regular' | 'small' | 'extra-small';
@@ -74,4 +74,12 @@ export const sizeEnhancer = (
     default:
       return regular;
   }
+};
+
+export const mobileCss: Utils['mobileCss'] = (style: TemplateStringsArray) => {
+  return `
+    @media screen and (max-width: 768px) {
+      ${style}
+    }
+  `;
 };

@@ -1,8 +1,12 @@
 // Hooks
 import {
+  AnswerAction,
+  ConnectionAction,
   GetRequestFetchArgs,
   GetRequestFetchResponse,
+  ICECandidateAction,
   LessonsRequest,
+  OfferAction,
   RequestFetch,
 } from '@chess-tent/types';
 import { ReactElement } from 'react';
@@ -33,12 +37,20 @@ import { GenericArguments } from './_helpers';
 
 type UseMetaReturn<T> = [T, (meta: T) => void, () => void];
 
+export interface ConferencingHandlers {
+  handleAnswer(data: AnswerAction): void;
+  handleConnectionReady(data: ConnectionAction): void;
+  handleICECandidate(data: ICECandidateAction): void;
+  handleOffer(data: OfferAction): void;
+}
+
 export type Hooks = {
   useRecordInit: typeof useRecordInit;
   useRecordSafe: typeof useRecordSafe;
   useIsMobile: () => boolean;
   useComponentStateSilent: () => { mounted: boolean };
   useComponentState: () => { mounted: boolean };
+  useConferencing: (handlers: ConferencingHandlers) => void;
   usePromptModal: () => (
     renderModal: (close: () => void) => ReactElement,
   ) => void;

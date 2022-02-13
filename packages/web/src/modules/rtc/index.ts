@@ -1,4 +1,4 @@
 import application from '@application';
-import { Conferencing } from './Conferencing';
+import Conferencing from './conferencing';
 
 application.rtc.Conferencing = Conferencing;

@@ -1,44 +1,23 @@
 import React, { memo, useCallback, useEffect, useMemo } from 'react';
+import { hooks, socket, ui } from '@application';
 import { CONFERENCING_ANSWER, CONFERENCING_ROOM } from '@chess-tent/types';
-import styled from '@emotion/styled';
-import io from 'socket.io-client';
 import { useImmer } from 'use-immer';
-
-import { constants, ui } from '@application';
 
 import type { ConferencingProps } from '@types';
 import type {
   AnswerAction,
+  ConnectionAction,
   ICECandidateAction,
   OfferAction,
 } from '@chess-tent/types';
 
-import { RTCVideo } from './RTCVideo';
-import Websocket from './Websocket';
-import PeerConnection from './PeerConnection';
-
 import { DEFAULT_CONSTRAINTS, DEFAULT_ICE_SERVERS } from './constants';
+import { ConferenceButton } from './components/conference-button';
+import { RTCVideo } from './components/rtc-video';
+import { usePeerConnection } from './hook';
 
-import { buildServers, createMessage, createPayload } from './helpers';
-
-const { APP_URL } = constants;
 const { Icon } = ui;
-
-// TODO: use scoped function instead of exposing this here
-const socket = io(APP_URL, {
-  path: '/api/socket.io',
-  secure: process.env.REACT_APP_PROTOCOL === 'https://',
-  transports: ['websocket'],
-  autoConnect: false,
-});
-
-const ConferenceButton = styled.div({
-  borderRadius: '100%',
-  cursor: 'pointer',
-  height: 40,
-  paddingBottom: 3,
-  width: 40,
-});
+const { useConferencing } = hooks;
 
 type State = Partial<{
   connectionStarted: boolean;
@@ -49,10 +28,12 @@ type State = Partial<{
   remoteMediaStream: MediaStream;
 }>;
 
-export const Conferencing = memo(
+const Conferencing = memo(
   ({ activityId, iceServerUrls, mediaConstraints }: ConferencingProps) => {
     const [state, setState] = useImmer<State>({
-      iceServers: buildServers(iceServerUrls) || DEFAULT_ICE_SERVERS,
+      iceServers:
+        iceServerUrls?.map(serverURL => ({ urls: serverURL })) ||
+        DEFAULT_ICE_SERVERS,
       mediaConstraints: mediaConstraints || DEFAULT_CONSTRAINTS,
     });
 
@@ -93,6 +74,8 @@ export const Conferencing = memo(
         const { localMediaStream } = state;
         const { payload } = data;
 
+        if (!payload.message) return;
+
         await rtcPeerConnection.setRemoteDescription(payload.message);
 
         let mediaStream = localMediaStream;
@@ -129,12 +112,10 @@ export const Conferencing = memo(
     );
 
     const handleConnectionReady = useCallback(
-      (message: { startConnection?: boolean }) => {
-        if (message.startConnection) {
-          setState(draft => {
-            draft.connectionStarted = message.startConnection;
-          });
-        }
+      (data: ConnectionAction) => {
+        setState(draft => {
+          draft.connectionStarted = data.payload.startConnection;
+        });
       },
       [setState],
     );
@@ -151,11 +132,11 @@ export const Conferencing = memo(
     const handleStartConferencing = useCallback(async () => {
       await openCamera();
 
-      const roomKeyMessage = createMessage(
-        CONFERENCING_ROOM,
-        createPayload(activityId, ''),
-      );
-      socket.send(JSON.stringify(roomKeyMessage));
+      socket.sendAction({
+        type: CONFERENCING_ROOM,
+        payload: { activityId },
+        meta: {},
+      });
     }, [activityId, openCamera]);
 
     const handleStopConferencing = useCallback(() => {
@@ -186,52 +167,50 @@ export const Conferencing = memo(
       const { connectionStarted, localMediaStream } = state;
 
       if (connectionStarted && localMediaStream && activityId) {
-        try {
-          const createAnswer = async () => {
-            const answer = await rtcPeerConnection.createAnswer();
+        const createAnswer = async () => {
+          let answer: RTCSessionDescriptionInit | undefined;
 
-            await rtcPeerConnection.setLocalDescription(answer);
+          try {
+            answer = await rtcPeerConnection.createAnswer();
+          } catch (error) {
+            console.error(error);
+          }
 
-            const payload = createPayload(activityId, '', answer);
-            const answerMessage = createMessage(CONFERENCING_ANSWER, payload);
-            socket.send(JSON.stringify(answerMessage));
-          };
+          if (!answer) return;
 
-          createAnswer();
-        } catch {}
+          await rtcPeerConnection.setLocalDescription(answer);
 
-        // TODO: disconnect on unmount (WebSocket / P2P)
+          socket.sendAction({
+            type: CONFERENCING_ANSWER,
+            payload: {
+              activityId,
+              message: answer,
+            },
+            meta: {},
+          });
+        };
+
+        createAnswer();
       }
     }, [activityId, rtcPeerConnection, state]);
 
-    useEffect(() => {
-      socket.connect();
+    useConferencing({
+      handleAnswer,
+      handleConnectionReady,
+      handleICECandidate,
+      handleOffer,
+    });
 
-      return () => {
-        socket.disconnect();
-      };
-    }, []);
-
-    const sendMessage = socket.send.bind(socket);
+    usePeerConnection(
+      activityId,
+      rtcPeerConnection,
+      addRemoteStream,
+      state.localMediaStream,
+      state.connectionStarted,
+    );
 
     return (
       <>
-        <Websocket
-          socket={socket}
-          handleConnectionReady={handleConnectionReady}
-          handleOffer={handleOffer}
-          handleAnswer={handleAnswer}
-          handleICECandidate={handleICECandidate}
-        />
-        <PeerConnection
-          activityId={activityId}
-          rtcPeerConnection={rtcPeerConnection}
-          iceServers={state.iceServers}
-          localMediaStream={state.localMediaStream}
-          addRemoteStream={addRemoteStream}
-          startConnection={state.connectionStarted}
-          sendMessage={sendMessage}
-        />
         <RTCVideo mediaStream={state.localMediaStream} />
         <RTCVideo mediaStream={state.remoteMediaStream} />
         <div style={{ height: 10, width: '100%' }} />
@@ -240,8 +219,9 @@ export const Conferencing = memo(
             className="d-flex justify-content-center align-items-center"
             onClick={handleStartConferencing}
             style={{ background: 'rgba(0, 200, 0, 0.9)' }}
+            title="Start"
           >
-            <Icon color="white" type="enter" />
+            <Icon type="enter" />
           </ConferenceButton>
           <ConferenceButton
             className="d-flex justify-content-center align-items-center"
@@ -249,18 +229,22 @@ export const Conferencing = memo(
               background: state.muted ? 'gray' : 'rgba(0, 0, 200, 0.9)',
             }}
             onClick={handleMuteUnmute}
+            title="Toggle Microphone"
           >
-            <Icon color="white" type="microphone" />
+            <Icon type="microphone" />
           </ConferenceButton>
           <ConferenceButton
             className="d-flex justify-content-center align-items-center"
             style={{ background: 'rgba(200, 0, 0, 0.9)' }}
             onClick={handleStopConferencing}
+            title="Stop"
           >
-            <Icon color="white" type="exit" />
+            <Icon type="exit" />
           </ConferenceButton>
         </section>
       </>
     );
   },
 );
+
+export default Conferencing;

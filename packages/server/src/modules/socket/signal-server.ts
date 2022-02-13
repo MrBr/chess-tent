@@ -1,53 +1,59 @@
-import { CONFERENCING_CONNECTION, CONFERENCING_ROOM } from '@chess-tent/types';
+import {
+  ACTION_EVENT,
+  CONFERENCING_CONNECTION,
+  CONFERENCING_ROOM,
+} from '@chess-tent/types';
 import type { Server, Socket } from 'socket.io';
 
-const broadcast = (
-  data: string,
-  currentClient: Socket,
-  clients: Record<string, Socket>,
-) => {
-  // TODO: replace with channel emit
-  Object.keys(clients).forEach(clientID => {
-    const client = clients[clientID];
+import type { Actions } from '@chess-tent/types';
 
+// TODO: replace with channel emit
+const broadcast = (data: Actions, currentClient: Socket, clients: Socket[]) => {
+  clients.forEach(client => {
     if (client !== currentClient && client.connected) {
-      client.send(data);
+      client.emit(ACTION_EVENT, JSON.stringify(data));
     }
   });
 };
 
+// TODO: move to activity middleware
 export const initSignalServer = (socket: Server) => {
-  // TODO: we don't need a dictionary, can be an array
-  const channels: Record<string, Record<string, Socket>> = {};
+  const channels: Record<string, Socket[]> = {};
 
   socket.on('connection', (currentClient: Socket) => {
-    currentClient.on('message', (data: string) => {
+    currentClient.on(ACTION_EVENT, (message: string) => {
       try {
-        const parsedData = JSON.parse(data);
+        const data: Actions = JSON.parse(message);
 
-        switch (parsedData.type) {
+        switch (data.type) {
           case CONFERENCING_ROOM:
-            const { roomKey } = parsedData.payload;
-            if (
-              channels[roomKey] &&
-              Object.keys(channels[roomKey]).length < 2
-            ) {
-              channels[roomKey][currentClient.id] = currentClient;
+            const { activityId } = data.payload;
 
-              const clients = channels[roomKey];
-              const data = JSON.stringify({
-                type: CONFERENCING_CONNECTION,
-                startConnection: true,
-              });
+            if (channels[activityId] && channels[activityId].length < 2) {
+              channels[activityId].push(currentClient);
 
-              broadcast(data, currentClient, clients);
-            } else if (!channels[roomKey]) {
-              channels[roomKey] = { [parsedData.payload]: currentClient };
+              const clients = channels[activityId];
+
+              broadcast(
+                {
+                  type: CONFERENCING_CONNECTION,
+                  payload: {
+                    startConnection: true,
+                  },
+                  meta: {},
+                },
+                currentClient,
+                clients,
+              );
+            } else if (!channels[activityId]) {
+              channels[activityId] = [currentClient];
             }
             break;
           default:
-            const clientsInChannel = channels[parsedData.payload.roomKey];
-            broadcast(data, currentClient, clientsInChannel);
+            if (data.payload && 'activityId' in data.payload) {
+              const clientsInChannel = channels[data.payload.activityId];
+              broadcast(data, currentClient, clientsInChannel);
+            }
         }
       } catch (error) {
         console.error(error);

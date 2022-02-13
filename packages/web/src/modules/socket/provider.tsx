@@ -7,7 +7,7 @@ import {
   UNSUBSCRIBE_EVENT,
 } from '@chess-tent/types';
 import { hooks, constants } from '@application';
-import { useSocketConnected } from './hook';
+import { createUseConferencing, useSocketConnected } from './hook';
 
 const { useDispatchBatched, useActiveUserRecord } = hooks;
 const { APP_URL } = constants;
@@ -25,6 +25,8 @@ export const subscribe = (channel: string) =>
   socket.emit(SUBSCRIBE_EVENT, channel);
 export const unsubscribe = (channel: string) =>
   socket.emit(UNSUBSCRIBE_EVENT, channel);
+
+export const useConferencing = createUseConferencing(socket);
 
 export const SocketProvider: ComponentType = props => {
   const dispatch = useDispatchBatched();
@@ -59,7 +61,9 @@ export const SocketProvider: ComponentType = props => {
   }, [updateSocketConnected, userId]);
 
   useEffect(() => {
-    socket.on(ACTION_EVENT, (action: Actions) => {
+    socket.on(ACTION_EVENT, (action: Actions | string) => {
+      if (typeof action === 'string') return;
+
       console.log('Socket Action Received', action);
       action.meta.push = true;
       dispatch(action);

@@ -155,7 +155,10 @@ export type RoomUsersAction = Action<
 
 export type SocketAction = RoomUsersAction;
 
-export type RoomAction = Action<typeof CONFERENCING_ROOM, { roomKey: string }>;
+export type RoomAction = Action<
+  typeof CONFERENCING_ROOM,
+  { activityId: string }
+>;
 
 export type ConnectionAction = Action<
   typeof CONFERENCING_CONNECTION,
@@ -164,24 +167,25 @@ export type ConnectionAction = Action<
 
 export type OfferAction = Action<
   typeof CONFERENCING_OFFER,
-  { message: RTCSessionDescriptionInit }
+  { activityId: string; message: RTCSessionDescriptionInit | null }
 >;
 
 export type AnswerAction = Action<
   typeof CONFERENCING_ANSWER,
-  { message: RTCSessionDescriptionInit }
+  { activityId: string; message: RTCSessionDescriptionInit }
 >;
 
 export type ICECandidateAction = Action<
   typeof CONFERENCING_ICECANDIDATE,
-  { message: string }
+  { activityId: string; message: string }
 >;
 
 export type ConferencingAction =
   | RoomAction
   | ConnectionAction
   | OfferAction
-  | AnswerAction;
+  | AnswerAction
+  | ICECandidateAction;
 
 export type Actions =
   | UpdateEntityAction

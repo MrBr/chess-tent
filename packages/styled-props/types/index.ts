@@ -1,16 +1,20 @@
 import {
   ComponentType,
   ButtonHTMLAttributes,
-  HTMLAttributes,
   InputHTMLAttributes,
   AnchorHTMLAttributes,
 } from 'react';
 
 export const CLASSNAME_MAP = Symbol('CLASSNAME_MAP');
+export const COMPONENT_CLASSNAME = Symbol('COMPONENT_CLASSNAME');
 
 export type StyledProxyTarget = { [key: string]: any } & {
   [CLASSNAME_MAP]: { [key: string]: string };
   Component?: string | ComponentType;
+};
+
+export type StyledComponent<T extends {}> = ComponentType<T> & {
+  [COMPONENT_CLASSNAME]?: string;
 };
 
 export type DynamicClassNameResolver<T extends {}> = (props: T) => string;
@@ -27,6 +31,7 @@ export type CssDescriptor<T> = {
 export type CompositeStyle<T extends { className?: string }> =
   | string
   | number
+  | StyledComponent<T>
   | TemplateStringsArray
   | DynamicClassNameResolver<T>
   | DynamicCssDescriptorResolver<T>
@@ -41,6 +46,10 @@ export type ComponentCssResult<BaseProps = {}> = <CustomProps extends {}>(
   style: TemplateStringsArray,
   ...dynamicStyles: CompositeStyle<BaseProps & CustomProps>[]
 ) => ComponentType<BaseProps & CustomProps>;
+
+export type BaseComponentCssResult<BaseProps = {}> = ComponentCssResult<
+  Partial<BaseProps>
+>;
 
 export type WithCss<T extends {}, CssReturnType extends {}> = {
   [key: string]: T;
@@ -64,15 +73,16 @@ export interface Styled {
 
   // Base components
   button: RecursiveWithCss<
-    ComponentCssResult<ButtonHTMLAttributes<HTMLButtonElement>>
+    BaseComponentCssResult<ButtonHTMLAttributes<HTMLButtonElement>>
   >;
-  div: RecursiveWithCss<ComponentCssResult<HTMLAttributes<HTMLDivElement>>>;
-  span: RecursiveWithCss<ComponentCssResult<HTMLAttributes<HTMLSpanElement>>>;
-  p: RecursiveWithCss<ComponentCssResult<HTMLAttributes<HTMLParagraphElement>>>;
+  div: RecursiveWithCss<BaseComponentCssResult<HTMLDivElement>>;
+  span: RecursiveWithCss<BaseComponentCssResult<HTMLSpanElement>>;
+  p: RecursiveWithCss<BaseComponentCssResult<HTMLParagraphElement>>;
   input: RecursiveWithCss<
-    ComponentCssResult<InputHTMLAttributes<HTMLInputElement>>
+    BaseComponentCssResult<InputHTMLAttributes<HTMLInputElement>>
   >;
   a: RecursiveWithCss<
-    ComponentCssResult<AnchorHTMLAttributes<HTMLInputElement>>
+    BaseComponentCssResult<AnchorHTMLAttributes<HTMLAnchorElement>>
   >;
+  img: RecursiveWithCss<BaseComponentCssResult<HTMLImageElement>>;
 }

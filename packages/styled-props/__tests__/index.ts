@@ -1,4 +1,5 @@
 import styled, { css, resolveClassNames } from '../src';
+import { COMPONENT_CLASSNAME, StyledComponent } from '../types';
 
 type TestProps = {
   color: string;
@@ -29,7 +30,7 @@ describe('styled', () => {
   test('creates an extra class for dynamic style', () => {
     const color = styled.props.color.css<TestProps>`
           &.black {
-            ${props =>
+            ${(props: TestProps) =>
               css`
                 color: ${props.color};
               `}
@@ -52,6 +53,21 @@ describe('styled', () => {
     });
 
     expect(classNames.split(' ').length).toBe(3);
+  });
+  test('nested component style', () => {
+    const color: StyledComponent<any> = styled.a.css<TestProps>`
+          color: red;
+        `;
+    const size = styled.props.size.css`
+          ${color} {
+            color: black;
+          }
+        `;
+
+    expect(size.staticStyle).toMatch(
+      new RegExp(color[COMPONENT_CLASSNAME] as string),
+    );
+    expect(size.staticStyle).toMatch('black');
   });
   test('maps props to classes', () => {
     const color = styled.props.color.css<TestProps>`

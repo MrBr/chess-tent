@@ -6,9 +6,11 @@ import {
   DynamicClassNameResolver,
   CompositeStyle,
   CLASSNAME_MAP,
+  COMPONENT_CLASSNAME,
   Styled,
   StyledProxyTarget,
   DynamicCssDescriptorResolver,
+  StyledComponent,
 } from '../types';
 
 function createCssDescriptor<T extends { className?: string }>(
@@ -34,6 +36,12 @@ function isCssDescriptor<T extends { className?: string }>(
   return !!compositeStyle?.staticStyle;
 }
 
+function isStyledComponent<T extends { className?: string }>(
+  component: any,
+): component is StyledComponent<T> {
+  return !!component?.[COMPONENT_CLASSNAME];
+}
+
 export const resolveClassNames = <T extends { className?: string }>(
   mappedProps: Partial<T>,
 ) => (styles: TemplateStringsArray, ...variables: CompositeStyle<T>[]) => {
@@ -41,7 +49,9 @@ export const resolveClassNames = <T extends { className?: string }>(
     [any[], (DynamicClassNameResolver<T> | DynamicCssDescriptorResolver<T>)[]]
   >(
     (res, variable) => {
-      if (typeof variable === 'function') {
+      if (isStyledComponent(variable)) {
+        res[0].push(variable[COMPONENT_CLASSNAME]);
+      } else if (typeof variable === 'function') {
         res[1].push(variable);
       } else if (isCssDescriptor(variable)) {
         res[1].push(variable.resolveDynamicClassNames);
@@ -78,11 +88,11 @@ const renderWithClassNames = <T extends { className?: string }>(
 ) => (mappedProps: Partial<T>) => (
   styles: TemplateStringsArray,
   ...variables: CompositeStyle<T>[]
-) => {
+): StyledComponent<T> => {
   const { resolveDynamicClassNames, className } = resolveClassNames<T>(
     mappedProps,
   )(styles, ...variables);
-  return (props: T) => {
+  const WrappedComponent: StyledComponent<T> = (props: T) => {
     const dynamicClassNames = resolveDynamicClassNames(props);
     return (
       <Component
@@ -91,6 +101,8 @@ const renderWithClassNames = <T extends { className?: string }>(
       />
     );
   };
+  WrappedComponent[COMPONENT_CLASSNAME] = className;
+  return WrappedComponent;
 };
 
 let styled = (((Component: ComponentType) =>
@@ -123,6 +135,7 @@ styled.a = styled('a');
 styled.span = styled('span');
 styled.p = styled('p');
 styled.div = styled('div');
+styled.img = styled('img');
 
 styled = new Proxy(styled, {
   get(target, p, receiver): any {

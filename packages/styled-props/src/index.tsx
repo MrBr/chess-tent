@@ -42,6 +42,12 @@ function isStyledComponent<T extends { className?: string }>(
   return !!component?.[COMPONENT_CLASSNAME];
 }
 
+function isDynamicCssDescriptorResolver<T extends { className?: string }>(
+  resolver: any,
+): resolver is DynamicCssDescriptorResolver<T> {
+  return typeof resolver === 'function';
+}
+
 export const resolveClassNames = <T extends { className?: string }>(
   mappedProps: Partial<T>,
 ) => (styles: TemplateStringsArray, ...variables: CompositeStyle<T>[]) => {
@@ -51,7 +57,7 @@ export const resolveClassNames = <T extends { className?: string }>(
     (res, variable) => {
       if (isStyledComponent(variable)) {
         res[0].push(variable[COMPONENT_CLASSNAME]);
-      } else if (typeof variable === 'function') {
+      } else if (isDynamicCssDescriptorResolver(variable)) {
         res[1].push(variable);
       } else if (isCssDescriptor(variable)) {
         res[1].push(variable.resolveDynamicClassNames);

@@ -3,6 +3,9 @@ import {
   ButtonHTMLAttributes,
   InputHTMLAttributes,
   AnchorHTMLAttributes,
+  HTMLAttributes,
+  ImgHTMLAttributes,
+  ReactElement,
 } from 'react';
 
 export const CLASSNAME_MAP = Symbol('CLASSNAME_MAP');
@@ -13,10 +16,12 @@ export type StyledProxyTarget = { [key: string]: any } & {
   Component?: string | ComponentType;
 };
 
-export type StyledComponent<T extends {}> = ComponentType<T> & {
+export type StyledComponent<T extends {}> = ((
+  props: T,
+) => ReactElement<any, any> | null) & {
+  defaultProps?: Partial<T>;
   [COMPONENT_CLASSNAME]?: string;
 };
-
 export type DynamicClassNameResolver<T extends {}> = (props: T) => string;
 export type DynamicCssDescriptorResolver<T extends {}> = (
   props: T,
@@ -31,13 +36,13 @@ export type CssDescriptor<T> = {
 export type CompositeStyle<T extends { className?: string }> =
   | string
   | number
+  | DynamicCssDescriptorResolver<T>
   | StyledComponent<T>
   | TemplateStringsArray
   | DynamicClassNameResolver<T>
-  | DynamicCssDescriptorResolver<T>
   | CssDescriptor<T>;
 
-export type ClassNamesCssResult = <T>(
+export type ClassNamesCssResult = <T extends {}>(
   style: TemplateStringsArray,
   ...dynamicStyles: CompositeStyle<T>[]
 ) => CssDescriptor<T>;
@@ -45,7 +50,7 @@ export type ClassNamesCssResult = <T>(
 export type ComponentCssResult<BaseProps = {}> = <CustomProps extends {}>(
   style: TemplateStringsArray,
   ...dynamicStyles: CompositeStyle<BaseProps & CustomProps>[]
-) => ComponentType<BaseProps & CustomProps>;
+) => StyledComponent<BaseProps & CustomProps>;
 
 export type BaseComponentCssResult<BaseProps = {}> = ComponentCssResult<
   Partial<BaseProps>
@@ -73,16 +78,18 @@ export interface Styled {
 
   // Base components
   button: RecursiveWithCss<
-    BaseComponentCssResult<ButtonHTMLAttributes<HTMLButtonElement>>
+    ComponentCssResult<ButtonHTMLAttributes<HTMLButtonElement>>
   >;
-  div: RecursiveWithCss<BaseComponentCssResult<HTMLDivElement>>;
-  span: RecursiveWithCss<BaseComponentCssResult<HTMLSpanElement>>;
-  p: RecursiveWithCss<BaseComponentCssResult<HTMLParagraphElement>>;
+  div: RecursiveWithCss<ComponentCssResult<HTMLAttributes<HTMLDivElement>>>;
+  span: RecursiveWithCss<ComponentCssResult<HTMLAttributes<HTMLSpanElement>>>;
+  p: RecursiveWithCss<ComponentCssResult<HTMLAttributes<HTMLParagraphElement>>>;
   input: RecursiveWithCss<
-    BaseComponentCssResult<InputHTMLAttributes<HTMLInputElement>>
+    ComponentCssResult<InputHTMLAttributes<HTMLInputElement>>
   >;
   a: RecursiveWithCss<
-    BaseComponentCssResult<AnchorHTMLAttributes<HTMLAnchorElement>>
+    ComponentCssResult<AnchorHTMLAttributes<HTMLAnchorElement>>
   >;
-  img: RecursiveWithCss<BaseComponentCssResult<HTMLImageElement>>;
+  img: RecursiveWithCss<
+    ComponentCssResult<ImgHTMLAttributes<HTMLImageElement>>
+  >;
 }

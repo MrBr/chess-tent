@@ -29,7 +29,7 @@ const Header = styled<{ className?: string }>(({ className }) => (
       </Row>
       <hr />
       <Row>
-        <Col md={3}>
+        <Col>
           <Text fontSize="extra-small">
             ChessTent 2022. All rights reserved
           </Text>
@@ -38,6 +38,7 @@ const Header = styled<{ className?: string }>(({ className }) => (
     </Container>
   </Section>
 )).css`
+  padding: 48px 0 24px;
   .footer-links {
     list-style: none;
     li {

@@ -76,7 +76,7 @@ export type TextProps = {
   inherit?: boolean;
   fontSize?: FontSize;
   align?: 'center' | 'left' | 'right';
-  color?: 'primary' | 'secondary' | 'title' | 'inherit';
+  color?: 'primary' | 'secondary' | 'title' | 'inherit' | 'light';
 
   onClick?: ReactEventHandler;
   onPaste?: ReactEventHandler;
@@ -170,7 +170,7 @@ export type UI = {
       | 'chess';
     textual?: boolean;
     size?: 'large' | 'regular' | 'small' | 'extra-small';
-    color?: 'primary' | 'secondary' | 'black' | 'grey-700';
+    color?: 'primary' | 'secondary' | 'black' | 'grey-700' | 'light';
   }>;
   Img: ComponentType<
     {

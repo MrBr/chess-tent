@@ -9,6 +9,7 @@ import findALesson from '../images/find-a-lesson.png';
 import Topbar from '../components/topbar';
 import Section from '../components/section';
 import Footer from '../components/footer';
+import CTA from '../components/cta';
 import headerLeftUrl from '../images/header-left.png';
 import headerRightUrl from '../images/header-right.png';
 import headerArrowUrl from '../images/header-arrow.svg';
@@ -199,6 +200,7 @@ export const LandingPage = () => {
           </Row>
         </Container>
       </Section>
+      <CTA />
       <Footer />
     </Page>
   );

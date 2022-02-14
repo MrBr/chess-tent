@@ -60,6 +60,10 @@ const color = styled.props.color.css`
     color: var(--black-color);
   }
 
+  &.light {
+    color: var(--light-color);
+  }
+
   color: var(--grey-800-color);
 `;
 

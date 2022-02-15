@@ -13,10 +13,7 @@ const Header = styled<{ className?: string }>(({ className }) => (
       <Row>
         <Col md={3}>
           <Logo />
-          <Text align="center" fontSize="extra-small">
-            Create engaging chess lessons and build your audience. Join early
-            beta and help us build flexible creator platform.
-          </Text>
+          <Text fontSize="extra-small">Virtual chess place for everyone.</Text>
         </Col>
         <Col md={{ offset: 3, span: 6 }}>
           <ul className="footer-links">
@@ -41,6 +38,8 @@ const Header = styled<{ className?: string }>(({ className }) => (
   padding: 48px 0 24px;
   .footer-links {
     list-style: none;
+    margin: 0;
+    padding: 0;
     li {
       width: 50%;
       display: inline-block;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ui, components } from '@application';
+import { ui } from '@application';
 import styled from '@chess-tent/styled-props';
 
 import Section from './section';
@@ -19,7 +19,10 @@ const CTA = styled<{ className?: string }>(({ className }) => (
             Join early beta and help us build flexible creator platform.
           </Text>
         </Col>
-        <Col md={{ offset: 2, span: 3 }} className="d-flex align-items-center">
+        <Col
+          md={{ offset: 1, span: 4 }}
+          className="d-flex align-items-center justify-content-end"
+        >
           <Button>Get beta access</Button>
         </Col>
       </Row>

@@ -13,9 +13,9 @@ import CTA from '../components/cta';
 import headerLeftUrl from '../images/header-left.png';
 import headerRightUrl from '../images/header-right.png';
 import headerArrowUrl from '../images/header-arrow.svg';
+import underlineUrl from '../images/underline.svg';
 
 const {
-  Headline3,
   Headline5,
   Headline2,
   Container,
@@ -36,34 +36,40 @@ const { className } = css`
   .header-left {
     position: absolute;
     left: 0;
-    transform: translateX(-100%);
+    transform: translateX(-100%) translateY(100%);
+    width: 170px;
   }
   .header-right {
     position: absolute;
     right: 0;
-    transform: translateX(100%);
+    transform: translateX(100%) translateY(-70%);
   }
   .header-arrow {
     position: absolute;
     right: 0;
-    transform: translateX(100%);
+    transform: translateX(110%) translateY(-30%);
+  }
+  .header-underline {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    transform: translateY(25%);
   }
 
   ${mobileCss`
     .header-left {
       position: absolute;
-      left: 0;
-      transform: translateX(-100%);
+      left: 10px;
+      transform: translateY(-115%);
+      width: 80px;
     }
     .header-right {
       position: absolute;
-      right: 0;
-      transform: translateX(100%);
-    }
-    .header-arrow {
-      position: absolute;
-      right: 0;
-      transform: translateX(100%);
+      right: 10px;
+      top: 0;
+      transform: translateY(-110%);
+      width: 65px;
     }
 
     img.section-image {
@@ -82,10 +88,15 @@ export const LandingPage = () => {
             <Col md={{ offset: 2, span: 8 }}>
               <img src={headerLeftUrl} alt="" className="header-left" />
               <img src={headerRightUrl} alt="" className="header-right" />
-              <img src={headerArrowUrl} alt="" className="header-arrow" />
               <Hero align="center">
                 Have serious skills and wish to teach{' '}
-                <Text color="primary" inherit>
+                <Text
+                  color="primary"
+                  inherit
+                  className="position-relative d-inline-block"
+                >
+                  <img src={headerArrowUrl} alt="" className="header-arrow" />
+                  <img src={underlineUrl} alt="" className="header-underline" />
                   chess?
                 </Text>
               </Hero>
@@ -174,7 +185,7 @@ export const LandingPage = () => {
       <Section>
         <Container>
           <Row>
-            <Col md={5} sm={12}>
+            <Col md={5} sm={12} className="order-1 order-md-0">
               <Img
                 src={findALesson}
                 alt=""
@@ -182,12 +193,16 @@ export const LandingPage = () => {
                 width="auto"
               />
             </Col>
-            <Col md={{ offset: 1, span: 6 }} sm={12}>
+            <Col
+              md={{ offset: 1, span: 6 }}
+              sm={12}
+              className="order-0 order-md-1"
+            >
               <Headline1>Find a lesson</Headline1>
-              <Headline3>
+              <Text weight={700}>
                 Interactive chess lessons designed to help you learn to adopt
                 chess thinking.
-              </Headline3>
+              </Text>
               <Text>
                 Alongside with step by step explanation, lessons are composed of
                 tasks that aim to develop chess thinking.

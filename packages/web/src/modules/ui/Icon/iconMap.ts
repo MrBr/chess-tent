@@ -9,3 +9,4 @@ export { ReactComponent as plus } from './icons/plus.svg';
 export { ReactComponent as board } from './icons/board.svg';
 export { ReactComponent as like } from './icons/like.svg';
 export { ReactComponent as edit } from './icons/edit.svg';
+export { ReactComponent as hamburger } from './icons/hamburger.svg';

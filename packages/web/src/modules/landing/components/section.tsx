@@ -6,10 +6,10 @@ const Section = styled.div.fill.css<{
   className?: string;
   children: ReactNode;
 }>`
-  background: var(--bg-color);
+  background: var(--light-color);
   padding: 120px 0;
   &.fill {
-    background: var(--light-color);
+    background: var(--bg-color);
   }
 `;
 

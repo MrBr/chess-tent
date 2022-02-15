@@ -23,6 +23,7 @@ const variants = styled.props.variant.disabled.css<
   &.ghost {
     color: var(--dark-color);
     background: transparent;
+    border: 1px solid var(--grey-700-color);
   }
 
   &.disabled {

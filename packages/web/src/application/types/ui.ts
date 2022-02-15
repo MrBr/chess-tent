@@ -167,6 +167,7 @@ export type UI = {
       | 'board'
       | 'like'
       | 'edit'
+      | 'hamburger'
       | 'chess';
     textual?: boolean;
     size?: 'large' | 'regular' | 'small' | 'extra-small';

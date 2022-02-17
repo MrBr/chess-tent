@@ -1,10 +1,14 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { UIComponent } from '@types';
+import { Components } from '@types';
 
-export default styled<UIComponent>(({ children, className }) => (
-  <div className={className}>{children}</div>
-))({
+export default styled<Components['LessonPlaygroundCard']>(
+  ({ children, className, onClick }) => (
+    <div className={className} onClick={onClick}>
+      {children}
+    </div>
+  ),
+)({
   padding: '8px 12px',
   marginBottom: 16,
   boxShadow:

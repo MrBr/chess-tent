@@ -189,18 +189,15 @@ export type LessonPlaygroundTab = {
 };
 
 export type LessonPlayground = FunctionComponent<{
-  header: ReactElement;
-  tabs: LessonPlaygroundTab[];
-  updateStepMode: (mode: ActivityStepMode) => void;
-  updateActivityStepState: (state: {}) => void;
-  activeStepActivityState: ActivityStepStateBase;
-  comments?: boolean;
-  tabbarFooter?: ReactNode;
+  board: ReactNode;
+  sidebar: ReactNode;
+  stepper: ReactNode;
 }>;
 
 export type LessonPlaygroundCard = FunctionComponent<{
   children: ReactNode;
   className?: string;
+  onClick?: () => void;
 }>;
 
 export type LessonToolboxText = FunctionComponent<{

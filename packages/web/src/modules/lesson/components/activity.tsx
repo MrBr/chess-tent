@@ -1,10 +1,12 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
 import {
+  ActivityComment,
   ActivityComponent,
   ActivityFooterProps,
   ActivityRendererProps,
   ActivityRendererState,
   ActivityStepMode,
+  AppStep,
   ChessboardProps,
   FEN,
   Move,
@@ -36,6 +38,8 @@ import {
 } from '@chess-tent/models';
 import Footer from './activity-footer';
 import Header from './activity-header';
+import Stepper from './activity-stepper';
+import Comments from './activity-comments';
 
 const {
   StepRenderer,
@@ -43,10 +47,12 @@ const {
   LessonPlayground,
   AnalysisBoard,
   AnalysisSidebar,
+  ChessboardContextProvider,
+  LessonPlaygroundCard,
   LessonChapters,
 } = components;
 const { useDiffUpdates, useApi, useDispatchService } = hooks;
-const { Button, Absolute, Headline4 } = ui;
+const { Button, Absolute } = ui;
 
 export class ActivityRenderer extends React.Component<
   ActivityRendererProps,
@@ -136,6 +142,13 @@ export class ActivityRenderer extends React.Component<
     );
   };
 
+  addStepComment = (comment: ActivityComment) => {
+    const { activityStepState } = this.props;
+    this.setStepActivityState({
+      comments: [...(activityStepState.comments || []), comment],
+    });
+  };
+
   completeStep = (step: Step) => {
     const { updateActivity, activity } = this.props;
     updateActivity(markStepCompleted)(activity, step);
@@ -144,6 +157,11 @@ export class ActivityRenderer extends React.Component<
   chapterChangeHandler = (chapter: Chapter) => {
     const { updateActivity, activity } = this.props;
     updateActivity(updateActivityActiveChapter)(activity, chapter);
+  };
+
+  updateActiveStep = (step: AppStep) => {
+    const { updateActivity, activity } = this.props;
+    updateActivity(services.updateActivityActiveStep)(activity, step as Steps);
   };
 
   nextActivityStep = () => {
@@ -179,6 +197,7 @@ export class ActivityRenderer extends React.Component<
         stepsCount={stepsCount}
         prev={this.prevActivityStep}
         next={this.nextActivityStep}
+        className="mt-5 mb-4"
         {...props}
       />
     );
@@ -220,6 +239,60 @@ export class ActivityRenderer extends React.Component<
     );
   };
 
+  renderBoard() {
+    const {
+      activityStepState,
+      chapter,
+      activeStep,
+      lesson,
+      activity,
+    } = this.props;
+    switch (activityStepState.mode) {
+      case ActivityStepMode.ANALYSING:
+        return (
+          <>
+            <Absolute right={25} top={25}>
+              <Button
+                variant="regular"
+                size="extra-small"
+                onClick={() => this.updateStepMode(ActivityStepMode.SOLVING)}
+              >
+                Stop analysing
+              </Button>
+            </Absolute>
+            <AnalysisBoard
+              analysis={activityStepState.analysis}
+              updateAnalysis={this.updateStepActivityAnalysis}
+              initialPosition={services.getStepPosition(activeStep)}
+              initialOrientation={activeStep.state.orientation}
+              Chessboard={this.renderAnalysisBoard}
+            />
+          </>
+        );
+      case ActivityStepMode.SOLVING:
+      default:
+        return (
+          <StepRenderer
+            activity={activity}
+            lesson={lesson}
+            step={activeStep}
+            stepRoot={chapter}
+            chapter={chapter}
+            activeStep={activeStep}
+            setActiveStep={() => {}}
+            component="ActivityBoard"
+            setStepActivityState={this.setStepActivityState}
+            stepActivityState={activityStepState}
+            nextStep={this.nextActivityStep}
+            prevStep={this.prevActivityStep}
+            completeStep={this.completeStep}
+            Chessboard={this.renderActivityBoard}
+            Footer={this.renderFooter}
+          />
+        );
+    }
+  }
+
   render() {
     const {
       lesson,
@@ -228,104 +301,57 @@ export class ActivityRenderer extends React.Component<
       chapter,
       activeStep,
       activityStepState,
-      comments,
     } = this.props;
 
     return (
       <LessonPlayground
-        comments={comments}
-        updateStepMode={this.updateStepMode}
-        updateActivityStepState={this.setStepActivityState}
-        activeStepActivityState={activityStepState}
-        tabbarFooter={this.renderFooter({})}
-        header={
+        stepper={<Stepper root={chapter} onStepClick={this.updateActiveStep} />}
+        sidebar={
           <>
-            <Headline4 className="mt-0">Chapters</Headline4>
             <LessonChapters
               chapters={lesson.state.chapters}
               activeChapter={chapter}
               onChange={this.chapterChangeHandler}
             />
-          </>
-        }
-        tabs={[
-          {
-            mode: ActivityStepMode.SOLVING,
-            title: 'Step',
-            board: (
-              <StepRenderer
-                step={activeStep}
-                stepRoot={chapter}
-                chapter={chapter}
-                component="ActivityBoard"
-                activeStep={activeStep}
-                lesson={lesson}
-                setActiveStep={() => {}}
-                setStepActivityState={this.setStepActivityState}
-                stepActivityState={activityStepState}
-                nextStep={this.nextActivityStep}
-                prevStep={this.prevActivityStep}
-                activity={activity}
-                completeStep={this.completeStep}
-                Chessboard={this.renderActivityBoard}
-                Footer={this.renderFooter}
-              />
-            ),
-            sidebar: (
-              <StepRenderer
-                step={activeStep}
-                stepRoot={chapter}
-                chapter={chapter}
-                component="ActivitySidebar"
-                activeStep={activeStep}
-                lesson={lesson}
-                setActiveStep={() => {}}
-                setStepActivityState={this.setStepActivityState}
-                stepActivityState={activityStepState}
-                nextStep={this.nextActivityStep}
-                prevStep={this.prevActivityStep}
-                activity={activity}
-                completeStep={this.completeStep}
-                Chessboard={this.renderActivityBoard}
-                Footer={this.renderFooter}
-              />
-            ),
-          },
-          {
-            mode: ActivityStepMode.ANALYSING,
-            title: 'Analysis',
-            board: (
-              <>
-                <Absolute right={25} top={25}>
-                  <Button
-                    variant="regular"
-                    size="extra-small"
-                    onClick={() =>
-                      this.updateStepMode(ActivityStepMode.SOLVING)
-                    }
-                  >
-                    Stop analysing
-                  </Button>
-                </Absolute>
-                <AnalysisBoard
-                  analysis={analysis}
-                  updateAnalysis={this.updateStepActivityAnalysis}
-                  initialPosition={services.getStepPosition(activeStep)}
-                  initialOrientation={activeStep.state.orientation}
-                  Chessboard={this.renderAnalysisBoard}
-                />
-              </>
-            ),
-            sidebar: (
+            {this.renderFooter({})}
+            <StepRenderer
+              step={activeStep}
+              stepRoot={chapter}
+              chapter={chapter}
+              component="ActivitySidebar"
+              activeStep={activeStep}
+              lesson={lesson}
+              setActiveStep={() => {}}
+              setStepActivityState={this.setStepActivityState}
+              stepActivityState={activityStepState}
+              nextStep={this.nextActivityStep}
+              prevStep={this.prevActivityStep}
+              activity={activity}
+              completeStep={this.completeStep}
+              Chessboard={this.renderActivityBoard}
+              Footer={this.renderFooter}
+            />
+            <LessonPlaygroundCard>
               <AnalysisSidebar
                 analysis={analysis}
                 updateAnalysis={this.updateStepActivityAnalysis}
                 initialPosition={services.getStepPosition(activeStep)}
                 initialOrientation={activeStep.state.orientation}
               />
-            ),
-          },
-        ]}
+            </LessonPlaygroundCard>
+            <LessonPlaygroundCard>
+              <Comments
+                addComment={this.addStepComment}
+                comments={activityStepState.comments}
+              />
+            </LessonPlaygroundCard>
+          </>
+        }
+        board={
+          <ChessboardContextProvider>
+            {this.renderBoard()}
+          </ChessboardContextProvider>
+        }
       />
     );
   }

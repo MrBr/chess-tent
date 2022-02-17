@@ -6,7 +6,7 @@ import { ui } from '@application';
 
 const { Text } = ui;
 
-export const ToolboxText: Components['LessonToolboxText'] = styled(
+export const ToolboxText = styled<Components['LessonToolboxText']>(
   ({ defaultText, onChange, ...props }) => {
     // Updating div html resets the cursor so ToolboxText can't be controlled.
     // Ref is used to set static default value which won't change on props update.
@@ -20,9 +20,9 @@ export const ToolboxText: Components['LessonToolboxText'] = styled(
           // Placeholder is shown when there is no text and whitespace breaks it
           e.target.innerHTML = '';
         }
-        onChange && debouncedTextChange(e.target.innerHTML);
+        debouncedTextChange && debouncedTextChange(e.target.innerHTML);
       },
-      [onChange, debouncedTextChange],
+      [debouncedTextChange],
     );
     const onPaste = useCallback(event => {
       event.preventDefault();

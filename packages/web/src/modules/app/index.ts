@@ -17,12 +17,6 @@ application.register(
   },
 );
 application.register(
-  () => import('./pages/landing'),
-  module => {
-    application.pages.Landing = module.default;
-  },
-);
-application.register(
   () => import('./pages/dashboard'),
   module => {
     application.pages.Dashboard = module.default;

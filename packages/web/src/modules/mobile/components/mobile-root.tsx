@@ -1,10 +1,11 @@
 import React from 'react';
 import { constants } from '@application';
 import styled from '@emotion/styled';
+import { UIComponent } from '@types';
 
 const { MOBILE_ROOT_KEY } = constants;
 
-const MobileRoot = styled(({ className }) => (
+const MobileRoot = styled<UIComponent>(({ className }) => (
   <div id={MOBILE_ROOT_KEY} className={`${MOBILE_ROOT_KEY} ${className}`} />
 ))({
   '&:empty': {

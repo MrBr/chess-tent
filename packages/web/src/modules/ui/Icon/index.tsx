@@ -1,74 +1,90 @@
 import React, { ComponentProps } from 'react';
-import { FunctionComponent } from 'react';
 import { UI } from '@types';
-import styled from '@emotion/styled';
+import styled from '@chess-tent/styled-props';
 import * as iconsMap from './iconMap';
 
 type IconProps = ComponentProps<UI['Icon']>;
 
-const sizeEnhancer = (props: IconProps) => {
-  if (props.textual) {
-    return;
+const Icon = styled<IconProps>(({ type, className, onClick }) => {
+  const IconSvgComponent = iconsMap[type];
+  return (
+    <span className={className} onClick={onClick}>
+      <IconSvgComponent className="svg-icon" />
+    </span>
+  );
+}).size.textual.variant.background.css`
+  display: inline-block;
+  box-sizing: content-box;
+  position: relative;
+  vertical-align: middle;
+  
+  .svg-icon {
+    margin-top: 50%;
+    margin-left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
   }
-  switch (props.size) {
-    case 'large':
-      return {
-        width: 36,
-        height: 36,
-      };
-    case 'small':
-      return {
-        width: 16,
-        height: 16,
-      };
-    case 'extra-small':
-      return {
-        width: 10,
-        height: 10,
-      };
-    case 'regular':
-    default:
-      return {
-        width: 24,
-        height: 24,
-      };
+  
+  &.background {
+    padding: 12px;
+    border-radius: 12px;
   }
+  
+  &.primary {
+      color: var(--primary-color);
+    &.background {
+      color: var(--light-color);
+      background: var(--primary-gradient);
+    }
+  }
+  
+  &.secondary {
+      color: var(--secondary-color);
+    &.background {
+      color: var(--light-color);
+      background: var(--secondary-color);
+    }
+  }
+  
+  &.large {
+    width: 36px;
+    height: 36px;
+  }
+
+  &.small {
+    width: 16px;
+    height: 16px;
+  }
+
+  &.extra-small {
+    width: 10px;
+    height: 10px;
+  }
+
+  &.regular {
+    width: 24px;
+    height: 24px;
+  }
+
+  &.textual {
+    .svg-icon {
+      width: auto;
+      height: auto;
+    }
+
+    font-size: inherit;
+    color: inherit;
+    line-height: inherit;
+    vertical-align: sub;
+    min-width: 20px;
+    min-height: 20px;
+  }
+`;
+
+Icon.defaultProps = {
+  variant: 'grey-700',
+  size: 'regular',
 };
-
-const textualEnhancer = (props: IconProps) =>
-  props.textual && {
-    '.svg-icon': {
-      width: 'auto',
-      height: 'auto',
-    },
-    fontSize: 'inherit',
-    color: 'inherit',
-    lineHeight: 'inherit',
-    verticalAlign: 'sub',
-    minWidth: '20px',
-    minHeight: '20px',
-  };
-
-const Icon = styled<FunctionComponent<IconProps>>(
-  ({ type, className, onClick }) => {
-    const IconSvgComponent = iconsMap[type];
-    return (
-      <span className={className} onClick={onClick}>
-        <IconSvgComponent className="svg-icon" />
-      </span>
-    );
-  },
-)<IconProps>(
-  {
-    '.svg-icon': {
-      width: '100%',
-      height: '100%',
-    },
-    color: '#BABDC2',
-    display: 'inline-block',
-  },
-  sizeEnhancer,
-  textualEnhancer,
-);
 
 export default Icon;

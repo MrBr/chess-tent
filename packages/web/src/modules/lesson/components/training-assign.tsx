@@ -89,7 +89,7 @@ export default ({ close }: { close: () => void }) => {
           <Button type="submit" disabled={loading}>
             Assign
           </Button>
-          <Text inline fontSize="small" className="ml-4">
+          <Text as="span" fontSize="small" className="ml-4">
             {loading ? 'Assigning' : !!loaded ? 'Training assigned' : null}
           </Text>
         </Form>

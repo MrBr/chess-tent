@@ -5,7 +5,7 @@ import { UI } from '@types';
 import Icon from './Icon';
 import { Input } from './Form';
 
-const SearchBox: UI['SearchBox'] = styled(
+const SearchBox = styled<UI['SearchBox']>(
   ({ className, onSearch, debounce }) => {
     const debounceSearch = useRef(_.debounce(onSearch, debounce));
 

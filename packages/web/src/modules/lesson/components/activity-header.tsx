@@ -10,7 +10,7 @@ export default ({ lesson }: { lesson: Lesson }) => (
     <Headline3 className="mt-0 mb-0">{lesson.state.title}</Headline3>
     <Container className="mb-4 p-0">
       <UserAvatar user={lesson.owner} size="extra-small" />
-      <Text inline className="ml-2" fontSize="extra-small">
+      <Text as="span" className="ml-2" fontSize="extra-small">
         {lesson.owner.name}
       </Text>
     </Container>

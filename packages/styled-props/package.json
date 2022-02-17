@@ -1,0 +1,21 @@
+{
+  "name": "@chess-tent/styled-props",
+  "version": "1.0.0",
+  "main": "dist/src/index.js",
+  "scripts": {
+    "build:dev": "tsc -p tsconfig.build.json",
+    "build": "yarn run clean && yarn run compile",
+    "clean": "rimraf -rf ./dist",
+    "compile": "tsc -p tsconfig.build.json"
+  },
+  "dependencies": {
+    "@emotion/css": "^11.7.1",
+    "classnames": "^2.3.1"
+  },
+  "peerDependencies": {
+    "react": "*"
+  },
+  "devDependencies": {
+    "@types/react": "^16.9.0"
+  }
+}

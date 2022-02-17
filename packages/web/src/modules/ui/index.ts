@@ -21,8 +21,7 @@ import { Tooltip } from './Tooltip';
 import { Tag } from './Tag';
 import { Overlay, OverlayTrigger } from './Overlay';
 import {
-  Display1,
-  Display2,
+  Hero,
   Headline1,
   Headline2,
   Headline3,
@@ -43,6 +42,7 @@ import LoadMore from './LoadMore';
 import Spinner from './Spinner';
 import ProgressBar from './ProgressBar';
 import { withFiles, withHtml } from './hoc';
+import { mobileCss } from './enhancers';
 
 application.hoc.withFiles = withFiles;
 application.hoc.withHtml = withHtml;
@@ -87,8 +87,7 @@ application.ui.Col = Col;
 
 application.ui.Absolute = Absolute;
 
-application.ui.Display1 = Display1;
-application.ui.Display2 = Display2;
+application.ui.Hero = Hero;
 application.ui.Headline1 = Headline1;
 application.ui.Headline2 = Headline2;
 application.ui.Headline3 = Headline3;
@@ -109,3 +108,5 @@ application.ui.Dot = Dot;
 
 application.ui.LoadMore = LoadMore;
 application.ui.Spinner = Spinner;
+
+application.utils.mobileCss = mobileCss;

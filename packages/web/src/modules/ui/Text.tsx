@@ -1,138 +1,201 @@
 import React, { ComponentType } from 'react';
-import styled, { CSSObject } from '@emotion/styled';
+import styled, { css } from '@chess-tent/styled-props';
 import { TextProps } from '@types';
 import { withHtml } from './hoc';
+import { mobileCss } from './enhancers';
 
-const fontSize = (props: TextProps) => {
-  switch (props.fontSize) {
-    case 'display1':
-      return '5.653em';
-    case 'display2':
-      return '3.998em';
-    case 'headline1':
-      return '2.827em';
-    case 'headline2':
-      return '1.999em';
-    case 'headline3':
-      return '1.444em';
-    case 'headline4':
-      return '1.125em';
-    case 'headline5':
-      return '1em';
-    case 'headline6':
-      return '0.875em';
-    case 'small':
-      return '0.875em';
-    case 'extra-small':
-      return '0.707em';
-    default:
-      // base
-      return '1em';
+const inherit = styled.props.inherit.css`
+ &.inherit {
+    font-size: inherit;
+    color: inherit;
+    line-height: inherit;
+    font-family: inherit;
+    font-weight: inherit;
+    display: inline;
   }
-};
+`;
 
-const fontColor = (props: TextProps) => {
-  switch (props.color) {
-    case 'title':
-      return '#182235';
-    case 'subtitle':
-      return '#2F3849';
-    case 'alt-title':
-      return 'rgba(255,255,255,1)';
-    case 'alt-subtitle':
-      return 'rgba(255,255,255,0.8)';
-    case 'alt':
-      return 'rgba(255,255,255,0.8)';
-    case 'inherit':
-      return 'inherit';
-    default:
-      // base
-      return '#747A86';
+const size = styled.props.fontSize.css`
+  font-size: 20px;
+
+  &.large {
+    font-size: 24px;
   }
-};
 
-const textDynamicStyle = (props: TextProps): CSSObject => ({
-  fontWeight: props.weight || 400,
-  textAlign: props.align || 'left',
-  fontSize: fontSize(props),
-  color: fontColor(props),
-});
+  &.small {
+    font-size: 18px;
+  }
 
-const headingStyle = [
-  {
-    margin: '2.75rem 0 1.05rem',
-    fontFamily: 'Inter, sans-serif',
-    lineHeight: 1.21,
-  },
-  textDynamicStyle,
-];
+  &.extra-small {
+    font-size: 16px;
+  }
+
+ ${mobileCss`
+   font-size: 18px;
+
+   &.large {
+     font-size: 20px;
+   }
+
+   &.small {
+     font-size: 16px;
+   }
+
+   &.extra-small {
+     font-size: 14px;
+   }
+ `}
+`;
+
+const color = styled.props.color.css`
+  &.primary {
+    color: var(--primary-color);
+  }
+
+  &.secondary {
+    color: var(--secondary-color);
+  }
+
+  &.title {
+    color: var(--black-color);
+  }
+
+  &.light {
+    color: var(--light-color);
+  }
+
+  color: var(--grey-800-color);
+`;
+
+const dynamicStyle = (props: TextProps) =>
+  css`
+    font-weight: ${props.weight || 400};
+    text-align: ${props.align || 'left'};
+  `;
 
 const BaseText: ComponentType<TextProps> = withHtml<TextProps>(
-  ({ inline, initialHtml, ...textProps }) =>
-    inline ? <span {...textProps} /> : <p {...textProps} />,
-);
-const StyledBaseText = styled(BaseText);
-
-const Text = StyledBaseText(
-  {
-    marginBottom: '0.5rem',
+  ({ inline, inherit, initialHtml, as, ...textProps }) => {
+    const Component = as || (inherit ? 'span' : 'p');
+    return <Component {...textProps} />;
   },
-  textDynamicStyle,
 );
 
-const Display1 = StyledBaseText(...headingStyle); // 90
-Display1.defaultProps = {
+const Text = styled(BaseText).css<TextProps>`
+  ${dynamicStyle}
+  ${inherit}
+  ${color}
+  ${size}
+`;
+
+const headingStyle = styled.css<TextProps>`
+  font-family: Inter, sans-serif;
+  line-height: 1.21;
+  ${inherit}
+  ${color}
+  ${dynamicStyle}
+`;
+
+const Hero = styled(BaseText).css`
+  font-size: 60px;
+
+  ${headingStyle}
+  ${mobileCss`
+    font-size: 48px;
+  `}
+`;
+
+Hero.defaultProps = {
   color: 'title',
-  fontSize: 'display1',
   weight: 700,
 };
-const Display2 = StyledBaseText(...headingStyle); // 64
-Display2.defaultProps = {
-  color: 'title',
-  fontSize: 'display2',
-  weight: 700,
-};
-const Headline1 = StyledBaseText(...headingStyle); // 45
+
+const Headline1 = styled(BaseText).css`
+  font-size: 56px;
+  
+    ${headingStyle}
+  ${mobileCss`
+    font-size: 32px;
+  `}
+`;
 Headline1.defaultProps = {
+  as: 'h1',
   color: 'title',
-  fontSize: 'headline1',
   weight: 700,
 };
-const Headline2 = StyledBaseText(...headingStyle); // 32
+
+const Headline2 = styled(BaseText).css`
+  font-size: 48px;
+  
+  ${headingStyle}
+  ${mobileCss`
+    font-size: 24px;
+  `}
+`;
 Headline2.defaultProps = {
+  as: 'h2',
   color: 'title',
-  fontSize: 'headline2',
   weight: 700,
 };
-const Headline3 = StyledBaseText(...headingStyle); // 23
+
+const Headline3 = styled(BaseText).css`
+  font-size: 40px;
+  
+  ${headingStyle}
+  ${mobileCss`
+    font-size: 22px;
+  `}
+`;
 Headline3.defaultProps = {
+  as: 'h3',
   color: 'title',
-  fontSize: 'headline3',
   weight: 700,
 };
-const Headline4 = StyledBaseText(...headingStyle); // 18
+
+const Headline4 = styled(BaseText).css`
+  font-size: 32px;
+  
+  ${headingStyle}
+  ${mobileCss`
+    font-size: 18px;
+  `}
+`;
 Headline4.defaultProps = {
+  as: 'h4',
   color: 'title',
-  fontSize: 'headline4',
   weight: 700,
 };
-const Headline5 = StyledBaseText(...headingStyle); // 16
+
+const Headline5 = styled(BaseText).css`
+  font-size: 24px;
+  
+  ${headingStyle}
+  ${mobileCss`
+    font-size: 16px;
+  `}
+`;
 Headline5.defaultProps = {
+  as: 'h5',
   color: 'title',
-  fontSize: 'headline5',
   weight: 700,
 };
-const Headline6 = StyledBaseText(...headingStyle); // 14
+
+const Headline6 = styled(BaseText).css`
+  font-size: 18px;
+  
+  ${headingStyle}
+  ${mobileCss`
+    font-size: 16px;
+  `}
+`;
 Headline6.defaultProps = {
+  as: 'h6',
   color: 'title',
-  fontSize: 'headline6',
   weight: 700,
 };
 
 export {
   Text,
-  Display1,
-  Display2,
+  Hero,
   Headline1,
   Headline2,
   Headline3,

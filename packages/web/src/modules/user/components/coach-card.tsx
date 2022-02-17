@@ -32,24 +32,13 @@ const CoachCard: Components['CoachCard'] = ({ coach }) => {
             <Headline4
               className="mt-1 mb-0 cursor-pointer"
               onClick={() => history.push(`/user/${coach.id}`)}
-              color="alt-title"
             >
               {coach.name}
             </Headline4>
-            <Text
-              color="alt-subtitle"
-              fontSize="small"
-              className="text-truncate"
-              weight={700}
-            >
+            <Text fontSize="small" className="text-truncate" weight={700}>
               {coach.state.punchline}
             </Text>
-            <Text
-              fontSize="extra-small"
-              color="alt"
-              className="text-truncate"
-              weight={500}
-            >
+            <Text fontSize="extra-small" className="text-truncate" weight={500}>
               {coach.state.studentElo && `Up to ${coach.state.studentElo} elo`}
             </Text>
           </Col>

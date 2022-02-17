@@ -7,10 +7,11 @@
     "@chess-tent/models": "1.0.0",
     "@chess-tent/normalization": "1.0.0",
     "@chess-tent/redux-record": "1.0.0",
+    "@chess-tent/styled-props": "1.0.0",
     "@chess-tent/types": "1.0.0",
-    "@emotion/core": "^10.0.10",
     "@emotion/is-prop-valid": "^1.0.0",
-    "@emotion/styled": "^10.0.10",
+    "@emotion/react": "^11.7.1",
+    "@emotion/styled": "^11.6.0",
     "@sentry/react": "^6.15.0",
     "@sentry/tracing": "^6.15.0",
     "@testing-library/jest-dom": "^4.2.4",
@@ -86,7 +87,6 @@
     "eslint-plugin-react": "7.x",
     "http-proxy-middleware": "^1.0.6",
     "source-map-explorer": "^2.5.0",
-    "ts-jest": "^26.4.4",
     "tsconfig-paths-webpack-plugin": "^3.2.0"
   }
 }

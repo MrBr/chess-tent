@@ -9,6 +9,7 @@ application.register(() => import('./chapter'));
 application.register(() => import('./chessboard'));
 application.register(() => import('./evaluator'));
 application.register(() => import('./lesson'));
+application.register(() => import('./landing'));
 application.register(() => import('./state'));
 application.register(() => import('./state-records'));
 application.register(() => import('./state-meta'));

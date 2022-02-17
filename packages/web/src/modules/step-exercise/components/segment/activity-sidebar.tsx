@@ -31,12 +31,7 @@ const Playground: FunctionComponent<
     <>
       <LessonPlaygroundCard>
         <Headline4 className="mt-2 mb-1">{title}</Headline4>
-        <Text
-          className="m-0"
-          fontSize="small"
-          color="subtitle"
-          initialHtml={task.text}
-        />
+        <Text className="m-0" fontSize="small" initialHtml={task.text} />
         {children}
         {onReset && (
           <Row>
@@ -54,7 +49,6 @@ const Playground: FunctionComponent<
           <Text
             className="m-0"
             fontSize="small"
-            color="subtitle"
             initialHtml={explanation?.text}
           />
         </LessonPlaygroundCard>
@@ -64,12 +58,8 @@ const Playground: FunctionComponent<
           <Headline5 className="mt-2 ">Hint</Headline5>
           {showHint ? (
             <>
-              <Text
-                className="m-0"
-                fontSize="small"
-                color="subtitle"
-                initialHtml={hint?.text}
-              />
+              <Text className="m-0" fontSize="small" initialHtml={hint?.text} />
+              Z{' '}
             </>
           ) : (
             <Button

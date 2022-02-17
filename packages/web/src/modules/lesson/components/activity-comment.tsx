@@ -14,12 +14,7 @@ const Comment = ({ comment }: { comment: ActivityComment }) => {
         <UserAvatar user={user} />
       </Col>
       <Col className="justify-content-center d-flex flex-column">
-        <Text
-          className="mb-0"
-          fontSize="extra-small"
-          weight={700}
-          color="subtitle"
-        >
+        <Text className="mb-0" fontSize="extra-small" weight={700}>
           {user.name}
         </Text>
         <Text className="mb-0" weight={400} fontSize="small">

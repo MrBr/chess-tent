@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 
-const Step = styled(({ children, className, onClick }) => {
+const Step = styled(({ children, className, onClick }: any) => {
   return (
     <div className={className} onClick={onClick}>
       {children}

@@ -7,6 +7,7 @@ import {
   ReactEventHandler,
   ReactNode,
   RefObject,
+  ImgHTMLAttributes,
 } from 'react';
 import { DrawCurrent, DrawShape } from '@chess-tent/chessground/dist/draw';
 import { Api } from '@chess-tent/chessground/dist/api';
@@ -301,6 +302,7 @@ export type Components = {
   MobilePortal: ComponentType;
   Filters: ComponentType<{ children?: ReactElement }>;
   Header: ComponentType;
+  Logo: ComponentType<ImgHTMLAttributes<HTMLImageElement>>;
   TabBar: ComponentType;
   LoadMore: ComponentType;
   // Page with common layout setup

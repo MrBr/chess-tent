@@ -1,6 +1,6 @@
 import React, { ComponentProps } from 'react';
 import { UI } from '@types';
-import styled, { css } from '@chess-tent/styled-props';
+import styled from '@chess-tent/styled-props';
 import * as iconsMap from './iconMap';
 
 type IconProps = ComponentProps<UI['Icon']>;

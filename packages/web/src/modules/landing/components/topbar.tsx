@@ -91,9 +91,9 @@ const Topbar = () => {
     <Container className={className}>
       <Row>
         <Col className="logo-container">
-          <a href="/">
+          <Link to="/">
             <Logo />
-          </a>
+          </Link>
           <span
             className="hamburger"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -106,7 +106,7 @@ const Topbar = () => {
             <Col className="d-flex justify-content-center">
               <ul id="menu">
                 <li>
-                  <a href="/about">About</a>
+                  <Link to="/about">About</Link>
                 </li>
               </ul>
             </Col>

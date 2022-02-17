@@ -1,5 +1,5 @@
 import React from 'react';
-import { ui, components, utils } from '@application';
+import { ui } from '@application';
 import { css } from '@chess-tent/styled-props';
 
 import lukaSrc from '../images/contributors/luka.png';
@@ -33,8 +33,6 @@ const {
   Icon,
   Headline3,
 } = ui;
-const { mobileCss } = utils;
-const { Link } = components;
 
 const { className } = css`
   .user-stats {
@@ -337,7 +335,7 @@ export const LandingPage = () => {
             </Col>
             <Col md={4} xs={6} className="mb-5">
               <div className="contributor">
-                <img src={anteSrc} />
+                <img src={anteSrc} alt="" />
                 <Headline5 align="center" className="mt-3 mb-1">
                   Ante Machiedo
                 </Headline5>
@@ -348,7 +346,7 @@ export const LandingPage = () => {
             </Col>
             <Col md={4} xs={6} className="mb-5">
               <div className="contributor">
-                <img src={alenSrc} />
+                <img src={alenSrc} alt="" />
                 <Headline5 align="center" className="mt-3 mb-1">
                   Alen Šljivar
                 </Headline5>
@@ -359,7 +357,7 @@ export const LandingPage = () => {
             </Col>
             <Col md={4} xs={6} className="mb-5">
               <div className="contributor">
-                <img src={sandroSrc} />
+                <img src={sandroSrc} alt="" />
                 <Headline5 align="center" className="mt-3 mb-1">
                   Sandro Šafar
                 </Headline5>
@@ -370,7 +368,7 @@ export const LandingPage = () => {
             </Col>
             <Col md={4} xs={6} className="mb-5">
               <div className="contributor">
-                <img src={tihanaSrc} />
+                <img src={tihanaSrc} alt="" />
                 <Headline5 align="center" className="mt-3 mb-1">
                   Tihana Iveković
                 </Headline5>
@@ -381,7 +379,7 @@ export const LandingPage = () => {
             </Col>
             <Col md={4} xs={6} className="mb-5">
               <div className="contributor">
-                <img src={bozidarSrc} alt=" - " />
+                <img src={bozidarSrc} alt="" />
                 <Headline5 align="center" className="mt-3 mb-1">
                   Božidar Iveković
                 </Headline5>
@@ -392,7 +390,7 @@ export const LandingPage = () => {
             </Col>
             <Col md={4} xs={6} className="mb-5">
               <div className="contributor">
-                <img src={mendeSrc} />
+                <img src={mendeSrc} alt="" />
                 <Headline5 align="center" className="mt-3 mb-1">
                   Mende Mitrovski
                 </Headline5>
@@ -403,7 +401,7 @@ export const LandingPage = () => {
             </Col>
             <Col md={4} xs={6} className="mb-5">
               <div className="contributor">
-                <img src={tomislavSrc} />
+                <img src={tomislavSrc} alt="" />
                 <Headline5 align="center" className="mt-3 mb-1">
                   Tomislav Milanović
                 </Headline5>
@@ -414,7 +412,7 @@ export const LandingPage = () => {
             </Col>
             <Col md={4} xs={6} className="mb-5">
               <div className="contributor">
-                <img src={borisSrc} />
+                <img src={borisSrc} alt="" />
                 <Headline5 align="center" className="mt-3 mb-1">
                   Boris Belonjek
                 </Headline5>
@@ -425,7 +423,7 @@ export const LandingPage = () => {
             </Col>
             <Col md={4} xs={6} className="mb-5">
               <div className="contributor">
-                <img src={borisSrc} />
+                <img src={borisSrc} alt="" />
                 <Headline5 align="center" className="mt-3 mb-1">
                   Zoia Vasina
                 </Headline5>
@@ -436,7 +434,7 @@ export const LandingPage = () => {
             </Col>
             <Col md={4} xs={6} className="mb-5">
               <div className="contributor">
-                <img src={antonioSrc} />
+                <img src={antonioSrc} alt="" />
                 <Headline5 align="center" className="mt-3 mb-1">
                   Antonio Martinović
                 </Headline5>

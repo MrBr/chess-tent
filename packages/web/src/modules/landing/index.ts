@@ -6,3 +6,9 @@ application.register(
     application.pages.Landing = module.default;
   },
 );
+application.register(
+  () => import('./pages/about'),
+  module => {
+    application.pages.About = module.default;
+  },
+);

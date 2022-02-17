@@ -91,19 +91,23 @@ const Topbar = () => {
     <Container className={className}>
       <Row>
         <Col className="logo-container">
-          <Logo />
+          <a href="/">
+            <Logo />
+          </a>
           <span
             className="hamburger"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
-            <Icon type={isMenuOpen ? 'close' : 'hamburger'} color="black" />
+            <Icon type={isMenuOpen ? 'close' : 'hamburger'} variant="black" />
           </span>
         </Col>
         <Col className="menu-container">
           <Row>
             <Col className="d-flex justify-content-center">
               <ul id="menu">
-                <li>About</li>
+                <li>
+                  <a href="/about">About</a>
+                </li>
               </ul>
             </Col>
             <Col className="col-auto d-flex justify-content-center col menu-actions">

@@ -10,10 +10,10 @@ import Topbar from '../components/topbar';
 import Section from '../components/section';
 import Footer from '../components/footer';
 import CTA from '../components/cta';
+import Underline from '../components/underline';
 import headerLeftUrl from '../images/header-left.png';
 import headerRightUrl from '../images/header-right.png';
 import headerArrowUrl from '../images/header-arrow.svg';
-import underlineUrl from '../images/underline.svg';
 
 const {
   Headline5,
@@ -48,13 +48,6 @@ const { className } = css`
     position: absolute;
     right: 0;
     transform: translateX(110%) translateY(-30%);
-  }
-  .header-underline {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    transform: translateY(25%);
   }
 
   ${mobileCss`
@@ -96,7 +89,7 @@ export const LandingPage = () => {
                   className="position-relative d-inline-block"
                 >
                   <img src={headerArrowUrl} alt="" className="header-arrow" />
-                  <img src={underlineUrl} alt="" className="header-underline" />
+                  <Underline />
                   chess?
                 </Text>
               </Hero>
@@ -153,7 +146,12 @@ export const LandingPage = () => {
                 tailored trainings and lessons.
               </Text>
               <Headline5>
-                <Icon type="board" color="primary" className="mr-2" />
+                <Icon
+                  type="pawn"
+                  variant="primary"
+                  className="mr-2"
+                  size="large"
+                />
                 Live training
               </Headline5>
               <Text>
@@ -162,8 +160,13 @@ export const LandingPage = () => {
                 online.
               </Text>
               <Headline5>
-                <Icon type="board" color="primary" className="mr-2" /> Solo
-                training
+                <Icon
+                  type="board"
+                  variant="primary"
+                  className="mr-2"
+                  size="large"
+                />
+                Solo training
               </Headline5>
               <Text>
                 Practice when you can. Solve standalone lessons or get custom

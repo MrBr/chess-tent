@@ -168,10 +168,23 @@ export type UI = {
       | 'like'
       | 'edit'
       | 'hamburger'
-      | 'chess';
+      | 'chess'
+      | 'chat'
+      | 'code'
+      | 'cursor'
+      | 'support'
+      | 'show'
+      | 'hide'
+      | 'gift'
+      | 'king'
+      | 'pawn'
+      | 'price'
+      | 'settings'
+      | 'video';
     textual?: boolean;
     size?: 'large' | 'regular' | 'small' | 'extra-small';
-    color?: 'primary' | 'secondary' | 'black' | 'grey-700' | 'light';
+    variant?: 'primary' | 'secondary' | 'black' | 'grey-700' | 'light';
+    background?: boolean;
   }>;
   Img: ComponentType<
     {

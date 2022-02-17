@@ -12,19 +12,41 @@ const Icon = styled<IconProps>(({ type, className, onClick }) => {
       <IconSvgComponent className="svg-icon" />
     </span>
   );
-}).size.textual.color.css`
+}).size.textual.variant.background.css`
   display: inline-block;
+  box-sizing: content-box;
+  position: relative;
+  vertical-align: middle;
   
   .svg-icon {
+    margin-top: 50%;
+    margin-left: 50%;
+    transform: translate(-50%, -50%);
     width: 100%;
     height: 100%;
   }
-
-  ${({ color }) =>
-    css`
-      color: var(--${color}-color);
-    `}
-
+  
+  &.background {
+    padding: 12px;
+    border-radius: 12px;
+  }
+  
+  &.primary {
+      color: var(--primary-color);
+    &.background {
+      color: var(--light-color);
+      background: var(--primary-gradient);
+    }
+  }
+  
+  &.secondary {
+      color: var(--secondary-color);
+    &.background {
+      color: var(--light-color);
+      background: var(--secondary-color);
+    }
+  }
+  
   &.large {
     width: 36px;
     height: 36px;
@@ -61,7 +83,7 @@ const Icon = styled<IconProps>(({ type, className, onClick }) => {
 `;
 
 Icon.defaultProps = {
-  color: 'grey-700',
+  variant: 'grey-700',
   size: 'regular',
 };
 

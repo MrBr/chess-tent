@@ -10,6 +10,7 @@ import anteSrc from '../images/contributors/ante.jpeg';
 import sandroSrc from '../images/contributors/sandro.jpeg';
 import tomislavSrc from '../images/contributors/tomislav.png';
 import borisSrc from '../images/contributors/boris.jpeg';
+import zoiaSrc from '../images/contributors/zoia.jpg';
 import antonioSrc from '../images/contributors/antonio.png';
 import tihanaSrc from '../images/contributors/tihana.jpeg';
 
@@ -346,6 +347,50 @@ export const LandingPage = () => {
             </Col>
             <Col md={4} xs={6} className="mb-5">
               <div className="contributor">
+                <img src={sandroSrc} alt="" />
+                <Headline5 align="center" className="mt-3 mb-1">
+                  Sandro Šafar
+                </Headline5>
+                <Text fontSize="small" align="center">
+                  Chess Coach (content)
+                </Text>
+              </div>
+            </Col>
+            <Col md={4} xs={6} className="mb-5">
+              <div className="contributor">
+                <img src={zoiaSrc} alt="" />
+                <Headline5 align="center" className="mt-3 mb-1">
+                  Zoia Vasina
+                </Headline5>
+                <Text fontSize="small" align="center">
+                  Design (v2)
+                </Text>
+              </div>
+            </Col>
+            <Col md={4} xs={6} className="mb-5">
+              <div className="contributor">
+                <img src={mendeSrc} alt="" />
+                <Headline5 align="center" className="mt-3 mb-1">
+                  Mende Mitrovski
+                </Headline5>
+                <Text fontSize="small" align="center">
+                  Design (logo)
+                </Text>
+              </div>
+            </Col>
+            <Col md={4} xs={6} className="mb-5">
+              <div className="contributor">
+                <img src={borisSrc} alt="" />
+                <Headline5 align="center" className="mt-3 mb-1">
+                  Boris Belonjek
+                </Headline5>
+                <Text fontSize="small" align="center">
+                  Design (v1)
+                </Text>
+              </div>
+            </Col>
+            <Col md={4} xs={6} className="mb-5">
+              <div className="contributor">
                 <img src={alenSrc} alt="" />
                 <Headline5 align="center" className="mt-3 mb-1">
                   Alen Šljivar
@@ -357,12 +402,12 @@ export const LandingPage = () => {
             </Col>
             <Col md={4} xs={6} className="mb-5">
               <div className="contributor">
-                <img src={sandroSrc} alt="" />
+                <img src={tomislavSrc} alt="" />
                 <Headline5 align="center" className="mt-3 mb-1">
-                  Sandro Šafar
+                  Tomislav Milanović
                 </Headline5>
                 <Text fontSize="small" align="center">
-                  Chess Coach (content)
+                  Developer
                 </Text>
               </div>
             </Col>
@@ -385,50 +430,6 @@ export const LandingPage = () => {
                 </Headline5>
                 <Text fontSize="small" align="center">
                   Chess Coach (content)
-                </Text>
-              </div>
-            </Col>
-            <Col md={4} xs={6} className="mb-5">
-              <div className="contributor">
-                <img src={mendeSrc} alt="" />
-                <Headline5 align="center" className="mt-3 mb-1">
-                  Mende Mitrovski
-                </Headline5>
-                <Text fontSize="small" align="center">
-                  Designer (logo)
-                </Text>
-              </div>
-            </Col>
-            <Col md={4} xs={6} className="mb-5">
-              <div className="contributor">
-                <img src={tomislavSrc} alt="" />
-                <Headline5 align="center" className="mt-3 mb-1">
-                  Tomislav Milanović
-                </Headline5>
-                <Text fontSize="small" align="center">
-                  Developer
-                </Text>
-              </div>
-            </Col>
-            <Col md={4} xs={6} className="mb-5">
-              <div className="contributor">
-                <img src={borisSrc} alt="" />
-                <Headline5 align="center" className="mt-3 mb-1">
-                  Boris Belonjek
-                </Headline5>
-                <Text fontSize="small" align="center">
-                  Design (v1)
-                </Text>
-              </div>
-            </Col>
-            <Col md={4} xs={6} className="mb-5">
-              <div className="contributor">
-                <img src={borisSrc} alt="" />
-                <Headline5 align="center" className="mt-3 mb-1">
-                  Zoia Vasina
-                </Headline5>
-                <Text fontSize="small" align="center">
-                  Design (v2)
                 </Text>
               </div>
             </Col>

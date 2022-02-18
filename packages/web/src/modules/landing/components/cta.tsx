@@ -26,7 +26,6 @@ const CTA = styled<{ className?: string }>(({ className }) => (
           <Button>Get beta access</Button>
         </Col>
       </Row>
-      <hr />
     </Container>
   </Section>
 )).css`

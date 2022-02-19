@@ -1,3 +1,6 @@
+import React from 'react';
+import { render } from '@testing-library/react';
+import '@testing-library/jest-dom';
 import styled, { css, resolveClassNames } from '../index';
 import { COMPONENT_CLASSNAME } from '../../types';
 
@@ -134,5 +137,25 @@ describe('styled', () => {
       `}
     `;
     expect(staticStyle).toMatch(/(?=[\s\S]*base)(?=[\s\S]*mobile)/gm);
+  });
+  test('ignore props', () => {
+    const MockComponentBase = jest.fn(() => <></>);
+
+    const TestComponent = styled(MockComponentBase).css<TestProps>`
+    ${{ omitProps: ['color'] }}`;
+    render(<TestComponent color="omit" size="keep" />);
+    const renderProps = ((MockComponentBase.mock.calls[0] as unknown) as [
+      Partial<TestProps>[],
+    ])[0];
+    expect(renderProps).not.toEqual(
+      expect.objectContaining({
+        color: 'omit',
+      }),
+    );
+    expect(renderProps).toEqual(
+      expect.objectContaining({
+        size: 'keep',
+      }),
+    );
   });
 });

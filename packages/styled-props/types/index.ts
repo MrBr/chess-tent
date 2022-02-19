@@ -18,24 +18,33 @@ export type StyledProxyTarget = { [key: string]: any } & {
 
 export type StyledComponent<T extends {}> = ((
   props: T,
-) => ReactElement<any, any> | null) & {
+) => ReactElement<T, any> | null) & {
   defaultProps?: Partial<T>;
   [COMPONENT_CLASSNAME]?: string;
 };
+export type OmittedProps<T extends { className?: string }> = (keyof T)[];
 export type DynamicClassNameResolver<T extends {}> = (props: T) => string;
 export type DynamicCssDescriptorResolver<T extends {}> = (
   props: T,
 ) => CssDescriptor<T>;
 
+// TODO - make all attributes optional; it will make much simpler composition
+// Currently different type of composites are needed to make it simple (such as omitProps composite).
+// It is created just to write shorter descriptor.
 export type CssDescriptor<T> = {
   className: string;
   staticStyle: string;
   resolveDynamicClassNames: DynamicClassNameResolver<T>;
+  omittedProps: OmittedProps<T>;
 };
 
+export type OmittedPropsComposite<T extends {}> = {
+  omitProps: OmittedProps<T>;
+};
 export type CompositeStyle<T extends { className?: string }> =
   | string
   | number
+  | OmittedPropsComposite<T>
   | DynamicCssDescriptorResolver<T>
   | StyledComponent<T>
   | TemplateStringsArray

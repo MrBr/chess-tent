@@ -52,7 +52,7 @@ describe('styled', () => {
       size: 'large',
     });
 
-    expect(classNames.split(' ').length).toBe(3);
+    expect(classNames).toMatch(/(?=[\s\S]*css)(?=[\s\S]*large)/gm);
   });
   test('nested component style', () => {
     const color = styled.a.css<TestProps>`
@@ -63,6 +63,21 @@ describe('styled', () => {
             color: black;
           }
         `;
+
+    expect(size.staticStyle).toMatch(
+      new RegExp(color[COMPONENT_CLASSNAME] as string),
+    );
+    expect(size.staticStyle).toMatch('black');
+  });
+  test('nested component style with static css', () => {
+    const color = styled.a.css<TestProps>`
+          color: red;
+        `;
+    const size = css`
+      ${color} {
+        color: black;
+      }
+    `;
 
     expect(size.staticStyle).toMatch(
       new RegExp(color[COMPONENT_CLASSNAME] as string),

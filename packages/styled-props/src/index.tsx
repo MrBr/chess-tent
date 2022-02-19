@@ -56,7 +56,8 @@ export const resolveClassNames = <T extends { className?: string }>(
   >(
     (res, variable) => {
       if (isStyledComponent(variable)) {
-        res[0].push(variable[COMPONENT_CLASSNAME]);
+        // Create a className
+        res[0].push('.' + variable[COMPONENT_CLASSNAME]);
       } else if (isDynamicCssDescriptorResolver(variable)) {
         res[1].push(variable);
       } else if (isCssDescriptor(variable)) {
@@ -184,7 +185,7 @@ const useCss = <T extends {}>(cssDescriptor: CssDescriptor<T>) => (
 const cssDescriptorCreator = (
   styles: TemplateStringsArray,
   ...args: any[]
-): CssDescriptor<any> => createCssDescriptor(styles, [...args], () => '');
+): CssDescriptor<any> => resolveClassNames({})(styles, ...args);
 
 export { cssDescriptorCreator as css, useCss };
 export default styled;

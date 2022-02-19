@@ -135,7 +135,7 @@ export default () => {
                       <ToggleButton
                         variant="dark"
                         checked={!values['coach']}
-                        onClick={() => setFieldValue('coach', false)}
+                        onChange={() => setFieldValue('coach', false)}
                         stretch
                       >
                         <Icon textual type="pawn" className="mr-1" /> I'm
@@ -146,7 +146,7 @@ export default () => {
                       <ToggleButton
                         variant="dark"
                         checked={values['coach']}
-                        onClick={() => setFieldValue('coach', true)}
+                        onChange={() => setFieldValue('coach', true)}
                         stretch
                       >
                         <Icon textual type="king" className="mr-1" />

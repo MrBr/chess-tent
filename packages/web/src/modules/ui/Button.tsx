@@ -20,6 +20,11 @@ const variants = styled.props.variant.disabled.css<
     background: var(--secondary-color);
   }
 
+  &.dark {
+    color: var(--light-color);
+    background: var(--black-color);
+  }
+  
   &.ghost {
     color: var(--dark-color);
     background: transparent;
@@ -31,12 +36,16 @@ const variants = styled.props.variant.disabled.css<
   }
 `;
 
-const sizes = styled.props.size.css<Pick<ButtonProps, 'size'>>`
+const sizes = styled.props.size.stretch.css<
+  Pick<ButtonProps, 'size' | 'stretch'>
+>`
+  ${{ omitProps: ['stretch'] }}
+  
   border: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  
+
   &.large {
     height: 64px;
     border-radius: 10px;
@@ -53,6 +62,11 @@ const sizes = styled.props.size.css<Pick<ButtonProps, 'size'>>`
     height: 42px;
     border-radius: 6px;
     padding: 0 30px;
+  }
+
+  &.stretch {
+    width: 100%;
+    padding: 0px;
   }
 `;
 
@@ -81,13 +95,37 @@ const toggle = styled.props.checked.css<ButtonProps>`
   &.checked {
     ${variants}
   }
+  &:not(.checked) {
+    &.danger {
+      border: 1px solid var(--error-color);
+    }
+
+    &.primary {
+      border: 1px solid var(--primary-color);
+    }
+
+    &.secondary {
+      border: 1px solid var(--secondary-color);
+    }
+
+    &.dark {
+      border: 1px solid var(--black-color);
+    }
+  }
   
   ${sizes}
 `;
 
 export const ToggleButton = styled<ComponentProps<UI['ToggleButton']>>(
   props => {
-    const { className, children, defaultChecked, onChange, checked } = props;
+    const {
+      className,
+      children,
+      defaultChecked,
+      onChange,
+      checked,
+      onClick,
+    } = props;
     const buttonClassName = useCss(toggle)(props);
     return (
       <label className={className}>
@@ -95,17 +133,22 @@ export const ToggleButton = styled<ComponentProps<UI['ToggleButton']>>(
           type="checkbox"
           defaultChecked={defaultChecked}
           onChange={onChange}
+          onClick={onClick}
           checked={checked}
         />
         <span className={buttonClassName}>{children}</span>
       </label>
     );
   },
-).css`
+).stretch.css`
   input {
     opacity: 0;
     width: 0;
     height: 0;
+  }
+  
+  &.stretch {
+    width: 100%;
   }
 `;
 

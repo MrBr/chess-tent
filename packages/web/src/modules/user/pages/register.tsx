@@ -1,26 +1,23 @@
 import React, { useEffect } from 'react';
-import styled from '@emotion/styled';
 import { RegisterOptions } from '@chess-tent/types';
-import { ui, hooks, requests, components, utils } from '@application';
+import { ui, hooks, requests, components } from '@application';
 import * as yup from 'yup';
 
-const { mediaQueryEnhancer } = utils;
+import AuthPage from '../components/auth-page';
 
 const { useApi, useHistory, useQuery, useActiveUserRecord } = hooks;
 const { Link } = components;
 const {
+  Icon,
   Form,
   Button,
   FormGroup,
   Label,
-  Container,
-  Absolute,
-  Icon,
-  Card,
-  Headline1,
+  Headline4,
   Text,
   Col,
   Row,
+  ToggleButton,
 } = ui;
 
 const SignupSchema = yup.object().shape({
@@ -37,15 +34,6 @@ const SignupSchema = yup.object().shape({
   email: yup.string().email('Invalid email').required(),
   coach: yup.boolean(),
 });
-
-const SubmitButton = styled(Button)(
-  mediaQueryEnhancer('sm', {
-    width: '100%',
-  }),
-  mediaQueryEnhancer('xs', {
-    width: '100%',
-  }),
-);
 
 export default () => {
   const { fetch, loading, response, error } = useApi(requests.register);
@@ -71,109 +59,121 @@ export default () => {
   };
 
   return (
-    <Container className="h-100 d-flex justify-content-center align-items-center no-gutters mx-auto">
-      <Absolute
-        left={25}
-        top={15}
-        onClick={() => history.push('/')}
-        className="cursor-pointer"
-      >
-        <Icon type="close" size="large" />
-      </Absolute>
-      <Card className="px-5 py-4 border rounded-lg">
-        <Headline1 className="mb-4">Create your account</Headline1>
-        <Form
-          initialValues={{
-            email: '',
-            password: '',
-            nickname: '',
-            name: '',
-            passwordConfirmation: '',
-          }}
-          validationSchema={SignupSchema}
-          onSubmit={handleSubmit}
-        >
-          <FormGroup>
-            <Form.Input
-              className="mt-4"
-              size="large"
-              type="text"
-              name="name"
-              placeholder="Name"
-            />
-          </FormGroup>
-          <FormGroup>
-            <Form.Input
-              className="mt-4"
-              size="large"
-              type="text"
-              name="nickname"
-              placeholder="Nickname"
-            />
-          </FormGroup>
-          <FormGroup>
-            <Form.Input
-              className="mt-4"
-              size="large"
-              type="email"
-              name="email"
-              placeholder="Email"
-            />
-          </FormGroup>
-          <FormGroup>
-            <Form.Input
-              className="mt-4"
-              size="large"
-              type="password"
-              name="password"
-              placeholder="Password"
-            />
-          </FormGroup>
-          <FormGroup>
-            <Form.Input
-              className="mt-4"
-              size="large"
-              type="password"
-              name="passwordConfirmation"
-              placeholder="Repeat password"
-            />
-          </FormGroup>
-          <FormGroup className="mt-4 d-flex">
-            <Label htmlFor="pick-coach">Are you a coach?</Label>
-            <Form.Check
-              size="sm"
-              className="w-25 shadow-none"
-              name="coach"
-              id="pick-coach"
-            />
-            <Text fontSize="extra-small" className="mt-2">
-              Mark true if you want to tutor others.
-            </Text>
-          </FormGroup>
-          {error && (
-            <FormGroup>
-              <Label>{error}</Label>
-            </FormGroup>
-          )}
-          <FormGroup className="mt-4 ">
-            <Row className="w-100" noGutters>
-              <Col className="col-12 col-sm-9 d-flex order-2 order-sm-1 justify-content-center align-items-center justify-content-sm-start">
-                <Text weight={700}>
-                  Have an account?
-                  <Link to="/login">
-                    <u> Sign in</u>
-                  </Link>
+    <AuthPage>
+      <Row>
+        <Col>
+          <Headline4 className="">Create an account</Headline4>
+          <Text fontSize="extra-small">
+            Already a member? <Link to="/login">Sign in</Link>
+          </Text>
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <Form
+            initialValues={{
+              email: '',
+              password: '',
+              nickname: '',
+              name: '',
+              passwordConfirmation: '',
+              coach: false,
+            }}
+            validationSchema={SignupSchema}
+            onSubmit={handleSubmit}
+          >
+            {({ setFieldValue, values }) => (
+              <>
+                <FormGroup>
+                  <Form.Input
+                    className="mt-4"
+                    size="large"
+                    type="text"
+                    name="name"
+                    placeholder="Name"
+                  />
+                </FormGroup>
+                <FormGroup>
+                  <Form.Input
+                    className="mt-4"
+                    size="large"
+                    type="text"
+                    name="nickname"
+                    placeholder="Nickname"
+                  />
+                </FormGroup>
+                <FormGroup>
+                  <Form.Input
+                    className="mt-4"
+                    size="large"
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                  />
+                </FormGroup>
+                <FormGroup>
+                  <Form.Input
+                    className="mt-4"
+                    size="large"
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                  />
+                </FormGroup>
+                <FormGroup>
+                  <Form.Input
+                    className="mt-4"
+                    size="large"
+                    type="password"
+                    name="passwordConfirmation"
+                    placeholder="Repeat password"
+                  />
+                </FormGroup>
+                <FormGroup className="mt-4 d-flex">
+                  <Row className="w-100" noGutters>
+                    <Col className="mr-3">
+                      <ToggleButton
+                        variant="dark"
+                        checked={!values['coach']}
+                        onClick={() => setFieldValue('coach', false)}
+                        stretch
+                      >
+                        <Icon textual type="pawn" className="mr-1" /> I'm
+                        student
+                      </ToggleButton>
+                    </Col>
+                    <Col>
+                      <ToggleButton
+                        variant="dark"
+                        checked={values['coach']}
+                        onClick={() => setFieldValue('coach', true)}
+                        stretch
+                      >
+                        <Icon textual type="king" className="mr-1" />
+                        I'm coach
+                      </ToggleButton>
+                    </Col>
+                  </Row>
+                </FormGroup>
+                {error && (
+                  <FormGroup>
+                    <Label>{error}</Label>
+                  </FormGroup>
+                )}
+                <FormGroup className="mt-4 ">
+                  <Button stretch type="submit" disabled={loading}>
+                    Register
+                  </Button>
+                </FormGroup>
+                <Text className="mt-5" fontSize="extra-small">
+                  By signing up you agree to our Terms of Services and Privacy
+                  Policy
                 </Text>
-              </Col>
-              <Col className="col-12 col-sm-3 order-1 order-sm-2 mb-3 mb-sm-0">
-                <SubmitButton type="submit" disabled={loading}>
-                  Submit
-                </SubmitButton>
-              </Col>
-            </Row>
-          </FormGroup>
-        </Form>
-      </Card>
-    </Container>
+              </>
+            )}
+          </Form>
+        </Col>
+      </Row>
+    </AuthPage>
   );
 };

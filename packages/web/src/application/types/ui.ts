@@ -49,10 +49,11 @@ import { AsyncSelect } from '../../modules/ui/Select';
 import { HtmlProps } from './hoc';
 
 export type ButtonProps = {
-  variant?: 'primary' | 'secondary' | 'regular' | 'danger' | 'ghost';
+  variant?: 'primary' | 'secondary' | 'regular' | 'danger' | 'ghost' | 'dark';
   size?: 'large' | 'regular' | 'small' | 'extra-small';
   type?: 'button' | 'reset' | 'submit';
   disabled?: boolean;
+  stretch?: boolean;
 } & { onClick?: () => void; ref?: RefObject<HTMLButtonElement> };
 
 export type ModalProps = BModalProps;

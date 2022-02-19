@@ -1,7 +1,6 @@
 import React, { ComponentType } from 'react';
 import application, { ui, constants } from '@application';
 import { Components, History, RenderPropComponentType, Services } from '@types';
-import isPropValid from '@emotion/is-prop-valid';
 import {
   Switch,
   Route,
@@ -13,7 +12,7 @@ import {
   Router as BaseRouter,
 } from 'react-router-dom';
 import { createBrowserHistory, LocationState } from 'history';
-import styled from '@emotion/styled';
+import styled from '@chess-tent/styled-props';
 
 const { Icon } = ui;
 const { APP_URL } = constants;
@@ -60,20 +59,19 @@ const addRoute: Services['addRoute'] = Route => {
   routes.push(Route);
 };
 
-const Link = styled<Components['Link']>(RLink, {
-  shouldForwardProp: (propName: string) =>
-    isPropValid(propName) && propName !== 'ghost',
-})(
-  ({ ghost }) =>
-    ghost && {
-      color: 'inherit',
-      textDecoration: 'inherit',
-      '&:hover, &:focus, &:visited, &:link, &:active': {
-        color: 'inherit',
-        textDecoration: 'inherit',
-      },
-    },
-);
+const Link = styled<Components['Link']>(RLink).ghost.css<{}>`
+  ${{ omitProps: ['ghost'] }}
+
+  &.ghost {
+    color: inherit;
+    textDecoration: inherit;
+
+    &:hover, &:focus, &:visited, &:link, &:active {
+      color: inherit;
+      textDecoration: inherit;
+    }
+  }
+`;
 
 export function useQuery<T extends Record<string, string | undefined>>(): T {
   const query: Record<string, string> = {};

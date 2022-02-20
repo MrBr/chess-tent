@@ -61,6 +61,11 @@ const addRoute: Services['addRoute'] = Route => {
 
 const Link = styled<Components['Link']>(RLink).ghost.css<{}>`
   ${{ omitProps: ['ghost'] }}
+  color: var(--primary-color);
+
+  &:hover, &:focus, &:visited, &:link, &:active {
+    color: var(--primary-color);
+  }
 
   &.ghost {
     color: inherit;

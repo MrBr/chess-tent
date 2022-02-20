@@ -106,7 +106,9 @@ const Topbar = () => {
             <Col className="d-flex justify-content-center">
               <ul id="menu">
                 <li>
-                  <Link to="/about">About</Link>
+                  <Link to="/about" ghost>
+                    About
+                  </Link>
                 </li>
               </ul>
             </Col>

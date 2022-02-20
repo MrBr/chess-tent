@@ -48,12 +48,26 @@ import { ClassNameProps, ClickProps } from './_helpers';
 import { AsyncSelect } from '../../modules/ui/Select';
 import { HtmlProps } from './hoc';
 
-export type ButtonProps = {
-  variant?: 'primary' | 'secondary' | 'regular' | 'danger' | 'ghost';
+export type BaseButtonProps = {
+  variant?: 'primary' | 'secondary' | 'regular' | 'danger' | 'ghost' | 'dark';
   size?: 'large' | 'regular' | 'small' | 'extra-small';
   type?: 'button' | 'reset' | 'submit';
   disabled?: boolean;
-} & { onClick?: () => void; ref?: RefObject<HTMLButtonElement> };
+  stretch?: boolean;
+};
+
+export type ButtonProps = BaseButtonProps & {
+  onClick?: () => void;
+  ref?: RefObject<HTMLButtonElement>;
+};
+
+export type ToggleButtonProps = {
+  checked?: boolean;
+  defaultChecked?: boolean;
+  value?: string | number;
+  onChange?: ReactEventHandler;
+  onClick?: undefined;
+} & BaseButtonProps;
 
 export type ModalProps = BModalProps;
 
@@ -247,14 +261,7 @@ export type UI = {
   Col: UIComponent<ColProps>;
   ErrorMessage: UIComponent<ErrorMessageProps>;
   Button: UIComponent<ButtonProps>;
-  ToggleButton: UIComponent<
-    ButtonProps & {
-      checked?: boolean;
-      defaultChecked?: boolean;
-      value?: string | number;
-      onChange?: ReactEventHandler;
-    }
-  >;
+  ToggleButton: UIComponent<ToggleButtonProps>;
   Card: ComponentType<ClickProps & ClassNameProps & CardProps>;
   CardBody: ComponentType<ClassNameProps>;
   CardHeader: ComponentType;

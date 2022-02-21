@@ -2,9 +2,6 @@ import { services, utils } from '@application';
 import {
   Activity,
   createActivity as modelCreateActivity,
-  PatchListener,
-  Step,
-  updateActivityActiveStep as modelUpdateActivityActiveStep,
 } from '@chess-tent/models';
 import { ActivityStepMode, ActivityStepStateBase, Services } from '@types';
 
@@ -26,17 +23,3 @@ export const createActivityComment: Services['createActivityComment'] = (
   text,
   id: utils.generateIndex(),
 });
-
-export const updateActivityActiveStep = <T extends Activity>(
-  activity: T,
-  step: Step,
-  patchListener?: PatchListener,
-) =>
-  modelUpdateActivityActiveStep(
-    activity,
-    step,
-    {
-      analysis: services.createAnalysis(),
-    },
-    patchListener,
-  );

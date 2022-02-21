@@ -39,6 +39,13 @@ application.register(
   },
 );
 application.register(
+  () => import('./service'),
+  module => {
+    application.services.updateLessonActivityActiveStep =
+      module.updateActivityActiveStep;
+  },
+);
+application.register(
   () => import('./components/my-trainings'),
   module => {
     application.components.MyTrainings = module.default;

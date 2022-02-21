@@ -13,8 +13,6 @@ export interface Activity<
   type: typeof TYPE_ACTIVITY;
   owner: User;
   users: User[]; // Collaborators - write permissions
-  completedSteps: string[];
-  completed: boolean;
 }
 
 export interface NormalizedActivity<
@@ -27,6 +25,4 @@ export interface NormalizedActivity<
   subject: Subject;
   owner: User['id'];
   users: User['id'][];
-  completedSteps: Activity<T>['completedSteps'];
-  completed: Activity<T>['completed'];
 }

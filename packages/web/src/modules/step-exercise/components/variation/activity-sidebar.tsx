@@ -5,7 +5,7 @@ import {
   ExerciseVariationActivityState,
   ExerciseVariationStep,
 } from '@types';
-import { isStepCompleted } from '@chess-tent/models';
+import { isLessonActivityStepCompleted } from '@chess-tent/models';
 import { SegmentActivitySidebar } from '../segment';
 
 const { Text } = ui;
@@ -13,7 +13,13 @@ const { Text } = ui;
 const Playground: FunctionComponent<
   ComponentProps<ExerciseModule<ExerciseVariationStep>['ActivitySidebar']>
 > = props => {
-  const { activity, step, stepActivityState, setStepActivityState } = props;
+  const {
+    activity,
+    step,
+    stepActivityState,
+    setStepActivityState,
+    activeBoard,
+  } = props;
   const {
     activeMoveIndex,
     correct,
@@ -21,7 +27,7 @@ const Playground: FunctionComponent<
   const { task } = step.state;
   const moveToPlayIndex = activeMoveIndex || 0;
   const stepToPlayMove = task.moves?.[moveToPlayIndex];
-  const completed = isStepCompleted(activity, step);
+  const completed = isLessonActivityStepCompleted(activity, activeBoard, step);
 
   const reset = () =>
     setStepActivityState({ move: null, activeMoveIndex: null, correct: null });

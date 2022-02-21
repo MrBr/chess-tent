@@ -1,4 +1,4 @@
-import { records, requests, services } from '@application';
+import { records, requests } from '@application';
 import {
   Lesson,
   LessonActivity,
@@ -6,8 +6,7 @@ import {
   TYPE_LESSON,
   User,
 } from '@chess-tent/models';
-
-const { createActivity } = services;
+import { createLessonActivity } from './service';
 
 const userTrainings = records.createRecord(
   records.withRecordBase<LessonActivity[]>(),
@@ -17,12 +16,8 @@ const userTrainings = records.createRecord(
   records.withRecordMethod(
     'new',
     async function (lesson: Lesson, owner: User, state = {}, users = []) {
-      const activity = createActivity<LessonActivity>(
-        lesson,
-        owner,
-        state,
-        users,
-      );
+      debugger;
+      const activity = createLessonActivity(lesson, owner, state, users);
       try {
         await requests.activitySave(activity);
         this.amend({ loading: true, loaded: false });

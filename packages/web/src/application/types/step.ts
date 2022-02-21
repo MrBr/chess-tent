@@ -5,9 +5,9 @@ import {
   ReactElement,
 } from 'react';
 import {
-  Activity,
   Chapter,
   Lesson,
+  LessonActivity,
   Step,
   StepRoot,
   StepType,
@@ -109,10 +109,11 @@ export type ActivityProps<ACTIVITY_STATE> = {
   nextStep: () => void;
   prevStep: () => void;
   Footer: FunctionComponent<Partial<ActivityFooterProps>>;
-  activity: Activity;
+  activity: LessonActivity;
   completeStep: (step: AppStep) => void;
   lesson: Lesson;
   chapter: Chapter;
+  activeBoard: string;
 } & StepBoardComponentProps;
 
 export type StepModule<

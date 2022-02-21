@@ -263,7 +263,7 @@ export interface ActivityRendererProps {
 }
 
 export interface ActivityRendererState {
-  activeTab: number;
+  activeBoard: string;
 }
 
 export interface TagsSelectProps {

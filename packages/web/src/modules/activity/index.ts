@@ -21,8 +21,6 @@ application.register(
   () => import('./service'),
   module => {
     application.services.createActivity = module.createActivity;
-    application.services.updateActivityActiveStep =
-      module.updateActivityActiveStep;
     application.services.createActivityStepState =
       module.createActivityStepState;
     application.services.createActivityComment = module.createActivityComment;

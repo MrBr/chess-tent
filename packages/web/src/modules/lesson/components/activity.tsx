@@ -65,7 +65,7 @@ export class ActivityRenderer extends React.Component<
   constructor(props: Readonly<ActivityRendererProps>) {
     super(props);
     this.state = {
-      activeTab: 0,
+      activeBoard: props.activity.state.activeBoard,
     };
   }
 
@@ -81,9 +81,14 @@ export class ActivityRenderer extends React.Component<
    */
   updateStepMode = async (mode: ActivityStepMode) => {
     const { updateActivity, activity, activeStep } = this.props;
-    updateActivity(updateActivityStepState)(activity, activeStep.id, {
-      mode,
-    });
+    updateActivity(updateActivityStepState)(
+      activity,
+      this.state.activeBoard,
+      activeStep.id,
+      {
+        mode,
+      },
+    );
   };
 
   setStepActivityState = (state: {}) => {
@@ -94,19 +99,25 @@ export class ActivityRenderer extends React.Component<
       updateActivity,
     } = this.props;
 
-    updateActivity(updateActivityStepState)(activity, activeStep.id, {
-      ...activityStepState,
-      ...state,
-    });
+    updateActivity(updateActivityStepState)(
+      activity,
+      this.state.activeBoard,
+      activeStep.id,
+      {
+        ...activityStepState,
+        ...state,
+      },
+    );
   };
 
   updateStepActivityAnalysis = <T extends any[], U>(
     service: (...args: T) => U,
   ) => (...args: T) => {
     const { updateActivity, activity, activeStep } = this.props;
+    const { activeBoard } = this.state;
     updateActivity(applyNestedPatches(service)(...args))(
       activity,
-      draft => draft.state[activeStep.id].analysis,
+      draft => draft.state.boards[activeBoard][activeStep.id].analysis,
     );
     !this.isAnalysing() && this.updateStepMode(ActivityStepMode.ANALYSING);
   };
@@ -151,31 +162,47 @@ export class ActivityRenderer extends React.Component<
 
   completeStep = (step: Step) => {
     const { updateActivity, activity } = this.props;
-    updateActivity(markStepCompleted)(activity, step);
+    updateActivity(markStepCompleted)(activity, this.state.activeBoard, step);
   };
 
   chapterChangeHandler = (chapter: Chapter) => {
     const { updateActivity, activity } = this.props;
-    updateActivity(updateActivityActiveChapter)(activity, chapter);
+    updateActivity(updateActivityActiveChapter)(
+      activity,
+      this.state.activeBoard,
+      chapter,
+    );
   };
 
   updateActiveStep = (step: AppStep) => {
     const { updateActivity, activity } = this.props;
-    updateActivity(services.updateActivityActiveStep)(activity, step as Steps);
+    updateActivity(services.updateLessonActivityActiveStep)(
+      activity,
+      this.state.activeBoard,
+      step as Steps,
+    );
   };
 
   nextActivityStep = () => {
     const { updateActivity, chapter, activeStep, activity } = this.props;
     const nextStep = getNextStep(chapter, activeStep) as Steps;
     nextStep &&
-      updateActivity(services.updateActivityActiveStep)(activity, nextStep);
+      updateActivity(services.updateLessonActivityActiveStep)(
+        activity,
+        this.state.activeBoard,
+        nextStep,
+      );
   };
 
   prevActivityStep = () => {
     const { updateActivity, chapter, activeStep, activity } = this.props;
     const prevStep = getPreviousStep(chapter, activeStep) as Steps;
     prevStep &&
-      updateActivity(services.updateActivityActiveStep)(activity, prevStep);
+      updateActivity(services.updateLessonActivityActiveStep)(
+        activity,
+        this.state.activeBoard,
+        prevStep,
+      );
   };
 
   updateStepRotation = (orientation?: Orientation) => {
@@ -273,6 +300,7 @@ export class ActivityRenderer extends React.Component<
       default:
         return (
           <StepRenderer
+            activeBoard={activity.state.activeBoard}
             activity={activity}
             lesson={lesson}
             step={activeStep}
@@ -315,6 +343,7 @@ export class ActivityRenderer extends React.Component<
             />
             {this.renderFooter({})}
             <StepRenderer
+              activeBoard={this.state.activeBoard}
               step={activeStep}
               stepRoot={chapter}
               chapter={chapter}
@@ -359,14 +388,16 @@ export class ActivityRenderer extends React.Component<
 
 const Activity: ActivityComponent<LessonActivity> = props => {
   const lesson = props.activity.subject;
+  const activeBoard = props.activity.state.activeBoard;
+  const activityState = props.activity.state.boards[activeBoard];
   const activeChapterId =
-    props.activity.state.activeChapterId ||
+    activityState.activeChapterId ||
     props.activity.subject.state.chapters[0].id;
   const activeChapter = getLessonChapter(lesson, activeChapterId) as Chapter;
   const activeStepId =
-    props.activity.state.activeStepId || activeChapter.state.steps[0].id;
+    activityState.activeStepId || activeChapter.state.steps[0].id;
   const activeStep = getChildStep(activeChapter, activeStepId) as Steps;
-  const activeStepActivityState = props.activity.state[activeStep.id];
+  const activeStepActivityState = activityState[activeStep.id];
 
   const dispatchService = useDispatchService();
   const { fetch: saveActivity } = useApi(requests.activityUpdate);
@@ -381,14 +412,21 @@ const Activity: ActivityComponent<LessonActivity> = props => {
   const updateActivity = useCallback(dispatchService, [dispatchService]);
 
   useEffect(() => {
-    if (!props.activity.state[activeStepId]) {
+    if (!activityState[activeStepId]) {
       updateActivity(updateActivityStepState)(
         props.activity,
+        activeBoard,
         activeStepId,
         services.createActivityStepState(),
       );
     }
-  }, [activeStepId, props.activity, updateActivity]);
+  }, [
+    activeStepId,
+    props.activity,
+    updateActivity,
+    activeBoard,
+    activityState,
+  ]);
 
   const stepsCount = useMemo(() => getStepsCount(activeChapter), [
     activeChapter,

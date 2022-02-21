@@ -2,7 +2,6 @@ import React, { useCallback, useMemo, useState, useEffect } from 'react';
 import { hooks, services, ui } from '@application';
 import {
   Chapter,
-  createActivity,
   getChildStep,
   getStepIndex,
   getStepsCount,
@@ -11,9 +10,11 @@ import {
   LessonActivity,
   getLessonChapter,
   updateActivityStepState,
+  getLessonActivityState,
 } from '@chess-tent/models';
 import { Steps } from '@types';
 import { ActivityRenderer } from './activity';
+import { createLessonActivity } from '../service';
 
 interface PreviewProps {
   lesson: Lesson;
@@ -28,22 +29,24 @@ const { Modal } = ui;
 const Preview = ({ lesson, chapter, step }: PreviewProps) => {
   const { value: user } = useActiveUserRecord();
   const [activity, updatePreviewActivity] = useState<LessonActivity>(
-    createActivity('preview', lesson, user, {
+    createLessonActivity(lesson, user, {
       activeStepId: step.id,
       activeChapterId: chapter.id,
       [step.id]: services.createActivityStepState(),
     }),
   );
+  const activeBoard = activity.state.activeBoard;
+  const activityState = getLessonActivityState(activity, activeBoard);
 
   const activeChapter = getLessonChapter(
     lesson,
-    activity.state.activeChapterId as string,
+    activityState.activeChapterId as string,
   );
   const activeStep = getChildStep(
     activeChapter,
-    activity.state.activeStepId as string,
+    activityState.activeStepId as string,
   ) as Steps;
-  const activityStepState = activity.state[activeStep.id];
+  const activityStepState = activityState[activeStep.id];
   const stepsCount = useMemo(() => getStepsCount(activeChapter), [
     activeChapter,
   ]);
@@ -52,12 +55,13 @@ const Preview = ({ lesson, chapter, step }: PreviewProps) => {
     if (!activityStepState) {
       const updatedActivity = updateActivityStepState(
         activity,
+        activeBoard,
         activeStep.id,
         services.createActivityStepState(),
       );
       updatePreviewActivity(updatedActivity);
     }
-  }, [activityStepState, activity, activeStep.id]);
+  }, [activityStepState, activity, activeStep.id, activeBoard]);
 
   const currentStepIndex = useMemo(
     () => getStepIndex(activeChapter, activeStep),

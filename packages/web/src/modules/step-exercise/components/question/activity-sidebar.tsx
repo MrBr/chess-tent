@@ -10,7 +10,7 @@ import {
   ExerciseQuestionActivityState,
   ExerciseQuestionStep,
 } from '@types';
-import { isStepCompleted } from '@chess-tent/models';
+import { isLessonActivityStepCompleted } from '@chess-tent/models';
 import { SegmentActivitySidebar } from '../segment';
 
 const { LessonToolboxText } = components;
@@ -25,9 +25,10 @@ const Playground: FunctionComponent<
     completeStep,
     step,
     activity,
+    activeBoard,
   } = props;
   const { answer } = stepActivityState as ExerciseQuestionActivityState;
-  const completed = isStepCompleted(activity, step);
+  const completed = isLessonActivityStepCompleted(activity, activeBoard, step);
   const handleAnswerChange = useCallback(
     (text: string) => {
       setStepActivityState({

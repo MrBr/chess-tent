@@ -4,6 +4,7 @@ import { Chapter } from '../chapter';
 import { Tag } from '../tag';
 import { Step } from '../step';
 import { Activity } from '../activity';
+import { FEN } from '@chess-tent/chessground/dist/types';
 
 export const TYPE_LESSON = 'lessons';
 
@@ -52,11 +53,20 @@ export interface NormalizedLesson {
   };
 }
 
+export type LessonActivityState = {
+  position?: string; // :o
+  shapes?: any[]; // :o
+  completedSteps?: string[];
+  completed?: boolean;
+  activeChapterId?: Chapter['id'];
+  activeStepId?: Step['id'];
+  [key: string]: any;
+};
+
 export type LessonActivity = Activity<
   Lesson,
   {
-    activeChapterId?: Chapter['id'];
-    activeStepId?: Step['id'];
-    [key: string]: any;
+    activeBoard: string | 'main';
+    boards: { main: LessonActivityState; [key: string]: LessonActivityState };
   }
 >;

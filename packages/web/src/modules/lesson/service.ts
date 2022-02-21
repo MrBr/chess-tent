@@ -1,5 +1,5 @@
 import { isEqual } from 'lodash';
-import { services } from '@application';
+import { services, utils } from '@application';
 import {
   MoveStep,
   MoveStepState,
@@ -7,9 +7,58 @@ import {
   VariationStep,
   VariationStepState,
 } from '@types';
-import { Lesson, LessonActivity, Mentorship, User } from '@chess-tent/models';
+import {
+  createActivity,
+  Lesson,
+  LessonActivity,
+  LessonActivityState,
+  Mentorship,
+  PatchListener,
+  Step,
+  updateActivityActiveStep as modelUpdateActivityActiveStep,
+  User,
+} from '@chess-tent/models';
 
 const { isMentorship } = services;
+
+export const updateActivityActiveStep = <T extends LessonActivity>(
+  activity: T,
+  board: string,
+  step: Step,
+  patchListener?: PatchListener,
+) =>
+  modelUpdateActivityActiveStep(
+    activity,
+    board,
+    step,
+    {
+      analysis: services.createAnalysis(),
+    },
+    patchListener,
+  );
+
+export const createLessonActivity = (
+  lesson: Lesson,
+  user: User,
+  state?: Partial<LessonActivityState>,
+  users?: User[],
+): LessonActivity => {
+  const id = utils.generateIndex();
+  const activeChapterId = lesson.state.chapters[0].id;
+  const activeStepId = lesson.state.chapters[0].state.steps[0].id;
+  const activityInitialState = {
+    activeBoard: 'main',
+    boards: {
+      main: {
+        ...state,
+        activeStepId,
+        activeChapterId,
+        [activeStepId]: services.createActivityStepState(),
+      },
+    },
+  };
+  return createActivity(id, lesson, user, activityInitialState, users);
+};
 
 export const hasVariationMove = (
   step: MoveStep | VariationStep,

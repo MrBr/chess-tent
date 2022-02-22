@@ -2,22 +2,31 @@ import { Step } from '../step';
 import { Chapter } from '../chapter';
 import { Analysis } from '../analysis';
 import { createService } from '../_helpers';
-import { LessonActivity, LessonActivityState } from './types';
-import { Activity } from '../activity';
+import { LessonActivity, LessonActivityBoardState } from './types';
 
-export const getLessonActivityState = (
+export const getLessonActivityBoardState = (
   activity: LessonActivity,
-  board: string,
-): LessonActivityState => {
-  if (!activity.state.boards?.[board]) {
+  boardId: string,
+): LessonActivityBoardState => {
+  const board =
+    activity.state.mainBoard.id === boardId
+      ? activity.state.mainBoard
+      : Object.values(activity.state.userBoards).find(
+          ({ id }) => id === boardId,
+        );
+  if (!board) {
     throw new Error('Missing board');
   }
-  return activity.state.boards?.[board];
+  return board;
 };
 
 export const markStepCompleted = createService(
-  <T extends LessonActivity>(draft: T, board: string, step: Step): T => {
-    const state = getLessonActivityState(draft, board);
+  (
+    draft: LessonActivity,
+    board: LessonActivityBoardState,
+    step: Step,
+  ): LessonActivity => {
+    const state = getLessonActivityBoardState(draft, board.id);
     if (!state?.completedSteps) {
       state.completedSteps = [];
     }
@@ -29,13 +38,13 @@ export const markStepCompleted = createService(
 );
 
 export const updateActivityActiveStep = createService(
-  <T extends LessonActivity>(
-    draft: T,
-    board: string,
+  (
+    draft: LessonActivity,
+    board: LessonActivityBoardState,
     step: Step,
     initialState: {},
-  ): T => {
-    const state = getLessonActivityState(draft, board);
+  ): LessonActivity => {
+    const state = getLessonActivityBoardState(draft, board.id);
     if (!state[step.id]) {
       state[step.id] = initialState;
     }
@@ -45,8 +54,12 @@ export const updateActivityActiveStep = createService(
 );
 
 export const updateActivityActiveChapter = createService(
-  <T extends LessonActivity>(draft: T, board: string, chapter: Chapter): T => {
-    const state = getLessonActivityState(draft, board);
+  (
+    draft: LessonActivity,
+    board: LessonActivityBoardState,
+    chapter: Chapter,
+  ): LessonActivity => {
+    const state = getLessonActivityBoardState(draft, board.id);
     state.activeChapterId = chapter.id;
     state.activeStepId = chapter.state.steps[0].id;
     return draft;
@@ -54,39 +67,35 @@ export const updateActivityActiveChapter = createService(
 );
 
 export const updateActivityStepAnalysis = createService(
-  <T extends LessonActivity>(
-    draft: T,
-    board: string,
-    stepId: Step['id'],
+  (
+    draft: LessonActivity,
+    board: LessonActivityBoardState,
+    step: Step,
     analysis: Analysis<any>,
-  ): T => {
-    const state = getLessonActivityState(draft, board);
-    state[stepId].analysis = analysis;
+  ): LessonActivity => {
+    const state = getLessonActivityBoardState(draft, board.id);
+    state[step.id].analysis = analysis;
     return draft;
   },
 );
 
-export const isLessonActivityStepCompleted = (
-  activity: LessonActivity,
-  board: string,
-  step: Step,
-) =>
-  getLessonActivityState(activity, board).completedSteps?.some(
-    stepId => stepId === step.id,
-  );
-
 export const updateActivityStepState = createService(
-  <T extends LessonActivity>(
-    draft: T extends LessonActivity ? T : never,
-    board: string,
-    stepId: Step['id'],
+  (
+    draft: LessonActivity,
+    board: LessonActivityBoardState,
+    step: Step,
     patch: {},
-  ): T extends LessonActivity ? T : never => {
-    const state = getLessonActivityState(draft, board);
-    state[stepId] = {
-      ...(state[stepId] || {}),
+  ): LessonActivity => {
+    const state = getLessonActivityBoardState(draft, board.id);
+    state[step.id] = {
+      ...(state[step.id] || {}),
       ...patch,
     };
     return draft;
   },
 );
+
+export const isLessonActivityBoardStepCompleted = (
+  board: LessonActivityBoardState,
+  step: Step,
+) => board.completedSteps?.some(stepId => stepId === step.id);

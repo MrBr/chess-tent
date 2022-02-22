@@ -11,7 +11,7 @@ import {
   createActivity,
   Lesson,
   LessonActivity,
-  LessonActivityState,
+  LessonActivityBoardState,
   Mentorship,
   PatchListener,
   Step,
@@ -21,12 +21,12 @@ import {
 
 const { isMentorship } = services;
 
-export const updateActivityActiveStep = <T extends LessonActivity>(
-  activity: T,
-  board: string,
+export const updateActivityActiveStep = (
+  activity: LessonActivity,
+  board: LessonActivityBoardState,
   step: Step,
   patchListener?: PatchListener,
-) =>
+): LessonActivity =>
   modelUpdateActivityActiveStep(
     activity,
     board,
@@ -40,22 +40,23 @@ export const updateActivityActiveStep = <T extends LessonActivity>(
 export const createLessonActivity = (
   lesson: Lesson,
   user: User,
-  state?: Partial<LessonActivityState>,
+  state?: Partial<LessonActivityBoardState>,
   users?: User[],
 ): LessonActivity => {
   const id = utils.generateIndex();
+  const mainBoardId = utils.generateIndex();
   const activeChapterId = lesson.state.chapters[0].id;
   const activeStepId = lesson.state.chapters[0].state.steps[0].id;
-  const activityInitialState = {
-    activeBoard: 'main',
-    boards: {
-      main: {
-        ...state,
-        activeStepId,
-        activeChapterId,
-        [activeStepId]: services.createActivityStepState(),
-      },
+  const activityInitialState: LessonActivity['state'] = {
+    mainBoard: {
+      id: mainBoardId,
+      ...state,
+      activeStepId,
+      activeChapterId,
+      [activeStepId]: services.createActivityStepState(),
     },
+    presentedBoardId: mainBoardId,
+    userBoards: {},
   };
   return createActivity(id, lesson, user, activityInitialState, users);
 };

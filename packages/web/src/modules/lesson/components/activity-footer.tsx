@@ -14,8 +14,6 @@ const ActivityPagination = styled(
     prev?: () => void;
     next?: () => void;
     className?: string;
-    currentStep: number;
-    stepsCount: number;
   }) => {
     return (
       <Container className={className}>
@@ -37,19 +35,8 @@ const ActivityPagination = styled(
   borderRadius: 10,
 });
 
-export default ({
-  next,
-  prev,
-  currentStep,
-  stepsCount,
-  className,
-}: ActivityFooterProps) => (
+export default ({ next, prev, className }: ActivityFooterProps) => (
   <Container className={className}>
-    <ActivityPagination
-      next={next}
-      prev={prev}
-      currentStep={currentStep}
-      stepsCount={stepsCount}
-    />
+    <ActivityPagination next={next} prev={prev} />
   </Container>
 );

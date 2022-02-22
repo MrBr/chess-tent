@@ -10,6 +10,8 @@ import {
   User,
   Mentorship,
   LessonActivity,
+  PatchListener,
+  LessonActivityBoardState,
 } from '@chess-tent/models';
 import {
   FEN,
@@ -114,11 +116,12 @@ export type Services = {
   ) => T;
   createActivityComment: (user: User, text: string) => ActivityComment;
   createActivityStepState: (initialState?: {}) => ActivityStepStateBase;
-  updateLessonActivityActiveStep: <T extends LessonActivity>(
-    activity: T,
-    board: string,
+  updateLessonActivityActiveStep: (
+    activity: LessonActivity,
+    board: LessonActivityBoardState,
     step: Steps,
-  ) => T;
+    patchListener?: PatchListener,
+  ) => LessonActivity;
   getStepPosition: (step: Steps) => FEN;
   getStepBoardOrientation: (step: Steps) => PieceColor;
   updateStepRotation: (step: Steps, orientation?: Orientation) => Steps;

@@ -27,6 +27,7 @@ import {
   Tag,
   User,
   LessonActivity,
+  LessonActivityBoardState,
 } from '@chess-tent/models';
 import {
   Move,
@@ -252,14 +253,12 @@ export interface AnalysisSystemProps {
 export interface ActivityRendererProps {
   activity: LessonActivity;
   updateActivity: ReturnType<Hooks['useDispatchService']>;
-  currentStepIndex: number;
-  stepsCount: number;
-  activeStep: Steps;
+  step: Steps;
   chapter: Chapter;
   analysis: AppAnalysis;
   lesson: Lesson;
   activityStepState: ActivityStepStateBase;
-  comments?: boolean;
+  boardState: LessonActivityBoardState;
 }
 
 export interface ActivityRendererState {

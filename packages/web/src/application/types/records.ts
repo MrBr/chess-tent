@@ -8,7 +8,7 @@ import {
   Conversation,
   LessonActivity,
   TYPE_ACTIVITY,
-  LessonActivityState,
+  LessonActivityBoardState,
 } from '@chess-tent/models';
 import {
   CreateRecord,
@@ -63,7 +63,7 @@ export type Records<T = any> = {
         (
           lesson: Lesson,
           owner: User,
-          state?: Partial<LessonActivityState>,
+          state?: Partial<LessonActivityBoardState>,
           users?: User[],
         ) => void
       >

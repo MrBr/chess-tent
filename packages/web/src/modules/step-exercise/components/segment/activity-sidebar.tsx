@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useCallback } from 'react';
 import { ui, components } from '@application';
-import { isLessonActivityStepCompleted } from '@chess-tent/models';
+import { isLessonActivityBoardStepCompleted } from '@chess-tent/models';
 import { ExerciseSteps } from '@types';
 
 import { SegmentActivityProps } from '../../types';
@@ -14,16 +14,15 @@ const Playground: FunctionComponent<
 > = ({
   setStepActivityState,
   step,
-  activity,
   children,
   title,
   onReset,
   stepActivityState,
-  activeBoard,
+  boardState,
 }) => {
   const { showHint } = stepActivityState;
   const { task, explanation, hint } = step.state;
-  const completed = isLessonActivityStepCompleted(activity, activeBoard, step);
+  const completed = isLessonActivityBoardStepCompleted(boardState, step);
   const handleShowHint = useCallback(() => {
     setStepActivityState({ showHint: true });
   }, [setStepActivityState]);

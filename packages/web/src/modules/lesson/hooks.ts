@@ -87,3 +87,5 @@ export const useEditor = () => {
 export const useLessonMeta: Hooks['useLessonMeta'] = activity => {
   return hooks.useMeta(`lesson-${activity.id}`);
 };
+
+export const useLessonActivity = () => {};

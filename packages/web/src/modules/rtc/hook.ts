@@ -12,6 +12,7 @@ export const usePeerConnection = (
   localMediaStream?: MediaStream,
   startConnection?: boolean,
 ) => {
+  // adds localMediaStream to RTC connection
   const addMediaStreamTrack = useCallback(() => {
     if (localMediaStream) {
       localMediaStream.getTracks().forEach(mediaStreamTrack => {
@@ -53,7 +54,7 @@ export const usePeerConnection = (
   );
 
   const handleOnTrack = useCallback(
-    trackEvent => {
+    (trackEvent: RTCTrackEvent) => {
       const remoteMediaStream = new MediaStream([trackEvent.track]);
       addRemoteStream(remoteMediaStream);
     },

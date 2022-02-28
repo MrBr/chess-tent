@@ -16,7 +16,12 @@ export const RTCVideo: React.FC<RTCVideoProps> = ({ mediaStream }) => {
 
   return (
     <video
-      style={{ width: '480px', backgroundColor: 'black' }}
+      style={{
+        width: 480,
+        height: 360,
+        borderRadius: 4,
+        backgroundColor: 'black',
+      }}
       autoPlay
       ref={mediaStream ? addMediaStream : null}
     >

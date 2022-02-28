@@ -145,6 +145,8 @@ const Conferencing = memo(
       // eslint-disable-next-line no-unused-expressions
       localMediaStream?.getTracks().forEach(track => track.stop());
 
+      // TODO: remove track from RTCPeerConnection
+
       setState(draft => {
         draft.localMediaStream = undefined;
       });
@@ -211,14 +213,16 @@ const Conferencing = memo(
 
     return (
       <>
-        <RTCVideo mediaStream={state.localMediaStream} />
-        <RTCVideo mediaStream={state.remoteMediaStream} />
+        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+          <RTCVideo mediaStream={state.localMediaStream} />
+          <RTCVideo mediaStream={state.remoteMediaStream} />
+        </div>
         <div style={{ height: 10, width: '100%' }} />
         <section style={{ display: 'flex', gap: 10 }}>
           <ConferenceButton
             className="d-flex justify-content-center align-items-center"
             onClick={handleStartConferencing}
-            style={{ background: 'rgba(0, 200, 0, 0.9)' }}
+            style={{ background: 'rgba(0, 200, 0, 0.6)', paddingTop: 3 }}
             title="Start"
           >
             <Icon type="enter" />
@@ -226,7 +230,8 @@ const Conferencing = memo(
           <ConferenceButton
             className="d-flex justify-content-center align-items-center"
             style={{
-              background: state.muted ? 'gray' : 'rgba(0, 0, 200, 0.9)',
+              background: state.muted ? 'gray' : 'rgba(0, 0, 200, 0.6)',
+              paddingTop: 3,
             }}
             onClick={handleMuteUnmute}
             title="Toggle Microphone"
@@ -235,7 +240,7 @@ const Conferencing = memo(
           </ConferenceButton>
           <ConferenceButton
             className="d-flex justify-content-center align-items-center"
-            style={{ background: 'rgba(200, 0, 0, 0.9)' }}
+            style={{ background: 'rgba(200, 0, 0, 0.6)', paddingTop: 3 }}
             onClick={handleStopConferencing}
             title="Stop"
           >

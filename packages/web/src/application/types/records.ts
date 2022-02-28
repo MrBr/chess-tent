@@ -64,7 +64,7 @@ export type Records<T = any> = {
           lesson: Lesson,
           owner: User,
           state?: Partial<LessonActivityBoardState>,
-          users?: User[],
+          students?: User[],
         ) => void
       >
   >;

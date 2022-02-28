@@ -15,9 +15,9 @@ const userTrainings = records.createRecord(
   records.withRecordApiLoad(requests.trainings),
   records.withRecordMethod(
     'new',
-    async function (lesson: Lesson, owner: User, state = {}, users = []) {
+    async function (lesson: Lesson, owner: User, state = {}, students = []) {
       debugger;
-      const activity = createLessonActivity(lesson, owner, state, users);
+      const activity = createLessonActivity(lesson, owner, state, students);
       try {
         await requests.activitySave(activity);
         this.amend({ loading: true, loaded: false });

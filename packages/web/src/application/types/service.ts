@@ -6,7 +6,6 @@ import {
   Step,
   StepType,
   Notification,
-  Activity,
   User,
   Mentorship,
   LessonActivity,
@@ -108,12 +107,6 @@ export type Services = {
     stepType: T,
     initialState: Parameters<StepModules[T]['createStep']>[1],
   ) => StepModules[T] extends StepModule<infer S, infer K> ? S : never;
-  createActivity: <T extends Activity>(
-    subject: T extends Activity<infer S, infer K> ? S : never,
-    owner: User,
-    state?: T extends Activity<infer S, infer K> ? K : never,
-    users?: User[],
-  ) => T;
   createActivityComment: (user: User, text: string) => ActivityComment;
   createActivityStepState: (initialState?: {}) => ActivityStepStateBase;
   updateLessonActivityActiveStep: (

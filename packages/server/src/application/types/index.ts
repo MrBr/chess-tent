@@ -13,6 +13,8 @@ import {
   User,
   Subject,
   Entity,
+  Role,
+  NormalizedRole,
 } from '@chess-tent/models';
 import { Socket } from 'socket.io';
 import { Server as HttpServer } from 'http';
@@ -49,6 +51,8 @@ export type DB = {
     options?: SchemaOptions,
     useDefault?: boolean,
   ) => Schema;
+  roleSchema: Schema;
+  depopulateRole: <T>(role: Role<T>) => NormalizedRole<T>;
   createModel: <T>(type: string, schema: Schema) => Model<AppDocument<T>>;
   orQueries: (
     ...args: MongooseFilterQuery<any>[]

@@ -53,22 +53,9 @@ application.register(
 );
 
 application.register(
-  () => import('./components/lesson-trainings'),
-  module => {
-    application.components.LessonTrainings = module.default;
-  },
-);
-
-application.register(
   () => import('./components/training-card'),
   module => {
     application.components.TrainingCard = module.default;
-  },
-);
-application.register(
-  () => import('./components/student-trainings'),
-  module => {
-    application.components.StudentTrainings = module.default;
   },
 );
 application.register(

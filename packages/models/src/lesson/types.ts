@@ -75,3 +75,9 @@ export type LessonActivity = Activity<
     userBoards: { [key: string]: LessonActivityBoardState }; // In current implementation reachable by the user and the activity coach
   }
 >;
+
+export enum LessonActivityRole {
+  OWNER = 'OWNER',
+  COACH = 'COACH',
+  STUDENT = 'STUDENT',
+}

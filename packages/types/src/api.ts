@@ -55,7 +55,6 @@ export type NotificationsResponse = DataResponse<Notification[]>;
 export type TagsResponse = DataResponse<Tag[]>;
 
 export type ActivityFilters = {
-  owner?: User['id'];
   users?: User['id'] | User['id'][];
   subject?: Lesson['id'];
   state?: {};

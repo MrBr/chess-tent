@@ -22,6 +22,7 @@ export * from './user';
 export * from './chapter';
 export * from './mentorship';
 export * from './tag';
+export * from './role';
 
 export * from './_helpers';
 

@@ -6,9 +6,11 @@ import {
   Step,
   StepType,
   Notification,
-  Activity,
   User,
   Mentorship,
+  LessonActivity,
+  PatchListener,
+  LessonActivityBoardState,
 } from '@chess-tent/models';
 import {
   FEN,
@@ -105,15 +107,14 @@ export type Services = {
     stepType: T,
     initialState: Parameters<StepModules[T]['createStep']>[1],
   ) => StepModules[T] extends StepModule<infer S, infer K> ? S : never;
-  createActivity: <T extends Activity>(
-    subject: T extends Activity<infer S, infer K> ? S : never,
-    owner: User,
-    state?: T extends Activity<infer S, infer K> ? K : never,
-    users?: User[],
-  ) => T;
   createActivityComment: (user: User, text: string) => ActivityComment;
   createActivityStepState: (initialState?: {}) => ActivityStepStateBase;
-  updateActivityActiveStep: <T extends Activity>(activity: T, step: Steps) => T;
+  updateLessonActivityActiveStep: (
+    activity: LessonActivity,
+    board: LessonActivityBoardState,
+    step: Steps,
+    patchListener?: PatchListener,
+  ) => LessonActivity;
   getStepPosition: (step: Steps) => FEN;
   getStepBoardOrientation: (step: Steps) => PieceColor;
   updateStepRotation: (step: Steps, orientation?: Orientation) => Steps;

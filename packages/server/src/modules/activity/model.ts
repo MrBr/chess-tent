@@ -4,7 +4,6 @@ import {
   NormalizedActivity,
   Subject,
   TYPE_ACTIVITY,
-  TYPE_USER,
 } from '@chess-tent/models';
 import { db } from '@application';
 
@@ -13,11 +12,8 @@ export interface DepupulatedActivity {
   type: Activity['type'];
   state: Activity['state'];
   subject: Activity['subject'];
-  completedSteps: Activity['completedSteps'];
-  completed: Activity['completed'];
-  subjectType: NormalizedActivity['subject']['type'];
-  owner: NormalizedActivity['owner'];
-  users: NormalizedActivity['users'];
+  subjectType: Activity['subjectType'];
+  roles: NormalizedActivity['roles'];
 }
 
 const activitySchema = db.createSchema<DepupulatedActivity>(
@@ -28,29 +24,12 @@ const activitySchema = db.createSchema<DepupulatedActivity>(
     subjectType: ({
       type: String,
     } as unknown) as DepupulatedActivity['subjectType'],
-    owner: ({
-      type: String,
-      ref: TYPE_USER,
-    } as unknown) as DepupulatedActivity['owner'],
-    users: [
-      {
-        type: String,
-        ref: TYPE_USER,
-      } as unknown,
-    ] as DepupulatedActivity['users'],
+    roles: ([db.roleSchema] as unknown) as DepupulatedActivity['roles'],
     state: ({
       type: Schema.Types.Mixed,
       required: true,
       default: {},
     } as unknown) as DepupulatedActivity['state'],
-    completedSteps: [
-      {
-        type: String,
-      } as unknown,
-    ] as DepupulatedActivity['completedSteps'],
-    completed: ({
-      type: Boolean,
-    } as unknown) as DepupulatedActivity['completed'],
     type: ({
       type: String,
       default: TYPE_ACTIVITY,
@@ -65,11 +44,11 @@ const ActivityModel = db.createModel<DepupulatedActivity>(
 );
 
 const depopulate = (activity: Activity<Subject>): DepupulatedActivity => {
-  const users = activity.users.map(user => user.id);
+  const roles = activity.roles.map(db.depopulateRole);
+
   return {
     ...activity,
-    owner: activity.owner.id,
-    users,
+    roles,
     subjectType: activity.subject.type,
   };
 };

@@ -1,5 +1,5 @@
 import { Subject } from '../subject';
-import { User } from '../user';
+import { NormalizedRole, Role } from '../role';
 
 export const TYPE_ACTIVITY = 'activities';
 
@@ -10,11 +10,10 @@ export interface Activity<
   id: string;
   state: S;
   subject: T;
+  // Shouldn't be required because it's more a db thing
+  subjectType?: T['type'];
   type: typeof TYPE_ACTIVITY;
-  owner: User;
-  users: User[]; // Collaborators - write permissions
-  completedSteps: string[];
-  completed: boolean;
+  roles: Role<string>[];
 }
 
 export interface NormalizedActivity<
@@ -25,8 +24,6 @@ export interface NormalizedActivity<
   type: Activity<T>['type'];
   state: Activity<T, S>['state'];
   subject: Subject;
-  owner: User['id'];
-  users: User['id'][];
-  completedSteps: Activity<T>['completedSteps'];
-  completed: Activity<T>['completed'];
+  subjectType: T['type'];
+  roles: NormalizedRole<string>[];
 }

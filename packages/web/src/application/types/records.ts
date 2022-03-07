@@ -8,6 +8,7 @@ import {
   Conversation,
   LessonActivity,
   TYPE_ACTIVITY,
+  LessonActivityBoardState,
 } from '@chess-tent/models';
 import {
   CreateRecord,
@@ -62,8 +63,8 @@ export type Records<T = any> = {
         (
           lesson: Lesson,
           owner: User,
-          state?: LessonActivity['state'],
-          users?: User[],
+          state?: Partial<LessonActivityBoardState>,
+          students?: User[],
         ) => void
       >
   >;
@@ -115,7 +116,10 @@ export type Records<T = any> = {
     T extends RecordBase<any[]> & RecipeCollection<any>
   >(
     type: string,
-  ) => RecordRecipe<InferRecordValueType<T> extends Entity ? T : never>;
+  ) => RecordRecipe<
+    InferRecordValueType<T> extends Entity ? T : never,
+    { updateRaw: (ids: string[], meta?: {}) => void }
+  >;
   withRecordApiLoad: <A, V, T extends RecordBase<V>>(
     request: RequestFetch<A, DataResponse<V>>,
   ) => RecordRecipe<

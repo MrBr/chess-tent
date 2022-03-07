@@ -1,5 +1,6 @@
 import application, { middleware } from '@application';
 import { TYPE_ACTIVITY } from '@chess-tent/models';
+import { ActivityFilters } from '@chess-tent/types';
 import {
   canEditActivity,
   getActivity,
@@ -26,15 +27,20 @@ application.service.registerPostRoute(
   saveActivity,
 
   // Notification flow
-  toLocals('user', (req, res) => res.locals.activity.owner),
-  toLocals('notificationType', TYPE_ACTIVITY),
-  toLocals('state', (req, res) => ({
-    activityId: res.locals.activity.id,
-    activityTitle: res.locals.activity.subject.state.title,
-  })),
-  createNotification,
-  sendNotification,
-  sendActivity,
+  // TODO - refactor
+  // - configure notifications to accept multiple users - notification.users
+  // - configure notification.type instead of notificationType
+  // - create/send notification should be the same?
+  // toLocals('user', (req, res) => res.locals.activity.owner),
+  // toLocals('notificationType', TYPE_ACTIVITY),
+  // toLocals('state', (req, res) => ({
+  //   activityId: res.locals.activity.id,
+  //   activityTitle: res.locals.activity.subject.state.title,
+  // })),
+  // createNotification,
+  // sendNotification,
+  // TODO - Distinct create and update; send only on create
+  // sendActivity,
 
   sendStatusOk,
 );
@@ -51,12 +57,13 @@ application.service.registerPostRoute(
 application.service.registerPostRoute(
   '/activities',
   identify,
-  toLocals('filters', req => ({
-    owner: req.body.owner,
-    users: req.body.users,
-    subject: req.body.subject,
-    state: req.body.state,
-  })),
+  toLocals(
+    'filters',
+    (req): ActivityFilters => ({
+      users: req.body.users,
+      subject: req.body.subject,
+    }),
+  ),
   findActivities,
   sendData('activities'),
 );

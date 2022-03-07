@@ -42,8 +42,7 @@ export const getActivity = (
 ): Promise<Activity | null> =>
   new Promise(resolve => {
     ActivityModel.findById(activityId)
-      .populate('owner')
-      .populate('users')
+      .populate('roles')
       .exec((err, result) => {
         if (err) {
           throw err;
@@ -56,24 +55,18 @@ export const findActivities = (
   activityFilters: ActivityFilters,
 ): Promise<Activity[]> =>
   new Promise(resolve => {
-    const owner = utils.notNullOrUndefined({
-      owner: activityFilters.owner,
-    });
     const users = utils.notNullOrUndefined({
-      users: activityFilters.users,
+      'roles.user': activityFilters.users,
     });
-
-    const dotNotatedState = db.dotNotate({ state: activityFilters.state });
 
     const query: MongooseFilterQuery<any> = utils.notNullOrUndefined({
-      ...dotNotatedState,
       subject: activityFilters.subject,
-      ...db.orQueries(owner, users),
+      ...db.orQueries(users),
     });
 
+    console.log(query);
     ActivityModel.find(query)
-      .populate('owner')
-      .populate('users')
+      .populate('roles')
       .exec((err, result) => {
         if (err) {
           throw err;
@@ -93,10 +86,6 @@ export const canEditActivity = (
       if (err) {
         throw err;
       }
-      resolve(
-        !result ||
-          result?.owner === userId ||
-          result?.users.some(user => user === userId),
-      );
+      resolve(!result || result?.roles.some(({ user }) => user === userId));
     });
   });

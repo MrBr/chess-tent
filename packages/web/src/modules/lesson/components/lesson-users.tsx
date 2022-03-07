@@ -9,7 +9,6 @@ const { UserAvatar } = components;
 
 const searchUsers = debounce((name, callback) => {
   requests.users({ search: name }).then(({ data }) => {
-    console.log(data);
     callback(data);
   });
 }, 500);

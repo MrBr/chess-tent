@@ -3,13 +3,7 @@ import { components, hooks } from '@application';
 import { Tag, User } from '@chess-tent/models';
 import { LessonsRequest } from '@chess-tent/types';
 
-const {
-  Page,
-  StudentTrainings,
-  LessonBrowser,
-  MyTrainings,
-  LessonTrainings,
-} = components;
+const { Page, LessonBrowser, MyTrainings } = components;
 const { useMyLessons, useUserTrainings } = hooks;
 
 export default ({ user }: { user: User }) => {
@@ -33,13 +27,7 @@ export default ({ user }: { user: User }) => {
 
   return (
     <Page>
-      {trainings && (
-        <>
-          <StudentTrainings trainings={trainings} user={user} />
-          <MyTrainings trainings={trainings} user={user} />
-          <LessonTrainings trainings={trainings} user={user} />
-        </>
-      )}
+      {trainings && <MyTrainings trainings={trainings} user={user} />}
       <LessonBrowser
         lessons={lessons}
         onFiltersChange={handleFilterChange}

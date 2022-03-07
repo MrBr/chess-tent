@@ -1,7 +1,7 @@
 import { Lesson, Step, updateStepState, User } from '@chess-tent/models';
 import { hooks } from '@application';
 import { useCallback, useContext, useEffect, useMemo } from 'react';
-import { Hooks } from '@types';
+import { ActivityFilters, Hooks } from '@types';
 import { editorContext } from './context';
 import { userTrainings, lessons, myLessons, lesson } from './record';
 import { lessonSelector } from './state/selectors';
@@ -21,7 +21,7 @@ export const useUpdateLessonStepState = <T extends Step>(
 export const useUserTrainings: Hooks['useUserTrainings'] = (user: User) => {
   const record = useRecordInit(userTrainings, `trainings-${user.id}`);
 
-  const filters = useMemo(() => ({ owner: user.id, users: user.id }), [
+  const filters: ActivityFilters = useMemo(() => ({ users: user.id }), [
     user.id,
   ]);
 
@@ -87,3 +87,5 @@ export const useEditor = () => {
 export const useLessonMeta: Hooks['useLessonMeta'] = activity => {
   return hooks.useMeta(`lesson-${activity.id}`);
 };
+
+export const useLessonActivity = () => {};

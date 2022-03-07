@@ -1,11 +1,8 @@
-import React, { useCallback, useMemo, useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { hooks, services, ui } from '@application';
 import {
   Chapter,
-  createActivity,
   getChildStep,
-  getStepIndex,
-  getStepsCount,
   Lesson,
   Step,
   LessonActivity,
@@ -14,6 +11,7 @@ import {
 } from '@chess-tent/models';
 import { Steps } from '@types';
 import { ActivityRenderer } from './activity';
+import { createLessonActivity } from '../service';
 
 interface PreviewProps {
   lesson: Lesson;
@@ -28,41 +26,35 @@ const { Modal } = ui;
 const Preview = ({ lesson, chapter, step }: PreviewProps) => {
   const { value: user } = useActiveUserRecord();
   const [activity, updatePreviewActivity] = useState<LessonActivity>(
-    createActivity('preview', lesson, user, {
+    createLessonActivity(lesson, user, {
       activeStepId: step.id,
       activeChapterId: chapter.id,
       [step.id]: services.createActivityStepState(),
     }),
   );
+  const activityBoardState = activity.state.mainBoard;
 
   const activeChapter = getLessonChapter(
     lesson,
-    activity.state.activeChapterId as string,
+    activityBoardState.activeChapterId as string,
   );
   const activeStep = getChildStep(
     activeChapter,
-    activity.state.activeStepId as string,
+    activityBoardState.activeStepId as string,
   ) as Steps;
-  const activityStepState = activity.state[activeStep.id];
-  const stepsCount = useMemo(() => getStepsCount(activeChapter), [
-    activeChapter,
-  ]);
+  const activityStepState = activityBoardState[activeStep.id];
 
   useEffect(() => {
     if (!activityStepState) {
       const updatedActivity = updateActivityStepState(
         activity,
-        activeStep.id,
+        activityBoardState,
+        activeStep,
         services.createActivityStepState(),
       );
       updatePreviewActivity(updatedActivity);
     }
-  }, [activityStepState, activity, activeStep.id]);
-
-  const currentStepIndex = useMemo(
-    () => getStepIndex(activeChapter, activeStep),
-    [activeChapter, activeStep],
-  );
+  }, [activityStepState, activity, activeStep, activityBoardState]);
 
   const updateActivity = useCallback(
     service => (...args: Parameters<typeof service>) => {
@@ -80,13 +72,12 @@ const Preview = ({ lesson, chapter, step }: PreviewProps) => {
       activity={activity}
       lesson={lesson}
       analysis={activityStepState.analysis}
-      activeStep={activeStep}
+      step={activeStep}
       chapter={activeChapter}
       updateActivity={updateActivity}
-      stepsCount={stepsCount}
-      currentStepIndex={currentStepIndex}
       activityStepState={activityStepState}
       comments={false}
+      boardState={activityBoardState}
     />
   );
 };

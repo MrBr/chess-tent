@@ -1,5 +1,11 @@
-import { socket, action } from '@application';
-import { ACTION_EVENT, SUBSCRIBE_EVENT, SEND_PATCH } from '@chess-tent/types';
+import { action, socket } from '@application';
+import {
+  ACTION_EVENT,
+  ROOM_USERS_ACTION,
+  SEND_PATCH,
+  SUBSCRIBE_EVENT,
+  UNSUBSCRIBED_EVENT,
+} from '@chess-tent/types';
 import { TYPE_ACTIVITY } from '@chess-tent/models';
 import { canEditActivity, getActivity } from './service';
 
@@ -22,16 +28,18 @@ socket.registerMiddleware(async (stream, next) => {
     if (canJoin) {
       console.log('Client joined to', roomId);
       // Joining a room implicitly requires sending a sync request
-      const newSocket = stream.client.join(roomId);
+      const socketId = stream.client.id;
       const shouldSyncData = socket.shouldSyncData(roomId);
       const channel = `${TYPE_ACTIVITY}-${activityId}`;
+
+      stream.client.join(roomId);
 
       if (shouldSyncData) {
         console.log('Owner already exists');
         const sync = action.syncAction(
           activityId,
           TYPE_ACTIVITY,
-          newSocket.id,
+          socketId,
           undefined,
         );
         socket.sendServerAction(channel, sync, socket.getOwnerSocketId(roomId));
@@ -41,12 +49,21 @@ socket.registerMiddleware(async (stream, next) => {
         const sync = action.syncAction(
           activityId,
           TYPE_ACTIVITY,
-          newSocket.id,
+          socketId,
           activity,
         );
-        socket.sendServerAction(channel, sync, newSocket.id);
+        socket.sendServerAction(channel, sync, socketId);
       }
+
+      socket.dispatchRoomUsers(channel);
     }
+  }
+
+  if (
+    stream.event === UNSUBSCRIBED_EVENT &&
+    stream.data.indexOf(TYPE_ACTIVITY) > -1
+  ) {
+    socket.dispatchRoomUsers(stream.data);
   }
 
   // Forward activity action

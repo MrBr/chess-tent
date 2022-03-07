@@ -5,9 +5,8 @@ import {
   ReactElement,
 } from 'react';
 import {
-  Activity,
   Chapter,
-  Lesson,
+  LessonActivityBoardState,
   Step,
   StepRoot,
   StepType,
@@ -78,8 +77,6 @@ export type StepModuleComponentKey =
 export type ActivityFooterProps = {
   next: () => void;
   prev: () => void;
-  stepsCount: number;
-  currentStep: number;
   className?: string;
 };
 export type ActivityComment = {
@@ -99,20 +96,17 @@ export type ActivityStepStateBase = {
   shapes?: Shape[];
 };
 
-export type ActivityStepState<T extends {}> = T & ActivityStepStateBase;
 export type ActivityExerciseStepState<T extends {}> = T &
   ActivityStepStateBase & { showHint?: boolean };
 export type ActivityProps<ACTIVITY_STATE> = {
   // TODO - update name to updateStepActivityState
   setStepActivityState: (state: {}) => void;
   stepActivityState: ACTIVITY_STATE;
+  boardState: LessonActivityBoardState;
   nextStep: () => void;
   prevStep: () => void;
   Footer: FunctionComponent<Partial<ActivityFooterProps>>;
-  activity: Activity;
   completeStep: (step: AppStep) => void;
-  lesson: Lesson;
-  chapter: Chapter;
 } & StepBoardComponentProps;
 
 export type StepModule<

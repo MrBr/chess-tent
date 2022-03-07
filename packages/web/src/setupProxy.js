@@ -7,6 +7,8 @@ module.exports = app => {
     createProxyMiddleware('/api/socket.io', {
       target: 'http://localhost:3007',
       ws: true,
+      // Needed to prevent unhandled promise error crash
+      onError: err => console.log(`Proxy error: ${err}`),
     }),
   );
 };

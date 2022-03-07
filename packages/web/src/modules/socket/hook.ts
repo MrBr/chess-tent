@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
 import { socket, hooks } from '@application';
 import { Hooks } from '@types';
+import { roomUsers } from './record';
 
-const { useMeta } = hooks;
+const { useMeta, useRecordInit } = hooks;
 
 const useSocketConnected = () => {
   return useMeta('socketConnected');
@@ -23,4 +24,10 @@ const useSocketSubscribe: Hooks['useSocketSubscribe'] = channel => {
   }, [channel, connected]);
 };
 
-export { useSocketConnected, useSocketSubscribe };
+const useSocketRoomUsers: Hooks['useSocketRoomUsers'] = room => {
+  const record = useRecordInit(roomUsers, `room-${room}-users`);
+
+  return record.value || [];
+};
+
+export { useSocketConnected, useSocketSubscribe, useSocketRoomUsers };

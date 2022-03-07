@@ -3,14 +3,7 @@ import { components, hooks, ui } from '@application';
 import { Tag, User } from '@chess-tent/models';
 import { LessonsRequest } from '@chess-tent/types';
 
-const {
-  Page,
-  Coaches,
-  LessonBrowser,
-  StudentTrainings,
-  MyTrainings,
-  LessonTrainings,
-} = components;
+const { Page, Coaches, LessonBrowser, MyTrainings } = components;
 const { useLessons, useUserTrainings } = hooks;
 const { Row, Col } = ui;
 
@@ -40,11 +33,7 @@ export default ({ user }: { user: User }) => {
       {!trainings || trainings.length === 0 ? (
         <Coaches />
       ) : (
-        <>
-          <StudentTrainings trainings={trainings} user={user} />
-          <MyTrainings trainings={trainings} user={user} />
-          <LessonTrainings trainings={trainings} user={user} />
-        </>
+        <MyTrainings trainings={trainings} user={user} />
       )}
       <Row noGutters>
         <Col>

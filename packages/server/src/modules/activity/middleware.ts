@@ -61,21 +61,24 @@ export const canEditActivity: MiddlewareFunction = (req, res, next) => {
 };
 
 export const sendActivity: MiddlewareFunction = (req, res, next) => {
-  const activity = res.locals.activity;
+  const activity = res.locals.activity as Activity;
   if (!activity) {
     throw new ActivityNotPreparedError();
   }
-
-  if (res.locals.me.id !== activity.owner.id) {
-    // Don't send lesson to the same user that assign it
-    socket.sendServerAction(`user-${activity.owner.id}`, {
-      type: PUSH_RECORD,
-      payload: { value: activity },
-      meta: {
-        key: `trainings-${activity.owner.id}`,
-      },
+  // TODO - verify if this is working
+  [...activity.roles]
+    .map(({ user }) => user)
+    .filter(({ id }) => id !== res.locals.me.id)
+    .forEach(({ id }) => {
+      // Don't send lesson to the same user that assign it
+      socket.sendServerAction(`user-${id}`, {
+        type: PUSH_RECORD,
+        payload: { value: activity },
+        meta: {
+          key: `trainings-${id}`,
+        },
+      });
     });
-  }
 
   next();
 };

@@ -8,7 +8,7 @@ interface NormalizedEntity {
 interface Entities {
   [key: string]: { [key: string]: Entity };
 }
-interface Schema {
+export interface Schema {
   type: string;
   id?: string | ((entity: Entity) => string);
   relationships: {
@@ -50,27 +50,36 @@ const initService = (schemaMap: { [key: string]: Schema }) => {
       const relationshipType = relationships[attribute];
       let normalizedRelationshipValue;
       const relationshipValue = entityState[attribute];
-      if (typeof relationshipType === 'object') {
+      if (Array.isArray(relationshipValue)) {
+        normalizedRelationshipValue = [];
+        for (let i = 0; i < relationshipValue.length; i++) {
+          let normalizedValue;
+          if (typeof relationshipType === 'object') {
+            normalizedValue = normalizeRelationships(
+              relationshipValue[i],
+              relationshipType,
+              entities,
+            );
+          } else {
+            normalizedValue = relationshipValue[i];
+            if (typeof normalizedValue !== 'string') {
+              // isn't already normalized
+              normalizedValue = getId(relationshipValue[i]);
+              normalize(relationshipValue[i], entities);
+            }
+          }
+          normalizedRelationshipValue.push(normalizedValue);
+        }
+      } else if (typeof relationshipType === 'object') {
         // Nested relationships normalization
         normalizedRelationshipValue = normalizeRelationships(
           entityState[attribute],
           relationshipType,
           entities,
         );
-      } else if (Array.isArray(relationshipValue)) {
-        normalizedRelationshipValue = [];
-        for (let i = 0; i < relationshipValue.length; i++) {
-          let id = relationshipValue[i];
-          if (typeof id !== 'string') {
-            // isn't already normalized
-            id = getId(relationshipValue[i]);
-            normalize(relationshipValue[i], entities);
-          }
-          normalizedRelationshipValue.push(id);
-        }
       } else if (typeof relationshipValue === 'string') {
         normalizedRelationshipValue = relationshipValue;
-      } else {
+      } else if (relationshipValue) {
         // eslint-disable-next-line @typescript-eslint/no-use-before-define
         normalize(relationshipValue, entities);
         normalizedRelationshipValue = getId(relationshipValue);
@@ -114,27 +123,27 @@ const initService = (schemaMap: { [key: string]: Schema }) => {
       const relationshipSchema = schemaMap[type];
       const relationshipValue = entityState[attribute];
       let freshValue;
-      if (typeof type === 'object') {
-        // Nested relationships denormalization
-        freshValue = denormalizeState(
-          entityState[attribute],
-          cachedEntityState[attribute] || {},
-          prevEntityState?.[attribute],
-          type,
-          entities,
-        );
-      } else if (Array.isArray(relationshipValue)) {
+      if (Array.isArray(relationshipValue)) {
         let collectionChanged =
           cachedEntityState[attribute]?.length !== relationshipValue.length;
         let index = 0;
         freshValue = [];
         while (index < relationshipValue.length) {
           // eslint-disable-next-line @typescript-eslint/no-use-before-define
-          const item = denormalize(
-            relationshipValue[index],
-            relationshipSchema.type,
-            entities,
-          );
+          const item =
+            typeof type === 'object'
+              ? denormalizeState(
+                  relationshipValue[index],
+                  cachedEntityState[attribute] || {},
+                  prevEntityState?.[attribute],
+                  type,
+                  entities,
+                )
+              : denormalize(
+                  relationshipValue[index],
+                  relationshipSchema.type,
+                  entities,
+                );
           if (cachedEntityState[attribute]?.[index] !== item) {
             collectionChanged = true;
           }
@@ -145,6 +154,15 @@ const initService = (schemaMap: { [key: string]: Schema }) => {
         if (!collectionChanged) {
           freshValue = cachedEntityState[attribute];
         }
+      } else if (typeof type === 'object') {
+        // Nested relationships denormalization
+        freshValue = denormalizeState(
+          entityState[attribute],
+          cachedEntityState[attribute] || {},
+          prevEntityState?.[attribute],
+          type,
+          entities,
+        );
       } else {
         // eslint-disable-next-line @typescript-eslint/no-use-before-define
         freshValue = denormalize(

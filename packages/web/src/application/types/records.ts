@@ -116,7 +116,10 @@ export type Records<T = any> = {
     T extends RecordBase<any[]> & RecipeCollection<any>
   >(
     type: string,
-  ) => RecordRecipe<InferRecordValueType<T> extends Entity ? T : never>;
+  ) => RecordRecipe<
+    InferRecordValueType<T> extends Entity ? T : never,
+    { updateRaw: (ids: string[], meta?: {}) => void }
+  >;
   withRecordApiLoad: <A, V, T extends RecordBase<V>>(
     request: RequestFetch<A, DataResponse<V>>,
   ) => RecordRecipe<

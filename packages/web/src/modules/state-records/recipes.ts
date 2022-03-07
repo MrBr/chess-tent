@@ -1,5 +1,5 @@
 import { utils, state, hof } from '@application';
-import { RequestFetch, DataResponse } from '@types';
+import { RequestFetch, DataResponse, Records } from '@types';
 import { Entity } from '@chess-tent/models';
 import {
   InferRecordValue,
@@ -71,13 +71,18 @@ const withRecordDenormalized = <T extends RecordBase<any>>(
   };
 };
 
-const withRecordDenormalizedCollection = <
+const withRecordDenormalizedCollection: Records['withRecordDenormalizedCollection'] = <
   T extends RecordBase<any[]> & RecipeCollection<any>
 >(
   type: string,
-): RecordRecipe<
-  InferRecordValueType<T> extends Entity ? T : never
-> => store => record => {
+) => store => record => {
+  const updateRaw = (descriptor: string[], meta = {}) => {
+    store.dispatch(
+      batchActions([
+        state.actions.updateRecord(record.recordKey, descriptor, meta),
+      ]),
+    );
+  };
   const update = (value: InferRecordValueSafe<T>, meta: {}) => {
     const descriptor = formatEntityValue(value);
     store.dispatch(
@@ -112,6 +117,7 @@ const withRecordDenormalizedCollection = <
     get,
     update,
     push,
+    updateRaw,
   };
 };
 

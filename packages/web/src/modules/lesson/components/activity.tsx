@@ -34,11 +34,13 @@ import {
   updateAnalysisStep,
   applyNestedPatches,
   getLessonActivityBoardState,
+  TYPE_ACTIVITY,
 } from '@chess-tent/models';
 import Footer from './activity-footer';
 import Header from './activity-header';
 import Stepper from './activity-stepper';
 import Comments from './activity-comments';
+import UserAvatar from '../../user/components/user-avatar';
 
 const {
   StepRenderer,
@@ -50,7 +52,12 @@ const {
   LessonPlaygroundCard,
   LessonChapters,
 } = components;
-const { useDiffUpdates, useApi, useDispatchService } = hooks;
+const {
+  useDiffUpdates,
+  useApi,
+  useDispatchService,
+  useSocketRoomUsers,
+} = hooks;
 const { Button, Absolute } = ui;
 const { updateLessonActivityActiveStep } = services;
 
@@ -298,6 +305,7 @@ export class ActivityRenderer extends React.Component<
       step,
       activityStepState,
       boardState,
+      liveUsers,
     } = this.props;
 
     return (
@@ -340,6 +348,13 @@ export class ActivityRenderer extends React.Component<
                 comments={activityStepState.comments}
               />
             </LessonPlaygroundCard>
+            {liveUsers && (
+              <LessonPlaygroundCard>
+                {liveUsers.map(user => (
+                  <UserAvatar user={user} />
+                ))}
+              </LessonPlaygroundCard>
+            )}
           </>
         }
         board={
@@ -363,6 +378,7 @@ const Activity: ActivityComponent<LessonActivity> = props => {
     activeBoardState.activeStepId || activeChapter.state.steps[0].id;
   const activeStep = getChildStep(activeChapter, activeStepId) as Steps;
   const activeStepActivityState = activeBoardState[activeStep.id];
+  const liveUsers = useSocketRoomUsers(`${TYPE_ACTIVITY}-${props.activity.id}`);
 
   const dispatchService = useDispatchService();
   const { fetch: saveActivity } = useApi(requests.activityUpdate);
@@ -407,6 +423,7 @@ const Activity: ActivityComponent<LessonActivity> = props => {
       updateActivity={updateActivity}
       activityStepState={activeStepActivityState}
       boardState={activeBoardState}
+      liveUsers={liveUsers}
     />
   );
 };

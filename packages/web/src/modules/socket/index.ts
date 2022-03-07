@@ -13,5 +13,12 @@ application.register(
   () => import('./hook'),
   module => {
     application.hooks.useSocketSubscribe = module.useSocketSubscribe;
+    application.hooks.useSocketRoomUsers = module.useSocketRoomUsers;
+  },
+);
+application.register(
+  () => import('./state/middleware'),
+  module => {
+    application.state.registerMiddleware(module.middleware);
   },
 );

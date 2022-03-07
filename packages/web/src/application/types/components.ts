@@ -259,6 +259,7 @@ export interface ActivityRendererProps {
   lesson: Lesson;
   activityStepState: ActivityStepStateBase;
   boardState: LessonActivityBoardState;
+  liveUsers?: User[];
 }
 
 export interface ActivityRendererState {

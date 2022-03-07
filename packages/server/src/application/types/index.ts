@@ -25,6 +25,7 @@ import {
   SUBSCRIBE_EVENT,
   UNSUBSCRIBE_EVENT,
   SyncAction,
+  UNSUBSCRIBED_EVENT,
 } from '@chess-tent/types';
 import { RecordAction } from '@chess-tent/redux-record/types';
 import { createInitialFounderConversation } from '../../modules/conversation/middleware';
@@ -217,21 +218,29 @@ export type Application = {
   errors: Errors;
 };
 
+export type ClientSocketStream = {
+  client: Socket;
+  data: Actions | RecordAction;
+};
+
 export type SocketStream =
-  | {
-      client: Socket;
+  | ({
       event: typeof ACTION_EVENT;
-      data: Actions | RecordAction;
-    }
+    } & ClientSocketStream)
   | {
       client: Socket;
       event: typeof SUBSCRIBE_EVENT;
-      data: string;
+      data: string; // room
     }
   | {
       client: Socket;
       event: typeof UNSUBSCRIBE_EVENT;
-      data: string;
+      data: string; // room
+    }
+  | {
+      clientId: string;
+      event: typeof UNSUBSCRIBED_EVENT;
+      data: string; // room
     };
 
 export type SocketService = {
@@ -246,15 +255,17 @@ export type SocketService = {
       next: (stream: SocketStream) => void,
     ) => void,
   ) => void;
-  sendAction: (channel: string, stream: SocketStream) => void;
+  sendAction: (channel: string, stream: ClientSocketStream) => void;
   sendServerAction: (
     channel: string,
     action: Actions | RecordAction,
     toSocketId?: string,
   ) => void;
+  dispatchRoomUsers: (room: string) => void;
+  getRoomUsers: (room: string) => User['id'][];
   shouldSyncData: (roomId: string) => boolean;
   getOwnerSocketId: (roomId: string) => string;
-  identify: (stream: SocketStream) => Auth['apiTokenPayload'] | null;
+  identify: (stream: SocketStream | Socket) => Auth['apiTokenPayload'] | null;
 };
 
 export class AppError extends Error {

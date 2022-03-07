@@ -59,14 +59,12 @@ export const findActivities = (
       'roles.user': activityFilters.users,
     });
 
-    const dotNotatedState = db.dotNotate({ state: activityFilters.state });
-
     const query: MongooseFilterQuery<any> = utils.notNullOrUndefined({
-      ...dotNotatedState,
       subject: activityFilters.subject,
       ...db.orQueries(users),
     });
 
+    console.log(query);
     ActivityModel.find(query)
       .populate('roles')
       .exec((err, result) => {

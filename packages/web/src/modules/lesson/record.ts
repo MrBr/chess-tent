@@ -16,7 +16,6 @@ const userTrainings = records.createRecord(
   records.withRecordMethod(
     'new',
     async function (lesson: Lesson, owner: User, state = {}, students = []) {
-      debugger;
       const activity = createLessonActivity(lesson, owner, state, students);
       try {
         await requests.activitySave(activity);

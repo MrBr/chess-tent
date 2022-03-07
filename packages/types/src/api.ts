@@ -57,7 +57,6 @@ export type TagsResponse = DataResponse<Tag[]>;
 export type ActivityFilters = {
   users?: User['id'] | User['id'][];
   subject?: Lesson['id'];
-  state?: {};
 };
 
 export type ApiMethods = 'GET' | 'POST' | 'PUT';

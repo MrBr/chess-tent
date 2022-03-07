@@ -50,6 +50,7 @@ export type Hooks = {
   useSelector: typeof useSelector;
   useStore: typeof useStore;
   useSocketSubscribe: (channel: string | null) => void;
+  useSocketRoomUsers: (room: string) => User[];
   useDiffUpdates: (
     subject: Subject,
     save: (updates: SubjectPathUpdate[]) => void,

@@ -14,12 +14,15 @@ import {
   NormalizedMentorship,
   NormalizedEntity,
   ReversiblePatch,
+  User,
 } from '@chess-tent/models';
 
 export const UPDATE_ENTITIES = 'UPDATE_ENTITIES';
 export const UPDATE_ENTITY = 'UPDATE_ENTITY';
 
 export const SYNC_ACTION = 'SYNC_ACTION';
+
+export const ROOM_USERS_ACTION = 'ROOM_USERS_ACTION';
 
 export const SEND_NOTIFICATION = 'SEND_NOTIFICATION';
 export const SEND_MESSAGE = 'SEND_MESSAGE';
@@ -135,6 +138,17 @@ export type SendPatchAction = Action<
 
 export type PatchAction = SendPatchAction;
 
+/**
+ * Socket actions
+ */
+export type RoomUsersAction = Action<
+  typeof ROOM_USERS_ACTION,
+  User['id'][],
+  { room: string }
+>;
+
+export type SocketAction = RoomUsersAction;
+
 export type Actions =
   | UpdateEntityAction
   | SyncAction
@@ -145,4 +159,5 @@ export type Actions =
   | ConversationAction
   | LessonAction
   | UserAction
+  | SocketAction
   | ActivityAction<any>;

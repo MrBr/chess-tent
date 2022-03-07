@@ -62,7 +62,6 @@ application.service.registerPostRoute(
     (req): ActivityFilters => ({
       users: req.body.users,
       subject: req.body.subject,
-      state: req.body.state,
     }),
   ),
   findActivities,

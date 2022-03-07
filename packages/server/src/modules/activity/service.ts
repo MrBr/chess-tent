@@ -64,7 +64,6 @@ export const findActivities = (
       ...db.orQueries(users),
     });
 
-    console.log(query);
     ActivityModel.find(query)
       .populate('roles')
       .exec((err, result) => {

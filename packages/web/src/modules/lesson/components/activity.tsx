@@ -2,7 +2,6 @@ import React, { useCallback, useEffect } from 'react';
 import {
   ActivityComment,
   ActivityComponent,
-  ActivityFooterProps,
   ActivityRendererProps,
   ActivityRendererState,
   ActivityStepMode,
@@ -35,12 +34,14 @@ import {
   applyNestedPatches,
   getLessonActivityBoardState,
   TYPE_ACTIVITY,
+  updateSubjectState,
 } from '@chess-tent/models';
 import Footer from './activity-footer';
 import Header from './activity-header';
 import Stepper from './activity-stepper';
 import Comments from './activity-comments';
-import UserAvatar from '../../user/components/user-avatar';
+import StudentBoards from './activity-student-boards';
+import { createLessonActivityBoard } from '../service';
 
 const {
   StepRenderer,
@@ -51,12 +52,14 @@ const {
   ChessboardContextProvider,
   LessonPlaygroundCard,
   LessonChapters,
+  UserAvatar,
 } = components;
 const {
   useDiffUpdates,
   useApi,
   useDispatchService,
   useSocketRoomUsers,
+  useActiveUserRecord,
 } = hooks;
 const { Button, Absolute } = ui;
 const { updateLessonActivityActiveStep } = services;
@@ -203,17 +206,6 @@ export class ActivityRenderer extends React.Component<
     this.setStepActivityState({ shapes });
   };
 
-  renderFooter = (props: Partial<ActivityFooterProps>) => {
-    return (
-      <Footer
-        prev={this.prevActivityStep}
-        next={this.nextActivityStep}
-        className="mt-5 mb-4"
-        {...props}
-      />
-    );
-  };
-
   renderActivityBoard = (props: ChessboardProps) => {
     const { lesson, step, activityStepState } = this.props;
     return (
@@ -245,7 +237,21 @@ export class ActivityRenderer extends React.Component<
         orientation={step && services.getStepBoardOrientation(step)}
         onOrientationChange={this.updateStepRotation}
         {...props}
-        header={<Header lesson={lesson} />}
+        header={
+          <>
+            <Absolute right={25} top={25}>
+              <Button
+                variant="regular"
+                size="extra-small"
+                onClick={() => this.updateStepMode(ActivityStepMode.SOLVING)}
+              >
+                Stop analysing
+              </Button>
+            </Absolute>
+
+            <Header lesson={lesson} />
+          </>
+        }
       />
     );
   };
@@ -291,7 +297,6 @@ export class ActivityRenderer extends React.Component<
             prevStep={this.prevActivityStep}
             completeStep={this.completeStep}
             Chessboard={this.renderActivityBoard}
-            Footer={this.renderFooter}
           />
         );
     }
@@ -306,6 +311,7 @@ export class ActivityRenderer extends React.Component<
       activityStepState,
       boardState,
       liveUsers,
+      activity,
     } = this.props;
 
     return (
@@ -318,7 +324,11 @@ export class ActivityRenderer extends React.Component<
               activeChapter={chapter}
               onChange={this.chapterChangeHandler}
             />
-            {this.renderFooter({})}
+            <Footer
+              prev={this.prevActivityStep}
+              next={this.nextActivityStep}
+              className="mt-5 mb-4"
+            />
             <StepRenderer
               boardState={boardState}
               step={step}
@@ -332,7 +342,6 @@ export class ActivityRenderer extends React.Component<
               prevStep={this.prevActivityStep}
               completeStep={this.completeStep}
               Chessboard={this.renderActivityBoard}
-              Footer={this.renderFooter}
             />
             <LessonPlaygroundCard>
               <AnalysisSidebar
@@ -351,10 +360,13 @@ export class ActivityRenderer extends React.Component<
             {liveUsers && (
               <LessonPlaygroundCard>
                 {liveUsers.map(user => (
-                  <UserAvatar user={user} />
+                  <UserAvatar key={user.id} user={user} />
                 ))}
               </LessonPlaygroundCard>
             )}
+            <LessonPlaygroundCard>
+              <StudentBoards activity={activity} liveUsers={liveUsers} />
+            </LessonPlaygroundCard>
           </>
         }
         board={
@@ -368,16 +380,18 @@ export class ActivityRenderer extends React.Component<
 }
 
 const Activity: ActivityComponent<LessonActivity> = props => {
+  const { value: user } = useActiveUserRecord();
+  const { activity } = props;
   const lesson = props.activity.subject;
   const activeBoardState = props.activity.state.mainBoard;
   const activeChapterId =
-    activeBoardState.activeChapterId ||
+    activeBoardState?.activeChapterId ||
     props.activity.subject.state.chapters[0].id;
   const activeChapter = getLessonChapter(lesson, activeChapterId) as Chapter;
   const activeStepId =
-    activeBoardState.activeStepId || activeChapter.state.steps[0].id;
+    activeBoardState?.activeStepId || activeChapter.state.steps[0].id;
   const activeStep = getChildStep(activeChapter, activeStepId) as Steps;
-  const activeStepActivityState = activeBoardState[activeStep.id];
+  const activeStepActivityState = activeBoardState?.[activeStep.id];
   const liveUsers = useSocketRoomUsers(`${TYPE_ACTIVITY}-${props.activity.id}`);
 
   const dispatchService = useDispatchService();
@@ -393,24 +407,30 @@ const Activity: ActivityComponent<LessonActivity> = props => {
   const updateActivity = useCallback(dispatchService, [dispatchService]);
 
   useEffect(() => {
-    if (!activeBoardState[activeStepId]) {
-      updateActivity(updateActivityStepState)(
-        props.activity,
-        activeBoardState,
-        activeStep,
-        services.createActivityStepState(),
-      );
+    if (!activeBoardState) {
+      updateActivity(updateSubjectState)(activity, {
+        ...activity.state,
+        userBoards: {
+          ...activity.state.userBoards,
+          [user.id]: createLessonActivityBoard(activeChapterId, activeStepId),
+        },
+      });
     }
   }, [
-    activeStepId,
-    props.activity,
-    updateActivity,
     activeBoardState,
-    activeStep,
+    activeChapterId,
+    activeStepId,
+    activity,
+    updateActivity,
+    user.id,
   ]);
 
-  if (!activeStepActivityState) {
+  if (!activeBoardState) {
     return null;
+  }
+
+  if (!activeStepActivityState) {
+    throw new Error('Unknown active step activity state');
   }
 
   return (

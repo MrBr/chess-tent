@@ -85,6 +85,7 @@ export interface ChessboardProps {
   header?: ReactNode;
   footer?: ReactNode;
   size?: string | number;
+  allowEvaluation?: boolean;
 
   // Chessground proxy props
   viewOnly?: boolean;
@@ -249,6 +250,10 @@ export interface AnalysisSystemProps {
   initialPosition?: FEN;
   initialOrientation?: Color;
 }
+
+export interface AnalysisBoardProps
+  extends AnalysisSystemProps,
+    StepBoardComponentProps {}
 
 export interface ActivityRendererProps {
   activity: LessonActivity;
@@ -426,7 +431,7 @@ export type Components = {
     className?: string;
     user: User;
   }>;
-  AnalysisBoard: ComponentType<AnalysisSystemProps & StepBoardComponentProps>;
+  AnalysisBoard: ComponentType<AnalysisBoardProps>;
   AnalysisSidebar: ComponentType<AnalysisSystemProps>;
   NotificationStand: ComponentType;
   DifficultyDropdown: ComponentType<

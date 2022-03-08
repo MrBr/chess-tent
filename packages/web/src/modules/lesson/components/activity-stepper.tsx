@@ -27,16 +27,14 @@ const Stepper = styled(
         {step && <Step onClick={() => onStepClick(step)}>{step.stepType}</Step>}
         {steps.map(child => {
           return (
-            <>
-              <div className={className}>
-                <Stepper
-                  root={root}
-                  // Override current step
-                  step={child as AppStep}
-                  onStepClick={onStepClick}
-                />
-              </div>
-            </>
+            <div key={child.id} className={className}>
+              <Stepper
+                root={root}
+                // Override current step
+                step={child as AppStep}
+                onStepClick={onStepClick}
+              />
+            </div>
           );
         })}
       </>

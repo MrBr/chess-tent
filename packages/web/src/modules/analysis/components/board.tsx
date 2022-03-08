@@ -1,6 +1,6 @@
-import React, { ComponentProps } from 'react';
+import React from 'react';
 import { components } from '@application';
-import { Components } from '@types';
+import { AnalysisBoardProps } from '@types';
 import { getAnalysisActiveStep } from '@chess-tent/models';
 import Analysis from './analysis';
 
@@ -8,9 +8,7 @@ const { StepRenderer } = components;
 
 const updateChapter = () => {}; // NOOP
 
-class AnalysisBoard extends Analysis<
-  ComponentProps<Components['AnalysisBoard']>
-> {
+class AnalysisBoard extends Analysis<AnalysisBoardProps> {
   render() {
     const {
       Chessboard,

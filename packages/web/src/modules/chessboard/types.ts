@@ -30,6 +30,7 @@ export type ChessgroundMappedPropsType = Record<
     | 'onFENSet'
     | 'editing'
     | 'onPGN'
+    | 'allowEvaluation'
   >,
   ChessgroundMapper
 >;

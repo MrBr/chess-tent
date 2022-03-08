@@ -26,6 +26,7 @@ import {
   UNSUBSCRIBE_EVENT,
   SyncAction,
   UNSUBSCRIBED_EVENT,
+  CONNECTION_EVENT,
 } from '@chess-tent/types';
 import { RecordAction } from '@chess-tent/redux-record/types';
 import { createInitialFounderConversation } from '../../modules/conversation/middleware';
@@ -224,6 +225,10 @@ export type ClientSocketStream = {
 };
 
 export type SocketStream =
+  | {
+      event: typeof CONNECTION_EVENT;
+      client: Socket;
+    }
   | ({
       event: typeof ACTION_EVENT;
     } & ClientSocketStream)

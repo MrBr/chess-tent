@@ -42,7 +42,7 @@ export const getActivity = (
 ): Promise<Activity | null> =>
   new Promise(resolve => {
     ActivityModel.findById(activityId)
-      .populate('roles')
+      .populate('roles.user')
       .exec((err, result) => {
         if (err) {
           throw err;

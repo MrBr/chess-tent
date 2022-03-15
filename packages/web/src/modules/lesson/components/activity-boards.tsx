@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { components, hooks, services } from '@application';
 import {
   getChildStep,
+  getLessonActivityUserSettings,
   getLessonChapter,
   LessonActivity,
   LessonActivityRole,
@@ -33,7 +34,7 @@ const renderChessboard = (props: ChessboardProps) => {
   );
 };
 
-const ActivityStudentBoards = ({
+const ActivityBoards = ({
   activity,
   liveUsers,
 }: {
@@ -55,24 +56,27 @@ const ActivityStudentBoards = ({
   return (
     <ChessboardContextProvider>
       {students.map(({ user }) => {
-        const userBoardState = activity.state.userBoards[user.id];
+        const { selectedBoardId } = getLessonActivityUserSettings(
+          activity,
+          user.id,
+        );
 
-        if (
-          !userBoardState ||
-          !userBoardState.activeStepId ||
-          !userBoardState.activeChapterId
-        ) {
+        if (!selectedBoardId) {
           return null;
         }
+
+        const userBoardState = activity.state.boards[selectedBoardId];
 
         const chapter = getLessonChapter(
           activity.subject,
           userBoardState.activeChapterId,
         );
+
         const step = getChildStep(
           chapter,
           userBoardState.activeStepId,
         ) as Steps;
+
         const activityStepState = userBoardState[userBoardState.activeStepId];
 
         if (activityStepState.mode === ActivityStepMode.ANALYSING) {
@@ -110,4 +114,4 @@ const ActivityStudentBoards = ({
   );
 };
 
-export default ActivityStudentBoards;
+export default ActivityBoards;

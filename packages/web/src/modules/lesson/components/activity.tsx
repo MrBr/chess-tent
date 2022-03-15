@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import {
   ActivityComment,
   ActivityComponent,
@@ -34,14 +34,13 @@ import {
   applyNestedPatches,
   getLessonActivityBoardState,
   TYPE_ACTIVITY,
-  updateSubjectState,
+  getLessonActivityUserActiveBoardState,
 } from '@chess-tent/models';
 import Footer from './activity-footer';
 import Header from './activity-header';
 import Stepper from './activity-stepper';
 import Comments from './activity-comments';
-import StudentBoards from './activity-student-boards';
-import { createLessonActivityBoard } from '../service';
+import ActivityBoards from './activity-boards';
 
 const {
   StepRenderer,
@@ -71,15 +70,6 @@ export class ActivityRenderer extends React.Component<
   static defaultProps = {
     comments: true,
   };
-
-  constructor(props: Readonly<ActivityRendererProps>) {
-    super(props);
-    this.state = {
-      activeBoard:
-        props.activity.state.presentedBoardId ||
-        props.activity.state.mainBoard.id,
-    };
-  }
 
   isAnalysing() {
     const { activityStepState } = this.props;
@@ -365,7 +355,7 @@ export class ActivityRenderer extends React.Component<
               </LessonPlaygroundCard>
             )}
             <LessonPlaygroundCard>
-              <StudentBoards activity={activity} liveUsers={liveUsers} />
+              <ActivityBoards activity={activity} liveUsers={liveUsers} />
             </LessonPlaygroundCard>
           </>
         }
@@ -383,7 +373,10 @@ const Activity: ActivityComponent<LessonActivity> = props => {
   const { value: user } = useActiveUserRecord();
   const { activity } = props;
   const lesson = props.activity.subject;
-  const activeBoardState = props.activity.state.mainBoard;
+  const activeBoardState = getLessonActivityUserActiveBoardState(
+    activity,
+    user.id,
+  );
   const activeChapterId =
     activeBoardState?.activeChapterId ||
     props.activity.subject.state.chapters[0].id;
@@ -406,31 +399,12 @@ const Activity: ActivityComponent<LessonActivity> = props => {
 
   const updateActivity = useCallback(dispatchService, [dispatchService]);
 
-  useEffect(() => {
-    if (!activeBoardState) {
-      updateActivity(updateSubjectState)(activity, {
-        ...activity.state,
-        userBoards: {
-          ...activity.state.userBoards,
-          [user.id]: createLessonActivityBoard(activeChapterId, activeStepId),
-        },
-      });
-    }
-  }, [
-    activeBoardState,
-    activeChapterId,
-    activeStepId,
-    activity,
-    updateActivity,
-    user.id,
-  ]);
-
-  if (!activeBoardState) {
-    return null;
-  }
-
   if (!activeStepActivityState) {
     throw new Error('Unknown active step activity state');
+  }
+
+  if (!activeBoardState) {
+    throw new Error('Unknown active board state');
   }
 
   return (

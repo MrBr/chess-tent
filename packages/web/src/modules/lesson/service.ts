@@ -69,9 +69,11 @@ export const createLessonActivity = (
     state,
   );
   const activityInitialState: LessonActivity['state'] = {
-    mainBoard,
-    presentedBoardId: mainBoard.id,
-    userBoards: {},
+    mainBoardId: mainBoard.id,
+    boards: {
+      [mainBoard.id]: mainBoard,
+    },
+    userSettings: {},
   };
   return createActivity(id, lesson, roles, activityInitialState);
 };
@@ -87,13 +89,6 @@ export const hasVariationMove = (
     }
     return false;
   });
-};
-
-export const getActivityUserBoard = (
-  activity: LessonActivity,
-  user: User,
-): LessonActivityBoardState | undefined => {
-  return activity.state.userBoards[user.id];
 };
 
 export const isOwned = (activities: LessonActivity[], lessonId: Lesson['id']) =>

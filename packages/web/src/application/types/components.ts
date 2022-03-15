@@ -267,9 +267,7 @@ export interface ActivityRendererProps {
   liveUsers?: User[];
 }
 
-export interface ActivityRendererState {
-  activeBoard: string;
-}
+export interface ActivityRendererState {}
 
 export interface TagsSelectProps {
   className?: string;

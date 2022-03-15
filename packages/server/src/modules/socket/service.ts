@@ -4,6 +4,7 @@ import { Server, Socket } from 'socket.io';
 import {
   ACTION_EVENT,
   Actions,
+  CONNECTION_EVENT,
   ROOM_USERS_ACTION,
   SocketEvents,
   SUBSCRIBE_EVENT,
@@ -55,11 +56,8 @@ const dispatch = (stream: SocketStream) => {
 
 const init: SocketService['init'] = server => {
   io = new Server(server, { path: process.env.SOCKET_BASE_PATH });
-  io.on('connection', function (client) {
-    const userId = socket.identify(client)?.user.id;
-    if (userId) {
-      client.data.userId = userId;
-    }
+  io.on(CONNECTION_EVENT, function (client) {
+    dispatch({ client, event: CONNECTION_EVENT });
 
     client.on(SUBSCRIBE_EVENT, function (room) {
       dispatch({ client, data: room, event: SUBSCRIBE_EVENT });

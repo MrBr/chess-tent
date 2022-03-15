@@ -6,6 +6,7 @@ import {
   TYPE_ACTIVITY,
 } from '@chess-tent/models';
 import { db } from '@application';
+import { activityAdapter } from './adapter';
 
 export interface DepupulatedActivity {
   id: Activity['id'];
@@ -37,6 +38,8 @@ const activitySchema = db.createSchema<DepupulatedActivity>(
   },
   { minimize: false },
 );
+
+db.applyAdapter(activitySchema, activityAdapter);
 
 const ActivityModel = db.createModel<DepupulatedActivity>(
   TYPE_ACTIVITY,

@@ -86,6 +86,7 @@ class Chessboard
     orientation: 'white',
     shapes: [],
     allowAllMoves: true,
+    allowEvaluation: true,
   };
 
   constructor(props: ChessboardProps) {
@@ -538,6 +539,7 @@ class Chessboard
       sparePieces,
       footer,
       onPGN,
+      allowEvaluation,
     } = this.props;
     const { renderPrompt, promotion, evaluate, evaluations } = this.context;
 
@@ -557,14 +559,16 @@ class Chessboard
           className="position-relative"
           height={35}
         >
-          <Absolute right={10} top={-40}>
-            <Evaluator
-              position={fen}
-              evaluate={evaluate}
-              onToggle={this.toggleEvaluation}
-              onEvaluationChange={this.updateEvaluation}
-            />
-          </Absolute>
+          {allowEvaluation && (
+            <Absolute right={10} top={-40}>
+              <Evaluator
+                position={fen}
+                evaluate={evaluate}
+                onToggle={this.toggleEvaluation}
+                onEvaluationChange={this.updateEvaluation}
+              />
+            </Absolute>
+          )}
           {evaluate && bestEvaluation && (
             <EvaluationBar evaluation={bestEvaluation} />
           )}

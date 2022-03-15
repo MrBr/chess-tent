@@ -2,22 +2,41 @@ import { Step } from '../step';
 import { Chapter } from '../chapter';
 import { Analysis } from '../analysis';
 import { createService } from '../_helpers';
-import { LessonActivity, LessonActivityBoardState } from './types';
+import {
+  LessonActivity,
+  LessonActivityBoardState,
+  LessonActivityUserSettings,
+} from './types';
 
 export const getLessonActivityBoardState = (
   activity: LessonActivity,
   boardId: string,
 ): LessonActivityBoardState => {
-  const board =
-    activity.state.mainBoard.id === boardId
-      ? activity.state.mainBoard
-      : Object.values(activity.state.userBoards).find(
-          ({ id }) => id === boardId,
-        );
+  const board = activity.state.boards[boardId];
   if (!board) {
     throw new Error('Missing board');
   }
   return board;
+};
+
+export const getLessonActivityUserSettings = (
+  activity: LessonActivity,
+  userId: string,
+): LessonActivityUserSettings => {
+  return activity.state.userSettings[userId] || {};
+};
+
+/**
+ * User always have an active board.
+ * Behavior described in types.
+ */
+export const getLessonActivityUserActiveBoardState = (
+  activity: LessonActivity,
+  userId: string,
+): LessonActivityBoardState => {
+  const { selectedBoardId } = getLessonActivityUserSettings(activity, userId);
+  const activeBoardId = selectedBoardId || activity.state.mainBoardId;
+  return activity.state.boards[activeBoardId];
 };
 
 export const markStepCompleted = createService(

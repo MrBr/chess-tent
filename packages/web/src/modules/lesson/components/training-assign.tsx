@@ -38,7 +38,7 @@ export default ({ close }: { close: () => void }) => {
 
   const assignTraining = useCallback(
     (data, helpers) => {
-      newTraining(data.lesson, data.user, {}, [user]);
+      newTraining(data.lesson, user, {}, [data.user]);
       helpers.resetForm();
     },
     [newTraining, user],

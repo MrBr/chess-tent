@@ -20,6 +20,18 @@ import {
 } from '@chess-tent/models';
 import { createRoles } from '@chess-tent/models/dist/role/service';
 
+export const createLessonActivityBoard = (
+  activeChapterId: string,
+  activeStepId: string,
+  state = {},
+) => ({
+  id: utils.generateIndex(),
+  ...state,
+  activeStepId,
+  activeChapterId,
+  [activeStepId]: services.createActivityStepState(),
+});
+
 export const updateActivityActiveStep = (
   activity: LessonActivity,
   board: LessonActivityBoardState,
@@ -44,7 +56,6 @@ export const createLessonActivity = (
   coaches: User[] = [],
 ): LessonActivity => {
   const id = utils.generateIndex();
-  const mainBoardId = utils.generateIndex();
   const activeChapterId = lesson.state.chapters[0].id;
   const activeStepId = lesson.state.chapters[0].state.steps[0].id;
   const roles = [
@@ -52,16 +63,17 @@ export const createLessonActivity = (
     ...createRoles(students, LessonActivityRole.STUDENT),
     ...createRoles(coaches, LessonActivityRole.COACH),
   ];
+  const mainBoard = createLessonActivityBoard(
+    activeChapterId,
+    activeStepId,
+    state,
+  );
   const activityInitialState: LessonActivity['state'] = {
-    mainBoard: {
-      id: mainBoardId,
-      ...state,
-      activeStepId,
-      activeChapterId,
-      [activeStepId]: services.createActivityStepState(),
+    mainBoardId: mainBoard.id,
+    boards: {
+      [mainBoard.id]: mainBoard,
     },
-    presentedBoardId: mainBoardId,
-    userBoards: {},
+    userSettings: {},
   };
   return createActivity(id, lesson, roles, activityInitialState);
 };
@@ -83,3 +95,9 @@ export const isOwned = (activities: LessonActivity[], lessonId: Lesson['id']) =>
   activities.some(({ subject }) => subject.id === lessonId);
 
 export const getMentor = (activity: LessonActivity) => activity.subject.owner;
+
+export const isStudent = (activity: LessonActivity, user: User) =>
+  activity.roles.find(
+    ({ user: { id }, role }) =>
+      id === user.id && role === LessonActivityRole.STUDENT,
+  );

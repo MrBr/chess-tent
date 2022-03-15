@@ -8,6 +8,7 @@ import {
   LessonActivity,
   getLessonChapter,
   updateActivityStepState,
+  getLessonActivityUserActiveBoardState,
 } from '@chess-tent/models';
 import { Steps } from '@types';
 import { ActivityRenderer } from './activity';
@@ -32,7 +33,10 @@ const Preview = ({ lesson, chapter, step }: PreviewProps) => {
       [step.id]: services.createActivityStepState(),
     }),
   );
-  const activityBoardState = activity.state.mainBoard;
+  const activityBoardState = getLessonActivityUserActiveBoardState(
+    activity,
+    user.id,
+  );
 
   const activeChapter = getLessonChapter(
     lesson,

@@ -105,7 +105,6 @@ export type ActivityProps<ACTIVITY_STATE> = {
   boardState: LessonActivityBoardState;
   nextStep: () => void;
   prevStep: () => void;
-  Footer: FunctionComponent<Partial<ActivityFooterProps>>;
   completeStep: (step: AppStep) => void;
 } & StepBoardComponentProps;
 

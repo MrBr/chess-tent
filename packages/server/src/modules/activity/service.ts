@@ -59,9 +59,18 @@ export const findActivities = (
       'roles.user': activityFilters.users,
     });
 
+    const date = utils.notNullOrUndefined({
+      date:
+        activityFilters.date && Object.keys(activityFilters.date).length > 0
+          ? db.getDateRangeFilter(activityFilters.date)
+          : undefined,
+      weekly: activityFilters.weekly,
+    });
+
     const query: MongooseFilterQuery<any> = utils.notNullOrUndefined({
       subject: activityFilters.subject,
       ...db.orQueries(users),
+      ...date,
     });
 
     ActivityModel.find(query)

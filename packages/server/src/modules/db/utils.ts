@@ -1,6 +1,7 @@
 import { Document, model, Schema, SchemaOptions } from 'mongoose';
 import { DB } from '@types';
 import { v4 as uuid } from 'uuid';
+import { DateRange } from '@chess-tent/types';
 
 const createTransformRemoveId = <T>(
   transform?: (doc: any, ret: any, options: any) => any,
@@ -129,3 +130,8 @@ export const flattenBuckets = (buckets: any[], itemsKey: string) => {
 
 export const getBucketingIdFilterRegex = (parentId: string) =>
   new RegExp(String.raw`^${parentId}_`);
+
+export const getDateRangeFilter = (date: DateRange) => ({
+  $gte: date.from ? new Date(date.from) : undefined,
+  $lt: date.to ? new Date(date.to) : undefined,
+});

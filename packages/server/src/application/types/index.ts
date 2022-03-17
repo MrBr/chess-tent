@@ -27,6 +27,7 @@ import {
   SyncAction,
   UNSUBSCRIBED_EVENT,
   CONNECTION_EVENT,
+  DateRange,
 } from '@chess-tent/types';
 import { RecordAction } from '@chess-tent/redux-record/types';
 import { createInitialFounderConversation } from '../../modules/conversation/middleware';
@@ -108,6 +109,9 @@ export type DB = {
     schema: Schema,
     adapter: Updater<T>,
   ): void;
+  getDateRangeFilter(
+    date: DateRange,
+  ): { $gte: Date | undefined; $lt: Date | undefined };
 };
 
 export type Auth = {

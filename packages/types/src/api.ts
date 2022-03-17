@@ -18,6 +18,11 @@ import {
 import { GenericArguments } from './_helpers';
 import { LessonAction } from './actions';
 
+export interface DateRange {
+  from?: Date;
+  to?: Date;
+}
+
 export type LessonsRequest = {
   owner?: User['id'];
   users?: User['id'][];
@@ -57,6 +62,8 @@ export type TagsResponse = DataResponse<Tag[]>;
 export type ActivityFilters = {
   users?: User['id'] | User['id'][];
   subject?: Lesson['id'];
+  date?: DateRange;
+  weekly?: boolean;
 };
 
 export type ApiMethods = 'GET' | 'POST' | 'PUT';

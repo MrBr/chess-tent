@@ -21,9 +21,12 @@ export const useUpdateLessonStepState = <T extends Step>(
 export const useUserTrainings: Hooks['useUserTrainings'] = (user: User) => {
   const record = useRecordInit(userTrainings, `trainings-${user.id}`);
 
-  const filters: ActivityFilters = useMemo(() => ({ users: user.id }), [
-    user.id,
-  ]);
+  const filters: ActivityFilters = useMemo(
+    () => ({
+      users: user.id,
+    }),
+    [user.id],
+  );
 
   useEffect(() => {
     if (record.get().meta.loading) {

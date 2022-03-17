@@ -43,6 +43,9 @@ export const useLessons: Hooks['useLessons'] = (key: string, filters) => {
   const record = useRecordInit(lessons, key);
 
   useEffect(() => {
+    if (record.get().meta.loading) {
+      return;
+    }
     record.load(filters);
     // eslint-disable-next-line
   }, [filters]);
@@ -72,6 +75,9 @@ export const useMyLessons: Hooks['useMyLessons'] = (key: string, filters) => {
   const record = useRecordInit(myLessons, key);
 
   useEffect(() => {
+    if (record.get().meta.loading) {
+      return;
+    }
     record.load(filters);
     // eslint-disable-next-line
   }, [filters]);

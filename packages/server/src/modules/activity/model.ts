@@ -15,6 +15,8 @@ export interface DepupulatedActivity {
   subject: Activity['subject'];
   subjectType: Activity['subjectType'];
   roles: NormalizedActivity['roles'];
+  date?: NormalizedActivity['date'];
+  weekly?: NormalizedActivity['weekly'];
 }
 
 const activitySchema = db.createSchema<DepupulatedActivity>(
@@ -35,6 +37,12 @@ const activitySchema = db.createSchema<DepupulatedActivity>(
       type: String,
       default: TYPE_ACTIVITY,
     } as unknown) as typeof TYPE_ACTIVITY,
+    date: ({
+      type: Schema.Types.Date,
+    } as unknown) as string,
+    weekly: ({
+      type: Schema.Types.Boolean,
+    } as unknown) as boolean,
   },
   { minimize: false },
 );

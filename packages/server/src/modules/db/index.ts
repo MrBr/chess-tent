@@ -12,6 +12,7 @@ import {
   get$SetAndOptionsForArrayElemUpdate,
   flattenBuckets,
   getBucketingIdFilterRegex,
+  getDateRangeFilter,
 } from './utils';
 import { applyAdapter, createAdapter } from './adapter';
 
@@ -51,3 +52,4 @@ application.db.flattenBuckets = flattenBuckets;
 application.db.getBucketingIdFilterRegex = getBucketingIdFilterRegex;
 application.db.createAdapter = createAdapter;
 application.db.applyAdapter = applyAdapter;
+application.db.getDateRangeFilter = getDateRangeFilter;

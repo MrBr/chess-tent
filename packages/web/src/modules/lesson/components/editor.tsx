@@ -581,7 +581,7 @@ class EditorRenderer extends React.Component<
                   <Col>
                     <Headline2
                       contentEditable
-                      initialHtml={lesson.state.title}
+                      html={lesson.state.title}
                       onInput={this.updateLessonTitle}
                       className="mt-4"
                     />
@@ -590,7 +590,7 @@ class EditorRenderer extends React.Component<
                 <Row>
                   <Col>
                     <EditorSidebarAdjustableText
-                      initialHtml={lesson.state.description}
+                      html={lesson.state.description}
                       onInput={this.updateLessonDescription}
                     />
                   </Col>

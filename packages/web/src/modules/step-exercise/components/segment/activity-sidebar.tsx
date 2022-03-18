@@ -31,7 +31,7 @@ const Playground: FunctionComponent<
     <>
       <LessonPlaygroundCard>
         <Headline4 className="mt-2 mb-1">{title}</Headline4>
-        <Text className="m-0" fontSize="small" initialHtml={task.text} />
+        <Text className="m-0" fontSize="small" html={task.text} />
         {children}
         {onReset && (
           <Row>
@@ -46,11 +46,7 @@ const Playground: FunctionComponent<
       {completed && hasExplanation(step) && (
         <LessonPlaygroundCard>
           <Headline5 className="mt-2 mb-1">Explanation</Headline5>
-          <Text
-            className="m-0"
-            fontSize="small"
-            initialHtml={explanation?.text}
-          />
+          <Text className="m-0" fontSize="small" html={explanation?.text} />
         </LessonPlaygroundCard>
       )}
       {!completed && hasHint(step) && (
@@ -58,8 +54,7 @@ const Playground: FunctionComponent<
           <Headline5 className="mt-2 ">Hint</Headline5>
           {showHint ? (
             <>
-              <Text className="m-0" fontSize="small" initialHtml={hint?.text} />
-              Z{' '}
+              <Text className="m-0" fontSize="small" html={hint?.text} />Z{' '}
             </>
           ) : (
             <Button

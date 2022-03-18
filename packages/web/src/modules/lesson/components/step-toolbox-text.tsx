@@ -7,12 +7,16 @@ import { ui } from '@application';
 const { Text } = ui;
 
 export const ToolboxText = styled<Components['LessonToolboxText']>(
-  ({ defaultText, onChange, ...props }) => {
+  ({ text, onChange, ...props }) => {
     // Updating div html resets the cursor so ToolboxText can't be controlled.
     // Ref is used to set static default value which won't change on props update.
-    const debouncedTextChange =
-      onChange &&
-      useCallback(debounce(onChange, 500, { trailing: true }), [onChange]);
+    const debouncedTextChange = useCallback(
+      debounce(onChange as (text: string) => void, 500, { trailing: true }),
+      //
+      // NOTE - no dependencies
+      // ToolboxText is re-rendering a lot without this - seems unnecessary.
+      [],
+    );
     const onTextChange = useCallback(
       e => {
         if (e.target.innerText.trim() === '') {
@@ -40,7 +44,7 @@ export const ToolboxText = styled<Components['LessonToolboxText']>(
         contentEditable={!!onChange}
         {...props}
         onPaste={onPaste}
-        initialHtml={defaultText}
+        html={text}
         onInput={onTextChange}
       />
     );
@@ -62,5 +66,9 @@ export const ToolboxText = styled<Components['LessonToolboxText']>(
     },
   }),
 );
+
+ToolboxText.defaultProps = {
+  onChange: () => {},
+};
 
 export { ToolboxText as default };

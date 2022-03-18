@@ -19,7 +19,7 @@ const ActivitySidebar: VariationModule['ActivitySidebar'] = ({ step }) => {
   return (
     <LessonPlaygroundCard>
       {step.state.move && <StepMove move={step.state.move} />}
-      <LessonToolboxText defaultText={step.state.description} />
+      <LessonToolboxText text={step.state.description} />
     </LessonPlaygroundCard>
   );
 };

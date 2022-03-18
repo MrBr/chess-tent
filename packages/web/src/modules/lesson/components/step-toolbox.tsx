@@ -154,7 +154,7 @@ const StepToolbox: Components['StepToolbox'] = ({
       {(text || active) && showInput && (
         <LessonToolboxText
           onChange={textChangeHandler}
-          defaultText={text}
+          text={text}
           placeholder="Add comment"
         />
       )}

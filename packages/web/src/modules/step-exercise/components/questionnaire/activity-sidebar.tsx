@@ -68,9 +68,7 @@ const Playground: FunctionComponent<
                 isValid={!!(correct && completed)}
                 checked={!!selectedOptions?.[index]}
                 onChange={() => handleAnswerChange(index)}
-                label={
-                  <Text className="m-0" color="inherit" initialHtml={text} />
-                }
+                label={<Text className="m-0" color="inherit" html={text} />}
               />
             </Col>
           </Row>

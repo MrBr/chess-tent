@@ -7,7 +7,7 @@ const { Text } = ui;
 
 export default styled<
   UIComponent<{
-    initialHtml?: string;
+    html?: string;
     onInput?: (event: React.FormEvent<HTMLHeadingElement>) => void;
   }>
 >(props => {
@@ -16,7 +16,7 @@ export default styled<
       <Text
         {...props}
         contentEditable
-        initialHtml={props.initialHtml || 'Write lesson description'}
+        html={props.html || 'Write lesson description'}
       />
     </div>
   );

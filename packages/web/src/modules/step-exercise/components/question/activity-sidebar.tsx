@@ -1,9 +1,4 @@
-import React, {
-  ComponentProps,
-  FunctionComponent,
-  useCallback,
-  useMemo,
-} from 'react';
+import React, { ComponentProps, FunctionComponent, useCallback } from 'react';
 import { components, ui } from '@application';
 import {
   ExerciseModule,
@@ -40,22 +35,17 @@ const Playground: FunctionComponent<
     completeStep(step);
   }, [completeStep, step]);
 
-  const InitialHtmlText = ({ initialHtml }: { initialHtml?: string }) =>
-    useMemo(() => <Text className="m-0" initialHtml={initialHtml} />, [
-      initialHtml,
-    ]);
-
   return (
     <SegmentActivitySidebar title="Question" {...props}>
       <Headline5 className="mt-2 mb-1">Answer</Headline5>
       {!completed && (
         <LessonToolboxText
-          defaultText={answer}
+          text={answer}
           placeholder="Type here..."
           onChange={handleAnswerChange}
         />
       )}
-      {completed && <InitialHtmlText initialHtml={answer} />}
+      {completed && <Text className="m-0" html={answer} />}
       {!completed && (
         <Button onClick={handleSubmit} size="extra-small" className="mt-2">
           Submit

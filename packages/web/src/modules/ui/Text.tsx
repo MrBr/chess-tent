@@ -1,4 +1,4 @@
-import React, { ComponentType } from 'react';
+import React, { ComponentType, memo } from 'react';
 import styled, { css } from '@chess-tent/styled-props';
 import { TextProps } from '@types';
 import { withHtml } from './hoc';
@@ -74,18 +74,18 @@ const dynamicStyle = (props: TextProps) =>
   `;
 
 const BaseText: ComponentType<TextProps> = withHtml<TextProps>(
-  ({ inline, inherit, initialHtml, as, ...textProps }) => {
+  ({ inline, inherit, html, as, ...textProps }) => {
     const Component = as || (inherit ? 'span' : 'p');
     return <Component {...textProps} />;
   },
 );
 
-const Text = styled(BaseText).css<TextProps>`
+const Text = memo(styled(BaseText).css<TextProps>`
   ${dynamicStyle}
   ${inherit}
   ${color}
   ${size}
-`;
+`);
 
 const headingStyle = styled.css<TextProps>`
   font-family: Inter, sans-serif;

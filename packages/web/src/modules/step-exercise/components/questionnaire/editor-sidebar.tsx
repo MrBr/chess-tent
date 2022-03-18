@@ -57,7 +57,7 @@ const TaskSidebar = (
             </Col>
             <Col className="d-flex align-items-center pl-0">
               <LessonToolboxText
-                defaultText={text}
+                text={text}
                 placeholder="Type option..."
                 onChange={text => updateOption(id, { text })}
               />

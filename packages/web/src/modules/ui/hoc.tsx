@@ -31,13 +31,11 @@ export const withFiles = <P extends FileUploaderProps>(
 
   return (
     <>
-      <File>
-        <File.Input
-          ref={fileInputRef}
-          style={{ display: 'none' }}
-          onChange={handleFilesChange}
-        />
-      </File>
+      <File
+        ref={fileInputRef}
+        style={{ display: 'none' }}
+        onChange={handleFilesChange}
+      />
       <WrappedComponent
         {...(props as P)}
         files={files}

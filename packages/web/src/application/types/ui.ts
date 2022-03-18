@@ -39,13 +39,11 @@ import DropdownToggle from 'react-bootstrap/DropdownToggle';
 import { ErrorMessageProps, Formik } from 'formik';
 import FormCheck from 'react-bootstrap/FormCheck';
 import FormControl from 'react-bootstrap/FormControl';
-import FormFile from 'react-bootstrap/FormFile';
-import Select from 'react-select';
-import { SelectComponentsProps } from 'react-select/base';
+import Select, { Props } from 'react-select';
+import AsyncSelect from 'react-select/async';
 import { FormCheckInputProps } from 'react-bootstrap/FormCheckInput';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { ClassNameProps, ClickProps } from './_helpers';
-import { AsyncSelect } from '../../modules/ui/Select';
 import { HtmlProps } from './hoc';
 
 export type BaseButtonProps = {
@@ -154,11 +152,9 @@ export type UI = {
     Check: UIComponent<
       FormCheckInputProps & { name: string } & FormControlProps
     >;
-    Select: UIComponent<
-      Omit<FormControlProps, 'value'> & {
-        name: string;
-      } & SelectComponentsProps
-    >;
+    Select: <T, M extends boolean>(
+      props: Props<T, M> & { name: string },
+    ) => ReactElement;
   };
   SearchBox: UIComponent<SearchBoxProps>;
   Text: UIComponent<TextProps>;
@@ -235,7 +231,7 @@ export type UI = {
     src: string | undefined;
     size?: 'regular' | 'small' | 'large' | 'extra-small';
   }>;
-  File: typeof FormFile;
+  File: UIComponent<FormControlProps>;
   Label: UIComponent<FormLabelProps>;
   FormGroup: UIComponent<FormGroupProps>;
   Input: ComponentType<InputPropsWithSizeEnhancer>;
@@ -268,10 +264,10 @@ export type UI = {
   Modal: UIComponent<
     ModalProps & { close?: () => void; fullScreen?: boolean }
   > & {
-    Header: BModal['Header'];
-    Body: BModal['Body'];
-    Footer: BModal['Footer'];
-    Dialog: BModal['Dialog'];
+    Header: typeof BModal['Header'];
+    Body: typeof BModal['Body'];
+    Footer: typeof BModal['Footer'];
+    Dialog: typeof BModal['Dialog'];
   };
   ModalBody: typeof ModalBody;
   Confirm: UIComponent<ConfirmProps>;

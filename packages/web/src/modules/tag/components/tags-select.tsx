@@ -2,7 +2,7 @@ import React from 'react';
 import { Tag } from '@chess-tent/models';
 import { TagsSelectProps } from '@types';
 import { ui } from '@application';
-import { ValueType } from 'react-select';
+import { MultiValue } from 'react-select';
 
 import { useTags } from '../hooks';
 
@@ -13,7 +13,7 @@ const TagsSelect = ({ onChange, className, selected }: TagsSelectProps) => {
 
   const changeHandle =
     onChange &&
-    ((tags: ValueType<Tag>) => onChange(tags ? (tags as Tag[]) : []));
+    ((tags: MultiValue<Tag>) => onChange(tags ? (tags as Tag[]) : []));
 
   return (
     <Select

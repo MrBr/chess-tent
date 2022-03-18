@@ -4,7 +4,7 @@ import { ComponentProps, ComponentType } from 'react';
 import { ClickProps, UI } from '@types';
 
 const CardComponent = styled<
-  ComponentType<ComponentProps<RBCard> & ClickProps>
+  ComponentType<ComponentProps<typeof RBCard> & ClickProps>
 >(RBCard)({
   border: 0,
   boxShadow: '0px 4px 8px rgba(0,0,0,0.1)',

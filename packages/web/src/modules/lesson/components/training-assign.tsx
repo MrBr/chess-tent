@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { components, hooks, requests, ui } from '@application';
-import { Lesson, User } from '@chess-tent/models';
 import * as yup from 'yup';
 import lessonThumbUrl from '../images/lesson.svg';
 
@@ -63,7 +62,7 @@ export default ({ close }: { close: () => void }) => {
               name="user"
               placeholder="Select student"
               options={students}
-              formatOptionLabel={(userOption: User) => (
+              formatOptionLabel={userOption => (
                 <>
                   <UserAvatar user={userOption} size="small" />
                   <Text className="ml-2" inline>
@@ -78,7 +77,7 @@ export default ({ close }: { close: () => void }) => {
             <Form.Select
               name="lesson"
               options={response?.data || []}
-              formatOptionLabel={(lesson: Lesson) => (
+              formatOptionLabel={lesson => (
                 <>
                   <Thumbnail src={lessonThumbUrl} />
                   <Text inline>{lesson.state.title}</Text>

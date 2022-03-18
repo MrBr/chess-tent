@@ -31,7 +31,7 @@ const InputComponent = (styled(BForm.Control)(inputSizeEnhancer, {
 }) as unknown) as UI['Input'];
 
 const Check = BForm.Check;
-const File = BForm.File;
+const File = (props: any) => <BForm.Control {...props} type="file" />;
 
 // Form connected components
 const Form: UI['Form'] = props => (
@@ -47,7 +47,7 @@ const Form: UI['Form'] = props => (
 );
 
 const FormSelect: UI['Form']['Select'] = props => {
-  const [field, { error }, { setValue }] = useField(props.name);
+  const [field, { error }, { setValue }] = useField(props.name); // TODO - force "name"
   return (
     <>
       <Select

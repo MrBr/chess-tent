@@ -25,7 +25,7 @@ export type ServiceType =
 
 type CreateServiceArgs<
   T extends readonly any[],
-  TNew = PatchListener
+  TNew = PatchListener,
 > = T extends [infer A]
   ? [A, TNew?]
   : T extends [infer A0, infer A1]
@@ -74,12 +74,14 @@ const createService = <T extends any[], U>(
     if (!isDraft(args[0])) {
       args[0] = createDraft(args[0] as Objectish);
     }
-    const returnValue = service(...((args as unknown) as T));
+    const returnValue = service(...(args as unknown as T));
     // Allowing return value to leave draft mode (return current) provides
     // extra flexibility to recursive services (such as early return).
-    return (isDraft(returnValue)
-      ? finishDraft(args[0], patchListener as PatchListener)
-      : returnValue) as U;
+    return (
+      isDraft(returnValue)
+        ? finishDraft(args[0], patchListener as PatchListener)
+        : returnValue
+    ) as U;
   };
 };
 
@@ -94,24 +96,25 @@ const createService = <T extends any[], U>(
  * The need for such utility probably indicated a poor architecture. Seems like the normalization
  * should take care for this. Updating substate as an independent state would solve the problem.
  */
-const applyNestedPatches = <T extends any[], U>(service: (...args: T) => U) => (
-  ...args: T
-) => <E extends {}>(
-  entity: E,
-  getNestedDraft: (entity: Draft<E>) => {},
-  patchListener?: PatchListener,
-): E => {
-  const meta: { patch?: ReversiblePatch } = {};
-  // @ts-ignore
-  service(...args, (next: Patch[], prev: Patch[]) => {
-    meta.patch = createReversiblePatch(next, prev);
-  });
+const applyNestedPatches =
+  <T extends any[], U>(service: (...args: T) => U) =>
+  (...args: T) =>
+  <E extends {}>(
+    entity: E,
+    getNestedDraft: (entity: Draft<E>) => {},
+    patchListener?: PatchListener,
+  ): E => {
+    const meta: { patch?: ReversiblePatch } = {};
+    // @ts-ignore
+    service(...args, (next: Patch[], prev: Patch[]) => {
+      meta.patch = createReversiblePatch(next, prev);
+    });
 
-  const draft = createDraft(entity);
-  applyPatches(getNestedDraft(draft), meta.patch?.next || []);
+    const draft = createDraft(entity);
+    applyPatches(getNestedDraft(draft), meta.patch?.next || []);
 
-  return finishDraft(draft, patchListener);
-};
+    return finishDraft(draft, patchListener) as E;
+  };
 
 export {
   createService,

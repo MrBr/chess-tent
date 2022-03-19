@@ -1,12 +1,9 @@
 {
   "extends": [
     "react-app",
-    "plugin:prettier/recommended",
-    "plugin:@typescript-eslint/recommended",
-    "prettier",
-    "prettier/@typescript-eslint"
+    "react-app/jest",
+    "prettier"
   ],
-  "parser": "@typescript-eslint/parser",
   "plugins": ["react-hooks"],
   "overrides": [
     {

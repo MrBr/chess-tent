@@ -1,4 +1,4 @@
 # Ignore build directories
-**/dist
-**/build
-**/node_modules
+**/dist/**
+**/build/**
+**/node_modules/**

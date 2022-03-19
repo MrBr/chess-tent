@@ -25,12 +25,7 @@
     "@types/mailgun-js": "^0.22.11",
     "@types/mongodb": "^3.5.17",
     "@types/mongoose": "^5.7.20",
-    "@types/ws": "^7.2.6",
-    "dotenv": "^8.2.0",
-    "nodemon": "^2.0.4",
-    "ts-node": "^8.10.1",
-    "tsconfig-paths": "^3.9.0",
-    "typescript": "^3.9.2"
+    "@types/ws": "^7.2.6"
   },
   "dependencies": {
     "@chess-tent/redux-record": "1.0.0",

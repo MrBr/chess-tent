@@ -8,7 +8,7 @@ const { useApi, useComponentStateSilent, useIsMobile } = hooks;
 const { Container, Row, Col, Headline3, SearchBox } = ui;
 const { Filters } = components;
 
-export default () => {
+const Coaches = () => {
   const { mounted } = useComponentStateSilent();
   const { fetch: fetchCoaches, response } = useApi(requests.users);
 
@@ -73,3 +73,5 @@ export default () => {
     </Container>
   );
 };
+
+export default Coaches;

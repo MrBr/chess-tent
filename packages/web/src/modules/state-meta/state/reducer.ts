@@ -5,7 +5,7 @@ import {
   UpdateMetaStateAction,
 } from './actions';
 
-export default (
+const reducer = (
   state: { [key: string]: any } = {},
   action: UpdateMetaStateAction | DeleteMetaStateAction,
 ) => {
@@ -25,3 +25,5 @@ export default (
       return state;
   }
 };
+
+export default reducer;

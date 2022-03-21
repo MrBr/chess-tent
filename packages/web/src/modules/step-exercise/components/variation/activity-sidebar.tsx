@@ -14,10 +14,8 @@ const Playground: FunctionComponent<
   ComponentProps<ExerciseModule<ExerciseVariationStep>['ActivitySidebar']>
 > = props => {
   const { boardState, step, stepActivityState, setStepActivityState } = props;
-  const {
-    activeMoveIndex,
-    correct,
-  } = stepActivityState as ExerciseVariationActivityState;
+  const { activeMoveIndex, correct } =
+    stepActivityState as ExerciseVariationActivityState;
   const { task } = step.state;
   const moveToPlayIndex = activeMoveIndex || 0;
   const stepToPlayMove = task.moves?.[moveToPlayIndex];

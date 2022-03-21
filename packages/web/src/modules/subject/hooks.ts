@@ -50,6 +50,7 @@ export const useDiffUpdates = (
     ] as Subject;
   }, [store, subject.id, subject.type]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const entityUpdated = useCallback(
     throttle(
       () => {

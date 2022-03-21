@@ -41,7 +41,7 @@ export type State = {
   registerEntityReducer: <
     T extends keyof EntitiesState,
     S,
-    U extends ReduxAction
+    U extends ReduxAction,
   >(
     path: T,
     reducer?: Reducer<S, U>,
@@ -90,7 +90,7 @@ export type State = {
     ) => (state: AppState) => Activity<T>;
     selectNormalizedEntities: <
       T extends string | string[],
-      K extends keyof EntitiesState
+      K extends keyof EntitiesState,
     >(
       entityDescriptor: T,
       type: keyof EntitiesState,

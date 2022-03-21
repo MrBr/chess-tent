@@ -239,7 +239,7 @@ export interface AuthorizedProps {
 }
 
 export type ActivityComponent<T> = ComponentType<
-  T extends Activity<infer U, infer K> ? { activity: T } : never
+  T extends Activity<any> ? { activity: T } : never
 >;
 
 export interface AnalysisSystemProps {

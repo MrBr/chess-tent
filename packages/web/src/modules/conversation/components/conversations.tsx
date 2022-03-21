@@ -65,7 +65,7 @@ const ConversationRow = styled<
   padding: '0.75em 1.5em',
 });
 
-export default () => {
+const Conversations = () => {
   const dispatch = useDispatchBatched();
   const { value: activeUser } = useActiveUserRecord();
   const {
@@ -136,3 +136,5 @@ export default () => {
     </Container>
   );
 };
+
+export default Conversations;

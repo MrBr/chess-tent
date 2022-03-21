@@ -11,12 +11,8 @@ import {
 import { ActivityStepMode, ChessboardProps, Steps } from '@types';
 
 const { useActiveUserRecord } = hooks;
-const {
-  Chessboard,
-  ChessboardContextProvider,
-  StepRenderer,
-  AnalysisBoard,
-} = components;
+const { Chessboard, ChessboardContextProvider, StepRenderer, AnalysisBoard } =
+  components;
 
 const noop = () => {};
 const noopNoop = () => () => {};

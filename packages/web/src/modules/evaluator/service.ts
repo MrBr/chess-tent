@@ -7,13 +7,8 @@ import {
 } from '@types';
 import { services } from '@application';
 
-const {
-  uciToSan,
-  extendRole,
-  createPiece,
-  createNotableMove,
-  Chess,
-} = services;
+const { uciToSan, extendRole, createPiece, createNotableMove, Chess } =
+  services;
 
 export const getBestMove = ({ variation }: Evaluation): MoveShort =>
   uciToSan(variation[0]);

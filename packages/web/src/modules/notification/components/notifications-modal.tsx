@@ -7,7 +7,7 @@ const { Headline3, ModalBody, Modal, Dropdown, LoadMore } = ui;
 const { NotificationRender } = components;
 const { useActiveUserNotifications } = hooks;
 
-export default ({ close }: { close: () => void }) => {
+const NotificationModal = ({ close }: { close: () => void }) => {
   const { value: notifications } = useActiveUserNotifications();
   const [loadMoreNotifications, loading, noMore] = useLoadMoreNotifications();
 
@@ -38,3 +38,5 @@ export default ({ close }: { close: () => void }) => {
     </Modal>
   );
 };
+
+export default NotificationModal;

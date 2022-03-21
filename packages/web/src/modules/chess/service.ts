@@ -130,33 +130,41 @@ export const isLegalMove: Services['isLegalMove'] = (
   return !!reversedColorGame.move(shortMove);
 };
 
-export const createNotableMovesFromGame: Services['createNotableMovesFromGame'] = game => {
-  const history = game.history({ verbose: true });
-  const headers = game.header();
-  const gameReplay = new Chess(headers.FEN);
+export const createNotableMovesFromGame: Services['createNotableMovesFromGame'] =
+  game => {
+    const history = game.history({ verbose: true });
+    const headers = game.header();
+    const gameReplay = new Chess(headers.FEN);
 
-  const moves = history.map((chessMove, moveIndex) => {
-    const { from, to, promotion } = chessMove;
-    if (!gameReplay.move(chessMove)) {
-      throw new Error('Invalid move');
-    }
+    const moves = history.map((chessMove, moveIndex) => {
+      const { from, to, promotion } = chessMove;
+      if (!gameReplay.move(chessMove)) {
+        throw new Error('Invalid move');
+      }
 
-    const position = gameReplay.fen();
-    const promoted = promotion
-      ? transformPieceTypeToRole(promotion)
-      : undefined;
-    const captured = !!chessMove.captured;
-    const color = transformColorKey(chessMove.color);
-    const role = transformPieceTypeToRole(chessMove.piece);
-    const piece = createPiece(role, color, !!promotion);
-    const move: Move = [from, to];
-    const index = Math.floor(moveIndex / 2) + 1;
+      const position = gameReplay.fen();
+      const promoted = promotion
+        ? transformPieceTypeToRole(promotion)
+        : undefined;
+      const captured = !!chessMove.captured;
+      const color = transformColorKey(chessMove.color);
+      const role = transformPieceTypeToRole(chessMove.piece);
+      const piece = createPiece(role, color, !!promotion);
+      const move: Move = [from, to];
+      const index = Math.floor(moveIndex / 2) + 1;
 
-    return createNotableMove(position, move, index, piece, captured, promoted);
-  });
+      return createNotableMove(
+        position,
+        move,
+        index,
+        piece,
+        captured,
+        promoted,
+      );
+    });
 
-  return moves;
-};
+    return moves;
+  };
 
 export const getComment: Services['getComment'] = (comments, fen) =>
   comments

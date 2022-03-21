@@ -35,51 +35,53 @@ interface SidebarSegments<T extends ExerciseStep<any, any>> {
   hint: ComponentType<SegmentProps<T, 'hint'>>;
 }
 
-export const withSegmentBoards = <T extends ExerciseStep<any, any>>(
-  Segments: BoardSegments<T>,
-) => (props: SegmentBoardProps<T, ExerciseSegmentKeys>) => {
-  const { activeSegment } = props.step.state;
-  const Segment = Segments[(activeSegment || 'task') as ExerciseSegmentKeys];
-  return <Segment {...props} />;
-};
+export const withSegmentBoards =
+  <T extends ExerciseStep<any, any>>(Segments: BoardSegments<T>) =>
+  (props: SegmentBoardProps<T, ExerciseSegmentKeys>) => {
+    const { activeSegment } = props.step.state;
+    const Segment = Segments[(activeSegment || 'task') as ExerciseSegmentKeys];
+    return <Segment {...props} />;
+  };
 
-export const withSegmentSidebars = <T extends ExerciseStep<any, any>>(
-  Segments: SidebarSegments<T>,
-): ComponentType<ExerciseToolboxProps> => props => {
-  const sidebar = Object.keys(Segments).map(segmentKey => {
-    const segment = props.step.state[segmentKey as ExerciseSegmentKeys];
-    const updateSegment = useUpdateSegment(
-      props.step,
-      props.updateStep,
-      segmentKey as ExerciseSegmentKeys,
-    );
-    const Segment = Segments[segmentKey as ExerciseSegmentKeys];
-    const segmentProps = {
-      step: props.step,
-      updateStep: props.updateStep,
-      segment,
-      updateSegment,
-    } as ComponentProps<typeof Segment>;
+export const withSegmentSidebars =
+  <T extends ExerciseStep<any, any>>(
+    Segments: SidebarSegments<T>,
+  ): ComponentType<ExerciseToolboxProps> =>
+  props => {
+    const sidebar = Object.keys(Segments).map(segmentKey => {
+      const segment = props.step.state[segmentKey as ExerciseSegmentKeys];
+      const updateSegment = useUpdateSegment(
+        props.step,
+        props.updateStep,
+        segmentKey as ExerciseSegmentKeys,
+      );
+      const Segment = Segments[segmentKey as ExerciseSegmentKeys];
+      const segmentProps = {
+        step: props.step,
+        updateStep: props.updateStep,
+        segment,
+        updateSegment,
+      } as ComponentProps<typeof Segment>;
 
-    return (
-      <OverlayTrigger
-        placement="left"
-        trigger="focus"
-        popperConfig={sidebarSegmentTooltipModifiers}
-        overlay={
-          <Tooltip
-            className="text-capitalize"
-            id={`${props.step.id}-${segmentKey}`}
-          >
-            {segmentKey}
-          </Tooltip>
-        }
-        key={segmentKey}
-      >
-        <Segment {...segmentProps} />
-      </OverlayTrigger>
-    );
-  });
+      return (
+        <OverlayTrigger
+          placement="left"
+          trigger="focus"
+          popperConfig={sidebarSegmentTooltipModifiers}
+          overlay={
+            <Tooltip
+              className="text-capitalize"
+              id={`${props.step.id}-${segmentKey}`}
+            >
+              {segmentKey}
+            </Tooltip>
+          }
+          key={segmentKey}
+        >
+          <Segment {...segmentProps} />
+        </OverlayTrigger>
+      );
+    });
 
-  return <>{sidebar}</>;
-};
+    return <>{sidebar}</>;
+  };

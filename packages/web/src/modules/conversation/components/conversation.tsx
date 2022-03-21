@@ -52,9 +52,8 @@ export default styled(
     close: () => void;
   }) => {
     const dispatch = useDispatchBatched();
-    const [loadMoreMessages, loading, noMore] = useLoadMoreMessages(
-      conversation,
-    );
+    const [loadMoreMessages, loading, noMore] =
+      useLoadMoreMessages(conversation);
     const { messages } = conversation;
 
     useEffect(() => {

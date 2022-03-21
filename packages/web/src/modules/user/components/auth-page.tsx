@@ -18,7 +18,7 @@ const { className } = css`
   }
 `;
 
-export default ({ children }: { children: ReactNode }) => {
+const PageAuth = ({ children }: { children: ReactNode }) => {
   const { value: user } = hooks.useActiveUserRecord(null);
 
   if (user) {
@@ -47,3 +47,5 @@ export default ({ children }: { children: ReactNode }) => {
     </Page>
   );
 };
+
+export default PageAuth;

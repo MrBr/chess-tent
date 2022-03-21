@@ -6,7 +6,7 @@ import LessonThumbnail from './thumbnail';
 const { Row, Col, Headline6, Text } = ui;
 const { useHistory } = hooks;
 
-export default (props: { training: LessonActivity }) => {
+const TrainingCard = (props: { training: LessonActivity }) => {
   const lesson = props.training.subject;
   const history = useHistory();
   return (
@@ -27,3 +27,5 @@ export default (props: { training: LessonActivity }) => {
     </Row>
   );
 };
+
+export default TrainingCard;

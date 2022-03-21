@@ -5,7 +5,7 @@ import { canEditLesson, isLessonPublicDocument } from '@chess-tent/models';
 const { useParams, useActiveUserRecord, useLesson } = hooks;
 const { Editor, Redirect } = components;
 
-export default () => {
+const PageLesson = () => {
   const { value: user } = useActiveUserRecord();
   const { lessonId } = useParams();
   const { value: lesson } = useLesson(lessonId);
@@ -20,3 +20,5 @@ export default () => {
 
   return <Editor lesson={lesson} save={requests.lessonUpdates} />;
 };
+
+export default PageLesson;

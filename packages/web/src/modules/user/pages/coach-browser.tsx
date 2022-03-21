@@ -5,7 +5,7 @@ import Coaches from '../components/coaches';
 const { Container } = ui;
 const { Page } = components;
 
-export default () => {
+const PageCoachBrowser = () => {
   return (
     <Page>
       <Container fluid>
@@ -14,3 +14,5 @@ export default () => {
     </Page>
   );
 };
+
+export default PageCoachBrowser;

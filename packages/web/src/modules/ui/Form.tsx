@@ -18,7 +18,7 @@ const FormGroup = styled<UI['FormGroup']>(BFormGroup)({
 });
 const Label = BForm.Label;
 
-const InputComponent = (styled(BForm.Control)(inputSizeEnhancer, {
+const InputComponent = styled(BForm.Control)(inputSizeEnhancer, {
   border: 'none',
   '&:empty': {
     background: '#F3F4F5',
@@ -28,7 +28,7 @@ const InputComponent = (styled(BForm.Control)(inputSizeEnhancer, {
     color: '#2F3849',
     boxShadow: 'none',
   },
-}) as unknown) as UI['Input'];
+}) as unknown as UI['Input'];
 
 const Check = BForm.Check;
 const File = (props: any) => <BForm.Control {...props} type="file" />;

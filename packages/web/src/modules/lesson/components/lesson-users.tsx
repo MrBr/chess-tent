@@ -13,11 +13,19 @@ const searchUsers = debounce((name, callback) => {
   });
 }, 500);
 
-export default ({ close, lesson }: { close: () => void; lesson: Lesson }) => {
+const LessonUsers = ({
+  close,
+  lesson,
+}: {
+  close: () => void;
+  lesson: Lesson;
+}) => {
   const users = lesson.users || [];
-  const { fetch: saveLesson, response: assignResponse, loading } = useApi(
-    requests.lessonPatch,
-  );
+  const {
+    fetch: saveLesson,
+    response: assignResponse,
+    loading,
+  } = useApi(requests.lessonPatch);
 
   const onUsersChange = useCallback(
     selectOptions => {
@@ -58,3 +66,5 @@ export default ({ close, lesson }: { close: () => void; lesson: Lesson }) => {
     </Modal>
   );
 };
+
+export default LessonUsers;

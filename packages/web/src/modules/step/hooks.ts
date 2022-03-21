@@ -27,16 +27,15 @@ const cloneSteps = (step: any): Step => {
 export const useCopyStep: Hooks['useCopyStep'] = () => {
   const [step, copy, remove] = useMeta<Step | undefined>('copiedStep');
 
-  const paste = useCallback(() => (step ? cloneSteps(step) : null), [
-    step,
-  ]) as () => Step | null;
+  const paste = useCallback(
+    () => (step ? cloneSteps(step) : null),
+    [step],
+  ) as () => Step | null;
 
   const hasCopy = !!step;
 
-  return useMemo(() => [hasCopy, copy, paste, remove], [
-    copy,
-    paste,
-    remove,
-    hasCopy,
-  ]);
+  return useMemo(
+    () => [hasCopy, copy, paste, remove],
+    [copy, paste, remove, hasCopy],
+  );
 };

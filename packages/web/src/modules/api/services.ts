@@ -1,25 +1,27 @@
 import { services } from '@application';
 import { ApiMethods, Request, API, GenericArguments } from '@types';
 
-export const createRequest = <T, K>(
-  method: ApiMethods,
-  urlOrCustomizer:
-    | string
-    | ((...args: GenericArguments<T>) => { url: string; data?: any }),
-) => (...args: GenericArguments<T>): Promise<K> => {
-  let url;
-  let data;
-  if (typeof urlOrCustomizer === 'function') {
-    const params = urlOrCustomizer(...args);
-    url = params.url;
-    data = params.data;
-  } else {
-    url = urlOrCustomizer;
-    data = args.length > 0 ? args[0] : undefined;
-  }
+export const createRequest =
+  <T, K>(
+    method: ApiMethods,
+    urlOrCustomizer:
+      | string
+      | ((...args: GenericArguments<T>) => { url: string; data?: any }),
+  ) =>
+  (...args: GenericArguments<T>): Promise<K> => {
+    let url;
+    let data;
+    if (typeof urlOrCustomizer === 'function') {
+      const params = urlOrCustomizer(...args);
+      url = params.url;
+      data = params.data;
+    } else {
+      url = urlOrCustomizer;
+      data = args.length > 0 ? args[0] : undefined;
+    }
 
-  return services.api.makeRequest<T, K>({ url, method, data });
-};
+    return services.api.makeRequest<T, K>({ url, method, data });
+  };
 
 export class Api implements API {
   basePath: string;

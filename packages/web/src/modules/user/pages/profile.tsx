@@ -4,18 +4,16 @@ import { User } from '@chess-tent/models';
 
 const { UserAvatar, Page, MentorshipButton } = components;
 const { useHistory } = hooks;
-const {
-  Col,
-  Row,
-  Headline3,
-  Headline4,
-  Text,
-  Absolute,
-  Button,
-  Container,
-} = ui;
+const { Col, Row, Headline3, Headline4, Text, Absolute, Button, Container } =
+  ui;
 
-export default ({ user, editable }: { user: User; editable?: boolean }) => {
+const PageProfile = ({
+  user,
+  editable,
+}: {
+  user: User;
+  editable?: boolean;
+}) => {
   const history = useHistory();
   return (
     <Page>
@@ -84,3 +82,5 @@ export default ({ user, editable }: { user: User; editable?: boolean }) => {
     </Page>
   );
 };
+
+export default PageProfile;

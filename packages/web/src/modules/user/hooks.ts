@@ -10,7 +10,7 @@ export const useUser = (userId: User['id']) => {
   return useSelector(userSelector(userId));
 };
 
-export const useActiveUserRecord: Hooks['useActiveUserRecord'] = <T>(
+export const useActiveUserRecord: Hooks['useActiveUserRecord'] = (
   ...args: any[]
 ) => {
   return hooks.useRecordSafe(

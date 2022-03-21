@@ -9,9 +9,10 @@ const { Link, MentorshipAction, Page, UserAvatar, MessageButton } = components;
 const Students = () => {
   const { value: user } = useActiveUserRecord();
   const { value: students } = useStudents(user);
-  const result = useMemo(() => groupBy(students, student => student.approved), [
-    students,
-  ]);
+  const result = useMemo(
+    () => groupBy(students, student => student.approved),
+    [students],
+  );
 
   return (
     <Page>

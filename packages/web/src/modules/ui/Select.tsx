@@ -19,12 +19,12 @@ const selectStyle = {
     display: 'none',
   },
 };
-const Select = (styled(RSelect)(selectStyle) as unknown) as typeof RSelect & {
+const Select = styled(RSelect)(selectStyle) as unknown as typeof RSelect & {
   defaultProps: {};
 };
-const AsyncSelect = (styled(RSAsync)(
+const AsyncSelect = styled(RSAsync)(
   selectStyle,
-) as unknown) as typeof RSelect & { defaultProps: {} };
+) as unknown as typeof RSelect & { defaultProps: {} };
 
 Select.defaultProps = {
   ...Select.defaultProps,

@@ -26,9 +26,8 @@ const Playground: FunctionComponent<
 > = props => {
   const { step, stepActivityState, setStepActivityState } = props;
   const { position, moves: exerciseMoves } = step.state.task;
-  const {
-    moves: activityMoves,
-  } = stepActivityState as ExerciseActivityArrangePiecesState;
+  const { moves: activityMoves } =
+    stepActivityState as ExerciseActivityArrangePiecesState;
   const activePosition = activityMoves
     ? activityMoves[activityMoves.length - 1].position
     : position;

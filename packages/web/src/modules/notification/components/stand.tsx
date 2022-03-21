@@ -4,21 +4,16 @@ import { components, hooks, ui, requests, state } from '@application';
 
 const { Icon, Dropdown, Absolute, Dot } = ui;
 const { NotificationRender, NotificationsModal } = components;
-const {
-  useActiveUserNotifications,
-  useApi,
-  useDispatch,
-  usePromptModal,
-} = hooks;
+const { useActiveUserNotifications, useApi, useDispatch, usePromptModal } =
+  hooks;
 
 const { actions } = state;
 
 const NOTIFICATIONS_LIMIT = 5;
 
-export default () => {
-  const { value: notifications } = useActiveUserNotifications(
-    NOTIFICATIONS_LIMIT,
-  );
+const Stand = () => {
+  const { value: notifications } =
+    useActiveUserNotifications(NOTIFICATIONS_LIMIT);
   const { fetch: updateNotifications } = useApi(requests.updateNotifications);
   const dispatch = useDispatch();
   const promptModal = usePromptModal();
@@ -81,3 +76,5 @@ export default () => {
     </Dropdown>
   );
 };
+
+export default Stand;

@@ -20,9 +20,8 @@ const Playground: FunctionComponent<
     completeStep,
     boardState,
   } = props;
-  const {
-    selectedOptions,
-  } = stepActivityState as ExerciseQuestionnaireActivityState;
+  const { selectedOptions } =
+    stepActivityState as ExerciseQuestionnaireActivityState;
   const {
     task: { options },
   } = step.state;

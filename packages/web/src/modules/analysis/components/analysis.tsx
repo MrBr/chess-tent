@@ -22,7 +22,7 @@ import { components, services } from '@application';
 const { StepToolbox } = components;
 
 export default class AnalysisBase<
-  T extends AnalysisSystemProps
+  T extends AnalysisSystemProps,
 > extends React.Component<T> {
   updateStep = (step: Step) => {
     const { updateAnalysis, analysis } = this.props;
@@ -31,6 +31,9 @@ export default class AnalysisBase<
   removeStep = (step: Step) => {
     const { updateAnalysis, analysis } = this.props;
     const prevStep = getPreviousStep(analysis, step);
+    if (!prevStep) {
+      return;
+    }
     updateAnalysis(removeStep)(analysis, step, true);
     updateAnalysis(updateSubjectState)(analysis as Analysis<any>, {
       activeStepId: prevStep.id,
@@ -47,12 +50,8 @@ export default class AnalysisBase<
     captured?: boolean,
     promoted?: PieceRole,
   ) => {
-    const {
-      analysis,
-      updateAnalysis,
-      initialOrientation,
-      initialPosition,
-    } = this.props;
+    const { analysis, updateAnalysis, initialOrientation, initialPosition } =
+      this.props;
     const notableMove =
       position && move && piece
         ? services.createNotableMove(

@@ -7,7 +7,7 @@ const { Page, Coaches, LessonBrowser, MyTrainings } = components;
 const { useLessons, useUserTrainings } = hooks;
 const { Row, Col } = ui;
 
-export default ({ user }: { user: User }) => {
+const DashboardStudent = ({ user }: { user: User }) => {
   const { value: trainings } = useUserTrainings(user);
 
   const [lessonsFilter, setLessonsFilter] = useState<LessonsRequest>({
@@ -47,3 +47,5 @@ export default ({ user }: { user: User }) => {
     </Page>
   );
 };
+
+export default DashboardStudent;

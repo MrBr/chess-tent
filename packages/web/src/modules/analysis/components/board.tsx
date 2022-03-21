@@ -10,12 +10,8 @@ const updateChapter = () => {}; // NOOP
 
 class AnalysisBoard extends Analysis<AnalysisBoardProps> {
   render() {
-    const {
-      Chessboard,
-      analysis,
-      initialPosition,
-      initialOrientation,
-    } = this.props;
+    const { Chessboard, analysis, initialPosition, initialOrientation } =
+      this.props;
     const step = getAnalysisActiveStep(analysis);
 
     if (!step) {

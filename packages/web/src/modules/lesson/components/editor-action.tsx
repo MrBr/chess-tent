@@ -3,7 +3,7 @@ import { ui } from '@application';
 
 const { Dropdown, OverlayTrigger, Tooltip } = ui;
 
-export default ({
+const EditorAction = ({
   children,
   tooltip,
   id,
@@ -27,3 +27,5 @@ export default ({
     </OverlayTrigger>
   );
 };
+
+export default EditorAction;

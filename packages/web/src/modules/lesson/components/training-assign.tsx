@@ -22,7 +22,7 @@ const TrainingSchema = yup.object().shape({
   lesson: yup.string().required(),
 });
 
-export default ({ close }: { close: () => void }) => {
+const TrainingAssign = ({ close }: { close: () => void }) => {
   const { value: user } = useActiveUserRecord();
   const { value: mentorship } = useStudents(user);
   const {
@@ -31,9 +31,10 @@ export default ({ close }: { close: () => void }) => {
   } = useUserTrainings(user);
   const { fetch: fetchUserLessons, response } = useApi(requests.myLessons);
 
-  const students = useMemo(() => mentorship?.map(({ student }) => student), [
-    mentorship,
-  ]);
+  const students = useMemo(
+    () => mentorship?.map(({ student }) => student),
+    [mentorship],
+  );
 
   const assignTraining = useCallback(
     (data, helpers) => {
@@ -96,3 +97,5 @@ export default ({ close }: { close: () => void }) => {
     </Modal>
   );
 };
+
+export default TrainingAssign;

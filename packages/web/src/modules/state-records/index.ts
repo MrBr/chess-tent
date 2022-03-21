@@ -27,6 +27,7 @@ application.records.withRecordBase = withRecordBase;
 application.records.withRecordCollection = withRecordCollection;
 application.records.withRecordApiLoad = withRecordApiLoad;
 application.records.withRecordDenormalized = withRecordDenormalized;
-application.records.withRecordDenormalizedCollection = withRecordDenormalizedCollection;
+application.records.withRecordDenormalizedCollection =
+  withRecordDenormalizedCollection;
 application.records.withRecordMethod = withRecordMethod;
 application.state.registerReducer('records', records);

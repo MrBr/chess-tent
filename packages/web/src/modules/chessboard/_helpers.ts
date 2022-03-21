@@ -49,15 +49,17 @@ export function unfreeze<T>(value: T): T {
   if (isNil(value)) {
     return value;
   }
-  const newValue = (Array.isArray(value)
-    ? value.map(unfreeze)
-    : typeof value === 'object'
-    ? Object.keys(value).reduce((result, key) => {
-        // @ts-ignore
-        result[key] = unfreeze(value[key]);
-        return result;
-      }, {})
-    : value) as T;
+  const newValue = (
+    Array.isArray(value)
+      ? value.map(unfreeze)
+      : typeof value === 'object'
+      ? Object.keys(value).reduce((result, key) => {
+          // @ts-ignore
+          result[key] = unfreeze(value[key]);
+          return result;
+        }, {})
+      : value
+  ) as T;
   return newValue;
 }
 

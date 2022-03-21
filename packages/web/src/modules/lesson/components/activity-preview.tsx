@@ -61,9 +61,10 @@ const Preview = ({ lesson, chapter, step }: PreviewProps) => {
   }, [activityStepState, activity, activeStep, activityBoardState]);
 
   const updateActivity = useCallback(
-    service => (...args: Parameters<typeof service>) => {
-      updatePreviewActivity(service(...args));
-    },
+    service =>
+      (...args: Parameters<typeof service>) => {
+        updatePreviewActivity(service(...args));
+      },
     [updatePreviewActivity],
   );
 

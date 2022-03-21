@@ -26,7 +26,7 @@ export const updateMetaState = <T>(
   },
 });
 
-export const deleteMetaState = <T>(key: string): DeleteMetaStateAction => ({
+export const deleteMetaState = (key: string): DeleteMetaStateAction => ({
   type: DELETE_META_STATE,
   payload: undefined,
   meta: {

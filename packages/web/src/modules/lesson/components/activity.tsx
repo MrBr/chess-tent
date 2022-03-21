@@ -94,17 +94,17 @@ export class ActivityRenderer extends React.Component<
     updateActivity(updateActivityStepState)(activity, boardState, step, state);
   };
 
-  updateStepActivityAnalysis = <T extends any[], U>(
-    service: (...args: T) => U,
-  ) => (...args: T) => {
-    const { updateActivity, activity, step, boardState } = this.props;
-    updateActivity(applyNestedPatches(service)(...args))(
-      activity,
-      draft =>
-        getLessonActivityBoardState(draft, boardState.id)[step.id].analysis,
-    );
-    !this.isAnalysing() && this.updateStepMode(ActivityStepMode.ANALYSING);
-  };
+  updateStepActivityAnalysis =
+    <T extends any[], U>(service: (...args: T) => U) =>
+    (...args: T) => {
+      const { updateActivity, activity, step, boardState } = this.props;
+      updateActivity(applyNestedPatches(service)(...args))(
+        activity,
+        draft =>
+          getLessonActivityBoardState(draft, boardState.id)[step.id].analysis,
+      );
+      !this.isAnalysing() && this.updateStepMode(ActivityStepMode.ANALYSING);
+    };
 
   startAnalysingPosition = (
     position: FEN,

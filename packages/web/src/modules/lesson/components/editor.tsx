@@ -663,10 +663,10 @@ const Editor: Components['Editor'] = ({ lesson, save, onStatusChange }) => {
   const activeStepId =
     new URLSearchParams(location.search).get('activeStep') ||
     activeChapter.state.steps[0].id;
-  const activeStep = useMemo(() => getChildStep(activeChapter, activeStepId), [
-    activeChapter,
-    activeStepId,
-  ]) as Steps;
+  const activeStep = useMemo(
+    () => getChildStep(activeChapter, activeStepId),
+    [activeChapter, activeStepId],
+  ) as Steps;
 
   useEffect(() => {
     onStatusChange && onStatusChange(lessonStatus);

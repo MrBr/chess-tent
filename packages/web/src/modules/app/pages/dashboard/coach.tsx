@@ -6,7 +6,7 @@ import { LessonsRequest } from '@chess-tent/types';
 const { Page, LessonBrowser, MyTrainings } = components;
 const { useMyLessons, useUserTrainings } = hooks;
 
-export default ({ user }: { user: User }) => {
+const DashboardCoach = ({ user }: { user: User }) => {
   const { value: trainings } = useUserTrainings(user);
   const [lessonsFilter, setLessonsFilter] = useState<LessonsRequest>({});
   const { value: lessons } = useMyLessons(
@@ -37,3 +37,5 @@ export default ({ user }: { user: User }) => {
     </Page>
   );
 };
+
+export default DashboardCoach;

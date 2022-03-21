@@ -10,6 +10,7 @@ export const ToolboxText = styled<Components['LessonToolboxText']>(
   ({ text, onChange, ...props }) => {
     // Updating div html resets the cursor so ToolboxText can't be controlled.
     // Ref is used to set static default value which won't change on props update.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const debouncedTextChange = useCallback(
       debounce(onChange as (text: string) => void, 500, { trailing: true }),
       //
@@ -33,7 +34,7 @@ export const ToolboxText = styled<Components['LessonToolboxText']>(
 
       const text = (
         event.clipboardData ||
-        ((window as unknown) as { clipboardData: Clipboard }).clipboardData
+        (window as unknown as { clipboardData: Clipboard }).clipboardData
       ).getData('text');
 
       document.execCommand('insertHTML', false, text);

@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default (props: { active: boolean }) => (
+const Comment = (props: { active: boolean }) => (
   <svg
     width="14"
     height="14"
@@ -14,3 +14,5 @@ export default (props: { active: boolean }) => (
     />
   </svg>
 );
+
+export default Comment;

@@ -8,17 +8,15 @@ import {
   isChapter,
   isStep,
   replaceStep,
+  StepRoot,
 } from '@chess-tent/models';
 import { over } from 'lodash';
 
 const { Container, Button, Icon, Modal, ModalBody, Headline4 } = ui;
 const { LessonToolboxText } = components;
 const { useCopyStep, usePromptModal } = hooks;
-const {
-  getStepPosition,
-  addStepNextToTheComments,
-  getStepBoardOrientation,
-} = services;
+const { getStepPosition, addStepNextToTheComments, getStepBoardOrientation } =
+  services;
 
 function pickFunction(...funcs: any[]) {
   return funcs.find(f => typeof f === 'function');
@@ -85,7 +83,7 @@ const StepToolbox: Components['StepToolbox'] = ({
       return;
     }
     const replace = () => {
-      const parent = getParentStep(stepRoot, step);
+      const parent = getParentStep(stepRoot, step) as StepRoot;
       const updatedParent = replaceStep(parent, step, copiedStep);
       if (isChapter(updatedParent)) {
         updateChapter(updatedParent);

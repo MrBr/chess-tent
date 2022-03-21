@@ -5,7 +5,7 @@ const { Dropdown, Text } = ui;
 const { useHistory, useActiveUserRecord, useApi } = hooks;
 const { UserAvatar } = components;
 
-export default () => {
+const UserSettings = () => {
   const history = useHistory();
   const { value: user, reset: clear } = useActiveUserRecord();
   const { fetch: logout, response: logoutResponse } = useApi(requests.logout);
@@ -44,3 +44,5 @@ export default () => {
     </Dropdown>
   );
 };
+
+export default UserSettings;

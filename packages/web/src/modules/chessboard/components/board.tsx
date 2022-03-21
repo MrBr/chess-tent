@@ -63,7 +63,8 @@ window.addEventListener('resize', () =>
 
 class Chessboard
   extends Component<ChessboardProps>
-  implements ChessboardInterface {
+  implements ChessboardInterface
+{
   boardHost: RefObject<HTMLDivElement> = React.createRef();
   api: Api = new Proxy({}, {}) as Api;
   chess: ChessInstance;

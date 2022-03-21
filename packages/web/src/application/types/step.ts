@@ -112,7 +112,7 @@ export type StepModule<
   STEP extends AppStep,
   STEP_TYPE extends StepType,
   REQUIRED_STATE extends {} = {},
-  ACTIVITY_STATE extends ActivityStepStateBase = ActivityStepStateBase
+  ACTIVITY_STATE extends ActivityStepStateBase = ActivityStepStateBase,
 > = {
   EditorBoard: StepComponent<STEP, EditorProps & StepBoardComponentProps>;
   EditorSidebar: StepComponent<STEP, EditorSidebarProps>;

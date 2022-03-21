@@ -9,9 +9,12 @@ const { Button } = ui;
 export default (({ user, className }) => {
   const { value: me } = useActiveUserRecord();
   const { value: coaches, update: setCoaches } = useCoaches(me);
-  const { fetch: requestMentorship, response, loading, reset } = useApi(
-    requests.mentorshipRequest,
-  );
+  const {
+    fetch: requestMentorship,
+    response,
+    loading,
+    reset,
+  } = useApi(requests.mentorshipRequest);
   const requestMentorshipHandle = useCallback(() => {
     requestMentorship({ coachId: user.id, studentId: me.id });
   }, [requestMentorship, user.id, me.id]);
@@ -21,7 +24,7 @@ export default (({ user, className }) => {
       return;
     }
     reset();
-    setCoaches([...(coaches || []), (response.data as unknown) as Mentorship]);
+    setCoaches([...(coaches || []), response.data as unknown as Mentorship]);
   }, [coaches, reset, response, setCoaches]);
 
   if (!user.coach || user.id === me.id) {

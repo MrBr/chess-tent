@@ -3,7 +3,7 @@ import { components } from '@application';
 
 const { Provider, Router, StateProvider, MobileRoot } = components;
 
-export default () => (
+const App = () => (
   <>
     <MobileRoot />
     <StateProvider>
@@ -13,3 +13,5 @@ export default () => (
     </StateProvider>
   </>
 );
+
+export default App;

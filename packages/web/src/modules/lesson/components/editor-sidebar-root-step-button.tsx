@@ -12,7 +12,7 @@ export interface RootStepButtonProps {
   className?: string;
 }
 
-export default ({
+const EditorSidebarRootStepButton = ({
   updateChapter,
   chapter,
   className,
@@ -44,3 +44,5 @@ export default ({
     </Dropdown>
   );
 };
+
+export default EditorSidebarRootStepButton;

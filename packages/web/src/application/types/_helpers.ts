@@ -1,6 +1,6 @@
 import { Component, FormEvent, ReactEventHandler } from 'react';
 
-export type ClassComponent<T> = T extends Component<infer P, infer S, infer C>
+export type ClassComponent<T> = T extends Component<infer P, unknown, infer C>
   ? { new (props: P, context?: C): T }
   : never;
 

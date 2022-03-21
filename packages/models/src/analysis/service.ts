@@ -12,7 +12,7 @@ const getAnalysisActiveStep = <T extends Analysis<any>>(
 };
 
 const updateAnalysisActiveStepId = createService(
-  <T extends Analysis<any>>(draft: T, stepId: Step['id']): T => {
+  <T extends Analysis<any>>(draft: T, stepId: Step['id'] | undefined): T => {
     draft.state.activeStepId = stepId;
     return draft;
   },

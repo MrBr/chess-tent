@@ -17,9 +17,7 @@ import {
   createStep as coreCreateStep,
   getParentStep,
   isStep,
-  Step,
   StepRoot,
-  StepType,
 } from '@chess-tent/models';
 import { constants } from '@application';
 import { stepType } from './model';
@@ -46,27 +44,68 @@ export const createExerciseStepState = <T extends ExerciseSteps>(
   },
 });
 
-export const createStep = (
+function createStep(
   id: string,
   initialState: Parameters<
     ExerciseModule<ExerciseVariationStep>['createStep']
   >[1],
-) =>
-  coreCreateStep<ExerciseVariationStep>(
+): ExerciseVariationStep;
+function createStep(
+  id: string,
+  initialState: Parameters<
+    ExerciseModule<ExerciseArrangePiecesStep>['createStep']
+  >[1],
+): ExerciseArrangePiecesStep;
+function createStep(
+  id: string,
+  initialState: Parameters<
+    ExerciseModule<ExerciseQuestionStep>['createStep']
+  >[1],
+): ExerciseQuestionStep;
+function createStep(
+  id: string,
+  initialState: Parameters<
+    ExerciseModule<ExerciseQuestionnaireStep>['createStep']
+  >[1],
+): ExerciseQuestionnaireStep;
+function createStep(
+  id: string,
+  initialState: Parameters<
+    ExerciseModule<ExerciseSelectSquaresAndPiecesStep>['createStep']
+  >[1],
+): ExerciseSelectSquaresAndPiecesStep;
+function createStep(
+  id: string,
+  initialState: Parameters<ExerciseModule['createStep']>[1],
+): ExerciseVariationStep;
+function createStep(id: any, initialState: any): any {
+  if (!initialState.exerciseType) {
+    return coreCreateStep<ExerciseVariationStep>(
+      id,
+      stepType,
+      createExerciseStepState<ExerciseVariationStep>('variation', {
+        position: initialState.position,
+      }),
+    );
+  }
+  return coreCreateStep<ExerciseSteps>(
     id,
     stepType,
-    createExerciseStepState<ExerciseVariationStep>('variation', initialState),
+    createExerciseStepState<ExerciseVariationStep>(
+      initialState.exerciseType,
+      initialState,
+    ),
   );
+}
 
-export const getParent = (
-  stepRoot: StepRoot<Step<{}, StepType>>,
-  step: ExerciseSteps,
-) => {
+export { createStep };
+
+export const getParent = (stepRoot: StepRoot, step: ExerciseSteps) => {
   return getParentStep(stepRoot, step) as VariationStep | MoveStep | Chapter;
 };
 
 export const getPositionAndOrientation = (
-  stepRoot: StepRoot<Step<{}, StepType>>,
+  stepRoot: StepRoot,
   step: ExerciseSteps,
 ) => {
   const parent = getParent(stepRoot, step);
@@ -87,7 +126,7 @@ export const getPositionAndOrientation = (
 };
 
 export const getInitialExerciseStepState = (
-  stepRoot: StepRoot<Step<{}, StepType>>,
+  stepRoot: StepRoot,
   step: ExerciseSteps,
   exerciseType: ExerciseTypes,
 ) => {
@@ -101,7 +140,7 @@ export const getInitialExerciseStepState = (
 export const changeExercise = createService(
   <T extends ExerciseSteps>(
     step: T,
-    stepRoot: StepRoot<Step<{}, StepType>>,
+    stepRoot: StepRoot,
     exerciseType: ExerciseTypes,
   ): T => {
     step.state = getInitialExerciseStepState(

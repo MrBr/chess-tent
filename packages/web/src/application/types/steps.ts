@@ -183,8 +183,5 @@ type ModuleRecord<K extends StepType, T> = {
 };
 export type StepModules = ModuleRecord<
   StepType,
-  | MoveModule
-  | VariationModule
-  | DescriptionModule
-  | ExerciseModule<ExerciseSteps>
+  MoveModule | VariationModule | DescriptionModule | ExerciseModule
 >;

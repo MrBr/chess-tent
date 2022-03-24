@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { components, hooks, services } from '@application';
 import {
+  Chapter,
   getChildStep,
   getLessonActivityUserSettings,
   getLessonChapter,
@@ -66,7 +67,7 @@ const ActivityBoards = ({
         const chapter = getLessonChapter(
           activity.subject,
           userBoardState.activeChapterId,
-        );
+        ) as Chapter;
 
         const step = getChildStep(
           chapter,

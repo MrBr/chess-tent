@@ -41,7 +41,7 @@ const Preview = ({ lesson, chapter, step }: PreviewProps) => {
   const activeChapter = getLessonChapter(
     lesson,
     activityBoardState.activeChapterId as string,
-  );
+  ) as Chapter;
   const activeStep = getChildStep(
     activeChapter,
     activityBoardState.activeStepId as string,

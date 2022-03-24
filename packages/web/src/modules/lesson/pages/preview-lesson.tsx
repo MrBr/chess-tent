@@ -33,7 +33,7 @@ const {
 } = hooks;
 
 const PreviewLesson = () => {
-  const { lessonId } = useParams();
+  const { lessonId } = useParams<{ lessonId: string }>();
   const history = useHistory();
   const { value: lesson } = useLesson(lessonId);
   const [chapter, setActiveChapter] = useState<Chapter>();

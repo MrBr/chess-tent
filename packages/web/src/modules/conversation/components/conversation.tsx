@@ -109,18 +109,15 @@ export default styled(
               noMore={noMore}
             />
             {messages?.reduce<ReactElement[]>((result, message, index) => {
+              const messageOwner = getParticipant(conversation, message.owner);
               const messageElement =
                 message.owner !== activeUser.id ? (
                   <Container key={message.id} className="pl-0">
                     {messages[index - 1]?.owner !== message.owner && (
                       <>
-                        <UserAvatar
-                          size="small"
-                          user={getParticipant(
-                            conversation as Conversation,
-                            message.owner,
-                          )}
-                        />
+                        {messageOwner && (
+                          <UserAvatar size="small" user={messageOwner} />
+                        )}
                         <Text
                           inline
                           fontSize="extra-small"

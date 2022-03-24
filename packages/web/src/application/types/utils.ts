@@ -11,7 +11,10 @@ export type Utils = {
   stopPropagation: ReactEventHandler;
   generateIndex: () => string;
   denormalize: <T>(id: string, type: string, entities: {}) => T;
-  normalize: (entity: Entity) => { entities: any; result: any };
+  normalize: (entity: Entity | NormalizedEntity) => {
+    entities: any;
+    result: any;
+  };
   getEntityId: (entity: Entity | NormalizedEntity) => string;
   mediaQueryEnhancer: (
     screenSize: 'xs' | 'sm' | 'md' | 'lg' | 'xl',

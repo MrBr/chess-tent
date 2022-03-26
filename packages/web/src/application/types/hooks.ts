@@ -41,6 +41,9 @@ export type Hooks = {
   usePromptModal: () => (
     renderModal: (close: () => void) => ReactElement,
   ) => void;
+  usePromptOffcanvas: () => (
+    renderOffcanvas: (close: () => void) => ReactElement,
+  ) => void;
   useUpdateLessonStepState: <T extends Step>(
     updateStep: (step: T) => void,
     step: T,

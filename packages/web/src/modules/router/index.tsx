@@ -11,7 +11,7 @@ import {
   useLocation,
   Router as BaseRouter,
 } from 'react-router-dom';
-import { createBrowserHistory, LocationState } from 'history';
+import { createBrowserHistory } from 'history';
 import styled from '@chess-tent/styled-props';
 
 const { Icon } = ui;
@@ -22,7 +22,7 @@ const routes: ComponentType[] = [];
 const history: History = createBrowserHistory();
 const basePush = history.push.bind(history);
 const baseGoBack = history.goBack.bind(history);
-history.push = function (path: string, state?: LocationState) {
+history.push = function <T extends {}>(path: string, state?: T) {
   basePush(path, {
     from: history.location.pathname,
     ...state,

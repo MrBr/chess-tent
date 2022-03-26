@@ -20,9 +20,8 @@ const Playground: FunctionComponent<
     completeStep,
     boardState,
   } = props;
-  const {
-    selectedOptions,
-  } = stepActivityState as ExerciseQuestionnaireActivityState;
+  const { selectedOptions } =
+    stepActivityState as ExerciseQuestionnaireActivityState;
   const {
     task: { options },
   } = step.state;
@@ -68,9 +67,7 @@ const Playground: FunctionComponent<
                 isValid={!!(correct && completed)}
                 checked={!!selectedOptions?.[index]}
                 onChange={() => handleAnswerChange(index)}
-                label={
-                  <Text className="m-0" color="inherit" initialHtml={text} />
-                }
+                label={<Text className="m-0" color="inherit" html={text} />}
               />
             </Col>
           </Row>

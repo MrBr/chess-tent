@@ -22,7 +22,7 @@ const InvitationEmailSchema = yup.object().shape({
   email: yup.string().required(),
 });
 
-export default () => {
+const Invitation = () => {
   const { fetch } = useApi(requests.inviteUser);
   const { value: activeUser } = useActiveUserRecord();
   const target = useRef() as RefObject<HTMLButtonElement>;
@@ -118,3 +118,5 @@ export default () => {
     </div>
   );
 };
+
+export default Invitation;

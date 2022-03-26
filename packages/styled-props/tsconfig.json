@@ -2,7 +2,6 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "baseUrl": ".",
-    "outDir": "./dist",
     "jsx": "react",
     "module": "esnext",
     "isolatedModules": true,
@@ -13,11 +12,8 @@
     ],
     "noEmit": true
   },
-  "exclude": [
-    "dist"
-  ],
   "include": [
-    "src",
-    "types"
+    "src/**/*",
+    "types/**/*"
   ]
 }

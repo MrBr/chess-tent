@@ -37,7 +37,7 @@ const Modal = (({ close, fullScreen, ...props }) =>
         </Absolute>
       )}
     </BModal>
-  ) as unknown) as BModal;
+  ) as unknown) as typeof BModal;
 
 Modal.defaultProps = {
   ...BModal.defaultProps,

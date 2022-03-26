@@ -11,10 +11,10 @@ export const useApi: Hooks['useApi'] = <T, U extends StatusResponse>(
     response: null,
   });
 
-  const fetch = useMemo(() => withRequestHandler(request)(setApiRequestState), [
-    request,
-    setApiRequestState,
-  ]);
+  const fetch = useMemo(
+    () => withRequestHandler(request)(setApiRequestState),
+    [request, setApiRequestState],
+  );
 
   const reset = useCallback(() => {
     setApiRequestState({ response: null, loading: false, error: null });

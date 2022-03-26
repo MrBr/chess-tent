@@ -18,9 +18,8 @@ const Playground: FunctionComponent<
   ComponentProps<ExerciseModule<ExerciseVariationStep>['ActivityBoard']>
 > = props => {
   const { step, stepActivityState, setStepActivityState, completeStep } = props;
-  const {
-    activeMoveIndex,
-  } = stepActivityState as ExerciseVariationActivityState;
+  const { activeMoveIndex } =
+    stepActivityState as ExerciseVariationActivityState;
   const { moves } = step.state.task;
   const activePosition = getActivityPosition(step, stepActivityState);
 

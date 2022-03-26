@@ -45,7 +45,7 @@ const createNewLesson = (user: User) => {
   return createLesson(newLessonId, [defaultChapter], user, 'Lesson');
 };
 
-export default () => {
+const NewLesson = () => {
   const dispatch = useDispatchBatched();
   const { value: user } = useActiveUserRecord();
   const [lessonId, setLessonId] = useState<Lesson['id'] | undefined>();
@@ -98,3 +98,5 @@ export default () => {
     />
   );
 };
+
+export default NewLesson;

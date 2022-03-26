@@ -33,7 +33,7 @@ const {
 } = hooks;
 
 const PreviewLesson = () => {
-  const { lessonId } = useParams();
+  const { lessonId } = useParams<{ lessonId: string }>();
   const history = useHistory();
   const { value: lesson } = useLesson(lessonId);
   const [chapter, setActiveChapter] = useState<Chapter>();
@@ -71,7 +71,7 @@ const PreviewLesson = () => {
       <Card className="mb-4 mt-5 ">
         {ownedLessonActivity && (
           <Absolute left={10} top={10}>
-            <Tag variant="light" className="p-2">
+            <Tag bg="light" className="p-2">
               <Text inline>Owned</Text>
             </Tag>
           </Absolute>
@@ -88,7 +88,7 @@ const PreviewLesson = () => {
             </Col>
           </Row>
           <Container className="pl-0 mb-2 mt-2">
-            <Tag pill variant="primary" className="mr-1">
+            <Tag pill bg="primary" className="mr-1">
               <Text
                 fontSize="extra-small"
                 as="span"
@@ -99,7 +99,7 @@ const PreviewLesson = () => {
               </Text>
             </Tag>
             {lesson.tags?.map(({ text, id }) => (
-              <Tag pill key={id} variant="success" className="mr-1">
+              <Tag pill key={id} bg="success" className="mr-1">
                 <Text
                   fontSize="extra-small"
                   inline

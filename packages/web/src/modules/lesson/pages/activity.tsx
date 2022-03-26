@@ -6,9 +6,9 @@ import Activity from '../components/activity';
 const { useParams, useActivity, useHistory } = hooks;
 const { Absolute, Icon } = ui;
 
-export default () => {
+const PageActivity = () => {
   const history = useHistory();
-  const { activityId } = useParams();
+  const { activityId } = useParams<{ activityId: string }>();
   const { value: activity, meta } = useActivity<LessonActivity>(activityId);
   const { loading, loaded } = meta;
 
@@ -34,3 +34,5 @@ export default () => {
     </>
   );
 };
+
+export default PageActivity;

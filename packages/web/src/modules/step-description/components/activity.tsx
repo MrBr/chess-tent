@@ -25,7 +25,7 @@ export const ActivitySidebar: DescriptionModule['ActivitySidebar'] = ({
     <LessonPlaygroundCard>
       <Icon type="comment" textual />
       <LessonToolboxText
-        defaultText={description}
+        text={description}
         placeholder="Comment should be here :o"
       />
     </LessonPlaygroundCard>

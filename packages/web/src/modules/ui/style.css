@@ -1,32 +1,32 @@
 @import url('https://fonts.googleapis.com/css?family=Inter:500,700');
 
 :root {
-  --primary-color: #26D95C;
-  --secondary-color: #F45924;
+  --primary-color: #26d95c;
+  --secondary-color: #f45924;
 
-  --bg-color: #FAFBFB;
+  --bg-color: #fafbfb;
 
   --black-color: #182235;
-  --light-color: #FFFFFF;
+  --light-color: #ffffff;
 
-  --grey-800-color: #2F3849;
-  --grey-700-color: #6B7280;
-  --grey-600-color: #C1C4CA;
-  --grey-500-color: #D0D2D6;
-  --grey-400-color: #DFE0E3;
-  --grey-300-color: #EDEEF0;;
-  --grey-200-color: #FDFDFD;
+  --grey-800-color: #2f3849;
+  --grey-700-color: #6b7280;
+  --grey-600-color: #c1c4ca;
+  --grey-500-color: #d0d2d6;
+  --grey-400-color: #dfe0e3;
+  --grey-300-color: #edeef0;
+  --grey-200-color: #fdfdfd;
 
-  --success-color: #00B67A;
-  --error-color: #FF6B57;
-  --warning-color: #ECB832;
-  --link-color: #3076FF;
+  --success-color: #00b67a;
+  --error-color: #ff6b57;
+  --warning-color: #ecb832;
+  --link-color: #3076ff;
 
-  --primary-gradient: linear-gradient(90deg, #5AD9AB 0%, #26D95C 100%);
+  --primary-gradient: linear-gradient(90deg, #5ad9ab 0%, #26d95c 100%);
 }
 
-
-html, body {
+html,
+body {
   font-size: 100%; /*16px*/
   overflow-x: hidden;
 }

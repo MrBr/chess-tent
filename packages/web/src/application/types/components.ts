@@ -205,7 +205,7 @@ export type LessonPlaygroundCard = FunctionComponent<{
 export type LessonToolboxText = FunctionComponent<{
   onChange?: (text: string) => void;
   onClick?: () => void;
-  defaultText?: string;
+  text?: string;
   placeholder?: string;
   className?: string;
 }>;
@@ -239,7 +239,7 @@ export interface AuthorizedProps {
 }
 
 export type ActivityComponent<T> = ComponentType<
-  T extends Activity<infer U, infer K> ? { activity: T } : never
+  T extends Activity<any> ? { activity: T } : never
 >;
 
 export interface AnalysisSystemProps {

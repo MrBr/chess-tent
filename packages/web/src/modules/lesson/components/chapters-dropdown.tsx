@@ -2,7 +2,7 @@ import React, { ComponentProps } from 'react';
 import { Chapter } from '@chess-tent/models';
 import { debounce } from 'lodash';
 import { ui } from '@application';
-import { ValueType } from 'react-select';
+import { SingleValue } from 'react-select';
 import { Components } from '@types';
 
 const { Select, Text, Input } = ui;
@@ -38,7 +38,7 @@ class ChaptersDropdown extends React.Component<
     }
     this.debouncedEdit((event.target as HTMLInputElement).value);
   };
-  changeHandle = (value: ValueType<Chapter>) => {
+  changeHandle = (value: SingleValue<Chapter>) => {
     const { onChange } = this.props;
     if (!onChange || !value) {
       return;

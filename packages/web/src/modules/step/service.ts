@@ -39,18 +39,16 @@ export const addStepNextToTheComments = <T extends Steps>(
   return addStepToLeft(parentStep, step, commentsCount) as T;
 };
 
-export const createStepsFromNotableMoves: Services['createStepsFromNotableMoves'] = (
-  moves,
-  options,
-) => {
-  const comments = options?.comments || [];
-  const orientation = options?.orientation;
+export const createStepsFromNotableMoves: Services['createStepsFromNotableMoves'] =
+  (moves, options) => {
+    const comments = options?.comments || [];
+    const orientation = options?.orientation;
 
-  return moves.map(move =>
-    createStepModuleStep('move', {
-      description: getComment(comments, move.position),
-      move,
-      orientation,
-    }),
-  );
-};
+    return moves.map(move =>
+      createStepModuleStep('move', {
+        description: getComment(comments, move.position),
+        move,
+        orientation,
+      }),
+    );
+  };

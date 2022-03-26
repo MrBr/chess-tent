@@ -31,7 +31,7 @@ export const removeAnalysisStep = (
       analysis,
       removeStep(parentStep, step, step.stepType !== 'variation'),
     ),
-    newActiveStep.id,
+    newActiveStep?.id,
     patchListener,
   );
 };

@@ -17,9 +17,8 @@ const Playground: FunctionComponent<
   const {
     task: { shapes },
   } = step.state;
-  const {
-    selectedShapes,
-  } = stepActivityState as ExerciseActivitySelectSquaresAndPiecesState;
+  const { selectedShapes } =
+    stepActivityState as ExerciseActivitySelectSquaresAndPiecesState;
   const handleShapesChange = useCallback(
     (newSelectedShapes: Shape[]) => {
       const selectedShapes = newSelectedShapes.map(selectedShape => {

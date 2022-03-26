@@ -2,6 +2,7 @@ const CracoAlias = require('craco-alias');
 const webpack = require('webpack');
 const path = require('path');
 
+// TODO - fix deprecation warnings
 module.exports = {
   devServer: devServer => {
     return {

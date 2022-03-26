@@ -41,7 +41,7 @@ const SparePieces: FunctionComponent<SparePiecesProps> = ({
           role,
           color,
         },
-        (event as unknown) as MouseEvent & TouchEvent,
+        event as unknown as MouseEvent & TouchEvent,
       );
     },
     [onDragStart],

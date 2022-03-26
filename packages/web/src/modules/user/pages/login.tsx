@@ -13,7 +13,7 @@ const LoginSchema = yup.object().shape({
   email: yup.string().email('Invalid email').required(),
 });
 
-export default () => {
+const PageLogin = () => {
   const { fetch, loading, response } = useApi(requests.login);
   const record = hooks.useActiveUserRecord(null);
   const { value: user, update: updateUser } = record;
@@ -79,3 +79,5 @@ export default () => {
     </AuthPage>
   );
 };
+
+export default PageLogin;

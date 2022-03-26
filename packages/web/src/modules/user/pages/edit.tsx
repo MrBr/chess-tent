@@ -134,9 +134,7 @@ export default withFiles(
                         <Label>Pricing</Label>
                         <InputGroup>
                           <Form.Input name="state.pricing" type="number" />
-                          <InputGroup.Append>
-                            <InputGroup.Text>$/hr</InputGroup.Text>
-                          </InputGroup.Append>
+                          <InputGroup.Text>$/hr</InputGroup.Text>
                         </InputGroup>
                       </FormGroup>
                       <FormGroup>

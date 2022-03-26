@@ -17,7 +17,7 @@ import {
 
 export type SegmentProps<
   T extends ExerciseStep,
-  S extends ExerciseSegmentKeys
+  S extends ExerciseSegmentKeys,
 > = {
   step: T;
   segment: T['state'][S];
@@ -27,12 +27,12 @@ export type SegmentProps<
 
 export type SegmentBoardProps<
   T extends ExerciseStep,
-  S extends ExerciseSegmentKeys = ExerciseSegmentKeys
+  S extends ExerciseSegmentKeys = ExerciseSegmentKeys,
 > = SegmentProps<T, S> & StepBoardComponentProps & EditorProps;
 
 export type SegmentToolboxProps<
   T extends ExerciseStep,
-  S extends keyof ExerciseSegments
+  S extends keyof ExerciseSegments,
 > = SegmentProps<T, S> &
   ExerciseToolboxProps & { children?: ReactNode; placeholder?: string };
 
@@ -46,7 +46,7 @@ export type SegmentActivityProps<T extends ExerciseStep> = {
 
 export type InferUpdateStep<
   T extends SegmentProps,
-  P extends {} = {}
+  P extends {} = {},
 > = T extends SegmentProps<infer S>
   ? T & {
       updateStep: (step: S) => void;

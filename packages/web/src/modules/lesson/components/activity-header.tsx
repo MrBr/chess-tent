@@ -5,7 +5,7 @@ import { Lesson } from '@chess-tent/models';
 const { Headline3, Text, Container } = ui;
 const { UserAvatar } = components;
 
-export default ({ lesson }: { lesson: Lesson }) => (
+const ActivityHeader = ({ lesson }: { lesson: Lesson }) => (
   <>
     <Headline3 className="mt-0 mb-0">{lesson.state.title}</Headline3>
     <Container className="mb-4 p-0">
@@ -16,3 +16,5 @@ export default ({ lesson }: { lesson: Lesson }) => (
     </Container>
   </>
 );
+
+export default ActivityHeader;

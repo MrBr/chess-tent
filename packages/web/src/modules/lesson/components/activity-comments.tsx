@@ -8,7 +8,7 @@ const { Col, Input } = ui;
 const { useActiveUserRecord } = hooks;
 const { createActivityComment } = services;
 
-export default ({
+const ActivityComments = ({
   comments,
   addComment,
 }: {
@@ -45,3 +45,5 @@ export default ({
     </>
   );
 };
+
+export default ActivityComments;

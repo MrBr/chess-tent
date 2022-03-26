@@ -23,6 +23,7 @@
     "module": "commonjs",
     "inlineSourceMap": true,
     "inlineSources": true,
+    "skipLibCheck": true,
     "lib": ["DOM", "ES6"]
   }
 }

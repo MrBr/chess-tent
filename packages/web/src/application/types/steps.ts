@@ -67,9 +67,10 @@ export type ExerciseVariationActivityState = ActivityExerciseStepState<{
 }>;
 
 export type ExerciseSelectSquaresAndPiecesState = ExerciseSegments;
-export type ExerciseActivitySelectSquaresAndPiecesState = ActivityExerciseStepState<{
-  selectedShapes: Shape[];
-}>;
+export type ExerciseActivitySelectSquaresAndPiecesState =
+  ActivityExerciseStepState<{
+    selectedShapes: Shape[];
+  }>;
 
 export type ExerciseArrangePiecesState = ExerciseSegments<{
   moves?: NotableMove[];
@@ -120,7 +121,7 @@ export type ExerciseTypes =
 
 export type ExerciseStep<
   S extends ExerciseState,
-  T extends ExerciseTypes
+  T extends ExerciseTypes,
 > = AppStep<
   {
     activeSegment: keyof ExerciseSegments;
@@ -163,19 +164,18 @@ export type ExerciseToolboxProps<T extends ExerciseSteps = ExerciseSteps> = {
   updateStep: (step: AppStep) => void;
 };
 
-export type ExerciseModule<
-  T extends ExerciseSteps = ExerciseSteps
-> = StepModule<
-  T,
-  'exercise',
-  { position: FEN; orientation?: Orientation },
-  ExerciseActivityState
->;
+export type ExerciseModule<T extends ExerciseSteps = ExerciseSteps> =
+  StepModule<
+    T,
+    'exercise',
+    { position: FEN; orientation?: Orientation },
+    ExerciseActivityState
+  >;
 
 export type Steps = MoveStep | DescriptionStep | VariationStep | ExerciseSteps;
 
 type ModuleRecord<K extends StepType, T> = {
-  [P in K]: T extends StepModule<infer U, infer S, infer Z, infer Y>
+  [P in K]: T extends StepModule<any, infer S, any, any>
     ? S extends P
       ? T
       : never
@@ -183,8 +183,5 @@ type ModuleRecord<K extends StepType, T> = {
 };
 export type StepModules = ModuleRecord<
   StepType,
-  | MoveModule
-  | VariationModule
-  | DescriptionModule
-  | ExerciseModule<ExerciseSteps>
+  MoveModule | VariationModule | DescriptionModule | ExerciseModule
 >;

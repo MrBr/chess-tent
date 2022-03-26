@@ -4,10 +4,12 @@ import Conversations from '../components/conversations';
 
 const { MobileScreen } = components;
 
-export default () => {
+const PageConversations = () => {
   return (
     <MobileScreen>
       <Conversations />
     </MobileScreen>
   );
 };
+
+export default PageConversations;

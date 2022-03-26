@@ -35,7 +35,7 @@ const SignupSchema = yup.object().shape({
   coach: yup.boolean(),
 });
 
-export default () => {
+const PageRegister = () => {
   const { fetch, loading, response, error } = useApi(requests.register);
   const { update } = useActiveUserRecord(null);
   const history = useHistory();
@@ -177,3 +177,5 @@ export default () => {
     </AuthPage>
   );
 };
+
+export default PageRegister;

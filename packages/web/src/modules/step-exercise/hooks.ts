@@ -33,21 +33,20 @@ export const useUpdateExerciseActiveSegment = <T extends ExerciseSteps>(
   );
 };
 
-export const useUpdateSegment = <
-  T extends ExerciseStep<any, any>,
-  K extends keyof ExerciseSegments
->(
-  step: T,
-  updateStep: (step: T) => void,
-  activeSegment: K,
-) => (segmentPatch: Partial<T['state'][K]>) => {
-  const updatedSegment: T['state'][ExerciseSegmentKeys] = {
-    ...step.state[activeSegment],
-    ...segmentPatch,
+export const useUpdateSegment =
+  <T extends ExerciseStep<any, any>, K extends keyof ExerciseSegments>(
+    step: T,
+    updateStep: (step: T) => void,
+    activeSegment: K,
+  ) =>
+  (segmentPatch: Partial<T['state'][K]>) => {
+    const updatedSegment: T['state'][ExerciseSegmentKeys] = {
+      ...step.state[activeSegment],
+      ...segmentPatch,
+    };
+    updateStep(
+      updateStepState(step, {
+        [activeSegment]: updatedSegment,
+      } as Partial<T['state']>),
+    );
   };
-  updateStep(
-    updateStepState(step, {
-      [activeSegment]: updatedSegment,
-    } as Partial<T['state']>),
-  );
-};

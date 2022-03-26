@@ -10,9 +10,7 @@ type EvaluatorProps = Components['Evaluator'] extends ComponentType<infer U>
   : never;
 
 type InfoParam = 'score' | 'depth' | 'pv' | 'multipv';
-type ScoreParam = 'cp' | 'mate';
 type BestMoveParam = 'bestmove' | 'ponder';
-type EngineAction = 'info' | 'bestmove';
 type EngineLine = string;
 
 const getInfoValues = (data: EngineLine, param: InfoParam): string[] => {
@@ -110,12 +108,8 @@ class Evaluator extends React.Component<EvaluatorProps> {
   }
 
   onEngineMessage = ({ data }: MessageEvent) => {
-    const {
-      onBestMoveChange,
-      onEvaluationChange,
-      position,
-      minDepth,
-    } = this.props;
+    const { onBestMoveChange, onEvaluationChange, position, minDepth } =
+      this.props;
 
     if (onEvaluationChange && isLineValuation(data)) {
       const [score, isMate] = getScore(data, getTurnColor(position));

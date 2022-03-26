@@ -52,7 +52,7 @@ const EditorSidebar = <T extends ExerciseSteps, K extends ExerciseSegmentKeys>({
     >
       {activeSegment === currentSegmentKey && <ActiveSegmentMark />}
       <LessonToolboxText
-        defaultText={text}
+        text={text}
         placeholder={placeholder || Placeholders[currentSegmentKey]}
         onChange={updateText}
       />

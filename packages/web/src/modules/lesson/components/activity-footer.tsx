@@ -35,8 +35,10 @@ const ActivityPagination = styled(
   borderRadius: 10,
 });
 
-export default ({ next, prev, className }: ActivityFooterProps) => (
+const ActivityFooter = ({ next, prev, className }: ActivityFooterProps) => (
   <Container className={className}>
     <ActivityPagination next={next} prev={prev} />
   </Container>
 );
+
+export default ActivityFooter;

@@ -103,7 +103,7 @@ export type Records<T = any> = {
   withRecordMethod: <
     T extends RecordBase<any>,
     M extends string,
-    F extends (this: T, ...args: any[]) => void
+    F extends (this: T, ...args: any[]) => void,
   >(
     method: M,
     func: F,
@@ -113,7 +113,7 @@ export type Records<T = any> = {
     type: string,
   ) => RecordRecipe<InferRecordValueSafe<T> extends Entity ? T : never>;
   withRecordDenormalizedCollection: <
-    T extends RecordBase<any[]> & RecipeCollection<any>
+    T extends RecordBase<any[]> & RecipeCollection<any>,
   >(
     type: string,
   ) => RecordRecipe<

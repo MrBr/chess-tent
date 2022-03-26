@@ -71,10 +71,10 @@ const TaskBoard: FunctionComponent<
     [editing, moves, updateSegment, boardSetup],
   );
 
-  const activePosition = useMemo(() => getActivePosition(position, moves), [
-    position,
-    moves,
-  ]);
+  const activePosition = useMemo(
+    () => getActivePosition(position, moves),
+    [position, moves],
+  );
 
   return (
     <Chessboard
@@ -99,10 +99,10 @@ const ArrangePiecesSegmentBoard = (
   props: SegmentBoardProps<ExerciseArrangePiecesStep>,
 ) => {
   const { moves, position } = props.step.state.task;
-  const activePosition = useMemo(() => getActivePosition(position, moves), [
-    position,
-    moves,
-  ]);
+  const activePosition = useMemo(
+    () => getActivePosition(position, moves),
+    [position, moves],
+  );
   return <SegmentBoard {...props} position={activePosition} />;
 };
 

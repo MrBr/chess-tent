@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { components, hooks, services } from '@application';
 import {
+  Chapter,
   getChildStep,
   getLessonActivityUserSettings,
   getLessonChapter,
@@ -11,12 +12,8 @@ import {
 import { ActivityStepMode, ChessboardProps, Steps } from '@types';
 
 const { useActiveUserRecord } = hooks;
-const {
-  Chessboard,
-  ChessboardContextProvider,
-  StepRenderer,
-  AnalysisBoard,
-} = components;
+const { Chessboard, ChessboardContextProvider, StepRenderer, AnalysisBoard } =
+  components;
 
 const noop = () => {};
 const noopNoop = () => () => {};
@@ -70,7 +67,7 @@ const ActivityBoards = ({
         const chapter = getLessonChapter(
           activity.subject,
           userBoardState.activeChapterId,
-        );
+        ) as Chapter;
 
         const step = getChildStep(
           chapter,

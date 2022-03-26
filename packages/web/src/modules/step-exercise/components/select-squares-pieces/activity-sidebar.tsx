@@ -18,9 +18,8 @@ const Playground: FunctionComponent<
 > = props => {
   const { step, stepActivityState, boardState } = props;
   const { task } = step.state;
-  const {
-    selectedShapes,
-  } = stepActivityState as ExerciseActivitySelectSquaresAndPiecesState;
+  const { selectedShapes } =
+    stepActivityState as ExerciseActivitySelectSquaresAndPiecesState;
   const shapes = task.shapes || [];
   const correctAction = isLastSelectionCorrect(shapes, selectedShapes);
   const correctSelectionsCount = getCorrectSelectionsCount(

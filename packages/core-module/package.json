@@ -8,10 +8,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "stack-trace": "^0.0.10",
-    "typescript": "^3.8.3"
+    "stack-trace": "^0.0.10"
   },
-  "devDependencies": {
-    "@types/node": "^14.0.5"
-  }
+  "devDependencies": {}
 }

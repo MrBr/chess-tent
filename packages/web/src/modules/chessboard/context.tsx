@@ -9,23 +9,22 @@ export const BoardContext = createContext<ChessboardContext>({
   update: () => {},
 });
 
-export const ChessboardContextProvider: Components['ChessboardContextProvider'] = ({
-  children,
-}) => {
-  const [state, setState] = useState<ChessboardContext>({
-    evaluate: false,
-    evaluations: {},
-    renderPrompt: undefined,
-    promotion: undefined,
-    update: (patch: Partial<ChessboardContext>) => {
-      setState(prevState => ({
-        ...prevState,
-        ...patch,
-      }));
-    },
-  });
+export const ChessboardContextProvider: Components['ChessboardContextProvider'] =
+  ({ children }) => {
+    const [state, setState] = useState<ChessboardContext>({
+      evaluate: false,
+      evaluations: {},
+      renderPrompt: undefined,
+      promotion: undefined,
+      update: (patch: Partial<ChessboardContext>) => {
+        setState(prevState => ({
+          ...prevState,
+          ...patch,
+        }));
+      },
+    });
 
-  return (
-    <BoardContext.Provider value={state}>{children}</BoardContext.Provider>
-  );
-};
+    return (
+      <BoardContext.Provider value={state}>{children}</BoardContext.Provider>
+    );
+  };

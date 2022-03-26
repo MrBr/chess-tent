@@ -3,7 +3,7 @@ import { ui } from '@application';
 
 const { ToggleButton } = ui;
 
-export default ({
+const Edit = ({
   onChange,
   editing,
 }: {
@@ -19,3 +19,5 @@ export default ({
     {editing ? 'Done editing' : 'Edit board'}
   </ToggleButton>
 );
+
+export default Edit;

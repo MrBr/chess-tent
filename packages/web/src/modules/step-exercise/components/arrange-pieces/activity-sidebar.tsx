@@ -27,10 +27,8 @@ const Playground: FunctionComponent<
   ComponentProps<ExerciseModule<ExerciseArrangePiecesStep>['ActivitySidebar']>
 > = props => {
   const { step, stepActivityState, completeStep, boardState } = props;
-  const {
-    moves: activityMoves,
-    invalidPiece,
-  } = stepActivityState as ExerciseActivityArrangePiecesState;
+  const { moves: activityMoves, invalidPiece } =
+    stepActivityState as ExerciseActivityArrangePiecesState;
   const { moves: exerciseMoves } = step.state.task;
   const completed = isLessonActivityBoardStepCompleted(boardState, step);
 

@@ -7,7 +7,7 @@ export interface FileUploaderProps {
 }
 
 export type HtmlProps = ContentEditableProps & {
-  initialHtml?: string;
+  html?: string;
 };
 
 export interface HOC {

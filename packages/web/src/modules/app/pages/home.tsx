@@ -4,8 +4,10 @@ import { components, pages } from '@application';
 const { Authorized } = components;
 const { Landing, Dashboard } = pages;
 
-export default () => (
+const Home = () => (
   <Authorized>
     {authorized => (!!authorized ? <Dashboard /> : <Landing />)}
   </Authorized>
 );
+
+export default Home;

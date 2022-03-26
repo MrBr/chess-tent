@@ -5,7 +5,7 @@ import StudentDashboard from './student';
 
 const { useActiveUserRecord } = hooks;
 
-export default () => {
+const Dashboard = () => {
   const { value: activeUser } = useActiveUserRecord();
   return activeUser.coach ? (
     <CoachDashboard user={activeUser} />
@@ -13,3 +13,5 @@ export default () => {
     <StudentDashboard user={activeUser} />
   );
 };
+
+export default Dashboard;

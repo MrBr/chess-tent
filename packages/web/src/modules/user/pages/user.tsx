@@ -5,8 +5,8 @@ import Profile from './profile';
 
 const { useParams, useApi, useRecordInit } = hooks;
 
-export default () => {
-  const { userId } = useParams();
+const PageUser = () => {
+  const { userId } = useParams<{ userId: string }>();
   const { value: user, update: setUser } = useRecordInit(
     userRecord,
     `user-${userId}`,
@@ -26,3 +26,5 @@ export default () => {
 
   return user ? <Profile user={user} /> : null;
 };
+
+export default PageUser;

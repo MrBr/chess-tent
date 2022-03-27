@@ -45,9 +45,9 @@ application.register(
 );
 
 application.register(
-  () => import('./components/conversations'),
+  () => import('./components/stand'),
   module => {
-    application.components.Conversations = module.default;
+    application.components.ConversationsStand = module.default;
   },
 );
 application.register(

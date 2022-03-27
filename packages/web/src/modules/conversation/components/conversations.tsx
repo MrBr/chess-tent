@@ -6,7 +6,7 @@ import { sortBy, last } from 'lodash';
 import Conversation from './conversation';
 import { selectConversationByUsers } from '../state/selectors';
 
-const { Container, Headline3, Text, Row, Col } = ui;
+const { Container, Text, Row, Col } = ui;
 const { UserAvatar } = components;
 const {
   actions: { updateEntities },
@@ -110,7 +110,6 @@ const Conversations = () => {
 
   return (
     <Container className="h-100 overflow-y-auto p-0">
-      <Headline3 className="mb-5 pl-5 pr-5">Messages</Headline3>
       {participant && conversation && (
         <Conversation
           activeUser={activeUser}

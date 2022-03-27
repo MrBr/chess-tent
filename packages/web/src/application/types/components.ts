@@ -421,7 +421,7 @@ export type Components = {
   CoachCard: ComponentType<{
     coach: User;
   }>;
-  Conversations: ComponentType;
+  ConversationsStand: ComponentType;
   MessageButton: ComponentType<{
     size?: ButtonProps['size'];
     variant?: ButtonProps['variant'];

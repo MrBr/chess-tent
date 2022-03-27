@@ -4,7 +4,13 @@ import { Components } from '@types';
 
 const { Container, Headline4, Row, Col } = ui;
 const { useHistory } = hooks;
-const { NotificationStand, TabBar, UserSettings, Invitation } = components;
+const {
+  NotificationStand,
+  TabBar,
+  UserSettings,
+  Invitation,
+  ConversationsStand,
+} = components;
 
 const Header: Components['Header'] = () => {
   const history = useHistory();
@@ -24,6 +30,7 @@ const Header: Components['Header'] = () => {
 
         <Col className="d-flex justify-content-end" xs={3}>
           <Invitation />
+          <ConversationsStand />
           <NotificationStand />
           <UserSettings />
         </Col>

@@ -1,13 +1,14 @@
 import React from 'react';
 import { components, hooks, ui } from '@application';
 
-const { useActiveUserRecord, useCoaches } = hooks;
-const { Container, Row, Col, Text, Headline2, Card, CardBody } = ui;
-const { MentorshipAction, Page, MessageButton, UserAvatar } = components;
+const { useActiveUserRecord, useCoaches, useOpenConversations } = hooks;
+const { Container, Row, Col, Text, Headline2, Card, CardBody, Button } = ui;
+const { MentorshipAction, Page, UserAvatar } = components;
 
 const Coaches = () => {
   const { value: user } = useActiveUserRecord();
   const { value: coaches } = useCoaches(user);
+  const openConversations = useOpenConversations();
   return (
     <Page>
       <Headline2>My coaches</Headline2>
@@ -26,11 +27,13 @@ const Coaches = () => {
                 </Row>
                 <Row>
                   <Col>
-                    <MessageButton
-                      user={mentorship.coach}
+                    <Button
+                      onClick={() => openConversations(mentorship.coach)}
                       size="extra-small"
                       className="mr-3"
-                    />
+                    >
+                      Message
+                    </Button>
                     <MentorshipAction
                       mentorship={mentorship}
                       approve={false}

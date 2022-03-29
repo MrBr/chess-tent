@@ -1,26 +1,13 @@
 import React from 'react';
-import { ui, hooks } from '@application';
+import { ui } from '@application';
 
-import Conversations from './conversations';
+import useOpenConversations from '../hooks/useOpenConversations';
 
-const { Icon, Offcanvas } = ui;
-const { usePromptOffcanvas } = hooks;
+const { Icon } = ui;
 
 const ConversationsStand = () => {
-  const promptOffcanvas = usePromptOffcanvas();
-  return (
-    <Icon
-      type="notification"
-      onClick={() =>
-        promptOffcanvas(close => (
-          <Offcanvas show onHide={close}>
-            <Offcanvas.Header closeButton>Messages</Offcanvas.Header>
-            <Conversations />
-          </Offcanvas>
-        ))
-      }
-    />
-  );
+  const openConversations = useOpenConversations();
+  return <Icon type="notification" onClick={() => openConversations()} />;
 };
 
 export default ConversationsStand;

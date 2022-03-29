@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, FunctionComponent } from 'react';
+import React, { useEffect, useMemo, FunctionComponent, useState } from 'react';
 import { components, hooks, state, ui, utils, records } from '@application';
 import { createConversation, User } from '@chess-tent/models';
 import styled from '@emotion/styled';
@@ -11,13 +11,8 @@ const { UserAvatar } = components;
 const {
   actions: { updateEntities },
 } = state;
-const {
-  useDispatchBatched,
-  useSelector,
-  useRecordInit,
-  useActiveUserRecord,
-  useConversationParticipant,
-} = hooks;
+const { useDispatchBatched, useSelector, useRecordInit, useActiveUserRecord } =
+  hooks;
 const { generateIndex } = utils;
 
 const ConversationRow = styled<
@@ -65,14 +60,14 @@ const ConversationRow = styled<
   padding: '0.75em 1.5em',
 });
 
-const Conversations = () => {
+const Conversations = ({
+  initialParticipant,
+}: {
+  initialParticipant?: User;
+}) => {
   const dispatch = useDispatchBatched();
   const { value: activeUser } = useActiveUserRecord();
-  const {
-    value: participant,
-    update: setParticipant,
-    reset: clearParticipant,
-  } = useConversationParticipant();
+  const [participant, setParticipant] = useState(initialParticipant);
   const { value: conversations, load } = useRecordInit(
     records.activeUserConversations,
     'conversations',
@@ -113,7 +108,7 @@ const Conversations = () => {
       {participant && conversation && (
         <Conversation
           activeUser={activeUser}
-          close={clearParticipant}
+          close={() => setParticipant(undefined)}
           participant={participant}
           conversation={conversation}
         />

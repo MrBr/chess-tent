@@ -10,7 +10,7 @@ import {
 import styled from '@emotion/styled';
 import { DateTime } from 'luxon';
 import last from 'lodash/last';
-import { useLoadMoreMessages } from '../hooks';
+import useLoadMoreMessages from '../hooks/useLoadMoreMessages';
 
 const {
   Container,

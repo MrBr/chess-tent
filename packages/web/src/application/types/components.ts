@@ -422,13 +422,6 @@ export type Components = {
     coach: User;
   }>;
   ConversationsStand: ComponentType;
-  MessageButton: ComponentType<{
-    size?: ButtonProps['size'];
-    variant?: ButtonProps['variant'];
-    text?: string;
-    className?: string;
-    user: User;
-  }>;
   AnalysisBoard: ComponentType<AnalysisBoardProps>;
   AnalysisSidebar: ComponentType<AnalysisSystemProps>;
   NotificationStand: ComponentType;

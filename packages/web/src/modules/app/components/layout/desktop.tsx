@@ -6,9 +6,9 @@ import { Components } from '@types';
 const { mediaQueryEnhancer } = utils;
 
 export default styled<Components['Layout']>(
-  ({ className, children, header }) => (
+  ({ className, children, header, menu }) => (
     <div className={className}>
-      <div className="layout-menu"></div>
+      <div className="layout-menu">{menu}</div>
       <div className="layout-header">{header}</div>
       <div className="layout-content">{children}</div>
     </div>
@@ -32,13 +32,6 @@ export default styled<Components['Layout']>(
       background: '#FAFBFB',
       position: 'relative',
       overflowY: 'auto',
-    },
-    '.layout-sidebar': {
-      gridArea: 'sidebar',
-      position: 'relative',
-    },
-    '&.extended-sidebar': {
-      gridTemplateColumns: '4fr 2fr',
     },
     display: 'grid',
     gridTemplateRows: 'min-content calc(100vh - 64px)',

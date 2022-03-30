@@ -191,6 +191,7 @@ export type UI = {
       | 'pawn'
       | 'price'
       | 'settings'
+      | 'logo'
       | 'video';
     textual?: boolean;
     size?: 'large' | 'regular' | 'small' | 'extra-small';

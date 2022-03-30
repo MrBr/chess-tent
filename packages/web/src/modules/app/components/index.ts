@@ -19,6 +19,12 @@ application.register(
   },
 );
 application.register(
+  () => import('./menu'),
+  module => {
+    application.components.Menu = module.default;
+  },
+);
+application.register(
   () => import('./layout'),
   module => {
     application.components.Layout = module.default;

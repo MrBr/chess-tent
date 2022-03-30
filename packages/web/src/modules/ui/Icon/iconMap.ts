@@ -22,3 +22,4 @@ export { ReactComponent as pawn } from './icons/pawn.svg';
 export { ReactComponent as price } from './icons/price.svg';
 export { ReactComponent as settings } from './icons/settings.svg';
 export { ReactComponent as video } from './icons/video.svg';
+export { ReactComponent as logo } from './icons/logo.svg';

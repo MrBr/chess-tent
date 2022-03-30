@@ -6,18 +6,22 @@ import { Components } from '@types';
 const { mediaQueryEnhancer } = utils;
 
 export default styled<Components['Layout']>(
-  ({ className, children, header, sidebar }) => (
+  ({ className, children, header, menu }) => (
     <div className={className}>
+      <div className="layout-menu">{menu}</div>
       <div className="layout-header">{header}</div>
       <div className="layout-content">{children}</div>
-      <div className="layout-sidebar">{sidebar}</div>
     </div>
   ),
 )(
   {
+    '.layout-menu': {
+      gridArea: 'menu',
+      width: 70,
+    },
     '.layout-header': {
       gridArea: 'header',
-      height: 96,
+      height: 64,
       boxShadow: '0px 1px 0px #ECECEC',
       zIndex: 10,
       padding: '0 5em',
@@ -29,19 +33,12 @@ export default styled<Components['Layout']>(
       position: 'relative',
       overflowY: 'auto',
     },
-    '.layout-sidebar': {
-      gridArea: 'sidebar',
-      position: 'relative',
-    },
-    '&.extended-sidebar': {
-      gridTemplateColumns: '4fr 2fr',
-    },
     display: 'grid',
-    gridTemplateRows: 'min-content calc(100vh - 96px)',
-    gridTemplateColumns: '4fr 1fr',
+    gridTemplateRows: 'min-content calc(100vh - 64px)',
+    gridTemplateColumns: '0fr 1fr',
     gridTemplateAreas: `
-    "header header"
-    "content sidebar"
+    "menu header"
+    "menu content"
     `,
     width: '100%',
     height: '100%',
@@ -53,10 +50,8 @@ export default styled<Components['Layout']>(
     '.layout-content': {
       padding: '0 2em',
     },
-    gridTemplateColumns: '6fr 2fr',
   }),
   mediaQueryEnhancer('md', {
-    gridTemplateColumns: '2fr 1fr',
     '.layout-header': {
       padding: '0 2em',
     },

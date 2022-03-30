@@ -2,13 +2,24 @@ import React, { useMemo } from 'react';
 import { components, hooks, ui } from '@application';
 import { groupBy } from 'lodash';
 
-const { useActiveUserRecord, useStudents } = hooks;
-const { Container, Row, Col, Headline3, Text, Headline2, Card, CardBody } = ui;
-const { Link, MentorshipAction, Page, UserAvatar, MessageButton } = components;
+const { useActiveUserRecord, useStudents, useOpenConversations } = hooks;
+const {
+  Container,
+  Row,
+  Col,
+  Headline3,
+  Text,
+  Headline2,
+  Card,
+  CardBody,
+  Button,
+} = ui;
+const { Link, MentorshipAction, Page, UserAvatar } = components;
 
 const Students = () => {
   const { value: user } = useActiveUserRecord();
   const { value: students } = useStudents(user);
+  const openConversations = useOpenConversations();
   const result = useMemo(
     () => groupBy(students, student => student.approved),
     [students],
@@ -34,12 +45,14 @@ const Students = () => {
                   </Col>
                 </Row>
                 <Row noGutters>
-                  <MessageButton
-                    user={mentorship.student}
+                  <Button
+                    onClick={() => openConversations(mentorship.student)}
                     className="mr-4"
                     size="extra-small"
                     variant="regular"
-                  />
+                  >
+                    Message
+                  </Button>
                   <MentorshipAction
                     mentorship={mentorship}
                     text="Accept"

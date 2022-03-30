@@ -41,6 +41,9 @@ export type Hooks = {
   usePromptModal: () => (
     renderModal: (close: () => void) => ReactElement,
   ) => void;
+  usePromptOffcanvas: () => (
+    renderOffcanvas: (close: () => void) => ReactElement,
+  ) => void;
   useUpdateLessonStepState: <T extends Step>(
     updateStep: (step: T) => void,
     step: T,
@@ -61,9 +64,7 @@ export type Hooks = {
   useActiveUserRecord: <T = void>(
     fallback?: T,
   ) => RecordHookSafe<InferInitRecord<Records['activeUser']>, T>;
-  useConversationParticipant: () => RecordHookInit<
-    InferInitRecord<Records['conversationParticipant']>
-  >;
+  useOpenConversations: () => (user?: User) => void;
   useActiveUserNotifications: (
     limit?: number,
   ) => RecordHookInit<InferInitRecord<Records['activeUserNotifications']>>;

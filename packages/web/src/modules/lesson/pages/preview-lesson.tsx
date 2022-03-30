@@ -8,7 +8,6 @@ import LessonThumbnail from '../components/thumbnail';
 
 const {
   Container,
-  Page,
   Col,
   Card,
   Text,
@@ -21,7 +20,7 @@ const {
   Absolute,
 } = ui;
 
-const { Layout, Header, Chessboard, UserAvatar } = components;
+const { Page, Chessboard, UserAvatar } = components;
 
 const {
   useParams,
@@ -29,7 +28,6 @@ const {
   useUserTrainings,
   useActiveUserRecord,
   useHistory,
-  useIsMobile,
 } = hooks;
 
 const PreviewLesson = () => {
@@ -39,7 +37,6 @@ const PreviewLesson = () => {
   const [chapter, setActiveChapter] = useState<Chapter>();
   const { value: user } = useActiveUserRecord();
   const { new: newTraining, value: activities } = useUserTrainings(user);
-  const isMobile = useIsMobile();
 
   const ownedLessonActivity = activities?.find(
     ({ subject }) => subject.id === lessonId,
@@ -67,7 +64,7 @@ const PreviewLesson = () => {
   const firstStep = activeChapter.state.steps[0] as VariationStep;
 
   const sidebar = (
-    <Container className="w-75">
+    <Container>
       <Card className="mb-4 mt-5 ">
         {ownedLessonActivity && (
           <Absolute left={10} top={10}>
@@ -152,21 +149,21 @@ const PreviewLesson = () => {
   );
 
   return (
-    <Page fluid className="px-0 h-100">
-      <Layout
-        className="extended-sidebar"
-        header={<Header />}
-        sidebar={isMobile ? null : sidebar}
-      >
-        <Chessboard
-          fen={firstStep.state.position as string}
-          shapes={firstStep.state.shapes}
-          footer={null}
-          viewOnly
-          header={boardHeader}
-        />
-        {isMobile && sidebar}
-      </Layout>
+    <Page>
+      <Container fluid>
+        <Row>
+          <Col xs={12} sm={7}>
+            <Chessboard
+              fen={firstStep.state.position as string}
+              shapes={firstStep.state.shapes}
+              footer={null}
+              viewOnly
+              header={boardHeader}
+            />
+          </Col>
+          <Col sm={5}>{sidebar}</Col>
+        </Row>
+      </Container>
     </Page>
   );
 };

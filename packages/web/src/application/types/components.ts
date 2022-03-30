@@ -305,6 +305,7 @@ export type Components = {
   MobilePortal: ComponentType;
   Filters: ComponentType<{ children?: ReactElement }>;
   Header: ComponentType;
+  Menu: ComponentType;
   Logo: ComponentType<ImgHTMLAttributes<HTMLImageElement>>;
   TabBar: ComponentType;
   LoadMore: ComponentType;
@@ -314,7 +315,7 @@ export type Components = {
     className?: string;
     footer?: ReactElement | null;
     header?: ReactElement | null;
-    sidebar?: ReactElement | null;
+    menu?: ReactElement | null;
   }>;
   Chessboard: ClassComponent<ChessboardInterface>;
   ChessboardContextProvider: ComponentType;
@@ -421,14 +422,7 @@ export type Components = {
   CoachCard: ComponentType<{
     coach: User;
   }>;
-  Conversations: ComponentType;
-  MessageButton: ComponentType<{
-    size?: ButtonProps['size'];
-    variant?: ButtonProps['variant'];
-    text?: string;
-    className?: string;
-    user: User;
-  }>;
+  ConversationsStand: ComponentType;
   AnalysisBoard: ComponentType<AnalysisBoardProps>;
   AnalysisSidebar: ComponentType<AnalysisSystemProps>;
   NotificationStand: ComponentType;

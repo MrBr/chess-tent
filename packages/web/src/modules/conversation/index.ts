@@ -15,10 +15,9 @@ application.register(
   },
 );
 application.register(
-  () => import('./hooks'),
+  () => import('./hooks/useOpenConversations'),
   module => {
-    application.hooks.useConversationParticipant =
-      module.useConversationParticipant;
+    application.hooks.useOpenConversations = module.default;
   },
 );
 application.register(
@@ -45,15 +44,10 @@ application.register(
 );
 
 application.register(
-  () => import('./components/conversations'),
+  () => import('./components/stand'),
   module => {
-    application.components.Conversations = module.default;
+    application.components.ConversationsStand = module.default;
   },
 );
-application.register(
-  () => import('./components/message-button'),
-  module => {
-    application.components.MessageButton = module.default;
-  },
-);
+
 application.register(() => import('./routes'));

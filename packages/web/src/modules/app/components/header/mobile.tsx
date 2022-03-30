@@ -1,23 +1,15 @@
 import React from 'react';
-import { components, hooks, ui } from '@application';
+import { components, ui } from '@application';
 import { Components } from '@types';
 
-const { Container, Headline4, Row, Col } = ui;
-const { useHistory } = hooks;
+const { Container, Row, Col } = ui;
 const { NotificationStand, UserSettings, Invitation } = components;
 
 const Header: Components['Header'] = () => {
-  const history = useHistory();
   return (
     <Container fluid className="h-100">
       <Row className="h-100 align-items-center">
-        <Col
-          className="col-auto cursor-pointer"
-          onClick={() => history.push('/')}
-          xs={6}
-        >
-          <Headline4 className="m-0">CHESS TENT</Headline4>
-        </Col>
+        <Col>Search</Col>
         <Col className="d-flex justify-content-end" xs={6}>
           <Invitation />
           <NotificationStand />

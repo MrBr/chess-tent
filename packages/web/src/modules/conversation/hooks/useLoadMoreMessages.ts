@@ -2,9 +2,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { hooks, requests, state } from '@application';
 import { Conversation } from '@chess-tent/models';
 import first from 'lodash/first';
-import { conversationParticipant } from './records';
 
-const { useApi, useDispatch, useRecordInit } = hooks;
+const { useApi, useDispatch } = hooks;
 const {
   actions: { updateEntities },
 } = state;
@@ -39,8 +38,4 @@ const useLoadMoreMessages = (
   return [loadMore, loading || !!response, noMore];
 };
 
-const useConversationParticipant = () => {
-  return useRecordInit(conversationParticipant, 'conversationParticipant');
-};
-
-export { useLoadMoreMessages, useConversationParticipant };
+export default useLoadMoreMessages;

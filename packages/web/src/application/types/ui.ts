@@ -108,6 +108,7 @@ export interface SelectOption<T> {
 }
 
 export type FormElementsSize = 'large' | 'regular' | 'small' | 'extra-small';
+
 export interface OptionsDropdownProps<T> {
   id: string;
   className?: string;
@@ -190,6 +191,7 @@ export type UI = {
       | 'pawn'
       | 'price'
       | 'settings'
+      | 'logo'
       | 'video';
     textual?: boolean;
     size?: 'large' | 'regular' | 'small' | 'extra-small';
@@ -255,6 +257,14 @@ export type UI = {
   Tab: typeof Tab;
   Row: UIComponent<RowProps>;
   Col: UIComponent<ColProps>;
+  Offcanvas: UIComponent<{
+    show?: boolean;
+    placement?: 'end';
+    onHide: () => void;
+  }> & {
+    Body: UIComponent;
+    Header: UIComponent<{ closeButton?: boolean }>;
+  };
   ErrorMessage: UIComponent<ErrorMessageProps>;
   Button: UIComponent<ButtonProps>;
   ToggleButton: UIComponent<ToggleButtonProps>;

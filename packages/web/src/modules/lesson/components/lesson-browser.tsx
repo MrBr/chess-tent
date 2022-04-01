@@ -33,7 +33,10 @@ const LessonBrowser: Components['LessonBrowser'] = ({
     mounted &&
       onFiltersChange &&
       onFiltersChange(search, difficulty, selectedTags);
-  }, [onFiltersChange, search, difficulty, selectedTags, mounted]);
+    // Filters should trigger change only when changed and not until mounted
+    // Leaving "mounted" out of the dependencies
+    // eslint-disable-next-line
+  }, [onFiltersChange, search, difficulty, selectedTags]);
 
   const onSelectedTagsChange = useCallback(
     (tagIds: Tag[]) => {

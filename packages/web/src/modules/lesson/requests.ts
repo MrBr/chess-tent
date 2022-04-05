@@ -1,62 +1,53 @@
 import { services, requests } from '@application';
-import {
-  LessonsRequest,
-  LessonResponse,
-  LessonsResponse,
-  LessonUpdates,
-  StatusResponse,
-  MyLessonsRequest,
-  ActivitiesResponse,
-  ActivityFilters,
-} from '@types';
-import { Lesson, LessonActivity } from '@chess-tent/models';
+import { Requests } from '@types';
+import { TYPE_LESSON } from '@chess-tent/models';
 
-const lesson = services.createRequest<[string], LessonResponse>(
+const lesson = services.createRequest<Requests['lesson']>(
   'GET',
-  lessonId => ({ url: `/lesson/${lessonId}` }),
+  lessonId => `/lesson/${lessonId}`,
 );
 
-const lessonSave = services.createRequest<Lesson, LessonResponse>(
+const lessonSave = services.createRequest<Requests['lessonSave']>(
   'POST',
   '/lesson/save',
 );
 
-const lessonPublish = services.createRequest<Lesson['id'], StatusResponse>(
+const lessonPublish = services.createRequest<Requests['lessonPublish']>(
   'PUT',
-  id => ({ url: `/lesson/publish/${id}` }),
+  id => `/lesson/publish/${id}`,
 );
 
-const lessonUnpublish = services.createRequest<Lesson['id'], StatusResponse>(
+const lessonUnpublish = services.createRequest<Requests['lessonUnpublish']>(
   'PUT',
-  id => ({ url: `/lesson/unpublish/${id}` }),
+  id => `/lesson/unpublish/${id}`,
 );
 
-const lessonPatch = services.createRequest<
-  [Lesson['id'], Partial<Lesson>],
-  StatusResponse
->('PUT', (id, patch) => ({ url: `/lesson/${id}`, data: patch }));
-
-const lessonUpdates = services.createRequest<
-  [Lesson['id'], LessonUpdates],
-  StatusResponse
->('PUT', (id, patch) => ({ url: `/lesson-update/${id}`, data: patch }));
-
-const lessons = services.createRequest<LessonsRequest, LessonsResponse>(
-  'POST',
-  '/lessons',
+const lessonPatch = services.createRequest<Requests['lessonPatch']>(
+  'PUT',
+  id => `/lesson/${id}`,
+  (id, patch) => patch,
 );
-const myLessons = services.createRequest<MyLessonsRequest, LessonsResponse>(
+
+const lessonUpdates = services.createRequest<Requests['lessonUpdates']>(
+  'PUT',
+  id => `/lesson-update/${id}`,
+  (id, update) => update,
+);
+
+const lessons = services.createRequest<Requests['lessons']>('POST', '/lessons');
+const myLessons = services.createRequest<Requests['myLessons']>(
   'POST',
   '/my-lessons',
 );
 
-const trainings = services.createRequest<
-  ActivityFilters,
-  ActivitiesResponse<LessonActivity>
->('POST', data => ({
-  url: '/activities',
-  data,
-}));
+const trainings = services.createRequest<Requests['trainings']>(
+  'POST',
+  '/activities',
+  data => ({
+    ...data,
+    subjectType: TYPE_LESSON,
+  }),
+);
 
 requests.trainings = trainings;
 requests.lesson = lesson;

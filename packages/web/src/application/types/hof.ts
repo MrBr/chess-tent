@@ -1,10 +1,14 @@
-import { RequestFetch, RequestState, StatusResponse } from '@chess-tent/types';
+import {
+  GetRequestFetchResponse,
+  RequestFetch,
+  RequestState,
+} from '@chess-tent/types';
 import { GenericArguments } from './_helpers';
 
 export type HOF = {
-  withRequestHandler: <T, U extends StatusResponse>(
-    request: RequestFetch<T, U>,
+  withRequestHandler: <T extends RequestFetch<any, any>>(
+    request: T,
   ) => (
-    change: (requestState: RequestState<U>) => void,
+    change: (requestState: RequestState<GetRequestFetchResponse<T>>) => void,
   ) => (...args: GenericArguments<T>) => void;
 };

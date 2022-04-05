@@ -1,48 +1,35 @@
 import { services, requests } from '@application';
-import {
-  ConversationMessagesResponse,
-  ConversationResponse,
-  ConversationsResponse,
-  Pagination,
-  Requests,
-  StatusResponse,
-} from '@types';
-import { Conversation, User } from '@chess-tent/models';
+import { Requests } from '@types';
 
-const conversation = services.createRequest<
-  Conversation['id'],
-  ConversationResponse
->('GET', conversationId => ({
-  url: `/conversation/${conversationId}`,
-}));
-
-const conversations = services.createRequest<
-  User['id'][] | User['id'],
-  ConversationsResponse
->('POST', users => ({
-  url: '/conversations',
-  data: { users: Array.isArray(users) ? users : [users] },
-}));
-
-const messageSend: Requests['messageSend'] = services.createRequest(
-  'PUT',
-  (conversationId, message) => ({
-    url: `/conversation/${conversationId}/message`,
-    data: message,
-  }),
+const conversation = services.createRequest<Requests['conversation']>(
+  'GET',
+  conversationId => `/conversation/${conversationId}`,
 );
-const conversationSave = services.createRequest<Conversation, StatusResponse>(
+
+const conversations = services.createRequest<Requests['conversations']>(
+  'POST',
+  '/conversations',
+  users => ({ users: Array.isArray(users) ? users : [users] }),
+);
+
+const messageSend: Requests['messageSend'] = services.createRequest<
+  Requests['messageSend']
+>(
+  'PUT',
+  conversationId => `/conversation/${conversationId}/message`,
+  (conversationId, message) => message,
+);
+
+const conversationSave = services.createRequest<Requests['conversationSave']>(
   'POST',
   '/conversation/save',
 );
 
-const messages = services.createRequest<
-  [Conversation['id'], Pagination],
-  ConversationMessagesResponse
->('POST', (conversationId, lastDocumentTimestamp) => ({
-  url: `/conversation/${conversationId}/messages`,
-  data: { lastDocumentTimestamp },
-}));
+const messages = services.createRequest<Requests['messages']>(
+  'POST',
+  conversationId => `/conversation/${conversationId}/messages`,
+  (conversationId, lastDocumentTimestamp) => ({ lastDocumentTimestamp }),
+);
 
 requests.conversations = conversations;
 requests.conversationSave = conversationSave;

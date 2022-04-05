@@ -1,43 +1,29 @@
 import { services, requests } from '@application';
-import { User } from '@chess-tent/models';
-import { RegisterRequestParams, InviteUserParams } from '@chess-tent/types';
-import { StatusResponse, UserResponse, UsersResponse } from '@types';
+import { Requests } from '@types';
 
-const register = services.createRequest<RegisterRequestParams, UserResponse>(
+const register = services.createRequest<Requests['register']>(
   'POST',
   '/register',
 );
 
-const inviteUser = services.createRequest<InviteUserParams, StatusResponse>(
+const inviteUser = services.createRequest<Requests['inviteUser']>(
   'POST',
   '/invite-user',
 );
 
-const login = services.createRequest<
-  Pick<User, 'email' | 'password'>,
-  UserResponse
->('POST', '/login');
+const login = services.createRequest<Requests['login']>('POST', '/login');
 
-const users = services.createRequest<
-  { coach?: boolean; name?: string; search?: string },
-  UsersResponse
->('POST', '/users');
+const users = services.createRequest<Requests['users']>('POST', '/users');
 
-const logout = services.createRequest<undefined, StatusResponse>(
+const logout = services.createRequest<Requests['logout']>('GET', '/logout');
+
+const me = services.createRequest<Requests['me']>('GET', '/me');
+
+const updateMe = services.createRequest<Requests['updateMe']>('PUT', '/me');
+
+const user = services.createRequest<Requests['user']>(
   'GET',
-  '/logout',
-);
-
-const me = services.createRequest<undefined, UserResponse>('GET', '/me');
-
-const updateMe = services.createRequest<Partial<User>, UserResponse>(
-  'PUT',
-  '/me',
-);
-
-const user = services.createRequest<User['id'], UserResponse>(
-  'GET',
-  userId => ({ url: `/user/${userId}` }),
+  userId => `/user/${userId}`,
 );
 
 requests.register = register;

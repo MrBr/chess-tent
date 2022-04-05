@@ -1,6 +1,15 @@
 import { ChessInstance } from 'chess.js';
 import { ComponentType, ReactElement } from 'react';
-import { API, ApiMethods } from '@chess-tent/types';
+import {
+  API,
+  GetEndpointData,
+  GetRequestFetchArgs,
+  GetRequestFetchData,
+  GetRequestFetchEndpoint,
+  GetRequestFetchMethod,
+  GetRequestFetchUrl,
+  RequestFetch,
+} from '@chess-tent/types';
 import {
   Chapter,
   Step,
@@ -96,12 +105,29 @@ export type Services = {
   addProvider: (provider: ComponentType) => void;
   addRoute: (route: ComponentType) => void;
   api: API;
-  createRequest: <K, U>(
-    method: ApiMethods,
+  createRequest<T extends RequestFetch<any, any>>(
+    method: GetRequestFetchMethod<T>,
     urlOrCustomizer:
-      | string
-      | ((...args: GenericArguments<K>) => { url: string; data?: any }),
-  ) => (...args: GenericArguments<K>) => Promise<U>;
+      | GetRequestFetchUrl<T>
+      | ((
+          ...args: GenericArguments<GetRequestFetchArgs<T>>
+        ) => GetRequestFetchUrl<T>),
+  ): GetRequestFetchMethod<T> extends 'GET' // GET request data is irrelevant
+    ? T
+    : GetRequestFetchArgs<T> extends GetEndpointData<GetRequestFetchEndpoint<T>>
+    ? T
+    : unknown;
+  createRequest<T extends RequestFetch<any, any>>(
+    method: GetRequestFetchMethod<T>,
+    urlOrCustomizer:
+      | GetRequestFetchUrl<T>
+      | ((
+          ...args: GenericArguments<GetRequestFetchArgs<T>>
+        ) => GetRequestFetchUrl<T>),
+    data: (
+      ...args: GenericArguments<GetRequestFetchArgs<T>>
+    ) => GetRequestFetchData<T>,
+  ): T;
   isStepType: <T extends Steps>(step: Step, stepType: StepType) => step is T;
   createStep: <T extends StepType>(
     stepType: T,

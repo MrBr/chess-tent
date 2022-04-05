@@ -1,11 +1,8 @@
 import { services, requests } from '@application';
-import { TagsResponse } from '@types';
+import { Requests } from '@types';
 
-const getAllTags = services.createRequest<undefined, TagsResponse>(
-  'GET',
-  '/tags',
-);
-const findTags = services.createRequest<string, TagsResponse>('POST', '/tags');
+const getAllTags = services.createRequest<Requests['tags']>('GET', '/tags');
+const findTags = services.createRequest<Requests['findTags']>('POST', '/tags');
 
 requests.findTags = findTags;
 requests.tags = getAllTags;

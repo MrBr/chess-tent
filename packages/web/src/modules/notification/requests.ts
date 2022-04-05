@@ -1,34 +1,29 @@
 import { services, requests } from '@application';
-import {
-  NotificationsResponse,
-  StatusResponse,
-  UpdateNotificationsRequest,
-  Pagination,
-} from '@types';
+import { Requests } from '@types';
 
-const notifications = services.createRequest<
-  boolean | undefined,
-  NotificationsResponse
->('GET', (read?: boolean, limit?: number) => ({
-  url: `/notifications?${!!limit ? `limit=${limit}` : ''}${
-    !!read ? 'read=true' : ''
-  }`,
-}));
+const notifications = services.createRequest<Requests['notifications']>(
+  'GET',
+  (read, limit) =>
+    `/notifications?${!!limit ? `limit=${limit}` : ''}${
+      !!read ? 'read=true' : ''
+    }`,
+);
 
 const loadMoreNotifications = services.createRequest<
-  Pagination,
-  NotificationsResponse
->('GET', (lastDocumentTimestamp?: Pagination) => ({
-  url: `/notifications?lastDocumentTimestamp=${lastDocumentTimestamp}`,
-}));
+  Requests['loadMoreNotifications']
+>(
+  'GET',
+  lastDocumentTimestamp =>
+    `/notifications?${
+      !!lastDocumentTimestamp
+        ? `lastDocumentTimestamp=${lastDocumentTimestamp}`
+        : ''
+    }`,
+);
 
 const updateNotifications = services.createRequest<
-  UpdateNotificationsRequest,
-  StatusResponse
->('PUT', updatesForNotifications => ({
-  url: '/notifications',
-  data: updatesForNotifications,
-}));
+  Requests['updateNotifications']
+>('PUT', '/notifications', updatesForNotifications => updatesForNotifications);
 
 requests.notifications = notifications;
 requests.loadMoreNotifications = loadMoreNotifications;

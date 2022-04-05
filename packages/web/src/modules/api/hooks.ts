@@ -1,11 +1,18 @@
 import { useCallback, useMemo, useState } from 'react';
-import { Hooks, RequestFetch, RequestState, StatusResponse } from '@types';
+import {
+  GetRequestFetchResponse,
+  Hooks,
+  RequestFetch,
+  RequestState,
+} from '@types';
 import { withRequestHandler } from './hof';
 
-export const useApi: Hooks['useApi'] = <T, U extends StatusResponse>(
-  request: RequestFetch<T, U>,
+export const useApi: Hooks['useApi'] = <T extends RequestFetch<any, any>>(
+  request: T,
 ) => {
-  const [apiRequestState, setApiRequestState] = useState<RequestState<U>>({
+  const [apiRequestState, setApiRequestState] = useState<
+    RequestState<GetRequestFetchResponse<T>>
+  >({
     loading: false,
     error: null,
     response: null,

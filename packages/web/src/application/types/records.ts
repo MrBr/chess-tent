@@ -1,4 +1,9 @@
-import { DataResponse, RequestFetch, Requests } from '@chess-tent/types';
+import {
+  DataResponse,
+  Endpoint,
+  GetRequestFetchArgs,
+  RequestFetch,
+} from '@chess-tent/types';
 import {
   Lesson,
   Mentorship,
@@ -20,9 +25,11 @@ import {
   RecordBase,
   RecordRecipe,
 } from '@chess-tent/redux-record/types';
+import { GenericArguments } from './_helpers';
+import { Requests } from './requests';
 
 export type RecipeApiLoad<T extends RequestFetch<any, any>> = {
-  load: (...args: Parameters<T>) => void;
+  load: (...args: GenericArguments<GetRequestFetchArgs<T>>) => void;
 };
 
 function getRecordInitByNamespace(
@@ -33,7 +40,7 @@ function getRecordInitByNamespace(
   );
 }
 
-type UserTrainingsRecord = RecipeApiLoad<Requests['activities']> &
+type UserTrainingsRecord = RecipeApiLoad<Requests['trainings']> &
   RecordBase<LessonActivity[]> &
   RecipeCollection<LessonActivity>;
 
@@ -120,10 +127,15 @@ export type Records<T = any> = {
     InferRecordValueType<T> extends Entity ? T : never,
     { updateRaw: (ids: string[], meta?: {}) => void }
   >;
-  withRecordApiLoad: <A, V, T extends RecordBase<V>>(
-    request: RequestFetch<A, DataResponse<V>>,
+  withRecordApiLoad: <
+    RESPONSE extends DataResponse<any>,
+    E extends Endpoint<any, RESPONSE>,
+    R extends RequestFetch<E, any>,
+    T extends RecordBase<RESPONSE extends DataResponse<infer U> ? U : never>,
+  >(
+    request: R,
   ) => RecordRecipe<
     T,
-    { load: (...args: Parameters<RequestFetch<A, DataResponse<V>>>) => void }
+    { load: (...args: GenericArguments<GetRequestFetchArgs<R>>) => void }
   >;
 };

@@ -1,5 +1,4 @@
 import { register } from 'core-module';
-import { Requests } from '@chess-tent/types';
 import { Components } from './components';
 import { UI } from './ui';
 import { StepModules } from './steps';
@@ -15,10 +14,12 @@ import { Constants } from './constants';
 import { Context } from './context';
 import { HOF } from './hof';
 import { Records } from './records';
+import { Requests } from './requests';
 
 export * from '@chess-tent/types';
 export * from './activity';
 export * from './hoc';
+export * from './hof';
 export * from './context';
 export * from './chess';
 export * from './step';
@@ -37,6 +38,7 @@ export * from './pages';
 export * from './notification';
 export * from './records';
 export * from './router';
+export * from './requests';
 export * from './_helpers';
 
 export type Application = {

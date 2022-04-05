@@ -55,6 +55,7 @@ export const findActivities = (
   activityFilters: ActivityFilters,
 ): Promise<Activity[]> =>
   new Promise(resolve => {
+    // TODO - subjectType
     const users = utils.notNullOrUndefined({
       'roles.user': activityFilters.users,
     });

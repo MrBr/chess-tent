@@ -1,26 +1,43 @@
 import { services } from '@application';
-import { ApiMethods, Request, API, GenericArguments } from '@types';
+import {
+  API,
+  GenericArguments,
+  RequestFetch,
+  GetRequestFetchEndpoint,
+  GetEndpointResponse,
+  GetRequestFetchData,
+  GetRequestFetchMethod,
+  GetEndpointRequest,
+  Endpoint,
+  GetRequestFetchUrl,
+} from '@types';
 
 export const createRequest =
-  <T, K>(
-    method: ApiMethods,
+  <T extends RequestFetch<any, any>, K = GetRequestFetchData<T>>(
+    method: GetRequestFetchMethod<T>,
     urlOrCustomizer:
-      | string
-      | ((...args: GenericArguments<T>) => { url: string; data?: any }),
+      | GetRequestFetchUrl<T>
+      | ((...args: GenericArguments<K>) => GetRequestFetchUrl<T>),
+    dataCustomizer: (...args: GenericArguments<K>) => GetRequestFetchData<T> = (
+      ...args
+    ) => args[0] as GetRequestFetchData<T>,
   ) =>
-  (...args: GenericArguments<T>): Promise<K> => {
-    let url;
-    let data;
-    if (typeof urlOrCustomizer === 'function') {
-      const params = urlOrCustomizer(...args);
-      url = params.url;
-      data = params.data;
-    } else {
-      url = urlOrCustomizer;
-      data = args.length > 0 ? args[0] : undefined;
-    }
+  (
+    ...args: GenericArguments<K>
+  ): Promise<GetEndpointResponse<GetRequestFetchEndpoint<T>>> => {
+    const url =
+      typeof urlOrCustomizer === 'function'
+        ? // @ts-ignore - don't understand
+          urlOrCustomizer(...args)
+        : urlOrCustomizer;
+    const data = dataCustomizer(...args);
+    const request = {
+      url,
+      method,
+      data,
+    } as GetEndpointRequest<GetRequestFetchEndpoint<T>>;
 
-    return services.api.makeRequest<T, K>({ url, method, data });
+    return services.api.makeRequest<GetRequestFetchEndpoint<T>>(request);
   };
 
 export class Api implements API {
@@ -32,7 +49,7 @@ export class Api implements API {
     this.basePath = basePath;
   }
 
-  makeRequest<T, K>(request: Request<T>) {
+  makeRequest<T extends Endpoint<any, any>>(request: GetEndpointRequest<T>) {
     const { url, data, method } = request;
 
     const headers: { [key: string]: string } = {
@@ -47,6 +64,6 @@ export class Api implements API {
       body: data ? JSON.stringify(data) : undefined,
     }).then(response => {
       return response.json();
-    }) as Promise<K>;
+    }) as Promise<GetEndpointResponse<T>>;
   }
 }

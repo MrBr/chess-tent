@@ -1,14 +1,14 @@
 import {
-  GenericArguments,
+  GetRequestFetchResponse,
+  HOF,
   RequestFetch,
   RequestState,
-  StatusResponse,
 } from '@types';
 
-export const withRequestHandler =
-  <T, U extends StatusResponse>(request: RequestFetch<T, U>) =>
-  (change: (requestState: RequestState<U>) => void) =>
-  (...args: GenericArguments<T>) => {
+export const withRequestHandler: HOF['withRequestHandler'] =
+  <T extends RequestFetch<any, any>>(request: T) =>
+  (change: (requestState: RequestState<GetRequestFetchResponse<T>>) => void) =>
+  (...args) => {
     change({ response: null, error: null, loading: true });
     request(...args)
       .then(response => {
@@ -20,7 +20,11 @@ export const withRequestHandler =
           });
           return;
         }
-        change({ error: null, loading: false, response });
+        change({
+          error: null,
+          loading: false,
+          response: response as GetRequestFetchResponse<T> | null,
+        });
       })
       .catch(error => {
         change({ response: null, loading: false, error });

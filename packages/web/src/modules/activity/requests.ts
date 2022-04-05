@@ -1,26 +1,23 @@
 import { services, requests } from '@application';
-import { ActivityResponse, ActivitiesResponse, ActivityFilters } from '@types';
-import { Activity, SubjectPathUpdate } from '@chess-tent/models';
+import { Requests } from '@types';
 
-const activity = services.createRequest<[string], ActivityResponse>(
+const activity = services.createRequest<Requests['activity']>(
   'GET',
-  activityId => ({ url: `/activity/${activityId}` }),
+  activityId => `/activity/${activityId}`,
 );
 
-const activitySave = services.createRequest<Activity, ActivityResponse>(
+const activitySave = services.createRequest<Requests['activitySave']>(
   'POST',
   '/activity/save',
 );
 
-const activityUpdate = services.createRequest<
-  [Activity['id'], SubjectPathUpdate[]],
-  ActivityResponse
->('POST', (activityId, updates) => ({
-  url: `/activity-update/${activityId}`,
-  data: updates,
-}));
+const activityUpdate = services.createRequest<Requests['activityUpdate']>(
+  'POST',
+  activityId => `/activity-update/${activityId}`,
+  (activityId, updates) => updates,
+);
 
-const activities = services.createRequest<ActivityFilters, ActivitiesResponse>(
+const activities = services.createRequest<Requests['activities']>(
   'POST',
   '/activities',
 );

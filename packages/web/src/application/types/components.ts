@@ -13,7 +13,6 @@ import { DrawCurrent, DrawShape } from '@chess-tent/chessground/dist/draw';
 import { Api } from '@chess-tent/chessground/dist/api';
 import { Color } from '@chess-tent/chessground/dist/types';
 import { LinkProps, RedirectProps, RouteProps } from 'react-router-dom';
-import { Requests } from '@chess-tent/types';
 import {
   Activity,
   Analysis,
@@ -62,6 +61,7 @@ import {
   ChessboardContext,
   Hooks,
   NotificationView,
+  Requests,
   StepModules,
   Steps,
 } from './index';

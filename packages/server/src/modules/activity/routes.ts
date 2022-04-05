@@ -62,6 +62,7 @@ application.service.registerPostRoute(
     (req): ActivityFilters => ({
       users: req.body.users,
       subject: req.body.subject,
+      subjectType: req.body.subjectType,
       date: req.body.date,
     }),
   ),

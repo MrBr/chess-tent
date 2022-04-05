@@ -1,10 +1,10 @@
 import { requests, services } from '@application';
-import { SignedImageResponse } from '@types';
+import { Requests } from '@types';
 
-requests.signImageUrl = services.createRequest<
-  { contentType: string; key: string },
-  SignedImageResponse
->('POST', '/sign-image-url');
+requests.signImageUrl = services.createRequest<Requests['signImageUrl']>(
+  'POST',
+  '/sign-image-url',
+);
 
 requests.uploadImage = (signedImageUrl, file) =>
   fetch(signedImageUrl, {

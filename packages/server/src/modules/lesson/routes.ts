@@ -25,7 +25,6 @@ application.service.registerPostRoute(
 application.service.registerPutRoute(
   '/lesson/publish/:lessonId',
   identify,
-  toLocals('lesson', req => req.body),
   toLocals('lesson.id', req => req.params.lessonId),
   canEditLesson,
   publishLesson,
@@ -35,7 +34,6 @@ application.service.registerPutRoute(
 application.service.registerPutRoute(
   '/lesson/unpublish/:lessonId',
   identify,
-  toLocals('lesson', req => req.body),
   toLocals('lesson.id', req => req.params.lessonId),
   canEditLesson,
   unpublishLesson,

@@ -1,8 +1,9 @@
 // Hooks
 import {
+  GetRequestFetchArgs,
+  GetRequestFetchResponse,
   LessonsRequest,
   RequestFetch,
-  StatusResponse,
 } from '@chess-tent/types';
 import { ReactElement } from 'react';
 import {
@@ -26,9 +27,9 @@ import {
   RecordHookSafe,
 } from '@chess-tent/redux-record/types';
 
-import { GenericArguments } from './_helpers';
 import { Records } from './records';
 import { History } from './router';
+import { GenericArguments } from './_helpers';
 
 type UseMetaReturn<T> = [T, (meta: T) => void, () => void];
 
@@ -78,11 +79,11 @@ export type Hooks = {
   useQuery: <T extends Record<string, string | undefined>>() => T;
   useLocation: typeof useLocation;
   useParams: typeof useParams;
-  useApi: <T, K extends StatusResponse>(
-    request: RequestFetch<T, K>,
+  useApi: <T extends RequestFetch<any, any>>(
+    request: T,
   ) => {
-    fetch: (...args: GenericArguments<T>) => void;
-    response: K | null;
+    fetch: (...args: GenericArguments<GetRequestFetchArgs<T>>) => void;
+    response: GetRequestFetchResponse<T> | null;
     loading: boolean;
     error: null | string | {};
     reset: () => void;

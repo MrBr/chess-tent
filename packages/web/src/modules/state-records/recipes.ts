@@ -1,5 +1,12 @@
 import { utils, state, hof } from '@application';
-import { RequestFetch, DataResponse, Records } from '@types';
+import {
+  RequestFetch,
+  DataResponse,
+  Records,
+  GetRequestFetchArgs,
+  GenericArguments,
+  Endpoint,
+} from '@types';
 import { Entity } from '@chess-tent/models';
 import {
   InferRecordValue,
@@ -15,12 +22,19 @@ import { formatEntityValue } from './_helpers';
 const { withRequestHandler } = hof;
 
 const withRecordApiLoad =
-  <A, V, T extends RecordBase<V>>(request: RequestFetch<A, DataResponse<V>>) =>
+  <
+    RESPONSE extends DataResponse<any>,
+    E extends Endpoint<any, RESPONSE>,
+    R extends RequestFetch<E, any>,
+    T extends RecordBase<RESPONSE extends DataResponse<infer U> ? U : never>,
+  >(
+    request: R,
+  ) =>
   () =>
   (
     record: T,
   ): T & {
-    load: (...args: Parameters<RequestFetch<A, DataResponse<V>>>) => void;
+    load: (...args: GenericArguments<GetRequestFetchArgs<R>>) => void;
   } => {
     const load = withRequestHandler(request)(({ loading, response }) => {
       if (loading) {

@@ -2,7 +2,6 @@ import { Schema } from 'mongoose';
 import {
   Activity,
   NormalizedActivity,
-  Subject,
   TYPE_ACTIVITY,
 } from '@chess-tent/models';
 import { db } from '@application';
@@ -17,6 +16,7 @@ export interface DepupulatedActivity {
   roles: NormalizedActivity['roles'];
   date?: NormalizedActivity['date'];
   weekly?: NormalizedActivity['weekly'];
+  name?: Activity['name'];
   v?: number;
 }
 
@@ -25,6 +25,9 @@ const activitySchema = db.createSchema<DepupulatedActivity>(
     subject: {
       type: Schema.Types.Mixed,
     } as unknown as DepupulatedActivity['subject'],
+    name: {
+      type: Schema.Types.Mixed,
+    } as unknown as DepupulatedActivity['name'],
     subjectType: {
       type: String,
     } as unknown as DepupulatedActivity['subjectType'],
@@ -59,7 +62,7 @@ const ActivityModel = db.createModel<DepupulatedActivity>(
   activitySchema,
 );
 
-const depopulate = (activity: Activity<Subject>): DepupulatedActivity => {
+const depopulate = (activity: Activity): DepupulatedActivity => {
   const roles = activity.roles.map(db.depopulateRole);
 
   return {

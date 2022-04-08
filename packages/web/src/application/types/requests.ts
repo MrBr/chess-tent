@@ -6,6 +6,7 @@ import {
   Pagination,
   RegisterRequestParams,
   RequestFetch,
+  ScheduledLessonActivityFilters,
 } from '@chess-tent/types';
 import {
   Activity,
@@ -49,6 +50,10 @@ export interface Requests {
     [Activity['id'], SubjectPathUpdate[]]
   >;
   activities: RequestFetch<Endpoints['activities']>;
+  scheduledTrainings: RequestFetch<
+    Endpoints['trainings'],
+    Omit<ScheduledLessonActivityFilters, 'subjectType'>
+  >;
   trainings: RequestFetch<
     Endpoints['trainings'],
     Omit<LessonActivityFilters, 'subjectType'>

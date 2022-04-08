@@ -5,6 +5,7 @@ import { VariationStep } from '@types';
 
 import ChaptersDropdown from '../components/chapters-dropdown';
 import LessonThumbnail from '../components/thumbnail';
+import { createLessonActivity } from '../service';
 
 const {
   Container,
@@ -46,7 +47,8 @@ const PreviewLesson = () => {
     if (!lesson) {
       return;
     }
-    newTraining(lesson, user, { training: false });
+    const activity = createLessonActivity(lesson, user, {});
+    newTraining(activity);
   }, [newTraining, lesson, user]);
 
   const goToLesson = useCallback(() => {

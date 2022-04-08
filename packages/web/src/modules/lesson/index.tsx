@@ -28,7 +28,11 @@ application.register(
     application.hooks.useLesson = module.useLesson;
     application.hooks.useLessons = module.useLessons;
     application.hooks.useMyLessons = module.useMyLessons;
+    application.hooks.usePromptNewTrainingModal =
+      module.usePromptNewTrainingModal;
     application.hooks.useUserTrainings = module.useUserTrainings;
+    application.hooks.useUserScheduledTrainings =
+      module.useUserScheduledTrainings;
   },
 );
 

@@ -1,5 +1,5 @@
 import { isEqual } from 'lodash';
-import { services, utils } from '@application';
+import { constants, services, utils } from '@application';
 import {
   MoveStep,
   MoveStepState,
@@ -17,8 +17,14 @@ import {
   User,
   createActivity,
   LessonActivityRole,
+  createChapter,
+  createLesson,
+  createRoles,
 } from '@chess-tent/models';
-import { createRoles } from '@chess-tent/models/dist/role/service';
+
+const { createStep } = services;
+const { generateIndex } = utils;
+const { START_FEN } = constants;
 
 export const createLessonActivityBoard = (
   activeChapterId: string,
@@ -51,7 +57,8 @@ export const updateActivityActiveStep = (
 export const createLessonActivity = (
   lesson: Lesson,
   owner: User,
-  state?: Partial<LessonActivityBoardState>,
+  state: Partial<LessonActivity>,
+  boardState?: Partial<LessonActivityBoardState>,
   students: User[] = [],
   coaches: User[] = [],
 ): LessonActivity => {
@@ -66,7 +73,7 @@ export const createLessonActivity = (
   const mainBoard = createLessonActivityBoard(
     activeChapterId,
     activeStepId,
-    state,
+    boardState,
   );
   const activityInitialState: LessonActivity['state'] = {
     mainBoardId: mainBoard.id,
@@ -74,6 +81,7 @@ export const createLessonActivity = (
       [mainBoard.id]: mainBoard,
     },
     userSettings: {},
+    ...state,
   };
   return createActivity(id, lesson, roles, activityInitialState);
 };
@@ -101,3 +109,14 @@ export const isStudent = (activity: LessonActivity, user: User) =>
     ({ user: { id }, role }) =>
       id === user.id && role === LessonActivityRole.STUDENT,
   );
+
+export const createNewLesson = (user: User) => {
+  const defaultStep: Step = createStep('variation', {
+    position: START_FEN,
+  });
+  const newLessonId = generateIndex();
+  const defaultChapter = createChapter(generateIndex(), 'Chapter', [
+    defaultStep,
+  ]);
+  return createLesson(newLessonId, [defaultChapter], user, 'Lesson');
+};

@@ -7,6 +7,7 @@ import {
   LessonsRequest,
   OfferAction,
   RequestFetch,
+  ScheduledLessonActivityFilters,
 } from '@chess-tent/types';
 import { ReactElement } from 'react';
 import {
@@ -86,6 +87,11 @@ export type Hooks = {
   useUserTrainings: (
     user: User,
   ) => RecordHookInit<InferInitRecord<Records['userTrainings']>>;
+  useUserScheduledTrainings: (
+    user: User,
+    initialFilters?: Partial<ScheduledLessonActivityFilters>,
+  ) => RecordHookInit<InferInitRecord<Records['userScheduledTrainings']>>;
+  usePromptNewTrainingModal: () => () => void;
   useUserLessonsRecord: (
     user: User,
   ) => RecordHookInit<InferInitRecord<Records['lessons']>>;

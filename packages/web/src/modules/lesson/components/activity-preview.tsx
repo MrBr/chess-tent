@@ -27,11 +27,16 @@ const { Modal } = ui;
 const Preview = ({ lesson, chapter, step }: PreviewProps) => {
   const { value: user } = useActiveUserRecord();
   const [activity, updatePreviewActivity] = useState<LessonActivity>(
-    createLessonActivity(lesson, user, {
-      activeStepId: step.id,
-      activeChapterId: chapter.id,
-      [step.id]: services.createActivityStepState(),
-    }),
+    createLessonActivity(
+      lesson,
+      user,
+      {},
+      {
+        activeStepId: step.id,
+        activeChapterId: chapter.id,
+        [step.id]: services.createActivityStepState(),
+      },
+    ),
   );
   const activityBoardState = getLessonActivityUserActiveBoardState(
     activity,

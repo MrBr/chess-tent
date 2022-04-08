@@ -13,7 +13,6 @@ import {
   Conversation,
   LessonActivity,
   TYPE_ACTIVITY,
-  LessonActivityBoardState,
 } from '@chess-tent/models';
 import {
   CreateRecord,
@@ -43,6 +42,12 @@ function getRecordInitByNamespace(
 type UserTrainingsRecord = RecipeApiLoad<Requests['trainings']> &
   RecordBase<LessonActivity[]> &
   RecipeCollection<LessonActivity>;
+type UserScheduledTrainingsRecord = RecipeApiLoad<
+  Requests['scheduledTrainings']
+> &
+  RecordBase<LessonActivity[]> &
+  RecipeCollection<LessonActivity>;
+type CreateNewUserTraining = (activity: LessonActivity) => void;
 
 export type Records<T = any> = {
   activeUser: InitRecord<RecipeApiLoad<Requests['me']> & RecordBase<User>>;
@@ -64,16 +69,11 @@ export type Records<T = any> = {
 
   userTrainings: InitRecord<
     UserTrainingsRecord &
-      RecipeMethod<
-        UserTrainingsRecord,
-        'new',
-        (
-          lesson: Lesson,
-          owner: User,
-          state?: Partial<LessonActivityBoardState>,
-          students?: User[],
-        ) => void
-      >
+      RecipeMethod<UserTrainingsRecord, 'new', CreateNewUserTraining>
+  >;
+  userScheduledTrainings: InitRecord<
+    UserScheduledTrainingsRecord &
+      RecipeMethod<UserScheduledTrainingsRecord, 'new', CreateNewUserTraining>
   >;
 
   conversationParticipant: InitRecord<RecordBase<User>>;

@@ -14,11 +14,8 @@ import { Constants } from './constants';
 import { Context } from './context';
 import { HOF } from './hof';
 import { Records } from './records';
-<<<<<<< HEAD
 import { Requests } from './requests';
-=======
 import { RTC } from './rtc';
->>>>>>> 234ce9a (Implement basic PoC of conferencing (needs refactor))
 
 export * from '@chess-tent/types';
 export * from './activity';

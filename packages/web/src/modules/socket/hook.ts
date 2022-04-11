@@ -1,8 +1,6 @@
 import { useEffect } from 'react';
 import { socket, hooks } from '@application';
 import { Hooks } from '@types';
-import { roomUsers } from './record';
-import { Socket } from 'socket.io-client';
 import {
   ACTION_EVENT,
   CONFERENCING_ANSWER,
@@ -11,7 +9,11 @@ import {
   CONFERENCING_OFFER,
 } from '@chess-tent/types';
 
+import { Socket } from 'socket.io-client';
+
 import type { Actions } from '@chess-tent/types';
+
+import { roomUsers } from './record';
 
 const { useMeta, useRecordInit } = hooks;
 

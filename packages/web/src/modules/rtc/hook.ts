@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { socket } from '@application';
 import {
   CONFERENCING_ICECANDIDATE,
@@ -12,11 +12,13 @@ export const usePeerConnection = (
   localMediaStream?: MediaStream,
   startConnection?: boolean,
 ) => {
+  const senders = useRef<RTCRtpSender[]>([]);
+
   // adds localMediaStream to RTC connection
   const addMediaStreamTrack = useCallback(() => {
     if (localMediaStream) {
       localMediaStream.getTracks().forEach(mediaStreamTrack => {
-        rtcPeerConnection.addTrack(mediaStreamTrack);
+        senders.current.push(rtcPeerConnection.addTrack(mediaStreamTrack));
       });
     }
   }, [localMediaStream, rtcPeerConnection]);
@@ -79,12 +81,20 @@ export const usePeerConnection = (
   ]);
 
   useEffect(() => {
+    const activeSenders = senders.current;
+
     if (startConnection) {
       addMediaStreamTrack();
     }
 
     return () => {
-      // TODO: removal
+      if (rtcPeerConnection && activeSenders.length) {
+        activeSenders.forEach(sender => {
+          rtcPeerConnection.removeTrack(sender);
+        });
+
+        senders.current = [];
+      }
     };
-  }, [addMediaStreamTrack, startConnection]);
+  }, [addMediaStreamTrack, rtcPeerConnection, startConnection]);
 };

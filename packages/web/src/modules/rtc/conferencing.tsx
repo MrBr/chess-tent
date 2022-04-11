@@ -142,10 +142,9 @@ const Conferencing = memo(
     const handleStopConferencing = useCallback(() => {
       const { localMediaStream } = state;
 
-      // eslint-disable-next-line no-unused-expressions
-      localMediaStream?.getTracks().forEach(track => track.stop());
-
-      // TODO: remove track from RTCPeerConnection
+      if (localMediaStream) {
+        localMediaStream.getTracks().forEach(track => track.stop());
+      }
 
       setState(draft => {
         draft.localMediaStream = undefined;
@@ -155,10 +154,11 @@ const Conferencing = memo(
     const handleMuteUnmute = useCallback(() => {
       const { localMediaStream, muted } = state;
 
-      // eslint-disable-next-line no-unused-expressions
-      localMediaStream?.getAudioTracks().forEach(audioTrack => {
-        audioTrack.enabled = !!muted;
-      });
+      if (localMediaStream) {
+        localMediaStream.getAudioTracks().forEach(audioTrack => {
+          audioTrack.enabled = !!muted;
+        });
+      }
 
       setState(draft => {
         draft.muted = !muted;
@@ -194,6 +194,13 @@ const Conferencing = memo(
 
         createAnswer();
       }
+
+      // TODO: we need to close this when user leaves room
+      // return () => {
+      //   if (rtcPeerConnection) {
+      //     rtcPeerConnection.close();
+      //   }
+      // };
     }, [activityId, rtcPeerConnection, state]);
 
     useConferencing({

@@ -42,42 +42,47 @@ const useSocketRoomUsers: Hooks['useSocketRoomUsers'] = room => {
   return record.value || [];
 };
 
-const createUseConferencing: (
-  socket: Socket,
-) => Hooks['useConferencing'] = socket => ({
-  handleAnswer,
-  handleConnectionReady,
-  handleICECandidate,
-  handleOffer,
-}) => {
-  return useEffect(() => {
-    socket.on(ACTION_EVENT, (message: string) => {
-      const data: Actions = JSON.parse(message);
+const createUseConferencing: (socket: Socket) => Hooks['useConferencing'] =
+  socket =>
+  ({
+    handleAnswer,
+    handleConnectionReady,
+    handleICECandidate,
+    handleOffer,
+  }) => {
+    return useEffect(() => {
+      const listener = (data: Actions | string) => {
+        if (typeof data === 'string') return;
 
-      try {
-        switch (data.type) {
-          case CONFERENCING_CONNECTION:
-            handleConnectionReady(data);
-            break;
-          case CONFERENCING_OFFER:
-            handleOffer(data);
-            break;
-          case CONFERENCING_ANSWER:
-            handleAnswer(data);
-            break;
-          case CONFERENCING_ICECANDIDATE:
-            handleICECandidate(data);
-            break;
-          default:
-            break;
+        try {
+          switch (data.type) {
+            case CONFERENCING_CONNECTION:
+              handleConnectionReady(data);
+              break;
+            case CONFERENCING_OFFER:
+              handleOffer(data);
+              break;
+            case CONFERENCING_ANSWER:
+              handleAnswer(data);
+              break;
+            case CONFERENCING_ICECANDIDATE:
+              handleICECandidate(data);
+              break;
+            default:
+              break;
+          }
+        } catch (error) {
+          console.error(error);
         }
-      } catch (error) {
-        console.error(error);
-      }
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-};
+      };
+
+      socket.on(ACTION_EVENT, listener);
+      return () => {
+        socket.removeListener();
+      };
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+  };
 
 export {
   createUseConferencing,

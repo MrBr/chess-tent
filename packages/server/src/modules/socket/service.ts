@@ -12,8 +12,6 @@ import {
 } from '@chess-tent/types';
 import { RecordAction } from '@chess-tent/redux-record/types';
 
-import { initSignalServer } from './signal-server';
-
 let io: Server;
 
 const middleware: SocketService['middleware'][] = [];
@@ -42,9 +40,10 @@ const identify: SocketService['identify'] = stream => {
   return service.verifyToken(token);
 };
 
-const registerMiddleware: SocketService['registerMiddleware'] = socketMiddleware => {
-  middleware.push(socketMiddleware as SocketService['middleware']);
-};
+const registerMiddleware: SocketService['registerMiddleware'] =
+  socketMiddleware => {
+    middleware.push(socketMiddleware as SocketService['middleware']);
+  };
 
 const dispatch = (stream: SocketStream) => {
   let index = 0;
@@ -76,8 +75,6 @@ const init: SocketService['init'] = server => {
   io.of('/').adapter.on('leave-room', (room, clientId) => {
     dispatch({ clientId, data: room, event: UNSUBSCRIBED_EVENT });
   });
-
-  initSignalServer(io);
 };
 
 const getRoomUsers: SocketService['getRoomUsers'] = room => {

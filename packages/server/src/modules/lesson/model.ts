@@ -24,42 +24,42 @@ export interface DepupulatedLesson {
 
 const lessonSchema = db.createSchema<DepupulatedLesson>(
   {
-    docId: ({
+    docId: {
       type: String,
-    } as unknown) as DepupulatedLesson['docId'],
-    owner: ({
+    } as unknown as DepupulatedLesson['docId'],
+    owner: {
       type: String,
       ref: TYPE_USER,
-    } as unknown) as DepupulatedLesson['owner'],
+    } as unknown as DepupulatedLesson['owner'],
     users: [
       {
         type: String,
         ref: TYPE_USER,
       } as unknown,
     ] as DepupulatedLesson['users'],
-    state: ({
+    state: {
       type: Schema.Types.Mixed,
       required: true,
-    } as unknown) as DepupulatedLesson['state'],
-    difficulty: ({
+    } as unknown as DepupulatedLesson['state'],
+    difficulty: {
       type: String,
       enum: Object.keys(Difficulty),
       required: true,
       index: true,
-    } as unknown) as DepupulatedLesson['difficulty'],
+    } as unknown as DepupulatedLesson['difficulty'],
     tags: [
       {
         type: String,
         ref: TYPE_TAG,
       } as unknown,
     ] as DepupulatedLesson['tags'],
-    published: ({
+    published: {
       type: Boolean,
-    } as unknown) as DepupulatedLesson['published'],
-    type: ({
+    } as unknown as DepupulatedLesson['published'],
+    type: {
       type: String,
       default: TYPE_LESSON,
-    } as unknown) as typeof TYPE_LESSON,
+    } as unknown as typeof TYPE_LESSON,
   },
   { minimize: false },
 );

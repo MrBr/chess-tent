@@ -10,7 +10,7 @@ const activityBoardStateAdapter = async (
   }
   const mainBoard = {
     // Previously, activity state was board state
-    ...((entity.state as unknown) as LessonActivityBoardState),
+    ...(entity.state as unknown as LessonActivityBoardState),
     // Previously, activity.completedSteps on the root was place for completed steps -> now in the boardState
     completedSteps: ((entity as any).completedSteps as string[]) || [],
     id: service.generateIndex(),

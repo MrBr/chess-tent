@@ -57,9 +57,9 @@ export type DB = {
   roleSchema: Schema;
   depopulateRole: <T>(role: Role<T>) => NormalizedRole<T>;
   createModel: <T>(type: string, schema: Schema) => Model<AppDocument<T>>;
-  orQueries: (
-    ...args: MongooseFilterQuery<any>[]
-  ) => { $or: MongooseFilterQuery<any>[] | undefined };
+  orQueries: (...args: MongooseFilterQuery<any>[]) => {
+    $or: MongooseFilterQuery<any>[] | undefined;
+  };
   inQuery: <T, F extends string>(
     field: F,
     value: T[] | T,
@@ -109,9 +109,10 @@ export type DB = {
     schema: Schema,
     adapter: Updater<T>,
   ): void;
-  getDateRangeFilter(
-    date: DateRange,
-  ): { $gte: Date | undefined; $lt: Date | undefined };
+  getDateRangeFilter(date: DateRange): {
+    $gte: Date | undefined;
+    $lt: Date | undefined;
+  };
 };
 
 export type Auth = {

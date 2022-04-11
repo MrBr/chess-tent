@@ -144,9 +144,9 @@ describe('styled', () => {
     const TestComponent = styled(MockComponentBase).css<TestProps>`
     ${{ omitProps: ['color'] }}`;
     render(<TestComponent color="omit" size="keep" />);
-    const renderProps = ((MockComponentBase.mock.calls[0] as unknown) as [
-      Partial<TestProps>[],
-    ])[0];
+    const renderProps = (
+      MockComponentBase.mock.calls[0] as unknown as [Partial<TestProps>[]]
+    )[0];
     expect(renderProps).not.toEqual(
       expect.objectContaining({
         color: 'omit',

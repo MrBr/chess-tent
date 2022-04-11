@@ -21,28 +21,28 @@ export interface DepupulatedActivity {
 
 const activitySchema = db.createSchema<DepupulatedActivity>(
   {
-    subject: ({
+    subject: {
       type: Schema.Types.Mixed,
-    } as unknown) as DepupulatedActivity['subject'],
-    subjectType: ({
+    } as unknown as DepupulatedActivity['subject'],
+    subjectType: {
       type: String,
-    } as unknown) as DepupulatedActivity['subjectType'],
-    roles: ([db.roleSchema] as unknown) as DepupulatedActivity['roles'],
-    state: ({
+    } as unknown as DepupulatedActivity['subjectType'],
+    roles: [db.roleSchema] as unknown as DepupulatedActivity['roles'],
+    state: {
       type: Schema.Types.Mixed,
       required: true,
       default: {},
-    } as unknown) as DepupulatedActivity['state'],
-    type: ({
+    } as unknown as DepupulatedActivity['state'],
+    type: {
       type: String,
       default: TYPE_ACTIVITY,
-    } as unknown) as typeof TYPE_ACTIVITY,
-    date: ({
+    } as unknown as typeof TYPE_ACTIVITY,
+    date: {
       type: Schema.Types.Date,
-    } as unknown) as string,
-    weekly: ({
+    } as unknown as string,
+    weekly: {
       type: Schema.Types.Boolean,
-    } as unknown) as boolean,
+    } as unknown as boolean,
   },
   { minimize: false },
 );

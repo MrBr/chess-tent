@@ -1,7 +1,6 @@
 // Hooks
 import {
   AnswerAction,
-  ConnectionAction,
   GetRequestFetchArgs,
   GetRequestFetchResponse,
   ICECandidateAction,
@@ -39,7 +38,7 @@ type UseMetaReturn<T> = [T, (meta: T) => void, () => void];
 
 export interface ConferencingHandlers {
   handleAnswer(data: AnswerAction): void;
-  handleConnectionReady(data: ConnectionAction): void;
+  handleConnectionReady(): void;
   handleICECandidate(data: ICECandidateAction): void;
   handleOffer(data: OfferAction): void;
 }

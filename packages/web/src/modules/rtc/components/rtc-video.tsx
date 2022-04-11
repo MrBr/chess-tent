@@ -2,9 +2,10 @@ import React, { useCallback } from 'react';
 
 export interface RTCVideoProps {
   mediaStream?: MediaStream;
+  muted?: boolean;
 }
 
-export const RTCVideo: React.FC<RTCVideoProps> = ({ mediaStream }) => {
+export const RTCVideo: React.FC<RTCVideoProps> = ({ mediaStream, muted }) => {
   const addMediaStream = useCallback(
     (video: HTMLVideoElement | null) => {
       if (mediaStream && video) {
@@ -23,6 +24,7 @@ export const RTCVideo: React.FC<RTCVideoProps> = ({ mediaStream }) => {
         backgroundColor: 'black',
       }}
       autoPlay
+      muted={muted}
       ref={mediaStream ? addMediaStream : null}
     >
       <track default kind="captions" />

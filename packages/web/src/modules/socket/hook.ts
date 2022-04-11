@@ -1,10 +1,9 @@
 import { useEffect } from 'react';
 import { socket, hooks } from '@application';
-import { Hooks } from '@types';
+import { Hooks, ROOM_USERS_ACTION } from '@types';
 import {
   ACTION_EVENT,
   CONFERENCING_ANSWER,
-  CONFERENCING_CONNECTION,
   CONFERENCING_ICECANDIDATE,
   CONFERENCING_OFFER,
 } from '@chess-tent/types';
@@ -56,8 +55,10 @@ const createUseConferencing: (socket: Socket) => Hooks['useConferencing'] =
 
         try {
           switch (data.type) {
-            case CONFERENCING_CONNECTION:
-              handleConnectionReady(data);
+            case ROOM_USERS_ACTION:
+              if (data.payload.length > 1) {
+                handleConnectionReady();
+              }
               break;
             case CONFERENCING_OFFER:
               handleOffer(data);

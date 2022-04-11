@@ -1,31 +1,155 @@
-import { useCallback, useEffect, useRef } from 'react';
-import { socket } from '@application';
+import { useCallback, useEffect, useMemo } from 'react';
+import { hooks, socket } from '@application';
 import {
+  CONFERENCING_ANSWER,
   CONFERENCING_ICECANDIDATE,
   CONFERENCING_OFFER,
 } from '@chess-tent/types';
+import { useImmer } from 'use-immer';
+
+import type {
+  AnswerAction,
+  ICECandidateAction,
+  OfferAction,
+} from '@chess-tent/types';
+
+const { useConferencing } = hooks;
+
+type State = Partial<{
+  connectionStarted: boolean;
+  localMediaStream: MediaStream;
+  muted?: boolean;
+  remoteMediaStream: MediaStream;
+}>;
 
 export const usePeerConnection = (
   activityId: string,
-  rtcPeerConnection: RTCPeerConnection,
-  addRemoteStream: (remoteMediaStream: MediaStream) => void,
-  localMediaStream?: MediaStream,
-  startConnection?: boolean,
+  iceServers: { urls: string }[],
+  mediaConstraints: { video: boolean; audio: boolean },
 ) => {
-  const senders = useRef<RTCRtpSender[]>([]);
+  const [state, setState] = useImmer<State>({});
+  const { connectionStarted, localMediaStream, muted } = state;
+  const rtcPeerConnection = useMemo(
+    () =>
+      new RTCPeerConnection({
+        iceServers,
+      }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
 
-  // adds localMediaStream to RTC connection
-  const addMediaStreamTrack = useCallback(() => {
+  const openCamera = useCallback(
+    async (fromHandleOffer = false) => {
+      try {
+        if (!localMediaStream) {
+          const mediaStream = await navigator.mediaDevices.getUserMedia(
+            mediaConstraints,
+          );
+
+          if (fromHandleOffer) {
+            return mediaStream;
+          }
+
+          setState(draft => {
+            draft.localMediaStream = mediaStream;
+          });
+        }
+      } catch (error) {
+        console.error('getUserMedia Error: ', error);
+      }
+    },
+    [mediaConstraints, setState, localMediaStream],
+  );
+
+  const handleOffer = useCallback(
+    async (data: OfferAction) => {
+      const { payload } = data;
+
+      if (!payload.message) return;
+
+      await rtcPeerConnection.setRemoteDescription(payload.message);
+
+      let mediaStream = localMediaStream;
+
+      if (!mediaStream) {
+        mediaStream = await openCamera(true);
+      }
+
+      setState(draft => {
+        draft.connectionStarted = true;
+        draft.localMediaStream = mediaStream;
+      });
+    },
+    [openCamera, rtcPeerConnection, setState, localMediaStream],
+  );
+
+  const handleAnswer = useCallback(
+    async (data: AnswerAction) => {
+      const { payload } = data;
+
+      await rtcPeerConnection.setRemoteDescription(payload.message);
+    },
+    [rtcPeerConnection],
+  );
+
+  const handleICECandidate = useCallback(
+    async (data: ICECandidateAction) => {
+      const { message } = data.payload;
+      const candidate = JSON.parse(message);
+
+      await rtcPeerConnection.addIceCandidate(candidate);
+    },
+    [rtcPeerConnection],
+  );
+
+  const handleConnectionReady = useCallback(() => {
+    setState(draft => {
+      draft.connectionStarted = true;
+    });
+  }, [setState]);
+
+  const addRemoteStream = useCallback(
+    (remoteMediaStream: MediaStream) => {
+      setState(draft => {
+        draft.remoteMediaStream = remoteMediaStream;
+      });
+    },
+    [setState],
+  );
+
+  const handleStartConferencing = useCallback(
+    async () => openCamera(),
+    [openCamera],
+  );
+
+  const handleStopConferencing = useCallback(() => {
     if (localMediaStream) {
-      localMediaStream.getTracks().forEach(mediaStreamTrack => {
-        senders.current.push(rtcPeerConnection.addTrack(mediaStreamTrack));
+      localMediaStream.getTracks().forEach(track => track.stop());
+    }
+
+    setState(draft => {
+      draft.localMediaStream = undefined;
+    });
+  }, [setState, localMediaStream]);
+
+  const handleMuteUnmute = useCallback(() => {
+    if (localMediaStream) {
+      localMediaStream.getAudioTracks().forEach(audioTrack => {
+        audioTrack.enabled = !!muted;
       });
     }
-  }, [localMediaStream, rtcPeerConnection]);
+
+    setState(draft => {
+      draft.muted = !muted;
+    });
+  }, [setState, localMediaStream, muted]);
 
   const handleOnNegotiationNeeded = useCallback(async () => {
     try {
-      const offer = await rtcPeerConnection.createOffer();
+      const offer = await rtcPeerConnection.createOffer({
+        offerToReceiveAudio: true,
+        offerToReceiveVideo: true,
+      });
 
       await rtcPeerConnection.setLocalDescription(offer);
 
@@ -57,44 +181,79 @@ export const usePeerConnection = (
 
   const handleOnTrack = useCallback(
     (trackEvent: RTCTrackEvent) => {
-      const remoteMediaStream = new MediaStream([trackEvent.track]);
-      addRemoteStream(remoteMediaStream);
+      addRemoteStream(trackEvent.streams[0]);
     },
     [addRemoteStream],
   );
 
   useEffect(() => {
+    if (!rtcPeerConnection) {
+      throw new Error('RTC should be initialized!');
+    }
+
     rtcPeerConnection.onnegotiationneeded = handleOnNegotiationNeeded;
     rtcPeerConnection.onicecandidate = handleOnIceEvent;
     rtcPeerConnection.ontrack = handleOnTrack;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-    return () => {
-      rtcPeerConnection.onnegotiationneeded = null;
-      rtcPeerConnection.onicecandidate = null;
-      rtcPeerConnection.ontrack = null;
-    };
-  }, [
-    handleOnIceEvent,
-    handleOnNegotiationNeeded,
-    handleOnTrack,
-    rtcPeerConnection,
-  ]);
+  useConferencing({
+    handleAnswer,
+    handleConnectionReady,
+    handleICECandidate,
+    handleOffer,
+  });
 
   useEffect(() => {
-    const activeSenders = senders.current;
+    if (!connectionStarted || !localMediaStream) return;
 
-    if (startConnection) {
-      addMediaStreamTrack();
+    localMediaStream
+      .getTracks()
+      .forEach(mediaStreamTrack =>
+        rtcPeerConnection.addTrack(mediaStreamTrack, localMediaStream),
+      );
+  }, [rtcPeerConnection, connectionStarted, localMediaStream]);
+
+  useEffect(() => {
+    if (connectionStarted && localMediaStream) {
+      const createAnswer = async () => {
+        let answer: RTCSessionDescriptionInit | undefined;
+
+        try {
+          answer = await rtcPeerConnection.createAnswer();
+        } catch (error) {
+          console.error(error);
+        }
+
+        if (!answer) return;
+
+        await rtcPeerConnection.setLocalDescription(answer);
+
+        socket.sendAction({
+          type: CONFERENCING_ANSWER,
+          payload: {
+            activityId,
+            message: answer,
+          },
+          meta: {},
+        });
+      };
+
+      createAnswer();
     }
 
-    return () => {
-      if (rtcPeerConnection && activeSenders.length) {
-        activeSenders.forEach(sender => {
-          rtcPeerConnection.removeTrack(sender);
-        });
+    // TODO: we need to close this when user leaves room
+    // return () => {
+    //   if (rtcPeerConnection) {
+    //     rtcPeerConnection.close();
+    //   }
+    // };
+  }, [activityId, rtcPeerConnection, connectionStarted, localMediaStream]);
 
-        senders.current = [];
-      }
-    };
-  }, [addMediaStreamTrack, rtcPeerConnection, startConnection]);
+  return {
+    state,
+    handleStartConferencing,
+    handleMuteUnmute,
+    handleStopConferencing,
+  };
 };

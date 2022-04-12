@@ -168,6 +168,7 @@ export type UI = {
   Headline6: UIComponent<TextProps>;
   Icon: UIComponent<{
     type:
+      | 'camera'
       | 'close'
       | 'comment'
       | 'enter'

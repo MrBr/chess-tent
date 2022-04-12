@@ -25,6 +25,7 @@ const Conferencing = memo(
       handleStartConferencing,
       handleMuteUnmute,
       handleStopConferencing,
+      handleToggleCamera,
     } = usePeerConnection(activityId, iceServers, mediaConstraints);
 
     return (
@@ -46,13 +47,26 @@ const Conferencing = memo(
           <ConferenceButton
             className="d-flex justify-content-center align-items-center"
             style={{
-              background: state.muted ? 'gray' : 'rgba(0, 0, 200, 0.6)',
+              background: state.mutedAudio ? 'gray' : 'rgba(0, 0, 200, 0.6)',
               paddingTop: 3,
             }}
             onClick={handleMuteUnmute}
             title="Toggle Microphone"
           >
             <Icon type="microphone" />
+          </ConferenceButton>
+          <ConferenceButton
+            className="d-flex justify-content-center align-items-center"
+            style={{
+              background: state.mutedVideo
+                ? 'gray'
+                : 'rgba(200, 100, 100, 0.6)',
+              paddingTop: 3,
+            }}
+            onClick={handleToggleCamera}
+            title="Toggle Camera"
+          >
+            <Icon type="camera" />
           </ConferenceButton>
           <ConferenceButton
             className="d-flex justify-content-center align-items-center"

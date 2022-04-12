@@ -18,7 +18,8 @@ const { useConferencing } = hooks;
 type State = Partial<{
   connectionStarted: boolean;
   localMediaStream: MediaStream;
-  muted?: boolean;
+  mutedAudio?: boolean;
+  mutedVideo?: boolean;
   remoteMediaStream: MediaStream;
 }>;
 
@@ -28,7 +29,7 @@ export const usePeerConnection = (
   mediaConstraints: { video: boolean; audio: boolean },
 ) => {
   const [state, setState] = useImmer<State>({});
-  const { connectionStarted, localMediaStream, muted } = state;
+  const { connectionStarted, localMediaStream, mutedAudio, mutedVideo } = state;
   const rtcPeerConnection = useMemo(
     () =>
       new RTCPeerConnection({
@@ -135,14 +136,26 @@ export const usePeerConnection = (
   const handleMuteUnmute = useCallback(() => {
     if (localMediaStream) {
       localMediaStream.getAudioTracks().forEach(audioTrack => {
-        audioTrack.enabled = !!muted;
+        audioTrack.enabled = !!mutedAudio;
       });
     }
 
     setState(draft => {
-      draft.muted = !muted;
+      draft.mutedAudio = !mutedAudio;
     });
-  }, [setState, localMediaStream, muted]);
+  }, [setState, localMediaStream, mutedAudio]);
+
+  const handleToggleCamera = useCallback(() => {
+    if (localMediaStream) {
+      localMediaStream.getVideoTracks().forEach(videoTrack => {
+        videoTrack.enabled = !!mutedVideo;
+      });
+    }
+
+    setState(draft => {
+      draft.mutedVideo = !mutedVideo;
+    });
+  }, [setState, localMediaStream, mutedVideo]);
 
   const handleOnNegotiationNeeded = useCallback(async () => {
     try {
@@ -242,7 +255,7 @@ export const usePeerConnection = (
       createAnswer();
     }
 
-    // TODO: we need to close this when user leaves room
+    // TODO: we need to close this when user leaves room via messaging
     // return () => {
     //   if (rtcPeerConnection) {
     //     rtcPeerConnection.close();
@@ -255,5 +268,6 @@ export const usePeerConnection = (
     handleStartConferencing,
     handleMuteUnmute,
     handleStopConferencing,
+    handleToggleCamera,
   };
 };

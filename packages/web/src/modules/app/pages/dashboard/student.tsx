@@ -1,12 +1,18 @@
 import React, { useCallback, useState } from 'react';
-import { components, hooks, rtc, ui } from '@application';
-import { Tag, User } from '@chess-tent/models';
+import { components, hooks, ui } from '@application';
+import { Tag, TYPE_ACTIVITY, User } from '@chess-tent/models';
 import { LessonsRequest } from '@chess-tent/types';
 
-const { Page, Coaches, LessonBrowser, MyTrainings } = components;
-const { useLessons, useUserTrainings, useActivity } = hooks;
+const {
+  Page,
+  Coaches,
+  ConferencingPeer,
+  ConferencingProvider,
+  LessonBrowser,
+  MyTrainings,
+} = components;
+const { useLessons, useUserTrainings, useActivity, useSocketRoomUsers } = hooks;
 const { Row, Col } = ui;
-const { Conferencing } = rtc;
 
 const DashboardStudent = ({ user }: { user: User }) => {
   const { value: trainings } = useUserTrainings(user);
@@ -16,6 +22,9 @@ const DashboardStudent = ({ user }: { user: User }) => {
   const [lessonsFilter, setLessonsFilter] = useState<LessonsRequest>({
     owner: user.id,
   });
+  const liveUsers = useSocketRoomUsers(
+    `${TYPE_ACTIVITY}-6387149e-b0c9-4246-9a94-462a439b1af5`,
+  );
   const { value: lessons } = useLessons(`lessons`, lessonsFilter);
 
   const handleFilterChange = useCallback(
@@ -30,6 +39,8 @@ const DashboardStudent = ({ user }: { user: User }) => {
     },
     [setLessonsFilter, user.id],
   );
+
+  console.log(liveUsers);
 
   return (
     <Page>
@@ -48,7 +59,21 @@ const DashboardStudent = ({ user }: { user: User }) => {
         </Col>
       </Row>
       <Row>
-        <Conferencing activityId="6387149e-b0c9-4246-9a94-462a439b1af5" />
+        <ConferencingProvider>
+          <>
+            {liveUsers
+              .filter(Boolean)
+              .filter(({ id }) => id !== user.id)
+              .map(({ id }) => (
+                <ConferencingPeer
+                  key={id}
+                  activityId="6387149e-b0c9-4246-9a94-462a439b1af5"
+                  fromUserId={id}
+                  toUserId={user.id}
+                />
+              ))}
+          </>
+        </ConferencingProvider>
       </Row>
     </Page>
   );

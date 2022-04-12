@@ -1,4 +1,6 @@
 import application from '@application';
-import Conferencing from './conferencing';
+import { ConferencingProvider } from './context';
+import { ConferencingPeer } from './conferencing-peer';
 
-application.rtc.Conferencing = Conferencing;
+application.components.ConferencingProvider = ConferencingProvider;
+application.components.ConferencingPeer = ConferencingPeer;

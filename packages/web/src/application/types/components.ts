@@ -300,6 +300,12 @@ export type RenderPropComponentType = ComponentType<{
 }>;
 
 export type Components = {
+  ConferencingProvider: ComponentType;
+  ConferencingPeer: ComponentType<{
+    activityId: string;
+    fromUserId: string;
+    toUserId: string;
+  }>;
   App: ComponentType;
   MobileRoot: ComponentType;
   MobilePortal: ComponentType;

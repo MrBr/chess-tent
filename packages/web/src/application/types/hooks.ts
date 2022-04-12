@@ -38,7 +38,6 @@ type UseMetaReturn<T> = [T, (meta: T) => void, () => void];
 
 export interface ConferencingHandlers {
   handleAnswer(data: AnswerAction): void;
-  handleConnectionReady(): void;
   handleICECandidate(data: ICECandidateAction): void;
   handleOffer(data: OfferAction): void;
 }
@@ -49,7 +48,11 @@ export type Hooks = {
   useIsMobile: () => boolean;
   useComponentStateSilent: () => { mounted: boolean };
   useComponentState: () => { mounted: boolean };
-  useConferencing: (handlers: ConferencingHandlers) => void;
+  useConferencing: (
+    fromUserId: string,
+    toUserId: string,
+    handlers: ConferencingHandlers,
+  ) => void;
   usePromptModal: () => (
     renderModal: (close: () => void) => ReactElement,
   ) => void;

@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
 import { socket, hooks } from '@application';
-import { Hooks, ROOM_USERS_ACTION } from '@types';
+import { Hooks } from '@types';
 import {
+  ConferencingAction,
   ACTION_EVENT,
   CONFERENCING_ANSWER,
   CONFERENCING_ICECANDIDATE,
@@ -41,25 +42,27 @@ const useSocketRoomUsers: Hooks['useSocketRoomUsers'] = room => {
   return record.value || [];
 };
 
+const isConferencingAction = (action: Actions): action is ConferencingAction =>
+  [CONFERENCING_OFFER, CONFERENCING_ANSWER, CONFERENCING_ICECANDIDATE].some(
+    actionType => actionType === action.type,
+  );
+
 const createUseConferencing: (socket: Socket) => Hooks['useConferencing'] =
   socket =>
-  ({
-    handleAnswer,
-    handleConnectionReady,
-    handleICECandidate,
-    handleOffer,
-  }) => {
+  (fromUserId, toUserId, { handleAnswer, handleICECandidate, handleOffer }) => {
     return useEffect(() => {
       const listener = (data: Actions | string) => {
-        if (typeof data === 'string') return;
+        if (typeof data === 'string' || !isConferencingAction(data)) return;
+
+        if (
+          data.payload?.fromUserId !== fromUserId ||
+          data.payload?.toUserId !== toUserId
+        ) {
+          return;
+        }
 
         try {
           switch (data.type) {
-            case ROOM_USERS_ACTION:
-              if (data.payload.length > 1) {
-                handleConnectionReady();
-              }
-              break;
             case CONFERENCING_OFFER:
               handleOffer(data);
               break;

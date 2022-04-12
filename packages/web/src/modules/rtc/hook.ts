@@ -1,11 +1,10 @@
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { hooks, socket } from '@application';
 import {
   CONFERENCING_ANSWER,
   CONFERENCING_ICECANDIDATE,
   CONFERENCING_OFFER,
 } from '@chess-tent/types';
-import { useImmer } from 'use-immer';
 
 import type {
   AnswerAction,
@@ -13,23 +12,18 @@ import type {
   OfferAction,
 } from '@chess-tent/types';
 
-const { useConferencing } = hooks;
+import { useConferencingContext } from './context';
 
-type State = Partial<{
-  connectionStarted: boolean;
-  localMediaStream: MediaStream;
-  mutedAudio?: boolean;
-  mutedVideo?: boolean;
-  remoteMediaStream: MediaStream;
-}>;
+const { useConferencing } = hooks;
 
 export const usePeerConnection = (
   activityId: string,
-  iceServers: { urls: string }[],
-  mediaConstraints: { video: boolean; audio: boolean },
+  fromUserId: string,
+  toUserId: string,
 ) => {
-  const [state, setState] = useImmer<State>({});
-  const { connectionStarted, localMediaStream, mutedAudio, mutedVideo } = state;
+  const [remoteMediaStream, setRemoteMediaStream] = useState<MediaStream>();
+  const { connectionStarted, iceServers, localMediaStream } =
+    useConferencingContext();
   const rtcPeerConnection = useMemo(
     () =>
       new RTCPeerConnection({
@@ -39,29 +33,6 @@ export const usePeerConnection = (
     [],
   );
 
-  const openCamera = useCallback(
-    async (fromHandleOffer = false) => {
-      try {
-        if (!localMediaStream) {
-          const mediaStream = await navigator.mediaDevices.getUserMedia(
-            mediaConstraints,
-          );
-
-          if (fromHandleOffer) {
-            return mediaStream;
-          }
-
-          setState(draft => {
-            draft.localMediaStream = mediaStream;
-          });
-        }
-      } catch (error) {
-        console.error('getUserMedia Error: ', error);
-      }
-    },
-    [mediaConstraints, setState, localMediaStream],
-  );
-
   const handleOffer = useCallback(
     async (data: OfferAction) => {
       const { payload } = data;
@@ -69,19 +40,8 @@ export const usePeerConnection = (
       if (!payload.message) return;
 
       await rtcPeerConnection.setRemoteDescription(payload.message);
-
-      let mediaStream = localMediaStream;
-
-      if (!mediaStream) {
-        mediaStream = await openCamera(true);
-      }
-
-      setState(draft => {
-        draft.connectionStarted = true;
-        draft.localMediaStream = mediaStream;
-      });
     },
-    [openCamera, rtcPeerConnection, setState, localMediaStream],
+    [rtcPeerConnection],
   );
 
   const handleAnswer = useCallback(
@@ -103,59 +63,9 @@ export const usePeerConnection = (
     [rtcPeerConnection],
   );
 
-  const handleConnectionReady = useCallback(() => {
-    setState(draft => {
-      draft.connectionStarted = true;
-    });
-  }, [setState]);
-
-  const addRemoteStream = useCallback(
-    (remoteMediaStream: MediaStream) => {
-      setState(draft => {
-        draft.remoteMediaStream = remoteMediaStream;
-      });
-    },
-    [setState],
-  );
-
-  const handleStartConferencing = useCallback(
-    async () => openCamera(),
-    [openCamera],
-  );
-
-  const handleStopConferencing = useCallback(() => {
-    if (localMediaStream) {
-      localMediaStream.getTracks().forEach(track => track.stop());
-    }
-
-    setState(draft => {
-      draft.localMediaStream = undefined;
-    });
-  }, [setState, localMediaStream]);
-
-  const handleMuteUnmute = useCallback(() => {
-    if (localMediaStream) {
-      localMediaStream.getAudioTracks().forEach(audioTrack => {
-        audioTrack.enabled = !!mutedAudio;
-      });
-    }
-
-    setState(draft => {
-      draft.mutedAudio = !mutedAudio;
-    });
-  }, [setState, localMediaStream, mutedAudio]);
-
-  const handleToggleCamera = useCallback(() => {
-    if (localMediaStream) {
-      localMediaStream.getVideoTracks().forEach(videoTrack => {
-        videoTrack.enabled = !!mutedVideo;
-      });
-    }
-
-    setState(draft => {
-      draft.mutedVideo = !mutedVideo;
-    });
-  }, [setState, localMediaStream, mutedVideo]);
+  const addRemoteStream = useCallback((remoteMediaStream: MediaStream) => {
+    setRemoteMediaStream(remoteMediaStream);
+  }, []);
 
   const handleOnNegotiationNeeded = useCallback(async () => {
     try {
@@ -168,13 +78,18 @@ export const usePeerConnection = (
 
       socket.sendAction({
         type: CONFERENCING_OFFER,
-        payload: { activityId, message: rtcPeerConnection.localDescription },
+        payload: {
+          activityId,
+          message: rtcPeerConnection.localDescription,
+          fromUserId,
+          toUserId,
+        },
         meta: {},
       });
     } catch (error) {
       console.error(error);
     }
-  }, [activityId, rtcPeerConnection]);
+  }, [activityId, fromUserId, rtcPeerConnection, toUserId]);
 
   const handleOnIceEvent = useCallback(
     (rtcPeerConnectionIceEvent: RTCPeerConnectionIceEvent) => {
@@ -184,12 +99,14 @@ export const usePeerConnection = (
           payload: {
             activityId,
             message: JSON.stringify(rtcPeerConnectionIceEvent.candidate),
+            fromUserId,
+            toUserId,
           },
           meta: {},
         });
       }
     },
-    [activityId],
+    [activityId, fromUserId, toUserId],
   );
 
   const handleOnTrack = useCallback(
@@ -210,9 +127,8 @@ export const usePeerConnection = (
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useConferencing({
+  useConferencing(fromUserId, toUserId, {
     handleAnswer,
-    handleConnectionReady,
     handleICECandidate,
     handleOffer,
   });
@@ -246,6 +162,8 @@ export const usePeerConnection = (
           type: CONFERENCING_ANSWER,
           payload: {
             activityId,
+            fromUserId,
+            toUserId,
             message: answer,
           },
           meta: {},
@@ -261,13 +179,14 @@ export const usePeerConnection = (
     //     rtcPeerConnection.close();
     //   }
     // };
-  }, [activityId, rtcPeerConnection, connectionStarted, localMediaStream]);
+  }, [
+    activityId,
+    rtcPeerConnection,
+    connectionStarted,
+    localMediaStream,
+    fromUserId,
+    toUserId,
+  ]);
 
-  return {
-    state,
-    handleStartConferencing,
-    handleMuteUnmute,
-    handleStopConferencing,
-    handleToggleCamera,
-  };
+  return remoteMediaStream;
 };

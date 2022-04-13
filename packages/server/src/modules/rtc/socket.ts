@@ -15,10 +15,7 @@ socket.registerMiddleware(async (stream, next) => {
       stream.data.type === CONFERENCING_OFFER ||
       stream.data.type === CONFERENCING_ICECANDIDATE)
   ) {
-    socket.sendAction(
-      `${TYPE_ACTIVITY}-${stream.data.payload.activityId}`,
-      stream,
-    );
+    socket.sendAction(stream.data.payload.room, stream);
   }
 
   next(stream);

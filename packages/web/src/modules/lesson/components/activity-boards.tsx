@@ -7,11 +7,12 @@ import {
   getLessonChapter,
   LessonActivity,
   LessonActivityRole,
+  TYPE_ACTIVITY,
   User,
 } from '@chess-tent/models';
 import { ActivityStepMode, ChessboardProps, Steps } from '@types';
 
-const { useActiveUserRecord } = hooks;
+const { useActiveUserRecord, useSocketRoomUsers } = hooks;
 const { Chessboard, ChessboardContextProvider, StepRenderer, AnalysisBoard } =
   components;
 
@@ -31,13 +32,8 @@ const renderChessboard = (props: ChessboardProps) => {
   );
 };
 
-const ActivityBoards = ({
-  activity,
-  liveUsers,
-}: {
-  activity: LessonActivity;
-  liveUsers?: User[];
-}) => {
+const ActivityBoards = ({ activity }: { activity: LessonActivity }) => {
+  const liveUsers = useSocketRoomUsers(`${TYPE_ACTIVITY}-${activity.id}`);
   const { value: activeUser } = useActiveUserRecord();
   const students = useMemo(
     () =>
@@ -66,7 +62,7 @@ const ActivityBoards = ({
 
         const chapter = getLessonChapter(
           activity.subject,
-          userBoardState.activeChapterId,
+          userBoardState.activeChapterId as string, // TODO - handle lesson without chapters?
         ) as Chapter;
 
         const step = getChildStep(

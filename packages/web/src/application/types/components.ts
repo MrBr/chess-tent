@@ -264,8 +264,6 @@ export interface ActivityRendererProps {
   lesson: Lesson;
   activityStepState: ActivityStepStateBase;
   boardState: LessonActivityBoardState;
-  liveUsers?: User[];
-  activeUserId?: string;
 }
 
 export interface ActivityRendererState {}
@@ -301,11 +299,11 @@ export type RenderPropComponentType = ComponentType<{
 }>;
 
 export type Components = {
-  ConferencingProvider: ComponentType;
+  ConferencingProvider: ComponentType<{ room: string }>;
   ConferencingPeer: ComponentType<{
-    activityId: string;
     fromUserId: string;
     toUserId: string;
+    room: string;
   }>;
   App: ComponentType;
   MobileRoot: ComponentType;

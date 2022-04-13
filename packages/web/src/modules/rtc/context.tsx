@@ -1,16 +1,23 @@
-import React, { createContext, useCallback, useContext } from 'react';
-import { useImmer } from 'use-immer';
-import { ui } from '@application';
-
-import type { FC } from 'react';
-import type { Updater } from 'use-immer';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useState,
+  useMemo,
+  useEffect,
+} from 'react';
+import { components, hooks, ui } from '@application';
+import { Components } from '@types';
 
 import { DEFAULT_CONSTRAINTS, DEFAULT_ICE_SERVERS } from './constants';
 
 import { ConferenceButton } from './components/conference-button';
+import { ConferencingPeer } from './conferencing-peer';
 import { RTCVideo } from './components/rtc-video';
 
 const { Icon } = ui;
+const { useActiveUserRecord, useSocketRoomUsers } = hooks;
+const { UserAvatar } = components;
 
 interface ConferencingContextType {
   mediaConstraints: typeof DEFAULT_CONSTRAINTS;
@@ -19,21 +26,34 @@ interface ConferencingContextType {
   connectionStarted?: boolean;
   mutedAudio?: boolean;
   mutedVideo?: boolean;
-  update: Updater<ConferencingContextType>;
 }
 
 export const ConferencingContext = createContext({} as ConferencingContextType);
 
 export const useConferencingContext = () => useContext(ConferencingContext);
 
-export const ConferencingProvider: FC = ({ children }) => {
-  const [state, setState] = useImmer<ConferencingContextType>({
+export const ConferencingProvider: Components['ConferencingProvider'] = ({
+  room,
+}) => {
+  const [state, setState] = useState<ConferencingContextType>({
     connectionStarted: true,
     iceServers: DEFAULT_ICE_SERVERS,
     mediaConstraints: DEFAULT_CONSTRAINTS,
-    update: (...args) => setState(...args),
   });
+  const { value: user } = useActiveUserRecord();
   const { mediaConstraints, mutedAudio, mutedVideo, localMediaStream } = state;
+  const liveUsers = useSocketRoomUsers(room);
+
+  const remoteUsers = useMemo(
+    () => liveUsers.filter(({ id }) => id !== user.id),
+    [liveUsers, user.id],
+  );
+
+  // Close media tracks on unmount
+  useEffect(
+    () => localMediaStream?.getTracks().forEach(track => track.stop()),
+    [localMediaStream],
+  );
 
   const openCamera = useCallback(
     async (fromHandleOffer = false) => {
@@ -47,9 +67,10 @@ export const ConferencingProvider: FC = ({ children }) => {
             return mediaStream;
           }
 
-          setState(draft => {
-            draft.localMediaStream = mediaStream;
-          });
+          setState(pevState => ({
+            ...pevState,
+            localMediaStream: mediaStream,
+          }));
         }
       } catch (error) {
         console.error('getUserMedia Error: ', error);
@@ -68,9 +89,10 @@ export const ConferencingProvider: FC = ({ children }) => {
       localMediaStream.getTracks().forEach(track => track.stop());
     }
 
-    setState(draft => {
-      draft.localMediaStream = undefined;
-    });
+    setState(pevState => ({
+      ...pevState,
+      localMediaStream: undefined,
+    }));
   }, [setState, localMediaStream]);
 
   const handleMuteUnmute = useCallback(() => {
@@ -80,9 +102,10 @@ export const ConferencingProvider: FC = ({ children }) => {
       });
     }
 
-    setState(draft => {
-      draft.mutedAudio = !mutedAudio;
-    });
+    setState(pevState => ({
+      ...pevState,
+      mutedAudio: !mutedAudio,
+    }));
   }, [setState, localMediaStream, mutedAudio]);
 
   const handleToggleCamera = useCallback(() => {
@@ -92,13 +115,17 @@ export const ConferencingProvider: FC = ({ children }) => {
       });
     }
 
-    setState(draft => {
-      draft.mutedVideo = !mutedVideo;
-    });
-  }, [setState, localMediaStream, mutedVideo]);
+    setState(pevState => ({
+      ...pevState,
+      mutedVideo: !mutedAudio,
+    }));
+  }, [localMediaStream, mutedVideo, mutedAudio]);
 
   return (
     <ConferencingContext.Provider value={state}>
+      {liveUsers.map(user => (
+        <UserAvatar key={user.id} user={user} />
+      ))}
       <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
         <RTCVideo mediaStream={localMediaStream} muted />
       </div>
@@ -142,7 +169,14 @@ export const ConferencingProvider: FC = ({ children }) => {
         >
           <Icon type="exit" />
         </ConferenceButton>
-        {children}
+        {remoteUsers.map(({ id }) => (
+          <ConferencingPeer
+            key={id}
+            room={room}
+            fromUserId={id}
+            toUserId={user.id as string}
+          />
+        ))}
       </section>
     </ConferencingContext.Provider>
   );

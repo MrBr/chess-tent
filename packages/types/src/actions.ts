@@ -153,30 +153,26 @@ export type RoomUsersAction = Action<
 
 export type SocketAction = RoomUsersAction;
 
-type SenderReceiverBase = {
+type SenderReceiverBase<T> = {
   fromUserId: string;
   toUserId: string;
+  room: string;
+  message: T;
 };
 
 export type OfferAction = Action<
   typeof CONFERENCING_OFFER,
-  SenderReceiverBase & {
-    activityId: string;
-    message: RTCSessionDescriptionInit | null;
-  }
+  SenderReceiverBase<RTCSessionDescriptionInit | null>
 >;
 
 export type AnswerAction = Action<
   typeof CONFERENCING_ANSWER,
-  SenderReceiverBase & {
-    activityId: string;
-    message: RTCSessionDescriptionInit;
-  }
+  SenderReceiverBase<RTCSessionDescriptionInit>
 >;
 
 export type ICECandidateAction = Action<
   typeof CONFERENCING_ICECANDIDATE,
-  SenderReceiverBase & { activityId: string; message: string }
+  SenderReceiverBase<string>
 >;
 
 export type ConferencingAction =

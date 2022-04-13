@@ -51,17 +51,10 @@ const {
   ChessboardContextProvider,
   LessonPlaygroundCard,
   LessonChapters,
-  UserAvatar,
   ConferencingProvider,
-  ConferencingPeer,
 } = components;
-const {
-  useDiffUpdates,
-  useApi,
-  useDispatchService,
-  useSocketRoomUsers,
-  useActiveUserRecord,
-} = hooks;
+const { useDiffUpdates, useApi, useDispatchService, useActiveUserRecord } =
+  hooks;
 const { Button, Absolute } = ui;
 const { updateLessonActivityActiveStep } = services;
 
@@ -302,9 +295,7 @@ export class ActivityRenderer extends React.Component<
       step,
       activityStepState,
       boardState,
-      liveUsers,
       activity,
-      activeUserId,
     } = this.props;
 
     return (
@@ -350,30 +341,11 @@ export class ActivityRenderer extends React.Component<
                 comments={activityStepState.comments}
               />
             </LessonPlaygroundCard>
-            {liveUsers && (
-              <LessonPlaygroundCard>
-                {liveUsers.map(user => (
-                  <UserAvatar key={user.id} user={user} />
-                ))}
-                <ConferencingProvider>
-                  <>
-                    {liveUsers
-                      .filter(Boolean)
-                      .filter(({ id }) => id !== activeUserId)
-                      .map(({ id }) => (
-                        <ConferencingPeer
-                          key={id}
-                          activityId={activity.id}
-                          fromUserId={id}
-                          toUserId={activeUserId as string}
-                        />
-                      ))}
-                  </>
-                </ConferencingProvider>
-              </LessonPlaygroundCard>
-            )}
             <LessonPlaygroundCard>
-              <ActivityBoards activity={activity} liveUsers={liveUsers} />
+              <ConferencingProvider room={`${TYPE_ACTIVITY}-${activity.id}`} />
+            </LessonPlaygroundCard>
+            <LessonPlaygroundCard>
+              <ActivityBoards activity={activity} />
             </LessonPlaygroundCard>
           </>
         }
@@ -403,7 +375,6 @@ const Activity: ActivityComponent<LessonActivity> = props => {
     activeBoardState?.activeStepId || activeChapter.state.steps[0].id;
   const activeStep = getChildStep(activeChapter, activeStepId) as Steps;
   const activeStepActivityState = activeBoardState?.[activeStep.id];
-  const liveUsers = useSocketRoomUsers(`${TYPE_ACTIVITY}-${props.activity.id}`);
 
   const dispatchService = useDispatchService();
   const { fetch: saveActivity } = useApi(requests.activityUpdate);
@@ -435,8 +406,6 @@ const Activity: ActivityComponent<LessonActivity> = props => {
       updateActivity={updateActivity}
       activityStepState={activeStepActivityState}
       boardState={activeBoardState}
-      liveUsers={liveUsers}
-      activeUserId={user.id}
     />
   );
 };

@@ -5,12 +5,8 @@ import { RTCVideo } from './components/rtc-video';
 import { usePeerConnection } from './hook';
 
 export const ConferencingPeer: Components['ConferencingPeer'] = memo(
-  ({ activityId, fromUserId, toUserId }) => {
-    const remoteMediaStream = usePeerConnection(
-      activityId,
-      fromUserId,
-      toUserId,
-    );
+  ({ fromUserId, toUserId, room }) => {
+    const remoteMediaStream = usePeerConnection(room, fromUserId, toUserId);
 
     return (
       <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>

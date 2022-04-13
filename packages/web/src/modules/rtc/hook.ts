@@ -4,9 +4,6 @@ import {
   CONFERENCING_ANSWER,
   CONFERENCING_ICECANDIDATE,
   CONFERENCING_OFFER,
-} from '@chess-tent/types';
-
-import type {
   AnswerAction,
   ICECandidateAction,
   OfferAction,
@@ -17,7 +14,7 @@ import { useConferencingContext } from './context';
 const { useConferencing } = hooks;
 
 export const usePeerConnection = (
-  activityId: string,
+  room: string,
   fromUserId: string,
   toUserId: string,
 ) => {
@@ -79,7 +76,7 @@ export const usePeerConnection = (
       socket.sendAction({
         type: CONFERENCING_OFFER,
         payload: {
-          activityId,
+          room,
           message: rtcPeerConnection.localDescription,
           fromUserId,
           toUserId,
@@ -89,7 +86,7 @@ export const usePeerConnection = (
     } catch (error) {
       console.error(error);
     }
-  }, [activityId, fromUserId, rtcPeerConnection, toUserId]);
+  }, [fromUserId, rtcPeerConnection, toUserId, room]);
 
   const handleOnIceEvent = useCallback(
     (rtcPeerConnectionIceEvent: RTCPeerConnectionIceEvent) => {
@@ -97,7 +94,7 @@ export const usePeerConnection = (
         socket.sendAction({
           type: CONFERENCING_ICECANDIDATE,
           payload: {
-            activityId,
+            room,
             message: JSON.stringify(rtcPeerConnectionIceEvent.candidate),
             fromUserId,
             toUserId,
@@ -106,7 +103,7 @@ export const usePeerConnection = (
         });
       }
     },
-    [activityId, fromUserId, toUserId],
+    [fromUserId, toUserId, room],
   );
 
   const handleOnTrack = useCallback(
@@ -161,7 +158,7 @@ export const usePeerConnection = (
         socket.sendAction({
           type: CONFERENCING_ANSWER,
           payload: {
-            activityId,
+            room,
             fromUserId,
             toUserId,
             message: answer,
@@ -173,19 +170,18 @@ export const usePeerConnection = (
       createAnswer();
     }
 
-    // TODO: we need to close this when user leaves room via messaging
-    // return () => {
-    //   if (rtcPeerConnection) {
-    //     rtcPeerConnection.close();
-    //   }
-    // };
+    return () => {
+      if (rtcPeerConnection) {
+        rtcPeerConnection.close();
+      }
+    };
   }, [
-    activityId,
     rtcPeerConnection,
     connectionStarted,
     localMediaStream,
     fromUserId,
     toUserId,
+    room,
   ]);
 
   return remoteMediaStream;

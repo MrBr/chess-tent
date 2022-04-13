@@ -1,12 +1,11 @@
 import { ClientSocketStream, SocketService, SocketStream } from '@types';
 import application, { service, socket } from '@application';
-import { Server, Socket } from 'socket.io';
+import { Server } from 'socket.io';
 import {
   ACTION_EVENT,
   Actions,
   CONNECTION_EVENT,
   ROOM_USERS_ACTION,
-  SocketEvents,
   SUBSCRIBE_EVENT,
   UNSUBSCRIBE_EVENT,
   UNSUBSCRIBED_EVENT,
@@ -41,9 +40,10 @@ const identify: SocketService['identify'] = stream => {
   return service.verifyToken(token);
 };
 
-const registerMiddleware: SocketService['registerMiddleware'] = socketMiddleware => {
-  middleware.push(socketMiddleware as SocketService['middleware']);
-};
+const registerMiddleware: SocketService['registerMiddleware'] =
+  socketMiddleware => {
+    middleware.push(socketMiddleware as SocketService['middleware']);
+  };
 
 const dispatch = (stream: SocketStream) => {
   let index = 0;
@@ -56,6 +56,7 @@ const dispatch = (stream: SocketStream) => {
 
 const init: SocketService['init'] = server => {
   io = new Server(server, { path: process.env.SOCKET_BASE_PATH });
+
   io.on(CONNECTION_EVENT, function (client) {
     dispatch({ client, event: CONNECTION_EVENT });
 

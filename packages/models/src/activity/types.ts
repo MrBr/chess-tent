@@ -5,7 +5,7 @@ export const TYPE_ACTIVITY = 'activities';
 
 export interface Activity<
   T extends Subject = Subject,
-  S extends { [key: string]: any } = any
+  S extends { [key: string]: any } = any,
 > {
   id: string;
   state: S;
@@ -20,7 +20,7 @@ export interface Activity<
 
 export interface NormalizedActivity<
   T extends Subject = Subject,
-  S extends {} = {}
+  S extends {} = {},
 > {
   id: Activity<T>['id'];
   type: Activity<T>['type'];

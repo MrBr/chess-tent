@@ -3,12 +3,12 @@ import { DB } from '@types';
 import { v4 as uuid } from 'uuid';
 import { DateRange } from '@chess-tent/types';
 
-const createTransformRemoveId = <T>(
-  transform?: (doc: any, ret: any, options: any) => any,
-) => (doc: unknown, ret: T extends { _id: any } ? T : never, options: any) => {
-  delete ret._id;
-  return transform ? transform(doc, ret, options) : ret;
-};
+const createTransformRemoveId =
+  <T>(transform?: (doc: any, ret: any, options: any) => any) =>
+  (doc: unknown, ret: T extends { _id: any } ? T : never, options: any) => {
+    delete ret._id;
+    return transform ? transform(doc, ret, options) : ret;
+  };
 
 export const createSchema: DB['createSchema'] = <T extends {}>(
   definition: T,
@@ -16,12 +16,12 @@ export const createSchema: DB['createSchema'] = <T extends {}>(
   useDefault = true,
 ) => {
   const defaultDefinition = {
-    _id: ({ type: String, default: uuid, alias: 'id' } as unknown) as string,
-    v: ({
+    _id: { type: String, default: uuid, alias: 'id' } as unknown as string,
+    v: {
       type: Schema.Types.Number,
       required: false,
       default: 0,
-    } as unknown) as number,
+    } as unknown as number,
   };
   const schema = new Schema<typeof definition>(
     {

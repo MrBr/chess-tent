@@ -9,6 +9,7 @@ const { useMyLessons, useUserTrainings } = hooks;
 const DashboardCoach = ({ user }: { user: User }) => {
   const { value: trainings } = useUserTrainings(user);
   const [lessonsFilter, setLessonsFilter] = useState<LessonsRequest>({});
+
   const { value: lessons } = useMyLessons(
     `own-lessons-${user.id}`,
     lessonsFilter,

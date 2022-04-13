@@ -168,11 +168,15 @@ export type UI = {
   Headline6: UIComponent<TextProps>;
   Icon: UIComponent<{
     type:
+      | 'camera'
       | 'close'
       | 'comment'
+      | 'enter'
+      | 'exit'
       | 'notification'
       | 'search'
       | 'home'
+      | 'microphone'
       | 'crown'
       | 'plus'
       | 'board'

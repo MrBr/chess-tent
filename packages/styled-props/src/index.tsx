@@ -58,95 +58,93 @@ function isOmittedPropsComposite<T extends {}>(
   return !!composite?.omitProps;
 }
 
-export const resolveClassNames = <T extends { className?: string }>(
-  mappedProps: Partial<T>,
-) => (styles: TemplateStringsArray, ...variables: CompositeStyle<T>[]) => {
-  const [styleVariables, compositeStyles, omittedProps] = variables.reduce<
-    [
-      any[],
-      (DynamicClassNameResolver<T> | DynamicCssDescriptorResolver<T>)[],
-      OmittedProps<T>,
-    ]
-  >(
-    (res, variable) => {
-      if (isStyledComponent(variable)) {
-        // Create a className
-        res[0].push('.' + variable[COMPONENT_CLASSNAME]);
-      } else if (isDynamicCssDescriptorResolver(variable)) {
-        res[1].push(variable);
-      } else if (isCssDescriptor(variable)) {
-        res[1].push(variable.resolveDynamicClassNames);
-        res[0].push(variable.staticStyle);
-        variable.omittedProps.forEach(prop => res[2].push(prop));
-      } else if (isOmittedPropsComposite(variable)) {
-        variable.omitProps.forEach(prop => res[2].push(prop));
-      } else {
-        res[0].push(variable);
+export const resolveClassNames =
+  <T extends { className?: string }>(mappedProps: Partial<T>) =>
+  (styles: TemplateStringsArray, ...variables: CompositeStyle<T>[]) => {
+    const [styleVariables, compositeStyles, omittedProps] = variables.reduce<
+      [
+        any[],
+        (DynamicClassNameResolver<T> | DynamicCssDescriptorResolver<T>)[],
+        OmittedProps<T>,
+      ]
+    >(
+      (res, variable) => {
+        if (isStyledComponent(variable)) {
+          // Create a className
+          res[0].push('.' + variable[COMPONENT_CLASSNAME]);
+        } else if (isDynamicCssDescriptorResolver(variable)) {
+          res[1].push(variable);
+        } else if (isCssDescriptor(variable)) {
+          res[1].push(variable.resolveDynamicClassNames);
+          res[0].push(variable.staticStyle);
+          variable.omittedProps.forEach(prop => res[2].push(prop));
+        } else if (isOmittedPropsComposite(variable)) {
+          variable.omitProps.forEach(prop => res[2].push(prop));
+        } else {
+          res[0].push(variable);
+        }
+        return res;
+      },
+      [[], [], []],
+    );
+    const resolveDynamicClassNames = (props: T): string => {
+      const dynamicClassNames = {} as Record<string, string | boolean>;
+      for (const key in mappedProps) {
+        const value = props[key];
+        const propClassName = typeof value === 'string' ? value : key;
+        dynamicClassNames[propClassName] =
+          typeof value === 'string' ? value : !!value;
       }
-      return res;
-    },
-    [[], [], []],
-  );
-  const resolveDynamicClassNames = (props: T): string => {
-    const dynamicClassNames = {} as Record<string, string | boolean>;
-    for (const key in mappedProps) {
-      const value = props[key];
-      const propClassName = typeof value === 'string' ? value : key;
-      dynamicClassNames[propClassName] =
-        typeof value === 'string' ? value : !!value;
-    }
-    const compositeClassNames = compositeStyles.map(compositeStyle => {
-      const composite = compositeStyle(props);
-      if (typeof composite === 'string') {
-        return composite;
-      }
-      return composite.className;
-    });
-    return cn(dynamicClassNames, ...compositeClassNames);
-  };
-  return createCssDescriptor(
-    styles,
-    styleVariables,
-    resolveDynamicClassNames,
-    omittedProps,
-  );
-};
-
-const renderWithClassNames = <T extends { className?: string }>(
-  Component: ComponentType<T>,
-) => (mappedProps: Partial<T>) => (
-  styles: TemplateStringsArray,
-  ...variables: CompositeStyle<T>[]
-): StyledComponent<T> => {
-  const {
-    resolveDynamicClassNames,
-    className,
-    omittedProps,
-  } = resolveClassNames<T>(mappedProps)(styles, ...variables);
-  const WrappedComponent: StyledComponent<T> = (props: T) => {
-    const dynamicClassNames = resolveDynamicClassNames(props);
-    const filteredProps =
-      omittedProps.length > 0
-        ? omittedProps.reduce(
-            (res, prop) => {
-              delete res[prop];
-              return res;
-            },
-            { ...props },
-          )
-        : props;
-    return (
-      <Component
-        {...filteredProps}
-        className={cn(props.className, className, dynamicClassNames)}
-      />
+      const compositeClassNames = compositeStyles.map(compositeStyle => {
+        const composite = compositeStyle(props);
+        if (typeof composite === 'string') {
+          return composite;
+        }
+        return composite.className;
+      });
+      return cn(dynamicClassNames, ...compositeClassNames);
+    };
+    return createCssDescriptor(
+      styles,
+      styleVariables,
+      resolveDynamicClassNames,
+      omittedProps,
     );
   };
-  WrappedComponent[COMPONENT_CLASSNAME] = className;
-  return WrappedComponent;
-};
 
-let styled = (((Component: ComponentType) =>
+const renderWithClassNames =
+  <T extends { className?: string }>(Component: ComponentType<T>) =>
+  (mappedProps: Partial<T>) =>
+  (
+    styles: TemplateStringsArray,
+    ...variables: CompositeStyle<T>[]
+  ): StyledComponent<T> => {
+    const { resolveDynamicClassNames, className, omittedProps } =
+      resolveClassNames<T>(mappedProps)(styles, ...variables);
+    const WrappedComponent: StyledComponent<T> = (props: T) => {
+      const dynamicClassNames = resolveDynamicClassNames(props);
+      const filteredProps =
+        omittedProps.length > 0
+          ? omittedProps.reduce(
+              (res, prop) => {
+                delete res[prop];
+                return res;
+              },
+              { ...props },
+            )
+          : props;
+      return (
+        <Component
+          {...filteredProps}
+          className={cn(props.className, className, dynamicClassNames)}
+        />
+      );
+    };
+    WrappedComponent[COMPONENT_CLASSNAME] = className;
+    return WrappedComponent;
+  };
+
+let styled = ((Component: ComponentType) =>
   new Proxy(
     {
       [CLASSNAME_MAP]: {},
@@ -168,7 +166,7 @@ let styled = (((Component: ComponentType) =>
         return receiver;
       },
     },
-  )) as unknown) as Styled;
+  )) as unknown as Styled;
 
 styled.button = styled('button');
 styled.input = styled('input');
@@ -208,13 +206,13 @@ styled = new Proxy(styled, {
   },
 }) as Styled;
 
-const useCss = <T extends {}>(cssDescriptor: CssDescriptor<T>) => (
-  props: T,
-) => {
-  const className = cssDescriptor.className;
-  const dynamicClassNames = cssDescriptor.resolveDynamicClassNames(props);
-  return cn(className, dynamicClassNames);
-};
+const useCss =
+  <T extends {}>(cssDescriptor: CssDescriptor<T>) =>
+  (props: T) => {
+    const className = cssDescriptor.className;
+    const dynamicClassNames = cssDescriptor.resolveDynamicClassNames(props);
+    return cn(className, dynamicClassNames);
+  };
 
 const cssDescriptorCreator = (
   styles: TemplateStringsArray,

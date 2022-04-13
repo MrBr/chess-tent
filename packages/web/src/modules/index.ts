@@ -21,6 +21,7 @@ application.register(() => import('./step-variation'));
 application.register(() => import('./ui'));
 application.register(() => import('./utils'));
 application.register(() => import('./router'));
+application.register(() => import('./rtc'));
 application.register(() => import('./user'));
 application.register(() => import('./socket'));
 application.register(() => import('./activity'));

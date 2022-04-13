@@ -3,14 +3,14 @@ import { db } from '@application';
 
 const roleSchema = db.createSchema<NormalizedRole<string>>(
   {
-    user: ({
+    user: {
       type: String,
       ref: TYPE_USER,
       index: true,
-    } as unknown) as NormalizedRole<string>['user'],
-    role: ({
+    } as unknown as NormalizedRole<string>['user'],
+    role: {
       type: String,
-    } as unknown) as NormalizedRole<string>['role'],
+    } as unknown as NormalizedRole<string>['role'],
   },
   { minimize: false },
 );

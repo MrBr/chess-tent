@@ -1,10 +1,14 @@
+export { ReactComponent as camera } from './icons/camera.svg';
 export { ReactComponent as close } from './icons/close.svg';
 export { ReactComponent as comment } from './icons/comment.svg';
+export { ReactComponent as enter } from './icons/enter.svg';
+export { ReactComponent as exit } from './icons/exit.svg';
 export { ReactComponent as notification } from './icons/notification.svg';
 export { ReactComponent as search } from './icons/search.svg';
 export { ReactComponent as chess } from './icons/chess.svg';
 export { ReactComponent as crown } from './icons/crown.svg';
 export { ReactComponent as home } from './icons/home.svg';
+export { ReactComponent as microphone } from './icons/microphone.svg';
 export { ReactComponent as plus } from './icons/plus.svg';
 export { ReactComponent as board } from './icons/board.svg';
 export { ReactComponent as like } from './icons/like.svg';

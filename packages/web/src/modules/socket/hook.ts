@@ -55,30 +55,31 @@ const createUseConferencing: (socket: Socket) => Hooks['useConferencing'] =
         if (typeof data === 'string' || !isConferencingAction(data)) return;
 
         if (
-          data.payload?.fromUserId !== fromUserId ||
-          data.payload?.toUserId !== toUserId
+          (data.payload?.fromUserId === fromUserId ||
+            data.payload?.fromUserId === toUserId) &&
+          (data.payload?.toUserId === toUserId ||
+            data.payload?.toUserId === fromUserId)
         ) {
-          return;
-        }
-
-        try {
-          switch (data.type) {
-            case CONFERENCING_OFFER:
-              handleOffer(data);
-              break;
-            case CONFERENCING_ANSWER:
-              handleAnswer(data);
-              break;
-            case CONFERENCING_ICECANDIDATE:
-              handleICECandidate(data);
-              break;
-            default:
-              break;
+          try {
+            switch (data.type) {
+              case CONFERENCING_OFFER:
+                handleOffer(data);
+                break;
+              case CONFERENCING_ANSWER:
+                handleAnswer(data);
+                break;
+              case CONFERENCING_ICECANDIDATE:
+                handleICECandidate(data);
+                break;
+              default:
+                break;
+            }
+          } catch (error) {
+            console.error(error);
           }
-        } catch (error) {
-          console.error(error);
         }
       };
+      console.log('LISTENER ADDED');
 
       socket.on(ACTION_EVENT, listener);
       return () => {

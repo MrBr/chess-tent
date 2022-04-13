@@ -11,7 +11,7 @@ socket.registerMiddleware(async (stream, next) => {
       console.warn('Forwarding SYNC action Error - no payload');
       return;
     }
-    socket.sendServerAction(`${type}-${id}`, action, action.meta.socketId);
+    socket.sendAction(`${type}-${id}`, stream);
   }
 
   next(stream);

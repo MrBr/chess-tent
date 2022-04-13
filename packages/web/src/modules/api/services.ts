@@ -34,7 +34,7 @@ export const createRequest =
     const request = {
       url,
       method,
-      data,
+      data: method === 'GET' ? undefined : data,
     } as GetEndpointRequest<GetRequestFetchEndpoint<T>>;
 
     return services.api.makeRequest<GetRequestFetchEndpoint<T>>(request);

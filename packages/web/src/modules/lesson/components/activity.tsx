@@ -52,6 +52,8 @@ const {
   LessonPlaygroundCard,
   LessonChapters,
   UserAvatar,
+  ConferencingProvider,
+  ConferencingPeer,
 } = components;
 const {
   useDiffUpdates,
@@ -302,6 +304,7 @@ export class ActivityRenderer extends React.Component<
       boardState,
       liveUsers,
       activity,
+      activeUserId,
     } = this.props;
 
     return (
@@ -352,6 +355,21 @@ export class ActivityRenderer extends React.Component<
                 {liveUsers.map(user => (
                   <UserAvatar key={user.id} user={user} />
                 ))}
+                <ConferencingProvider>
+                  <>
+                    {liveUsers
+                      .filter(Boolean)
+                      .filter(({ id }) => id !== activeUserId)
+                      .map(({ id }) => (
+                        <ConferencingPeer
+                          key={id}
+                          activityId={activity.id}
+                          fromUserId={id}
+                          toUserId={activeUserId as string}
+                        />
+                      ))}
+                  </>
+                </ConferencingProvider>
               </LessonPlaygroundCard>
             )}
             <LessonPlaygroundCard>
@@ -418,6 +436,7 @@ const Activity: ActivityComponent<LessonActivity> = props => {
       activityStepState={activeStepActivityState}
       boardState={activeBoardState}
       liveUsers={liveUsers}
+      activeUserId={user.id}
     />
   );
 };

@@ -23,7 +23,7 @@ const UserSettings = () => {
   return (
     <Dropdown>
       <Dropdown.Toggle id="header-user" collapse>
-        <UserAvatar size="small" user={user} />
+        <UserAvatar size="extra-small" user={user} />
       </Dropdown.Toggle>
       <Dropdown.Menu>
         <Dropdown.Item>

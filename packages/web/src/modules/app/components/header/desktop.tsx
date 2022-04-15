@@ -3,8 +3,7 @@ import { components, ui } from '@application';
 import { Components } from '@types';
 
 const { Container, Row, Col } = ui;
-const { NotificationStand, UserSettings, Invitation, ConversationsStand } =
-  components;
+const { NotificationStand, Invitation, ConversationsStand } = components;
 
 const Header: Components['Header'] = () => {
   return (
@@ -15,7 +14,6 @@ const Header: Components['Header'] = () => {
           <Invitation />
           <ConversationsStand />
           <NotificationStand />
-          <UserSettings />
         </Col>
       </Row>
     </Container>

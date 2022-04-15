@@ -99,6 +99,25 @@ const applyNestedPatches =
     return finishDraft(draft, patchListener) as E;
   };
 
+/**
+ * Similar to the applyNestedPatches but feels a lot simpler.
+ *
+ * The function enables a new more verbose approach. Instead of making a single patch update
+ * it creates a draft which is later on modified by the other services.
+ *
+ * This is actually a way to go in the future. Services shouldn't create draft but rather get it as an argument.
+ *
+ * TODO - Needs verification
+ */
+const applyUpdates =
+  <T>(entity: T) =>
+  (update: (draft: T) => void) =>
+  (patchListener?: PatchListener): T => {
+    const draft = createDraft(entity);
+    update(draft as T);
+    return finishDraft(draft, patchListener) as T;
+  };
+
 export {
   createService,
   PatchListener,
@@ -106,4 +125,5 @@ export {
   createReversiblePatch,
   applyPatches,
   applyNestedPatches,
+  applyUpdates,
 };

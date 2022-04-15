@@ -7,7 +7,11 @@ const { Icon } = ui;
 
 const ConversationsStand = () => {
   const openConversations = useOpenConversations();
-  return <Icon type="notification" onClick={() => openConversations()} />;
+  return (
+    <div className="d-inline-block">
+      <Icon type="notification" onClick={() => openConversations()} />
+    </div>
+  );
 };
 
 export default ConversationsStand;

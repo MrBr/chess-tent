@@ -22,14 +22,12 @@ export default styled<Components['Layout']>(
     '.layout-header': {
       gridArea: 'header',
       height: 64,
-      boxShadow: '0px 1px 0px #ECECEC',
       zIndex: 10,
       padding: '0 5em',
     },
     '.layout-content': {
       gridArea: 'content',
       padding: '0 5em',
-      background: '#FAFBFB',
       position: 'relative',
       overflowY: 'auto',
     },

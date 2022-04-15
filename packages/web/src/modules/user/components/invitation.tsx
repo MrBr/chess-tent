@@ -53,9 +53,9 @@ const Invitation = () => {
       <Button
         onClick={() => setModalVisibility(true)}
         size="extra-small"
-        variant="regular"
+        variant="text"
       >
-        {contentText}
+        Invite
       </Button>
       <Modal close={() => setModalVisibility(false)} show={isModalVisible}>
         <Modal.Header>{contentText}</Modal.Header>

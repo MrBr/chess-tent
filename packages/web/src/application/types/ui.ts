@@ -48,7 +48,14 @@ import { ClassNameProps, ClickProps } from './_helpers';
 import { HtmlProps } from './hoc';
 
 export type BaseButtonProps = {
-  variant?: 'primary' | 'secondary' | 'regular' | 'danger' | 'ghost' | 'dark';
+  variant?:
+    | 'primary'
+    | 'secondary'
+    | 'regular'
+    | 'danger'
+    | 'ghost'
+    | 'dark'
+    | 'text';
   size?: 'large' | 'regular' | 'small' | 'extra-small';
   disabled?: boolean;
   stretch?: boolean;

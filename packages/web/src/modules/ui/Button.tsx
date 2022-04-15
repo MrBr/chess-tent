@@ -30,6 +30,12 @@ const variants = styled.props.variant.disabled.css<BaseButtonProps>`
     background: transparent;
     border: 1px solid var(--grey-700-color);
   }
+  
+  &.text {
+    color: var(--dark-color);
+    background: transparent;
+    border: none;
+  }
 
   &.disabled {
     background: var(--grey-500-color);

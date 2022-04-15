@@ -27,7 +27,7 @@ const CoachCard: Components['CoachCard'] = ({ coach }) => {
     <CoachFrame key={coach.id}>
       <FramedProfile src={coach.state.imageUrl || defaultAvatarSrc} />
       <CardBody>
-        <Row className="flex-column flex-nowrap h-100" noGutters>
+        <Row className="flex-column flex-nowrap h-100 g-0">
           <Col>
             <Headline4
               className="mt-1 mb-0 cursor-pointer"

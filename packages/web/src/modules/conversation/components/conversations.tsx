@@ -27,8 +27,7 @@ const ConversationRow = styled<
   <Row
     onClick={() => setParticipant(participant)}
     key={participant.id}
-    className={className}
-    noGutters
+    className={`g-0 ${className}`}
   >
     <Col className="col-auto d-flex align-items-center pr-0">
       <UserAvatar user={participant} />

@@ -122,7 +122,7 @@ const Footer: FunctionComponent<ChessboardFooterProps> = ({
 
   return (
     <>
-      <Row noGutters className="justify-content-between">
+      <Row className="g-0 justify-content-between">
         <Col className="col-auto">
           <EditBoardToggle editing={editing} onChange={updateEditing} />
         </Col>
@@ -161,7 +161,7 @@ const Footer: FunctionComponent<ChessboardFooterProps> = ({
           </Button>
         </Col>
       </Row>
-      <Row noGutters className="mt-3 align-items-center">
+      <Row className="g-0 mt-3 align-items-center">
         <Col className="col-auto me-2">
           <Label className="mb-0">FEN:</Label>
         </Col>

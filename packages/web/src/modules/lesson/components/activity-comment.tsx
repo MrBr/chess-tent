@@ -9,7 +9,7 @@ const { useUser } = hooks;
 const Comment = ({ comment }: { comment: ActivityComment }) => {
   const user = useUser(comment.userId);
   return (
-    <Row className="mt-2" noGutters>
+    <Row className="mt-2" g-0>
       <Col className="col-auto pr-0 me-2">
         <UserAvatar user={user} />
       </Col>

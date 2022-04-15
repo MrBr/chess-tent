@@ -45,9 +45,8 @@ const EditorSidebar = <T extends ExerciseSteps, K extends ExerciseSegmentKeys>({
   // NOTE! Passing props for the OverlayTrigger (so that it can trigger tooltip)
   return (
     <Row
-      noGutters
       onClick={() => updateActiveSegment(currentSegmentKey)}
-      className="position-relative flex-column"
+      className="g-0 position-relative flex-column"
       {...props}
     >
       {activeSegment === currentSegmentKey && <ActiveSegmentMark />}

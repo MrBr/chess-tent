@@ -469,7 +469,7 @@ class EditorRenderer extends React.Component<
         <Absolute left={15} top={15} zIndex={100} className="cursor-pointer">
           <Text onClick={this.closeEditor}>Back</Text>
         </Absolute>
-        <Row noGutters className="h-100">
+        <Row className="g-0 h-100">
           <Col className="pt-5">
             <ChessboardContextProvider>
               <StepRenderer

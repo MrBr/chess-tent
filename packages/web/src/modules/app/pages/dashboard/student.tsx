@@ -35,7 +35,7 @@ const DashboardStudent = ({ user }: { user: User }) => {
       ) : (
         <MyTrainings trainings={trainings} user={user} />
       )}
-      <Row noGutters>
+      <Row className="g-0">
         <Col>
           <LessonBrowser
             lessons={lessons}

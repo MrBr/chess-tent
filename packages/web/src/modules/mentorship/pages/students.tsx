@@ -34,7 +34,7 @@ const Students = () => {
           {result['undefined']?.map(mentorship => (
             <Card key={`${mentorship.student.id}`}>
               <CardBody>
-                <Row noGutters className="mb-3">
+                <Row className="g-0 mb-3">
                   <Col className="col-auto me-3">
                     <UserAvatar user={mentorship.student} />
                   </Col>
@@ -44,7 +44,7 @@ const Students = () => {
                     </Link>
                   </Col>
                 </Row>
-                <Row noGutters>
+                <Row className="g-0">
                   <Button
                     onClick={() => openConversations(mentorship.student)}
                     className="me-4"

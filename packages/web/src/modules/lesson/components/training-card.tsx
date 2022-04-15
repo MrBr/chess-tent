@@ -11,9 +11,8 @@ const TrainingCard = (props: { training: LessonActivity }) => {
   const history = useHistory();
   return (
     <Row
-      noGutters
       onClick={() => history.push(`/activity/${props.training.id}`)}
-      className="cursor-pointer"
+      className="g-0 cursor-pointer"
     >
       <Col className="col-auto me-2">
         <LessonThumbnail difficulty={lesson.difficulty} size="small" />

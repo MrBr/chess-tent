@@ -78,7 +78,7 @@ const PreviewLesson = () => {
         <LessonThumbnail size="large" difficulty={lesson.difficulty} />
         <CardBody className="px-4">
           <Headline5 className="mt-2 mb-3">{lesson.state.title}</Headline5>
-          <Row noGutters>
+          <Row className="g-0">
             <Col className="col-auto me-1">
               <UserAvatar user={lesson.owner} size="extra-small" />
             </Col>

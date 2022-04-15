@@ -29,7 +29,7 @@ const TaskSidebar = (
 
   return (
     <SegmentSidebar {...props}>
-      <Row noGutters>
+      <Row className="g-0">
         <Text fontSize="small">Moves:</Text>
         <Row className="align-items-center m-0">
           <StepTag

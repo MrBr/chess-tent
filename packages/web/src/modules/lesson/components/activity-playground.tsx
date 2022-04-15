@@ -20,9 +20,7 @@ ActivityPlayground.Board = (({ children }) => (
 
 ActivityPlayground.Sidebar = (({ children }) => (
   <Col md={5} xl={4} className="h-100 pr-5 pl-5">
-    <Row className="h-100 d-flex flex-column flex-nowrap" noGutters>
-      {children}
-    </Row>
+    <Row className="h-100 d-flex flex-column flex-nowrap g-0">{children}</Row>
   </Col>
 )) as Components['LessonPlayground']['Sidebar'];
 

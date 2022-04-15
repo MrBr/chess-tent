@@ -17,7 +17,7 @@ const Coaches = () => {
           {coaches?.map(mentorship => (
             <Card>
               <CardBody>
-                <Row noGutters className="mb-3">
+                <Row className="g-0 mb-3">
                   <Col className="col-auto me-3">
                     <UserAvatar user={mentorship.coach} />
                   </Col>

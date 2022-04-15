@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Inter:500,700');
+@import url('https://fonts.googleapis.com/css?family=Inter:400,500,700');
 
 :root {
   --primary-color: #26d95c;
@@ -8,6 +8,7 @@
 
   --black-color: #182235;
   --light-color: #ffffff;
+  --light-color-02: #ffffff20;
 
   --grey-800-color: #2f3849;
   --grey-700-color: #6b7280;

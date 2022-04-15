@@ -1,7 +1,11 @@
 import application from '@application';
 import { v4 as uuid } from 'uuid';
 import { saveAs } from 'file-saver';
-import { useComponentState, useComponentStateSilent } from './hooks';
+import {
+  useComponentState,
+  useComponentStateSilent,
+  useOutsideClick,
+} from './hooks';
 import { getEntitySchema, getTypeSchema } from './model';
 import { mediaQueryEnhancer } from './enhancers';
 import { getDiff } from './utils';
@@ -22,3 +26,4 @@ application.utils.getDiff = getDiff;
 
 application.hooks.useComponentStateSilent = useComponentStateSilent;
 application.hooks.useComponentState = useComponentState;
+application.hooks.useOutsideClick = useOutsideClick;

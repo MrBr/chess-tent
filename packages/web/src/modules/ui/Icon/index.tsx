@@ -17,7 +17,8 @@ const Icon = styled<IconProps>(({ type, className, onClick }) => {
   box-sizing: content-box;
   position: relative;
   vertical-align: middle;
-  
+  padding: 4px;
+
   .svg-icon {
     margin-top: 50%;
     margin-left: 50%;
@@ -79,6 +80,7 @@ const Icon = styled<IconProps>(({ type, className, onClick }) => {
     vertical-align: sub;
     min-width: 20px;
     min-height: 20px;
+    padding: 0;
   }
 `;
 

@@ -22,6 +22,7 @@ import {
 } from '@chess-tent/models';
 import { useRecordInit, useRecordSafe } from '@chess-tent/redux-record';
 import { Action as ReduxAction } from 'redux';
+import { RefObject } from 'react';
 import { useSelector, useDispatch, useStore } from 'react-redux';
 import { BatchAction } from 'redux-batched-actions';
 import { useParams, useLocation } from 'react-router-dom';
@@ -49,6 +50,10 @@ export type Hooks = {
   useIsMobile: () => boolean;
   useComponentStateSilent: () => { mounted: boolean };
   useComponentState: () => { mounted: boolean };
+  useOutsideClick: (
+    outsideClickHandler: () => void,
+    ...refs: RefObject<any>[]
+  ) => void;
   useConferencing: (
     fromUserId: string,
     toUserId: string,

@@ -1,4 +1,4 @@
-import React, { ComponentType, memo } from 'react';
+import React, { ComponentType } from 'react';
 import styled, { css } from '@chess-tent/styled-props';
 import { TextProps } from '@types';
 import { withHtml } from './hoc';
@@ -80,12 +80,12 @@ const BaseText: ComponentType<TextProps> = withHtml<TextProps>(
   },
 );
 
-const Text = memo(styled(BaseText).css<TextProps>`
+const Text = styled(BaseText).css<TextProps>`
   ${dynamicStyle}
   ${inherit}
   ${color}
   ${size}
-`);
+`;
 
 const headingStyle = styled.css<TextProps>`
   font-family: Inter, sans-serif;

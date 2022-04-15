@@ -7,6 +7,7 @@ import {
   ReactNode,
   RefObject,
   ElementType,
+  RefCallback,
 } from 'react';
 import {
   ColProps,
@@ -127,6 +128,7 @@ export type UIComponent<T = {}> = ComponentType<
   T & {
     className?: string;
     defaultProps?: Partial<T & { className: string }>;
+    ref?: RefObject<any> | null | RefCallback<any>;
   } & ClickProps
 >;
 
@@ -145,6 +147,37 @@ type InputPropsWithSizeEnhancer = Omit<
 > & {
   size?: FormElementsSize;
 };
+
+export type Icons =
+  | 'camera'
+  | 'close'
+  | 'comment'
+  | 'enter'
+  | 'exit'
+  | 'notification'
+  | 'search'
+  | 'home'
+  | 'microphone'
+  | 'crown'
+  | 'plus'
+  | 'board'
+  | 'like'
+  | 'edit'
+  | 'hamburger'
+  | 'chess'
+  | 'chat'
+  | 'code'
+  | 'cursor'
+  | 'support'
+  | 'show'
+  | 'hide'
+  | 'gift'
+  | 'king'
+  | 'pawn'
+  | 'price'
+  | 'settings'
+  | 'logo'
+  | 'video';
 
 export type UI = {
   Form: typeof Formik & {
@@ -170,36 +203,7 @@ export type UI = {
   Headline5: UIComponent<TextProps>;
   Headline6: UIComponent<TextProps>;
   Icon: UIComponent<{
-    type:
-      | 'camera'
-      | 'close'
-      | 'comment'
-      | 'enter'
-      | 'exit'
-      | 'notification'
-      | 'search'
-      | 'home'
-      | 'microphone'
-      | 'crown'
-      | 'plus'
-      | 'board'
-      | 'like'
-      | 'edit'
-      | 'hamburger'
-      | 'chess'
-      | 'chat'
-      | 'code'
-      | 'cursor'
-      | 'support'
-      | 'show'
-      | 'hide'
-      | 'gift'
-      | 'king'
-      | 'pawn'
-      | 'price'
-      | 'settings'
-      | 'logo'
-      | 'video';
+    type: Icons;
     textual?: boolean;
     size?: 'large' | 'regular' | 'small' | 'extra-small';
     variant?: 'primary' | 'secondary' | 'black' | 'grey-700' | 'light';

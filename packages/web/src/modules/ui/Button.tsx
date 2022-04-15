@@ -1,6 +1,8 @@
 import React, { ComponentProps } from 'react';
 import styled, { useCss } from '@chess-tent/styled-props';
 import { BaseButtonProps, ButtonProps, ToggleButtonProps, UI } from '@types';
+import BToggleButton from 'react-bootstrap/ToggleButton';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
 
 const variants = styled.props.variant.disabled.css<BaseButtonProps>`
   &.danger {
@@ -62,7 +64,7 @@ const sizes = styled.props.size.stretch.css<BaseButtonProps>`
 
   &.stretch {
     width: 100%;
-    padding: 0px;
+    padding: 0;
   }
 `;
 
@@ -113,28 +115,17 @@ const toggle = styled.props.checked.css<ToggleButtonProps>`
 `;
 
 export const ToggleButton = styled<ComponentProps<UI['ToggleButton']>>(
-  props => {
-    const { className, children, defaultChecked, onChange, checked } = props;
+  ({ size, value, ...props }) => {
     const buttonClassName = useCss(toggle)(props);
     return (
-      <label className={className}>
-        <input
-          type="checkbox"
-          defaultChecked={defaultChecked}
-          onChange={onChange}
-          checked={checked}
-        />
-        <span className={buttonClassName}>{children}</span>
-      </label>
+      <BToggleButton
+        {...props}
+        className={buttonClassName}
+        value={value || ''}
+      />
     );
   },
 ).stretch.css`
-  input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-  }
-  
   &.stretch {
     width: 100%;
   }
@@ -143,4 +134,7 @@ export const ToggleButton = styled<ComponentProps<UI['ToggleButton']>>(
 ToggleButton.defaultProps = {
   size: 'regular',
   variant: 'primary',
+  type: 'checkbox',
 };
+
+export { ButtonGroup };

@@ -49,7 +49,6 @@ import { HtmlProps } from './hoc';
 export type BaseButtonProps = {
   variant?: 'primary' | 'secondary' | 'regular' | 'danger' | 'ghost' | 'dark';
   size?: 'large' | 'regular' | 'small' | 'extra-small';
-  type?: 'button' | 'reset' | 'submit';
   disabled?: boolean;
   stretch?: boolean;
 };
@@ -57,15 +56,19 @@ export type BaseButtonProps = {
 export type ButtonProps = BaseButtonProps & {
   onClick?: () => void;
   ref?: RefObject<HTMLButtonElement>;
+  type?: 'button' | 'reset' | 'submit';
 };
 
-export type ToggleButtonProps = {
+export type ToggleButtonProps = BaseButtonProps & {
   checked?: boolean;
   defaultChecked?: boolean;
-  value?: string | number;
+  value?: string | number | readonly string[];
   onChange?: ReactEventHandler;
   onClick?: undefined;
-} & BaseButtonProps;
+  id?: string;
+  name?: string;
+  type?: 'checkbox' | 'radio';
+};
 
 export type ModalProps = BModalProps;
 
@@ -272,6 +275,7 @@ export type UI = {
   ErrorMessage: UIComponent<ErrorMessageProps>;
   Button: UIComponent<ButtonProps>;
   ToggleButton: UIComponent<ToggleButtonProps>;
+  ButtonGroup: UIComponent;
   Card: ComponentType<ClickProps & ClassNameProps & CardProps>;
   CardBody: ComponentType<ClassNameProps>;
   CardHeader: ComponentType;

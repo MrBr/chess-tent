@@ -3,7 +3,7 @@ import application from '@application';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.css';
 
-import { Button, ToggleButton } from './Button';
+import { Button, ButtonGroup, ToggleButton } from './Button';
 import {
   Form,
   Input,
@@ -54,6 +54,7 @@ application.ui.FormGroup = FormGroup;
 application.ui.Form = Form;
 application.ui.Button = Button;
 application.ui.ToggleButton = ToggleButton;
+application.ui.ButtonGroup = ButtonGroup;
 application.ui.Label = Label;
 application.ui.Input = Input;
 application.ui.InputGroup = InputGroup;

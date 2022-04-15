@@ -11,8 +11,12 @@ import {
   getLessonActivityUserActiveBoardState,
 } from '@chess-tent/models';
 import { Steps } from '@types';
-import { ActivityRenderer } from './activity';
+import ActivityRenderer from './activity-renderer';
 import { createLessonActivity } from '../service';
+import {
+  ActivityRendererStepBoard,
+  ActivityRendererStepCard,
+} from './activity-renderer-step';
 
 interface PreviewProps {
   lesson: Lesson;
@@ -27,11 +31,16 @@ const { Modal } = ui;
 const Preview = ({ lesson, chapter, step }: PreviewProps) => {
   const { value: user } = useActiveUserRecord();
   const [activity, updatePreviewActivity] = useState<LessonActivity>(
-    createLessonActivity(lesson, user, {
-      activeStepId: step.id,
-      activeChapterId: chapter.id,
-      [step.id]: services.createActivityStepState(),
-    }),
+    createLessonActivity(
+      lesson,
+      user,
+      {},
+      {
+        activeStepId: step.id,
+        activeChapterId: chapter.id,
+        [step.id]: services.createActivityStepState(),
+      },
+    ),
   );
   const activityBoardState = getLessonActivityUserActiveBoardState(
     activity,
@@ -53,12 +62,11 @@ const Preview = ({ lesson, chapter, step }: PreviewProps) => {
       const updatedActivity = updateActivityStepState(
         activity,
         activityBoardState,
-        activeStep,
         services.createActivityStepState(),
       );
       updatePreviewActivity(updatedActivity);
     }
-  }, [activityStepState, activity, activeStep, activityBoardState]);
+  }, [activityStepState, activity, activityBoardState]);
 
   const updateActivity = useCallback(
     service =>
@@ -81,8 +89,9 @@ const Preview = ({ lesson, chapter, step }: PreviewProps) => {
       chapter={activeChapter}
       updateActivity={updateActivity}
       activityStepState={activityStepState}
-      comments={false}
       boardState={activityBoardState}
+      cards={[ActivityRendererStepCard]}
+      boards={[ActivityRendererStepBoard]}
     />
   );
 };

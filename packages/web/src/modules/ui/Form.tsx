@@ -81,7 +81,7 @@ const FormCheck: UI['Form']['Check'] = props => {
   const isInvalid = !!touched && !!error;
   return (
     <>
-      <BForm.Control
+      <BForm.Check
         type="checkbox"
         isValid={isValid}
         isInvalid={isInvalid}

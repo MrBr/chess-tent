@@ -1,18 +1,38 @@
-import React from 'react';
-import { components, ui } from '@application';
-import { Lesson } from '@chess-tent/models';
+import React, { ComponentType } from 'react';
+import { ui } from '@application';
+import { ActivityRendererProps, ActivityStepMode, Steps } from '@types';
 
-const { Headline3, Text, Container } = ui;
-const { UserAvatar } = components;
+const { ToggleButton, Container, ButtonGroup } = ui;
 
-const ActivityHeader = ({ lesson }: { lesson: Lesson }) => (
+interface ActivityHeaderProps {
+  boards: ActivityRendererProps<Steps | undefined>['boards'];
+  activeMode: ActivityStepMode;
+  onChange?: (mode: ActivityStepMode) => void;
+}
+
+const ActivityHeader: ComponentType<ActivityHeaderProps> = ({
+  boards,
+  activeMode,
+  onChange,
+}) => (
   <>
-    <Headline3 className="mt-0 mb-0">{lesson.state.title}</Headline3>
     <Container className="mb-4 p-0">
-      <UserAvatar user={lesson.owner} size="extra-small" />
-      <Text as="span" className="ml-2" fontSize="extra-small">
-        {lesson.owner.name}
-      </Text>
+      <ButtonGroup className="mb-2">
+        {boards.map((Board, idx) => (
+          <ToggleButton
+            key={idx}
+            id={`radio-${idx}`}
+            type="radio"
+            variant="secondary"
+            name="radio"
+            value={Board.mode}
+            checked={activeMode === Board.mode}
+            onChange={() => onChange && onChange(Board.mode)}
+          >
+            {Board.mode}
+          </ToggleButton>
+        ))}
+      </ButtonGroup>
     </Container>
   </>
 );

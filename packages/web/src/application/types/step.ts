@@ -13,6 +13,9 @@ import {
   User,
 } from '@chess-tent/models';
 import {
+  ActivityRendererModuleProps,
+  ActivityRendererProps,
+  ActivityStepProps,
   ChessboardInterface,
   ChessboardProps,
   StepToolbox,
@@ -98,15 +101,8 @@ export type ActivityStepStateBase = {
 
 export type ActivityExerciseStepState<T extends {}> = T &
   ActivityStepStateBase & { showHint?: boolean };
-export type ActivityProps<ACTIVITY_STATE> = {
-  // TODO - update name to updateStepActivityState
-  setStepActivityState: (state: {}) => void;
-  stepActivityState: ACTIVITY_STATE;
-  boardState: LessonActivityBoardState;
-  nextStep: () => void;
-  prevStep: () => void;
-  completeStep: (step: AppStep) => void;
-} & StepBoardComponentProps;
+export type ActivityProps<ACTIVITY_STATE> = ActivityStepProps<ACTIVITY_STATE> &
+  StepBoardComponentProps;
 
 export type StepModule<
   STEP extends AppStep,

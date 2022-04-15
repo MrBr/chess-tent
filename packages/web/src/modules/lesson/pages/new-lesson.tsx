@@ -1,22 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import {
-  components,
-  constants,
-  hooks,
-  requests,
-  services,
-  state,
-  utils,
-} from '@application';
-import {
-  createChapter,
-  createLesson,
-  Lesson,
-  Step,
-  TYPE_LESSON,
-  User,
-} from '@chess-tent/models';
+import { components, hooks, requests, state } from '@application';
+import { Lesson, TYPE_LESSON } from '@chess-tent/models';
 import { LessonStatus } from '@types';
+import { createNewLesson } from '../service';
 
 const {
   useDispatchBatched,
@@ -26,24 +12,10 @@ const {
   useStore,
 } = hooks;
 const { Editor } = components;
-const { createStep } = services;
-const { generateIndex } = utils;
-const { START_FEN } = constants;
 const {
   selectors: { lessonSelector },
   actions: { updateEntities },
 } = state;
-
-const createNewLesson = (user: User) => {
-  const defaultStep: Step = createStep('variation', {
-    position: START_FEN,
-  });
-  const newLessonId = generateIndex();
-  const defaultChapter = createChapter(generateIndex(), 'Chapter', [
-    defaultStep,
-  ]);
-  return createLesson(newLessonId, [defaultChapter], user, 'Lesson');
-};
 
 const NewLesson = () => {
   const dispatch = useDispatchBatched();

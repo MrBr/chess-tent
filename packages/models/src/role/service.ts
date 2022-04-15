@@ -11,10 +11,8 @@ const createRole =
 export const createRoles = <T extends User | User[], R extends string>(
   users: T,
   role: R,
-): T extends User[] ? Role<R>[] : Role<R> => {
-  return (
-    Array.isArray(users)
-      ? users.map(createRole(role))
-      : createRole(role)(users as User)
-  ) as T extends User[] ? Role<R>[] : Role<R>;
+): Role<R>[] => {
+  return Array.isArray(users)
+    ? users.map(createRole(role))
+    : [createRole(role)(users as User)];
 };

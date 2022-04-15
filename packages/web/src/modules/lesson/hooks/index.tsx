@@ -1,12 +1,16 @@
-import { Lesson, Step, updateStepState, User } from '@chess-tent/models';
+import React from 'react';
+import { Lesson, Step, updateStepState } from '@chess-tent/models';
 import { hooks } from '@application';
-import { useCallback, useContext, useEffect, useMemo } from 'react';
-import { ActivityFilters, Hooks } from '@types';
-import { editorContext } from './context';
-import { userTrainings, lessons, myLessons, lesson } from './record';
-import { lessonSelector } from './state/selectors';
+import { useCallback, useContext, useEffect } from 'react';
+import { Hooks } from '@types';
+import { editorContext } from '../context';
+import { lessons, myLessons, lesson } from '../record';
+import { lessonSelector } from '../state/selectors';
+import TrainingAssign from '../components/training-assign';
 
-const { useRecordInit, useStore } = hooks;
+export * from './training-hooks';
+
+const { useRecordInit, useStore, usePromptModal } = hooks;
 
 export const useUpdateLessonStepState = <T extends Step>(
   updateStep: (step: T) => void,
@@ -16,27 +20,6 @@ export const useUpdateLessonStepState = <T extends Step>(
     (state: Partial<T['state']>) => updateStep(updateStepState(step, state)),
     [step, updateStep],
   );
-};
-
-export const useUserTrainings: Hooks['useUserTrainings'] = (user: User) => {
-  const record = useRecordInit(userTrainings, `trainings-${user.id}`);
-
-  const filters: ActivityFilters = useMemo(
-    () => ({
-      users: user.id,
-    }),
-    [user.id],
-  );
-
-  useEffect(() => {
-    if (record.get().meta.loading) {
-      return;
-    }
-    record.load(filters);
-    // eslint-disable-next-line
-  }, [filters]);
-
-  return record;
 };
 
 export const useLessons: Hooks['useLessons'] = (key: string, filters) => {
@@ -95,6 +78,14 @@ export const useEditor = () => {
 
 export const useLessonMeta: Hooks['useLessonMeta'] = activity => {
   return hooks.useMeta(`lesson-${activity.id}`);
+};
+
+export const usePromptNewTrainingModal = () => {
+  const promptModal = usePromptModal();
+  return useCallback(
+    () => promptModal(close => <TrainingAssign close={close} />),
+    [promptModal],
+  );
 };
 
 export const useLessonActivity = () => {};

@@ -49,7 +49,15 @@ const trainings = services.createRequest<Requests['trainings']>(
   }),
 );
 
+const scheduledTrainings = services.createRequest<
+  Requests['scheduledTrainings']
+>('POST', '/activities', data => ({
+  ...data,
+  subjectType: TYPE_LESSON,
+}));
+
 requests.trainings = trainings;
+requests.scheduledTrainings = scheduledTrainings;
 requests.lesson = lesson;
 requests.lessonSave = lessonSave;
 requests.lessonPublish = lessonPublish;

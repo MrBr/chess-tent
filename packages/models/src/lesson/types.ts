@@ -58,7 +58,7 @@ export type LessonActivityBoardState = {
   shapes?: any[]; // TODO - should be shapes type
   completedSteps?: string[];
   completed?: boolean;
-  activeChapterId: Chapter['id'];
+  activeChapterId?: Chapter['id'];
   activeStepId: Step['id'];
   [key: string]: any;
 };

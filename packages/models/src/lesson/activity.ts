@@ -102,14 +102,15 @@ export const updateActivityStepState = createService(
   (
     draft: LessonActivity,
     board: LessonActivityBoardState,
-    step: Step,
     patch: {},
   ): LessonActivity => {
     const state = getLessonActivityBoardState(draft, board.id);
-    state[step.id] = {
-      ...(state[step.id] || {}),
-      ...patch,
-    };
+    const stepId = state.activeStepId;
+    if (!state[stepId]) {
+      state[stepId] = patch;
+    } else {
+      Object.assign(state[stepId], patch);
+    }
     return draft;
   },
 );

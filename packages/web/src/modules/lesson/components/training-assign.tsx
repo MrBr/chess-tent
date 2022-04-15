@@ -1,99 +1,125 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
-import { components, hooks, requests, ui } from '@application';
+import React, { useCallback, useMemo } from 'react';
+import { components, hooks, ui } from '@application';
 import * as yup from 'yup';
-import lessonThumbUrl from '../images/lesson.svg';
+import {
+  useUserScheduledTrainings,
+  useUserTrainings,
+} from '../hooks/training-hooks';
+import { createLessonActivity, createNewLesson } from '../service';
 
 const {
   Label,
   Headline3,
+  Headline4,
   FormGroup,
   Button,
   Form,
-  ModalBody,
-  Thumbnail,
   Text,
   Modal,
+  Container,
+  Row,
+  Col,
 } = ui;
-const { useApi, useActiveUserRecord, useStudents, useUserTrainings } = hooks;
+const { useActiveUserRecord, useStudents, useHistory } = hooks;
 const { UserAvatar } = components;
 
 const TrainingSchema = yup.object().shape({
   user: yup.string().required(),
-  lesson: yup.string().required(),
 });
 
 const TrainingAssign = ({ close }: { close: () => void }) => {
   const { value: user } = useActiveUserRecord();
   const { value: mentorship } = useStudents(user);
-  const {
-    new: newTraining,
-    meta: { loading, loaded },
-  } = useUserTrainings(user);
-  const { fetch: fetchUserLessons, response } = useApi(requests.myLessons);
+  const userTrainings = useUserTrainings(user);
+  const userScheduledTrainings = useUserScheduledTrainings(user);
+  const history = useHistory();
 
   const students = useMemo(
     () => mentorship?.map(({ student }) => student),
     [mentorship],
   );
 
-  const assignTraining = useCallback(
-    (data, helpers) => {
-      newTraining(data.lesson, user, {}, [data.user]);
-      helpers.resetForm();
+  const createTraining = useCallback(
+    async (data, helpers) => {
+      const { new: newTraining } = data.date
+        ? userScheduledTrainings
+        : userTrainings;
+      const lesson = createNewLesson(user, []);
+      const training = createLessonActivity(
+        lesson,
+        user,
+        {},
+        { activeStepId: 'analysis-step' },
+        [data.user],
+      );
+      await newTraining(training);
+      history.push(`/activity/${training.id}`);
+      close();
     },
-    [newTraining, user],
+    [userScheduledTrainings, userTrainings, user, history, close],
   );
-
-  useEffect(() => {
-    fetchUserLessons({});
-  }, [fetchUserLessons, user.id]);
 
   return (
     <Modal show close={close}>
-      <ModalBody>
-        <Headline3 className="mt-0">New Training</Headline3>
-        <Form
-          initialValues={{ user: '', lesson: '' }}
-          validationSchema={TrainingSchema}
-          onSubmit={assignTraining}
-        >
-          <FormGroup>
-            <Label>Assign to</Label>
-            <Form.Select
-              name="user"
-              placeholder="Select student"
-              options={students}
-              formatOptionLabel={userOption => (
-                <>
-                  <UserAvatar user={userOption} size="small" />
-                  <Text className="ml-2" inline>
-                    {userOption.name}
-                  </Text>
-                </>
-              )}
-            />
-          </FormGroup>
-          <FormGroup>
-            <Label>Lesson</Label>
-            <Form.Select
-              name="lesson"
-              options={response?.data || []}
-              formatOptionLabel={lesson => (
-                <>
-                  <Thumbnail src={lessonThumbUrl} />
-                  <Text inline>{lesson.state.title}</Text>
-                </>
-              )}
-            />
-          </FormGroup>
-          <Button type="submit" disabled={loading}>
-            Assign
-          </Button>
-          <Text as="span" fontSize="small" className="ml-4">
-            {loading ? 'Assigning' : !!loaded ? 'Training assigned' : null}
-          </Text>
-        </Form>
-      </ModalBody>
+      <Modal.Header>
+        <Container>
+          <Headline3>Create Training</Headline3>
+          <Text>Make a virtual room for your students</Text>
+        </Container>
+      </Modal.Header>
+      <Modal.Body>
+        <Container>
+          <Row>
+            <Col>
+              <Headline4 className="mt-0">Details</Headline4>
+            </Col>
+          </Row>
+          <Form
+            initialValues={{ user: '' }}
+            validationSchema={TrainingSchema}
+            onSubmit={createTraining}
+          >
+            <FormGroup>
+              <Label>Training name</Label>
+              <Form.Input name="name" />
+            </FormGroup>
+            <FormGroup>
+              <Label>Assign to</Label>
+              <Form.Select
+                name="user"
+                placeholder="Select student"
+                options={students}
+                formatOptionLabel={userOption => (
+                  <>
+                    <UserAvatar user={userOption} size="small" />
+                    <Text className="ml-2" inline>
+                      {userOption.name}
+                    </Text>
+                  </>
+                )}
+              />
+            </FormGroup>
+            <hr />
+            <Headline4>Schedule</Headline4>
+            <Text>Optionally schedule a training for the future</Text>
+            <Row>
+              <Col>
+                <FormGroup>
+                  <Label>Time</Label>
+                  <Form.Input type="datetime-local" name="date" />
+                </FormGroup>
+              </Col>
+              <Col>
+                <FormGroup>
+                  <Label>Repeat weekly</Label>
+                  <Form.Check type="switch" name="repeat" />
+                </FormGroup>
+              </Col>
+            </Row>
+            <Button type="submit">Start training</Button>
+          </Form>
+        </Container>
+      </Modal.Body>
     </Modal>
   );
 };

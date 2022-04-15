@@ -255,16 +255,73 @@ export interface AnalysisBoardProps
   extends AnalysisSystemProps,
     StepBoardComponentProps {}
 
-export interface ActivityRendererProps {
+export interface ActivityBaseProps {
   activity: LessonActivity;
   updateActivity: ReturnType<Hooks['useDispatchService']>;
-  step: Steps;
-  chapter: Chapter;
+}
+
+export interface ActivityDataProps<
+  T extends Steps | undefined,
+  K extends Chapter | undefined,
+> {
+  step: T;
+  chapter: K;
   analysis: AppAnalysis;
   lesson: Lesson;
   activityStepState: ActivityStepStateBase;
   boardState: LessonActivityBoardState;
 }
+
+export type ActivityRendererProps<
+  T extends Steps | undefined,
+  K extends Chapter | undefined = Chapter | undefined,
+> = T extends undefined
+  ? ActivityDataProps<T, K> &
+      ActivityBaseProps & {
+        boards: ActivityRendererModuleBoard<Steps | undefined>[];
+        cards: ActivityRendererModuleCard<Steps | undefined>[];
+      }
+  : ActivityDataProps<T, K> &
+      ActivityBaseProps & {
+        boards: ActivityRendererModuleBoard<Steps>[];
+        cards: ActivityRendererModuleCard<Steps>[];
+      };
+
+export interface ActivityStepProps<T> {
+  // TODO - update name to updateStepActivityState
+  setStepActivityState: (state: {}) => void;
+  stepActivityState: T;
+  boardState: LessonActivityBoardState;
+  nextStep: () => void;
+  prevStep: () => void;
+  completeStep: (step: AppStep) => void;
+}
+
+export interface ActivityRendererModuleProps<
+  K extends Steps | undefined,
+  U extends Chapter | undefined = Chapter | undefined,
+  T = any,
+> extends ActivityStepProps<T>,
+    ActivityBaseProps,
+    ActivityDataProps<K, U> {}
+
+export interface ActivityRendererModuleBoardProps<
+  T extends Steps | undefined,
+  U extends Chapter | undefined = Chapter | undefined,
+> extends ActivityRendererModuleProps<T, U> {
+  Chessboard: ComponentType<ChessboardProps>;
+}
+
+export type ActivityRendererModuleBoard<
+  T extends Steps | undefined,
+  U extends Chapter | undefined = Chapter | undefined,
+> = ComponentType<ActivityRendererModuleBoardProps<T, U>> & {
+  mode: ActivityStepMode;
+};
+export type ActivityRendererModuleCard<
+  T extends Steps | undefined,
+  U extends Chapter | undefined = Chapter | undefined,
+> = ComponentType<ActivityRendererModuleProps<T, U>>;
 
 export interface ActivityRendererState {}
 
@@ -328,7 +385,11 @@ export type Components = {
   Stepper: FunctionComponent<StepperProps>;
   StepToolbox: StepToolbox;
   LessonToolboxText: LessonToolboxText;
-  LessonPlayground: LessonPlayground;
+  LessonPlayground: ComponentType<{ children: ReactNode }> & {
+    Board: ComponentType;
+    Sidebar: ComponentType;
+    Stepper: ComponentType;
+  };
   LessonPlaygroundCard: LessonPlaygroundCard;
   StepTag: StepTag;
   StepMove: StepMove;

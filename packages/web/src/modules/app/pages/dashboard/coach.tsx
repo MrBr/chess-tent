@@ -1,13 +1,15 @@
 import React, { useCallback, useState } from 'react';
-import { components, hooks } from '@application';
+import { components, hooks, ui } from '@application';
 import { Tag, User } from '@chess-tent/models';
 import { LessonsRequest } from '@chess-tent/types';
 
 const { Page, LessonBrowser, MyTrainings } = components;
-const { useMyLessons, useUserTrainings } = hooks;
+const { Button } = ui;
+const { useMyLessons, useUserTrainings, usePromptNewTrainingModal } = hooks;
 
 const DashboardCoach = ({ user }: { user: User }) => {
   const { value: trainings } = useUserTrainings(user);
+  const promptNewTrainingModal = usePromptNewTrainingModal();
   const [lessonsFilter, setLessonsFilter] = useState<LessonsRequest>({});
 
   const { value: lessons } = useMyLessons(
@@ -28,6 +30,7 @@ const DashboardCoach = ({ user }: { user: User }) => {
 
   return (
     <Page>
+      <Button onClick={promptNewTrainingModal}>New training</Button>
       {trainings && <MyTrainings trainings={trainings} user={user} />}
       <LessonBrowser
         lessons={lessons}

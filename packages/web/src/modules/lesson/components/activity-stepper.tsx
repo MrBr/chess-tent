@@ -5,18 +5,18 @@ import styled from '@emotion/styled';
 
 import Step from './activity-step';
 
-const Stepper = styled(
-  ({
-    root,
-    step,
-    className,
-    onStepClick,
-  }: {
-    root: StepRoot;
-    step?: AppStep;
-    className?: string;
-    onStepClick: (step: AppStep) => void;
-  }) => {
+interface ActivityStepperProps {
+  root: StepRoot | null | undefined;
+  step?: AppStep;
+  className?: string;
+  onStepClick: (step: AppStep) => void;
+}
+
+const ActivityStepper = styled(
+  ({ root, step, className, onStepClick }: ActivityStepperProps) => {
+    if (!root) {
+      return null;
+    }
     const steps = (step || root).state.steps;
     if (!steps) {
       return null;
@@ -28,7 +28,7 @@ const Stepper = styled(
         {steps.map(child => {
           return (
             <div key={child.id} className={className}>
-              <Stepper
+              <ActivityStepper
                 root={root}
                 // Override current step
                 step={child as AppStep}
@@ -46,4 +46,4 @@ const Stepper = styled(
   },
 });
 
-export default Stepper;
+export default ActivityStepper;

@@ -252,6 +252,10 @@ export interface Endpoints {
     RequestPost<'/activities', ActivityFilters>,
     ActivitiesResponse
   >;
+  scheduledTrainings: Endpoint<
+    RequestPost<'/activities', ScheduledLessonActivityFilters>,
+    ActivitiesResponse<LessonActivity>
+  >;
   trainings: Endpoint<
     RequestPost<'/activities', LessonActivityFilters>,
     ActivitiesResponse<LessonActivity>

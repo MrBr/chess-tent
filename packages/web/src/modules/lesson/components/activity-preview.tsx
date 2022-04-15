@@ -11,8 +11,12 @@ import {
   getLessonActivityUserActiveBoardState,
 } from '@chess-tent/models';
 import { Steps } from '@types';
-import { ActivityRenderer } from './activity';
+import ActivityRenderer from './activity-renderer';
 import { createLessonActivity } from '../service';
+import {
+  ActivityRendererStepBoard,
+  ActivityRendererStepCard,
+} from './activity-renderer-step';
 
 interface PreviewProps {
   lesson: Lesson;
@@ -58,12 +62,11 @@ const Preview = ({ lesson, chapter, step }: PreviewProps) => {
       const updatedActivity = updateActivityStepState(
         activity,
         activityBoardState,
-        activeStep,
         services.createActivityStepState(),
       );
       updatePreviewActivity(updatedActivity);
     }
-  }, [activityStepState, activity, activeStep, activityBoardState]);
+  }, [activityStepState, activity, activityBoardState]);
 
   const updateActivity = useCallback(
     service =>
@@ -86,8 +89,9 @@ const Preview = ({ lesson, chapter, step }: PreviewProps) => {
       chapter={activeChapter}
       updateActivity={updateActivity}
       activityStepState={activityStepState}
-      comments={false}
       boardState={activityBoardState}
+      cards={[ActivityRendererStepCard]}
+      boards={[ActivityRendererStepBoard]}
     />
   );
 };

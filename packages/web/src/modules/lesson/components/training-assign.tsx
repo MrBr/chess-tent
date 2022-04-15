@@ -44,8 +44,14 @@ const TrainingAssign = ({ close }: { close: () => void }) => {
       const { new: newTraining } = data.date
         ? userScheduledTrainings
         : userTrainings;
-      const lesson = createNewLesson(user);
-      const training = createLessonActivity(lesson, user, {}, {}, [data.user]);
+      const lesson = createNewLesson(user, []);
+      const training = createLessonActivity(
+        lesson,
+        user,
+        {},
+        { activeStepId: 'analysis-step' },
+        [data.user],
+      );
       await newTraining(training);
       history.push(`/activity/${training.id}`);
       close();

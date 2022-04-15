@@ -1,6 +1,7 @@
 import { isEqual } from 'lodash';
 import { constants, services, utils } from '@application';
 import {
+  ActivityStepMode,
   MoveStep,
   MoveStepState,
   NotableMove,
@@ -20,6 +21,9 @@ import {
   createChapter,
   createLesson,
   createRoles,
+  Chapter,
+  addStep,
+  updateAnalysisActiveStepId,
 } from '@chess-tent/models';
 
 const { createStep } = services;
@@ -29,13 +33,14 @@ const { START_FEN } = constants;
 export const createLessonActivityBoard = (
   activeChapterId: string,
   activeStepId: string,
-  state = {},
-) => ({
+  boardState = {},
+  initialStepState: {} = {},
+): LessonActivityBoardState => ({
   id: utils.generateIndex(),
-  ...state,
+  ...boardState,
   activeStepId,
   activeChapterId,
-  [activeStepId]: services.createActivityStepState(),
+  [activeStepId]: services.createActivityStepState(initialStepState),
 });
 
 export const updateActivityActiveStep = (
@@ -63,10 +68,12 @@ export const createLessonActivity = (
   coaches: User[] = [],
 ): LessonActivity => {
   const id = utils.generateIndex();
-  const activeChapterId = lesson.state.chapters[0].id;
-  const activeStepId = lesson.state.chapters[0].state.steps[0].id;
+  const activeChapterId =
+    boardState?.activeChapterId || lesson.state.chapters[0]?.id;
+  const activeStepId =
+    boardState?.activeStepId || lesson.state.chapters[0]?.state.steps[0].id;
   const roles = [
-    createRoles(owner, LessonActivityRole.OWNER),
+    ...createRoles(owner, LessonActivityRole.OWNER),
     ...createRoles(students, LessonActivityRole.STUDENT),
     ...createRoles(coaches, LessonActivityRole.COACH),
   ];
@@ -74,7 +81,17 @@ export const createLessonActivity = (
     activeChapterId,
     activeStepId,
     boardState,
+    { mode: ActivityStepMode.ANALYSING },
   );
+  if (!lesson.state.chapters[0]) {
+    // Handle empty training lesson without chapters
+    const { analysis } = mainBoard[mainBoard.activeStepId];
+    const newStep = services.createStep('variation', {});
+
+    addStep(analysis, newStep);
+    updateAnalysisActiveStepId(analysis, newStep.id);
+  }
+
   const activityInitialState: LessonActivity['state'] = {
     mainBoardId: mainBoard.id,
     boards: {
@@ -110,13 +127,18 @@ export const isStudent = (activity: LessonActivity, user: User) =>
       id === user.id && role === LessonActivityRole.STUDENT,
   );
 
-export const createNewLesson = (user: User) => {
-  const defaultStep: Step = createStep('variation', {
-    position: START_FEN,
-  });
+export const createNewLesson = (user: User, chapters?: Chapter[]) => {
   const newLessonId = generateIndex();
-  const defaultChapter = createChapter(generateIndex(), 'Chapter', [
-    defaultStep,
-  ]);
-  return createLesson(newLessonId, [defaultChapter], user, 'Lesson');
+  let initialChapters = chapters;
+
+  if (!initialChapters) {
+    const defaultStep: Step = createStep('variation', {
+      position: START_FEN,
+    });
+    initialChapters = [
+      createChapter(generateIndex(), 'Chapter', [defaultStep]),
+    ];
+  }
+
+  return createLesson(newLessonId, initialChapters, user, 'Lesson');
 };

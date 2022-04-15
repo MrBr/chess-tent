@@ -92,7 +92,7 @@ const TrainingAssign = ({ close }: { close: () => void }) => {
                 formatOptionLabel={userOption => (
                   <>
                     <UserAvatar user={userOption} size="small" />
-                    <Text className="ml-2" inline>
+                    <Text className="ms-2" inline>
                       {userOption.name}
                     </Text>
                   </>

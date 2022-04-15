@@ -18,7 +18,7 @@ const Coaches = () => {
             <Card>
               <CardBody>
                 <Row noGutters className="mb-3">
-                  <Col className="col-auto mr-3">
+                  <Col className="col-auto me-3">
                     <UserAvatar user={mentorship.coach} />
                   </Col>
                   <Col>
@@ -30,7 +30,7 @@ const Coaches = () => {
                     <Button
                       onClick={() => openConversations(mentorship.coach)}
                       size="extra-small"
-                      className="mr-3"
+                      className="me-3"
                     >
                       Message
                     </Button>

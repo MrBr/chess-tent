@@ -122,7 +122,7 @@ export default styled(
                           inline
                           fontSize="extra-small"
                           weight={700}
-                          className="ml-3"
+                          className="ms-3"
                         >
                           {DateTime.fromMillis(
                             message.timestamp,

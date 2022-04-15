@@ -45,7 +45,7 @@ const Coaches = () => {
     <Container fluid>
       <Row className="mt-5 mb-4 align-items-center">
         <Col className="col-auto">
-          <Headline3 className="m-0 mr-5">Browse coaches</Headline3>
+          <Headline3 className="m-0 me-5">Browse coaches</Headline3>
         </Col>
         <Col>
           <Filters>
@@ -57,7 +57,7 @@ const Coaches = () => {
               >
                 <CoachLevelDropdown
                   id="coach-browser-coach-level"
-                  className="mr-2"
+                  className="me-2"
                   onChange={setStudentElo}
                   size="small"
                 />

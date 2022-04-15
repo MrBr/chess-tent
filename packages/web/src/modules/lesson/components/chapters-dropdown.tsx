@@ -82,7 +82,7 @@ class ChaptersDropdown extends React.Component<
               inline
               fontSize="extra-small"
               weight={700}
-              className="mr-3 cursor-pointer"
+              className="me-3 cursor-pointer"
               onClick={this.newHandle}
             >
               Add
@@ -90,7 +90,7 @@ class ChaptersDropdown extends React.Component<
             <Text
               inline
               fontSize="extra-small"
-              className="mr-3"
+              className="me-3"
               weight={700}
               onClick={() => this.setState({ editing: !editing })}
             >

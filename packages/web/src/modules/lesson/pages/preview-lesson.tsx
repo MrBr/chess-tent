@@ -79,7 +79,7 @@ const PreviewLesson = () => {
         <CardBody className="px-4">
           <Headline5 className="mt-2 mb-3">{lesson.state.title}</Headline5>
           <Row noGutters>
-            <Col className="col-auto mr-1">
+            <Col className="col-auto me-1">
               <UserAvatar user={lesson.owner} size="extra-small" />
             </Col>
             <Col>
@@ -87,7 +87,7 @@ const PreviewLesson = () => {
             </Col>
           </Row>
           <Container className="pl-0 mb-2 mt-2">
-            <Tag pill bg="primary" className="mr-1">
+            <Tag pill bg="primary" className="me-1">
               <Text
                 fontSize="extra-small"
                 as="span"
@@ -98,7 +98,7 @@ const PreviewLesson = () => {
               </Text>
             </Tag>
             {lesson.tags?.map(({ text, id }) => (
-              <Tag pill key={id} bg="success" className="mr-1">
+              <Tag pill key={id} bg="success" className="me-1">
                 <Text
                   fontSize="extra-small"
                   inline

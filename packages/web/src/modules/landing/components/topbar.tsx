@@ -114,7 +114,7 @@ const Topbar = () => {
             </Col>
             <Col className="col-auto d-flex justify-content-center col menu-actions">
               <Link to="/login" ghost>
-                <Button size="small" variant="ghost" className="mr-4">
+                <Button size="small" variant="ghost" className="me-4">
                   Sign in
                 </Button>
               </Link>

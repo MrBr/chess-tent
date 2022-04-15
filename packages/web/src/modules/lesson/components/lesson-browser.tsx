@@ -69,7 +69,7 @@ const LessonBrowser: Components['LessonBrowser'] = ({
                 >
                   <DifficultyDropdown
                     id="lessons-difficulty"
-                    className="mr-2"
+                    className="me-2"
                     onChange={setDifficulty}
                     initial={difficulty}
                     includeNullOption={true}

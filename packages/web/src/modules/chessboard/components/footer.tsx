@@ -135,7 +135,7 @@ const Footer: FunctionComponent<ChessboardFooterProps> = ({
                 <PGNModal close={close} onImport={handlePGN} />
               ))
             }
-            className="mr-3"
+            className="me-3"
             disabled={!onPGN}
           >
             PGN
@@ -144,7 +144,7 @@ const Footer: FunctionComponent<ChessboardFooterProps> = ({
             size="extra-small"
             variant="regular"
             onClick={onReset}
-            className="mr-3"
+            className="me-3"
           >
             Reset
           </Button>
@@ -152,7 +152,7 @@ const Footer: FunctionComponent<ChessboardFooterProps> = ({
             size="extra-small"
             variant="regular"
             onClick={onClear}
-            className="mr-3"
+            className="me-3"
           >
             Clear
           </Button>
@@ -162,7 +162,7 @@ const Footer: FunctionComponent<ChessboardFooterProps> = ({
         </Col>
       </Row>
       <Row noGutters className="mt-3 align-items-center">
-        <Col className="col-auto mr-2">
+        <Col className="col-auto me-2">
           <Label className="mb-0">FEN:</Label>
         </Col>
         <Col>

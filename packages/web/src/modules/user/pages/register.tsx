@@ -130,26 +130,31 @@ const PageRegister = () => {
                   />
                 </FormGroup>
                 <FormGroup className="mt-4 d-flex">
-                  <Row className="w-100" noGutters>
-                    <Col className="mr-3">
+                  <Row className="w-100 g-0">
+                    <Col className="me-3">
                       <ToggleButton
+                        type="radio"
+                        name="coach"
                         variant="dark"
                         checked={!values['coach']}
-                        onChange={() => setFieldValue('coach', false)}
+                        onClick={() => setFieldValue('coach', false)}
                         stretch
                       >
-                        <Icon textual type="pawn" className="mr-1" /> I'm
+                        <Icon textual type="pawn" className="me-1" /> I'm
                         student
                       </ToggleButton>
                     </Col>
                     <Col>
                       <ToggleButton
+                        type="radio"
+                        name="coach"
                         variant="dark"
                         checked={values['coach']}
-                        onChange={() => setFieldValue('coach', true)}
+                        onClick={() => setFieldValue('coach', true)}
                         stretch
+                        size="regular"
                       >
-                        <Icon textual type="king" className="mr-1" />
+                        <Icon textual type="king" className="me-1" />
                         I'm coach
                       </ToggleButton>
                     </Col>

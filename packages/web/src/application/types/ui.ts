@@ -64,7 +64,7 @@ export type ToggleButtonProps = BaseButtonProps & {
   defaultChecked?: boolean;
   value?: string | number | readonly string[];
   onChange?: ReactEventHandler;
-  onClick?: undefined;
+  onClick?: ReactEventHandler;
   id?: string;
   name?: string;
   type?: 'checkbox' | 'radio';

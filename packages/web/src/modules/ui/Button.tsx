@@ -64,13 +64,18 @@ const sizes = styled.props.size.stretch.css<BaseButtonProps>`
 
   &.stretch {
     width: 100%;
-    padding: 0;
+    padding-right: 0;
+    padding-left: 0;
   }
 `;
 
 export const Button = styled.button.css<ButtonProps>`
   font-weight: 700;
   font-size: 16px;
+  a & {
+    display: inline-block;
+    text-decoration: none;
+  }
 
   &:focus {
     outline: none;
@@ -94,6 +99,9 @@ const toggle = styled.props.checked.css<ToggleButtonProps>`
     ${variants}
   }
   &:not(.checked) {
+    color: var(--black-color);
+    background: transparent;
+
     &.danger {
       border: 1px solid var(--error-color);
     }
@@ -115,11 +123,12 @@ const toggle = styled.props.checked.css<ToggleButtonProps>`
 `;
 
 export const ToggleButton = styled<ComponentProps<UI['ToggleButton']>>(
-  ({ size, value, ...props }) => {
+  props => {
     const buttonClassName = useCss(toggle)(props);
+    const { size, value, stretch, ...toggleProps } = props;
     return (
       <BToggleButton
-        {...props}
+        {...toggleProps}
         className={buttonClassName}
         value={value || ''}
       />

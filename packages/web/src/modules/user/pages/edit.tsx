@@ -82,7 +82,7 @@ export default withFiles(
               <Absolute bottom={25} right={25}>
                 <Button
                   variant="regular"
-                  className="mr-4"
+                  className="me-4"
                   onClick={() => {
                     resetForm();
                     history.goBack();

@@ -96,8 +96,8 @@ export const OptionsDropdown: UI['OptionsDropdown'] = ({
   return (
     <Dropdown className={className} onSelect={onSelect}>
       <Dropdown.Toggle id={id} size={size}>
-        <Text className="m-0 mr-1">{label}</Text>
-        <Headline6 className="m-0 ml-1 mr-1">{selectedOption.label}</Headline6>
+        <Text className="m-0 me-1">{label}</Text>
+        <Headline6 className="m-0 ms-1 me-1">{selectedOption.label}</Headline6>
       </Dropdown.Toggle>
       <Dropdown.Menu>
         {values.map(option => (

@@ -105,7 +105,7 @@ const StepToolbox: Components['StepToolbox'] = ({
           </Headline4>
           <Button
             size="extra-small"
-            className="mr-3"
+            className="me-3"
             onClick={over(replace, close)}
           >
             Replace

@@ -10,7 +10,7 @@ const Comment = ({ comment }: { comment: ActivityComment }) => {
   const user = useUser(comment.userId);
   return (
     <Row className="mt-2" noGutters>
-      <Col className="col-auto pr-0 mr-2">
+      <Col className="col-auto pr-0 me-2">
         <UserAvatar user={user} />
       </Col>
       <Col className="justify-content-center d-flex flex-column">

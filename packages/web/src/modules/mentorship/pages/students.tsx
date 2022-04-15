@@ -35,7 +35,7 @@ const Students = () => {
             <Card key={`${mentorship.student.id}`}>
               <CardBody>
                 <Row noGutters className="mb-3">
-                  <Col className="col-auto mr-3">
+                  <Col className="col-auto me-3">
                     <UserAvatar user={mentorship.student} />
                   </Col>
                   <Col>
@@ -47,7 +47,7 @@ const Students = () => {
                 <Row noGutters>
                   <Button
                     onClick={() => openConversations(mentorship.student)}
-                    className="mr-4"
+                    className="me-4"
                     size="extra-small"
                     variant="regular"
                   >
@@ -56,7 +56,7 @@ const Students = () => {
                   <MentorshipAction
                     mentorship={mentorship}
                     text="Accept"
-                    className="mr-4"
+                    className="me-4"
                   />
                   <MentorshipAction
                     mentorship={mentorship}

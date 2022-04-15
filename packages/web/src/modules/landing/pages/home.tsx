@@ -149,7 +149,7 @@ export const LandingPage = () => {
                 <Icon
                   type="pawn"
                   variant="primary"
-                  className="mr-2"
+                  className="me-2"
                   size="large"
                 />
                 Live training
@@ -163,7 +163,7 @@ export const LandingPage = () => {
                 <Icon
                   type="board"
                   variant="primary"
-                  className="mr-2"
+                  className="me-2"
                   size="large"
                 />
                 Solo training
@@ -192,7 +192,7 @@ export const LandingPage = () => {
               <Img
                 src={findALesson}
                 alt=""
-                className="float-right section-image"
+                className="float-end section-image"
                 width="auto"
               />
             </Col>

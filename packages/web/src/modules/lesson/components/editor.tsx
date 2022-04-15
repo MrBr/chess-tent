@@ -449,7 +449,7 @@ class EditorRenderer extends React.Component<
     const { activeChapter } = this.props;
     return (
       <StepToolbox
-        actionsClassName="mr-n5"
+        actionsClassName="me-5"
         setActiveStep={this.setActiveStepHandler}
         updateStep={this.updateStep}
         removeStep={this.deleteStep}

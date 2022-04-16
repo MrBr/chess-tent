@@ -1,5 +1,5 @@
 {
-  "name": "playground",
+  "name": "@chess-tent/playground-web-server",
   "version": "1.0.0",
   "scripts": {
     "start:dev": "webpack-dev-server"

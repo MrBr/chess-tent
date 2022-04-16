@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build:dev": "lerna exec \"yarn build:dev\"",
-    "build": "lerna exec \"yarn build\""
+    "build:dev": "lerna exec --ignore @chess-tent/playground-* \"yarn build:dev\"",
+    "build": "lerna exec --ignore @chess-tent/playground-* \"yarn build\""
   },
   "devDependencies": {
     "husky": "^5.0.1",
@@ -37,6 +37,7 @@
     "@types/yup": "^0.29.3"
   },
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "playground/*"
   ]
 }

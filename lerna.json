@@ -1,6 +1,7 @@
 {
   "packages": [
-    "packages/*"
+    "packages/*",
+    "playground/*"
   ],
   "version": "independent",
   "npmClient": "yarn",

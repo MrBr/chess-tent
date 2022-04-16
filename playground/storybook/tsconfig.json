@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "jsx": "react",
+    "paths": {
+      "@chess-tent/web": ["../../packages/web"]
+    }
+  },
+  "include": [
+    "stories"
+  ]
+}

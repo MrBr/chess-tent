@@ -1,7 +1,6 @@
 import application from '@application';
 
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './style.css';
+import './style';
 
 import { Button, ButtonGroup, ToggleButton } from './Button';
 import {

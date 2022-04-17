@@ -100,14 +100,18 @@ export const register = <T>(
   deferredModules.push([loadModule, cb]);
 };
 
+let initializationPromise;
 export const init = () => {
-  return new Promise((resolve, reject) => {
-    resolveDeferredModules()
-      .then(resolve)
-      .catch(e => {
-        // Module couldn't be resolved, showing error stack.
-        console.error(e);
-        reject(e);
-      });
-  });
+  if (!initializationPromise) {
+    initializationPromise = new Promise((resolve, reject) => {
+      resolveDeferredModules()
+        .then(resolve)
+        .catch(e => {
+          // Module couldn't be resolved, showing error stack.
+          console.error(e);
+          reject(e);
+        });
+    });
+  }
+  return initializationPromise;
 };

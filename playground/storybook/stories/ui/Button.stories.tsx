@@ -1,13 +1,17 @@
 import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import { Button } from '@chess-tent/web/src/modules/ui/Button';
+import { UI } from '@chess-tent/web/src/application/types';
+
+import { withWebNamespace } from '../../utils';
 
 export default {
   title: 'UI/Button',
-  component: Button,
-} as ComponentMeta<typeof Button>;
+} as ComponentMeta<UI['Button']>;
 
-const Template: ComponentStory<typeof Button> = args => <Button {...args} />;
+const Template: ComponentStory<UI['Button']> = withWebNamespace(
+  'ui',
+  (args, { Button }) => <Button {...args} />,
+);
 
 export const Primary = Template.bind({});
 Primary.args = { children: 'Test' };

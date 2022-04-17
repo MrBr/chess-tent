@@ -1,5 +1,5 @@
 import { FEN, Orientation, PieceColor, Services, Steps } from '@types';
-import { services } from 'application';
+import { services } from '@application';
 import { addStepToLeft, updateStepState } from '@chess-tent/models';
 import { createStepModuleStep } from './model';
 

@@ -10,9 +10,6 @@
   "dependencies": {
     "@chess-tent/web": "*"
   },
-  "peerDependencies": {
-    "typescript": "*"
-  },
   "devDependencies": {
     "@babel/core": "^7.17.9",
     "@storybook/addon-actions": "^6.4.22",
@@ -21,6 +18,7 @@
     "@storybook/addon-links": "^6.4.22",
     "@storybook/react": "^6.4.22",
     "@storybook/testing-library": "^0.0.9",
-    "babel-loader": "^8.2.4"
+    "babel-loader": "^8.2.4",
+    "dynamic-alias-resolve-plugin": "^1.2.1"
   }
 }

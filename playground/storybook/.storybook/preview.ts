@@ -1,4 +1,6 @@
 import '@chess-tent/web/src/modules/ui/style';
+import '@chess-tent/web/src/modules';
+import application from '@chess-tent/web/src/application';
 
 export const parameters = {
   actions: { argTypesRegex: '^on[A-Z].*' },
@@ -9,3 +11,11 @@ export const parameters = {
     },
   },
 };
+
+// preview.js
+export const loaders = [
+  async () => {
+    await application.init();
+    return { application };
+  },
+];

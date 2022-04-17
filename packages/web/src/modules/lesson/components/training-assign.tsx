@@ -40,7 +40,7 @@ const TrainingAssign = ({ close }: { close: () => void }) => {
   );
 
   const createTraining = useCallback(
-    async (data, helpers) => {
+    async data => {
       const { new: newTraining } = data.date
         ? userScheduledTrainings
         : userTrainings;
@@ -48,7 +48,7 @@ const TrainingAssign = ({ close }: { close: () => void }) => {
       const training = createLessonActivity(
         lesson,
         user,
-        {},
+        { title: data.title },
         { activeStepId: 'analysis-step' },
         [data.user],
       );
@@ -81,7 +81,7 @@ const TrainingAssign = ({ close }: { close: () => void }) => {
           >
             <FormGroup>
               <Label>Training name</Label>
-              <Form.Input name="name" />
+              <Form.Input name="title" />
             </FormGroup>
             <FormGroup>
               <Label>Assign to</Label>

@@ -246,6 +246,7 @@ export type UI = {
     size?: 'regular' | 'small' | 'large' | 'extra-small';
     onClick?: ReactEventHandler;
     name?: string;
+    className?: string;
   }>;
   Thumbnail: ComponentType<{
     src: string | undefined;

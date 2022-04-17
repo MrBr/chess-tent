@@ -1,48 +1,43 @@
 import React from 'react';
-import { ui } from '@application';
-import { Difficulty } from '@chess-tent/models';
-import styled from '@emotion/styled';
+import { ui, components, services } from '@application';
+import { StepRoot } from '@chess-tent/models';
+import { Steps } from '@types';
+import { css } from '@chess-tent/styled-props';
 
-import lessonBeginner from '../images/lesson-beginner.svg';
-import lessonIntermediate from '../images/lesson-intermediate.svg';
-import lessonAdvanced from '../images/lesson-advanced.svg';
+const { Chessboard } = components;
+const { Container } = ui;
+const { getStepPosition } = services;
 
-const { Img } = ui;
+const { className } = css`
+  padding-bottom: 62.5%;
+  overflow: hidden;
+  position: relative;
+  border-radius: 8px;
+  > div {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: translateY(-60%);
+  }
+`;
 
-const difficultyImages = {
-  [Difficulty.BEGINNER]: lessonBeginner,
-  [Difficulty.INTERMEDIATE]: lessonIntermediate,
-  [Difficulty.ADVANCED]: lessonAdvanced,
+const Thumbnail = ({ stepRoot }: { stepRoot: StepRoot }) => {
+  return (
+    <Container className={className}>
+      <div>
+        <Chessboard
+          fen={getStepPosition(stepRoot.state.steps[0] as Steps)}
+          footer={null}
+          header={null}
+          allowEvaluation={false}
+          viewOnly={true}
+          size="100%"
+        />
+      </div>
+    </Container>
+  );
 };
 
-export default styled(
-  ({
-    difficulty,
-    className,
-  }: {
-    className?: string;
-    difficulty: Difficulty;
-    size?: 'small' | 'large';
-  }) => {
-    return <Img className={className} src={difficultyImages[difficulty]} />;
-  },
-)(({ size }) => {
-  switch (size) {
-    case 'small':
-      return {
-        width: 64,
-        height: 64,
-        objectFit: 'cover',
-        borderRadius: 16,
-      };
-    case 'large':
-      return {
-        width: '100%',
-        height: 'auto',
-        objectFit: 'cover',
-        borderRadius: 16,
-      };
-    default:
-      return undefined;
-  }
-});
+export default Thumbnail;

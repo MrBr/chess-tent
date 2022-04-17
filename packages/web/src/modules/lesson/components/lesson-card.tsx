@@ -22,7 +22,7 @@ const LessonCard: React.FC<{
         </Tag>
       </Absolute>
     )}
-    <LessonThumbnail size="large" difficulty={lesson.difficulty} />
+    <LessonThumbnail stepRoot={lesson.state.chapters[0]} />
     <Headline5 className="mt-2 mb-2">{lesson.state.title}</Headline5>
     <Text fontSize="extra-small" weight={700} className="mb-1">
       {lesson.difficulty}

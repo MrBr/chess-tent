@@ -69,11 +69,11 @@ const Link = styled<Components['Link']>(RLink).ghost.css<{}>`
 
   &.ghost {
     color: inherit;
-    textDecoration: inherit;
+    text-decoration: inherit;
 
     &:hover, &:focus, &:visited, &:link, &:active {
       color: inherit;
-      textDecoration: inherit;
+      text-decoration: inherit;
     }
   }
 `;

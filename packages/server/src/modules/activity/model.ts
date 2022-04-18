@@ -16,7 +16,7 @@ export interface DepupulatedActivity {
   roles: NormalizedActivity['roles'];
   date?: NormalizedActivity['date'];
   weekly?: NormalizedActivity['weekly'];
-  name?: Activity['name'];
+  title?: NormalizedActivity['title'];
   v?: number;
 }
 
@@ -25,9 +25,9 @@ const activitySchema = db.createSchema<DepupulatedActivity>(
     subject: {
       type: Schema.Types.Mixed,
     } as unknown as DepupulatedActivity['subject'],
-    name: {
+    title: {
       type: Schema.Types.Mixed,
-    } as unknown as DepupulatedActivity['name'],
+    } as unknown as DepupulatedActivity['title'],
     subjectType: {
       type: String,
     } as unknown as DepupulatedActivity['subjectType'],

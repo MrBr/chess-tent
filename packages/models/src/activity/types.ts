@@ -16,7 +16,7 @@ export interface Activity<
   roles: Role<string>[];
   date?: string;
   weekly?: boolean;
-  name?: string;
+  title?: string;
 }
 
 export interface NormalizedActivity<
@@ -31,5 +31,5 @@ export interface NormalizedActivity<
   roles: NormalizedRole<string>[];
   date?: string;
   weekly?: boolean;
-  name?: string;
+  title?: string;
 }

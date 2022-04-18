@@ -286,6 +286,7 @@ export type UI = {
   };
   ErrorMessage: UIComponent<ErrorMessageProps>;
   Button: UIComponent<ButtonProps>;
+  Stack: UIComponent;
   ToggleButton: UIComponent<ToggleButtonProps>;
   ButtonGroup: UIComponent;
   Card: ComponentType<ClickProps & ClassNameProps & CardProps>;

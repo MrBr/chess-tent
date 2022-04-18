@@ -18,7 +18,7 @@ const PageUser = () => {
     }
   }, [error, response, setUser]);
   useEffect(() => {
-    if (response || loading || error) {
+    if (response || loading || error || !userId) {
       return;
     }
     fetch(userId);

@@ -34,7 +34,7 @@ const {
 const PreviewLesson = () => {
   const { lessonId } = useParams<{ lessonId: string }>();
   const history = useHistory();
-  const { value: lesson } = useLesson(lessonId);
+  const { value: lesson } = useLesson(lessonId as string);
   const [chapter, setActiveChapter] = useState<Chapter>();
   const { value: user } = useActiveUserRecord();
   const { new: newTraining, value: activities } = useUserTrainings(user);
@@ -75,7 +75,7 @@ const PreviewLesson = () => {
             </Tag>
           </Absolute>
         )}
-        <LessonThumbnail size="large" difficulty={lesson.difficulty} />
+        <LessonThumbnail stepRoot={lesson.state.chapters[0]} />
         <CardBody className="px-4">
           <Headline5 className="mt-2 mb-3">{lesson.state.title}</Headline5>
           <Row className="g-0">

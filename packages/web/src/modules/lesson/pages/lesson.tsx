@@ -8,7 +8,7 @@ const { Editor, Redirect } = components;
 const PageLesson = () => {
   const { value: user } = useActiveUserRecord();
   const { lessonId } = useParams<{ lessonId: string }>();
-  const { value: lesson } = useLesson(lessonId);
+  const { value: lesson } = useLesson(lessonId as string);
 
   if (!lesson) {
     return null;

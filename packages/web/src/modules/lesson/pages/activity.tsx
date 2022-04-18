@@ -9,7 +9,9 @@ const { Absolute, Icon } = ui;
 const PageActivity = () => {
   const history = useHistory();
   const { activityId } = useParams<{ activityId: string }>();
-  const { value: activity, meta } = useActivity<LessonActivity>(activityId);
+  const { value: activity, meta } = useActivity<LessonActivity>(
+    activityId as string,
+  );
   const { loading, loaded } = meta;
 
   if (loaded && activity === null) {

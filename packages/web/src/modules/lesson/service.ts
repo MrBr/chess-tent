@@ -62,7 +62,7 @@ export const updateActivityActiveStep = (
 export const createLessonActivity = (
   lesson: Lesson,
   owner: User,
-  state: Partial<LessonActivity>,
+  optionals?: Partial<LessonActivity>,
   boardState?: Partial<LessonActivityBoardState>,
   students: User[] = [],
   coaches: User[] = [],
@@ -98,9 +98,8 @@ export const createLessonActivity = (
       [mainBoard.id]: mainBoard,
     },
     userSettings: {},
-    ...state,
   };
-  return createActivity(id, lesson, roles, activityInitialState);
+  return createActivity(id, lesson, roles, activityInitialState, optionals);
 };
 
 export const hasVariationMove = (

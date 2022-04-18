@@ -9,7 +9,9 @@ export const createActivity = <T extends Subject, K extends {}>(
   subject: T,
   roles: Activity['roles'],
   state: K,
+  optionals?: Pick<Activity, 'date' | 'weekly' | 'title'>,
 ): Activity<T, K> => ({
+  ...optionals,
   id,
   type: TYPE_ACTIVITY,
   subject,

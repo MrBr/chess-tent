@@ -2,7 +2,9 @@
 
 :root {
   --primary-color: #26d95c;
+  --primary-color-rgb: 38,217,92;
   --secondary-color: #f45924;
+  --secondary-color-rgb: 244,89,36;
 
   --bg-color: #fafbfb;
 
@@ -19,11 +21,18 @@
   --grey-200-color: #fdfdfd;
 
   --success-color: #00b67a;
+  --success-color-rgb: 0,182,122;
+
   --error-color: #ff6b57;
   --warning-color: #ecb832;
   --link-color: #3076ff;
 
   --primary-gradient: linear-gradient(90deg, #5ad9ab 0%, #26d95c 100%);
+
+  /*  BOOTSTRAP OVERRIDES */
+  --bs-primary-rgb: var(--primary-color-rgb);
+  --bs-secondary-rgb: var(--secondary-color-rgb);
+  --bs-success-rgb: var(--success-color-rgb);
 }
 
 html,

@@ -142,3 +142,6 @@ export const createNewLesson = (user: User, chapters?: Chapter[]) => {
 
   return createLesson(newLessonId, initialChapters, user, 'Lesson');
 };
+
+export const isInitialLessonActivity = (activity: LessonActivity) =>
+  activity.subject.state.chapters.length === 0;

@@ -4,8 +4,14 @@ import { Components } from '@types';
 
 const { Avatar } = ui;
 
-const UserAvatar: Components['UserAvatar'] = ({ size, onClick, user }) => (
+const UserAvatar: Components['UserAvatar'] = ({
+  className,
+  size,
+  onClick,
+  user,
+}) => (
   <Avatar
+    className={className}
     size={size}
     onClick={onClick}
     src={user.state.imageUrl}

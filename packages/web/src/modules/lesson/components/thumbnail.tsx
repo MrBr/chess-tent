@@ -1,5 +1,5 @@
 import React from 'react';
-import { ui, components, services } from '@application';
+import { ui, components, services, constants } from '@application';
 import { StepRoot } from '@chess-tent/models';
 import { Steps } from '@types';
 import { css } from '@chess-tent/styled-props';
@@ -7,6 +7,7 @@ import { css } from '@chess-tent/styled-props';
 const { Chessboard } = components;
 const { Container } = ui;
 const { getStepPosition } = services;
+const { START_FEN } = constants;
 
 const { className } = css`
   padding-bottom: 62.5%;
@@ -24,11 +25,13 @@ const { className } = css`
 `;
 
 const Thumbnail = ({ stepRoot }: { stepRoot: StepRoot }) => {
+  const step = stepRoot.state.steps[0];
+  const initialPosition = step ? getStepPosition(step as Steps) : START_FEN;
   return (
     <Container className={className}>
       <div>
         <Chessboard
-          fen={getStepPosition(stepRoot.state.steps[0] as Steps)}
+          fen={initialPosition}
           footer={null}
           header={null}
           allowEvaluation={false}

@@ -5,19 +5,20 @@ import {
   LessonActivityRole,
   StepRoot,
 } from '@chess-tent/models';
-import styled, { css } from '@chess-tent/styled-props';
+import { css } from '@chess-tent/styled-props';
 
 import LessonThumbnail from './thumbnail';
 import UserAvatar from '../../user/components/user-avatar';
+import TrainingProgress from './training-progress';
 
-const { Row, Col, Headline6, Text, Container } = ui;
+const { Row, Col, Headline6, Container, Stack, Text } = ui;
 const { useHistory } = hooks;
 
 const { className } = css`
   width: 300px;
+  height: 345px;
   padding: 16px;
   position: relative;
-  cursor: pointer;
   border: 1px solid var(--grey-400-color);
   border-radius: 14px;
 
@@ -40,44 +41,57 @@ const TrainingCard = (props: { training: LessonActivity }) => {
   const history = useHistory();
   const stepRoot = (lesson.state.chapters[0] ||
     boards[mainBoardId][boards[mainBoardId].activeStepId].analysis) as StepRoot;
+
   const coach = roles.find(
     ({ user, role }) =>
       role === LessonActivityRole.COACH || LessonActivityRole.OWNER,
   );
+  const students = roles
+    .map(({ user, role }) =>
+      role === LessonActivityRole.STUDENT ? (
+        <UserAvatar user={user} size="extra-small" />
+      ) : null,
+    )
+    .filter(Boolean);
+  const openTraining = () => history.push(`/activity/${props.training.id}`);
+
   return (
-    <Container
-      className={className}
-      onClick={() => history.push(`/activity/${props.training.id}`)}
-    >
-      <Row className="g-0 cursor-pointer flex-column">
-        <Col className="thumbnail-container">
+    <Container className={className}>
+      <Row className="g-0 mb-3">
+        <Col className="thumbnail-container" onClick={openTraining}>
           <LessonThumbnail stepRoot={stepRoot} />
         </Col>
-        <Col>
-          <Headline6 className="mt-2 ms-2 m-0">{title}</Headline6>
+      </Row>
+      <Row>
+        <Col onClick={openTraining}>
+          <Text className="m-0 mb-1" fontSize="extra-small">
+            {lesson.difficulty || 'TRAINING'}
+          </Text>
         </Col>
-        <Col>
-          <Row className="g-0">
-            <Col xs={8}>
-              {coach && (
-                <>
-                  <UserAvatar
-                    user={coach.user}
-                    size="extra-small"
-                    className="me-2"
-                  />
-                  {coach.user.name}
-                </>
-              )}
-            </Col>
-            <Col xs={4}>
-              {roles.map(({ user, role }) =>
-                role === LessonActivityRole.STUDENT ? (
-                  <UserAvatar user={user} />
-                ) : null,
-              )}
-            </Col>
-          </Row>
+      </Row>
+      <Row>
+        <Col onClick={openTraining}>
+          <Headline6 className="m-0 mb-3">{title || 'Untitled'}</Headline6>
+        </Col>
+      </Row>
+      <Row className="mb-2">
+        <TrainingProgress training={props.training} />
+      </Row>
+      <Row className="g-0">
+        <Col xs={8}>
+          {coach && (
+            <>
+              <UserAvatar
+                user={coach.user}
+                size="extra-small"
+                className="me-2"
+              />
+              {coach.user.name}
+            </>
+          )}
+        </Col>
+        <Col xs={4} className="text-right">
+          <Stack>{students}</Stack>
         </Col>
       </Row>
     </Container>

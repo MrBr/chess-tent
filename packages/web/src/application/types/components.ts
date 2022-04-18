@@ -12,7 +12,12 @@ import {
 import { DrawCurrent, DrawShape } from '@chess-tent/chessground/dist/draw';
 import { Api } from '@chess-tent/chessground/dist/api';
 import { Color } from '@chess-tent/chessground/dist/types';
-import { LinkProps, RedirectProps, RouteProps } from 'react-router-dom';
+import {
+  LinkProps,
+  RedirectProps,
+  RouteProps,
+  SwitchProps,
+} from 'react-router-dom';
 import {
   Activity,
   Analysis,
@@ -395,7 +400,7 @@ export type Components = {
   StepMove: StepMove;
   PieceIcon: PieceIcon;
   Router: RenderPropComponentType;
-  Switch: ComponentType;
+  Switch: ComponentType<SwitchProps>;
   Redirect: ComponentType<RedirectProps>;
   Route: ComponentType<RouteProps>;
   AuthorizedRoute: ComponentType<
@@ -481,7 +486,7 @@ export type Components = {
   UserAvatar: ComponentType<
     {
       user: User;
-    } & Pick<ComponentProps<UI['Avatar']>, 'size' | 'onClick'>
+    } & Pick<ComponentProps<UI['Avatar']>, 'size' | 'onClick' | 'className'>
   >;
   UserSettings: ComponentType;
   Coaches: ComponentType;

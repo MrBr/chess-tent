@@ -3,6 +3,8 @@
 :root {
   --primary-color: #26d95c;
   --primary-color-rgb: 38,217,92;
+  --primary-gradient: linear-gradient(90deg, #5ad9ab 0%, #26d95c 100%);
+
   --secondary-color: #f45924;
   --secondary-color-rgb: 244,89,36;
 
@@ -27,7 +29,10 @@
   --warning-color: #ecb832;
   --link-color: #3076ff;
 
-  --primary-gradient: linear-gradient(90deg, #5ad9ab 0%, #26d95c 100%);
+
+  /* Other color */
+  --purple-color: #8A77D6;
+  --purple-opaque-color: #F3F1FB;
 
   /*  BOOTSTRAP OVERRIDES */
   --bs-primary-rgb: var(--primary-color-rgb);

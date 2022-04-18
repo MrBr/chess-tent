@@ -22,6 +22,10 @@ const { className } = css`
   border: 1px solid var(--grey-400-color);
   border-radius: 14px;
 
+  :hover {
+    border-color: var(--black-color);
+  }
+
   .thumbnail-container {
     height: 165px;
     width: 100%;

@@ -464,6 +464,7 @@ export type Components = {
   }>;
   MyTrainings: ComponentType<{ trainings: LessonActivity[]; user: User }>;
   TrainingCard: ComponentType<{ training: LessonActivity }>;
+  TrainingScheduledCard: ComponentType<{ training: LessonActivity }>;
   LessonBrowser: ComponentType<{
     lessons: Lesson[] | null | undefined;
     onFiltersChange?: (

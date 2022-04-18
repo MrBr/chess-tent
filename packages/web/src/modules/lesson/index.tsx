@@ -63,6 +63,12 @@ application.register(
   },
 );
 application.register(
+  () => import('./components/training-scheduled-card'),
+  module => {
+    application.components.TrainingScheduledCard = module.default;
+  },
+);
+application.register(
   () => import('./components/chapters-dropdown'),
   module => {
     application.components.LessonChapters = module.default;

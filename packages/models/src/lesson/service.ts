@@ -103,7 +103,7 @@ const createLesson = (
   chapters: Chapter[],
   owner: User,
   title = 'Lesson',
-  difficulty: Difficulty = Difficulty.BEGINNER,
+  difficulty?: Difficulty,
   tags: Tag[] = [],
 ): Lesson => ({
   id,

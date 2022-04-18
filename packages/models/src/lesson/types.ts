@@ -23,7 +23,7 @@ export interface Lesson extends Subject {
   docId?: string;
   owner: User;
   type: typeof TYPE_LESSON;
-  difficulty: Difficulty;
+  difficulty?: Difficulty;
   tags?: Tag[];
   users?: User[];
   published?: boolean;

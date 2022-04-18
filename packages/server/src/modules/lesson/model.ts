@@ -16,7 +16,7 @@ export interface DepupulatedLesson {
   type: NormalizedLesson['type'];
   owner: NormalizedLesson['owner'];
   state: NormalizedLesson['state'];
-  difficulty: NormalizedLesson['difficulty'];
+  difficulty?: NormalizedLesson['difficulty'];
   tags: NormalizedLesson['tags'];
   published: NormalizedLesson['published'];
   users: NormalizedLesson['users'];

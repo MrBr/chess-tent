@@ -316,4 +316,7 @@ export type UI = {
   OverlayTrigger: typeof BOverlayTrigger;
   Tag: UIComponent<BadgeProps>;
   ProgressBar: UIComponent<ProgressBarProps>;
+
+  /* Molecules */
+  CardEmpty: UIComponent<{ title: string; subtitle: string; cta: string }>;
 };

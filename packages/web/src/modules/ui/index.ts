@@ -32,6 +32,7 @@ import {
 import SearchBox from './SearchBox';
 import { Avatar, Img, Thumbnail } from './Img';
 import Card from './Card';
+import CardEmpty from './CardEmpty';
 import { Tab, Tabs } from './Tab';
 import Icon from './Icon';
 import Absolute from './Absolute';
@@ -73,6 +74,7 @@ application.ui.Dropdown = Dropdown;
 application.ui.OptionsDropdown = OptionsDropdown;
 
 application.ui.Card = Card;
+application.ui.CardEmpty = CardEmpty;
 
 application.ui.Img = Img;
 application.ui.Avatar = Avatar;

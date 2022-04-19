@@ -13,7 +13,6 @@ const {
   Card,
   Text,
   Button,
-  CardBody,
   Row,
   Headline5,
   Tag,
@@ -76,7 +75,7 @@ const PreviewLesson = () => {
           </Absolute>
         )}
         <LessonThumbnail stepRoot={lesson.state.chapters[0]} />
-        <CardBody className="px-4">
+        <Card.Body className="px-4">
           <Headline5 className="mt-2 mb-3">{lesson.state.title}</Headline5>
           <Row className="g-0">
             <Col className="col-auto me-1">
@@ -134,7 +133,7 @@ const PreviewLesson = () => {
               )}
             </Col>
           </Row>
-        </CardBody>
+        </Card.Body>
       </Card>
       <ChaptersDropdown
         chapters={lesson.state.chapters}

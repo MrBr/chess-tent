@@ -1,17 +1,26 @@
 import RBCard from 'react-bootstrap/Card';
-import styled from '@emotion/styled';
-import { ComponentProps, ComponentType } from 'react';
-import { ClickProps, UI } from '@types';
+import { UI } from '@types';
+import styled from '@chess-tent/styled-props';
 
-const CardComponent = styled<
-  ComponentType<ComponentProps<typeof RBCard> & ClickProps>
->(RBCard)({
-  border: 0,
-  boxShadow: '0px 4px 8px rgba(0,0,0,0.1)',
-  backgroundColor: 'transparent',
-}) as UI['Card'];
+const CardComponent = styled<UI['Card']>(RBCard).css`
+  background-color: transparent;
+  position: relative;
+  border: 1px solid var(--grey-400-color);
+  border-radius: 14px;
+  overflow: hidden;
 
-const CardBody = RBCard.Body;
-const CardHeader = RBCard.Header;
+  :hover {
+    border-color: var(--black-color);
+  }
+` as unknown as UI['Card'];
 
-export { CardComponent, CardBody, CardHeader };
+CardComponent.Body = styled(RBCard.Body).css`
+  padding: 16px;
+`;
+CardComponent.Header = RBCard.Header;
+CardComponent.Img = styled(RBCard.Img).css`
+  border-radius: 0;
+  border: none;
+`;
+
+export default CardComponent;

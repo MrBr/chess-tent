@@ -17,14 +17,6 @@ const { useHistory } = hooks;
 const { className } = css`
   width: 300px;
   height: 345px;
-  padding: 16px;
-  position: relative;
-  border: 1px solid var(--grey-400-color);
-  border-radius: 14px;
-
-  :hover {
-    border-color: var(--black-color);
-  }
 
   .thumbnail-container {
     height: 165px;

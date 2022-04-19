@@ -30,19 +30,20 @@ import {
   Text,
 } from './Text';
 import SearchBox from './SearchBox';
-import { Avatar, FramedProfile, Img, Thumbnail } from './Img';
-import { CardBody, CardComponent, CardHeader } from './Card';
+import { Avatar, Img, Thumbnail } from './Img';
+import Card from './Card';
 import { Tab, Tabs } from './Tab';
 import Icon from './Icon';
 import Absolute from './Absolute';
 import { Toast, ToastBody, ToastHeader } from './Toast';
-import { Dot } from './Dot';
+import Dot from './Dot';
 import LoadMore from './LoadMore';
 import Spinner from './Spinner';
 import ProgressBar from './ProgressBar';
 import { withFiles, withHtml } from './hoc';
 import { mobileCss } from './enhancers';
 import Stack from './Stack';
+import Line from './Line';
 
 application.hoc.withFiles = withFiles;
 application.hoc.withHtml = withHtml;
@@ -71,12 +72,9 @@ application.ui.ToastBody = ToastBody;
 application.ui.Dropdown = Dropdown;
 application.ui.OptionsDropdown = OptionsDropdown;
 
-application.ui.Card = CardComponent;
-application.ui.CardBody = CardBody;
-application.ui.CardHeader = CardHeader;
+application.ui.Card = Card;
 
 application.ui.Img = Img;
-application.ui.FramedProfile = FramedProfile;
 application.ui.Avatar = Avatar;
 application.ui.Thumbnail = Thumbnail;
 
@@ -107,6 +105,7 @@ application.ui.ProgressBar = ProgressBar;
 
 application.ui.Icon = Icon;
 application.ui.Dot = Dot;
+application.ui.Line = Line;
 
 application.ui.LoadMore = LoadMore;
 application.ui.Spinner = Spinner;

@@ -36,6 +36,7 @@ import {
   BadgeProps,
   SpinnerProps,
   ProgressBarProps,
+  CardImgProps,
 } from 'react-bootstrap';
 import DropdownToggle from 'react-bootstrap/DropdownToggle';
 import { ErrorMessageProps, Formik, FormikProps as FFormikProps } from 'formik';
@@ -44,7 +45,7 @@ import FormControl from 'react-bootstrap/FormControl';
 import Select, { Props } from 'react-select';
 import AsyncSelect from 'react-select/async';
 import Dropdown from 'react-bootstrap/Dropdown';
-import { ClassNameProps, ClickProps } from './_helpers';
+import { ClickProps } from './_helpers';
 import { HtmlProps } from './hoc';
 
 export type BaseButtonProps = {
@@ -223,7 +224,6 @@ export type UI = {
       style?: {};
     } & ImgHTMLAttributes<unknown>
   >;
-  FramedProfile: ComponentType<{ src: string | undefined }>;
   Dropdown: ComponentType<ComponentProps<typeof Dropdown>> & {
     Toggle: ComponentType<
       Omit<ComponentProps<typeof DropdownToggle>, 'size'> & {
@@ -269,6 +269,7 @@ export type UI = {
     zIndex?: number;
   }>;
   Dot: UIComponent<{ background?: string }>;
+  Line: UIComponent;
   LoadMore: UIComponent<LoadMoreProps>;
   Spinner: UIComponent<SpinnerProps>;
   Page: UIComponent<ContainerProps>;
@@ -289,9 +290,11 @@ export type UI = {
   Stack: UIComponent;
   ToggleButton: UIComponent<ToggleButtonProps>;
   ButtonGroup: UIComponent;
-  Card: ComponentType<ClickProps & ClassNameProps & CardProps>;
-  CardBody: ComponentType<ClassNameProps>;
-  CardHeader: ComponentType;
+  Card: UIComponent<CardProps> & {
+    Body: UIComponent;
+    Header: UIComponent;
+    Img: UIComponent<CardImgProps>;
+  };
   Modal: UIComponent<
     ModalProps & { close?: () => void; fullScreen?: boolean }
   > & {

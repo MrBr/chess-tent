@@ -2,7 +2,7 @@ import React from 'react';
 import { components, hooks, ui } from '@application';
 
 const { useActiveUserRecord, useCoaches, useOpenConversations } = hooks;
-const { Container, Row, Col, Text, Headline2, Card, CardBody, Button } = ui;
+const { Container, Row, Col, Text, Headline2, Card, Button } = ui;
 const { MentorshipAction, Page, UserAvatar } = components;
 
 const Coaches = () => {
@@ -16,7 +16,7 @@ const Coaches = () => {
         <Row>
           {coaches?.map(mentorship => (
             <Card>
-              <CardBody>
+              <Card.Body>
                 <Row className="g-0 mb-3">
                   <Col className="col-auto me-3">
                     <UserAvatar user={mentorship.coach} />
@@ -41,7 +41,7 @@ const Coaches = () => {
                     />
                   </Col>
                 </Row>
-              </CardBody>
+              </Card.Body>
             </Card>
           ))}
         </Row>

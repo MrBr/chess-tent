@@ -3,17 +3,7 @@ import { components, hooks, ui } from '@application';
 import { groupBy } from 'lodash';
 
 const { useActiveUserRecord, useStudents, useOpenConversations } = hooks;
-const {
-  Container,
-  Row,
-  Col,
-  Headline3,
-  Text,
-  Headline2,
-  Card,
-  CardBody,
-  Button,
-} = ui;
+const { Container, Row, Col, Headline3, Text, Headline2, Card, Button } = ui;
 const { Link, MentorshipAction, Page, UserAvatar } = components;
 
 const Students = () => {
@@ -33,7 +23,7 @@ const Students = () => {
         <Row>
           {result['undefined']?.map(mentorship => (
             <Card key={`${mentorship.student.id}`}>
-              <CardBody>
+              <Card.Body>
                 <Row className="g-0 mb-3">
                   <Col className="col-auto me-3">
                     <UserAvatar user={mentorship.student} />
@@ -64,7 +54,7 @@ const Students = () => {
                     text="Decline"
                   />
                 </Row>
-              </CardBody>
+              </Card.Body>
             </Card>
           ))}
         </Row>
@@ -72,7 +62,7 @@ const Students = () => {
         <Row>
           {result['true']?.map(mentorship => (
             <Card key={mentorship.student.id}>
-              <CardBody>
+              <Card.Body>
                 <Row>
                   <Col className="col-auto">
                     <UserAvatar user={mentorship.student} />
@@ -83,7 +73,7 @@ const Students = () => {
                     </Link>
                   </Col>
                 </Row>
-              </CardBody>
+              </Card.Body>
             </Card>
           ))}
         </Row>
@@ -91,7 +81,7 @@ const Students = () => {
         <Row>
           {result['false']?.map(mentorship => (
             <Card key={mentorship.student.id}>
-              <CardBody>
+              <Card.Body>
                 <Row>
                   <Col className="col-auto">
                     <UserAvatar user={mentorship.student} />
@@ -102,7 +92,7 @@ const Students = () => {
                     </Link>
                   </Col>
                 </Row>
-              </CardBody>
+              </Card.Body>
             </Card>
           ))}
         </Row>

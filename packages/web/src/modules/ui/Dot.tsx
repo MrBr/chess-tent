@@ -1,11 +1,12 @@
-import { ComponentProps } from 'react';
-import styled from '@emotion/styled';
+import styled from '@chess-tent/styled-props';
 import { UI } from '@types';
 
-export const Dot = styled.span<ComponentProps<UI['Dot']>>(({ background }) => ({
-  borderRadius: '50%',
-  background: background || 'red',
-  display: 'inline-block',
-  width: 7,
-  height: 7,
-}));
+const Dot = styled.span.css`
+  border-radius: 50%;
+  background: red;
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+` as UI['Dot'];
+
+export default Dot;

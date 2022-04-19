@@ -4,22 +4,48 @@ import { UI } from '@types';
 
 import Card from './Card';
 import Icon from './Icon';
-import { Text, Headline5 } from './Text';
+import { Text } from './Text';
 import { Button } from './Button';
+import Tag from './Tag';
 
+/**
+ * CardEmpty is designed in a way to inherit height
+ */
 const CardEmpty = styled<ComponentProps<UI['CardEmpty']>>(
-  ({ className, title, subtitle, cta }) => {
+  ({ className, title, subtitle, cta, onClick }) => {
     return (
       <Card className={className}>
         <Card.Body>
-          <Icon type="search" />
-          <Headline5>{title}</Headline5>
-          <Text fontSize="extra-small">{subtitle}</Text>
-          <Button variant="ghost">{cta}</Button>
+          <Tag className="mb-3">
+            <Icon type="search" />
+          </Tag>
+          <Text className="mb-1" align="center" weight={500}>
+            {title}
+          </Text>
+          <Text fontSize="extra-small" align="center">
+            {subtitle}
+          </Text>
+          <Button
+            variant="ghost"
+            size="small"
+            className="d-inline-block"
+            onClick={onClick}
+          >
+            {cta}
+          </Button>
         </Card.Body>
       </Card>
     );
   },
-).css`` as UI['CardEmpty'];
+).css`
+  align-items: center;
+  width: 300px;
+  
+  .card-body {
+    text-align: center;
+    flex: 0;
+    margin: auto;
+  }
+` as UI['CardEmpty'];
 
 export default CardEmpty;

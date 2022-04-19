@@ -8,12 +8,29 @@ export default {
   title: 'UI/Card',
 } as ComponentMeta<UI['CardEmpty']>;
 
-const Template: ComponentStory<UI['CardEmpty']> = withWebNamespace(
+export const CardEmpty: ComponentStory<UI['CardEmpty']> = withWebNamespace(
   'ui',
   (args, { CardEmpty }) => <CardEmpty {...args} />,
 );
-export const CardEmpty = Template.bind({});
 CardEmpty.args = {
+  title: 'Best way to start',
+  subtitle: 'Browse the coaches',
+  cta: 'Find a coach',
+};
+
+export const CardEmptyInList: ComponentStory<UI['CardEmpty']> =
+  withWebNamespace('ui', (args, { CardEmpty, Row }) => (
+    <Row className="g-0">
+      <CardEmpty {...args} />
+      <div
+        style={{ height: 400, background: 'grey' }}
+        className="ms-2 col-auto"
+      >
+        Test item with height
+      </div>
+    </Row>
+  ));
+CardEmptyInList.args = {
   title: 'Best way to start',
   subtitle: 'Browse the coaches',
   cta: 'Find a coach',

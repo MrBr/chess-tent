@@ -337,5 +337,10 @@ export type UI = {
   ProgressBar: UIComponent<ProgressBarProps>;
 
   /* Molecules */
-  CardEmpty: UIComponent<{ title: string; subtitle: string; cta: string }>;
+  CardEmpty: UIComponent<{
+    title: string;
+    subtitle: string;
+    cta: string;
+    onClick?: () => void;
+  }>;
 };

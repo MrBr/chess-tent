@@ -17,7 +17,7 @@ import { Container, Row, Col, Page } from './Grid';
 import { Select, AsyncSelect } from './Select';
 import Dropdown, { OptionsDropdown } from './Dropdown';
 import { Tooltip } from './Tooltip';
-import { Tag } from './Tag';
+import Tag from './Tag';
 import { Overlay, OverlayTrigger } from './Overlay';
 import {
   Hero,

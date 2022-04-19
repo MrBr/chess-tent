@@ -1,6 +1,7 @@
 const path = require('path');
 var DynamicAliasResolvePlugin = require('dynamic-alias-resolve-plugin');
 
+// Helps properly resolve "relative" package alias
 const moduleAliases = (moduleIdentifier, aliases) =>
   new DynamicAliasResolvePlugin({
     alias: Object.keys(aliases),
@@ -30,6 +31,19 @@ const webModule = moduleAliases('chess-tent/packages/web', {
 module.exports = {
   webpackFinal: async config => {
     config.resolve.plugins = [...config.resolve.plugins, webModule];
+    const fileLoaderRule = config.module.rules.find(
+      rule => rule.test && rule.test.test('.svg'),
+    );
+    fileLoaderRule.exclude = /\.svg$/;
+
+    // Import svg components as ReactComponent.
+    // Has to match current react configuration otherwise default import is the component
+    // and that breaks the code.
+    config.module.rules.push({
+      test: /\.svg$/,
+      // Both loaders needs to be here.
+      use: ['@svgr/webpack', 'file-loader'],
+    });
     return config;
   },
   stories: [

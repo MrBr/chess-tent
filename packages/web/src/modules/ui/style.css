@@ -33,11 +33,6 @@
   /* Other color */
   --purple-color: #8A77D6;
   --purple-opaque-color: #F3F1FB;
-
-  /*  BOOTSTRAP OVERRIDES */
-  --bs-primary-rgb: var(--primary-color-rgb);
-  --bs-secondary-rgb: var(--secondary-color-rgb);
-  --bs-success-rgb: var(--success-color-rgb);
 }
 
 html,

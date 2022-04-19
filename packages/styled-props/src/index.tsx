@@ -175,6 +175,7 @@ styled.span = styled('span');
 styled.p = styled('p');
 styled.div = styled('div');
 styled.img = styled('img');
+styled.hr = styled('hr');
 
 styled = new Proxy(styled, {
   get(target, p, receiver): any {

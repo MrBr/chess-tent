@@ -107,4 +107,5 @@ export interface Styled {
   img: RecursiveWithCss<
     ComponentCssResult<ImgHTMLAttributes<HTMLImageElement>>
   >;
+  hr: RecursiveWithCss<ComponentCssResult<ImgHTMLAttributes<HTMLImageElement>>>;
 }

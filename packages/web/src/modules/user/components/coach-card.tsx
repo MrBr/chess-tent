@@ -1,55 +1,48 @@
 import React from 'react';
-import styled from '@emotion/styled';
 import { hooks, ui } from '@application';
 import { Components } from '@types';
-import defaultAvatarSrc from '../images/default-avatar.svg';
+import { css } from '@chess-tent/styled-props';
 
-const { Card, CardBody, FramedProfile, Headline4, Button, Text, Row, Col } = ui;
+const { Card, Headline6, Text, Row, Col, Line } = ui;
 
-const { useHistory, useOpenConversations } = hooks;
+const { useHistory } = hooks;
 
-const CoachFrame = styled(Card)({
-  margin: '0.5rem',
-  maxWidth: 300,
-  height: 350,
-  display: 'flex',
-  flexDirection: 'column',
-  borderRadius: 16,
-  background: 'linear-gradient(90deg, #F46F24 0%, #F44D24 100%)',
-  boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
-});
+const { className } = css`
+  width: 300px;
+  height: 310px;
+`;
 
 const CoachCard: Components['CoachCard'] = ({ coach }) => {
-  const openConversations = useOpenConversations();
   const history = useHistory();
 
   return (
-    <CoachFrame key={coach.id}>
-      <FramedProfile src={coach.state.imageUrl || defaultAvatarSrc} />
-      <CardBody>
-        <Row className="flex-column flex-nowrap h-100 g-0">
+    <Card className={className}>
+      <Card.Img src={coach.state.imageUrl} height={167} />
+      <Card.Body>
+        <Headline6
+          className="mt-1 mb-0 cursor-pointer"
+          onClick={() => history.push(`/user/${coach.id}`)}
+        >
+          {coach.name}
+        </Headline6>
+        <Text fontSize="extra-small" className="text-truncate" weight={700}>
+          {coach.state.punchline}
+        </Text>
+        <Line />
+        <Row>
           <Col>
-            <Headline4
-              className="mt-1 mb-0 cursor-pointer"
-              onClick={() => history.push(`/user/${coach.id}`)}
-            >
-              {coach.name}
-            </Headline4>
-            <Text fontSize="small" className="text-truncate" weight={700}>
-              {coach.state.punchline}
-            </Text>
-            <Text fontSize="extra-small" className="text-truncate" weight={500}>
-              {coach.state.studentElo && `Up to ${coach.state.studentElo} elo`}
+            <Text className="m-0" fontSize="extra-small">
+              FIDE
             </Text>
           </Col>
-          <Col className="col-auto">
-            <Button size="small" onClick={() => openConversations(coach)}>
-              Message
-            </Button>
+          <Col>
+            <Text className="m-0" fontSize="extra-small">
+              {coach.state.elo && `Up to ${coach.state.studentElo} elo`}
+            </Text>
           </Col>
         </Row>
-      </CardBody>
-    </CoachFrame>
+      </Card.Body>
+    </Card>
   );
 };
 

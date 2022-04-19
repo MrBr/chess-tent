@@ -1,41 +1,63 @@
 import React from 'react';
 import { ui } from '@application';
 import { Lesson } from '@chess-tent/models';
+import { css } from '@chess-tent/styled-props';
+
 import LessonThumbnail from './thumbnail';
 
-const { Headline5, Text, Card, Container, Tag, Absolute } = ui;
+const { Headline6, Text, Card, Row, Col, Line } = ui;
+
+const { className } = css`
+  width: 300px;
+  height: 345px;
+
+  .thumbnail-container {
+    height: 165px;
+    width: 100%;
+    position: relative;
+  }
+`;
 
 const LessonCard: React.FC<{
   lesson: Lesson;
-  onClick: (lesson: Lesson) => void;
+  onClick?: (lesson: Lesson) => void;
   owned?: boolean;
-}> = ({ lesson, onClick, owned }) => (
+}> = ({ lesson, onClick }) => (
   <Card
     key={lesson.id}
-    onClick={() => onClick(lesson)}
-    className="cursor-pointer mb-4 shadow-none"
+    onClick={() => onClick && onClick(lesson)}
+    className={className}
   >
-    {owned && (
-      <Absolute left={10} top={10}>
-        <Tag bg="light" className="p-2">
-          <Text inline>Owned</Text>
-        </Tag>
-      </Absolute>
-    )}
-    <LessonThumbnail stepRoot={lesson.state.chapters[0]} />
-    <Headline5 className="mt-2 mb-2">{lesson.state.title}</Headline5>
-    <Text fontSize="extra-small" weight={700} className="mb-1">
-      {lesson.difficulty}
-    </Text>
-    <Container className="pl-0">
-      {lesson.tags?.map(({ text, id }) => (
-        <Tag pill key={id} bg="success" className="me-1">
-          <Text fontSize="extra-small" as="span" weight={700} color="inherit">
-            {text}
+    <Card.Body>
+      <Row className="g-0 mb-3">
+        <Col className="thumbnail-container">
+          <LessonThumbnail stepRoot={lesson.state.chapters[0]} />
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <Text className="m-0 mb-1" fontSize="extra-small">
+            {lesson.difficulty || 'TRAINING'}
           </Text>
-        </Tag>
-      ))}
-    </Container>
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <Headline6 className="m-0 mb-3">{lesson.state.title}</Headline6>
+        </Col>
+      </Row>
+      <Row className="mb-2">
+        <Text fontSize="extra-small" className="mb-0">
+          {lesson.published
+            ? 'Finalize the lesson'
+            : `${lesson.state.chapters.length} chapters`}
+        </Text>
+      </Row>
+      <Line className="mb-2" />
+      <Row className="g-0">
+        <Col xs={8}>{lesson.published ? 'Published' : 'Draft'}</Col>
+      </Row>
+    </Card.Body>
   </Card>
 );
 

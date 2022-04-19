@@ -2,7 +2,7 @@ import styled from '@chess-tent/styled-props';
 import { UI } from '@types';
 
 const Line = styled.hr.css`
-  display: inline-block;
+  display: block;
   background: var(--black-color);
   opacity: 0.1;
   height: 1px;

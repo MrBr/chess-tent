@@ -11,7 +11,7 @@ import LessonThumbnail from './thumbnail';
 import UserAvatar from '../../user/components/user-avatar';
 import TrainingProgress from './training-progress';
 
-const { Row, Col, Headline6, Container, Stack, Text } = ui;
+const { Row, Col, Headline6, Card, Stack, Text } = ui;
 const { useHistory } = hooks;
 
 const { className } = css`
@@ -52,45 +52,47 @@ const TrainingCard = (props: { training: LessonActivity }) => {
   const openTraining = () => history.push(`/activity/${props.training.id}`);
 
   return (
-    <Container className={className}>
-      <Row className="g-0 mb-3">
-        <Col className="thumbnail-container" onClick={openTraining}>
-          <LessonThumbnail stepRoot={stepRoot} />
-        </Col>
-      </Row>
-      <Row>
-        <Col onClick={openTraining}>
-          <Text className="m-0 mb-1" fontSize="extra-small">
-            {lesson.difficulty || 'TRAINING'}
-          </Text>
-        </Col>
-      </Row>
-      <Row>
-        <Col onClick={openTraining}>
-          <Headline6 className="m-0 mb-3">{title || 'Untitled'}</Headline6>
-        </Col>
-      </Row>
-      <Row className="mb-2">
-        <TrainingProgress training={props.training} />
-      </Row>
-      <Row className="g-0">
-        <Col xs={8}>
-          {coach && (
-            <>
-              <UserAvatar
-                user={coach.user}
-                size="extra-small"
-                className="me-2"
-              />
-              {coach.user.name}
-            </>
-          )}
-        </Col>
-        <Col xs={4} className="text-right">
-          <Stack>{students}</Stack>
-        </Col>
-      </Row>
-    </Container>
+    <Card className={className}>
+      <Card.Body>
+        <Row className="g-0 mb-3">
+          <Col className="thumbnail-container" onClick={openTraining}>
+            <LessonThumbnail stepRoot={stepRoot} />
+          </Col>
+        </Row>
+        <Row>
+          <Col onClick={openTraining}>
+            <Text className="m-0 mb-1" fontSize="extra-small">
+              {lesson.difficulty || 'TRAINING'}
+            </Text>
+          </Col>
+        </Row>
+        <Row>
+          <Col onClick={openTraining}>
+            <Headline6 className="m-0 mb-3">{title || 'Untitled'}</Headline6>
+          </Col>
+        </Row>
+        <Row className="mb-2">
+          <TrainingProgress training={props.training} />
+        </Row>
+        <Row className="g-0">
+          <Col xs={8}>
+            {coach && (
+              <>
+                <UserAvatar
+                  user={coach.user}
+                  size="extra-small"
+                  className="me-2"
+                />
+                {coach.user.name}
+              </>
+            )}
+          </Col>
+          <Col xs={4} className="text-right">
+            <Stack>{students}</Stack>
+          </Col>
+        </Row>
+      </Card.Body>
+    </Card>
   );
 };
 

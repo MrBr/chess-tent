@@ -62,6 +62,14 @@ application.register(
     application.components.TrainingCard = module.default;
   },
 );
+
+application.register(
+  () => import('./components/lesson-card'),
+  module => {
+    application.components.LessonCard = module.default;
+  },
+);
+
 application.register(
   () => import('./components/training-scheduled-card'),
   module => {

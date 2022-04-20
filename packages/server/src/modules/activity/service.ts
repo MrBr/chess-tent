@@ -75,7 +75,7 @@ export const findActivities = (
     });
 
     ActivityModel.find(query)
-      .populate('roles')
+      .populate('roles.user')
       .exec((err, result) => {
         if (err) {
           throw err;

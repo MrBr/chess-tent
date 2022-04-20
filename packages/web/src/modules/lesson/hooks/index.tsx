@@ -29,7 +29,7 @@ export const useLessons: Hooks['useLessons'] = (key: string, filters) => {
     if (record.get().meta.loading) {
       return;
     }
-    record.load(filters);
+    record.load(filters || {});
     // eslint-disable-next-line
   }, [filters]);
 
@@ -61,7 +61,7 @@ export const useMyLessons: Hooks['useMyLessons'] = (key: string, filters) => {
     if (record.get().meta.loading) {
       return;
     }
-    record.load(filters);
+    record.load(filters || {});
     // eslint-disable-next-line
   }, [filters]);
 

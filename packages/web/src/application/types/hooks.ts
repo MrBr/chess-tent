@@ -129,11 +129,11 @@ export type Hooks = {
   useLessonMeta: (activity: Lesson) => UseMetaReturn<{ evaluation?: boolean }>;
   useLessons: (
     key: string,
-    filters: LessonsRequest,
+    filters?: LessonsRequest,
   ) => RecordHookInit<InferInitRecord<Records['lessons']>>;
   useMyLessons: (
     key: string,
-    filters: LessonsRequest,
+    filters?: LessonsRequest,
   ) => RecordHookInit<InferInitRecord<Records['activeUserLessons']>>;
   useCoaches: (
     user: User,

@@ -50,9 +50,15 @@ application.register(
   },
 );
 application.register(
-  () => import('./components/my-trainings'),
+  () => import('./components/trainings'),
   module => {
-    application.components.MyTrainings = module.default;
+    application.components.Trainings = module.default;
+  },
+);
+application.register(
+  () => import('./components/scheduled-trainings'),
+  module => {
+    application.components.ScheduledTrainings = module.default;
   },
 );
 
@@ -92,6 +98,12 @@ application.register(
   () => import('./components/lesson-browser'),
   module => {
     application.components.LessonBrowser = module.default;
+  },
+);
+application.register(
+  () => import('./components/lesson-templates'),
+  module => {
+    application.components.LessonTemplates = module.default;
   },
 );
 application.register(

@@ -462,7 +462,10 @@ export type Components = {
     save: Requests['lessonUpdates'];
     onStatusChange?: (status: LessonStatus) => void;
   }>;
-  MyTrainings: ComponentType<{ trainings: LessonActivity[]; user: User }>;
+  Trainings: ComponentType<{ trainings: LessonActivity[] }>;
+  ScheduledTrainings: ComponentType<{
+    trainings: LessonActivity[];
+  }>;
   TrainingCard: ComponentType<{ training: LessonActivity }>;
   TrainingScheduledCard: ComponentType<{ training: LessonActivity }>;
   LessonCard: ComponentType<{
@@ -470,6 +473,7 @@ export type Components = {
     owned?: boolean;
     onClick?: (lesson: Lesson) => void;
   }>;
+  LessonTemplates: ComponentType<{ lessons: Lesson[] }>;
   LessonBrowser: ComponentType<{
     lessons: Lesson[] | null | undefined;
     onFiltersChange?: (

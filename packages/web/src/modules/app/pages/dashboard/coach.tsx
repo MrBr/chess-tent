@@ -1,43 +1,109 @@
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import { components, hooks, ui } from '@application';
-import { Tag, User } from '@chess-tent/models';
-import { LessonsRequest } from '@chess-tent/types';
+import { User } from '@chess-tent/models';
 
-const { Page, LessonBrowser, MyTrainings } = components;
-const { Button } = ui;
-const { useMyLessons, useUserTrainings, usePromptNewTrainingModal } = hooks;
+const { Page, ScheduledTrainings, Trainings, LessonTemplates } = components;
+const { Button, Row, Col, Headline5, CardEmpty, Headline2, Text } = ui;
+const {
+  useMyLessons,
+  usePromptNewTrainingModal,
+  useUserScheduledTrainings,
+  useUserTrainings,
+  useStudents,
+} = hooks;
 
 const DashboardCoach = ({ user }: { user: User }) => {
-  const { value: trainings } = useUserTrainings(user);
+  const trainings = useUserTrainings(user);
+  const scheduledTrainings = useUserScheduledTrainings(user);
+  const students = useStudents(user);
   const promptNewTrainingModal = usePromptNewTrainingModal();
-  const [lessonsFilter, setLessonsFilter] = useState<LessonsRequest>({});
+  const lessons = useMyLessons(`own-lessons-${user.id}`);
 
-  const { value: lessons } = useMyLessons(
-    `own-lessons-${user.id}`,
-    lessonsFilter,
-  );
+  const hasStudents = students.value && students.value.length > 0;
+  const didLoad =
+    trainings.meta.loaded &&
+    scheduledTrainings.meta.loaded &&
+    students.meta.loaded;
 
-  const handleFilterChange = useCallback(
-    (search, difficulty, tags) => {
-      setLessonsFilter({
-        search,
-        tagIds: tags.map((it: Tag) => it.id),
-        difficulty,
-      });
-    },
-    [setLessonsFilter],
-  );
+  if (!didLoad) {
+    return null;
+  }
 
   return (
     <Page>
-      <Button onClick={promptNewTrainingModal}>New training</Button>
-      {trainings && <MyTrainings trainings={trainings} user={user} />}
-      <LessonBrowser
-        lessons={lessons}
-        onFiltersChange={handleFilterChange}
-        title="My lessons"
-        editable
-      />
+      <Row className="mt-4">
+        <Col>
+          <Headline2>Hello, {user.name}</Headline2>
+          <Text>
+            We hope you enjoy the platform. Let us know if you have any issue.
+          </Text>
+        </Col>
+      </Row>
+      {hasStudents && (
+        <>
+          <Row className="mt-5 mb-3">
+            <Col>
+              <Headline5>Upcoming trainings</Headline5>
+            </Col>
+            <Col className="col-auto">
+              <Button
+                onClick={promptNewTrainingModal}
+                size="small"
+                variant="ghost"
+              >
+                New training
+              </Button>
+            </Col>
+          </Row>
+          {!scheduledTrainings.value ||
+          scheduledTrainings.value.length === 0 ? (
+            <CardEmpty
+              title="No upcoming trainings."
+              subtitle="Best way to teach is live training."
+              cta="Schedule a training"
+              onClick={promptNewTrainingModal}
+            />
+          ) : (
+            <ScheduledTrainings trainings={scheduledTrainings.value} />
+          )}
+          <Row className="mt-5 mb-3">
+            <Col>
+              <Headline5>Studies</Headline5>
+            </Col>
+          </Row>
+          {!trainings.value || trainings.value.length === 0 ? null : (
+            <Trainings trainings={trainings.value} />
+          )}
+        </>
+      )}
+      {!hasStudents && (
+        <Row>
+          <Col>
+            <CardEmpty
+              title="Want to start coaching?"
+              subtitle="You need students to start coaching."
+              cta="Invite a student"
+            />
+          </Col>
+        </Row>
+      )}
+      <Row className="mt-5 mb-3">
+        <Col>
+          <Headline5>Templates</Headline5>
+        </Col>
+      </Row>
+      {lessons.value && <LessonTemplates lessons={lessons.value} />}
+      {!lessons.value && (
+        <Row>
+          <Col>
+            <CardEmpty
+              title="Want to make a public lesson?"
+              subtitle="Start by creating a reusable template."
+              cta="Create a template"
+            />
+          </Col>
+        </Row>
+      )}
     </Page>
   );
 };

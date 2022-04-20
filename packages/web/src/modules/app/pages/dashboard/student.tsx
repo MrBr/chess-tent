@@ -3,7 +3,7 @@ import { components, hooks, ui } from '@application';
 import { Tag, User } from '@chess-tent/models';
 import { LessonsRequest } from '@chess-tent/types';
 
-const { Page, Coaches, LessonBrowser, MyTrainings } = components;
+const { Page, Coaches, LessonBrowser, Trainings } = components;
 const { useLessons, useUserTrainings } = hooks;
 const { Row, Col } = ui;
 
@@ -33,7 +33,7 @@ const DashboardStudent = ({ user }: { user: User }) => {
       {!trainings || trainings.length === 0 ? (
         <Coaches />
       ) : (
-        <MyTrainings trainings={trainings} user={user} />
+        <Trainings trainings={trainings} />
       )}
       <Row className="g-0">
         <Col>

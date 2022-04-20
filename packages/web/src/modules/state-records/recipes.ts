@@ -42,7 +42,7 @@ const withRecordApiLoad =
         return;
       }
       if (response) {
-        record.update(response.data, { loading: false });
+        record.update(response.data, { loading: false, loaded: true });
         return;
       }
     });

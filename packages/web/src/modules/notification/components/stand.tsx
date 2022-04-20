@@ -50,7 +50,7 @@ const Stand = () => {
             <Dot />
           </Absolute>
         )}
-        <Icon type="notification" />
+        <Icon type="notifications" />
       </Dropdown.Toggle>
       <Dropdown.Menu width={250}>
         {!!reversedNotifications &&

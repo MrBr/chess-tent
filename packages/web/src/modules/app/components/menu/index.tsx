@@ -47,9 +47,9 @@ const Menu: Components['Menu'] = () => {
           label="ChessTent"
           break
         />
-        <Item icon="notification" path="/" label="Dashboard" />
-        <Item icon="notification" path="/coaches" label="Coaches" />
-        <Item icon="notification" path="/lessons" label="Lessons" />
+        <Item icon="notifications" path="/" label="Dashboard" />
+        <Item icon="notifications" path="/coaches" label="Coaches" />
+        <Item icon="notifications" path="/lessons" label="Lessons" />
         <Item icon={<UserSettings />} label="Profile" bottom />
       </div>
     </Container>

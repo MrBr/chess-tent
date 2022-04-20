@@ -9,7 +9,7 @@ const ConversationsStand = () => {
   const openConversations = useOpenConversations();
   return (
     <div className="d-inline-block">
-      <Icon type="notification" onClick={() => openConversations()} />
+      <Icon type="conversation" onClick={() => openConversations()} />
     </div>
   );
 };

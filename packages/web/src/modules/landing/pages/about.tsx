@@ -156,7 +156,7 @@ export const LandingPage = () => {
               </Text>
             </Col>
             <Col xs={6} md={4} className="mt-4 mb-4">
-              <Icon type="chat" background variant="secondary" />
+              <Icon type="message" background variant="secondary" />
               <Headline5 className="mt-4 mb-4">Conversations</Headline5>
               <Text fontSize="small">In app chat for brief discussions</Text>
             </Col>
@@ -248,7 +248,7 @@ export const LandingPage = () => {
             </Col>
             <Col xs={6} md={4} className="mt-4 mb-4">
               <div className="card">
-                <Icon type="chat" background variant="secondary" />
+                <Icon type="message" background variant="secondary" />
                 <Headline5 className="mt-4 mb-4">
                   Participation in the decision making
                 </Headline5>

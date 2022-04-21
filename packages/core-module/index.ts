@@ -9,6 +9,8 @@ let moduleCursor: {
   registerParams: [];
   error?: Error;
 } | null = null;
+let initialised = false;
+let initializationPromise;
 
 class DependencyError extends Error {
   constructor(message) {
@@ -16,14 +18,23 @@ class DependencyError extends Error {
     this.name = 'DependencyError';
   }
 }
+
+const markInitialised = () => {
+  initialised = true;
+};
+
 export const createNamespace = (initialNamespace = {}) =>
   new Proxy(initialNamespace, {
-    get(target, prop, receiver) {
-      if (prop === '__esModule' || prop === 'then') {
-        // Lol
-        return target;
-      } else if (target[prop]) {
-        return target[prop];
+    get(target, prop) {
+      if (
+        initialised ||
+        typeof prop === 'symbol' ||
+        Reflect.has(target, prop)
+      ) {
+        // Once the core has been initialised things are getting more complex.
+        // Various properties may be accessed and there is no easy way to tell
+        // if the property is a part of the namespace.
+        return Reflect.get(target, prop);
       }
       throw new DependencyError(
         `Namespace export ${String(prop)} not defined.`,
@@ -100,11 +111,11 @@ export const register = <T>(
   deferredModules.push([loadModule, cb]);
 };
 
-let initializationPromise;
 export const init = () => {
   if (!initializationPromise) {
     initializationPromise = new Promise((resolve, reject) => {
       resolveDeferredModules()
+        .then(markInitialised)
         .then(resolve)
         .catch(e => {
           // Module couldn't be resolved, showing error stack.

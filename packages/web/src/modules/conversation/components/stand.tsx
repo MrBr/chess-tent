@@ -8,7 +8,7 @@ const { Icon } = ui;
 const ConversationsStand = () => {
   const openConversations = useOpenConversations();
   return (
-    <div className="d-inline-block">
+    <div className="d-inline-block me-3">
       <Icon type="conversation" onClick={() => openConversations()} />
     </div>
   );

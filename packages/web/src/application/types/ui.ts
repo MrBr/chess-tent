@@ -407,5 +407,6 @@ export type UI = {
     subtitle: string;
     cta: string;
     onClick?: () => void;
+    icon: Icons;
   }>;
 };

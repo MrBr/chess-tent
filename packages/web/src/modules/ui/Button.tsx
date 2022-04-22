@@ -67,6 +67,12 @@ const sizes = styled.props.size.stretch.css<BaseButtonProps>`
     border-radius: 6px;
     padding: 0 30px;
   }
+  
+  &.extra-small {
+    height: 32px;
+    border-radius: 6px;
+    padding: 0 12px;
+  }
 
   &.stretch {
     width: 100%;

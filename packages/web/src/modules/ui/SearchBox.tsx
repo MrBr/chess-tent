@@ -49,7 +49,7 @@ const SearchBox: UI['SearchBox'] = ({ className, onSearch, types }) => {
       className={className}
       isSearchable
       hideDropdownIndicator
-      hideMenu={!types ? false : !options}
+      hideMenu={!types ? true : !options}
     />
   );
 };

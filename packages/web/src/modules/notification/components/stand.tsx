@@ -43,7 +43,7 @@ const Stand = () => {
   );
 
   return (
-    <Dropdown className="me-4" onClick={handleUnseenNotifications}>
+    <Dropdown className="me-3" onClick={handleUnseenNotifications}>
       <Dropdown.Toggle id="notification-stand" collapse>
         {unseen && (
           <Absolute top={4} right={3}>

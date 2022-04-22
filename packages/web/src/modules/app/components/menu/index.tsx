@@ -1,11 +1,10 @@
-import React, { useRef, useState } from 'react';
-import { components, hooks, ui } from '@application';
+import React from 'react';
+import { components, ui } from '@application';
 import { Components } from '@types';
 import { css } from '@chess-tent/styled-props';
 import Item from './item';
 
 const { Container } = ui;
-const { useOutsideClick } = hooks;
 const { UserSettings } = components;
 
 const style = css`
@@ -13,7 +12,7 @@ const style = css`
   position: relative;
   overflow-y: clip;
 
-  &:not(.collapsed) > div {
+  &:hover > div {
     width: 260px;
   }
 
@@ -32,24 +31,16 @@ const style = css`
 `;
 
 const Menu: Components['Menu'] = () => {
-  const [open, setOpen] = useState<boolean>(false);
-  const containerRef = useRef();
-  const className = `${open ? '' : 'collapsed'} ${style.className} g-0`;
-
-  useOutsideClick(() => setOpen(false), containerRef);
+  const className = ` ${style.className} g-0`;
 
   return (
-    <Container className={className} ref={containerRef}>
+    <Container className={className}>
       <div>
-        <Item
-          onClick={() => setOpen(!open)}
-          icon="logo"
-          label="ChessTent"
-          break
-        />
-        <Item icon="notifications" path="/" label="Dashboard" />
-        <Item icon="notifications" path="/coaches" label="Coaches" />
-        <Item icon="notifications" path="/lessons" label="Lessons" />
+        <Item icon="logo" label="ChessTent" break />
+        <Item icon="dashboard" path="/" label="Dashboard" />
+        <Item icon="lightbulb" path="/lessons" label="Lessons" />
+        <Item icon="contacts" path="/coaches" label="Coaches" />
+        <Item icon="template" path="/templates" label="Templates" />
         <Item icon={<UserSettings />} label="Profile" bottom />
       </div>
     </Container>

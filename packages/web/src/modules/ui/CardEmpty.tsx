@@ -12,12 +12,12 @@ import Tag from './Tag';
  * CardEmpty is designed in a way to inherit height
  */
 const CardEmpty = styled<ComponentProps<UI['CardEmpty']>>(
-  ({ className, title, subtitle, cta, onClick }) => {
+  ({ className, title, subtitle, cta, onClick, icon }) => {
     return (
       <Card className={className}>
         <Card.Body>
           <Tag className="mb-3">
-            <Icon type="search" />
+            <Icon type={icon} />
           </Tag>
           <Text className="mb-1" align="center" weight={500}>
             {title}

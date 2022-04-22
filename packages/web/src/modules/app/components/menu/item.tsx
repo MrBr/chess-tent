@@ -26,7 +26,7 @@ const Item = styled<ItemProps>(({ className, path, label, icon, onClick }) => {
       onClick={handleClick}
     >
       {typeof icon === 'string' ? <Icon type={icon} size="small" /> : icon}
-      <Text className="mb-0" fontSize="small">
+      <Text className="mb-0" fontSize="extra-small">
         {label}
       </Text>
     </div>
@@ -65,10 +65,10 @@ const Item = styled<ItemProps>(({ className, path, label, icon, onClick }) => {
   > ${Text as any} {
     color: var(--light-color);
     margin-left: 10px;
-    
-    .collapsed & {
-      display: none;
-    }
+  }
+  
+  *:not(:hover) > & > ${Text as any} {
+    display: none;
   }
 
   &.active {

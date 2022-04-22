@@ -10,7 +10,7 @@ export default {
 
 export const SingleValue: ComponentStory<UI['Select']> = withWebNamespace(
   'ui',
-  (args, { Select, Icon }) => {
+  (args, { Select }) => {
     const options = [
       { label: 'activities', value: 'activities' },
       { label: 'lessons', value: 'lessons' },
@@ -27,7 +27,7 @@ export const SingleValue: ComponentStory<UI['Select']> = withWebNamespace(
 
 export const MultiValue: ComponentStory<UI['Select']> = withWebNamespace(
   'ui',
-  (args, { Select, Icon }) => {
+  (args, { Select }) => {
     const options = [
       { label: 'activities', value: 'activities' },
       { label: 'lessons', value: 'lessons' },

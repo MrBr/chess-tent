@@ -62,6 +62,7 @@ const DashboardCoach = ({ user }: { user: User }) => {
               subtitle="Best way to teach is live training."
               cta="Schedule a training"
               onClick={promptNewTrainingModal}
+              icon="board"
             />
           ) : (
             <ScheduledTrainings trainings={scheduledTrainings.value} />
@@ -83,6 +84,7 @@ const DashboardCoach = ({ user }: { user: User }) => {
               title="Want to start coaching?"
               subtitle="You need students to start coaching."
               cta="Invite a student"
+              icon="invite"
             />
           </Col>
         </Row>
@@ -90,6 +92,11 @@ const DashboardCoach = ({ user }: { user: User }) => {
       <Row className="mt-5 mb-3">
         <Col>
           <Headline5>Templates</Headline5>
+        </Col>
+        <Col className="col-auto">
+          <Button size="small" variant="ghost">
+            Publish lesson
+          </Button>
         </Col>
       </Row>
       {lessons.value && <LessonTemplates lessons={lessons.value} />}
@@ -100,6 +107,7 @@ const DashboardCoach = ({ user }: { user: User }) => {
               title="Want to make a public lesson?"
               subtitle="Start by creating a reusable template."
               cta="Create a template"
+              icon="template"
             />
           </Col>
         </Row>

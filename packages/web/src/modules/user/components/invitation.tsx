@@ -100,7 +100,7 @@ const Invitation = () => {
               >
                 <FormGroup className="pt-4">
                   <Form.Input
-                    size="large"
+                    size="medium"
                     type="email"
                     name="email"
                     placeholder="Email address"

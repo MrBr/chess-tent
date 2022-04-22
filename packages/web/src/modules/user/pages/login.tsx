@@ -54,7 +54,7 @@ const PageLogin = () => {
           >
             <FormGroup className="pt-4">
               <Form.Input
-                size="large"
+                size="medium"
                 type="email"
                 name="email"
                 placeholder="Email address"
@@ -62,7 +62,7 @@ const PageLogin = () => {
             </FormGroup>
             <FormGroup className="pt-3">
               <Form.Input
-                size="large"
+                size="medium"
                 type="password"
                 name="password"
                 placeholder="Password"

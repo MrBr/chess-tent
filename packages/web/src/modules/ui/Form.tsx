@@ -4,8 +4,8 @@ import { Formik, ErrorMessage, useField } from 'formik';
 import BFormGroup from 'react-bootstrap/FormGroup';
 import BForm from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
-import styled from '@emotion/styled';
-import { inputSizeEnhancer } from './enhancers';
+import styled from '@chess-tent/styled-props';
+import { inputSizePropStyle } from './enhancers';
 import { Select } from './Select';
 
 // There are 2 type of Form components.
@@ -13,22 +13,54 @@ import { Select } from './Select';
 // Components connected to the Form, those can't be used without Form.
 
 // Standalone components
-const FormGroup = styled<UI['FormGroup']>(BFormGroup)({
-  position: 'relative',
-});
+const FormGroup = styled(BFormGroup).css`
+  position: relative;
+`;
 const Label = BForm.Label;
 
-const InputComponent = styled(BForm.Control)(inputSizeEnhancer, {
-  border: 'none',
-  '&:empty': {
-    background: '#F3F4F5',
-    color: 'rgba(47,56,73,0.4)',
-  },
-  '&:focus': {
-    color: '#2F3849',
-    boxShadow: 'none',
-  },
-}) as unknown as UI['Input'];
+const InputGroupText = styled(InputGroup.Text).css`
+  background: transparent;
+  border: 1px solid var(--grey-600-color);
+`;
+
+const InputComponent = styled(BForm.Control).css`
+  border: 1px solid var(--grey-600-color) !important; // !important is for bootstrap focus override
+  color: var(--black-color);
+  
+  &:placeholder-shown {
+    background: var(--light-color);
+    color: var(--grey-700-color);
+  }
+  
+  &:focus {
+    box-shadow: none;
+  }
+  
+  &:disabled {
+    background: var(--grey-300-color);
+    border: 1px solid var(--grey-600-color);
+    cursor: not-allowed;
+  }
+  
+  ${inputSizePropStyle}
+` as UI['Input'];
+InputComponent.defaultProps = { size: 'small' };
+
+const StyledInputGroup = styled(InputGroup).css`
+  ${InputGroupText}:first-child {
+    border-right: none !important;
+  }
+  ${InputGroupText}:last-child {
+    border-left: none !important;
+  }
+  ${InputGroupText} + ${InputComponent as any}{
+    border-left: none !important;
+  }
+  ${InputComponent as any}:not(:last-child) {
+    border-right: none !important;
+  }
+` as typeof InputGroup;
+StyledInputGroup.Text = InputGroupText;
 
 const Check = BForm.Check;
 const File = (props: any) => <BForm.Control {...props} type="file" />;
@@ -96,10 +128,6 @@ Form.Input = FormInput;
 Form.Select = FormSelect;
 Form.Check = FormCheck;
 
-InputGroup.Text = styled(InputGroup.Text)({
-  border: 'none',
-});
-
 export {
   Form,
   InputComponent as Input,
@@ -108,5 +136,5 @@ export {
   Label,
   Check,
   File,
-  InputGroup,
+  StyledInputGroup as InputGroup,
 };

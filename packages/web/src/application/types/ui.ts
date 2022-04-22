@@ -119,7 +119,7 @@ export interface SelectOption<T> {
   toString?: (value: T) => string;
 }
 
-export type FormElementsSize = 'large' | 'regular' | 'small' | 'extra-small';
+export type FormElementsSize = 'medium' | 'small';
 
 export interface OptionsDropdownProps<T> {
   id: string;

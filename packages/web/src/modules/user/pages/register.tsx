@@ -87,7 +87,7 @@ const PageRegister = () => {
                 <FormGroup>
                   <Form.Input
                     className="mt-4"
-                    size="large"
+                    size="medium"
                     type="text"
                     name="name"
                     placeholder="Name"
@@ -96,7 +96,7 @@ const PageRegister = () => {
                 <FormGroup>
                   <Form.Input
                     className="mt-4"
-                    size="large"
+                    size="medium"
                     type="text"
                     name="nickname"
                     placeholder="Nickname"
@@ -105,7 +105,7 @@ const PageRegister = () => {
                 <FormGroup>
                   <Form.Input
                     className="mt-4"
-                    size="large"
+                    size="medium"
                     type="email"
                     name="email"
                     placeholder="Email"
@@ -114,7 +114,7 @@ const PageRegister = () => {
                 <FormGroup>
                   <Form.Input
                     className="mt-4"
-                    size="large"
+                    size="medium"
                     type="password"
                     name="password"
                     placeholder="Password"
@@ -123,7 +123,7 @@ const PageRegister = () => {
                 <FormGroup>
                   <Form.Input
                     className="mt-4"
-                    size="large"
+                    size="medium"
                     type="password"
                     name="passwordConfirmation"
                     placeholder="Repeat password"

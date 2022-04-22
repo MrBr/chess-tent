@@ -1,5 +1,22 @@
 import { ComponentProps } from 'react';
 import { UI, Utils } from '@types';
+import styled from '@chess-tent/styled-props';
+
+export const inputSizePropStyle = styled.props.size.css`
+  &.small {
+    font-size: 16px;
+    border-radius: 6px;
+    padding: 8px 12px;
+    line-height: 24px;
+  }
+  
+  &.medium {
+    border-radius: 6px;
+    font-size: 18px;
+    line-height: 26px;
+    padding: 12px 16px;
+  }
+`;
 
 export interface BorderRadiusProps {
   borderRadius: 'large' | 'regular' | 'small' | 'extra-small';
@@ -43,23 +60,6 @@ const regular = {
   fontSize: 16,
   borderRadius: 10,
   padding: '15px 16px 14px 16px',
-};
-
-export const inputSizeEnhancer = (props: ComponentProps<UI['Input']>) => {
-  switch (props.size) {
-    case 'large':
-      return {
-        ...regular,
-        height: 48,
-      };
-    case 'extra-small':
-      return extraSmall;
-    case 'small':
-      return small;
-    case 'regular':
-    default:
-      return regular;
-  }
 };
 
 export const sizeEnhancer = (

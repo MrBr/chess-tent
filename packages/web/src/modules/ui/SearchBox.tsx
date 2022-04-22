@@ -1,51 +1,57 @@
-import _ from 'lodash';
-import React, { useCallback, useRef } from 'react';
-import styled from '@emotion/styled';
-import { UI } from '@types';
-import Icon from './Icon';
-import { Input } from './Form';
+import React, { useCallback, useState } from 'react';
+import { SearchBoxValueOption, UI } from '@types';
+import { Select } from './Select';
 
-const SearchBox = styled<UI['SearchBox']>(
-  ({ className, onSearch, debounce }) => {
-    const debounceSearch = useRef(_.debounce(onSearch, debounce));
+const SearchBox: UI['SearchBox'] = ({ className, onSearch, types }) => {
+  const [options, setOptions] = useState<SearchBoxValueOption[]>();
 
-    const handleChange = useCallback(event => {
-      debounceSearch.current(event.target.value);
-    }, []);
-
-    const handleEnter = useCallback(event => {
-      if (event.key !== 'Enter' || event.shiftKey) {
+  const handleChange = useCallback(
+    searchTerm => {
+      if (!types) {
+        setOptions([
+          {
+            value: searchTerm,
+            label: searchTerm,
+          },
+        ]);
         return;
       }
+      const newOptions = types.map((type, index) => ({
+        ...type,
+        value: index,
+        label: searchTerm,
+      }));
+      setOptions(newOptions);
+    },
+    [types],
+  );
 
-      event.preventDefault();
+  const formatOptionLabel = useCallback(
+    (data, { context, selectValue, inputValue }) => (
+      <span>
+        {data.prefix}
+        {context === 'value' ? selectValue[0].label : inputValue}
+      </span>
+    ),
+    [],
+  );
 
-      debounceSearch.current(event.target.value);
-    }, []);
-
-    return (
-      <div className={className}>
-        <Input
-          size="small"
-          placeholder="Search"
-          onKeyPress={handleEnter}
-          onChange={handleChange}
-        />
-        <Icon type="search" />
-      </div>
-    );
-  },
-)({
-  display: 'flex',
-  maxWidth: '240px',
-  justifyContent: 'space-between',
-  background: '#F3F4F5',
-  borderRadius: '10px',
-  fontFamily: 'Inter, sans-serif',
-  fontWeight: 700,
-  span: {
-    margin: '0.2rem 0.8rem 0 0',
-  },
-});
+  return (
+    <Select
+      isMulti={false}
+      onChange={onSearch}
+      options={options}
+      onInputChange={handleChange}
+      formatOptionLabel={formatOptionLabel}
+      filterOption={() => true}
+      icon="search"
+      placeholder="Search anything"
+      className={className}
+      isSearchable
+      hideDropdownIndicator
+      hideMenu={!types ? false : !options}
+    />
+  );
+};
 
 export default SearchBox;

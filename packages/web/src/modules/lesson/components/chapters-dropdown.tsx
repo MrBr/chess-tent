@@ -74,6 +74,7 @@ class ChaptersDropdown extends React.Component<
             getOptionValue={chapter => chapter.id}
             isSearchable={false}
             onChange={this.changeHandle}
+            isMulti={false}
           />
         )}
         {editable && (

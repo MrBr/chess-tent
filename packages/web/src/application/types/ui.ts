@@ -117,10 +117,16 @@ export type TextProps = {
   as?: ElementType;
 } & HtmlProps;
 
-export declare interface SearchBoxProps {
+export type SearchBoxValueOption = {
+  value: number;
+  type?: string;
+  prefix?: ReactNode;
+  label: string;
+};
+export interface SearchBoxProps {
   children?: never;
-  onSearch: (text: string) => void;
-  debounce: number;
+  onSearch: (value: SingleValue<SearchBoxValueOption>) => void;
+  types?: { type: string; prefix: ReactNode }[];
 }
 
 export interface SelectOption<T> {

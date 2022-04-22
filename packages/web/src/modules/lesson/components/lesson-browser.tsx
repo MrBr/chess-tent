@@ -6,7 +6,7 @@ import LessonCard from '../components/lesson-card';
 import DifficultyDropdown from './difficulty-dropdown';
 import { isOwned } from '../service';
 
-const { Container, Headline3, Row, Col, SearchBox } = ui;
+const { Container, Headline3, Row, Col } = ui;
 const {
   useHistory,
   useUserTrainings,
@@ -23,7 +23,6 @@ const LessonBrowser: Components['LessonBrowser'] = ({
 }) => {
   const history = useHistory();
   const { mounted } = useComponentStateSilent();
-  const [search, setSearch] = useState('');
   const [difficulty, setDifficulty] = useState<Difficulty>();
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
   const { value: user } = useActiveUserRecord();
@@ -32,11 +31,11 @@ const LessonBrowser: Components['LessonBrowser'] = ({
   useEffect(() => {
     mounted &&
       onFiltersChange &&
-      onFiltersChange(search, difficulty, selectedTags);
+      onFiltersChange(undefined, difficulty, selectedTags);
     // Filters should trigger change only when changed and not until mounted
     // Leaving "mounted" out of the dependencies
     // eslint-disable-next-line
-  }, [onFiltersChange, search, difficulty, selectedTags]);
+  }, [onFiltersChange, difficulty, selectedTags]);
 
   const onSelectedTagsChange = useCallback(
     (tagIds: Tag[]) => {
@@ -81,9 +80,6 @@ const LessonBrowser: Components['LessonBrowser'] = ({
                     onChange={onSelectedTagsChange}
                     selected={selectedTags}
                   />
-                </Col>
-                <Col className="d-flex align-items-center" xs={12} md={4}>
-                  <SearchBox onSearch={setSearch} debounce={500} />
                 </Col>
               </Row>
             )}

@@ -5,14 +5,13 @@ import CoachCard from './coach-card';
 import CoachLevelDropdown from './coach-level-dropdown';
 
 const { useApi, useComponentStateSilent, useIsMobile } = hooks;
-const { Container, Row, Col, Headline3, SearchBox } = ui;
+const { Container, Row, Col, Headline3 } = ui;
 const { Filters } = components;
 
 const Coaches = () => {
   const { mounted } = useComponentStateSilent();
   const { fetch: fetchCoaches, response } = useApi(requests.users);
 
-  const [filter, setFilter] = useState('');
   const [studentElo, setStudentElo] = useState<CoachEloRange | undefined>();
   const isMobile = useIsMobile();
 
@@ -24,10 +23,9 @@ const Coaches = () => {
     mounted &&
       fetchCoaches({
         coach: true,
-        search: filter,
         studentElo,
       });
-  }, [fetchCoaches, filter, studentElo, mounted]);
+  }, [fetchCoaches, studentElo, mounted]);
 
   const cols = response?.data.map(coach => (
     <Col key={coach.id} className="col-auto">
@@ -61,9 +59,6 @@ const Coaches = () => {
                   onChange={setStudentElo}
                   size="small"
                 />
-              </Col>
-              <Col className="d-flex align-items-center" xs={12} md={4}>
-                <SearchBox onSearch={setFilter} debounce={500} />
               </Col>
             </Row>
           </Filters>

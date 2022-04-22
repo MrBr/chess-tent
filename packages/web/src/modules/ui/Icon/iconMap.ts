@@ -1,3 +1,4 @@
+// @ts-nocheck
 export { ReactComponent as add } from './icons/add.svg';
 export { ReactComponent as addFilled } from './icons/add-filled.svg';
 export { ReactComponent as advanced } from './icons/advanced.svg';
@@ -101,6 +102,7 @@ export { ReactComponent as stopFill } from './icons/stop-circle-fill.svg';
 export { ReactComponent as support } from './icons/support.svg';
 
 export { ReactComponent as team } from './icons/team-line.svg';
+export { ReactComponent as template } from './icons/template.svg';
 export { ReactComponent as time } from './icons/time-line.svg';
 
 export { ReactComponent as invite } from './icons/user-add.svg';

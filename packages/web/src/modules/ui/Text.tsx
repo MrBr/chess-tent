@@ -16,6 +16,7 @@ const inherit = styled.props.inherit.css`
 `;
 
 const size = styled.props.fontSize.css`
+  line-height: 1.5;
   font-size: 20px;
 
   &.large {
@@ -69,7 +70,7 @@ const color = styled.props.color.css`
 
 const dynamicStyle = (props: TextProps) =>
   css`
-    font-weight: ${props.weight || 400};
+    font-weight: ${props.weight || 300};
     text-align: ${props.align || 'left'};
   `;
 

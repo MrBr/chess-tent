@@ -260,6 +260,7 @@ export type Icons =
   | 'stopFill'
   | 'support'
   | 'team'
+  | 'template'
   | 'time'
   | 'invite'
   | 'video'

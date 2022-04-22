@@ -42,11 +42,21 @@ import DropdownToggle from 'react-bootstrap/DropdownToggle';
 import { ErrorMessageProps, Formik, FormikProps as FFormikProps } from 'formik';
 import FormCheck from 'react-bootstrap/FormCheck';
 import FormControl from 'react-bootstrap/FormControl';
-import Select, { Props } from 'react-select';
-import AsyncSelect from 'react-select/async';
+import type {
+  Props as SelectProps,
+  GroupBase,
+  SingleValue,
+} from 'react-select';
+import type { AsyncProps as AsyncSelectProps } from 'react-select/async';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { ClickProps } from './_helpers';
 import { HtmlProps } from './hoc';
+
+export type UISelectProps = {
+  icon?: Icons;
+  hideDropdownIndicator?: boolean;
+  hideMenu?: boolean;
+};
 
 export type BaseButtonProps = {
   variant?:
@@ -261,7 +271,7 @@ export type UI = {
     >;
     Check: UIComponent<FormCheckProps & { name: string } & FormControlProps>;
     Select: <T, M extends boolean>(
-      props: Props<T, M> & { name: string },
+      props: SelectProps<T, M> & { name: string } & UISelectProps,
     ) => ReactElement;
   };
   SearchBox: UIComponent<SearchBoxProps>;
@@ -320,8 +330,12 @@ export type UI = {
   FormGroup: UIComponent<FormGroupProps>;
   Input: ComponentType<InputPropsWithSizeEnhancer>;
   InputGroup: typeof InputGroup;
-  Select: typeof Select;
-  AsyncSelect: typeof AsyncSelect;
+  Select: <T, M extends boolean>(
+    props: SelectProps<T, M> & UISelectProps,
+  ) => ReactElement;
+  AsyncSelect: <T, M extends boolean, G extends GroupBase<any>>(
+    props: AsyncSelectProps<T, M, G> & UISelectProps,
+  ) => ReactElement;
   Check: typeof FormCheck;
   Container: UIComponent<ContainerProps>;
   Absolute: UIComponent<{

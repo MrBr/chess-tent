@@ -374,10 +374,16 @@ export type Components = {
   Header: ComponentType;
   Menu: ComponentType;
   Logo: ComponentType<ImgHTMLAttributes<HTMLImageElement>>;
-  TabBar: ComponentType;
+  TabBar: ComponentType & {
+    TabButton: ComponentType<{
+      path: string;
+      className?: string;
+      children: ReactNode;
+    }>;
+  };
   LoadMore: ComponentType;
   // Page with common layout setup
-  Page: ComponentType;
+  Page: ComponentType<{ header?: ReactElement; tabbar?: ReactElement }>;
   Layout: ComponentType<{
     className?: string;
     footer?: ReactElement | null;

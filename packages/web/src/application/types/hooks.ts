@@ -132,7 +132,6 @@ export type Hooks = {
     filters?: LessonsRequest,
   ) => RecordHookInit<InferInitRecord<Records['lessons']>>;
   useMyLessons: (
-    key: string,
     filters?: LessonsRequest,
   ) => RecordHookInit<InferInitRecord<Records['activeUserLessons']>>;
   useCoaches: (

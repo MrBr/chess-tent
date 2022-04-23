@@ -69,6 +69,7 @@ const {
   TagsSelect,
   StepToolbox,
   ChessboardContextProvider,
+  Page,
 } = components;
 const {
   actions: { serviceAction },

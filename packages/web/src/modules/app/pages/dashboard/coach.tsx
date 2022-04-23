@@ -17,7 +17,7 @@ const DashboardCoach = ({ user }: { user: User }) => {
   const scheduledTrainings = useUserScheduledTrainings(user);
   const students = useStudents(user);
   const promptNewTrainingModal = usePromptNewTrainingModal();
-  const lessons = useMyLessons(`own-lessons-${user.id}`);
+  const lessons = useMyLessons();
 
   const hasStudents = students.value && students.value.length > 0;
   const didLoad =

@@ -54,8 +54,8 @@ export const useLesson: Hooks['useLesson'] = (lessonId: Lesson['id']) => {
   return record;
 };
 
-export const useMyLessons: Hooks['useMyLessons'] = (key: string, filters) => {
-  const record = useRecordInit(myLessons, key);
+export const useMyLessons: Hooks['useMyLessons'] = filters => {
+  const record = useRecordInit(myLessons, 'active-user-lessons');
 
   useEffect(() => {
     if (record.get().meta.loading) {

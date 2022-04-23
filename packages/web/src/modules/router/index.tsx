@@ -1,5 +1,5 @@
 import React, { ComponentType } from 'react';
-import application, { ui, constants } from '@application';
+import application, { constants } from '@application';
 import { Components, History, RenderPropComponentType, Services } from '@types';
 import {
   Switch,
@@ -14,7 +14,6 @@ import {
 import { createBrowserHistory } from 'history';
 import styled from '@chess-tent/styled-props';
 
-const { Icon } = ui;
 const { APP_URL } = constants;
 
 const routes: ComponentType[] = [];
@@ -48,11 +47,6 @@ const Router: RenderPropComponentType = ({ children }) => {
       )}
     </BaseRouter>
   );
-};
-
-const Back = () => {
-  const history = useHistory();
-  return <Icon onClick={history.goBack} type="close" />;
 };
 
 const addRoute: Services['addRoute'] = Route => {
@@ -94,7 +88,6 @@ application.components.Router = Router;
 application.components.Switch = Switch;
 application.components.Route = Route;
 application.components.Link = Link;
-application.components.Back = Back;
 application.components.Redirect = Redirect;
 application.services.addRoute = addRoute;
 application.services.history = history;

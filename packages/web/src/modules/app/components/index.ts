@@ -42,3 +42,9 @@ application.register(
     application.components.Logo = module.default;
   },
 );
+application.register(
+  () => import('./back'),
+  module => {
+    application.components.Back = module.default;
+  },
+);

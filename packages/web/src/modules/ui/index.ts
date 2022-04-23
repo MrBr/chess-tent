@@ -45,6 +45,7 @@ import { withFiles, withHtml } from './hoc';
 import { mobileCss } from './enhancers';
 import Stack from './Stack';
 import Line from './Line';
+import Breadcrumbs from './Breadcrumbs';
 
 application.hoc.withFiles = withFiles;
 application.hoc.withHtml = withHtml;
@@ -82,6 +83,7 @@ application.ui.Thumbnail = Thumbnail;
 
 application.ui.Container = Container;
 application.ui.Page = Page;
+application.ui.Breadcrumbs = Breadcrumbs;
 application.ui.Tabs = Tabs;
 application.ui.Tab = Tab;
 application.ui.Row = Row;

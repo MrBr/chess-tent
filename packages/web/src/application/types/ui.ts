@@ -37,6 +37,7 @@ import {
   SpinnerProps,
   ProgressBarProps,
   CardImgProps,
+  BreadcrumbItemProps,
 } from 'react-bootstrap';
 import DropdownToggle from 'react-bootstrap/DropdownToggle';
 import { ErrorMessageProps, Formik, FormikProps as FFormikProps } from 'formik';
@@ -357,6 +358,7 @@ export type UI = {
   LoadMore: UIComponent<LoadMoreProps>;
   Spinner: UIComponent<SpinnerProps>;
   Page: UIComponent<ContainerProps>;
+  Breadcrumbs: ComponentType & { Item: ComponentType<BreadcrumbItemProps> };
   Tabs: typeof Tabs;
   Tab: typeof Tab;
   Row: UIComponent<RowProps>;

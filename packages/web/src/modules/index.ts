@@ -1,5 +1,6 @@
 import application from '@application';
 
+application.register(() => import('./addons'));
 application.register(() => import('./app'));
 application.register(() => import('./api'));
 application.register(() => import('./auth'));

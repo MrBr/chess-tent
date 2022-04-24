@@ -1,9 +1,10 @@
 import React from 'react';
 import { components, hooks, requests } from '@application';
 import { canEditLesson, isLessonPublicDocument } from '@chess-tent/models';
+import EditorPageHeader from '../components/editor-page-header';
 
 const { useParams, useActiveUserRecord, useLesson } = hooks;
-const { Editor, Redirect } = components;
+const { Editor, Redirect, Page } = components;
 
 const PageLesson = () => {
   const { value: user } = useActiveUserRecord();
@@ -18,7 +19,11 @@ const PageLesson = () => {
     return <Redirect to="/" />;
   }
 
-  return <Editor lesson={lesson} save={requests.lessonUpdates} />;
+  return (
+    <Page header={<EditorPageHeader lesson={lesson} />}>
+      <Editor lesson={lesson} save={requests.lessonUpdates} />
+    </Page>
+  );
 };
 
 export default PageLesson;

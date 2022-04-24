@@ -1,29 +1,15 @@
-import React, {
-  ComponentProps,
-  FormEvent,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import React, { ComponentProps, useCallback, useEffect, useState } from 'react';
 import {
   Chapter,
-  Difficulty,
   getPreviousStep,
-  getLessonChapter,
   removeStep,
   Step,
-  Tag,
-  getChildStep,
   LessonStateStatus,
   updateSubjectState,
-  updateLesson,
   updateLessonChapter,
   updateLessonStep,
   addChapterToLesson,
   Lesson,
-  publishLesson,
-  unpublishLesson,
 } from '@chess-tent/models';
 import {
   Actions,
@@ -39,49 +25,26 @@ import {
   Orientation,
 } from '@types';
 import { debounce } from 'lodash';
-import {
-  components,
-  hooks,
-  requests,
-  services,
-  state,
-  ui,
-  utils,
-} from '@application';
-import TrainingModal from './training-assign';
-import CollaboratorModal from './lesson-users';
+import { components, hooks, services, state, ui } from '@application';
 import Sidebar from './editor-sidebar';
-import { PreviewModal } from './activity-preview';
 import ChaptersDropdown from './chapters-dropdown';
 import RootStepButton from './editor-sidebar-root-step-button';
-import EditorAction from './editor-action';
-import EditorSidebarAdjustableText from './editor-sidebar-adjustable-text';
-import { updateEntityAction } from '../../state/actions';
+import { useLessonParams } from '../hooks/utility';
 
-const { Container, Row, Col, Headline2, Absolute, Text, Dropdown } = ui;
+const { Container, Row, Col, Icon } = ui;
 const { createChapter, updateStepRotation, logException } = services;
-const { downloadAs } = utils;
 const {
   Stepper,
   StepRenderer,
   Chessboard,
-  DifficultyDropdown,
-  TagsSelect,
   StepToolbox,
   ChessboardContextProvider,
-  Page,
 } = components;
 const {
   actions: { serviceAction },
 } = state;
-const {
-  useDispatchBatched,
-  useApi,
-  useLocation,
-  usePromptModal,
-  useHistory,
-  useDiffUpdates,
-} = hooks;
+const { useDispatchBatched, useApi, useLocation, useHistory, useDiffUpdates } =
+  hooks;
 
 type EditorRendererProps = ComponentProps<Components['Editor']> & {
   activeChapter: Chapter;
@@ -89,7 +52,6 @@ type EditorRendererProps = ComponentProps<Components['Editor']> & {
   dispatch: (action: Actions) => void;
   history: History;
   location: ReturnType<typeof useLocation>;
-  promptModal: ReturnType<typeof usePromptModal>;
   lessonStatus: LessonStatus;
   addLessonUpdate: (action: LessonUpdatableAction) => void;
 };
@@ -143,24 +105,6 @@ class EditorRenderer extends React.Component<
       ...this.state.history,
     ]);
   }
-
-  publishLesson = () => {
-    const { dispatch } = this.props;
-    const lesson = publishLesson(this.props.lesson);
-    // This shouldn't be undoable hence don't use addLessonUpdate
-    requests.lessonPublish(lesson.id).then(() => {
-      dispatch(updateEntityAction(lesson));
-    });
-  };
-
-  unpublishLesson = () => {
-    const { dispatch } = this.props;
-    const lesson = unpublishLesson(this.props.lesson);
-    // This shouldn't be undoable hence don't use addLessonUpdate
-    requests.lessonUnpublish(lesson.id).then(() => {
-      dispatch(updateEntityAction(lesson));
-    });
-  };
 
   updateHistory(history: EditorRendererState['history']) {
     this.setState({ history });
@@ -225,38 +169,6 @@ class EditorRenderer extends React.Component<
     const action = serviceAction(updateSubjectState)(lesson, state);
     this.addLessonUpdate(action);
   }, 500);
-
-  updateLessonTitle = (event: FormEvent<HTMLHeadingElement>) => {
-    const elem = event.target as HTMLHeadingElement;
-    // @ts-ignore
-    if (event.nativeEvent.inputType === 'insertParagraph') {
-      elem.innerText = elem.innerText.trim();
-      elem.blur();
-      return;
-    }
-    this.updateLessonStateDebounced({ title: elem.innerText });
-  };
-
-  updateLessonDescription = (event: FormEvent<HTMLHeadingElement>) => {
-    const elem = event.target as HTMLHeadingElement;
-    // @ts-ignore
-    if (event.nativeEvent.inputType === 'insertParagraph') {
-      elem.innerText = elem.innerText.trim();
-      elem.blur();
-      return;
-    }
-    this.updateLessonStateDebounced({ description: elem.innerText });
-  };
-
-  updateLessonDifficulty = (difficulty?: Difficulty) => {
-    if (difficulty === undefined) {
-      return;
-    }
-
-    const { lesson } = this.props;
-    const action = serviceAction(updateLesson)(lesson, { difficulty });
-    this.addLessonUpdate(action);
-  };
 
   updateStep = (step: Step) => {
     const { lesson, activeChapter } = this.props;
@@ -360,55 +272,6 @@ class EditorRenderer extends React.Component<
     });
   };
 
-  updateTags = (tags: Tag[]) => {
-    const { lesson } = this.props;
-    const action = serviceAction(updateLesson)(lesson, { tags });
-    this.addLessonUpdate(action);
-  };
-
-  renderPublishAction() {
-    const { lessonStatus, lesson } = this.props;
-    const tooltip =
-      lessonStatus === LessonStatus.SAVED ||
-      lessonStatus === LessonStatus.INITIAL
-        ? lesson.state.status !== LessonStateStatus.PUBLISHED
-          ? 'Make lesson public'
-          : 'Nothing to publish, no changes made'
-        : 'You`ll be able to publish after the lesson is saved';
-
-    return (
-      <EditorAction
-        id="publish"
-        tooltip={tooltip}
-        onClick={this.publishLesson}
-        disabled={lesson.state.status !== LessonStateStatus.DRAFT}
-      >
-        Publish
-        <Text fontSize="small">
-          Lesson is {lesson.published ? 'published' : 'private'}
-        </Text>
-      </EditorAction>
-    );
-  }
-
-  renderUnpublishAction() {
-    const { lesson } = this.props;
-    const tooltip = lesson.published
-      ? 'Remove lesson from marketplace'
-      : 'Lesson is private';
-
-    return (
-      <EditorAction
-        id="unpublish"
-        tooltip={tooltip}
-        onClick={this.unpublishLesson}
-        disabled={!lesson.published}
-      >
-        Unpublish
-      </EditorAction>
-    );
-  }
-
   renderLessonStatus() {
     const { lessonStatus } = this.props;
     switch (lessonStatus) {
@@ -436,10 +299,14 @@ class EditorRenderer extends React.Component<
           <>
             <Row>
               <Col> {props.header || lessonStatusText}</Col>
+              <Col>
+                <Icon type="back" onClick={this.undoUpdate} />
+                <Icon type="forward" onClick={this.undoUpdate} />
+              </Col>
+              <Col>
+                <Icon type="settings" />
+              </Col>
             </Row>
-            <Absolute right={20} top={20} onClick={this.undoUpdate}>
-              Undo
-            </Absolute>
           </>
         }
       />
@@ -462,14 +329,11 @@ class EditorRenderer extends React.Component<
   };
 
   render() {
-    const { activeStep, lesson, promptModal, activeChapter } = this.props;
+    const { activeStep, lesson, activeChapter } = this.props;
     const lessonStatusText = this.renderLessonStatus();
 
     return (
       <Container fluid className="px-0 h-100">
-        <Absolute left={15} top={15} zIndex={100} className="cursor-pointer">
-          <Text onClick={this.closeEditor}>Back</Text>
-        </Absolute>
         <Row className="g-0 h-100">
           <Col className="pt-5">
             <ChessboardContextProvider>
@@ -491,111 +355,6 @@ class EditorRenderer extends React.Component<
           <Col md={6} lg={4} className="mh-100">
             <Sidebar>
               <Container>
-                <Row>
-                  <Col>
-                    <Dropdown>
-                      <Dropdown.Toggle>Actions</Dropdown.Toggle>
-                      <Dropdown.Menu>
-                        <EditorAction
-                          id="preview"
-                          tooltip="View lesson as student"
-                          onClick={() =>
-                            promptModal(close => (
-                              <PreviewModal
-                                close={close}
-                                lesson={lesson}
-                                step={activeStep}
-                                chapter={activeChapter}
-                              />
-                            ))
-                          }
-                        >
-                          Preview
-                        </EditorAction>
-                        <EditorAction
-                          id="assign"
-                          tooltip="Assign lesson to student"
-                          onClick={() =>
-                            promptModal(close => (
-                              <TrainingModal close={close} />
-                            ))
-                          }
-                        >
-                          Assign
-                        </EditorAction>
-                        <EditorAction
-                          id="collaborators"
-                          tooltip="Allow other to edit lesson"
-                          onClick={() =>
-                            promptModal(close => (
-                              <CollaboratorModal
-                                close={close}
-                                lesson={lesson}
-                              />
-                            ))
-                          }
-                        >
-                          Collaborators
-                        </EditorAction>
-                        <EditorAction
-                          id="download"
-                          tooltip="Make lesson safe copy"
-                          onClick={() =>
-                            downloadAs(
-                              new Blob([JSON.stringify(lesson)], {
-                                type: 'text/plain;charset=utf-8',
-                              }),
-                              lesson.state.title + '.json',
-                            )
-                          }
-                        >
-                          Download
-                        </EditorAction>
-                        {this.renderPublishAction()}
-                        {this.renderUnpublishAction()}
-                      </Dropdown.Menu>
-                    </Dropdown>
-                  </Col>
-                </Row>
-                <Row className="mt-3 mb-3">
-                  <Col className="col-auto">
-                    <DifficultyDropdown
-                      size="small"
-                      id="editor-difficulty"
-                      includeNullOption={false}
-                      initial={lesson.difficulty}
-                      onChange={this.updateLessonDifficulty}
-                    />
-                  </Col>
-                </Row>
-                <Row>
-                  <Col>
-                    <TagsSelect
-                      selected={lesson.tags}
-                      onChange={this.updateTags}
-                    />
-                  </Col>
-                </Row>
-              </Container>
-              <Container>
-                <Row>
-                  <Col>
-                    <Headline2
-                      contentEditable
-                      html={lesson.state.title}
-                      onInput={this.updateLessonTitle}
-                      className="mt-4"
-                    />
-                  </Col>
-                </Row>
-                <Row>
-                  <Col>
-                    <EditorSidebarAdjustableText
-                      html={lesson.state.description}
-                      onInput={this.updateLessonDescription}
-                    />
-                  </Col>
-                </Row>
                 <Row className="mb-4">
                   <Col>
                     <ChaptersDropdown
@@ -638,9 +397,9 @@ class EditorRenderer extends React.Component<
 
 const Editor: Components['Editor'] = ({ lesson, save, onStatusChange }) => {
   const dispatch = useDispatchBatched();
-  const { chapters } = lesson.state;
   const location = useLocation();
   const history = useHistory();
+  const { activeChapter, activeStep } = useLessonParams(lesson);
   const {
     fetch: lessonUpdate,
     error: lessonUpdateError,
@@ -654,20 +413,6 @@ const Editor: Components['Editor'] = ({ lesson, save, onStatusChange }) => {
   useDiffUpdates(lesson, (updates: LessonUpdates) => {
     lessonUpdate(lesson.id, updates);
   });
-
-  const activeChapterId =
-    new URLSearchParams(location.search).get('activeChapter') || chapters[0].id;
-  const activeChapter = useMemo(
-    () => getLessonChapter(lesson, activeChapterId),
-    [lesson, activeChapterId],
-  ) as Chapter;
-  const activeStepId =
-    new URLSearchParams(location.search).get('activeStep') ||
-    activeChapter.state.steps[0].id;
-  const activeStep = useMemo(
-    () => getChildStep(activeChapter, activeStepId),
-    [activeChapter, activeStepId],
-  ) as Steps;
 
   useEffect(() => {
     onStatusChange && onStatusChange(lessonStatus);
@@ -697,8 +442,6 @@ const Editor: Components['Editor'] = ({ lesson, save, onStatusChange }) => {
     [dispatch],
   );
 
-  const promptModal = usePromptModal();
-
   return (
     <EditorRenderer
       lesson={lesson}
@@ -708,7 +451,6 @@ const Editor: Components['Editor'] = ({ lesson, save, onStatusChange }) => {
       dispatch={dispatch}
       location={location}
       history={history}
-      promptModal={promptModal}
       save={save}
       addLessonUpdate={handleLessonUpdate}
     />

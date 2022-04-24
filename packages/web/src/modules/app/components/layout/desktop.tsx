@@ -1,9 +1,6 @@
 import React from 'react';
-import { utils } from '@application';
 import styled from '@emotion/styled';
 import { Components } from '@types';
-
-const { mediaQueryEnhancer } = utils;
 
 export default styled<Components['Layout']>(
   ({ className, children, header, menu }) => (
@@ -13,48 +10,28 @@ export default styled<Components['Layout']>(
       <div className="layout-content">{children}</div>
     </div>
   ),
-)(
-  {
-    '.layout-menu': {
-      gridArea: 'menu',
-      width: 70,
-    },
-    '.layout-header': {
-      gridArea: 'header',
-      height: 64,
-      zIndex: 10,
-      padding: '0 5em',
-    },
-    '.layout-content': {
-      gridArea: 'content',
-      padding: '0 5em',
-      position: 'relative',
-      overflowY: 'auto',
-    },
-    display: 'grid',
-    gridTemplateRows: 'min-content calc(100vh - 64px)',
-    gridTemplateColumns: '0fr 1fr',
-    gridTemplateAreas: `
+)({
+  '.layout-menu': {
+    gridArea: 'menu',
+    width: 70,
+  },
+  '.layout-header': {
+    gridArea: 'header',
+    height: 64,
+    zIndex: 10,
+  },
+  '.layout-content': {
+    gridArea: 'content',
+    position: 'relative',
+    overflowY: 'auto',
+  },
+  display: 'grid',
+  gridTemplateRows: 'min-content calc(100vh - 64px)',
+  gridTemplateColumns: '0fr 1fr',
+  gridTemplateAreas: `
     "menu header"
     "menu content"
     `,
-    width: '100%',
-    height: '100%',
-  },
-  mediaQueryEnhancer('lg', {
-    '.layout-header': {
-      padding: '0 2em',
-    },
-    '.layout-content': {
-      padding: '0 2em',
-    },
-  }),
-  mediaQueryEnhancer('md', {
-    '.layout-header': {
-      padding: '0 2em',
-    },
-    '.layout-content': {
-      padding: '0 2em',
-    },
-  }),
-);
+  width: '100%',
+  height: '100%',
+});

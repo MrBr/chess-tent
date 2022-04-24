@@ -3,6 +3,7 @@ import { components, hooks, requests, state } from '@application';
 import { Lesson, TYPE_LESSON } from '@chess-tent/models';
 import { LessonStatus } from '@types';
 import { createNewLesson } from '../service';
+import EditorPageHeader from '../components/editor-page-header';
 
 const {
   useDispatchBatched,
@@ -11,7 +12,7 @@ const {
   useHistory,
   useStore,
 } = hooks;
-const { Editor } = components;
+const { Editor, Page } = components;
 const {
   selectors: { lessonSelector },
   actions: { updateEntities },
@@ -63,11 +64,13 @@ const NewLesson = () => {
   }
 
   return (
-    <Editor
-      lesson={lesson}
-      save={saveLesson}
-      onStatusChange={handleStatusChange}
-    />
+    <Page header={<EditorPageHeader />}>
+      <Editor
+        lesson={lesson}
+        save={saveLesson}
+        onStatusChange={handleStatusChange}
+      />
+    </Page>
   );
 };
 

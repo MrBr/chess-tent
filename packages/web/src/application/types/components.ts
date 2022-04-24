@@ -59,7 +59,7 @@ import {
   StepModuleComponentKey,
   StepSystemProps,
 } from './step';
-import { ClassComponent } from './_helpers';
+import { ClassComponent, ClassNameProps } from './_helpers';
 import { OptionsDropdownProps, ButtonProps, UI } from './ui';
 import {
   AppAnalysis,
@@ -371,7 +371,7 @@ export type Components = {
   MobileRoot: ComponentType;
   MobilePortal: ComponentType;
   Filters: ComponentType<{ children?: ReactElement }>;
-  Header: ComponentType;
+  Header: ComponentType<ClassNameProps>;
   Menu: ComponentType;
   Logo: ComponentType<ImgHTMLAttributes<HTMLImageElement>>;
   TabBar: ComponentType & {

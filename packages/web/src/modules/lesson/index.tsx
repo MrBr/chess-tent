@@ -20,14 +20,19 @@ application.register(
   },
 );
 application.register(
-  () => import('./hooks'),
+  () => import('./hooks/record'),
   module => {
-    application.hooks.useUpdateLessonStepState =
-      module.useUpdateLessonStepState;
-    application.hooks.useLessonMeta = module.useLessonMeta;
     application.hooks.useLesson = module.useLesson;
     application.hooks.useLessons = module.useLessons;
     application.hooks.useMyLessons = module.useMyLessons;
+  },
+);
+application.register(
+  () => import('./hooks/utility'),
+  module => {
+    application.hooks.useLessonMeta = module.useLessonMeta;
+    application.hooks.useUpdateLessonStepState =
+      module.useUpdateLessonStepState;
     application.hooks.usePromptNewTrainingModal =
       module.usePromptNewTrainingModal;
     application.hooks.useUserTrainings = module.useUserTrainings;

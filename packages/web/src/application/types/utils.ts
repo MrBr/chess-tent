@@ -16,10 +16,6 @@ export type Utils = {
     result: any;
   };
   getEntityId: (entity: Entity | NormalizedEntity) => string;
-  mediaQueryEnhancer: (
-    screenSize: 'xs' | 'sm' | 'md' | 'lg' | 'xl',
-    style: CSSObject,
-  ) => CSSObject;
   mobileCss: (style: TemplateStringsArray) => string;
   propEnhancer: <T extends {}>(
     prop: string | ((props: T) => string),

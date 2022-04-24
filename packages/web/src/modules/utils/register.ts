@@ -7,7 +7,6 @@ import {
   useOutsideClick,
 } from './hooks';
 import { getEntitySchema, getTypeSchema } from './model';
-import { mediaQueryEnhancer } from './enhancers';
 import { getDiff } from './utils';
 
 application.utils.generateIndex = uuid;
@@ -19,8 +18,6 @@ application.utils.getEntitySchema = getEntitySchema;
 application.utils.getTypeSchema = getTypeSchema;
 
 application.utils.downloadAs = saveAs;
-
-application.utils.mediaQueryEnhancer = mediaQueryEnhancer;
 
 application.utils.getDiff = getDiff;
 

@@ -76,7 +76,7 @@ const dynamicStyle = (props: TextProps) =>
 
 const BaseText: ComponentType<TextProps> = withHtml<TextProps>(
   ({ inline, inherit, html, as, ...textProps }) => {
-    const Component = as || (inherit ? 'span' : 'p');
+    const Component = as || (inherit || inline ? 'span' : 'p');
     return <Component {...textProps} />;
   },
 );

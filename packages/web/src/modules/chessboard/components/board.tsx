@@ -1,4 +1,4 @@
-import { components, ui, constants, services } from '@application';
+import { ui, constants, services } from '@application';
 import {
   ChessboardProps,
   ChessboardContext,
@@ -12,7 +12,6 @@ import {
   NotableMove,
   MoveComment,
   FEN,
-  Evaluation,
   Promotion,
 } from '@types';
 
@@ -41,7 +40,7 @@ import { ChessgroundMappedPropsType, ChessgroundMapper } from '../types';
 import { BoardContext } from '../context';
 
 const { START_FEN, KINGS_FEN } = constants;
-const { Modal, Absolute } = ui;
+const { Modal } = ui;
 const {
   Chess,
   createMoveShortObject,
@@ -51,7 +50,6 @@ const {
   getTurnColor,
   switchTurnColor,
 } = services;
-const { Evaluator, EvaluationBar, EvaluationLines } = components;
 
 export type State = CGState;
 
@@ -269,25 +267,6 @@ class Chessboard
   toggleEvaluation = () => {
     const { update, evaluate, evaluations } = this.context;
     update({ evaluate: !evaluate, evaluations });
-  };
-
-  getBestEvaluation() {
-    const { evaluations } = this.context;
-    return evaluations[1];
-  }
-
-  updateEvaluation = (evaluation: Evaluation) => {
-    const { evaluate, update } = this.context;
-    if (!evaluate) {
-      return;
-    }
-
-    const evaluations: ChessboardContext['evaluations'] = {
-      ...this.context.evaluations,
-      [evaluation.lineIndex]: evaluation,
-    };
-
-    update({ evaluations, evaluate });
   };
 
   removeShape(shape: DrawShape) {
@@ -532,19 +511,10 @@ class Chessboard
   };
 
   render() {
-    const {
-      header,
-      fen,
-      editing,
-      size,
-      sparePieces,
-      footer,
-      onPGN,
-      allowEvaluation,
-    } = this.props;
-    const { renderPrompt, promotion, evaluate, evaluations } = this.context;
+    const { header, fen, editing, size, sparePieces, footer, onPGN } =
+      this.props;
+    const { renderPrompt, promotion } = this.context;
 
-    const bestEvaluation = this.getBestEvaluation();
     const sparePiecesElement = sparePieces ? (
       <SparePieces
         onDragStart={this.onSparePieceDrag}
@@ -555,33 +525,6 @@ class Chessboard
     return (
       <>
         <BoardHeader width={size as string}>{header}</BoardHeader>
-        <BoardHeader
-          width={size as string}
-          className="position-relative"
-          height={35}
-        >
-          {allowEvaluation && (
-            <Absolute right={10} top={-40}>
-              <Evaluator
-                position={fen}
-                evaluate={evaluate}
-                onToggle={this.toggleEvaluation}
-                onEvaluationChange={this.updateEvaluation}
-              />
-            </Absolute>
-          )}
-          {evaluate && bestEvaluation && (
-            <EvaluationBar evaluation={bestEvaluation} />
-          )}
-          {evaluate &&
-            Object.values(evaluations).map(evaluation => (
-              <EvaluationLines
-                evaluation={evaluation}
-                key={evaluation.lineIndex}
-                onMoveClick={this.onEvaluationMove}
-              />
-            ))}
-        </BoardHeader>
         <BoardContainer
           size={size as string}
           boardRef={this.boardHost}

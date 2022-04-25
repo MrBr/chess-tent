@@ -32,7 +32,6 @@ const renderChessboard = (props: ChessboardProps) => {
     <Chessboard
       {...props}
       footer={null}
-      allowEvaluation={false}
       sparePieces={false}
       editing={false}
       allowAllMoves={false}

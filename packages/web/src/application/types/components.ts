@@ -90,7 +90,6 @@ export interface ChessboardProps {
   header?: ReactNode;
   footer?: ReactNode;
   size?: string | number;
-  allowEvaluation?: boolean;
 
   // Chessground proxy props
   viewOnly?: boolean;
@@ -444,24 +443,9 @@ export type Components = {
       ? P & { component: T; step: S }
       : never,
   ) => ReactElement;
-  EvaluationLines: ComponentType<{
-    evaluation: Evaluation;
-    className?: string;
-    onMoveClick?: (move: NotableMove[]) => void;
-  }>;
-  EvaluationBar: ComponentType<{ evaluation: Evaluation; className?: string }>;
-  Evaluator: ComponentType<{
-    position: FEN;
-    evaluate?: boolean;
-    depth?: number;
-    lines?: number;
-    minDepth?: number;
-    // Evaluator is making sure that updates are thrown for the latest position only
-    onEvaluationChange?: (evaluation: Evaluation) => void;
-    onToggle?: () => void;
-    // Best move is not reliable in sense that
-    // after position changed it can still provide best move for the previous position
-    onBestMoveChange?: (bestMove: UciMove, ponder?: UciMove) => void;
+  Evaluation: ComponentType<{
+    fen: FEN;
+    onMoveClick?: (moves: NotableMove[]) => void;
   }>;
   Editor: ComponentType<{
     lesson: Lesson;

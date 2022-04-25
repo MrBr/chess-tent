@@ -34,7 +34,6 @@ const Thumbnail = ({ stepRoot }: { stepRoot: StepRoot }) => {
           fen={initialPosition}
           footer={null}
           header={null}
-          allowEvaluation={false}
           viewOnly={true}
           size="100%"
         />

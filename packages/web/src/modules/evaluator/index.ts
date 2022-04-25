@@ -1,22 +1,9 @@
 import application from '@application';
 
 application.register(
-  () => import('./components/evaluation-bar'),
+  () => import('./components/evaluation'),
   module => {
-    application.components.EvaluationBar = module.default;
-  },
-);
-
-application.register(
-  () => import('./components/evaluation-lines'),
-  module => {
-    application.components.EvaluationLines = module.default;
-  },
-);
-application.register(
-  () => import('./components/evaluator'),
-  module => {
-    application.components.Evaluator = module.default;
+    application.components.Evaluation = module.default;
   },
 );
 

@@ -1,15 +1,16 @@
-import React from 'react';
+import React, { ComponentType } from 'react';
 import { ui, components } from '@application';
-import { Components } from '@types';
+import { Components, Evaluation, NotableMove } from '@types';
 import { getEvaluationMoves } from '../service';
 
 const { Container } = ui;
 const { StepMove } = components;
 
-const EvaluationLines: Components['EvaluationLines'] = ({
-  evaluation,
-  onMoveClick,
-}) => {
+const EvaluationLines: ComponentType<{
+  evaluation: Evaluation;
+  className?: string;
+  onMoveClick?: (move: NotableMove[]) => void;
+}> = ({ evaluation, onMoveClick }) => {
   const notableMoves = getEvaluationMoves(evaluation);
   const handleMoveClick = (index: number) => {
     if (!onMoveClick) {

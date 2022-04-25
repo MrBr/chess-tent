@@ -1,13 +1,19 @@
-import React, { ComponentType } from 'react';
-import { Components, PieceColor, UciMove } from '@types';
-import { ui } from '@application';
+import React from 'react';
+import { Evaluation, FEN, PieceColor, UciMove } from '@types';
 import { getTurnColor } from '../../chess/service';
 
-const { ToggleButton } = ui;
-
-type EvaluatorProps = Components['Evaluator'] extends ComponentType<infer U>
-  ? U
-  : never;
+interface EvaluationEngineProps {
+  position: FEN;
+  evaluate?: boolean;
+  depth?: number;
+  lines?: number;
+  minDepth?: number;
+  // Evaluator is making sure that updates are thrown for the latest position only
+  onEvaluationChange?: (evaluation: Evaluation) => void;
+  // Best move is not reliable in sense that
+  // after position changed it can still provide best move for the previous position
+  onBestMoveChange?: (bestMove: UciMove, ponder?: UciMove) => void;
+}
 
 type InfoParam = 'score' | 'depth' | 'pv' | 'multipv';
 type BestMoveParam = 'bestmove' | 'ponder';
@@ -75,7 +81,7 @@ const getVariation = (data: EngineLine): UciMove[] => {
   return getInfoValues(data, 'pv');
 };
 
-class Evaluator extends React.Component<EvaluatorProps> {
+class EvaluationEngine extends React.Component<EvaluationEngineProps> {
   static defaultProps = {
     evaluate: true,
     depth: 18,
@@ -85,7 +91,7 @@ class Evaluator extends React.Component<EvaluatorProps> {
   };
 
   worker: Worker;
-  constructor(props: EvaluatorProps) {
+  constructor(props: EvaluationEngineProps) {
     super(props);
     this.worker = new Worker('/stockfish.js');
     this.worker.onmessage = this.onEngineMessage;
@@ -97,7 +103,7 @@ class Evaluator extends React.Component<EvaluatorProps> {
     this.worker.terminate();
   }
 
-  componentDidUpdate(prevProps: EvaluatorProps): void {
+  componentDidUpdate(prevProps: EvaluationEngineProps): void {
     const { evaluate, position } = this.props;
     if (prevProps.position !== position) {
       this.sync();
@@ -149,18 +155,8 @@ class Evaluator extends React.Component<EvaluatorProps> {
   }
 
   render() {
-    const { evaluate, onToggle } = this.props;
-
-    if (!onToggle) {
-      return null;
-    }
-
-    return (
-      <ToggleButton checked={evaluate} onChange={onToggle} size="extra-small">
-        Engine
-      </ToggleButton>
-    );
+    return null;
   }
 }
 
-export default Evaluator;
+export default EvaluationEngine;

@@ -28,3 +28,10 @@ application.register(
       module.ChessboardContextProvider;
   },
 );
+
+application.register(
+  () => import('./hook'),
+  module => {
+    application.hooks.useChessboardContext = module.useChessboardContext;
+  },
+);

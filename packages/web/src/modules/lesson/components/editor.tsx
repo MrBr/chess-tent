@@ -32,13 +32,15 @@ import RootStepButton from './editor-sidebar-root-step-button';
 import { useLessonParams } from '../hooks/utility';
 
 const { Container, Row, Col, Icon } = ui;
-const { createChapter, updateStepRotation, logException } = services;
+const { createChapter, updateStepRotation, logException, getStepPosition } =
+  services;
 const {
   Stepper,
   StepRenderer,
   Chessboard,
   StepToolbox,
   ChessboardContextProvider,
+  Evaluation,
 } = components;
 const {
   actions: { serviceAction },
@@ -332,11 +334,13 @@ class EditorRenderer extends React.Component<
     const { activeStep, lesson, activeChapter } = this.props;
     const lessonStatusText = this.renderLessonStatus();
 
+    const position = getStepPosition(activeStep);
+
     return (
-      <Container fluid className="px-0 h-100">
-        <Row className="g-0 h-100">
-          <Col className="pt-5">
-            <ChessboardContextProvider>
+      <ChessboardContextProvider>
+        <Container fluid className="px-0 h-100">
+          <Row className="g-0 h-100">
+            <Col className="pt-5">
               <StepRenderer
                 key={lesson.id}
                 step={activeStep}
@@ -350,47 +354,50 @@ class EditorRenderer extends React.Component<
                 updateStep={this.updateStep}
                 removeStep={this.deleteStep}
               />
-            </ChessboardContextProvider>
-          </Col>
-          <Col md={6} lg={4} className="mh-100">
-            <Sidebar>
-              <Container>
-                <Row className="mb-4">
-                  <Col>
-                    <ChaptersDropdown
-                      editable
-                      activeChapter={activeChapter}
-                      chapters={lesson.state.chapters}
-                      onChange={this.setActiveChapterHandler}
-                      onEdit={this.updateChapterTitle}
-                      onNew={this.addNewChapter}
-                      onRemove={this.removeChapter}
-                    />
-                  </Col>
-                </Row>
-              </Container>
-              <Col>
-                <Stepper
-                  activeStep={activeStep}
-                  setActiveStep={this.setActiveStepHandler}
-                  stepRoot={activeChapter}
+            </Col>
+            <Col md={6} lg={4} className="mh-100">
+              <Sidebar>
+                <Container>
+                  <Row className="mb-4">
+                    <Col>
+                      <ChaptersDropdown
+                        editable
+                        activeChapter={activeChapter}
+                        chapters={lesson.state.chapters}
+                        onChange={this.setActiveChapterHandler}
+                        onEdit={this.updateChapterTitle}
+                        onNew={this.addNewChapter}
+                        onRemove={this.removeChapter}
+                      />
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Evaluation fen={position} />
+                  </Row>
+                </Container>
+                <Col>
+                  <Stepper
+                    activeStep={activeStep}
+                    setActiveStep={this.setActiveStepHandler}
+                    stepRoot={activeChapter}
+                    updateChapter={this.updateChapter}
+                    updateStep={this.updateStep}
+                    removeStep={this.deleteStep}
+                    root
+                    renderToolbox={this.renderToolbox}
+                  />
+                </Col>
+                <RootStepButton
                   updateChapter={this.updateChapter}
-                  updateStep={this.updateStep}
-                  removeStep={this.deleteStep}
-                  root
-                  renderToolbox={this.renderToolbox}
+                  setActiveStep={this.setActiveStepHandler}
+                  chapter={activeChapter}
+                  className="mt-4"
                 />
-              </Col>
-              <RootStepButton
-                updateChapter={this.updateChapter}
-                setActiveStep={this.setActiveStepHandler}
-                chapter={activeChapter}
-                className="mt-4"
-              />
-            </Sidebar>
-          </Col>
-        </Row>
-      </Container>
+              </Sidebar>
+            </Col>
+          </Row>
+        </Container>
+      </ChessboardContextProvider>
     );
   }
 }

@@ -35,6 +35,7 @@ import {
 import { Records } from './records';
 import { History } from './router';
 import { GenericArguments } from './_helpers';
+import { ChessboardContext } from './context';
 
 type UseMetaReturn<T> = [T, (meta: T) => void, () => void];
 
@@ -140,4 +141,5 @@ export type Hooks = {
   useDispatchService: () => <T extends (...args: any) => any>(
     service: T extends ServiceType ? T : never,
   ) => (...payload: T extends (...args: infer U) => any ? U : never) => void;
+  useChessboardContext: () => ChessboardContext;
 };

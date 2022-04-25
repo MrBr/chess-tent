@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { ComponentType } from 'react';
 import { ui } from '@application';
 import styled from '@emotion/styled';
-import { Components } from '@types';
+import { Evaluation } from '@types';
 
 const { ProgressBar } = ui;
 
-const EvaluationBar: Components['EvaluationBar'] = ({
-  evaluation,
-  className,
-}) => {
+const EvaluationBar: ComponentType<{
+  evaluation: Evaluation;
+  className?: string;
+}> = ({ evaluation, className }) => {
   return (
     <ProgressBar
       className={className}

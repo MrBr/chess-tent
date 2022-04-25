@@ -6,11 +6,14 @@ import useOpenConversations from '../hooks/useOpenConversations';
 const { Icon } = ui;
 
 const ConversationsStand = () => {
-  const openConversations = useOpenConversations();
+  const [conversationCanvas, openConversations] = useOpenConversations();
   return (
-    <div className="d-inline-block me-3">
-      <Icon type="conversation" onClick={() => openConversations()} />
-    </div>
+    <>
+      {conversationCanvas}
+      <div className="d-inline-block me-3">
+        <Icon type="conversation" onClick={() => openConversations()} />
+      </div>
+    </>
   );
 };
 

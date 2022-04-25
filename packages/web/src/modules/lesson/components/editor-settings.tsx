@@ -56,55 +56,58 @@ const EditorSettings: ComponentType<{
 
   return (
     <Offcanvas show onHide={close}>
-      <Tabs defaultActiveKey="Details\">
-        <Tab eventKey="Details" title="Details">
-          <Container>
-            <Row>
-              <Col>
-                <Headline2
-                  contentEditable
-                  html={lesson.state.title}
-                  onInput={createUpdateLessonDetails('title')}
-                  className="mt-4"
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <EditorSidebarAdjustableText
-                  html={lesson.state.description}
-                  onInput={createUpdateLessonDetails('description')}
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <DifficultyDropdown
-                  size="small"
-                  id="editor-difficulty"
-                  includeNullOption={false}
-                  initial={lesson.difficulty}
-                  onChange={updateLessonDifficulty}
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <TagsSelect selected={lesson.tags} onChange={updateTags} />
-              </Col>
-            </Row>
-          </Container>
-        </Tab>
-        <Tab eventKey="Collaborator" title="Collaborator">
-          <Container>
-            <Row>
-              <Col>
-                <EditorSettingsCollaborators lesson={lesson} />
-              </Col>
-            </Row>
-          </Container>
-        </Tab>
-      </Tabs>
+      <Offcanvas.Header>Lesson settings</Offcanvas.Header>
+      <Offcanvas.Body>
+        <Tabs defaultActiveKey="Details">
+          <Tab eventKey="Details" title="Details">
+            <Container>
+              <Row>
+                <Col>
+                  <Headline2
+                    contentEditable
+                    html={lesson.state.title}
+                    onInput={createUpdateLessonDetails('title')}
+                    className="mt-4"
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  <EditorSidebarAdjustableText
+                    html={lesson.state.description}
+                    onInput={createUpdateLessonDetails('description')}
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  <DifficultyDropdown
+                    size="small"
+                    id="editor-difficulty"
+                    includeNullOption={false}
+                    initial={lesson.difficulty}
+                    onChange={updateLessonDifficulty}
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  <TagsSelect selected={lesson.tags} onChange={updateTags} />
+                </Col>
+              </Row>
+            </Container>
+          </Tab>
+          <Tab eventKey="Collaborator" title="Collaborators">
+            <Container>
+              <Row>
+                <Col>
+                  <EditorSettingsCollaborators lesson={lesson} />
+                </Col>
+              </Row>
+            </Container>
+          </Tab>
+        </Tabs>
+      </Offcanvas.Body>
     </Offcanvas>
   );
 };

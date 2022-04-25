@@ -15,7 +15,7 @@ import TrainingAssign from '../components/training-assign';
 
 export * from './training-hooks';
 
-const { usePromptModal, useLocation } = hooks;
+const { usePrompt, useLocation } = hooks;
 
 export const useUpdateLessonStepState = <T extends Step>(
   updateStep: (step: T) => void,
@@ -64,11 +64,7 @@ export const useLessonMeta: Hooks['useLessonMeta'] = activity => {
 };
 
 export const usePromptNewTrainingModal = () => {
-  const promptModal = usePromptModal();
-  return useCallback(
-    () => promptModal(close => <TrainingAssign close={close} />),
-    [promptModal],
-  );
+  return usePrompt(close => <TrainingAssign close={close} />);
 };
 
 export const useLessonActivity = () => {};

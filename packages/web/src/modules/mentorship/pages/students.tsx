@@ -9,7 +9,7 @@ const { Link, MentorshipAction, Page, UserAvatar } = components;
 const Students = () => {
   const { value: user } = useActiveUserRecord();
   const { value: students } = useStudents(user);
-  const openConversations = useOpenConversations();
+  const [conversationCanvas, openConversations] = useOpenConversations();
   const result = useMemo(
     () => groupBy(students, student => student.approved),
     [students],
@@ -17,6 +17,7 @@ const Students = () => {
 
   return (
     <Page>
+      {conversationCanvas}
       <Headline2>My students</Headline2>
       <Container>
         <Headline3>Pending approval</Headline3>

@@ -65,8 +65,10 @@ export const withHtml: HOC['withHtml'] = WrappedComponent => {
       // If causes any trouble, gotta check all other props as well
       // Changes outside the content should be ignored?
       if (
-        this.ref.current?.outerHTML === nextProps.html ||
-        this.ref.current?.innerHTML === nextProps.html
+        (this.ref.current?.outerHTML &&
+          this.ref.current.outerHTML === nextProps.html) ||
+        (this.ref.current?.innerHTML &&
+          this.ref.current.innerHTML === nextProps.html)
       ) {
         return false;
       }

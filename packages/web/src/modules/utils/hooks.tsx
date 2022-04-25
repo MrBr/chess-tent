@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback, ReactElement } from 'react';
 import { defer } from 'lodash';
 import { Hooks } from '@types';
 
@@ -43,4 +43,19 @@ export const useOutsideClick: Hooks['useOutsideClick'] = (
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [onOutsideClick, ...refs]);
+};
+
+export const usePrompt = (
+  renderOffcanvas: (close: () => void) => ReactElement,
+): ReturnType<Hooks['usePrompt']> => {
+  const [shouldRender, setShouldRender] = useState<true>();
+
+  const promptOffcanvas = useCallback(() => {
+    setShouldRender(true);
+  }, [setShouldRender]);
+
+  return [
+    shouldRender && renderOffcanvas(() => setShouldRender(undefined)),
+    promptOffcanvas,
+  ];
 };

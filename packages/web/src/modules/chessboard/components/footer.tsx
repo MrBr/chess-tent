@@ -23,7 +23,7 @@ const {
 } = ui;
 const { Chess, createNotableMovesFromGame } = services;
 const { START_FEN } = constants;
-const { usePromptModal } = hooks;
+const { usePrompt } = hooks;
 
 const chess = new Chess();
 
@@ -73,7 +73,9 @@ const Footer: FunctionComponent<ChessboardFooterProps> = ({
   position,
   onPGN,
 }) => {
-  const promptModal = usePromptModal();
+  const [pgnModalElem, promptModal] = usePrompt(close => (
+    <PGNModal close={close} onImport={handlePGN} />
+  ));
   const [fen, setFen] = useState<string>(position);
 
   useEffect(() => {
@@ -122,6 +124,7 @@ const Footer: FunctionComponent<ChessboardFooterProps> = ({
 
   return (
     <>
+      {pgnModalElem}
       <Row className="g-0 justify-content-between">
         <Col className="col-auto">
           <EditBoardToggle editing={editing} onChange={updateEditing} />
@@ -130,11 +133,7 @@ const Footer: FunctionComponent<ChessboardFooterProps> = ({
           <Button
             size="extra-small"
             variant="regular"
-            onClick={() =>
-              promptModal(close => (
-                <PGNModal close={close} onImport={handlePGN} />
-              ))
-            }
+            onClick={promptModal}
             className="me-3"
             disabled={!onPGN}
           >

@@ -1,11 +1,4 @@
-import React, {
-  ComponentType,
-  FunctionComponent,
-  ReactElement,
-  useCallback,
-  useContext,
-  useState,
-} from 'react';
+import React, { FunctionComponent } from 'react';
 import application from '@application';
 import { default as BModal } from 'react-bootstrap/Modal';
 import ModalBody from 'react-bootstrap/ModalBody';
@@ -14,10 +7,6 @@ import { ConfirmProps } from '@types';
 import { Button } from './Button';
 import Absolute from './Absolute';
 import Icon from './Icon';
-
-const ModalProviderContext = React.createContext<
-  (renderModal: (close: () => void) => ReactElement) => void
->(() => {});
 
 const Modal = (({ close, fullScreen, ...props }) =>
   (
@@ -42,6 +31,7 @@ const Modal = (({ close, fullScreen, ...props }) =>
 Modal.defaultProps = {
   ...BModal.defaultProps,
   onHide: () => {},
+  show: true,
 };
 Modal.Header = BModal.Header;
 Modal.Body = BModal.Body;
@@ -61,27 +51,6 @@ const Confirm = styled<FunctionComponent<ConfirmProps>>(
   ),
 )({});
 
-const usePromptModal = () => {
-  return useContext(ModalProviderContext);
-};
-
-const ModalProvider: ComponentType = ({ children }) => {
-  const [modal, setModal] = useState<ReactElement | null>(null);
-  const promptModal = useCallback(
-    (renderModal: (close: () => void) => ReactElement) =>
-      setModal(renderModal(() => setModal(null))),
-    [setModal],
-  );
-  return (
-    <ModalProviderContext.Provider value={promptModal}>
-      {children}
-      {modal}
-    </ModalProviderContext.Provider>
-  );
-};
-
 application.ui.Modal = Modal;
 application.ui.ModalBody = ModalBody;
 application.ui.Confirm = Confirm;
-application.hooks.usePromptModal = usePromptModal;
-application.services.addProvider(ModalProvider);

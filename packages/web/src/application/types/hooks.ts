@@ -59,12 +59,9 @@ export type Hooks = {
     toUserId: string,
     handlers: ConferencingHandlers,
   ) => void;
-  usePromptModal: () => (
-    renderModal: (close: () => void) => ReactElement,
-  ) => void;
-  usePromptOffcanvas: () => (
-    renderOffcanvas: (close: () => void) => ReactElement,
-  ) => void;
+  usePrompt: (
+    render: (close: () => void) => ReactElement,
+  ) => [ReactElement | undefined, () => void];
   useUpdateLessonStepState: <T extends Step>(
     updateStep: (step: T) => void,
     step: T,
@@ -85,7 +82,7 @@ export type Hooks = {
   useActiveUserRecord: <T = void>(
     fallback?: T,
   ) => RecordHookSafe<InferInitRecord<Records['activeUser']>, T>;
-  useOpenConversations: () => (user?: User) => void;
+  useOpenConversations: () => [ReactElement | undefined, (user?: User) => void];
   useActiveUserNotifications: (
     limit?: number,
   ) => RecordHookInit<InferInitRecord<Records['activeUserNotifications']>>;
@@ -96,7 +93,7 @@ export type Hooks = {
     user: User,
     initialFilters?: Partial<ScheduledLessonActivityFilters>,
   ) => RecordHookInit<InferInitRecord<Records['userScheduledTrainings']>>;
-  usePromptNewTrainingModal: () => () => void;
+  usePromptNewTrainingModal: () => [ReactElement | undefined, () => void];
   useUserLessonsRecord: (
     user: User,
   ) => RecordHookInit<InferInitRecord<Records['lessons']>>;

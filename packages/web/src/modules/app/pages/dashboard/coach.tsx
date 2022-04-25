@@ -16,7 +16,7 @@ const DashboardCoach = ({ user }: { user: User }) => {
   const trainings = useUserTrainings(user);
   const scheduledTrainings = useUserScheduledTrainings(user);
   const students = useStudents(user);
-  const promptNewTrainingModal = usePromptNewTrainingModal();
+  const [trainingModal, promptNewTrainingModal] = usePromptNewTrainingModal();
   const lessons = useMyLessons();
 
   const hasStudents = students.value && students.value.length > 0;
@@ -31,6 +31,7 @@ const DashboardCoach = ({ user }: { user: User }) => {
 
   return (
     <Page>
+      {trainingModal}
       <Row className="mt-4">
         <Col>
           <Headline2>Hello, {user.name}</Headline2>

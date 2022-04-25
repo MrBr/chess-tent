@@ -5,6 +5,7 @@ import {
   useComponentState,
   useComponentStateSilent,
   useOutsideClick,
+  usePrompt,
 } from './hooks';
 import { getEntitySchema, getTypeSchema } from './model';
 import { getDiff } from './utils';
@@ -24,3 +25,4 @@ application.utils.getDiff = getDiff;
 application.hooks.useComponentStateSilent = useComponentStateSilent;
 application.hooks.useComponentState = useComponentState;
 application.hooks.useOutsideClick = useOutsideClick;
+application.hooks.usePrompt = usePrompt;

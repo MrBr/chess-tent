@@ -14,7 +14,7 @@ import { over } from 'lodash';
 
 const { Container, Button, Icon, Modal, ModalBody, Headline4 } = ui;
 const { LessonToolboxText } = components;
-const { useCopyStep, usePromptModal } = hooks;
+const { useCopyStep, usePrompt } = hooks;
 const { getStepPosition, addStepNextToTheComments, getStepBoardOrientation } =
   services;
 
@@ -55,7 +55,45 @@ const StepToolbox: Components['StepToolbox'] = ({
   updateChapter,
 }) => {
   const [hasStepCopy, copy, getCopiedStep] = useCopyStep();
-  const promptModal = usePromptModal();
+
+  const pasteAdd = () => {
+    const copiedStep = getCopiedStep() as Steps;
+    updateStep(addStepNextToTheComments(step as Steps, copiedStep as Steps));
+    setActiveStep(copiedStep);
+  };
+
+  const pasteReplace = () => {
+    const copiedStep = getCopiedStep() as Steps;
+    const parent = getParentStep(stepRoot, step) as StepRoot;
+    const updatedParent = replaceStep(parent, step, copiedStep);
+    if (isChapter(updatedParent)) {
+      updateChapter(updatedParent);
+    } else if (isStep(updatedParent)) {
+      updateStep(updatedParent);
+    }
+    setActiveStep(copiedStep);
+  };
+
+  const [pasteModal, promptPasteModal] = usePrompt(close => (
+    <Modal close={close} show>
+      <ModalBody>
+        <Headline4>
+          Replace current step with copied step or add as child?
+        </Headline4>
+        <Button
+          size="extra-small"
+          className="me-3"
+          onClick={over(pasteReplace, close)}
+        >
+          Replace
+        </Button>
+        <Button size="extra-small" onClick={over(pasteAdd, close)}>
+          Add
+        </Button>
+      </ModalBody>
+    </Modal>
+  ));
+
   const addDescriptionStep = useCallback(() => {
     const position = getStepPosition(step as Steps);
     const orientation = getStepBoardOrientation(step as Steps);
@@ -66,6 +104,7 @@ const StepToolbox: Components['StepToolbox'] = ({
     updateStep(addStepToLeft(step, descriptionStep, 0));
     setActiveStep(descriptionStep);
   }, [step, updateStep, setActiveStep]);
+
   const addVariationStep = useCallback(() => {
     const position = getStepPosition(step as Steps);
     const orientation = getStepBoardOrientation(step as Steps);
@@ -77,54 +116,15 @@ const StepToolbox: Components['StepToolbox'] = ({
     updateStep(addStepNextToTheComments(step as Steps, variationStep));
     setActiveStep(variationStep);
   }, [step, updateStep, setActiveStep]);
+
   const pasteStep = useCallback(() => {
     const copiedStep = getCopiedStep();
     if (!copiedStep) {
       return;
     }
-    const replace = () => {
-      const parent = getParentStep(stepRoot, step) as StepRoot;
-      const updatedParent = replaceStep(parent, step, copiedStep);
-      if (isChapter(updatedParent)) {
-        updateChapter(updatedParent);
-      } else if (isStep(updatedParent)) {
-        updateStep(updatedParent);
-      }
-      setActiveStep(copiedStep);
-    };
-    const add = () => {
-      updateStep(addStepNextToTheComments(step as Steps, copiedStep as Steps));
-      setActiveStep(copiedStep);
-    };
+    promptPasteModal();
+  }, [getCopiedStep, promptPasteModal]);
 
-    promptModal(close => (
-      <Modal close={close} show>
-        <ModalBody>
-          <Headline4>
-            Replace current step with copied step or add as child?
-          </Headline4>
-          <Button
-            size="extra-small"
-            className="me-3"
-            onClick={over(replace, close)}
-          >
-            Replace
-          </Button>
-          <Button size="extra-small" onClick={over(add, close)}>
-            Add
-          </Button>
-        </ModalBody>
-      </Modal>
-    ));
-  }, [
-    getCopiedStep,
-    promptModal,
-    stepRoot,
-    step,
-    setActiveStep,
-    updateChapter,
-    updateStep,
-  ]);
   const addExerciseStep = useCallback(() => {
     const position = getStepPosition(step as Steps);
     const orientation = getStepBoardOrientation(step as Steps);
@@ -135,6 +135,7 @@ const StepToolbox: Components['StepToolbox'] = ({
     updateStep(addStepNextToTheComments(step as Steps, exerciseStep));
     setActiveStep(exerciseStep);
   }, [setActiveStep, step, updateStep]);
+
   const removeStepCB = useCallback(() => {
     removeStep(step);
   }, [removeStep, step]);
@@ -149,6 +150,7 @@ const StepToolbox: Components['StepToolbox'] = ({
       className={`d-flex align-items-center h-100 pr-0 ${className}`}
       onClick={handleClick}
     >
+      {pasteModal}
       {(text || active) && showInput && (
         <LessonToolboxText
           onChange={textChangeHandler}

@@ -8,9 +8,10 @@ const { MentorshipAction, Page, UserAvatar } = components;
 const Coaches = () => {
   const { value: user } = useActiveUserRecord();
   const { value: coaches } = useCoaches(user);
-  const openConversations = useOpenConversations();
+  const [conversationCanvas, openConversations] = useOpenConversations();
   return (
     <Page>
+      {conversationCanvas}
       <Headline2>My coaches</Headline2>
       <Container>
         <Row>

@@ -4,8 +4,7 @@ import { components, hooks, ui, requests, state } from '@application';
 
 const { Icon, Dropdown, Absolute, Dot } = ui;
 const { NotificationRender, NotificationsModal } = components;
-const { useActiveUserNotifications, useApi, useDispatch, usePromptModal } =
-  hooks;
+const { useActiveUserNotifications, useApi, useDispatch, usePrompt } = hooks;
 
 const { actions } = state;
 
@@ -16,7 +15,9 @@ const Stand = () => {
     useActiveUserNotifications(NOTIFICATIONS_LIMIT);
   const { fetch: updateNotifications } = useApi(requests.updateNotifications);
   const dispatch = useDispatch();
-  const promptModal = usePromptModal();
+  const [modal, promptModal] = usePrompt(close => (
+    <NotificationsModal close={close} />
+  ));
 
   const handleUnseenNotifications = () => {
     const unseenNotifications = notifications?.filter(
@@ -43,37 +44,34 @@ const Stand = () => {
   );
 
   return (
-    <Dropdown className="me-3" onClick={handleUnseenNotifications}>
-      <Dropdown.Toggle id="notification-stand" collapse>
-        {unseen && (
-          <Absolute top={4} right={3}>
-            <Dot />
-          </Absolute>
-        )}
-        <Icon type="notifications" />
-      </Dropdown.Toggle>
-      <Dropdown.Menu width={250}>
-        {!!reversedNotifications &&
-          reversedNotifications?.map(notification => (
-            <React.Fragment key={notification.id}>
-              <NotificationRender
-                view="DropdownItem"
-                notification={notification}
-              />
-              <Dropdown.Divider />
-            </React.Fragment>
-          ))}
-        {!!notifications && (
-          <Dropdown.Item
-            onClick={() =>
-              promptModal(close => <NotificationsModal close={close} />)
-            }
-          >
-            See all
-          </Dropdown.Item>
-        )}
-      </Dropdown.Menu>
-    </Dropdown>
+    <>
+      {modal}
+      <Dropdown className="me-3" onClick={handleUnseenNotifications}>
+        <Dropdown.Toggle id="notification-stand" collapse>
+          {unseen && (
+            <Absolute top={4} right={3}>
+              <Dot />
+            </Absolute>
+          )}
+          <Icon type="notifications" />
+        </Dropdown.Toggle>
+        <Dropdown.Menu width={250}>
+          {!!reversedNotifications &&
+            reversedNotifications?.map(notification => (
+              <React.Fragment key={notification.id}>
+                <NotificationRender
+                  view="DropdownItem"
+                  notification={notification}
+                />
+                <Dropdown.Divider />
+              </React.Fragment>
+            ))}
+          {!!notifications && (
+            <Dropdown.Item onClick={promptModal}>See all</Dropdown.Item>
+          )}
+        </Dropdown.Menu>
+      </Dropdown>
+    </>
   );
 };
 

@@ -1,4 +1,4 @@
-import React, { ComponentType } from 'react';
+import React, { ComponentType, ForwardRefExoticComponent } from 'react';
 import { css } from '@emotion/css';
 import cn from 'classnames';
 import {
@@ -220,5 +220,11 @@ const cssDescriptorCreator = (
   ...args: any[]
 ): CssDescriptor<any> => resolveClassNames({})(styles, ...args);
 
-export { cssDescriptorCreator as css, useCss };
+const hoistClassName = (
+  styled: StyledComponent<any>,
+  component: ComponentType | ForwardRefExoticComponent<any>,
+  // @ts-ignore
+) => (component[COMPONENT_CLASSNAME] = styled[COMPONENT_CLASSNAME]);
+
+export { cssDescriptorCreator as css, useCss, hoistClassName };
 export default styled;

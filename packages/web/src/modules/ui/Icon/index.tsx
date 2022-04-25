@@ -1,18 +1,20 @@
 import React, { ComponentProps } from 'react';
 import { UI } from '@types';
-import styled from '@chess-tent/styled-props';
+import styled, { hoistClassName } from '@chess-tent/styled-props';
 import * as iconsMap from './iconMap';
 
 type IconProps = ComponentProps<UI['Icon']>;
 
-const Icon = styled<IconProps>(({ type, className, onClick }) => {
-  const IconSvgComponent = iconsMap[type];
-  return (
-    <span className={className} onClick={onClick}>
-      <IconSvgComponent className="svg-icon" />
-    </span>
-  );
-}).size.textual.variant.background.css`
+const Icon = styled<IconProps>(
+  ({ type, className, onClick, innerRef, ...props }) => {
+    const IconSvgComponent = iconsMap[type];
+    return (
+      <span className={className} onClick={onClick} ref={innerRef} {...props}>
+        <IconSvgComponent className="svg-icon" />
+      </span>
+    );
+  },
+).size.textual.variant.background.css`
   display: inline-block;
   box-sizing: content-box;
   position: relative;
@@ -48,19 +50,23 @@ const Icon = styled<IconProps>(({ type, className, onClick }) => {
     }
   }
   
+  &.grey-700 {
+    color: var(--grey-700-color);
+  }
+  
   &.large {
     width: 36px;
     height: 36px;
   }
 
   &.small {
-    width: 16px;
-    height: 16px;
+    width: 20px;
+    height: 20px;
   }
 
   &.extra-small {
-    width: 10px;
-    height: 10px;
+    width: 18px;
+    height: 18px;
   }
 
   &.regular {
@@ -84,9 +90,15 @@ const Icon = styled<IconProps>(({ type, className, onClick }) => {
   }
 `;
 
-Icon.defaultProps = {
+const IconWithRef = React.forwardRef<HTMLElement, IconProps>((props, ref) => (
+  <Icon {...props} innerRef={ref} />
+));
+
+IconWithRef.defaultProps = {
   variant: 'grey-700',
   size: 'regular',
 };
 
-export default Icon;
+hoistClassName(Icon, IconWithRef);
+
+export default IconWithRef;

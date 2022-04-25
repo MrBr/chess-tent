@@ -8,6 +8,7 @@ import {
   RefObject,
   ElementType,
   RefCallback,
+  ForwardedRef,
 } from 'react';
 import {
   ColProps,
@@ -297,6 +298,7 @@ export type UI = {
     size?: 'large' | 'regular' | 'small' | 'extra-small';
     variant?: 'primary' | 'secondary' | 'black' | 'grey-700' | 'light';
     background?: boolean;
+    innerRef?: ForwardedRef<HTMLElement | null>;
   }>;
   Img: ComponentType<
     {

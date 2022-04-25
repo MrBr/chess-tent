@@ -1,7 +1,7 @@
 import React, { useCallback, ReactEventHandler } from 'react';
 import { Components, Steps } from '@types';
 import { components, hooks, services, ui, utils } from '@application';
-import styled from '@emotion/styled';
+import styled from '@chess-tent/styled-props';
 import {
   addStepToLeft,
   getParentStep,
@@ -12,7 +12,16 @@ import {
 } from '@chess-tent/models';
 import { over } from 'lodash';
 
-const { Container, Button, Icon, Modal, ModalBody, Headline4 } = ui;
+const {
+  Container,
+  Button,
+  Icon,
+  Modal,
+  ModalBody,
+  Headline4,
+  Tooltip,
+  OverlayTrigger,
+} = ui;
 const { LessonToolboxText } = components;
 const { useCopyStep, usePrompt } = hooks;
 const { getStepPosition, addStepNextToTheComments, getStepBoardOrientation } =
@@ -22,18 +31,23 @@ function pickFunction(...funcs: any[]) {
   return funcs.find(f => typeof f === 'function');
 }
 
-const ToolboxActions = styled.div({
-  '> button': {
-    marginBottom: 8,
-  },
-  display: 'flex',
-  flexDirection: 'column',
-  position: 'absolute',
-  right: 0,
-  top: '50%',
-  transform: 'translateY(-50%)',
-  zIndex: 10,
-});
+const ToolboxActions = styled.div.css`
+  > ${Icon as any}:not(:last-child) {
+    margin-bottom: 20px;
+    cursor: pointer;
+  }
+
+  padding: 15px 10px;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  left: 0;
+  transform: translateX(-50%);
+  z-index: 10;
+  background: var(--light-color);
+  border: 1px solid var(--grey-400-color);
+  border-radius: 10px;
+`;
 
 const StepToolbox: Components['StepToolbox'] = ({
   textChangeHandler,
@@ -161,59 +175,73 @@ const StepToolbox: Components['StepToolbox'] = ({
       {active && (
         <ToolboxActions className={actionsClassName}>
           {exercise && (
-            <Button
-              variant="regular"
-              size="extra-small"
-              onClick={pickFunction(exercise, addExerciseStep)}
+            <OverlayTrigger
+              placement="left"
+              overlay={
+                <Tooltip id="exercise-tooltip">Add exercise step</Tooltip>
+              }
             >
-              Q
-            </Button>
+              <Icon
+                size="extra-small"
+                type="exercise"
+                onClick={pickFunction(exercise, addExerciseStep)}
+              />
+            </OverlayTrigger>
           )}
           {add && (
-            <Button
-              size="extra-small"
-              variant="regular"
-              onClick={pickFunction(add, addVariationStep)}
+            <OverlayTrigger
+              placement="left"
+              overlay={<Tooltip id="add-tooltip">Add new step</Tooltip>}
             >
-              +
-            </Button>
+              <Icon
+                size="extra-small"
+                type="add"
+                onClick={pickFunction(add, addVariationStep)}
+              />
+            </OverlayTrigger>
           )}
           {comment && (
-            <Button
-              size="extra-small"
-              variant="regular"
-              onClick={pickFunction(comment, addDescriptionStep)}
+            <OverlayTrigger
+              placement="left"
+              overlay={<Tooltip id="comment-tooltip">Add step comment</Tooltip>}
             >
-              <Icon type="comment" textual />
-            </Button>
+              <Icon
+                size="extra-small"
+                type="comment"
+                onClick={pickFunction(comment, addDescriptionStep)}
+              />
+            </OverlayTrigger>
           )}
           {remove && (
-            <Button
+            <Icon
               size="extra-small"
-              variant="regular"
+              type="remove"
               onClick={pickFunction(remove, removeStepCB)}
-            >
-              x
-            </Button>
+            />
           )}
           {paste && (
-            <Button
-              size="extra-small"
-              variant="regular"
-              onClick={() => copy(step)}
+            <OverlayTrigger
+              placement="left"
+              overlay={
+                <Tooltip id="copy-tooltip">Copy step and child steps</Tooltip>
+              }
             >
-              C
-            </Button>
+              <Icon size="extra-small" type="copy" onClick={() => copy(step)} />
+            </OverlayTrigger>
           )}
           {paste && (
-            <Button
-              size="extra-small"
-              variant="regular"
-              onClick={pickFunction(paste, pasteStep)}
-              disabled={!hasStepCopy}
+            <OverlayTrigger
+              placement="left"
+              overlay={<Tooltip id="copy-tooltip">Paste copied steps</Tooltip>}
             >
-              P
-            </Button>
+              <Icon
+                size="extra-small"
+                type="move"
+                onClick={
+                  hasStepCopy ? pickFunction(paste, pasteStep) : undefined
+                }
+              />
+            </OverlayTrigger>
           )}
         </ToolboxActions>
       )}

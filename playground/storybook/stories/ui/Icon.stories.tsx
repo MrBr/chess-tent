@@ -17,6 +17,9 @@ const Template: ComponentStory<UI['Icon']> = withWebNamespace(
 export const Default = Template.bind({});
 Default.args = { type: 'board' };
 
+export const Primary = Template.bind({});
+Primary.args = { type: 'comment', variant: 'primary' };
+
 export const All: ComponentStory<UI['Icon']> = withWebNamespace(
   'ui',
   (args, { Text, Tag, Icon, Container, Row, Col }) => (
@@ -34,4 +37,3 @@ export const All: ComponentStory<UI['Icon']> = withWebNamespace(
     </Container>
   ),
 );
-Default.args = { type: 'board' };

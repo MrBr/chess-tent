@@ -355,7 +355,7 @@ class EditorRenderer extends React.Component<
                 removeStep={this.deleteStep}
               />
             </Col>
-            <Col md={6} lg={4} className="mh-100">
+            <Col md={6} lg={4} className="mh-100 position-relative">
               <Sidebar>
                 <Container>
                   <Row className="mb-4">

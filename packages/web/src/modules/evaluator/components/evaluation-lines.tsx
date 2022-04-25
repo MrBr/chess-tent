@@ -1,6 +1,6 @@
 import React, { ComponentType } from 'react';
 import { ui, components } from '@application';
-import { Components, Evaluation, NotableMove } from '@types';
+import { Evaluation, NotableMove } from '@types';
 import { getEvaluationMoves } from '../service';
 
 const { Container } = ui;

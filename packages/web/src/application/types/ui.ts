@@ -75,7 +75,7 @@ export type BaseButtonProps = {
 };
 
 export type ButtonProps = BaseButtonProps & {
-  onClick?: () => void;
+  onClick?: ReactEventHandler;
   ref?: RefObject<HTMLButtonElement>;
   type?: 'button' | 'reset' | 'submit';
 };

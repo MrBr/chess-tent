@@ -31,8 +31,9 @@ import {
   changeExercise,
 } from '../service';
 import { useUpdateSegment } from '../hooks';
+import EditorBoards from './editor-boards';
 
-const { Col, Row, Dropdown } = ui;
+const { Col, Row, Dropdown, Icon } = ui;
 const { StepTag } = components;
 
 const EditorBoard: FunctionComponent<
@@ -45,7 +46,19 @@ const EditorBoard: FunctionComponent<
     props.updateStep,
     activeSegment,
   );
-  const editorProps = { ...props, updateSegment, segment };
+  const Chessboard: typeof props['Chessboard'] = chessboardProps => (
+    <props.Chessboard
+      {...chessboardProps}
+      header={
+        <EditorBoards
+          activeSegment={activeSegment}
+          step={props.step}
+          updateStep={props.updateStep}
+        />
+      }
+    />
+  );
+  const editorProps = { ...props, updateSegment, segment, Chessboard };
 
   if (isVariationExerciseStep(props.step)) {
     return <VariationEditorBoard {...editorProps} step={props.step} />;
@@ -128,8 +141,19 @@ const EditorSidebar: ExerciseModule['EditorSidebar'] = ({
   return (
     <>
       <Row>
+        <StepToolbox
+          add={false}
+          active={activeStep === step}
+          step={step}
+          exercise={addExerciseStep}
+          comment={false}
+          remove={removeExerciseStep}
+          showInput={false}
+        />
         <Col className="col-auto">
-          <StepTag active={activeStep === step}>E</StepTag>
+          <StepTag active={activeStep === step}>
+            <Icon type="exercise" textual />
+          </StepTag>
         </Col>
         <Col>
           <Dropdown
@@ -158,15 +182,6 @@ const EditorSidebar: ExerciseModule['EditorSidebar'] = ({
             </Dropdown.Menu>
           </Dropdown>
           <ExerciseToolbox step={step} updateStep={updateStep} />
-          <StepToolbox
-            add={false}
-            active={activeStep === step}
-            step={step}
-            exercise={addExerciseStep}
-            comment={false}
-            remove={removeExerciseStep}
-            showInput={false}
-          />
         </Col>
       </Row>
     </>

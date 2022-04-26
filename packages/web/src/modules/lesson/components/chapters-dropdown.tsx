@@ -78,21 +78,21 @@ class ChaptersDropdown extends React.Component<
           />
         )}
         {editable && (
-          <>
+          <div className="mt-1">
             <Text
               inline
               fontSize="extra-small"
-              weight={700}
+              weight={400}
               className="me-3 cursor-pointer"
               onClick={this.newHandle}
             >
-              Add
+              +Add
             </Text>
             <Text
               inline
               fontSize="extra-small"
               className="me-3"
-              weight={700}
+              weight={400}
               onClick={() => this.setState({ editing: !editing })}
             >
               Edit
@@ -100,12 +100,12 @@ class ChaptersDropdown extends React.Component<
             <Text
               inline
               fontSize="extra-small"
-              weight={700}
+              weight={400}
               onClick={() => onRemove && onRemove(activeChapter)}
             >
               Remove
             </Text>
-          </>
+          </div>
         )}
       </>
     );

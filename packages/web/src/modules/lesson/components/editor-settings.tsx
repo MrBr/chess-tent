@@ -1,5 +1,4 @@
-import React, { ComponentType, FormEvent, useCallback } from 'react';
-import { debounce } from 'lodash';
+import React, { ComponentType, UIEvent } from 'react';
 import { components, hooks, ui } from '@application';
 import {
   Difficulty,
@@ -16,29 +15,26 @@ const { Tabs, Tab, Offcanvas, Headline2, Container, Row, Col } = ui;
 const { TagsSelect } = components;
 const { useDispatchService } = hooks;
 
+const formatTitleElementText = (e: UIEvent<HTMLDivElement>) => {
+  const elem = e.target as HTMLHeadingElement;
+  // @ts-ignore
+  if (e.nativeEvent.inputType === 'insertParagraph') {
+    elem.innerText = elem.innerText.trim();
+    elem.blur();
+    return;
+  }
+};
+
 const EditorSettings: ComponentType<{
   lesson: Lesson;
   close: () => void;
 }> = ({ lesson, close }) => {
   const dispatchService = useDispatchService();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const updateStateDebounced = useCallback(
-    debounce(dispatchService(updateSubjectState), 500),
-    [dispatchService],
-  );
 
   const createUpdateLessonDetails =
-    (field: 'title' | 'description') =>
-    (event: FormEvent<HTMLHeadingElement>) => {
-      const elem = event.target as HTMLHeadingElement;
-      // @ts-ignore
-      if (event.nativeEvent.inputType === 'insertParagraph') {
-        elem.innerText = elem.innerText.trim();
-        elem.blur();
-        return;
-      }
-      updateStateDebounced(lesson, {
-        [field]: elem.innerText,
+    (field: 'title' | 'description') => (text: string) => {
+      dispatchService(updateSubjectState)(lesson, {
+        [field]: text,
       });
     };
 
@@ -68,6 +64,7 @@ const EditorSettings: ComponentType<{
                     html={lesson.state.title}
                     onInput={createUpdateLessonDetails('title')}
                     className="mt-4"
+                    formatInput={formatTitleElementText}
                   />
                 </Col>
               </Row>

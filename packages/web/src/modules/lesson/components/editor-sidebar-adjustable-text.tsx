@@ -1,16 +1,11 @@
 import React from 'react';
 import { ui } from '@application';
 import styled from '@emotion/styled';
-import { UIComponent } from '@types';
+import { HtmlProps, UIComponent } from '@types';
 
 const { Text } = ui;
 
-export default styled<
-  UIComponent<{
-    html?: string;
-    onInput?: (event: React.FormEvent<HTMLHeadingElement>) => void;
-  }>
->(props => {
+export default styled<UIComponent<HtmlProps>>(props => {
   return (
     <div className={props.className}>
       <Text

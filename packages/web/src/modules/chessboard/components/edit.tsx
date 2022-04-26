@@ -1,7 +1,7 @@
 import React from 'react';
 import { ui } from '@application';
 
-const { ToggleButton } = ui;
+const { Icon, OverlayTrigger, Tooltip } = ui;
 
 const Edit = ({
   onChange,
@@ -10,14 +10,12 @@ const Edit = ({
   editing: boolean;
   onChange?: (editing: boolean) => void;
 }) => (
-  <ToggleButton
-    value={1}
-    checked={!!editing}
-    size="extra-small"
-    onChange={() => onChange && onChange(!editing)}
-  >
-    {editing ? 'Done editing' : 'Edit board'}
-  </ToggleButton>
+  <OverlayTrigger overlay={<Tooltip>Toggle edit mode</Tooltip>}>
+    <Icon
+      type={editing ? 'editFilled' : 'edit'}
+      onClick={() => onChange && onChange(!editing)}
+    />
+  </OverlayTrigger>
 );
 
 export default Edit;

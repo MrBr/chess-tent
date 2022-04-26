@@ -1,24 +1,36 @@
 import React from 'react';
 import { components, ui } from '@application';
 import { ExerciseSegmentKeys, ExerciseSteps } from '@types';
-import styled from '@emotion/styled';
+import styled from '@chess-tent/styled-props';
 import { useUpdateExerciseActiveSegment } from '../../hooks';
 import { SegmentToolboxProps } from '../../types';
 import { getSegmentKey } from '../../service';
 
-const { Row } = ui;
+const { Row, Card, Col } = ui;
 const { LessonToolboxText } = components;
 
-const ActiveSegmentMark = styled.span({
-  borderRadius: '50%',
-  background: '#F44D24',
-  display: 'inline-block',
-  position: 'absolute',
-  top: 7,
-  left: -15,
-  width: 7,
-  height: 7,
-});
+const ActiveSegmentMark = styled.span.props.active.css<{ active: boolean }>`
+  ${{ omitProps: ['active'] }}
+
+  text-transform: capitalize;
+  font-size: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  display: inline-block;
+  text-align: center;
+  line-height: 20px;
+  vertical-align: middle;
+
+  :first-letter {
+    font-size: 14px;
+  }
+
+  &.active {
+    background: var(--secondary-color);
+    color: var(--light-color);
+  }
+`;
 
 const Placeholders: Record<ExerciseSegmentKeys, string> = {
   task: 'Write task...',
@@ -44,19 +56,27 @@ const EditorSidebar = <T extends ExerciseSteps, K extends ExerciseSegmentKeys>({
 
   // NOTE! Passing props for the OverlayTrigger (so that it can trigger tooltip)
   return (
-    <Row
+    <Card
       onClick={() => updateActiveSegment(currentSegmentKey)}
-      className="g-0 position-relative flex-column"
+      className="rounded ps-3 pt-2 pb-2 pe-2 position-relative flex-column mb-2 "
       {...props}
     >
-      {activeSegment === currentSegmentKey && <ActiveSegmentMark />}
-      <LessonToolboxText
-        text={text}
-        placeholder={placeholder || Placeholders[currentSegmentKey]}
-        onChange={updateText}
-      />
+      <Row className="g-0 align-items-center">
+        <Col className="col-auto me-2 align-self-baseline">
+          <ActiveSegmentMark active={activeSegment === currentSegmentKey}>
+            {currentSegmentKey}
+          </ActiveSegmentMark>
+        </Col>
+        <Col>
+          <LessonToolboxText
+            text={text}
+            placeholder={placeholder || Placeholders[currentSegmentKey]}
+            onChange={updateText}
+          />
+        </Col>
+      </Row>
       {children}
-    </Row>
+    </Card>
   );
 };
 

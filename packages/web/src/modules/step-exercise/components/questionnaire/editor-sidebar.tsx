@@ -5,7 +5,7 @@ import { SegmentSidebar } from '../segment';
 import { withSegmentSidebars } from '../../hoc';
 import { SegmentToolboxProps } from '../../types';
 
-const { Check, Row, Col, Text, Container, Icon } = ui;
+const { Check, Row, Col, Container, Icon, Button } = ui;
 const { LessonToolboxText } = components;
 
 const TaskSidebar = (
@@ -73,9 +73,18 @@ const TaskSidebar = (
           </Row>
         ))}
       </Container>
-      <Text onClick={addOption} fontSize="small" className="mt-2">
-        + Add option
-      </Text>
+      <Row>
+        <Col>
+          <Button
+            onClick={addOption}
+            size="extra-small"
+            className="mt-2"
+            variant="secondary"
+          >
+            + Add option
+          </Button>
+        </Col>
+      </Row>
     </SegmentSidebar>
   );
 };

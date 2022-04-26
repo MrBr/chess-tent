@@ -20,6 +20,7 @@ const {
   Tooltip,
   OverlayTrigger,
   FormGroup,
+  Icon,
 } = ui;
 const { Chess, createNotableMovesFromGame } = services;
 const { START_FEN } = constants;
@@ -130,40 +131,21 @@ const Footer: FunctionComponent<ChessboardFooterProps> = ({
           <EditBoardToggle editing={editing} onChange={updateEditing} />
         </Col>
         <Col className="col-auto">
-          <Button
-            size="extra-small"
-            variant="regular"
-            onClick={promptModal}
-            className="me-3"
-            disabled={!onPGN}
-          >
-            PGN
-          </Button>
-          <Button
-            size="extra-small"
-            variant="regular"
-            onClick={onReset}
-            className="me-3"
-          >
-            Reset
-          </Button>
-          <Button
-            size="extra-small"
-            variant="regular"
-            onClick={onClear}
-            className="me-3"
-          >
-            Clear
-          </Button>
-          <Button size="extra-small" variant="regular" onClick={onRotate}>
-            Rotate
-          </Button>
+          <OverlayTrigger overlay={<Tooltip>Reset board</Tooltip>}>
+            <Icon type="refresh" onClick={onReset} />
+          </OverlayTrigger>
+          <OverlayTrigger overlay={<Tooltip>Clear board</Tooltip>}>
+            <Icon type="clear" onClick={onClear} />
+          </OverlayTrigger>
+          <OverlayTrigger overlay={<Tooltip>Rotate</Tooltip>}>
+            <Icon type="rotate" onClick={onRotate} />
+          </OverlayTrigger>
+          <OverlayTrigger overlay={<Tooltip>Import PGN</Tooltip>}>
+            <Icon type="document" onClick={promptModal} />
+          </OverlayTrigger>
         </Col>
       </Row>
-      <Row className="g-0 mt-3 align-items-center">
-        <Col className="col-auto me-2">
-          <Label className="mb-0">FEN:</Label>
-        </Col>
+      <Row className="g-0 mt-4 align-items-center">
         <Col>
           <OverlayTrigger
             overlay={<Tooltip id="fen">Press enter to confirm</Tooltip>}

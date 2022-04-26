@@ -1,4 +1,4 @@
-import styled from '@emotion/styled';
+import styled from '@chess-tent/styled-props';
 import React from 'react';
 import { StepTag } from '@types';
 
@@ -6,19 +6,22 @@ export default styled<StepTag>(({ children, className, onClick }) => (
   <span className={className} onClick={onClick}>
     <span>{children}</span>
   </span>
-))(({ active, collapse }) => ({
-  '& > span': {
-    background: active
-      ? 'linear-gradient(90deg, #F46F24 0%, #F44D24 100%)'
-      : 'transparent',
-    display: 'inline-block',
-    padding: '4px 8px',
-    borderRadius: 6,
-  },
-  color: '#2F3849',
-  display: 'inline-block',
-  width: collapse ? undefined : 58,
-  overflow: 'hidden',
-  fontSize: 11 / 16 + 'em',
-  fontWeight: 700,
-}));
+)).props.active.css`
+  &.active > span {
+    background: var(--secondary-color);
+    color: var(--light-color);
+  }
+
+  & > span {
+    background: transparent;
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 6px;
+  }
+
+  color: #2F3849;
+  display: inline-block;
+  overflow: hidden;
+  font-weight: 700;
+  font-size: 12px;
+`;

@@ -1,34 +1,20 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, UIEvent } from 'react';
 import { Components } from '@types';
 import styled from '@emotion/styled';
-import { debounce } from 'lodash';
 import { ui } from '@application';
 
 const { Text } = ui;
 
+const formatToolboxText = (e: UIEvent<HTMLDivElement>) => {
+  if (e.currentTarget.innerText.trim() === '') {
+    // Don't allow new line without any text it breaks the placeholder
+    // Placeholder is shown when there is no text and whitespace breaks it
+    e.currentTarget.innerHTML = '';
+  }
+};
+
 export const ToolboxText = styled<Components['LessonToolboxText']>(
   ({ text, onChange, ...props }) => {
-    // Updating div html resets the cursor so ToolboxText can't be controlled.
-    // Ref is used to set static default value which won't change on props update.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const debouncedTextChange = useCallback(
-      debounce(onChange as (text: string) => void, 500, { trailing: true }),
-      //
-      // NOTE - no dependencies
-      // ToolboxText is re-rendering a lot without this - seems unnecessary.
-      [],
-    );
-    const onTextChange = useCallback(
-      e => {
-        if (e.target.innerText.trim() === '') {
-          // Don't allow new line without any text it breaks the placeholder
-          // Placeholder is shown when there is no text and whitespace breaks it
-          e.target.innerHTML = '';
-        }
-        debouncedTextChange && debouncedTextChange(e.target.innerHTML);
-      },
-      [debouncedTextChange],
-    );
     const onPaste = useCallback(event => {
       event.preventDefault();
 
@@ -46,7 +32,8 @@ export const ToolboxText = styled<Components['LessonToolboxText']>(
         {...props}
         onPaste={onPaste}
         html={text}
-        onInput={onTextChange}
+        onInput={onChange}
+        formatInput={formatToolboxText}
       />
     );
   },

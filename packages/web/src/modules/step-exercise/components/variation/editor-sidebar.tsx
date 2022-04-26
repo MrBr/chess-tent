@@ -7,7 +7,7 @@ import { SegmentSidebar } from '../segment';
 import { withSegmentSidebars } from '../../hoc';
 import { isFENSetup } from './utils';
 
-const { Text, Row } = ui;
+const { Text } = ui;
 const { StepMove, StepTag } = components;
 
 const TaskSidebar = (
@@ -29,30 +29,26 @@ const TaskSidebar = (
 
   return (
     <SegmentSidebar {...props}>
-      <Row className="g-0">
-        <Text fontSize="small">Moves:</Text>
-        <Row className="align-items-center m-0">
+      <Text fontSize="extra-small" className="mt-2">
+        Moves:
+      </Text>
+      <div>
+        <StepTag
+          active={isFENSetup(activeMoveIndex)}
+          onClick={event => handleUpdateActiveMove(null, event)}
+        >
+          FEN
+        </StepTag>
+        {moves?.map((move, index) => (
           <StepTag
-            active={isFENSetup(activeMoveIndex)}
-            collapse
-            onClick={event => handleUpdateActiveMove(null, event)}
+            active={activeMoveIndex === index}
+            onClick={event => handleUpdateActiveMove(index, event)}
+            key={index}
           >
-            <Text className="mb-0" fontSize="small" color="title">
-              FEN
-            </Text>
+            <StepMove move={move} suffix=" " prefix=" " blackIndexSign=" " />
           </StepTag>
-          {moves?.map((move, index) => (
-            <StepTag
-              active={activeMoveIndex === index}
-              collapse
-              onClick={event => handleUpdateActiveMove(index, event)}
-              key={index}
-            >
-              <StepMove move={move} suffix=" " prefix=" " blackIndexSign=" " />
-            </StepTag>
-          ))}
-        </Row>
-      </Row>
+        ))}
+      </div>
     </SegmentSidebar>
   );
 };

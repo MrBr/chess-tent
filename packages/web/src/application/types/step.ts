@@ -4,20 +4,12 @@ import {
   FunctionComponent,
   ReactElement,
 } from 'react';
+import { Chapter, Step, StepRoot, StepType, User } from '@chess-tent/models';
 import {
-  Chapter,
-  LessonActivityBoardState,
-  Step,
-  StepRoot,
-  StepType,
-  User,
-} from '@chess-tent/models';
-import {
-  ActivityRendererModuleProps,
-  ActivityRendererProps,
   ActivityStepProps,
   ChessboardInterface,
   ChessboardProps,
+  LessonStatus,
   StepToolbox,
 } from './components';
 import { ClassComponent } from './_helpers';
@@ -38,7 +30,7 @@ export type StepBoardComponentProps = {
   Chessboard:
     | FunctionComponent<ChessboardProps>
     | ClassComponent<ChessboardInterface>;
-  status?: string;
+  status?: LessonStatus;
 };
 export type StepProps<S extends AppStep, P = {}> = {
   step: S;

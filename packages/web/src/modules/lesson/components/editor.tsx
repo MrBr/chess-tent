@@ -33,7 +33,16 @@ import RootStepButton from './editor-sidebar-root-step-button';
 import SidebarSection from './editor-sidebar-section';
 import { useLessonParams } from '../hooks/utility';
 
-const { Container, Row, Col, Icon, Button } = ui;
+const {
+  Container,
+  Row,
+  Col,
+  Icon,
+  Button,
+  OverlayTrigger,
+  Tooltip,
+  ToggleButton,
+} = ui;
 const { createChapter, updateStepRotation, logException, getStepPosition } =
   services;
 const {
@@ -288,23 +297,8 @@ class EditorRenderer extends React.Component<
     });
   };
 
-  renderLessonStatus() {
-    const { lessonStatus } = this.props;
-    switch (lessonStatus) {
-      case LessonStatus.DIRTY:
-        return 'Have unsaved changes';
-      case LessonStatus.ERROR:
-        return 'Something went wrong, lesson not saved.';
-      case LessonStatus.SAVED:
-      case LessonStatus.INITIAL:
-      default:
-        return 'Lesson saved';
-    }
-  }
-
   renderChessboard = (props: ChessboardProps) => {
     const { activeStep, lesson } = this.props;
-    const lessonStatusText = this.renderLessonStatus();
     return (
       <Chessboard
         key={lesson.id}
@@ -314,12 +308,22 @@ class EditorRenderer extends React.Component<
         header={
           <>
             <Row>
-              <Col> {props.header || lessonStatusText}</Col>
-              <Col>
-                <Icon type="back" onClick={this.undoUpdate} />
-                <Icon type="forward" onClick={this.undoUpdate} />
+              <Col xs={8}>
+                {props.header || (
+                  <ToggleButton variant="secondary" size="small" checked>
+                    Step
+                  </ToggleButton>
+                )}
               </Col>
               <Col>
+                <OverlayTrigger overlay={<Tooltip>Undo</Tooltip>}>
+                  <Icon type="back" onClick={this.undoUpdate} />
+                </OverlayTrigger>
+                <OverlayTrigger overlay={<Tooltip>Redo - not working</Tooltip>}>
+                  <Icon type="forward" />
+                </OverlayTrigger>
+              </Col>
+              <Col className="col-auto">
                 <Icon type="settings" />
               </Col>
             </Row>
@@ -345,8 +349,7 @@ class EditorRenderer extends React.Component<
   };
 
   render() {
-    const { activeStep, lesson, activeChapter } = this.props;
-    const lessonStatusText = this.renderLessonStatus();
+    const { activeStep, lesson, activeChapter, lessonStatus } = this.props;
 
     const position = getStepPosition(activeStep);
 
@@ -362,7 +365,7 @@ class EditorRenderer extends React.Component<
                 activeStep={activeStep}
                 setActiveStep={this.setActiveStepHandler}
                 stepRoot={activeChapter}
-                status={lessonStatusText}
+                status={lessonStatus}
                 Chessboard={this.renderChessboard}
                 updateChapter={this.updateChapter}
                 updateStep={this.updateStep}

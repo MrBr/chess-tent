@@ -10,12 +10,25 @@ export default {
 
 const Template: ComponentStory<UI['ToggleButton']> = withWebNamespace(
   'ui',
-  (args, { ToggleButton, ButtonGroup }) => (
-    <ButtonGroup>
-      <ToggleButton>Left</ToggleButton>
-      <ToggleButton checked>Mid</ToggleButton>
-      <ToggleButton>Right</ToggleButton>
-    </ButtonGroup>
+  (args, { ToggleButton, ButtonGroup, Container, Row, Col }) => (
+    <Container>
+      <Row>
+        <Col>
+          <ButtonGroup>
+            <ToggleButton>Left</ToggleButton>
+            <ToggleButton checked>Mid</ToggleButton>
+            <ToggleButton>Right</ToggleButton>
+          </ButtonGroup>
+        </Col>
+      </Row>
+
+      <Row>
+        <Col>
+          <ToggleButton checked>Mid</ToggleButton>
+          <ToggleButton>Right</ToggleButton>
+        </Col>
+      </Row>
+    </Container>
   ),
 );
 

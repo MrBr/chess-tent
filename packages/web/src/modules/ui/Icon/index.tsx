@@ -38,7 +38,7 @@ const Icon = styled<IconProps>(
       color: var(--primary-color);
     &.background {
       color: var(--light-color);
-      background: var(--primary-gradient);
+      background: var(--primary-color);
     }
   }
   

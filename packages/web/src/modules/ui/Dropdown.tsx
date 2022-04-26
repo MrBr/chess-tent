@@ -1,40 +1,50 @@
 import _ from 'lodash';
 import React, { ComponentProps, useCallback, useState } from 'react';
 import { default as BDropdown } from 'react-bootstrap/Dropdown';
-import styled from '@emotion/styled';
+import styled, { useCss } from '@chess-tent/styled-props';
 import { SelectOption, UI } from '@types';
 import { Headline6, Text } from './Text';
-import { sizeEnhancer } from './enhancers';
+import { inputSizePropStyle } from './enhancers';
 
-const Toggle = styled.div(
-  {
-    width: '100%',
-    background: '#F3F4F5',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  sizeEnhancer,
-  ({ collapse }: ComponentProps<UI['Dropdown']['Toggle']>) =>
-    collapse && {
-      ':after': { display: 'none' },
-      background: 'transparent',
-      paddingLeft: 0,
-      paddingRight: 0,
-    },
-);
+const toggleStyle = styled.props.size.collapse.css<
+  ComponentProps<UI['Dropdown']['Toggle']>
+>`
+  &.collapse {
+    &:after {
+      display: none
+    }
 
-// @ts-ignore
-BDropdown.Menu = styled(BDropdown.Menu)(({ width }) => ({
-  width: width || '100%',
-}));
+    background: transparent;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    display: flex;
+    border: none;
+  }
 
-// @ts-ignore
-BDropdown.Item = styled(BDropdown.Item)({
-  whiteSpace: 'initial',
+  width: 100%;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid var(--grey-600-color);
+  border-radius: 5px;
+  ${inputSizePropStyle}
+`;
+
+const Toggle = React.forwardRef<
+  HTMLDivElement,
+  ComponentProps<UI['Dropdown']['Toggle']>
+>((props, ref) => {
+  const className = useCss(toggleStyle)(props);
+  return (
+    <div {...props} className={`dropdown-toggle ${className}`} ref={ref} />
+  );
 });
 
-// @ts-ignore
+Toggle.defaultProps = {
+  size: 'small',
+};
+
 BDropdown.Toggle.defaultProps = {
   as: Toggle,
 };

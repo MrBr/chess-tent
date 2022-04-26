@@ -1,12 +1,11 @@
 @import url('https://fonts.googleapis.com/css?family=Inter:300,400,500,700');
 
 :root {
-  --primary-color: #26d95c;
-  --primary-color-rgb: 38,217,92;
-  --primary-gradient: linear-gradient(90deg, #5ad9ab 0%, #26d95c 100%);
+  --primary-color: #f45924;
+  --primary-color-rgb: 244,89,36;
 
-  --secondary-color: #f45924;
-  --secondary-color-rgb: 244,89,36;
+  --secondary-color: #182235;
+  --secondary-color-rgb: 24,34,53;
 
   --bg-color: #fafbfb;
 

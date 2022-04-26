@@ -311,7 +311,6 @@ export type UI = {
     Toggle: ComponentType<
       Omit<ComponentProps<typeof DropdownToggle>, 'size'> & {
         size?: Omit<FormElementsSize, 'large'>;
-        collapse?: boolean;
       }
     >;
     Menu: ComponentType<
@@ -360,7 +359,7 @@ export type UI = {
   LoadMore: UIComponent<LoadMoreProps>;
   Spinner: UIComponent<SpinnerProps>;
   Page: UIComponent<ContainerProps>;
-  Breadcrumbs: ComponentType & { Item: ComponentType<BreadcrumbItemProps> };
+  Breadcrumbs: UIComponent & { Item: ComponentType<BreadcrumbItemProps> };
   Tabs: typeof Tabs;
   Tab: typeof Tab;
   Row: UIComponent<RowProps>;

@@ -5,14 +5,14 @@ import BToggleButton from 'react-bootstrap/ToggleButton';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 
 const variants = styled.props.variant.disabled.css<BaseButtonProps>`
-  &.danger {
+  &.danger, &.danger:hover {
     color: var(--light-color);
     background: var(--error-color);
   }
 
   &.primary {
     color: var(--light-color);
-    background: var(--primary-gradient);
+    background: var(--primary-color);
   }
 
   &.secondary {
@@ -24,13 +24,13 @@ const variants = styled.props.variant.disabled.css<BaseButtonProps>`
     color: var(--light-color);
     background: var(--black-color);
   }
-  
+
   &.ghost {
     color: var(--dark-color);
     background: transparent;
     border: 1px solid var(--grey-700-color);
   }
-  
+
   &.text {
     color: var(--dark-color);
     background: transparent;
@@ -44,7 +44,7 @@ const variants = styled.props.variant.disabled.css<BaseButtonProps>`
 
 const sizes = styled.props.size.stretch.css<BaseButtonProps>`
   ${{ omitProps: ['stretch'] }}
-  
+
   border: none;
   display: flex;
   align-items: center;
@@ -67,7 +67,7 @@ const sizes = styled.props.size.stretch.css<BaseButtonProps>`
     border-radius: 6px;
     padding: 0 30px;
   }
-  
+
   &.extra-small {
     height: 32px;
     border-radius: 6px;
@@ -84,6 +84,7 @@ const sizes = styled.props.size.stretch.css<BaseButtonProps>`
 export const Button = styled.button.css<ButtonProps>`
   font-weight: 700;
   font-size: 16px;
+
   a & {
     display: inline-block;
     text-decoration: none;
@@ -103,35 +104,45 @@ Button.defaultProps = {
 };
 
 const toggle = styled.props.checked.css<ToggleButtonProps>`
-  display: inline-block;
   user-select: none;
   cursor: pointer;
 
   &.checked {
     ${variants}
   }
-  &:not(.checked) {
-    color: var(--black-color);
-    background: transparent;
-
+  
+  :not(.btn-group) &:not(.checked) {
     &.danger {
-      border: 1px solid var(--error-color);
+      border-color: var(--error-color);
     }
 
     &.primary {
-      border: 1px solid var(--primary-color);
+      border-color: var(--primary-color);
     }
 
     &.secondary {
-      border: 1px solid var(--secondary-color);
+      border-color: var(--secondary-color);
     }
 
     &.dark {
-      border: 1px solid var(--black-color);
+      border-color: var(--black-color);
     }
   }
-  
-  ${sizes}
+
+  ${sizes};
+
+  display: inline-flex;
+  &, :hover, :focus, :active {
+    color: var(--black-color);
+    background: transparent;
+    border: 1px solid var(--grey-400-color) !important;
+    outline: 0;
+    box-shadow: none;
+  }
+
+  .btn-group > & {
+    padding: 11px 16px;
+  }
 `;
 
 export const ToggleButton = styled<ComponentProps<UI['ToggleButton']>>(

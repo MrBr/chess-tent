@@ -166,7 +166,7 @@ const EditorSidebar: ExerciseModule['EditorSidebar'] = ({
               );
             }}
           >
-            <Dropdown.Toggle id="exercises" size="extra-small" className="mb-2">
+            <Dropdown.Toggle id="exercises" className="mb-2">
               {selectedTypeDescriptor?.text || 'Choose type'}
             </Dropdown.Toggle>
             <Dropdown.Menu>

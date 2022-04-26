@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import reverse from 'lodash/reverse';
 import { components, hooks, ui, requests, state } from '@application';
+import { css } from '@chess-tent/styled-props';
 
 const { Icon, Dropdown, Absolute, Dot } = ui;
 const { NotificationRender, NotificationsModal } = components;
@@ -9,6 +10,10 @@ const { useActiveUserNotifications, useApi, useDispatch, usePrompt } = hooks;
 const { actions } = state;
 
 const NOTIFICATIONS_LIMIT = 5;
+
+const { className: menuClassName } = css`
+  width: 250px;
+`;
 
 const Stand = () => {
   const { value: notifications } =
@@ -55,7 +60,7 @@ const Stand = () => {
           )}
           <Icon type="notifications" />
         </Dropdown.Toggle>
-        <Dropdown.Menu width={250}>
+        <Dropdown.Menu className={menuClassName}>
           {!!reversedNotifications &&
             reversedNotifications?.map(notification => (
               <React.Fragment key={notification.id}>

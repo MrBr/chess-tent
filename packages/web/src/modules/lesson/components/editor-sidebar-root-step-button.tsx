@@ -36,7 +36,7 @@ const EditorSidebarRootStepButton = ({
   );
   return (
     <Dropdown onSelect={addNewRootStep} className={className}>
-      <Dropdown.Toggle>Add root</Dropdown.Toggle>
+      <Dropdown.Toggle>Add</Dropdown.Toggle>
       <Dropdown.Menu>
         <Dropdown.Item eventKey="variation">Variation</Dropdown.Item>
         <Dropdown.Item eventKey="exercise">Exercise</Dropdown.Item>

@@ -6,8 +6,10 @@ import React, {
   useRef,
   useState,
   ComponentProps,
+  UIEvent,
 } from 'react';
 import { FileUploaderProps, HOC } from '@types';
+import { debounce } from 'lodash';
 import { File } from './Form';
 
 export const withFiles =
@@ -53,7 +55,7 @@ export const withHtml: HOC['withHtml'] = WrappedComponent => {
   class WithHtml extends React.Component<
     ComponentProps<typeof WrappedComponent>
   > {
-    ref: React.RefObject<HTMLElement>;
+    ref: React.RefObject<HTMLDivElement>;
 
     constructor(props: ComponentProps<typeof WrappedComponent>) {
       super(props);
@@ -65,10 +67,8 @@ export const withHtml: HOC['withHtml'] = WrappedComponent => {
       // If causes any trouble, gotta check all other props as well
       // Changes outside the content should be ignored?
       if (
-        (this.ref.current?.outerHTML &&
-          this.ref.current.outerHTML === nextProps.html) ||
-        (this.ref.current?.innerHTML &&
-          this.ref.current.innerHTML === nextProps.html)
+        this.ref.current?.innerHTML &&
+        this.ref.current.innerHTML === nextProps.html
       ) {
         return false;
       }
@@ -76,20 +76,30 @@ export const withHtml: HOC['withHtml'] = WrappedComponent => {
       return !!this.props.children;
     }
 
+    onInput = (e: UIEvent<HTMLDivElement>) =>
+      this.onInputDebounced(e.currentTarget.innerHTML);
+
+    onInputDebounced = debounce(
+      (html: string) => {
+        const { onInput } = this.props;
+        onInput && onInput(html);
+      },
+      500,
+      { trailing: true },
+    );
+
     render() {
       const { contentEditable, html } = this.props;
       if (contentEditable || html) {
         //children aren't actually used here
         return (
           // eslint-disable-next-line
-          <WrappedComponent
+          <div
             {...this.props}
-            children={
-              <span
-                dangerouslySetInnerHTML={{ __html: html as string }}
-                ref={this.ref}
-              />
-            }
+            children={undefined}
+            dangerouslySetInnerHTML={{ __html: html as string }}
+            ref={this.ref}
+            onInput={this.onInput}
             html={undefined}
             contentEditable
             suppressContentEditableWarning

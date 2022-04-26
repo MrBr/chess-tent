@@ -1,4 +1,4 @@
-import { Component, FormEvent, ReactEventHandler } from 'react';
+import { Component, UIEvent, ReactEventHandler } from 'react';
 import { GenericArguments as TGenericArguments } from '@chess-tent/types/dist/_helpers';
 
 export type ClassComponent<T> = T extends Component<infer P, unknown, infer C>
@@ -11,7 +11,8 @@ export type ClickProps = { onClick?: ReactEventHandler };
 export type ContentEditableProps = {
   contentEditable?: boolean;
   dangerouslySetInnerHTML?: { __html: string };
-  onInput?: (event: FormEvent<HTMLHeadingElement>) => void;
+  onInput?: (text: string) => void;
+  formatInput?: (e: UIEvent<HTMLDivElement>) => void;
 };
 export type ClassNameProps = { className?: string };
 

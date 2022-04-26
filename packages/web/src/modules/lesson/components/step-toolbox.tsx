@@ -33,11 +33,11 @@ function pickFunction(...funcs: any[]) {
 
 const ToolboxActions = styled.div.css`
   > ${Icon as any}:not(:last-child) {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     cursor: pointer;
   }
 
-  padding: 15px 10px;
+  padding: 15px 8px;
   display: flex;
   flex-direction: column;
   position: absolute;

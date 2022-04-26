@@ -1,10 +1,9 @@
-import styled from '@emotion/styled';
+import styled from '@chess-tent/styled-props';
 
-export default styled.div({
-  paddingLeft: 10,
-  marginLeft: 10,
-  marginTop: 10,
-  marginBottom: 10,
-  borderLeft: '1px solid #D1D3D7',
-  position: 'relative',
-});
+export default styled.div.css`
+  padding-left: 10px;
+  margin-left: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-left: 1px solid var(--grey-400-color);
+`;

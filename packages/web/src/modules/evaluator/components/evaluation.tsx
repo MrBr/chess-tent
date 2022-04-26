@@ -56,18 +56,24 @@ const EvaluationComponent = ({
         onEvaluationChange={updateEvaluation}
       />
       {evaluate && (
-        <Row>
-          <Col>
-            {Object.values(evaluations).map(evaluation => (
-              <EvaluationLines
-                evaluation={evaluation}
-                key={evaluation.lineIndex}
-                onMoveClick={onMoveClick}
-              />
-            ))}
-            {bestEvaluation && <EvaluationBar evaluation={bestEvaluation} />}
-          </Col>
-        </Row>
+        <>
+          <Row>
+            <Col className="text-nowrap overflow-hidden">
+              {Object.values(evaluations).map(evaluation => (
+                <EvaluationLines
+                  evaluation={evaluation}
+                  key={evaluation.lineIndex}
+                  onMoveClick={onMoveClick}
+                />
+              ))}
+            </Col>
+          </Row>
+          <Row>
+            <Col className="text-nowrap overflow-hidden">
+              {bestEvaluation && <EvaluationBar evaluation={bestEvaluation} />}
+            </Col>
+          </Row>
+        </>
       )}
     </Container>
   );

@@ -10,6 +10,7 @@ import {
   updateLessonStep,
   addChapterToLesson,
   Lesson,
+  getNextStep,
 } from '@chess-tent/models';
 import {
   Actions,
@@ -29,9 +30,10 @@ import { components, hooks, services, state, ui } from '@application';
 import Sidebar from './editor-sidebar';
 import ChaptersDropdown from './chapters-dropdown';
 import RootStepButton from './editor-sidebar-root-step-button';
+import SidebarSection from './editor-sidebar-section';
 import { useLessonParams } from '../hooks/utility';
 
-const { Container, Row, Col, Icon } = ui;
+const { Container, Row, Col, Icon, Button } = ui;
 const { createChapter, updateStepRotation, logException, getStepPosition } =
   services;
 const {
@@ -154,6 +156,18 @@ class EditorRenderer extends React.Component<
   setActiveStepHandler = (step?: Step) => {
     const { activeChapter } = this.props;
     this.setActiveChapterHandler(activeChapter, step?.id);
+  };
+
+  nextStepHandler = () => {
+    const { activeChapter, activeStep } = this.props;
+    const nextStep = getNextStep(activeChapter, activeStep);
+    nextStep && this.setActiveStepHandler(nextStep);
+  };
+
+  prevStepHandler = () => {
+    const { activeChapter, activeStep } = this.props;
+    const prevStep = getPreviousStep(activeChapter, activeStep);
+    prevStep && this.setActiveStepHandler(prevStep);
   };
 
   setActiveChapterHandler = (chapter: Chapter, activeStepId?: Step['id']) => {
@@ -357,25 +371,21 @@ class EditorRenderer extends React.Component<
             </Col>
             <Col md={6} lg={4} className="mh-100 position-relative">
               <Sidebar>
-                <Container>
-                  <Row className="mb-4">
-                    <Col>
-                      <ChaptersDropdown
-                        editable
-                        activeChapter={activeChapter}
-                        chapters={lesson.state.chapters}
-                        onChange={this.setActiveChapterHandler}
-                        onEdit={this.updateChapterTitle}
-                        onNew={this.addNewChapter}
-                        onRemove={this.removeChapter}
-                      />
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Evaluation fen={position} />
-                  </Row>
-                </Container>
-                <Col>
+                <SidebarSection>
+                  <ChaptersDropdown
+                    editable
+                    activeChapter={activeChapter}
+                    chapters={lesson.state.chapters}
+                    onChange={this.setActiveChapterHandler}
+                    onEdit={this.updateChapterTitle}
+                    onNew={this.addNewChapter}
+                    onRemove={this.removeChapter}
+                  />
+                </SidebarSection>
+                <SidebarSection>
+                  <Evaluation fen={position} />
+                </SidebarSection>
+                <SidebarSection className="h-100">
                   <Stepper
                     activeStep={activeStep}
                     setActiveStep={this.setActiveStepHandler}
@@ -386,13 +396,38 @@ class EditorRenderer extends React.Component<
                     root
                     renderToolbox={this.renderToolbox}
                   />
-                </Col>
-                <RootStepButton
-                  updateChapter={this.updateChapter}
-                  setActiveStep={this.setActiveStepHandler}
-                  chapter={activeChapter}
-                  className="mt-4"
-                />
+                </SidebarSection>
+                <SidebarSection>
+                  <Row>
+                    <Col>
+                      <RootStepButton
+                        updateChapter={this.updateChapter}
+                        setActiveStep={this.setActiveStepHandler}
+                        chapter={activeChapter}
+                      />
+                    </Col>
+                    <Col>
+                      <Button
+                        variant="ghost"
+                        stretch
+                        size="small"
+                        onClick={this.prevStepHandler}
+                      >
+                        <Icon type="left" />
+                      </Button>
+                    </Col>
+                    <Col>
+                      <Button
+                        variant="ghost"
+                        stretch
+                        size="small"
+                        onClick={this.nextStepHandler}
+                      >
+                        <Icon type="right" />
+                      </Button>
+                    </Col>
+                  </Row>
+                </SidebarSection>
               </Sidebar>
             </Col>
           </Row>

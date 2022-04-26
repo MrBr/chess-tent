@@ -1,9 +1,8 @@
 import React, { ComponentType } from 'react';
-import { ui, components } from '@application';
+import { components } from '@application';
 import { Evaluation, NotableMove } from '@types';
 import { getEvaluationMoves } from '../service';
 
-const { Container } = ui;
 const { StepMove } = components;
 
 const EvaluationLines: ComponentType<{
@@ -20,7 +19,7 @@ const EvaluationLines: ComponentType<{
     onMoveClick(movesToPlay);
   };
   return (
-    <Container>
+    <>
       {notableMoves.map((move, index) => (
         <StepMove
           onClick={() => handleMoveClick(index)}
@@ -30,7 +29,7 @@ const EvaluationLines: ComponentType<{
           suffix=" "
         />
       ))}
-    </Container>
+    </>
   );
 };
 

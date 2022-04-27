@@ -45,6 +45,8 @@ const createService = <T extends { 0: any } & Array<any>, U>(
   service: (...args: T) => U,
 ): ((...args: [...T, PatchListener?]) => U) => {
   return (...args): U => {
+    // Working on existing draft, let the "owner" finish the draft once ready.
+    let isRecursive = !!isDraft(args[0]);
     let patchListener = args.pop();
     // Making patch listener optional
     // TODO - this is not valid validation; function is not strict enough
@@ -58,13 +60,10 @@ const createService = <T extends { 0: any } & Array<any>, U>(
       args[0] = createDraft<T[0]>(args[0] as Objectish);
     }
     const returnValue = service(...(args as unknown as T));
-    // Allowing return value to leave draft mode (return current) provides
-    // extra flexibility to recursive services (such as early return).
-    return (
-      isDraft(returnValue)
-        ? finishDraft(args[0], patchListener as PatchListener)
-        : returnValue
-    ) as U;
+    if (isRecursive) {
+      return returnValue;
+    }
+    return finishDraft(args[0], patchListener as PatchListener) as U;
   };
 };
 

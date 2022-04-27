@@ -15,6 +15,8 @@ import {
   PatchListener,
   Step,
   updateActivityActiveStep as modelUpdateActivityActiveStep,
+  updateActivityActiveChapter as modelUpdateActivityActiveChapter,
+  removeActivityChapter as modelRemoveActivityChapter,
   User,
   createActivity,
   LessonActivityRole,
@@ -24,6 +26,8 @@ import {
   Chapter,
   addStep,
   updateAnalysisActiveStepId,
+  createService,
+  getLessonActivityBoardState,
 } from '@chess-tent/models';
 
 const { createStep } = services;
@@ -31,17 +35,31 @@ const { generateIndex } = utils;
 const { START_FEN } = constants;
 
 export const createLessonActivityBoard = (
-  activeChapterId: string,
+  activeChapterId: string | undefined,
   activeStepId: string,
   boardState = {},
   initialStepState: {} = {},
-): LessonActivityBoardState => ({
-  id: utils.generateIndex(),
-  ...boardState,
-  activeStepId,
-  activeChapterId,
-  [activeStepId]: services.createActivityStepState(initialStepState),
-});
+): LessonActivityBoardState => {
+  const stepActivityState = services.createActivityStepState(initialStepState);
+  const newBoardState = {
+    id: utils.generateIndex(),
+    ...boardState,
+    activeStepId,
+    activeChapterId,
+    [activeStepId]: stepActivityState,
+  };
+
+  if (!activeChapterId) {
+    // Handle empty training lesson without chapters
+    const { analysis } = stepActivityState;
+    const newStep = services.createStep('variation', {});
+
+    addStep(analysis, newStep);
+    updateAnalysisActiveStepId(analysis, newStep.id);
+  }
+
+  return newBoardState;
+};
 
 export const updateActivityActiveStep = (
   activity: LessonActivity,
@@ -59,6 +77,36 @@ export const updateActivityActiveStep = (
     patchListener,
   );
 
+export const updateActivityActiveChapter = (
+  activity: LessonActivity,
+  board: LessonActivityBoardState,
+  chapter: Chapter,
+  patchListener?: PatchListener,
+): LessonActivity =>
+  modelUpdateActivityActiveChapter(
+    activity,
+    board,
+    chapter,
+    {
+      analysis: services.createAnalysis(),
+    },
+    patchListener,
+  );
+
+export const removeActivityChapter = createService(
+  (
+    draft: LessonActivity,
+    board: LessonActivityBoardState,
+    chapter: Chapter,
+  ) => {
+    const fallbackBoardState = createLessonActivityBoard(
+      undefined,
+      'analysis-step',
+    );
+    modelRemoveActivityChapter(draft, board, chapter, fallbackBoardState);
+  },
+);
+
 export const createLessonActivity = (
   lesson: Lesson,
   owner: User,
@@ -70,27 +118,23 @@ export const createLessonActivity = (
   const id = utils.generateIndex();
   const activeChapterId =
     boardState?.activeChapterId || lesson.state.chapters[0]?.id;
+  // TODO - this is not a bullet proof solution
+  // activeStepId in the initial case depends on the optional boardState
   const activeStepId =
     boardState?.activeStepId || lesson.state.chapters[0]?.state.steps[0].id;
+
   const roles = [
     ...createRoles(owner, LessonActivityRole.OWNER),
     ...createRoles(students, LessonActivityRole.STUDENT),
     ...createRoles(coaches, LessonActivityRole.COACH),
   ];
+
   const mainBoard = createLessonActivityBoard(
     activeChapterId,
     activeStepId,
     boardState,
     { mode: ActivityStepMode.ANALYSING },
   );
-  if (!lesson.state.chapters[0]) {
-    // Handle empty training lesson without chapters
-    const { analysis } = mainBoard[mainBoard.activeStepId];
-    const newStep = services.createStep('variation', {});
-
-    addStep(analysis, newStep);
-    updateAnalysisActiveStepId(analysis, newStep.id);
-  }
 
   const activityInitialState: LessonActivity['state'] = {
     mainBoardId: mainBoard.id,
@@ -144,3 +188,20 @@ export const createNewLesson = (user: User, chapters?: Chapter[]) => {
 
 export const isInitialLessonActivity = (activity: LessonActivity) =>
   activity.subject.state.chapters.length === 0;
+
+export const importLessonActivityChapters = createService(
+  (draft: LessonActivity, chapters: Chapter[]) => {
+    if (chapters.length === 0) {
+      return;
+    }
+    chapters.forEach(chapter => {
+      draft.subject.state.chapters.push(chapter);
+    });
+    const boardState = getLessonActivityBoardState(
+      draft,
+      draft.state.mainBoardId,
+    );
+    updateActivityActiveChapter(draft, boardState, chapters[0]);
+    return draft;
+  },
+);

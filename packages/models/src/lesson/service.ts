@@ -39,6 +39,16 @@ const addChapterToLesson = createService(
   },
 );
 
+const removeChapterFromLesson = createService(
+  <T extends Lesson | NormalizedLesson>(draft: T, chapter: Chapter): T => {
+    const index = draft.state.chapters.findIndex(({ id }) => chapter.id === id);
+    if (index !== -1) {
+      draft.state.chapters.splice(index, 1);
+    }
+    return draft;
+  },
+);
+
 const publishLesson = createService(
   <T extends Lesson | NormalizedLesson>(draft: T): T => {
     draft.state.status = LessonStateStatus.PUBLISHED;
@@ -129,4 +139,5 @@ export {
   canAccessLesson,
   isLessonDraft,
   isLessonPublicDocument,
+  removeChapterFromLesson,
 };

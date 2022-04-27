@@ -7,6 +7,7 @@ import {
   LessonActivityBoardState,
   LessonActivityUserSettings,
 } from './types';
+import { removeChapterFromLesson } from './service';
 
 export const getLessonActivityBoardState = (
   activity: LessonActivity,
@@ -77,10 +78,11 @@ export const updateActivityActiveChapter = createService(
     draft: LessonActivity,
     board: LessonActivityBoardState,
     chapter: Chapter,
+    initialSate: {},
   ): LessonActivity => {
     const state = getLessonActivityBoardState(draft, board.id);
     state.activeChapterId = chapter.id;
-    state.activeStepId = chapter.state.steps[0].id;
+    updateActivityActiveStep(draft, board, chapter.state.steps[0], initialSate);
     return draft;
   },
 );
@@ -112,6 +114,27 @@ export const updateActivityStepState = createService(
       Object.assign(state[stepId], patch);
     }
     return draft;
+  },
+);
+
+export const removeActivityChapter = createService(
+  (
+    draft: LessonActivity,
+    board: LessonActivityBoardState,
+    chapter: Chapter,
+    fallbackBoard: LessonActivityBoardState,
+  ) => {
+    removeChapterFromLesson(draft.subject, chapter);
+    const state = getLessonActivityBoardState(draft, board.id);
+    const newActiveChapter = draft.subject.state.chapters[0];
+    if (newActiveChapter) {
+      state.activeChapterId = newActiveChapter.id;
+      state.activeStepId = newActiveChapter.state.steps[0].id;
+    } else {
+      delete draft.state.boards[board.id];
+      draft.state.boards[fallbackBoard.id] = fallbackBoard;
+      draft.state.mainBoardId = fallbackBoard.id;
+    }
   },
 );
 

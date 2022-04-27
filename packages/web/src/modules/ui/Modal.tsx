@@ -4,9 +4,21 @@ import { default as BModal } from 'react-bootstrap/Modal';
 import ModalBody from 'react-bootstrap/ModalBody';
 import styled from '@emotion/styled';
 import { ConfirmProps } from '@types';
+import { css } from '@chess-tent/styled-props';
+
 import { Button } from './Button';
 import Absolute from './Absolute';
 import Icon from './Icon';
+
+const { className: contentClassName } = css`
+  border: 0;
+  border-radius: 16px;
+`;
+
+const { className: backdropClassName } = css`
+  opacity: 0.2;
+  background-color: var(--black-color);
+`;
 
 const Modal = (({ close, fullScreen, ...props }) =>
   (
@@ -14,6 +26,8 @@ const Modal = (({ close, fullScreen, ...props }) =>
       {...props}
       onHide={close}
       dialogClassName={fullScreen ? 'full-screen-dialog' : ''}
+      contentClassName={contentClassName}
+      backdropClassName={backdropClassName}
     >
       {props.children}
       {close && (
@@ -22,7 +36,7 @@ const Modal = (({ close, fullScreen, ...props }) =>
           top={15}
           onClick={close}
         >
-          <Icon type="close" size="large" />
+          <Icon type="close" size="small" />
         </Absolute>
       )}
     </BModal>

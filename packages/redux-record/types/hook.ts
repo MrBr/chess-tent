@@ -10,12 +10,12 @@ export type RecordHookReturn<T extends RecordBase<any>, U> = T & U;
 
 export type RecordHookInit<T extends RecordBase<any>> = RecordHookReturn<
   T,
-  { value: RecordValue<InferRecordValue<T>>; meta: RecordMeta }
+  { value: InferRecordValue<T>; meta: RecordMeta }
 >;
 
 export type RecordHookSafe<
   T extends RecordBase<any>,
-  FALLBACK = void
+  FALLBACK = void,
 > = RecordHookReturn<
   T,
   {

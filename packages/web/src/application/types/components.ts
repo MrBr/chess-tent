@@ -33,6 +33,7 @@ import {
   LessonActivity,
   LessonActivityBoardState,
 } from '@chess-tent/models';
+import { RecordValue } from '@chess-tent/redux-record/types';
 import {
   Move,
   NotableMove,
@@ -463,7 +464,10 @@ export type Components = {
     owned?: boolean;
     onClick?: (lesson: Lesson) => void;
   }>;
-  LessonTemplates: ComponentType<{ lessons: Lesson[] }>;
+  LessonTemplates: ComponentType<{
+    lessons: RecordValue<Lesson[]>;
+    onLessonClick?: (lesson: Lesson) => void;
+  }>;
   LessonBrowser: ComponentType<{
     lessons: Lesson[] | null | undefined;
     onFiltersChange?: (

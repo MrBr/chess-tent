@@ -26,3 +26,8 @@ How to write stories:
 - In module dir inside stories add a new file matching the component
     - Use utilities such as `importWebNamespace` to inject namespace to render once ready
     - Once namespace is injected use components from the injected namespace and render stories as for Storybook 6
+
+### Private core module component story
+Because of the asynchronous core module behavior the "private" module export (not attached to the application) must be used with React suspense (lazy). The application still has to be loaded fully because the private module (file) may have dependencies. 
+
+To assure that the application is initialised use `withWebNamespace` and Suspense. See example in "ChaptersImport" story. 

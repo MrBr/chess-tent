@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { components, hooks, ui } from '@application';
-import { User } from '@chess-tent/models';
+import { Lesson, User } from '@chess-tent/models';
 
 const { Page, ScheduledTrainings, Trainings, LessonTemplates } = components;
 const { Button, Row, Col, Headline5, CardEmpty, Headline2, Text, Container } =
@@ -11,6 +11,7 @@ const {
   useUserScheduledTrainings,
   useUserTrainings,
   useStudents,
+  useHistory,
 } = hooks;
 
 const DashboardCoach = ({ user }: { user: User }) => {
@@ -19,6 +20,14 @@ const DashboardCoach = ({ user }: { user: User }) => {
   const students = useStudents(user);
   const [trainingModal, promptNewTrainingModal] = usePromptNewTrainingModal();
   const lessons = useMyLessons();
+  const history = useHistory();
+
+  const handleLessonClick = useCallback(
+    (lesson: Lesson) => {
+      history.push(`/lesson/${lesson.id}`);
+    },
+    [history],
+  );
 
   const hasStudents = students.value && students.value.length > 0;
   const didLoad =
@@ -102,7 +111,10 @@ const DashboardCoach = ({ user }: { user: User }) => {
             </Button>
           </Col>
         </Row>
-        {lessons.value && <LessonTemplates lessons={lessons.value} />}
+        <LessonTemplates
+          lessons={lessons.value}
+          onLessonClick={handleLessonClick}
+        />
         {!lessons.value && (
           <Row>
             <Col>

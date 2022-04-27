@@ -1,27 +1,23 @@
-import React, { useCallback } from 'react';
-import { hooks, ui } from '@application';
+import React from 'react';
+import { ui } from '@application';
 import { Components } from '@types';
-import { Lesson } from '@chess-tent/models';
 import LessonCard from '../components/lesson-card';
 
 const { Row, Col } = ui;
-const { useHistory } = hooks;
 
-const LessonTemplates: Components['LessonTemplates'] = ({ lessons }) => {
-  const history = useHistory();
-
-  const handleLessonClick = useCallback(
-    (lesson: Lesson) => {
-      history.push(`/lesson/${lesson.id}`);
-    },
-    [history],
-  );
+const LessonTemplates: Components['LessonTemplates'] = ({
+  lessons,
+  onLessonClick,
+}) => {
+  if (!lessons) {
+    return null;
+  }
 
   return (
     <Row>
-      {lessons?.map(lesson => (
+      {lessons.map(lesson => (
         <Col key={lesson.id} className="col-auto">
-          <LessonCard lesson={lesson} onClick={handleLessonClick} />
+          <LessonCard lesson={lesson} onClick={onLessonClick} />
         </Col>
       ))}
     </Row>

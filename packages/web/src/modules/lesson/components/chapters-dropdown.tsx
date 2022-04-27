@@ -5,7 +5,7 @@ import { ui } from '@application';
 import { SingleValue } from 'react-select';
 import { Components } from '@types';
 
-const { Select, Text, Input } = ui;
+const { Select, Text, Input, Dropdown, Icon, Row, Col } = ui;
 
 class ChaptersDropdown extends React.Component<
   ComponentProps<Components['LessonChapters']>,
@@ -55,7 +55,7 @@ class ChaptersDropdown extends React.Component<
   };
   render() {
     const { editing } = this.state;
-    const { chapters, activeChapter, onRemove, editable } = this.props;
+    const { chapters, activeChapter, onRemove, onNew, onEdit } = this.props;
     return (
       <>
         {editing ? (
@@ -77,35 +77,52 @@ class ChaptersDropdown extends React.Component<
             isMulti={false}
           />
         )}
-        {editable && (
-          <div className="mt-1">
-            <Text
-              inline
-              fontSize="extra-small"
-              weight={400}
-              className="me-3 cursor-pointer"
-              onClick={this.newHandle}
-            >
-              +Add
-            </Text>
-            <Text
-              inline
-              fontSize="extra-small"
-              className="me-3"
-              weight={400}
-              onClick={() => this.setState({ editing: !editing })}
-            >
-              Edit
-            </Text>
-            <Text
-              inline
-              fontSize="extra-small"
-              weight={400}
-              onClick={() => onRemove && onRemove(activeChapter)}
-            >
-              Remove
-            </Text>
-          </div>
+        {(onRemove || onEdit || onNew) && (
+          <Row className="mt-1 justify-content-between">
+            <Col>
+              {onNew && (
+                <Text
+                  inline
+                  fontSize="extra-small"
+                  weight={400}
+                  className="me-3 cursor-pointer"
+                  onClick={this.newHandle}
+                >
+                  +Add
+                </Text>
+              )}
+            </Col>
+            <Col className="col-auto">
+              <Dropdown>
+                <Dropdown.Toggle collapse>
+                  <Icon type="more" />
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  {onEdit && (
+                    <Dropdown.Item
+                      onClick={() => this.setState({ editing: !editing })}
+                    >
+                      <Text
+                        inline
+                        fontSize="extra-small"
+                        className="me-3"
+                        weight={400}
+                      >
+                        Edit
+                      </Text>
+                    </Dropdown.Item>
+                  )}
+                  {onRemove && (
+                    <Dropdown.Item onClick={() => onRemove(activeChapter)}>
+                      <Text inline fontSize="extra-small" weight={400}>
+                        Remove
+                      </Text>
+                    </Dropdown.Item>
+                  )}
+                </Dropdown.Menu>
+              </Dropdown>
+            </Col>
+          </Row>
         )}
       </>
     );

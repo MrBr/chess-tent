@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { components, hooks, services } from '@application';
+import { components, hooks, services, utils } from '@application';
 import {
   Chapter,
   getChildStep,
@@ -15,6 +15,7 @@ import {
   Steps,
 } from '@types';
 
+const { noopNoop, noop } = utils;
 const { useActiveUserRecord, useSocketRoomUsers } = hooks;
 const {
   Chessboard,
@@ -23,9 +24,6 @@ const {
   AnalysisBoard,
   LessonPlaygroundCard,
 } = components;
-
-const noop = () => {};
-const noopNoop = () => () => {};
 
 const renderChessboard = (props: ChessboardProps) => {
   return (

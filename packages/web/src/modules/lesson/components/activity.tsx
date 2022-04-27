@@ -6,6 +6,7 @@ import {
   getLessonChapter,
   LessonActivity,
   getLessonActivityUserActiveBoardState,
+  Chapter,
 } from '@chess-tent/models';
 import ActivityRenderer from './activity-renderer';
 import {
@@ -16,6 +17,7 @@ import {
   ActivityRendererAnalysisBoard,
   ActivityRendererAnalysisCard,
 } from './activity-renderer-analysis';
+import { importLessonActivityChapters } from '../service';
 
 const { useDiffUpdates, useApi, useDispatchService, useActiveUserRecord } =
   hooks;
@@ -49,6 +51,8 @@ const Activity: ActivityComponent<LessonActivity> = props => {
 
   const dispatchService = useDispatchService();
   const { fetch: saveActivity } = useApi(requests.activityUpdate);
+  const importChapters = (chapters: Chapter[]) =>
+    dispatchService(importLessonActivityChapters)(activity, chapters);
   useDiffUpdates(
     props.activity,
     updates => {
@@ -80,6 +84,7 @@ const Activity: ActivityComponent<LessonActivity> = props => {
         boardState={activeBoardState}
         boards={EMPTY_LESSON_MODULES.boards}
         cards={EMPTY_LESSON_MODULES.cards}
+        importChapters={importChapters}
       />
     );
   }

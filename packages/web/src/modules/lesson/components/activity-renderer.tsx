@@ -16,12 +16,12 @@ import {
   getPreviousStep,
   markStepCompleted,
   Step,
-  updateActivityActiveChapter,
   updateActivityStepState,
   TYPE_ACTIVITY,
 } from '@chess-tent/models';
 import Stepper from './activity-stepper';
 import Header from './activity-header';
+import { removeActivityChapter, updateActivityActiveChapter } from '../service';
 
 const {
   LessonPlayground,
@@ -72,6 +72,11 @@ export class ActivityRenderer<
     updateActivity(updateActivityActiveChapter)(activity, boardState, chapter);
   };
 
+  removeChapterHandler = (chapter: Chapter) => {
+    const { updateActivity, activity, boardState } = this.props;
+    updateActivity(removeActivityChapter)(activity, boardState, chapter);
+  };
+
   updateActiveStep = (step: AppStep) => {
     const { updateActivity, activity, boardState } = this.props;
     updateActivity(updateLessonActivityActiveStep)(
@@ -88,7 +93,7 @@ export class ActivityRenderer<
     }
     const nextStep = getNextStep(chapter, step) as Steps;
     nextStep &&
-      updateActivity(services.updateLessonActivityActiveStep)(
+      updateActivity(updateLessonActivityActiveStep)(
         activity,
         boardState,
         nextStep,
@@ -102,7 +107,7 @@ export class ActivityRenderer<
     }
     const prevStep = getPreviousStep(chapter, step) as Steps;
     prevStep &&
-      updateActivity(services.updateLessonActivityActiveStep)(
+      updateActivity(updateLessonActivityActiveStep)(
         activity,
         boardState,
         prevStep,
@@ -168,7 +173,7 @@ export class ActivityRenderer<
   }
 
   render() {
-    const { chapter, activity } = this.props;
+    const { chapter, activity, lesson, importChapters } = this.props;
 
     return (
       <LessonPlayground>
@@ -184,7 +189,16 @@ export class ActivityRenderer<
           </LessonPlaygroundCard>
         </LessonPlayground.Sidebar>
         <LessonPlayground.Stepper>
-          <Stepper root={chapter} onStepClick={this.updateActiveStep} />
+          <Stepper
+            next={this.nextActivityStep}
+            prev={this.prevActivityStep}
+            onStepClick={this.updateActiveStep}
+            activeChapter={chapter}
+            chapters={lesson.state.chapters}
+            onChapterImport={importChapters}
+            onChapterRemove={this.removeChapterHandler}
+            onChapterChange={this.chapterChangeHandler}
+          />
         </LessonPlayground.Stepper>
       </LessonPlayground>
     );

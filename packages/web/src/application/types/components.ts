@@ -263,6 +263,7 @@ export interface AnalysisBoardProps
 export interface ActivityBaseProps {
   activity: LessonActivity;
   updateActivity: ReturnType<Hooks['useDispatchService']>;
+  importChapters?: (chapters: Chapter[]) => void;
 }
 
 export interface ActivityDataProps<
@@ -486,6 +487,7 @@ export type Components = {
     onEdit?: (title: string) => void;
     onNew?: () => void;
     onRemove?: (chapter: Chapter) => void;
+    onChapterImport?: (chapters: Chapter[]) => void;
   }>;
   UserAvatar: ComponentType<
     {

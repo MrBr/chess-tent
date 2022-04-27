@@ -39,3 +39,6 @@ export const getDiff = (
   });
   return result;
 };
+
+export const noop = () => {};
+export const noopNoop = () => noop;

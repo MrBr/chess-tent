@@ -28,4 +28,6 @@ export type Utils = {
   ) => { [key: string]: unknown };
   downloadAs: typeof saveAs;
   isLocalReferrer: () => boolean;
+  noop: () => void;
+  noopNoop: () => () => void;
 };

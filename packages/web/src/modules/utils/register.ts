@@ -8,7 +8,7 @@ import {
   usePrompt,
 } from './hooks';
 import { getEntitySchema, getTypeSchema } from './model';
-import { getDiff } from './utils';
+import { getDiff, noop, noopNoop } from './utils';
 
 application.utils.generateIndex = uuid;
 application.utils.rightMouse = (f: Function) => (e: MouseEvent) =>
@@ -21,6 +21,9 @@ application.utils.getTypeSchema = getTypeSchema;
 application.utils.downloadAs = saveAs;
 
 application.utils.getDiff = getDiff;
+
+application.utils.noop = noop;
+application.utils.noopNoop = noopNoop;
 
 application.hooks.useComponentStateSilent = useComponentStateSilent;
 application.hooks.useComponentState = useComponentState;

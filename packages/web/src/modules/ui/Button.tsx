@@ -46,7 +46,7 @@ const sizes = styled.props.size.stretch.css<BaseButtonProps>`
   ${{ omitProps: ['stretch'] }}
 
   border: none;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
 

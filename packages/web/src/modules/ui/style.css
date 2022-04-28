@@ -35,21 +35,10 @@
 }
 
 html,
-body {
-  font-size: 100%; /*16px*/
+body,
+#app {
   overflow-x: hidden;
-}
-
-@media only screen and (max-width: 991.98px) {
-  html {
-    font-size: 90%; /*14.4px*/
-  }
-}
-
-@media only screen and (max-width: 576px) {
-  html {
-    font-size: 80%; /*12.8px*/
-  }
+  height: 100%;
 }
 
 body {

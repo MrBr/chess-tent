@@ -6,10 +6,7 @@ import styled, { css } from '@chess-tent/styled-props';
 import Icon from './Icon';
 
 const selectStyle = css`
-  min-width: 220px;
   background-color: var(--light-color);
-  //display: flex;
-  //align-items: center;
 
   .select__input {
     width: 100%;

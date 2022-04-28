@@ -1,18 +1,17 @@
 import { Hooks } from '@types';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectMeta } from './state/selectors';
 import { deleteMetaState, updateMetaState } from './state/actions';
-
-// TODO - implement configurable initial meta
-const initialMeta = Object.freeze({});
 
 export const useMeta: Hooks['useMeta'] = <T>(
   metaKey: string,
   defaultValue?: T,
 ) => {
+  // TODO - save to the store?
+  const { current: initialMeta } = useRef(defaultValue);
   const dispatch = useDispatch();
-  const meta = useSelector(selectMeta(metaKey)) || defaultValue || initialMeta;
+  const meta = useSelector(selectMeta(metaKey)) || initialMeta;
 
   const update = useCallback(
     (value: T) => {

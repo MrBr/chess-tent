@@ -60,7 +60,7 @@ export const useLessonParams = (lesson: Lesson) => {
 };
 
 export const useLessonMeta: Hooks['useLessonMeta'] = activity => {
-  return hooks.useMeta(`lesson-${activity.id}`);
+  return hooks.useMeta(`lesson-${activity.id}`, {});
 };
 
 export const usePromptNewTrainingModal = () => {

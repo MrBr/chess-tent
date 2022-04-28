@@ -45,7 +45,7 @@ const TrainingCard = (props: { training: LessonActivity }) => {
   const students = roles
     .map(({ user, role }) =>
       role === LessonActivityRole.STUDENT ? (
-        <UserAvatar user={user} size="extra-small" />
+        <UserAvatar user={user} size="extra-small" key={user.id} />
       ) : null,
     )
     .filter(Boolean);

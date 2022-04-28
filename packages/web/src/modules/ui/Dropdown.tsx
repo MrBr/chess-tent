@@ -37,7 +37,13 @@ const Toggle = React.forwardRef<
 >((props, ref) => {
   const className = useCss(toggleStyle)(props);
   return (
-    <div {...props} className={`dropdown-toggle ${className}`} ref={ref} />
+    <div
+      {...props}
+      className={`dropdown-toggle ${className}`}
+      ref={ref}
+      // @ts-ignore - remove react dom warning "non boolean attribute"..
+      collapse={undefined}
+    />
   );
 });
 

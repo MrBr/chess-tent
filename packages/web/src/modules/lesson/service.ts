@@ -9,25 +9,25 @@ import {
   VariationStepState,
 } from '@types';
 import {
-  Lesson,
-  LessonActivity,
-  LessonActivityBoardState,
-  PatchListener,
-  Step,
-  updateActivityActiveStep as modelUpdateActivityActiveStep,
-  updateActivityActiveChapter as modelUpdateActivityActiveChapter,
-  removeActivityChapter as modelRemoveActivityChapter,
-  User,
+  addStep,
+  Chapter,
   createActivity,
-  LessonActivityRole,
   createChapter,
   createLesson,
   createRoles,
-  Chapter,
-  addStep,
-  updateAnalysisActiveStepId,
   createService,
   getLessonActivityBoardState,
+  Lesson,
+  LessonActivity,
+  LessonActivityBoardState,
+  LessonActivityRole,
+  PatchListener,
+  removeActivityChapter as modelRemoveActivityChapter,
+  Step,
+  updateActivityActiveChapter as modelUpdateActivityActiveChapter,
+  updateActivityActiveStep as modelUpdateActivityActiveStep,
+  updateAnalysisActiveStepId,
+  User,
 } from '@chess-tent/models';
 
 const { createStep } = services;
@@ -53,6 +53,7 @@ export const createLessonActivityBoard = (
     // Handle empty training lesson without chapters
     const { analysis } = stepActivityState;
     const newStep = services.createStep('variation', {});
+    stepActivityState.mode = ActivityStepMode.ANALYSING;
 
     addStep(analysis, newStep);
     updateAnalysisActiveStepId(analysis, newStep.id);
@@ -71,9 +72,7 @@ export const updateActivityActiveStep = (
     activity,
     board,
     step,
-    {
-      analysis: services.createAnalysis(),
-    },
+    services.createActivityStepState(),
     patchListener,
   );
 
@@ -87,9 +86,7 @@ export const updateActivityActiveChapter = (
     activity,
     board,
     chapter,
-    {
-      analysis: services.createAnalysis(),
-    },
+    services.createActivityStepState(),
     patchListener,
   );
 
@@ -133,7 +130,7 @@ export const createLessonActivity = (
     activeChapterId,
     activeStepId,
     boardState,
-    { mode: ActivityStepMode.ANALYSING },
+    {},
   );
 
   const activityInitialState: LessonActivity['state'] = {

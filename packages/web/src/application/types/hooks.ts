@@ -71,7 +71,7 @@ export type Hooks = {
   useDispatch: typeof useDispatch;
   useSelector: typeof useSelector;
   useStore: typeof useStore;
-  useSocketSubscribe: (channel: string | null) => void;
+  useSocketSubscribe: (channel: string) => void;
   useSocketRoomUsers: (room: string) => User[];
   useDiffUpdates: (
     subject: Subject,

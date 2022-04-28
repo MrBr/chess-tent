@@ -18,20 +18,21 @@ import { roomUsers } from './record';
 const { useMeta, useRecordInit } = hooks;
 
 const useSocketConnected = () => {
-  return useMeta('socketConnected');
+  return useMeta('socketConnected', false);
 };
 
 const useSocketSubscribe: Hooks['useSocketSubscribe'] = channel => {
   const [connected] = useSocketConnected();
   useEffect(() => {
-    if (channel) {
-      connected ? socket.subscribe(channel) : socket.unsubscribe(channel);
+    if (!connected) {
+      return;
     }
+    socket.subscribe(channel);
 
     return () => {
       // In case activity change from within activity this may not trigger
       // take care
-      channel && socket.unsubscribe(channel);
+      connected && socket.unsubscribe(channel);
     };
   }, [channel, connected]);
 };

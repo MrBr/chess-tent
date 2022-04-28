@@ -44,21 +44,19 @@ export const SocketProvider: ComponentType = props => {
       updateSocketConnected(socket.connected);
     });
     return () => {
+      socket.disconnect();
       socket.removeAllListeners();
     };
     // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
-    if (!userId) {
-      socket.disconnect();
-    } else {
+    if (userId && !socket.connected) {
       socket.connect();
-    }
-    return () => {
+    } else if (socket.connected) {
       socket.disconnect();
-    };
-  }, [updateSocketConnected, userId]);
+    }
+  }, [userId]);
 
   useEffect(() => {
     socket.on(ACTION_EVENT, (action: Actions | string) => {

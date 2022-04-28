@@ -11,14 +11,20 @@ const {
 
 const { addProvider } = services;
 
+const UserSocketProvider: ComponentType<{ userId: string }> = ({
+  children,
+  userId,
+}) => {
+  useSocketSubscribe(`user-${userId}`);
+
+  return children as ReactElement;
+};
+
 const Provider: ComponentType = ({ children }) => {
   const { mounted } = useComponentState();
   const { fetch, response, loading, reset } = useApi(requests.me);
   const dispatch = useDispatch();
   const { value: user, update: updateActiveUser } = useActiveUserRecord(null);
-  const userId = user?.id;
-
-  useSocketSubscribe(userId ? `user-${userId}` : null);
 
   useEffect(() => {
     fetch();
@@ -40,6 +46,10 @@ const Provider: ComponentType = ({ children }) => {
 
   if (!mounted || loading || (response && !user)) {
     return <>Loading</>;
+  }
+
+  if (user) {
+    return <UserSocketProvider userId={user.id}>{children}</UserSocketProvider>;
   }
 
   return children as ReactElement;

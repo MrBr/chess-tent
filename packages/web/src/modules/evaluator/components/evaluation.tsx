@@ -1,23 +1,16 @@
 import React, { useCallback } from 'react';
-import { hooks, ui } from '@application';
-import { ChessboardContext, Evaluation, FEN, NotableMove } from '@types';
+import { constants, hooks, ui } from '@application';
+import { ChessboardContext, Components, Evaluation } from '@types';
 import EvaluationEngine from './evaluation-engine';
 import EvaluationBar from './evaluation-bar';
 import EvaluationLines from './evaluation-lines';
 
 const { useChessboardContext } = hooks;
 const { Container, Row, Col, Text, Check } = ui;
+const { START_FEN } = constants;
 
-interface EditorSidebarEvaluationProps {
-  fen: FEN;
-  onMoveClick?: (moves: NotableMove[]) => void;
-}
-
-const EvaluationComponent = ({
-  fen,
-  onMoveClick,
-}: EditorSidebarEvaluationProps) => {
-  const { evaluate, evaluations, update } = useChessboardContext();
+const EvaluationComponent: Components['Evaluation'] = ({ onMoveClick }) => {
+  const { evaluate, evaluations, update, board } = useChessboardContext();
   const bestEvaluation = evaluations[1];
 
   const toggleEvaluation = useCallback(
@@ -51,7 +44,7 @@ const EvaluationComponent = ({
         </Col>
       </Row>
       <EvaluationEngine
-        position={fen}
+        position={board?.api.getFen() || START_FEN}
         evaluate={evaluate}
         onEvaluationChange={updateEvaluation}
       />

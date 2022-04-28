@@ -446,7 +446,6 @@ export type Components = {
       : never,
   ) => ReactElement;
   Evaluation: ComponentType<{
-    fen: FEN;
     onMoveClick?: (moves: NotableMove[]) => void;
   }>;
   Editor: ComponentType<{

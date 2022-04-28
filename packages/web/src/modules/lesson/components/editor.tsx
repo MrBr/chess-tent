@@ -386,7 +386,7 @@ class EditorRenderer extends React.Component<
                   />
                 </SidebarSection>
                 <SidebarSection>
-                  <Evaluation fen={position} />
+                  <Evaluation />
                 </SidebarSection>
                 <SidebarSection className="h-100">
                   <Stepper

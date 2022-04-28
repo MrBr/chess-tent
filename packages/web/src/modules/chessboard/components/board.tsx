@@ -97,9 +97,12 @@ class Chessboard
     const { fen } = this.props;
     const { promotion, update } = this.context;
 
+    const boardContextConfig: Partial<ChessboardContext> = {
+      board: this,
+    };
     if (promotion) {
       // reset context;
-      update({ promotion: null });
+      boardContextConfig.promotion = null;
     }
 
     if (!this.boardHost.current) {
@@ -142,6 +145,9 @@ class Chessboard
 
     // Map variable values (props)
     this.syncChessgroundState({});
+    if (Object.keys(boardContextConfig).length > 0) {
+      update(boardContextConfig);
+    }
   }
 
   /**

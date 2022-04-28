@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react';
 import { Chapter, Lesson, Step } from '@chess-tent/models';
 import { Promotion } from './chess';
-import { Evaluation } from './components';
+import { ChessboardInterface, Evaluation } from './components';
 
 export type EditorContext =
   | {
@@ -25,6 +25,7 @@ export interface ChessboardContext {
   evaluate?: boolean;
   evaluations: Record<string, Evaluation>;
   update: (state: Partial<ChessboardContext>) => void;
+  board?: ChessboardInterface;
 }
 
 export type Context = {

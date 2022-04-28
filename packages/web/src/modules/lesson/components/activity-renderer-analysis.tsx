@@ -100,19 +100,6 @@ export class ActivityRendererAnalysisBoard<
 export class ActivityRendererAnalysisCard<
   T extends Steps | undefined,
 > extends ActivityRendererAnalysis<ActivityRendererModuleProps<T>> {
-  componentDidUpdate(
-    prevProps: ActivityRendererModuleProps<Steps | undefined>,
-  ) {
-    const { updateActivity, boardState, activity, analysis } = this.props;
-    const isAnalysing = this.isAnalysing();
-
-    if (!isAnalysing && prevProps.analysis !== analysis) {
-      updateActivity(updateActivityStepState)(activity, boardState, {
-        mode: ActivityStepMode.ANALYSING,
-      });
-    }
-  }
-
   render() {
     const { analysis } = this.props;
 

@@ -80,7 +80,6 @@ const createUseConferencing: (socket: Socket) => Hooks['useConferencing'] =
           }
         }
       };
-      console.log('LISTENER ADDED');
 
       socket.on(ACTION_EVENT, listener);
       return () => {

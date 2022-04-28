@@ -18,13 +18,18 @@ import {
   ActivityRendererAnalysisCard,
 } from './activity-renderer-analysis';
 import { importLessonActivityChapters } from '../service';
+import { ActivityRendererAnalysisEngineCard } from './activity-renderer-engine';
 
 const { useDiffUpdates, useApi, useDispatchService, useActiveUserRecord } =
   hooks;
 
 const LESSON_MODULES = {
   boards: [ActivityRendererStepBoard, ActivityRendererAnalysisBoard],
-  cards: [ActivityRendererStepCard, ActivityRendererAnalysisCard],
+  cards: [
+    ActivityRendererAnalysisEngineCard,
+    ActivityRendererStepCard,
+    ActivityRendererAnalysisCard,
+  ],
 };
 
 const EMPTY_LESSON_MODULES = {

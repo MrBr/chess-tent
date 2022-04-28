@@ -38,16 +38,18 @@ const ActivityStepperEmpty = styled(
     return (
       <>
         {chapterImportModal}
-        <div className={className}>
-          <Text fontSize="small">Chapters ?</Text>
-          <div className="cta-add-chapters" onClick={promptChapterImport}>
-            <Icon type="document" />
-            <Text fontSize="extra-small" weight={400}>
-              Add chapters
-            </Text>
+        <div className="d-flex flex-column h-100">
+          <div className={className}>
+            <Text fontSize="small">Chapters ?</Text>
+            <div className="cta-add-chapters" onClick={promptChapterImport}>
+              <Icon type="document" />
+              <Text fontSize="extra-small" weight={400}>
+                Add chapters
+              </Text>
+            </div>
           </div>
+          <ActivityStepperNav prev={noop} next={noop} className="border-top" />
         </div>
-        <ActivityStepperNav prev={noop} next={noop} className="border-top" />
       </>
     );
   },

@@ -69,7 +69,7 @@ const ActivityStepper = styled((props: ActivityStepperProps) => {
             onRemove={onChapterRemove}
           />
         </div>
-        <div className="h-100 border-bottom p-3">
+        <div className="h-100 border-bottom p-3 overflow-y-auto">
           <ActivityStepperSteps
             steps={steps}
             step={step}
@@ -81,6 +81,8 @@ const ActivityStepper = styled((props: ActivityStepperProps) => {
     </>
   );
 }).css`
+  display: flex;
+  flex-direction: column;
   height: 100%;
   background-color: var(--light-color);
 

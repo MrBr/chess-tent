@@ -34,6 +34,7 @@ const { className: stepperClassName } = css`
   height: 100%;
   border-left: 1px solid var(--grey-400-color);
   padding: 0;
+  overflow: hidden;
 `;
 ActivityPlayground.Stepper = (({ children }) => (
   <div className={stepperClassName}>{children}</div>

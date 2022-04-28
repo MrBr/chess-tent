@@ -176,31 +176,29 @@ export class ActivityRenderer<
     const { chapter, activity, lesson, importChapters } = this.props;
 
     return (
-      <LessonPlayground>
-        <LessonPlayground.Board>
-          <ChessboardContextProvider>
-            {this.renderBoard()}
-          </ChessboardContextProvider>
-        </LessonPlayground.Board>
-        <LessonPlayground.Sidebar>
-          {this.renderCards()}
-          <LessonPlaygroundCard>
-            <ConferencingProvider room={`${TYPE_ACTIVITY}-${activity.id}`} />
-          </LessonPlaygroundCard>
-        </LessonPlayground.Sidebar>
-        <LessonPlayground.Stepper>
-          <Stepper
-            next={this.nextActivityStep}
-            prev={this.prevActivityStep}
-            onStepClick={this.updateActiveStep}
-            activeChapter={chapter}
-            chapters={lesson.state.chapters}
-            onChapterImport={importChapters}
-            onChapterRemove={this.removeChapterHandler}
-            onChapterChange={this.chapterChangeHandler}
-          />
-        </LessonPlayground.Stepper>
-      </LessonPlayground>
+      <ChessboardContextProvider>
+        <LessonPlayground>
+          <LessonPlayground.Board>{this.renderBoard()}</LessonPlayground.Board>
+          <LessonPlayground.Sidebar>
+            {this.renderCards()}
+            <LessonPlaygroundCard>
+              <ConferencingProvider room={`${TYPE_ACTIVITY}-${activity.id}`} />
+            </LessonPlaygroundCard>
+          </LessonPlayground.Sidebar>
+          <LessonPlayground.Stepper>
+            <Stepper
+              next={this.nextActivityStep}
+              prev={this.prevActivityStep}
+              onStepClick={this.updateActiveStep}
+              activeChapter={chapter}
+              chapters={lesson.state.chapters}
+              onChapterImport={importChapters}
+              onChapterRemove={this.removeChapterHandler}
+              onChapterChange={this.chapterChangeHandler}
+            />
+          </LessonPlayground.Stepper>
+        </LessonPlayground>
+      </ChessboardContextProvider>
     );
   }
 }

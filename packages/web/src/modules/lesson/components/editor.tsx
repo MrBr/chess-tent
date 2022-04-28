@@ -43,8 +43,7 @@ const {
   Tooltip,
   ToggleButton,
 } = ui;
-const { createChapter, updateStepRotation, logException, getStepPosition } =
-  services;
+const { createChapter, updateStepRotation, logException } = services;
 const {
   Stepper,
   StepRenderer,
@@ -350,8 +349,6 @@ class EditorRenderer extends React.Component<
 
   render() {
     const { activeStep, lesson, activeChapter, lessonStatus } = this.props;
-
-    const position = getStepPosition(activeStep);
 
     return (
       <ChessboardContextProvider>

@@ -1,26 +1,29 @@
 import React from 'react';
-import styled from '@emotion/styled';
+import styled from '@chess-tent/styled-props';
 
-const Step = styled(({ children, className, onClick }: any) => {
+const Step = styled(({ children, className, onClick, active }: any) => {
   return (
-    <div className={className} onClick={onClick}>
+    <div className={`${className} ${active ? 'active' : ''}`} onClick={onClick}>
       {children}
     </div>
   );
-})({
-  '&  > &': {
-    marginLeft: 20,
-  },
-  display: 'inline-block',
-  width: 40,
-  height: 40,
-  position: 'relative',
-  borderRadius: '50%',
-  maxWidth: 40,
-  overflow: 'hidden',
-  background: '#EE7B00FF',
-  color: '#fff',
-  padding: 5,
-});
+}).css`
+  &.active {
+    background: var(--tertiary-color);
+  }
+
+  & > & {
+    margin-left: 15px;
+  }
+
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border-radius: 4px;
+  border: 1px solid var(--grey-500-color);
+  overflow: hidden;
+`;
 
 export default Step;

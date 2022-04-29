@@ -7,7 +7,6 @@ const CardComponent = styled<UI['Card']>(RBCard).css`
   position: relative;
   border: 1px solid var(--grey-400-color);
   border-radius: 14px;
-  overflow: hidden;
 
   :hover {
     border-color: var(--black-color);

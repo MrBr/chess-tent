@@ -166,7 +166,7 @@ export class ActivityRenderer<
   }
 
   render() {
-    const { chapter, lesson, importChapters } = this.props;
+    const { chapter, lesson, importChapters, step } = this.props;
 
     return (
       <ChessboardContextProvider>
@@ -177,6 +177,7 @@ export class ActivityRenderer<
           </LessonPlayground.Sidebar>
           <LessonPlayground.Stepper>
             <Stepper
+              activeStepId={step?.id}
               next={this.nextActivityStep}
               prev={this.prevActivityStep}
               onStepClick={this.updateActiveStep}

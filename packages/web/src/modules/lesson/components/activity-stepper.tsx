@@ -11,6 +11,7 @@ import ActivityStepperSteps from './activity-stepper-steps';
 const { LessonChapters } = components;
 
 export interface ActivityStepperProps {
+  activeStepId?: string;
   step?: AppStep;
   className?: string;
   onStepClick: (step: AppStep) => void;
@@ -35,6 +36,7 @@ const ActivityStepper = styled((props: ActivityStepperProps) => {
     prev,
     onChapterChange,
     onChapterRemove,
+    activeStepId,
   } = props;
 
   if (!onChapterImport && !activeChapter) {
@@ -71,6 +73,7 @@ const ActivityStepper = styled((props: ActivityStepperProps) => {
         </div>
         <div className="h-100 border-bottom p-3 overflow-y-auto">
           <ActivityStepperSteps
+            activeStepId={activeStepId}
             steps={steps}
             step={step}
             onStepClick={onStepClick}

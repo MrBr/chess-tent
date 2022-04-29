@@ -12,7 +12,7 @@ const variants = styled.props.variant.disabled.css<BaseButtonProps>`
 
   &.primary {
     color: var(--light-color);
-    background: var(--primary-color);
+    background: var(--primary-gradient);
   }
 
   &.secondary {

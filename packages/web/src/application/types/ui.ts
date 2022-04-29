@@ -64,6 +64,7 @@ export type BaseButtonProps = {
   variant?:
     | 'primary'
     | 'secondary'
+    | 'tertiary'
     | 'regular'
     | 'danger'
     | 'ghost'

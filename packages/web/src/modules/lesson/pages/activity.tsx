@@ -1,13 +1,13 @@
 import React from 'react';
-import { hooks, ui } from '@application';
-import { isLesson, LessonActivity } from '@chess-tent/models';
+import { components, hooks, ui } from '@application';
+import { isLesson, LessonActivity, TYPE_ACTIVITY } from '@chess-tent/models';
 import Activity from '../components/activity';
 
-const { useParams, useActivity, useHistory } = hooks;
-const { Absolute, Icon } = ui;
+const { useParams, useActivity } = hooks;
+const { Breadcrumbs, Col } = ui;
+const { Page, Header, ConferencingProvider } = components;
 
 const PageActivity = () => {
-  const history = useHistory();
   const { activityId } = useParams<{ activityId: string }>();
   const { value: activity, meta } = useActivity<LessonActivity>(
     activityId as string,
@@ -27,13 +27,23 @@ const PageActivity = () => {
     return <>Error - playground subject miss match</>;
   }
 
+  const pageHeader = (
+    <Header className="border-bottom">
+      <Col>
+        <Breadcrumbs>
+          <Breadcrumbs.Item href="/">Dashboard</Breadcrumbs.Item>
+          <Breadcrumbs.Item>{activity.title || 'Untitled'}</Breadcrumbs.Item>
+        </Breadcrumbs>
+      </Col>
+      <Col>
+        <ConferencingProvider room={`${TYPE_ACTIVITY}-${activity.id}`} />
+      </Col>
+    </Header>
+  );
   return (
-    <>
+    <Page header={pageHeader}>
       <Activity activity={activity} />
-      <Absolute left={25} top={25} onClick={() => history.goBack()}>
-        <Icon type="close" size="large" />
-      </Absolute>
-    </>
+    </Page>
   );
 };
 

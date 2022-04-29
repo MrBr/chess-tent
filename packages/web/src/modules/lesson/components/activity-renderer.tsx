@@ -17,19 +17,12 @@ import {
   markStepCompleted,
   Step,
   updateActivityStepState,
-  TYPE_ACTIVITY,
 } from '@chess-tent/models';
 import Stepper from './activity-stepper';
 import Header from './activity-header';
 import { removeActivityChapter, updateActivityActiveChapter } from '../service';
 
-const {
-  LessonPlayground,
-  ChessboardContextProvider,
-  LessonPlaygroundCard,
-  ConferencingProvider,
-  Chessboard,
-} = components;
+const { LessonPlayground, ChessboardContextProvider, Chessboard } = components;
 const { updateLessonActivityActiveStep } = services;
 
 function isStepBoard<T extends Steps | undefined>(
@@ -173,7 +166,7 @@ export class ActivityRenderer<
   }
 
   render() {
-    const { chapter, activity, lesson, importChapters } = this.props;
+    const { chapter, lesson, importChapters } = this.props;
 
     return (
       <ChessboardContextProvider>
@@ -181,9 +174,6 @@ export class ActivityRenderer<
           <LessonPlayground.Board>{this.renderBoard()}</LessonPlayground.Board>
           <LessonPlayground.Sidebar>
             {this.renderCards()}
-            <LessonPlaygroundCard>
-              <ConferencingProvider room={`${TYPE_ACTIVITY}-${activity.id}`} />
-            </LessonPlaygroundCard>
           </LessonPlayground.Sidebar>
           <LessonPlayground.Stepper>
             <Stepper

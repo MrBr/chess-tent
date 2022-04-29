@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 export interface RTCVideoProps {
   mediaStream?: MediaStream;
@@ -6,28 +6,43 @@ export interface RTCVideoProps {
 }
 
 export const RTCVideo: React.FC<RTCVideoProps> = ({ mediaStream, muted }) => {
-  const addMediaStream = useCallback(
-    (video: HTMLVideoElement | null) => {
-      if (mediaStream && video) {
-        video.srcObject = mediaStream;
-      }
-    },
-    [mediaStream],
-  );
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (!mediaStream || !videoRef.current) {
+      return;
+    }
+    videoRef.current.srcObject = mediaStream;
+  }, [videoRef, mediaStream]);
 
   return (
-    <video
+    <div
       style={{
-        width: 480,
-        height: 360,
-        borderRadius: 4,
-        backgroundColor: 'black',
+        width: 80,
+        height: 80,
+        borderRadius: '50%',
+        overflow: 'hidden',
+        maxWidth: 80,
+        position: 'relative',
       }}
-      autoPlay
-      muted={muted}
-      ref={mediaStream ? addMediaStream : null}
     >
-      <track default kind="captions" />
-    </video>
+      <video
+        style={{
+          width: 144,
+          height: 108,
+          backgroundColor: 'black',
+          position: 'absolute',
+          left: '50%',
+          top: '50%',
+          transform: 'translateX(-50%) translateY(-50%)',
+          zoom: 1.2,
+        }}
+        autoPlay
+        muted={muted}
+        ref={videoRef}
+      >
+        <track default kind="captions" />
+      </video>
+    </div>
   );
 };

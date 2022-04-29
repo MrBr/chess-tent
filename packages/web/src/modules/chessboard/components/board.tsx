@@ -13,9 +13,9 @@ import {
   MoveComment,
   FEN,
   Promotion,
+  ChessInstance,
 } from '@types';
 
-import { ChessInstance } from 'chess.js';
 import React, { Component, RefObject } from 'react';
 import { Chessground } from '@chess-tent/chessground';
 import _ from 'lodash';

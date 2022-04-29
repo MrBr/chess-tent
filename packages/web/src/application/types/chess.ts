@@ -6,8 +6,14 @@ import {
   MoveMetadata as CG_MOVEMETADATA,
 } from '@chess-tent/chessground/dist/types';
 import { DrawShape } from '@chess-tent/chessground/dist/draw';
-import { PieceType, ShortMove, Comment } from 'chess.js';
+import {
+  PieceType,
+  ShortMove,
+  Comment,
+  ChessInstance as ChessInstanceType,
+} from 'chess.js';
 
+export type ChessInstance = ChessInstanceType;
 export type FEN = CG_FEN;
 export type Piece = CG_PIECE;
 // prettier-ignore

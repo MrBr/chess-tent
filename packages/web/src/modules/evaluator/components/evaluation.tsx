@@ -44,7 +44,7 @@ const EvaluationComponent: Components['Evaluation'] = ({ onMoveClick }) => {
         </Col>
       </Row>
       <EvaluationEngine
-        position={board?.api.getFen() || START_FEN}
+        position={board?.chess.fen() || START_FEN}
         evaluate={evaluate}
         onEvaluationChange={updateEvaluation}
       />

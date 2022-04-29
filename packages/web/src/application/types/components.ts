@@ -48,6 +48,7 @@ import {
   PGNHeaders,
   MovableColor,
   UciMove,
+  ChessInstance,
 } from './chess';
 import {
   ActivityStepStateBase,
@@ -162,6 +163,7 @@ export interface ChessboardInterface extends Component<ChessboardProps> {
   ) => FEN;
   move: (from: Key, to: Key) => void;
   syncAutoShapes: () => void;
+  chess: ChessInstance;
 }
 
 export type StepperProps = {

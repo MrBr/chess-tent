@@ -14,7 +14,7 @@ import { DEFAULT_CONSTRAINTS, DEFAULT_ICE_SERVERS } from './constants';
 import { ConferencingPeer } from './conferencing-peer';
 import { RTCVideo } from './components/rtc-video';
 
-const { Icon, Stack } = ui;
+const { Icon, Stack, Dropdown, Button, Row, Col } = ui;
 const { useActiveUserRecord, useSocketRoomUsers } = hooks;
 const { UserAvatar } = components;
 
@@ -34,6 +34,7 @@ export const useConferencingContext = () => useContext(ConferencingContext);
 export const ConferencingProvider: Components['ConferencingProvider'] = ({
   room,
 }) => {
+  const [showConfMenu, setShowConfMenu] = useState(false);
   const [state, setState] = useState<ConferencingContextType>({
     mutedVideo: false,
     mutedAudio: false,
@@ -80,13 +81,12 @@ export const ConferencingProvider: Components['ConferencingProvider'] = ({
     }
   }, [mediaConstraints, setState, localMediaStream]);
 
-  const handleStartConferencing = useCallback(async () => {
-    await openCamera();
+  const handleStartConferencing = useCallback(() => {
     setState(pevState => ({
       ...pevState,
       connectionStarted: true,
     }));
-  }, [openCamera]);
+  }, []);
 
   const handleStopConferencing = useCallback(() => {
     localMediaStream?.getTracks().forEach(track => track.stop());
@@ -94,6 +94,9 @@ export const ConferencingProvider: Components['ConferencingProvider'] = ({
     setState(pevState => ({
       ...pevState,
       localMediaStream: undefined,
+      connectionStarted: false,
+      mutedAudio: false,
+      mutedVideo: false,
     }));
   }, [setState, localMediaStream]);
 
@@ -119,36 +122,111 @@ export const ConferencingProvider: Components['ConferencingProvider'] = ({
     }));
   }, [localMediaStream, mutedVideo]);
 
+  const toggleShowConfMenu = useCallback(
+    () => setShowConfMenu(prevVal => !prevVal),
+    [setShowConfMenu],
+  );
+
+  useEffect(() => {
+    if (showConfMenu && !connectionStarted) {
+      openCamera();
+    }
+
+    if (!showConfMenu && !connectionStarted) {
+      handleStopConferencing();
+    }
+  }, [showConfMenu, handleStopConferencing, openCamera, connectionStarted]);
+
   return (
     <ConferencingContext.Provider value={state}>
-      <Stack>
-        {liveUsers.map(user => (
-          <UserAvatar key={user.id} user={user} />
-        ))}
-      </Stack>
-      <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-        <RTCVideo mediaStream={localMediaStream} muted />
-      </div>
-      <div style={{ height: 10, width: '100%' }} />
-      <section style={{ display: 'flex', gap: 10 }}>
-        <Icon
-          type="headphone"
-          onClick={
-            connectionStarted ? handleStopConferencing : handleStartConferencing
-          }
-        />
-        <Icon type="microphone" onClick={handleMuteUnmute} />
-        <Icon type="video" onClick={handleToggleCamera} />
-        {connectionStarted &&
-          remoteUsers.map(({ id }) => (
-            <ConferencingPeer
-              key={id}
-              room={room}
-              fromUserId={id}
-              toUserId={user.id as string}
-            />
-          ))}
-      </section>
+      <Row>
+        <Col>
+          <Dropdown show={showConfMenu} onToggle={toggleShowConfMenu}>
+            <Dropdown.Toggle collapse onClick={toggleShowConfMenu}>
+              <Icon type={connectionStarted ? 'close' : 'headphone'} />
+            </Dropdown.Toggle>
+            <Dropdown.Menu className="p-3">
+              {!connectionStarted && (
+                <>
+                  <Row className="flex-no-wrap">
+                    <Col className="col-auto">
+                      <Icon
+                        type={mutedAudio ? 'micOff' : 'microphone'}
+                        onClick={handleMuteUnmute}
+                      />
+                    </Col>
+                    <Col className="col-auto">
+                      <Icon
+                        type={mutedVideo ? 'hide' : 'videoCamera'}
+                        onClick={handleToggleCamera}
+                      />
+                    </Col>
+                    <Col onClick={toggleShowConfMenu}>
+                      <Button
+                        size="extra-small"
+                        onClick={handleStartConferencing}
+                      >
+                        Join
+                      </Button>
+                    </Col>
+                  </Row>
+                  <RTCVideo
+                    mediaStream={localMediaStream}
+                    muted
+                    className="position-relative mt-3"
+                  />
+                </>
+              )}
+              {connectionStarted && (
+                <Row>
+                  <Col>
+                    <Button
+                      onClick={handleStopConferencing}
+                      size="extra-small"
+                      variant="tertiary"
+                    >
+                      Leave
+                    </Button>
+                  </Col>
+                </Row>
+              )}
+            </Dropdown.Menu>
+          </Dropdown>
+          {connectionStarted && (
+            <>
+              <div style={{ position: 'relative' }}>
+                {!mutedVideo && (
+                  <RTCVideo mediaStream={localMediaStream} muted />
+                )}
+                <Icon
+                  type={mutedAudio ? 'micOff' : 'microphone'}
+                  onClick={handleMuteUnmute}
+                />
+                <Icon
+                  type={mutedVideo ? 'hide' : 'videoCamera'}
+                  onClick={handleToggleCamera}
+                />
+
+                {remoteUsers.map(({ id }) => (
+                  <ConferencingPeer
+                    key={id}
+                    room={room}
+                    fromUserId={id}
+                    toUserId={user.id as string}
+                  />
+                ))}
+              </div>
+            </>
+          )}
+        </Col>
+        <Col className="col-auto">
+          <Stack>
+            {liveUsers.map(user => (
+              <UserAvatar key={user.id} user={user} size="small" />
+            ))}
+          </Stack>
+        </Col>
+      </Row>
     </ConferencingContext.Provider>
   );
 };

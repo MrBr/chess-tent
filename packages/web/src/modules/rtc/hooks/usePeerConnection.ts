@@ -9,7 +9,7 @@ import {
   OfferAction,
 } from '@chess-tent/types';
 
-import { useConferencingContext } from './context';
+import { useConferencingContext } from '../context';
 
 const { useConferencing } = hooks;
 

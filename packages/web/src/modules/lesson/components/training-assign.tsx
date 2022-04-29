@@ -1,43 +1,21 @@
-import React, { useCallback, useMemo } from 'react';
-import { components, hooks, ui } from '@application';
-import * as yup from 'yup';
+import React, { useCallback } from 'react';
+import { hooks, ui } from '@application';
+
 import {
   useUserScheduledTrainings,
   useUserTrainings,
 } from '../hooks/training-hooks';
 import { createLessonActivity, createNewLesson } from '../service';
+import ActivityForm from './activity-form';
 
-const {
-  Label,
-  Headline3,
-  Headline4,
-  FormGroup,
-  Button,
-  Form,
-  Text,
-  Modal,
-  Container,
-  Row,
-  Col,
-} = ui;
-const { useActiveUserRecord, useStudents, useHistory } = hooks;
-const { UserAvatar } = components;
-
-const TrainingSchema = yup.object().shape({
-  user: yup.string().required(),
-});
+const { Headline3, Headline4, Button, Text, Modal, Container, Row, Col } = ui;
+const { useActiveUserRecord, useHistory } = hooks;
 
 const TrainingAssign = ({ close }: { close: () => void }) => {
   const { value: user } = useActiveUserRecord();
-  const { value: mentorship } = useStudents(user);
   const userTrainings = useUserTrainings(user);
   const userScheduledTrainings = useUserScheduledTrainings(user);
   const history = useHistory();
-
-  const students = useMemo(
-    () => mentorship?.map(({ student }) => student),
-    [mentorship],
-  );
 
   const createTraining = useCallback(
     async data => {
@@ -74,50 +52,14 @@ const TrainingAssign = ({ close }: { close: () => void }) => {
               <Headline4 className="mt-0">Details</Headline4>
             </Col>
           </Row>
-          <Form
-            initialValues={{ user: '' }}
-            validationSchema={TrainingSchema}
+          <ActivityForm
             onSubmit={createTraining}
-          >
-            <FormGroup>
-              <Label>Training name</Label>
-              <Form.Input name="title" />
-            </FormGroup>
-            <FormGroup>
-              <Label>Assign to</Label>
-              <Form.Select
-                name="user"
-                placeholder="Select student"
-                options={students}
-                formatOptionLabel={userOption => (
-                  <>
-                    <UserAvatar user={userOption} size="small" />
-                    <Text className="ms-2" inline>
-                      {userOption.name}
-                    </Text>
-                  </>
-                )}
-              />
-            </FormGroup>
-            <hr />
-            <Headline4>Schedule</Headline4>
-            <Text>Optionally schedule a training for the future</Text>
-            <Row>
-              <Col>
-                <FormGroup>
-                  <Label>Time</Label>
-                  <Form.Input type="datetime-local" name="date" />
-                </FormGroup>
-              </Col>
-              <Col>
-                <FormGroup>
-                  <Label>Repeat weekly</Label>
-                  <Form.Check type="switch" name="repeat" />
-                </FormGroup>
-              </Col>
-            </Row>
-            <Button type="submit">Start training</Button>
-          </Form>
+            submitButton={
+              <Button type="submit" size="small">
+                Create training
+              </Button>
+            }
+          />
         </Container>
       </Modal.Body>
     </Modal>

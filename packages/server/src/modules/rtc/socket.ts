@@ -5,7 +5,6 @@ import {
   CONFERENCING_ICECANDIDATE,
   CONFERENCING_OFFER,
 } from '@chess-tent/types';
-import { TYPE_ACTIVITY } from '@chess-tent/models';
 
 socket.registerMiddleware(async (stream, next) => {
   // Forward conferencing action

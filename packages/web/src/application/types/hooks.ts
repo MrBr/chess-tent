@@ -1,5 +1,6 @@
 // Hooks
 import {
+  Actions,
   AnswerAction,
   GetRequestFetchArgs,
   GetRequestFetchResponse,
@@ -55,10 +56,8 @@ export type Hooks = {
     outsideClickHandler: () => void,
     ...refs: RefObject<any>[]
   ) => void;
-  useConferencing: (
-    fromUserId: string,
-    toUserId: string,
-    handlers: ConferencingHandlers,
+  useSocketActionListener: (
+    listener: (action: Actions | string) => void,
   ) => void;
   usePrompt: (
     render: (close: () => void) => ReactElement,

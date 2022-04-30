@@ -9,13 +9,17 @@ export interface RTCVideoProps {
   className?: string;
 }
 
-export const RTCVideo = styled<RTCVideoProps>(props => {
+const RTCVideo = styled<RTCVideoProps>(props => {
   const { mediaStream, muted, className } = props;
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useDraggable();
 
   useEffect(() => {
-    if (!mediaStream || !videoRef.current) {
+    if (!videoRef.current) {
+      return;
+    }
+    if (!mediaStream) {
+      videoRef.current.srcObject = null;
       return;
     }
     videoRef.current.srcObject = mediaStream;
@@ -47,3 +51,5 @@ export const RTCVideo = styled<RTCVideoProps>(props => {
     zoom: 1.2;
   }
 `;
+
+export default RTCVideo;

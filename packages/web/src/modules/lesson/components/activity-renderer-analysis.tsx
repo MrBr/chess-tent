@@ -12,7 +12,6 @@ import {
   getAnalysisActiveStep,
   applyNestedPatches,
   getLessonActivityBoardState,
-  updateActivityStepState,
   updateAnalysisStep,
 } from '@chess-tent/models';
 

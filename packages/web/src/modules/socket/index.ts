@@ -7,7 +7,6 @@ application.register(
     application.socket.sendAction = module.sendAction;
     application.socket.subscribe = module.subscribe;
     application.socket.unsubscribe = module.unsubscribe;
-    application.hooks.useConferencing = module.useConferencing;
   },
 );
 application.register(
@@ -15,6 +14,7 @@ application.register(
   module => {
     application.hooks.useSocketSubscribe = module.useSocketSubscribe;
     application.hooks.useSocketRoomUsers = module.useSocketRoomUsers;
+    application.hooks.useSocketActionListener = module.useSocketActionListener;
   },
 );
 application.register(

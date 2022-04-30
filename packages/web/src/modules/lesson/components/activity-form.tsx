@@ -40,6 +40,8 @@ const ActivityForm = ({
     [mentorship],
   );
 
+  console.log(students);
+
   const activityData = useMemo(
     () => ({
       students:
@@ -78,6 +80,7 @@ const ActivityForm = ({
               </Text>
             </>
           )}
+          getOptionValue={userOption => userOption.id}
         />
       </FormGroup>
       <hr />

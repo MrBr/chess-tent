@@ -162,7 +162,8 @@ type SenderReceiverBase<T> = {
 
 export type OfferAction = Action<
   typeof CONFERENCING_OFFER,
-  SenderReceiverBase<RTCSessionDescriptionInit | null>
+  SenderReceiverBase<RTCSessionDescriptionInit>,
+  { final?: boolean }
 >;
 
 export type AnswerAction = Action<

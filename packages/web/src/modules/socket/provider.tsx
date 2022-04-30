@@ -1,23 +1,15 @@
 import React, { ComponentType, useEffect } from 'react';
-import io from 'socket.io-client';
 import {
   Actions,
   ACTION_EVENT,
   SUBSCRIBE_EVENT,
   UNSUBSCRIBE_EVENT,
 } from '@chess-tent/types';
-import { hooks, constants } from '@application';
-import { createUseConferencing, useSocketConnected } from './hook';
+import { hooks } from '@application';
+import { socket } from './service';
+import { useSocketConnected } from './hook';
 
 const { useDispatchBatched, useActiveUserRecord } = hooks;
-const { APP_URL } = constants;
-
-const socket = io(APP_URL, {
-  path: '/api/socket.io',
-  secure: process.env.REACT_APP_PROTOCOL === 'https://',
-  transports: ['websocket'], // Needed for build?,
-  autoConnect: false, // Needed to prevent subscribing while user isn't authorised
-});
 
 export const sendAction = (action: Actions) =>
   socket.emit(ACTION_EVENT, JSON.stringify(action));
@@ -25,8 +17,6 @@ export const subscribe = (channel: string) =>
   socket.emit(SUBSCRIBE_EVENT, channel);
 export const unsubscribe = (channel: string) =>
   socket.emit(UNSUBSCRIBE_EVENT, channel);
-
-export const useConferencing = createUseConferencing(socket);
 
 export const SocketProvider: ComponentType = props => {
   const dispatch = useDispatchBatched();

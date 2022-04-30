@@ -30,7 +30,6 @@ import {
   DateRange,
 } from '@chess-tent/types';
 import { RecordAction } from '@chess-tent/redux-record/types';
-import { createInitialFounderConversation } from '../../modules/conversation/middleware';
 
 export type AppDocument<T> = T & Document & { v: number };
 export type EntityDocument<T = Entity> = AppDocument<T>;

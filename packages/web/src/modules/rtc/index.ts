@@ -1,6 +1,6 @@
 import application from '@application';
-import { ConferencingProvider } from './context';
-import { ConferencingPeer } from './conferencing-peer';
+import ConferencingProvider from './components/conferencing-provider';
+import ConferencingPeer from './components/conferencing-peer';
 
 application.components.ConferencingProvider = ConferencingProvider;
 application.components.ConferencingPeer = ConferencingPeer;

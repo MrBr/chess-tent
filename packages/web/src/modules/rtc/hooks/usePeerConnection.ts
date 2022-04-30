@@ -1,17 +1,16 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { hooks, socket } from '@application';
+import { useEffect, useState, useMemo, useCallback } from 'react';
+import { hooks } from '@application';
 import {
+  Actions,
   CONFERENCING_ANSWER,
   CONFERENCING_ICECANDIDATE,
   CONFERENCING_OFFER,
-  AnswerAction,
-  ICECandidateAction,
-  OfferAction,
 } from '@chess-tent/types';
 
 import { useConferencingContext } from '../context';
+import { isConferencingAction, RTCController } from '../service';
 
-const { useConferencing } = hooks;
+const { useSocketActionListener } = hooks;
 
 export const usePeerConnection = (
   room: string,
@@ -19,170 +18,68 @@ export const usePeerConnection = (
   toUserId: string,
 ) => {
   const [remoteMediaStream, setRemoteMediaStream] = useState<MediaStream>();
-  const { connectionStarted, iceServers, localMediaStream } =
-    useConferencingContext();
-  const rtcPeerConnection = useMemo(
-    () =>
-      new RTCPeerConnection({
-        iceServers,
-      }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
-  );
+  const { iceServers, localMediaStream } = useConferencingContext();
+  const rtcController = useMemo(() => {
+    return new RTCController(
+      {
+        iceServers: iceServers,
+      },
+      room,
+      fromUserId,
+      toUserId,
+      (trackEvent?: RTCTrackEvent) => {
+        setRemoteMediaStream(trackEvent?.streams[0]);
+      },
+    );
+  }, [fromUserId, iceServers, room, toUserId]);
 
-  const handleOffer = useCallback(
-    async (data: OfferAction) => {
-      const { payload } = data;
-
-      if (!payload.message) return;
-
-      await rtcPeerConnection.setRemoteDescription(payload.message);
-    },
-    [rtcPeerConnection],
-  );
-
-  const handleAnswer = useCallback(
-    async (data: AnswerAction) => {
-      const { payload } = data;
-
-      await rtcPeerConnection.setRemoteDescription(payload.message);
-    },
-    [rtcPeerConnection],
-  );
-
-  const handleICECandidate = useCallback(
-    async (data: ICECandidateAction) => {
-      const { message } = data.payload;
-      const candidate = JSON.parse(message);
-
-      await rtcPeerConnection.addIceCandidate(candidate);
-    },
-    [rtcPeerConnection],
-  );
-
-  const addRemoteStream = useCallback((remoteMediaStream: MediaStream) => {
-    setRemoteMediaStream(remoteMediaStream);
-  }, []);
-
-  const handleOnNegotiationNeeded = useCallback(async () => {
-    try {
-      const offer = await rtcPeerConnection.createOffer({
-        offerToReceiveAudio: true,
-        offerToReceiveVideo: true,
-      });
-
-      await rtcPeerConnection.setLocalDescription(offer);
-
-      socket.sendAction({
-        type: CONFERENCING_OFFER,
-        payload: {
-          room,
-          message: rtcPeerConnection.localDescription,
-          fromUserId,
-          toUserId,
-        },
-        meta: {},
-      });
-    } catch (error) {
-      console.error(error);
+  // Setup RTC tracks once the local media stream is up
+  useEffect(() => {
+    if (!localMediaStream) {
+      return;
     }
-  }, [fromUserId, rtcPeerConnection, toUserId, room]);
-
-  const handleOnIceEvent = useCallback(
-    (rtcPeerConnectionIceEvent: RTCPeerConnectionIceEvent) => {
-      if (rtcPeerConnectionIceEvent.candidate) {
-        socket.sendAction({
-          type: CONFERENCING_ICECANDIDATE,
-          payload: {
-            room,
-            message: JSON.stringify(rtcPeerConnectionIceEvent.candidate),
-            fromUserId,
-            toUserId,
-          },
-          meta: {},
-        });
-      }
-    },
-    [fromUserId, toUserId, room],
-  );
-
-  const handleOnTrack = useCallback(
-    (trackEvent: RTCTrackEvent) => {
-      addRemoteStream(trackEvent.streams[0]);
-    },
-    [addRemoteStream],
-  );
+    rtcController.setMediaStream(localMediaStream);
+  }, [rtcController, localMediaStream]);
 
   useEffect(() => {
-    if (!rtcPeerConnection) {
-      throw new Error('RTC should be initialized!');
-    }
+    rtcController.init();
+    return () => {
+      rtcController.close();
+    };
+  }, [rtcController]);
 
-    rtcPeerConnection.onnegotiationneeded = handleOnNegotiationNeeded;
-    rtcPeerConnection.onicecandidate = handleOnIceEvent;
-    rtcPeerConnection.ontrack = handleOnTrack;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useConferencing(fromUserId, toUserId, {
-    handleAnswer,
-    handleICECandidate,
-    handleOffer,
-  });
-
-  useEffect(() => {
-    if (!connectionStarted || !localMediaStream) return;
-
-    localMediaStream
-      .getTracks()
-      .forEach(mediaStreamTrack =>
-        rtcPeerConnection.addTrack(mediaStreamTrack, localMediaStream),
-      );
-  }, [rtcPeerConnection, connectionStarted, localMediaStream]);
-
-  useEffect(() => {
-    if (connectionStarted && localMediaStream) {
-      const createAnswer = async () => {
-        let answer: RTCSessionDescriptionInit | undefined;
-
+  const listener = useCallback(
+    (data: Actions | string) => {
+      if (typeof data === 'string' || !isConferencingAction(data)) return;
+      if (
+        (data.payload?.fromUserId === fromUserId ||
+          data.payload?.fromUserId === toUserId) &&
+        (data.payload?.toUserId === toUserId ||
+          data.payload?.toUserId === fromUserId)
+      ) {
         try {
-          answer = await rtcPeerConnection.createAnswer();
+          switch (data.type) {
+            case CONFERENCING_OFFER:
+              rtcController.handleOffer(data.payload.message);
+              break;
+            case CONFERENCING_ANSWER:
+              rtcController.handleAnswer(data.payload.message);
+              break;
+            case CONFERENCING_ICECANDIDATE:
+              rtcController.handleICECandidate(data.payload.message);
+              break;
+            default:
+              break;
+          }
         } catch (error) {
           console.error(error);
         }
-
-        if (!answer) return;
-
-        await rtcPeerConnection.setLocalDescription(answer);
-
-        socket.sendAction({
-          type: CONFERENCING_ANSWER,
-          payload: {
-            room,
-            fromUserId,
-            toUserId,
-            message: answer,
-          },
-          meta: {},
-        });
-      };
-
-      createAnswer();
-    }
-
-    return () => {
-      if (rtcPeerConnection) {
-        rtcPeerConnection.close();
       }
-    };
-  }, [
-    rtcPeerConnection,
-    connectionStarted,
-    localMediaStream,
-    fromUserId,
-    toUserId,
-    room,
-  ]);
+    },
+    [fromUserId, rtcController, toUserId],
+  );
+
+  useSocketActionListener(listener);
 
   return remoteMediaStream;
 };

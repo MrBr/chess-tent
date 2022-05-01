@@ -14,6 +14,24 @@ export const isConferencingAction = (
     actionType => actionType === action.type,
   );
 
+/**
+ * RTCController is an abstraction above the RTCPeerConnection.
+ * In a way it behaves like an adapter.
+ *
+ * Because of the dynamic relationship between two RTCPeers and the way React works,
+ * the goal of controller is to stabilize references (methods, listeners, properties)
+ * and do a cleanup in a standardised way for every RTCPeerConnection.
+ *
+ * Notable:
+ *  - As RTC implementations aren't yet standardised across the browsers
+ *  it is useful to create new RTCPeerConnection instance rather than recover it after
+ *  the connection has been closed or interrupted.
+ *  - onnegotiationneeded is called automatically when the new peer joins a room.
+ *  Useful callback to reconcile two peers in the initial phase.
+ *  It's also useful to detect changes in the connection (peer leaving and joining back).
+ *  However, in ideal scenario wouldn't be needed. Two peers can communicate their way through the signaling server by sending offers and answers timely. This is notable because if needed the extra offer can be sent on the initialisation.
+ *  Look at the commit diff.
+ */
 export class RTCController {
   private room: string;
   private fromUserId: string;
@@ -65,7 +83,24 @@ export class RTCController {
   }
 
   createRTCPeerConnection() {
+    // Remove old listeners
+    this.rtcPeerConnection?.removeEventListener(
+      'icecandidate',
+      this.handleOnIceEvent,
+    );
+    this.rtcPeerConnection?.addEventListener(
+      'negotiationneeded',
+      this.handleOnNegotiationNeeded,
+    );
+    this.rtcPeerConnection?.removeEventListener('track', this.handleTrack);
+    this.rtcPeerConnection?.removeEventListener(
+      'connectionstatechange',
+      this.handleConnectionStatusChange,
+    );
+
     this.rtcPeerConnection = new RTCPeerConnection(this.rtcConfig);
+
+    // Add listeners to new instance
     this.rtcPeerConnection.addEventListener(
       'icecandidate',
       this.handleOnIceEvent,
@@ -75,14 +110,10 @@ export class RTCController {
       this.handleOnNegotiationNeeded,
     );
     this.rtcPeerConnection.addEventListener('track', this.handleTrack);
-    this.rtcPeerConnection.addEventListener('connectionstatechange', e => {
-      if (
-        (e.currentTarget as RTCPeerConnection).connectionState ===
-        'disconnected'
-      ) {
-        this.createRTCPeerConnection();
-      }
-    });
+    this.rtcPeerConnection.addEventListener(
+      'connectionstatechange',
+      this.handleConnectionStatusChange,
+    );
 
     this.syncRTCPeerConnectionTracks();
   }
@@ -151,6 +182,8 @@ export class RTCController {
       this.rtcPeerConnection.signalingState === 'stable' ||
       this.rtcPeerConnection.signalingState === 'closed'
     ) {
+      // Not trying to recover existing RTCPeerConnection after interruption.
+      // Creating new makes better user experience.
       this.createRTCPeerConnection();
     }
 
@@ -186,10 +219,13 @@ export class RTCController {
     this.initiateOffer();
   };
 
-  // RTC controls
-  init() {
-    this.initiateOffer();
-  }
+  handleConnectionStatusChange = (e: Event) => {
+    if (
+      (e.currentTarget as RTCPeerConnection).connectionState === 'disconnected'
+    ) {
+      this.createRTCPeerConnection();
+    }
+  };
 
   close() {
     this.rtcPeerConnection.close();

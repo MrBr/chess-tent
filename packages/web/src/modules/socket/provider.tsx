@@ -52,7 +52,6 @@ export const SocketProvider: ComponentType = props => {
     socket.on(ACTION_EVENT, (action: Actions | string) => {
       if (typeof action === 'string') return;
 
-      console.log('Socket Action Received', action);
       action.meta.push = true;
       dispatch(action);
     });

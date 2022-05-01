@@ -41,12 +41,7 @@ export const usePeerConnection = (
     rtcController.setMediaStream(localMediaStream);
   }, [rtcController, localMediaStream]);
 
-  useEffect(() => {
-    rtcController.init();
-    return () => {
-      rtcController.close();
-    };
-  }, [rtcController]);
+  useEffect(() => () => rtcController.close(), [rtcController]);
 
   const listener = useCallback(
     (data: Actions | string) => {

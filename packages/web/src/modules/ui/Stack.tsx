@@ -7,11 +7,14 @@ const STACK_LIMIT = 3;
 const Stack = styled.div.css<ComponentProps<UI['Stack']>>`
   text-align: right;
   position: relative;
+  height: 100%;
 
   > * {
     position: absolute;
     right: 0;
-    
+    top: 50%;
+    transform: translateY(-50%);
+
     &:nth-child(n + ${4}) {
       display: none;
     }
@@ -20,11 +23,11 @@ const Stack = styled.div.css<ComponentProps<UI['Stack']>>`
     }
 
     &:nth-child(2) {
-      transform: translateX(-50%);
+      transform: translateX(-50%) translateY(-50%);
     }
 
     &:nth-child(3) {
-      transform: translateX(-100%);
+      transform: translateX(-100%) translateY(-50%);
     }
   }
 

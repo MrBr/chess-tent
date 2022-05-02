@@ -6,7 +6,7 @@ import * as iconsMap from './iconMap';
 type IconProps = ComponentProps<UI['Icon']>;
 
 const Icon = styled<IconProps>(
-  ({ type, className, onClick, innerRef, ...props }) => {
+  ({ type, className, onClick, innerRef, textual, ...props }) => {
     const IconSvgComponent = iconsMap[type];
     return (
       <span className={className} onClick={onClick} ref={innerRef} {...props}>

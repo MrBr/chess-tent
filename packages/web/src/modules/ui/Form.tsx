@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ComponentProps } from 'react';
 import { UI } from '@types';
 import { Formik, ErrorMessage, useField } from 'formik';
 import BFormGroup from 'react-bootstrap/FormGroup';
@@ -44,7 +44,12 @@ const InputComponent = styled(BForm.Control).css`
   
   ${inputSizePropStyle}
 ` as UI['Input'];
-InputComponent.defaultProps = { size: 'small' };
+
+const InputWithRef = React.forwardRef<HTMLElement, ComponentProps<UI['Input']>>(
+  (props, ref) => <InputComponent {...props} ref={ref} />,
+);
+
+InputWithRef.defaultProps = { size: 'small' };
 
 const StyledInputGroup = styled(InputGroup).css`
   ${InputGroupText}:first-child {
@@ -97,7 +102,7 @@ const FormInput: UI['Form']['Input'] = props => {
   const isInvalid = !!touched && !!error;
   return (
     <>
-      <InputComponent
+      <InputWithRef
         isValid={isValid}
         isInvalid={isInvalid}
         {...props}
@@ -130,7 +135,7 @@ Form.Check = FormCheck;
 
 export {
   Form,
-  InputComponent as Input,
+  InputWithRef as Input,
   ErrorMessage,
   FormGroup,
   Label,

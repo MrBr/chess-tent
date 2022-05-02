@@ -20,6 +20,11 @@ const variants = styled.props.variant.disabled.css<BaseButtonProps>`
     background: var(--secondary-color);
   }
 
+  &.tertiary {
+    color: var(--light-color);
+    background: var(--tertiary-color);
+  }
+
   &.dark {
     color: var(--light-color);
     background: var(--black-color);
@@ -122,6 +127,10 @@ const toggle = styled.props.checked.css<ToggleButtonProps>`
 
     &.secondary {
       border-color: var(--secondary-color);
+    }
+
+    &.tertiary {
+      border-color: var(--tertiary-color);
     }
 
     &.dark {

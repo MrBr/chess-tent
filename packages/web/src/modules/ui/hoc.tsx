@@ -89,18 +89,17 @@ export const withHtml: HOC['withHtml'] = WrappedComponent => {
     );
 
     render() {
-      const { contentEditable, html } = this.props;
+      const { contentEditable, html, formatInput, ...props } = this.props;
       if (contentEditable || html) {
         //children aren't actually used here
         return (
           // eslint-disable-next-line
           <div
-            {...this.props}
+            {...props}
             children={undefined}
             dangerouslySetInnerHTML={{ __html: html as string }}
             ref={this.ref}
             onInput={this.onInput}
-            html={undefined}
             contentEditable
             suppressContentEditableWarning
           />

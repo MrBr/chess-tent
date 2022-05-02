@@ -6,7 +6,7 @@ import { SelectOption, UI } from '@types';
 import { Headline6, Text } from './Text';
 import { inputSizePropStyle } from './enhancers';
 
-const toggleStyle = styled.props.size.collapse.css<
+const toggleStyle = styled.props.collapse.css<
   ComponentProps<UI['Dropdown']['Toggle']>
 >`
   &.collapse {
@@ -39,7 +39,7 @@ const Toggle = React.forwardRef<
   return (
     <div
       {...props}
-      className={`dropdown-toggle ${className}`}
+      className={`dropdown-toggle ${className} ${props.className}`}
       ref={ref}
       // @ts-ignore - remove react dom warning "non boolean attribute"..
       collapse={undefined}
@@ -56,6 +56,14 @@ BDropdown.Toggle.defaultProps = {
 };
 
 const Dropdown: UI['Dropdown'] = BDropdown as UI['Dropdown'];
+Dropdown.Menu = styled(BDropdown.Menu).css`
+width: max-content;
+`;
+Dropdown.Item = styled(BDropdown.Item).css`
+  :active {
+    background: var(--grey-800-color);
+  }
+`;
 
 const pickInitialOption = (
   options: SelectOption<any>[],

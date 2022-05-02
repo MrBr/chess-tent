@@ -80,13 +80,13 @@ export default class AnalysisBase<
     return (
       <StepToolbox
         showInput
-        comment
         setActiveStep={this.setActiveStep}
         updateStep={this.updateStep}
         removeStep={this.removeStep}
         stepRoot={analysis}
         updateChapter={() => {}}
         {...props}
+        comment={false}
         add={false}
         exercise={false}
         paste={false}

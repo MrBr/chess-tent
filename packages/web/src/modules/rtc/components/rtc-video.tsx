@@ -25,6 +25,10 @@ const RTCVideo = styled<RTCVideoProps>(props => {
     videoRef.current.srcObject = mediaStream;
   }, [videoRef, mediaStream]);
 
+  if (!mediaStream) {
+    return null;
+  }
+
   return (
     <div className={className} ref={containerRef}>
       <video autoPlay muted={muted} ref={videoRef}>
@@ -43,7 +47,7 @@ const RTCVideo = styled<RTCVideoProps>(props => {
   video {
     width: 144px;
     height: 108px;
-    background-color: black;
+    background-color: var(--grey-700-color);
     position: absolute;
     left: 50%;
     top: 50%;

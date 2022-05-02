@@ -71,7 +71,7 @@ const ActivityStepper = styled((props: ActivityStepperProps) => {
             onRemove={onChapterRemove}
           />
         </div>
-        <div className="h-100 border-bottom p-3 overflow-y-auto">
+        <div className="h-100 border-bottom pt-3 overflow-y-auto">
           <ActivityStepperSteps
             activeStepId={activeStepId}
             steps={steps}

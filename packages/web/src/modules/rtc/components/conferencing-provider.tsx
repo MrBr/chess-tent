@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useMemo, useEffect } from 'react';
-import { components, hooks, ui } from '@application';
+import { components, hooks, ui, utils } from '@application';
 import { Components } from '@types';
 
 import { DEFAULT_CONSTRAINTS, DEFAULT_ICE_SERVERS } from '../constants';
@@ -11,6 +11,7 @@ import { ConferencingContextType, ConferencingContext } from '../context';
 const { Icon, Stack, Dropdown, Button, Row, Col } = ui;
 const { useActiveUserRecord, useSocketRoomUsers } = hooks;
 const { UserAvatar } = components;
+const { noop } = utils;
 
 const ConferencingProvider: Components['ConferencingProvider'] = ({ room }) => {
   const [showConfMenu, setShowConfMenu] = useState(false);
@@ -101,10 +102,9 @@ const ConferencingProvider: Components['ConferencingProvider'] = ({ room }) => {
     }));
   }, [localMediaStream, mutedVideo]);
 
-  const toggleShowConfMenu = useCallback(
-    () => setShowConfMenu(prevVal => !prevVal),
-    [setShowConfMenu],
-  );
+  const toggleShowConfMenu = useCallback(() => {
+    setShowConfMenu(prevVal => !prevVal);
+  }, [setShowConfMenu]);
 
   useEffect(() => {
     if (showConfMenu && !connectionStarted) {
@@ -121,8 +121,23 @@ const ConferencingProvider: Components['ConferencingProvider'] = ({ room }) => {
       <Row>
         <Col>
           <Dropdown show={showConfMenu} onToggle={toggleShowConfMenu}>
-            <Dropdown.Toggle collapse onClick={toggleShowConfMenu}>
-              <Icon type={connectionStarted ? 'close' : 'headphone'} />
+            <Dropdown.Toggle collapse onClick={noop}>
+              {!connectionStarted && (
+                <Icon type="headphone" onClick={toggleShowConfMenu} />
+              )}
+              {connectionStarted && (
+                <>
+                  <Icon type="close" onClick={handleStopConferencing} />
+                  <Icon
+                    type={mutedAudio ? 'micOff' : 'microphone'}
+                    onClick={handleMuteUnmute}
+                  />
+                  <Icon
+                    type={mutedVideo ? 'hide' : 'videoCamera'}
+                    onClick={handleToggleCamera}
+                  />
+                </>
+              )}
             </Dropdown.Toggle>
             <Dropdown.Menu className="p-3">
               {!connectionStarted && (
@@ -171,35 +186,25 @@ const ConferencingProvider: Components['ConferencingProvider'] = ({ room }) => {
               )}
             </Dropdown.Menu>
           </Dropdown>
-          {connectionStarted && (
-            <>
-              <div style={{ position: 'relative' }}>
-                {!mutedVideo && (
-                  <RTCVideo mediaStream={localMediaStream} muted />
-                )}
-                <Icon
-                  type={mutedAudio ? 'micOff' : 'microphone'}
-                  onClick={handleMuteUnmute}
-                />
-                <Icon
-                  type={mutedVideo ? 'hide' : 'videoCamera'}
-                  onClick={handleToggleCamera}
-                />
-
-                {localMediaStream &&
-                  remoteUsers.map(({ id }) => (
-                    <ConferencingPeer
-                      key={id}
-                      room={room}
-                      fromUserId={id}
-                      toUserId={user.id as string}
-                    />
-                  ))}
-              </div>
-            </>
-          )}
         </Col>
-        <Col className="col-auto">
+        {connectionStarted && (
+          <Col>
+            <div style={{ position: 'relative' }}>
+              {!mutedVideo && <RTCVideo mediaStream={localMediaStream} muted />}
+
+              {localMediaStream &&
+                remoteUsers.map(({ id }) => (
+                  <ConferencingPeer
+                    key={id}
+                    room={room}
+                    fromUserId={id}
+                    toUserId={user.id as string}
+                  />
+                ))}
+            </div>
+          </Col>
+        )}
+        <Col className="col-auto position-relative">
           <Stack>
             {liveUsers.map(user => (
               <UserAvatar key={user.id} user={user} size="small" />

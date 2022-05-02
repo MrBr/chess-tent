@@ -23,7 +23,8 @@ const ActivityHeader: ComponentType<ActivityHeaderProps> = ({
             key={idx}
             id={`radio-${idx}`}
             type="radio"
-            variant="secondary"
+            variant="tertiary"
+            size="small"
             name="radio"
             value={Board.mode}
             checked={activeMode === Board.mode}

@@ -26,8 +26,13 @@ const ActivityStepperNav = styled(
     );
   },
 ).css`
+  > ${Button as any} {
+    padding: 0 6px;
+  }
   background-color: var(--light-color);
   padding: 16px;
+  display: flex;
+  justify-content: space-around;
 `;
 
 export default ActivityStepperNav;

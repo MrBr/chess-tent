@@ -227,7 +227,7 @@ const EditorSidebar: MoveModule['EditorSidebar'] = props => {
   return (
     <>
       <Row className="g-0">
-        <Col className="col-auto">
+        <Col className="col-auto me-2">
           <StepTag active={activeStep === step}>
             <StepMove move={step.state.move} />
           </StepTag>

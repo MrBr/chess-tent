@@ -297,7 +297,13 @@ export type UI = {
     type: Icons;
     textual?: boolean;
     size?: 'large' | 'regular' | 'small' | 'extra-small';
-    variant?: 'primary' | 'secondary' | 'black' | 'grey-700' | 'light';
+    variant?:
+      | 'primary'
+      | 'secondary'
+      | 'tertiary'
+      | 'black'
+      | 'grey-700'
+      | 'light';
     background?: boolean;
     innerRef?: ForwardedRef<HTMLElement | null>;
   }>;

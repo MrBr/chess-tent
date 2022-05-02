@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { ui } from '@application';
 
-const { Dropdown, OverlayTrigger, Tooltip } = ui;
+const { OverlayTrigger, Tooltip, Text } = ui;
 
 const EditorAction = ({
   children,
@@ -21,9 +21,14 @@ const EditorAction = ({
       placement="left"
       overlay={<Tooltip id={`editor-action-${id}`}>{tooltip}</Tooltip>}
     >
-      <Dropdown.Item onClick={disabled ? undefined : onClick}>
+      <Text
+        className="m-0 cursor-pointer"
+        weight={400}
+        fontSize="small"
+        onClick={disabled ? undefined : onClick}
+      >
         {children}
-      </Dropdown.Item>
+      </Text>
     </OverlayTrigger>
   );
 };

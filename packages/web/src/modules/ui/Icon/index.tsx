@@ -50,6 +50,14 @@ const Icon = styled<IconProps>(
     }
   }
   
+  &.tertiary {
+      color: var(--tertiary-color);
+    &.background {
+      color: var(--light-color);
+      background: var(--tertiary-color);
+    }
+  }
+  
   &.grey-700 {
     color: var(--grey-700-color);
   }

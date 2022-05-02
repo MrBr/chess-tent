@@ -305,28 +305,26 @@ class EditorRenderer extends React.Component<
         onOrientationChange={this.updateStepRotation}
         {...props}
         header={
-          <>
-            <Row>
-              <Col xs={8}>
-                {props.header || (
-                  <ToggleButton variant="tertiary" size="small" checked>
-                    Step
-                  </ToggleButton>
-                )}
-              </Col>
-              <Col>
-                <OverlayTrigger overlay={<Tooltip>Undo</Tooltip>}>
-                  <Icon type="back" onClick={this.undoUpdate} />
-                </OverlayTrigger>
-                <OverlayTrigger overlay={<Tooltip>Redo - not working</Tooltip>}>
-                  <Icon type="forward" />
-                </OverlayTrigger>
-              </Col>
-              <Col className="col-auto">
-                <Icon type="settings" />
-              </Col>
-            </Row>
-          </>
+          <Row className="align-items-center">
+            <Col xs={8}>
+              {props.header || (
+                <ToggleButton variant="tertiary" size="small" checked>
+                  Step
+                </ToggleButton>
+              )}
+            </Col>
+            <Col>
+              <OverlayTrigger overlay={<Tooltip>Undo</Tooltip>}>
+                <Icon type="back" onClick={this.undoUpdate} />
+              </OverlayTrigger>
+              <OverlayTrigger overlay={<Tooltip>Redo - not working</Tooltip>}>
+                <Icon type="forward" />
+              </OverlayTrigger>
+            </Col>
+            <Col className="col-auto">
+              <Icon type="settings" />
+            </Col>
+          </Row>
         }
       />
     );

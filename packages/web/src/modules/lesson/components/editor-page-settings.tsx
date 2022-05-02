@@ -25,34 +25,40 @@ const EditorPageSettings: ComponentType<{ lesson: Lesson }> = ({ lesson }) => {
       <Dropdown>
         <Dropdown.Toggle>Settings</Dropdown.Toggle>
         <Dropdown.Menu>
-          <EditorAction
-            id="settings"
-            tooltip="Edit lesson settings"
-            onClick={promptOffcanvas}
-          >
-            Settings
-          </EditorAction>
-          <EditorAction
-            id="assign"
-            tooltip="Assign lesson to student"
-            onClick={promptModal}
-          >
-            Assign
-          </EditorAction>
-          <EditorAction
-            id="download"
-            tooltip="Make lesson safe copy"
-            onClick={() =>
-              downloadAs(
-                new Blob([JSON.stringify(lesson)], {
-                  type: 'text/plain;charset=utf-8',
-                }),
-                lesson.state.title + '.json',
-              )
-            }
-          >
-            Download
-          </EditorAction>
+          <Dropdown.Item>
+            <EditorAction
+              id="settings"
+              tooltip="Edit lesson settings"
+              onClick={promptOffcanvas}
+            >
+              Settings
+            </EditorAction>
+          </Dropdown.Item>
+          <Dropdown.Item>
+            <EditorAction
+              id="assign"
+              tooltip="Assign lesson to student"
+              onClick={promptModal}
+            >
+              Assign
+            </EditorAction>
+          </Dropdown.Item>
+          <Dropdown.Item>
+            <EditorAction
+              id="download"
+              tooltip="Make lesson safe copy"
+              onClick={() =>
+                downloadAs(
+                  new Blob([JSON.stringify(lesson)], {
+                    type: 'text/plain;charset=utf-8',
+                  }),
+                  lesson.state.title + '.json',
+                )
+              }
+            >
+              Download
+            </EditorAction>
+          </Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
     </>

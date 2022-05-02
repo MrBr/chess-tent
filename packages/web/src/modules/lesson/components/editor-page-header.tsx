@@ -13,7 +13,7 @@ const EditorPageHeader: ComponentType<{ lesson?: Lesson }> = ({ lesson }) => {
     <Header className="border-bottom">
       <Col>
         <Breadcrumbs className="mb-0">
-          <Breadcrumbs.Item>Dashboard</Breadcrumbs.Item>
+          <Breadcrumbs.Item href="/">Dashboard</Breadcrumbs.Item>
           <Breadcrumbs.Item>
             {lesson?.state.title || 'New lesson'}
           </Breadcrumbs.Item>

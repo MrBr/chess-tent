@@ -61,7 +61,7 @@ const EditorSidebar = <T extends ExerciseSteps, K extends ExerciseSegmentKeys>({
       className="rounded ps-3 pt-2 pb-2 pe-2 position-relative flex-column mb-2 "
       {...props}
     >
-      <Row className="g-0 align-items-center">
+      <Row className="g-0">
         <Col className="col-auto me-2 align-self-baseline">
           <ActiveSegmentMark active={activeSegment === currentSegmentKey}>
             {currentSegmentKey}

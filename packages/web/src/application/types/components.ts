@@ -495,7 +495,7 @@ export type Components = {
       user: User;
     } & Pick<ComponentProps<UI['Avatar']>, 'size' | 'onClick' | 'className'>
   >;
-  UserSettings: ComponentType;
+  UserSettings: ComponentType<{ label?: ReactNode }>;
   Coaches: ComponentType;
   CoachCard: ComponentType<{
     coach: User;

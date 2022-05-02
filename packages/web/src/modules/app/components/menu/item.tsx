@@ -1,12 +1,13 @@
-import React, { ReactNode, ReactElement } from 'react';
+import React, { ReactNode } from 'react';
 import styled from '@chess-tent/styled-props';
 import { hooks, ui } from '@application';
 import { Icons } from '@types';
 
 interface ItemProps {
+  children?: ReactNode;
   className?: string;
-  icon: Icons | ReactElement;
-  label: ReactNode;
+  icon?: Icons;
+  label?: ReactNode;
   path?: string;
   break?: boolean;
   onClick?: () => void;
@@ -16,23 +17,36 @@ interface ItemProps {
 const { Icon, Text } = ui;
 const { useHistory } = hooks;
 
-const Item = styled<ItemProps>(({ className, path, label, icon, onClick }) => {
-  const history = useHistory();
-  const active = history.location.pathname === path;
-  const handleClick = onClick || (() => path && history.push(path));
-  return (
-    <div
-      className={`${active ? 'active' : ''} ${className}`}
-      onClick={handleClick}
-    >
-      {typeof icon === 'string' ? <Icon type={icon} size="small" /> : icon}
-      <Text className="mb-0" fontSize="extra-small">
-        {label}
-      </Text>
-    </div>
-  );
-}).props.break.bottom.css`
-  width: calc(100% - 26px);
+export const ItemLabel = styled(Text).css`
+  color: var(--light-color);
+  margin-left: 10px;
+  margin-bottom: 0;
+`;
+ItemLabel.defaultProps = {
+  fontSize: 'extra-small',
+};
+
+const Item = styled<ItemProps>(
+  ({ children, className, path, label, icon, onClick }) => {
+    const history = useHistory();
+    const active = history.location.pathname === path;
+    const handleClick = onClick || (() => path && history.push(path));
+    return (
+      <div
+        className={`${active ? 'active' : ''} ${className}`}
+        onClick={handleClick}
+      >
+        {children || (
+          <>
+            {icon && <Icon type={icon} size="small" />}
+            <ItemLabel>{label}</ItemLabel>
+          </>
+        )}
+      </div>
+    );
+  },
+).props.break.bottom.css`
+  width: calc(100% - 22px);
   height: 48px;
   align-items: center;
   display: flex;
@@ -61,13 +75,7 @@ const Item = styled<ItemProps>(({ className, path, label, icon, onClick }) => {
     }
   }
 
-
-  > ${Text as any} {
-    color: var(--light-color);
-    margin-left: 10px;
-  }
-  
-  *:not(:hover) > & > ${Text as any} {
+  *:not(:hover) > &  ${ItemLabel as any} {
     display: none;
   }
 

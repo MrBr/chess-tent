@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
 import { components, hooks, requests, ui } from '@application';
+import { Components } from '@types';
 
 const { Dropdown, Text } = ui;
 const { useHistory, useActiveUserRecord, useApi } = hooks;
 const { UserAvatar } = components;
 
-const UserSettings = () => {
+const UserSettings: Components['UserSettings'] = ({ label }) => {
   const history = useHistory();
   const { value: user, reset: clear } = useActiveUserRecord();
   const { fetch: logout, response: logoutResponse } = useApi(requests.logout);
@@ -24,6 +25,7 @@ const UserSettings = () => {
     <Dropdown>
       <Dropdown.Toggle id="header-user" collapse>
         <UserAvatar size="extra-small" user={user} />
+        {label}
       </Dropdown.Toggle>
       <Dropdown.Menu>
         <Dropdown.Item>

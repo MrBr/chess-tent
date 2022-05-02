@@ -2,7 +2,7 @@ import React from 'react';
 import { components, ui } from '@application';
 import { Components } from '@types';
 import { css } from '@chess-tent/styled-props';
-import Item from './item';
+import Item, { ItemLabel } from './item';
 
 const { Container } = ui;
 const { UserSettings } = components;
@@ -41,7 +41,9 @@ const Menu: Components['Menu'] = () => {
         <Item icon="lightbulb" path="/lessons" label="Lessons" />
         <Item icon="contacts" path="/coaches" label="Coaches" />
         <Item icon="template" path="/templates" label="Templates" />
-        <Item icon={<UserSettings />} label="Profile" bottom />
+        <Item bottom>
+          <UserSettings label={<ItemLabel>Profile</ItemLabel>} />
+        </Item>
       </div>
     </Container>
   );

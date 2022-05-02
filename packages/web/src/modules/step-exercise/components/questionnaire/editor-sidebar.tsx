@@ -79,7 +79,7 @@ const TaskSidebar = (
             onClick={addOption}
             size="extra-small"
             className="mt-2"
-            variant="secondary"
+            variant="ghost"
           >
             + Add option
           </Button>

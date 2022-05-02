@@ -1,4 +1,10 @@
-import React, { useCallback, ReactEventHandler } from 'react';
+import React, {
+  useCallback,
+  ReactEventHandler,
+  useRef,
+  useEffect,
+  useState,
+} from 'react';
 import { Components, Steps } from '@types';
 import { components, hooks, services, ui, utils } from '@application';
 import styled from '@chess-tent/styled-props';
@@ -21,6 +27,7 @@ const {
   Headline4,
   Tooltip,
   OverlayTrigger,
+  Overlay,
 } = ui;
 const { LessonToolboxText } = components;
 const { useCopyStep, usePrompt } = hooks;
@@ -42,6 +49,7 @@ const ToolboxActions = styled.div.css`
   flex-direction: column;
   position: absolute;
   left: 0;
+  top: 50%;
   transform: translateX(-50%) translateY(-50%);
   z-index: 10;
   background: var(--light-color);
@@ -68,7 +76,28 @@ const StepToolbox: Components['StepToolbox'] = ({
   stepRoot,
   updateChapter,
 }) => {
+  const toolboxRef = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState<boolean>(false);
   const [hasStepCopy, copy, getCopiedStep] = useCopyStep();
+
+  useEffect(() => {
+    if (!active || !toolboxRef.current) {
+      return;
+    }
+    const observer = new IntersectionObserver(
+      entries => setVisible(!!entries[0]?.isIntersecting),
+      {
+        root: null, // default is the viewport
+        threshold: 0.5, // percentage of taregt's visible area. Triggers "onIntersection"
+      },
+    );
+
+    observer.observe(toolboxRef.current);
+    return () => {
+      observer.disconnect();
+      // TODO - is observer deleted for sure?
+    };
+  }, [active, toolboxRef, setVisible]);
 
   const pasteAdd = () => {
     const copiedStep = getCopiedStep() as Steps;
@@ -161,91 +190,95 @@ const StepToolbox: Components['StepToolbox'] = ({
 
   return (
     <>
-      {active && (
-        <div>
-          <ToolboxActions className={actionsClassName}>
-            {exercise && (
-              <OverlayTrigger
-                placement="left"
-                overlay={
-                  <Tooltip id="exercise-tooltip">Add exercise step</Tooltip>
-                }
-              >
-                <Icon
-                  size="extra-small"
-                  type="exercise"
-                  onClick={pickFunction(exercise, addExerciseStep)}
-                />
-              </OverlayTrigger>
-            )}
-            {add && (
-              <OverlayTrigger
-                placement="left"
-                overlay={<Tooltip id="add-tooltip">Add new step</Tooltip>}
-              >
-                <Icon
-                  size="extra-small"
-                  type="add"
-                  onClick={pickFunction(add, addVariationStep)}
-                />
-              </OverlayTrigger>
-            )}
-            {comment && (
-              <OverlayTrigger
-                placement="left"
-                overlay={
-                  <Tooltip id="comment-tooltip">Add step comment</Tooltip>
-                }
-              >
-                <Icon
-                  size="extra-small"
-                  type="comment"
-                  onClick={pickFunction(comment, addDescriptionStep)}
-                />
-              </OverlayTrigger>
-            )}
-            {remove && (
-              <Icon
-                size="extra-small"
-                type="remove"
-                onClick={pickFunction(remove, removeStepCB)}
-              />
-            )}
-            {paste && (
-              <OverlayTrigger
-                placement="left"
-                overlay={
-                  <Tooltip id="copy-tooltip">Copy step and child steps</Tooltip>
-                }
-              >
-                <Icon
-                  size="extra-small"
-                  type="copy"
-                  onClick={() => copy(step)}
-                />
-              </OverlayTrigger>
-            )}
-            {paste && (
-              <OverlayTrigger
-                placement="left"
-                overlay={
-                  <Tooltip id="copy-tooltip">Paste copied steps</Tooltip>
-                }
-              >
-                <Icon
-                  size="extra-small"
-                  type="move"
-                  onClick={
-                    hasStepCopy ? pickFunction(paste, pasteStep) : undefined
+      {active && visible && (
+        <Overlay target={toolboxRef.current} placement="left" show>
+          <div>
+            <ToolboxActions className={actionsClassName}>
+              {exercise && (
+                <OverlayTrigger
+                  placement="left"
+                  overlay={
+                    <Tooltip id="exercise-tooltip">Add exercise step</Tooltip>
                   }
+                >
+                  <Icon
+                    size="extra-small"
+                    type="exercise"
+                    onClick={pickFunction(exercise, addExerciseStep)}
+                  />
+                </OverlayTrigger>
+              )}
+              {add && (
+                <OverlayTrigger
+                  placement="left"
+                  overlay={<Tooltip id="add-tooltip">Add new step</Tooltip>}
+                >
+                  <Icon
+                    size="extra-small"
+                    type="add"
+                    onClick={pickFunction(add, addVariationStep)}
+                  />
+                </OverlayTrigger>
+              )}
+              {comment && (
+                <OverlayTrigger
+                  placement="left"
+                  overlay={
+                    <Tooltip id="comment-tooltip">Add step comment</Tooltip>
+                  }
+                >
+                  <Icon
+                    size="extra-small"
+                    type="comment"
+                    onClick={pickFunction(comment, addDescriptionStep)}
+                  />
+                </OverlayTrigger>
+              )}
+              {remove && (
+                <Icon
+                  size="extra-small"
+                  type="remove"
+                  onClick={pickFunction(remove, removeStepCB)}
                 />
-              </OverlayTrigger>
-            )}
-          </ToolboxActions>
-        </div>
+              )}
+              {paste && (
+                <OverlayTrigger
+                  placement="left"
+                  overlay={
+                    <Tooltip id="copy-tooltip">
+                      Copy step and child steps
+                    </Tooltip>
+                  }
+                >
+                  <Icon
+                    size="extra-small"
+                    type="copy"
+                    onClick={() => copy(step)}
+                  />
+                </OverlayTrigger>
+              )}
+              {paste && (
+                <OverlayTrigger
+                  placement="left"
+                  overlay={
+                    <Tooltip id="copy-tooltip">Paste copied steps</Tooltip>
+                  }
+                >
+                  <Icon
+                    size="extra-small"
+                    type="move"
+                    onClick={
+                      hasStepCopy ? pickFunction(paste, pasteStep) : undefined
+                    }
+                  />
+                </OverlayTrigger>
+              )}
+            </ToolboxActions>
+          </div>
+        </Overlay>
       )}
-
       {pasteModal}
+      <div ref={toolboxRef} style={{ position: 'absolute', left: '0px' }} />
       <Container
         className={`d-flex align-items-center h-100 pr-0 ${className}`}
         onClick={handleClick}

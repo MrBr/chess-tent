@@ -8,7 +8,7 @@ export default styled<StepTag>(({ children, className, onClick }) => (
   </span>
 )).props.active.css`
   &.active > span {
-    background: var(--secondary-color);
+    background: var(--tertiary-color);
     color: var(--light-color);
   }
 

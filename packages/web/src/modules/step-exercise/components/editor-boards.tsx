@@ -19,6 +19,7 @@ const EditorBoards = ({
   return (
     <ButtonGroup>
       <ToggleButton
+        variant="tertiary"
         checked={activeSegment === 'task'}
         onClick={() => updateActiveSegment('task')}
         size="small"
@@ -26,6 +27,7 @@ const EditorBoards = ({
         Task
       </ToggleButton>
       <ToggleButton
+        variant="tertiary"
         checked={activeSegment === 'explanation'}
         onClick={() => updateActiveSegment('explanation')}
         size="small"
@@ -33,6 +35,7 @@ const EditorBoards = ({
         Explanation
       </ToggleButton>
       <ToggleButton
+        variant="tertiary"
         checked={activeSegment === 'hint'}
         onClick={() => updateActiveSegment('hint')}
         size="small"

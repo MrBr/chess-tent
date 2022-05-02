@@ -27,7 +27,7 @@ const ActiveSegmentMark = styled.span.props.active.css<{ active: boolean }>`
   }
 
   &.active {
-    background: var(--secondary-color);
+    background: var(--tertiary-color);
     color: var(--light-color);
   }
 `;

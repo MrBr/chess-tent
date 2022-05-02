@@ -309,7 +309,7 @@ class EditorRenderer extends React.Component<
             <Row>
               <Col xs={8}>
                 {props.header || (
-                  <ToggleButton variant="secondary" size="small" checked>
+                  <ToggleButton variant="tertiary" size="small" checked>
                     Step
                   </ToggleButton>
                 )}
@@ -354,7 +354,7 @@ class EditorRenderer extends React.Component<
       <ChessboardContextProvider>
         <Container fluid className="px-0 h-100">
           <Row className="g-0 h-100">
-            <Col className="pt-5">
+            <Col className="pt-3">
               <StepRenderer
                 key={lesson.id}
                 step={activeStep}
@@ -385,7 +385,7 @@ class EditorRenderer extends React.Component<
                 <SidebarSection>
                   <Evaluation />
                 </SidebarSection>
-                <SidebarSection className="h-100">
+                <SidebarSection className="h-100 overflow-y-auto position-relative">
                   <Stepper
                     activeStep={activeStep}
                     setActiveStep={this.setActiveStepHandler}

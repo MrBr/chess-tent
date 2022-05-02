@@ -13,6 +13,7 @@ const Edit = ({
   <OverlayTrigger overlay={<Tooltip>Toggle edit mode</Tooltip>}>
     <Icon
       type={editing ? 'editFilled' : 'edit'}
+      variant={editing ? 'tertiary' : undefined}
       onClick={() => onChange && onChange(!editing)}
     />
   </OverlayTrigger>

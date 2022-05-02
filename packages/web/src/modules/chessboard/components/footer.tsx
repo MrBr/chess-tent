@@ -11,12 +11,10 @@ import EditBoardToggle from './edit';
 
 const {
   Modal,
-  ModalBody,
   Button,
   Col,
   Row,
   Input,
-  Label,
   Tooltip,
   OverlayTrigger,
   FormGroup,
@@ -45,8 +43,8 @@ const PGNModal = ({
 
   return (
     <Modal close={close} show>
-      <ModalBody>
-        <Label>Import a game</Label>
+      <Modal.Header>Import a PGN</Modal.Header>
+      <Modal.Body>
         <FormGroup>
           <Input
             as="textarea"
@@ -56,10 +54,12 @@ const PGNModal = ({
             size="small"
           />
         </FormGroup>
+      </Modal.Body>
+      <Modal.Footer>
         <Button onClick={handleImport} size="small">
           Import
         </Button>
-      </ModalBody>
+      </Modal.Footer>
     </Modal>
   );
 };
@@ -74,6 +74,25 @@ const Footer: FunctionComponent<ChessboardFooterProps> = ({
   position,
   onPGN,
 }) => {
+  const handlePGN = (pgn: string) => {
+    const game = new Chess();
+    let formattedPgn = pgn;
+    if (/FEN/.test(pgn) && !/SetUp/.test(pgn)) {
+      // Chess.js requires SetUp property in PGN to load the provided fen
+      // This is a non-standard property and many PNGs doesn't have it even if the position isn't initial
+      // Chess class has to change initial position to be able to produce valid moves if FEN is provided.
+      formattedPgn = `[SetUp "1"]\n${formattedPgn}`;
+    }
+    game.load_pgn(formattedPgn);
+    const moves = createNotableMovesFromGame(game);
+    const headers = game.header();
+    // Should always have FEN it makes life easier
+    // TODO - make this typesafe
+    headers.FEN = headers.FEN || START_FEN;
+    const comments = game.get_comments();
+    onPGN && onPGN(moves, headers, comments);
+  };
+
   const [pgnModalElem, promptModal] = usePrompt(close => (
     <PGNModal close={close} onImport={handlePGN} />
   ));
@@ -104,25 +123,6 @@ const Footer: FunctionComponent<ChessboardFooterProps> = ({
     [setFen],
   );
 
-  const handlePGN = (pgn: string) => {
-    const game = new Chess();
-    let formattedPgn = pgn;
-    if (/FEN/.test(pgn) && !/SetUp/.test(pgn)) {
-      // Chess.js requires SetUp property in PGN to load the provided fen
-      // This is a non-standard property and many PNGs doesn't have it even if the position isn't initial
-      // Chess class has to change initial position to be able to produce valid moves if FEN is provided.
-      formattedPgn = `[SetUp "1"]\n${formattedPgn}`;
-    }
-    game.load_pgn(formattedPgn);
-    const moves = createNotableMovesFromGame(game);
-    const headers = game.header();
-    // Should always have FEN it makes life easier
-    // TODO - make this typesafe
-    headers.FEN = headers.FEN || START_FEN;
-    const comments = game.get_comments();
-    onPGN && onPGN(moves, headers, comments);
-  };
-
   return (
     <>
       {pgnModalElem}
@@ -146,17 +146,17 @@ const Footer: FunctionComponent<ChessboardFooterProps> = ({
         </Col>
       </Row>
       <Row className="g-0 mt-4 align-items-center">
-        <Col>
-          <OverlayTrigger
-            overlay={<Tooltip id="fen">Press enter to confirm</Tooltip>}
-          >
+        <OverlayTrigger
+          overlay={<Tooltip id="fen">Press enter to confirm</Tooltip>}
+        >
+          <Col>
             <Input
               value={fen}
               onKeyPress={handleFenEnterKeypress}
               onChange={handleFenChange}
             />
-          </OverlayTrigger>
-        </Col>
+          </Col>
+        </OverlayTrigger>
       </Row>
     </>
   );

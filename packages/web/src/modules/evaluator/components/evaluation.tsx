@@ -37,7 +37,9 @@ const EvaluationComponent: Components['Evaluation'] = ({ onMoveClick }) => {
     <Container>
       <Row>
         <Col>
-          <Text weight={500}>Engine</Text>
+          <Text weight={500} className="m-0">
+            Engine
+          </Text>
         </Col>
         <Col className="col-auto">
           <Check type="switch" checked={evaluate} onChange={toggleEvaluation} />

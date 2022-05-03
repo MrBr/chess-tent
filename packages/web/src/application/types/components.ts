@@ -252,9 +252,7 @@ export type ActivityComponent<T> = ComponentType<
 
 export interface AnalysisSystemProps {
   analysis: Analysis<any>;
-  updateAnalysis: <T extends any[], U>(
-    service: (...args: T) => U,
-  ) => (...args: T) => void;
+  updateAnalysis: (service: (analysis: Analysis<any>) => void) => void;
   initialPosition?: FEN;
   initialOrientation?: Color;
 }

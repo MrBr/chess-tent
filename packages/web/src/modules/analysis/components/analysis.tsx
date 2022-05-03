@@ -9,7 +9,6 @@ import {
 } from '@types';
 import {
   addStep,
-  Analysis,
   getPreviousStep,
   removeStep,
   Step,
@@ -25,23 +24,27 @@ export default class AnalysisBase<
   T extends AnalysisSystemProps,
 > extends React.Component<T> {
   updateStep = (step: Step) => {
-    const { updateAnalysis, analysis } = this.props;
-    updateAnalysis(updateAnalysisStep)(analysis, step);
+    const { updateAnalysis } = this.props;
+    updateAnalysis(analysis => {
+      updateAnalysisStep(analysis, step);
+    });
   };
   removeStep = (step: Step) => {
-    const { updateAnalysis, analysis } = this.props;
-    const prevStep = getPreviousStep(analysis, step);
-    if (!prevStep) {
-      return;
-    }
-    updateAnalysis(removeStep)(analysis, step, true);
-    updateAnalysis(updateSubjectState)(analysis as Analysis<any>, {
-      activeStepId: prevStep.id,
+    const { updateAnalysis } = this.props;
+    const prevStep = getPreviousStep(this.props.analysis, step);
+
+    updateAnalysis(analysis => {
+      removeStep(analysis, step, true);
+      updateSubjectState(analysis, {
+        activeStepId: prevStep?.id,
+      });
     });
   };
   setActiveStep = (step: Step) => {
-    const { updateAnalysis, analysis } = this.props;
-    updateAnalysis(updateAnalysisActiveStepId)(analysis, step.id);
+    const { updateAnalysis } = this.props;
+    updateAnalysis(analysis => {
+      updateAnalysisActiveStepId(analysis, step.id);
+    });
   };
   startAnalysis = (
     position?: FEN,
@@ -50,8 +53,7 @@ export default class AnalysisBase<
     captured?: boolean,
     promoted?: PieceRole,
   ) => {
-    const { analysis, updateAnalysis, initialOrientation, initialPosition } =
-      this.props;
+    const { updateAnalysis, initialOrientation, initialPosition } = this.props;
     const notableMove =
       position && move && piece
         ? services.createNotableMove(
@@ -64,14 +66,16 @@ export default class AnalysisBase<
           )
         : undefined;
 
-    updateAnalysis(addStep)(
-      analysis,
-      services.createStep('variation', {
-        position: position || initialPosition,
-        orientation: initialOrientation,
-        move: notableMove,
-      }),
-    );
+    updateAnalysis(analysis => {
+      addStep(
+        analysis,
+        services.createStep('variation', {
+          position: position || initialPosition,
+          orientation: initialOrientation,
+          move: notableMove,
+        }),
+      );
+    });
   };
 
   renderToolbox: EditorSidebarProps['renderToolbox'] = props => {

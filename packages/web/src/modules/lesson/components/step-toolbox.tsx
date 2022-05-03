@@ -31,6 +31,7 @@ const {
 } = ui;
 const { LessonToolboxText } = components;
 const { useCopyStep, usePrompt } = hooks;
+const { stopPropagation } = utils;
 const { getStepPosition, addStepNextToTheComments, getStepBoardOrientation } =
   services;
 
@@ -40,7 +41,7 @@ function pickFunction(...funcs: any[]) {
 
 const { className: toolboxContainerClassName } = css`
   position: absolute;
-  left: 0px;
+  left: 0;
 `;
 
 const ToolboxActions = styled.div.css`
@@ -189,7 +190,7 @@ const StepToolbox: Components['StepToolbox'] = ({
   }, [removeStep, step]);
 
   const handleClick: ReactEventHandler = event => {
-    utils.stopPropagation(event);
+    stopPropagation(event);
     !active && setActiveStep(step);
   };
 
@@ -199,7 +200,9 @@ const StepToolbox: Components['StepToolbox'] = ({
         <Overlay target={toolboxRef.current} placement="left" show>
           {/* Excluding props to remove react warning... */}
           {({ arrowProps, popper, show, ...props }) => (
-            <div {...props}>
+            // Stopping propagation to execute only clicked action
+            // and not triggers bellow the toolbox
+            <div {...props} onClick={stopPropagation}>
               <ToolboxActions className={actionsClassName}>
                 {exercise && (
                   <OverlayTrigger

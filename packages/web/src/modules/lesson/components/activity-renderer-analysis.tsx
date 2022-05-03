@@ -3,6 +3,7 @@ import {
   ActivityRendererModuleBoardProps,
   ActivityRendererModuleProps,
   ActivityStepMode,
+  AnalysisSystemProps,
   ChessboardProps,
   Orientation,
   Steps,
@@ -10,9 +11,9 @@ import {
 import { components, constants, services, ui } from '@application';
 import {
   getAnalysisActiveStep,
-  applyNestedPatches,
   getLessonActivityBoardState,
   updateAnalysisStep,
+  applyUpdates,
 } from '@chess-tent/models';
 import ActivityStep from './activity-step';
 import { isActivityStepAnalysing } from '../service';
@@ -39,17 +40,19 @@ abstract class ActivityRendererAnalysis<
     return step ? services.getStepBoardOrientation(step) : undefined;
   }
 
-  updateStepActivityAnalysis =
-    <T extends any[], U>(service: (...args: T) => U) =>
-    (...args: T) => {
+  updateStepActivityAnalysis: AnalysisSystemProps['updateAnalysis'] =
+    service => {
       const { updateActivity, activity, boardState } = this.props;
-      updateActivity(applyNestedPatches(service)(...args))(
-        activity,
-        draft =>
-          getLessonActivityBoardState(draft, boardState.id)[
-            boardState.activeStepId
-          ].analysis,
-      );
+      updateActivity(
+        applyUpdates(activity)(draft => {
+          const activityStepStateDraft = getLessonActivityBoardState(
+            draft,
+            boardState.id,
+          )[boardState.activeStepId];
+          activityStepStateDraft.mode = ActivityStepMode.ANALYSING;
+          service(activityStepStateDraft.analysis);
+        }),
+      )();
     };
 }
 
@@ -59,10 +62,11 @@ export class ActivityRendererAnalysisBoard<
   static mode = ActivityStepMode.ANALYSING;
 
   updateStepRotation = (orientation?: Orientation) => {
-    const { analysis } = this.props;
-    const step = getAnalysisActiveStep(analysis);
+    const step = getAnalysisActiveStep(this.props.analysis);
     const updatedStep = services.updateStepRotation(step, orientation);
-    this.updateStepActivityAnalysis(updateAnalysisStep)(analysis, updatedStep);
+    this.updateStepActivityAnalysis(analysis => {
+      updateAnalysisStep(analysis, updatedStep);
+    });
   };
 
   renderAnalysisBoard = (props: ChessboardProps) => {

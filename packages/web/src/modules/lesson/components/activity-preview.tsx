@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect } from 'react';
-import { hooks, services, ui } from '@application';
+import { components, hooks, services, ui } from '@application';
 import {
   Chapter,
   getChildStep,
@@ -17,6 +17,7 @@ import {
   ActivityRendererStepBoard,
   ActivityRendererStepCard,
 } from './activity-renderer-step';
+import { ActivityRendererAnalysisEngineCard } from './activity-renderer-engine';
 
 interface PreviewProps {
   lesson: Lesson;
@@ -25,8 +26,8 @@ interface PreviewProps {
 }
 
 const { useActiveUserRecord, useComponentState } = hooks;
-
-const { Modal } = ui;
+const { Modal, Breadcrumbs, Col, Button, Tag } = ui;
+const { Layout, Header, Menu } = components;
 
 const Preview = ({ lesson, chapter, step }: PreviewProps) => {
   const { value: user } = useActiveUserRecord();
@@ -90,7 +91,7 @@ const Preview = ({ lesson, chapter, step }: PreviewProps) => {
       updateActivity={updateActivity}
       activityStepState={activityStepState}
       boardState={activityBoardState}
-      cards={[ActivityRendererStepCard]}
+      cards={[ActivityRendererAnalysisEngineCard, ActivityRendererStepCard]}
       boards={[ActivityRendererStepBoard]}
     />
   );
@@ -101,9 +102,30 @@ const PreviewModal = ({
   ...props
 }: PreviewProps & { close: () => void }) => {
   const { mounted } = useComponentState();
+  const header = (
+    <Header className="border-bottom">
+      <Col className="col-auto">
+        <Breadcrumbs>
+          <Breadcrumbs.Item href="/">Dashboard</Breadcrumbs.Item>
+          <Breadcrumbs.Item onClick={close}>Template</Breadcrumbs.Item>
+          <Breadcrumbs.Item>Preview</Breadcrumbs.Item>
+        </Breadcrumbs>
+      </Col>
+      <Col className="text-center">
+        <Tag>You're now previewing as a student</Tag>
+      </Col>
+      <Col className="col-auto">
+        <Button onClick={close} variant="tertiary" size="small">
+          Close
+        </Button>
+      </Col>
+    </Header>
+  );
   return (
     <Modal show close={close} fullScreen>
-      {mounted && <Preview {...props} />}
+      <Layout header={header} menu={<Menu />}>
+        {mounted && <Preview {...props} />}
+      </Layout>
     </Modal>
   );
 };

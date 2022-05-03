@@ -11,9 +11,12 @@ export default styled<Components['LessonPlaygroundCard']>(
       <Card.Body>{children}</Card.Body>
     </Card>
   ),
-).css`
+).props.active.css`
   :last-child {
     margin-bottom: 0;
+  }
+  &.active {
+    border: 1px solid var(--black-color);
   }
   &.stretch {
     margin-left: 0;

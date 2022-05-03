@@ -1,8 +1,15 @@
 import React from 'react';
 import { MoveModule } from '@types';
-import { components } from '@application';
+import { components, ui } from '@application';
+import { isActivityStepSolving } from '../../lesson/service';
 
-const { StepMove, LessonToolboxText, LessonPlaygroundCard } = components;
+const {
+  StepMove,
+  LessonToolboxText,
+  LessonPlaygroundCard,
+  LessonPlaygroundStepTag,
+} = components;
+const { Row, Col } = ui;
 
 const ActivityBoard: MoveModule['ActivityBoard'] = ({ Chessboard, step }) => {
   const {
@@ -14,11 +21,24 @@ const ActivityBoard: MoveModule['ActivityBoard'] = ({ Chessboard, step }) => {
   return <Chessboard fen={position} autoShapes={shapes} />;
 };
 
-const ActivitySidebar: MoveModule['ActivitySidebar'] = ({ step }) => {
+const ActivitySidebar: MoveModule['ActivitySidebar'] = ({
+  step,
+  stepActivityState,
+}) => {
+  const isActive = isActivityStepSolving(stepActivityState);
+
   return (
-    <LessonPlaygroundCard>
-      {step.state.move && <StepMove move={step.state.move} />}
-      <LessonToolboxText text={step.state.description} />
+    <LessonPlaygroundCard active={isActive}>
+      <Row>
+        <Col className="col-auto">
+          <LessonPlaygroundStepTag active={isActive}>
+            <StepMove move={step.state.move} className="ps-1 pe-1" />
+          </LessonPlaygroundStepTag>
+        </Col>
+        <Col>
+          <LessonToolboxText text={step.state.description} />
+        </Col>
+      </Row>
     </LessonPlaygroundCard>
   );
 };

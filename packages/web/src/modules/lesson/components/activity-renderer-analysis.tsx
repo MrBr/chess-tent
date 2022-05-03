@@ -7,15 +7,18 @@ import {
   Orientation,
   Steps,
 } from '@types';
-import { components, constants, services } from '@application';
+import { components, constants, services, ui } from '@application';
 import {
   getAnalysisActiveStep,
   applyNestedPatches,
   getLessonActivityBoardState,
   updateAnalysisStep,
 } from '@chess-tent/models';
+import ActivityStep from './activity-step';
+import { isActivityStepAnalysing } from '../service';
 
 const { AnalysisBoard, AnalysisSidebar, LessonPlaygroundCard } = components;
+const { Row, Col, Icon, Text } = ui;
 const { START_FEN } = constants;
 
 abstract class ActivityRendererAnalysis<
@@ -100,10 +103,27 @@ export class ActivityRendererAnalysisCard<
   T extends Steps | undefined,
 > extends ActivityRendererAnalysis<ActivityRendererModuleProps<T>> {
   render() {
-    const { analysis } = this.props;
+    const { analysis, activityStepState } = this.props;
+    const isActive = isActivityStepAnalysing(activityStepState);
 
     return (
-      <LessonPlaygroundCard>
+      <LessonPlaygroundCard active={isActive}>
+        <Row className="align-items-center mb-3">
+          <Col className="col-auto">
+            <ActivityStep active={isActive}>
+              <Icon type="analysis" size="extra-small" />
+            </ActivityStep>
+          </Col>
+          <Col>
+            <Text fontSize="small" weight={500} className="mb-2">
+              Analysis
+            </Text>
+          </Col>
+          <Col className="col-auto">
+            <Icon type="left" size="extra-small" />
+            <Icon type="right" size="extra-small" />
+          </Col>
+        </Row>
         <AnalysisSidebar
           analysis={analysis}
           updateAnalysis={this.updateStepActivityAnalysis}

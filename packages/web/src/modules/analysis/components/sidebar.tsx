@@ -1,13 +1,12 @@
 import React, { ComponentProps } from 'react';
-import { components, ui } from '@application';
+import { components, ui, utils } from '@application';
 import { Components } from '@types';
 import { getAnalysisActiveStep } from '@chess-tent/models';
 import Analysis from './analysis';
 
 const { Stepper } = components;
 const { Button } = ui;
-
-const updateChapter = () => {}; // NOOP
+const { noop } = utils;
 
 class AnalysisSidebar extends Analysis<
   ComponentProps<Components['AnalysisSidebar']>
@@ -18,7 +17,11 @@ class AnalysisSidebar extends Analysis<
 
     if (!step) {
       return (
-        <Button size="extra-small" onClick={() => this.startAnalysis()}>
+        <Button
+          size="extra-small"
+          onClick={() => this.startAnalysis()}
+          variant="regular"
+        >
           Start Analysis
         </Button>
       );
@@ -32,7 +35,7 @@ class AnalysisSidebar extends Analysis<
         updateStep={this.updateStep}
         removeStep={this.removeStep}
         renderToolbox={this.renderToolbox}
-        updateChapter={updateChapter}
+        updateChapter={noop}
       />
     );
   }

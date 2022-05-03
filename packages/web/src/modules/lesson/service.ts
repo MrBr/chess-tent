@@ -2,6 +2,7 @@ import { isEqual } from 'lodash';
 import { constants, services, utils } from '@application';
 import {
   ActivityStepMode,
+  ActivityStepStateBase,
   MoveStep,
   MoveStepState,
   NotableMove,
@@ -202,3 +203,10 @@ export const importLessonActivityChapters = createService(
     return draft;
   },
 );
+
+export const isActivityStepAnalysing = <T extends ActivityStepStateBase>(
+  state: T,
+) => state.mode === ActivityStepMode.ANALYSING;
+export const isActivityStepSolving = <T extends ActivityStepStateBase>(
+  state: T,
+) => state.mode === ActivityStepMode.SOLVING;

@@ -6,10 +6,10 @@ const { Link } = components;
 
 // Override default bootstrap breadcrumb item
 // it makes hard refresh when opening new page
-Breadcrumbs.Item = props => (
-  <li className="breadcrumb-item">
-    <Link to={props.href || '#'} ghost>
-      {props.children}
+Breadcrumbs.Item = ({ href, children, title, ...props }) => (
+  <li className="breadcrumb-item" {...props}>
+    <Link to={href || '#'} ghost>
+      {children}
     </Link>
   </li>
 );

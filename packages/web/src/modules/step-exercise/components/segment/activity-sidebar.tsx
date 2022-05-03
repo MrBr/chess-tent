@@ -4,67 +4,138 @@ import { isLessonActivityBoardStepCompleted } from '@chess-tent/models';
 import { ExerciseSteps } from '@types';
 
 import { SegmentActivityProps } from '../../types';
-import { hasExplanation, hasHint } from '../../service';
+import { hasExplanation } from '../../service';
+import { isActivityStepSolving } from '../../../lesson/service';
 
-const { Headline4, Button, Headline5, Text, Row, Col } = ui;
-const { LessonPlaygroundCard } = components;
+const { Button, Text, Row, Col, Icon } = ui;
+const { LessonPlaygroundCard, LessonPlaygroundStepTag } = components;
 
 const Playground: FunctionComponent<
-  SegmentActivityProps<ExerciseSteps> & { title: string; onReset?: () => void }
+  SegmentActivityProps<ExerciseSteps> & {
+    title: string;
+    onReset?: () => void;
+    onSubmit?: () => void;
+    onHint?: () => void;
+  }
 > = ({
   setStepActivityState,
   step,
   children,
   title,
   onReset,
+  onHint,
   stepActivityState,
   boardState,
+  onSubmit,
 }) => {
   const { showHint } = stepActivityState;
   const { task, explanation, hint } = step.state;
   const completed = isLessonActivityBoardStepCompleted(boardState, step);
+  const isActive = isActivityStepSolving(stepActivityState);
   const handleShowHint = useCallback(() => {
     setStepActivityState({ showHint: true });
   }, [setStepActivityState]);
 
   return (
     <>
-      <LessonPlaygroundCard>
-        <Headline4 className="mt-2 mb-1">{title}</Headline4>
-        <Text className="m-0" fontSize="small" html={task.text} />
+      <LessonPlaygroundCard active={isActive}>
+        <Row>
+          <Col className="col-auto">
+            <LessonPlaygroundStepTag active={isActive}>
+              <Icon type="exercise" size="extra-small" />
+            </LessonPlaygroundStepTag>
+          </Col>
+          <Col>
+            <Text className="mb-0 mt-1" fontSize="extra-small" weight={500}>
+              {title}
+            </Text>
+          </Col>
+        </Row>
+        <Row className="mt-2">
+          <Col>
+            <Text className="m-0" fontSize="extra-small" html={task.text} />
+          </Col>
+        </Row>
         {children}
-        {onReset && (
-          <Row>
-            <Col>
-              <Button size="extra-small" variant="regular" onClick={onReset}>
-                Reset
+        <Row className="mt-4">
+          <Col>
+            {onSubmit && (
+              <Button
+                size="extra-small"
+                variant="tertiary"
+                onClick={onSubmit}
+                disabled={!onSubmit}
+              >
+                Submit
               </Button>
+            )}
+          </Col>
+          <Col className="col-auto">
+            <Button
+              size="extra-small"
+              variant="ghost"
+              onClick={onReset}
+              disabled={!onReset}
+            >
+              Reset
+            </Button>
+          </Col>
+          <Col className="col-auto">
+            <Button
+              size="extra-small"
+              variant="ghost"
+              onClick={onHint || handleShowHint}
+              disabled={!onHint && !hint}
+            >
+              Hint
+            </Button>
+          </Col>
+        </Row>
+      </LessonPlaygroundCard>
+      {showHint && (
+        <LessonPlaygroundCard>
+          <Row>
+            <Col className="col-auto">
+              <LessonPlaygroundStepTag>
+                <Icon type="lightbulb" size="extra-small" />
+              </LessonPlaygroundStepTag>
+            </Col>
+            <Col>
+              <Text className="mb-0 mt-1" fontSize="extra-small" weight={500}>
+                Hint
+              </Text>
             </Col>
           </Row>
-        )}
-      </LessonPlaygroundCard>
-      {completed && hasExplanation(step) && (
-        <LessonPlaygroundCard>
-          <Headline5 className="mt-2 mb-1">Explanation</Headline5>
-          <Text className="m-0" fontSize="small" html={explanation?.text} />
+          <Row className="mt-2">
+            <Col>
+              <Text className="m-0" fontSize="extra-small" html={hint?.text} />
+            </Col>
+          </Row>
         </LessonPlaygroundCard>
       )}
-      {!completed && hasHint(step) && (
+      {completed && hasExplanation(step) && (
         <LessonPlaygroundCard>
-          <Headline5 className="mt-2 ">Hint</Headline5>
-          {showHint ? (
-            <>
-              <Text className="m-0" fontSize="small" html={hint?.text} />Z{' '}
-            </>
-          ) : (
-            <Button
-              onClick={handleShowHint}
-              size="extra-small"
-              variant="regular"
-            >
-              Show Hint
-            </Button>
-          )}
+          <Row>
+            <Col className="col-auto">
+              <LessonPlaygroundStepTag>
+                <Icon type="check" size="extra-small" />
+              </LessonPlaygroundStepTag>
+            </Col>
+            <Col>
+              <Text className="mb-0 mt-1" fontSize="extra-small" weight={500}>
+                Explanation
+              </Text>
+            </Col>
+          </Row>
+          <Row className="mt-2">
+            <Col>
+              <Text
+                className="m-0"
+                fontSize="extra-small"
+                html={explanation?.text}
+              />
+            </Col>
+          </Row>
         </LessonPlaygroundCard>
       )}
     </>

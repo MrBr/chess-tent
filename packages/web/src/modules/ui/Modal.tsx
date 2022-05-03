@@ -20,12 +20,25 @@ const { className: backdropClassName } = css`
   background-color: var(--black-color);
 `;
 
+const { className: fullScreenDialogClassName } = css`
+  max-width: none;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  transition: none !important;
+  .modal-content {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+  }
+`;
+
 const Modal = (({ close, fullScreen, ...props }) =>
   (
     <BModal
       {...props}
       onHide={close}
-      dialogClassName={fullScreen ? 'full-screen-dialog' : ''}
+      dialogClassName={fullScreen ? fullScreenDialogClassName : ''}
       contentClassName={contentClassName}
       backdropClassName={backdropClassName}
     >

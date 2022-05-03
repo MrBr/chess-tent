@@ -25,8 +25,12 @@ const Playground: FunctionComponent<
     setStepActivityState({ move: null, activeMoveIndex: null, correct: null });
 
   return (
-    <SegmentActivitySidebar title="Task" {...props} onReset={reset}>
-      <Text>
+    <SegmentActivitySidebar
+      title="Task"
+      {...props}
+      onReset={moveToPlayIndex > 0 ? reset : undefined}
+    >
+      <Text fontSize="extra-small" className="text-capitalize" weight={400}>
         {correct && !completed
           ? 'Excellent, continue..'
           : correct === false

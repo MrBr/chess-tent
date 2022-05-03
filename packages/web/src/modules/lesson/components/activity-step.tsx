@@ -1,15 +1,19 @@
 import React from 'react';
 import styled from '@chess-tent/styled-props';
+import { Components } from '@types';
 
-const Step = styled(({ children, className, onClick, active }: any) => {
-  return (
-    <div className={`${className} ${active ? 'active' : ''}`} onClick={onClick}>
-      {children}
-    </div>
-  );
-}).css`
+const Step = styled<Components['LessonPlaygroundStepTag']>(
+  ({ children, className, onClick }) => {
+    return (
+      <div className={className} onClick={onClick}>
+        {children}
+      </div>
+    );
+  },
+).props.active.css`
   &.active {
     background: var(--tertiary-color);
+    color: var(--light-color);
   }
 
   & > & {

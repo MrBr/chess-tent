@@ -99,6 +99,10 @@ export const Button = styled.button.css<ButtonProps>`
     outline: none;
   }
 
+  &:disabled {
+    cursor: not-allowed;
+  }
+
   ${sizes}
   ${variants}
 `;

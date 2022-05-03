@@ -8,7 +8,7 @@ import {
 import { isLessonActivityBoardStepCompleted } from '@chess-tent/models';
 import { SegmentActivitySidebar } from '../segment';
 
-const { Headline5, Button, Row, Col, Check, Container, Text } = ui;
+const { Headline5, Row, Col, Check, Container, Text } = ui;
 
 const Playground: FunctionComponent<
   ComponentProps<ExerciseModule<ExerciseQuestionnaireStep>['ActivitySidebar']>
@@ -48,7 +48,11 @@ const Playground: FunctionComponent<
   );
 
   return (
-    <SegmentActivitySidebar title="Select the correct options" {...props}>
+    <SegmentActivitySidebar
+      title="Select the correct options"
+      onSubmit={handleSubmit}
+      {...props}
+    >
       <Headline5 className="mt-2 mb-2">
         {completed
           ? correctSubmission
@@ -73,11 +77,6 @@ const Playground: FunctionComponent<
           </Row>
         ))}
       </Container>
-      {!completed && (
-        <Button onClick={handleSubmit} size="extra-small" className="mt-2">
-          Submit
-        </Button>
-      )}
     </SegmentActivitySidebar>
   );
 };

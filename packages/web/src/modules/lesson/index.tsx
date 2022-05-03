@@ -48,6 +48,12 @@ application.register(
   },
 );
 application.register(
+  () => import('./components/activity-step'),
+  module => {
+    application.components.LessonPlaygroundStepTag = module.default;
+  },
+);
+application.register(
   () => import('./service'),
   module => {
     application.services.updateLessonActivityActiveStep =

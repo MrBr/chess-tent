@@ -27,7 +27,7 @@ const Playground: FunctionComponent<
   ComponentProps<ExerciseModule<ExerciseArrangePiecesStep>['ActivitySidebar']>
 > = props => {
   const { step, stepActivityState, completeStep, boardState } = props;
-  const { moves: activityMoves, invalidPiece } =
+  const { moves: activityMoves } =
     stepActivityState as ExerciseActivityArrangePiecesState;
   const { moves: exerciseMoves } = step.state.task;
   const completed = isLessonActivityBoardStepCompleted(boardState, step);
@@ -43,17 +43,20 @@ const Playground: FunctionComponent<
 
   return (
     <SegmentActivitySidebar title="Arrange the pieces" {...props}>
-      {exerciseMoves?.map(({ move, piece }) => (
-        <div>
-          <PieceIcon piece={piece} />
-          <Text className="d-inline-block" key={move[0]}>
-            {move[0]} - {getPieceStatus(activityMoves, move)}
-          </Text>
-        </div>
-      ))}
-      {invalidPiece && (
-        <Text fontSize="small">{invalidPiece} shouldn't be moved</Text>
-      )}
+      <div className="mt-3">
+        {exerciseMoves?.map(({ move, piece }) => (
+          <div className="mb-1">
+            <PieceIcon piece={piece} />
+            <Text
+              className="d-inline-block mb-0"
+              key={move[0]}
+              fontSize="extra-small"
+            >
+              {move[0]} - {getPieceStatus(activityMoves, move)}
+            </Text>
+          </div>
+        ))}
+      </div>
     </SegmentActivitySidebar>
   );
 };

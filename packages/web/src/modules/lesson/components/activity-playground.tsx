@@ -16,7 +16,7 @@ const ActivityPlayground = ({
 };
 
 ActivityPlayground.Board = (({ children }) => (
-  <Col className="col-12 col-md-auto flex-md-fill pt-5">{children}</Col>
+  <Col className="col-12 col-md-auto flex-md-fill pt-3">{children}</Col>
 )) as Components['LessonPlayground']['Board'];
 
 ActivityPlayground.Sidebar = (({ children }) => (

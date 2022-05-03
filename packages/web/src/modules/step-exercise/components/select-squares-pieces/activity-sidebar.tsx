@@ -30,14 +30,16 @@ const Playground: FunctionComponent<
   return (
     <SegmentActivitySidebar title="Select the squares and pieces" {...props}>
       {!completed && (
-        <Text>{`You have ${
-          shapes.length - correctSelectionsCount
-        } squares more to go.`}</Text>
+        <Text fontSize="extra-small" weight={400}>
+          {`You have ${
+            shapes.length - correctSelectionsCount
+          } selections more to go.`}
+        </Text>
       )}
-      <Text>
-        {correctAction === false
+      <Text fontSize="extra-small" weight={400}>
+        {!correctAction
           ? 'Wrong selection'
-          : correctAction === true
+          : !!correctAction
           ? 'Correct selection!'
           : ''}
       </Text>

@@ -61,7 +61,7 @@ import {
   StepModuleComponentKey,
   StepSystemProps,
 } from './step';
-import { ClassComponent, ClassNameProps } from './_helpers';
+import { ClassComponent, ClassNameProps, ClickProps } from './_helpers';
 import { OptionsDropdownProps, ButtonProps, UI } from './ui';
 import {
   AppAnalysis,
@@ -207,6 +207,7 @@ export type LessonPlaygroundCard = FunctionComponent<{
   children: ReactNode;
   className?: string;
   onClick?: () => void;
+  active?: boolean;
 }>;
 
 export type LessonToolboxText = FunctionComponent<{
@@ -406,6 +407,9 @@ export type Components = {
   };
   LessonPlaygroundCard: LessonPlaygroundCard;
   StepTag: StepTag;
+  LessonPlaygroundStepTag: ComponentType<
+    { children: ReactNode; active?: boolean } & ClickProps & ClassNameProps
+  >;
   StepMove: StepMove;
   PieceIcon: PieceIcon;
   Router: RenderPropComponentType;

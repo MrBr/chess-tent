@@ -1,12 +1,13 @@
 import React from 'react';
 import { ActivityComment, ActivityRendererModuleProps } from '@types';
-import { components } from '@application';
+import { components, ui } from '@application';
 import { updateActivityStepState } from '@chess-tent/models';
 import Comments from './activity-comments';
 
-const { LessonPlaygroundCard } = components;
+const { LessonPlaygroundCard, LessonPlaygroundStepTag } = components;
+const { Row, Col, Icon, Text } = ui;
 
-export class ActivityRendererCommentsModuleCard extends React.Component<
+export class ActivityRendererCommentsCard extends React.Component<
   ActivityRendererModuleProps<any>
 > {
   addStepComment = (comment: ActivityComment) => {
@@ -22,6 +23,18 @@ export class ActivityRendererCommentsModuleCard extends React.Component<
 
     return (
       <LessonPlaygroundCard>
+        <Row className="align-items-center mb-3">
+          <Col className="col-auto">
+            <LessonPlaygroundStepTag>
+              <Icon type="conversation" size="extra-small" />
+            </LessonPlaygroundStepTag>
+          </Col>
+          <Col>
+            <Text weight={500} fontSize="extra-small" className="mb-1">
+              Discussion
+            </Text>
+          </Col>
+        </Row>
         <Comments
           addComment={this.addStepComment}
           comments={activityStepState.comments}

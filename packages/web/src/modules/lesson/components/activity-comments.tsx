@@ -1,12 +1,13 @@
 import React, { useCallback } from 'react';
-import { hooks, services, ui } from '@application';
+import { components, hooks, services, ui } from '@application';
 import { ActivityComment } from '@types';
 
 import Comment from './activity-comment';
 
-const { Col, Input } = ui;
+const { Col, Input, Row } = ui;
 const { useActiveUserRecord } = hooks;
 const { createActivityComment } = services;
+const { UserAvatar } = components;
 
 const ActivityComments = ({
   comments,
@@ -34,14 +35,19 @@ const ActivityComments = ({
           <Comment comment={comment} key={comment.id} />
         ))}
       </Col>
-      <Col className="pt-1 col-auto">
-        <Input
-          as="textarea"
-          rows={1}
-          placeholder="Add comment"
-          onKeyDown={handleCommentSubmit}
-        />
-      </Col>
+      <Row className="mt-3">
+        <Col className="col-auto">
+          <UserAvatar user={activeUser} size="small" className="mt-1" />
+        </Col>
+        <Col>
+          <Input
+            as="textarea"
+            rows={1}
+            placeholder="Add comment"
+            onKeyDown={handleCommentSubmit}
+          />
+        </Col>
+      </Row>
     </>
   );
 };

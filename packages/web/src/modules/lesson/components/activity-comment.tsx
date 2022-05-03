@@ -11,7 +11,7 @@ const Comment = ({ comment }: { comment: ActivityComment }) => {
   return (
     <Row className="mt-2" g-0>
       <Col className="col-auto pr-0 me-2">
-        <UserAvatar user={user} />
+        <UserAvatar user={user} size="extra-small" />
       </Col>
       <Col className="justify-content-center d-flex flex-column">
         <Text className="mb-0" fontSize="extra-small" weight={700}>

@@ -19,6 +19,7 @@ import {
 } from './activity-renderer-analysis';
 import { importLessonActivityChapters } from '../service';
 import { ActivityRendererAnalysisEngineCard } from './activity-renderer-engine';
+import { ActivityRendererCommentsCard } from './activity-renderer-comments';
 
 const { useDiffUpdates, useApi, useDispatchService, useActiveUserRecord } =
   hooks;
@@ -29,12 +30,17 @@ const LESSON_MODULES = {
     ActivityRendererAnalysisEngineCard,
     ActivityRendererStepCard,
     ActivityRendererAnalysisCard,
+    ActivityRendererCommentsCard,
   ],
 };
 
 const EMPTY_LESSON_MODULES = {
   boards: [ActivityRendererAnalysisBoard],
-  cards: [ActivityRendererAnalysisCard],
+  cards: [
+    ActivityRendererAnalysisEngineCard,
+    ActivityRendererAnalysisCard,
+    ActivityRendererCommentsCard,
+  ],
 };
 
 const Activity: ActivityComponent<LessonActivity> = props => {

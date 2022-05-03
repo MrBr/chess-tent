@@ -21,14 +21,16 @@ const EditorAction = ({
       placement="left"
       overlay={<Tooltip id={`editor-action-${id}`}>{tooltip}</Tooltip>}
     >
-      <Text
-        className="m-0 cursor-pointer"
-        weight={400}
-        fontSize="small"
-        onClick={disabled ? undefined : onClick}
-      >
-        {children}
-      </Text>
+      <div>
+        <Text
+          className="m-0 cursor-pointer"
+          weight={400}
+          fontSize="small"
+          onClick={disabled ? undefined : onClick}
+        >
+          {children}
+        </Text>
+      </div>
     </OverlayTrigger>
   );
 };

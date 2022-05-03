@@ -1,10 +1,10 @@
 import React, { useCallback } from 'react';
 import { components, hooks, ui } from '@application';
 import { Lesson, User } from '@chess-tent/models';
+import Welcome from './welcome';
 
 const { Page, ScheduledTrainings, Trainings, LessonTemplates } = components;
-const { Button, Row, Col, Headline5, CardEmpty, Headline2, Text, Container } =
-  ui;
+const { Button, Row, Col, Headline5, CardEmpty, Container } = ui;
 const {
   useMyLessons,
   usePromptNewTrainingModal,
@@ -43,14 +43,7 @@ const DashboardCoach = ({ user }: { user: User }) => {
     <Page>
       {trainingModal}
       <Container fluid className="ps-5 pe-5">
-        <Row className="mt-4">
-          <Col>
-            <Headline2>Hello, {user.name}</Headline2>
-            <Text>
-              We hope you enjoy the platform. Let us know if you have any issue.
-            </Text>
-          </Col>
-        </Row>
+        <Welcome name={user.name} />
         {hasStudents && (
           <>
             <Row className="mt-5 mb-3">

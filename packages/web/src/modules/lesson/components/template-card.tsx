@@ -1,16 +1,15 @@
 import React from 'react';
-import { components, ui } from '@application';
+import { ui } from '@application';
 import { Lesson } from '@chess-tent/models';
 import { css } from '@chess-tent/styled-props';
 
 import LessonThumbnail from './thumbnail';
 
-const { Headline6, Text, Card, Row, Col } = ui;
-const { UserAvatar } = components;
+const { Headline6, Text, Card, Row, Col, Line } = ui;
 
 const { className } = css`
   width: 300px;
-  height: 300px;
+  height: 345px;
 
   .thumbnail-container {
     height: 165px;
@@ -19,10 +18,9 @@ const { className } = css`
   }
 `;
 
-const LessonCard: React.FC<{
+const TemplateCard: React.FC<{
   lesson: Lesson;
   onClick?: (lesson: Lesson) => void;
-  owned?: boolean;
 }> = ({ lesson, onClick }) => (
   <Card
     key={lesson.id}
@@ -37,28 +35,29 @@ const LessonCard: React.FC<{
       </Row>
       <Row>
         <Col>
-          <Text className="m-0 mb-1" fontSize="extra-small" weight={400}>
-            {lesson.difficulty}
+          <Text className="m-0 mb-1" fontSize="extra-small">
+            {lesson.difficulty || 'TRAINING'}
           </Text>
         </Col>
       </Row>
       <Row>
         <Col>
-          <Headline6 className="m-0 mb-2">{lesson.state.title}</Headline6>
+          <Headline6 className="m-0 mb-3">{lesson.state.title}</Headline6>
         </Col>
       </Row>
+      <Row className="mb-2">
+        <Text fontSize="extra-small" className="mb-0">
+          {lesson.published
+            ? 'Finalize the lesson'
+            : `${lesson.state.chapters.length} chapters`}
+        </Text>
+      </Row>
+      <Line className="mb-2" />
       <Row className="g-0">
-        <Col className="col-auto me-2">
-          <UserAvatar user={lesson.owner} size="extra-small" />
-        </Col>
-        <Col>
-          <Text fontSize="extra-small" weight={400}>
-            {lesson.owner.name}
-          </Text>
-        </Col>
+        <Col xs={8}>{lesson.published ? 'Published' : 'Draft'}</Col>
       </Row>
     </Card.Body>
   </Card>
 );
 
-export default LessonCard;
+export default TemplateCard;

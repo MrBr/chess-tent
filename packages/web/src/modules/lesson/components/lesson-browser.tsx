@@ -6,7 +6,7 @@ import LessonCard from '../components/lesson-card';
 import DifficultyDropdown from './difficulty-dropdown';
 import { isOwned } from '../service';
 
-const { Container, Headline3, Row, Col } = ui;
+const { Row, Col } = ui;
 const {
   useHistory,
   useUserTrainings,
@@ -18,8 +18,6 @@ const { TagsSelect, Filters } = components;
 const LessonBrowser: Components['LessonBrowser'] = ({
   lessons,
   onFiltersChange,
-  editable,
-  title,
 }) => {
   const history = useHistory();
   const { mounted } = useComponentStateSilent();
@@ -46,17 +44,14 @@ const LessonBrowser: Components['LessonBrowser'] = ({
 
   const handleLessonClick = useCallback(
     (lesson: Lesson) => {
-      history.push(`/lesson/${editable ? '' : 'preview/'}${lesson.id}`);
+      history.push(`/lesson/preview/${lesson.id}`);
     },
-    [editable, history],
+    [history],
   );
 
   return (
-    <Container fluid>
-      <Row className="mt-5 mb-4">
-        <Col className="text-wrap" md={2} xs={8}>
-          <Headline3 className="m-0">{title}</Headline3>
-        </Col>
+    <>
+      <Row className="mb-4">
         <Col>
           <Filters>
             {onFiltersChange && (
@@ -98,7 +93,7 @@ const LessonBrowser: Components['LessonBrowser'] = ({
             </Col>
           ))}
       </Row>
-    </Container>
+    </>
   );
 };
 

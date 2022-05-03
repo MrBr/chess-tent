@@ -1,11 +1,11 @@
 import React from 'react';
 import { ui } from '@application';
 import { Components } from '@types';
-import LessonCard from '../components/lesson-card';
+import TemplateCard from './template-card';
 
 const { Row, Col } = ui;
 
-const LessonTemplates: Components['LessonTemplates'] = ({
+const TemplateBrowser: Components['LessonTemplates'] = ({
   lessons,
   onLessonClick,
 }) => {
@@ -17,11 +17,11 @@ const LessonTemplates: Components['LessonTemplates'] = ({
     <Row>
       {lessons.map(lesson => (
         <Col key={lesson.id} className="col-auto">
-          <LessonCard lesson={lesson} onClick={onLessonClick} />
+          <TemplateCard lesson={lesson} onClick={onLessonClick} />
         </Col>
       ))}
     </Row>
   );
 };
 
-export default LessonTemplates;
+export default TemplateBrowser;

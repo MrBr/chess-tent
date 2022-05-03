@@ -112,7 +112,7 @@ application.register(
   },
 );
 application.register(
-  () => import('./components/lesson-templates'),
+  () => import('./components/template-browser'),
   module => {
     application.components.LessonTemplates = module.default;
   },

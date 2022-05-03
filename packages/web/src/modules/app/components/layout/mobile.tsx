@@ -15,7 +15,7 @@ export default styled<Components['Layout']>(
     gridArea: 'header',
     height: 54,
     boxShadow: '0px 1px 0px #ECECEC',
-    zIndex: 10,
+    zIndex: 11,
     padding: '0 3em',
   },
   '.layout-content': {

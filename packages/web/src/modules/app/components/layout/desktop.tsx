@@ -18,7 +18,7 @@ export default styled<Components['Layout']>(
   '.layout-header': {
     gridArea: 'header',
     height: 64,
-    zIndex: 10,
+    zIndex: 11,
   },
   '.layout-content': {
     gridArea: 'content',

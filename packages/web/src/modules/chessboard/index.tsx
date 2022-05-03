@@ -1,7 +1,7 @@
 import application from '@application';
 
 import './style.css';
-import './themes/default.css';
+import './themes/figma.css';
 
 application.register(
   () => import('./components/board'),

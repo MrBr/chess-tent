@@ -1,0 +1,61 @@
+/*
+ * Board
+ */
+cg-board {
+  background-image: url('../images/board/brown.svg');
+}
+
+.cg-wrap piece {
+  background-size: 80%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.cg-wrap piece.pawn.white,
+.piece.pawn.white {
+  background-image: url('../images/pieces/figma/wP.svg');
+}
+.cg-wrap piece.bishop.white,
+.piece.bishop.white {
+  background-image: url('../images/pieces/figma/wB.svg');
+}
+.cg-wrap piece.knight.white,
+.piece.knight.white {
+  background-image: url('../images/pieces/figma/wN.svg');
+}
+.cg-wrap piece.rook.white,
+.piece.rook.white {
+  background-image: url('../images/pieces/figma/wR.svg');
+}
+.cg-wrap piece.queen.white,
+.piece.queen.white {
+  background-image: url('../images/pieces/figma/wQ.svg');
+}
+.cg-wrap piece.king.white,
+.piece.king.white {
+  background-image: url('../images/pieces/figma/wK.svg');
+}
+.cg-wrap piece.pawn.black,
+.piece.pawn.black {
+  background-image: url('../images/pieces/figma/bP.svg');
+}
+.cg-wrap piece.bishop.black,
+.piece.bishop.black {
+  background-image: url('../images/pieces/figma/bB.svg');
+}
+.cg-wrap piece.knight.black,
+.piece.knight.black {
+  background-image: url('../images/pieces/figma/bN.svg');
+}
+.cg-wrap piece.rook.black,
+.piece.rook.black {
+  background-image: url('../images/pieces/figma/bR.svg');
+}
+.cg-wrap piece.queen.black,
+.piece.queen.black {
+  background-image: url('../images/pieces/figma/bQ.svg');
+}
+.cg-wrap piece.king.black,
+.piece.king.black {
+  background-image: url('../images/pieces/figma/bK.svg');
+}

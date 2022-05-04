@@ -5,7 +5,7 @@ import styled from '@chess-tent/styled-props';
 import Section from './section';
 
 const { Row, Col, Container, Text } = ui;
-const { Logo } = components;
+const { Logo, Link } = components;
 
 const Header = styled<{ className?: string }>(({ className }) => (
   <Section className={className} fill>
@@ -17,7 +17,11 @@ const Header = styled<{ className?: string }>(({ className }) => (
         </Col>
         <Col md={{ offset: 3, span: 6 }}>
           <ul className="footer-links">
-            <li>About</li>
+            <li>
+              <Link to="/about" ghost>
+                About
+              </Link>
+            </li>
             <li>Terms of Use</li>
             <li>Contact</li>
             <li>Privacy Policy</li>

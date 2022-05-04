@@ -272,9 +272,7 @@ export const LandingPage = () => {
                 <Headline5 className="mt-4 mb-4">
                   Open source codebase
                 </Headline5>
-                <Text fontSize="small">
-                  Stockfish 14 integrated with the board
-                </Text>
+                <Text fontSize="small">Being open to the bone</Text>
               </div>
             </Col>
           </Row>
@@ -298,16 +296,16 @@ export const LandingPage = () => {
             <Col md={{ offset: 2, span: 3 }} xs={12}>
               <Row className="code-stats">
                 <Col>
-                  <Headline3>800+</Headline3>
+                  <Headline3>1000+</Headline3>
                   <Text>Commits</Text>
                 </Col>
                 <Col>
-                  <Headline3>12500+</Headline3>
+                  <Headline3>35000+</Headline3>
                   <Text>Lines</Text>
                 </Col>
                 <Col>
                   <Headline3>5+</Headline3>
-                  <Text>Developers</Text>
+                  <Text>Contributions</Text>
                 </Col>
               </Row>
             </Col>

@@ -78,7 +78,7 @@ export const LandingPage = () => {
       <Section>
         <Container>
           <Row>
-            <Col md={{ offset: 2, span: 8 }}>
+            <Col md={{ offset: 2, span: 8 }} className="position-relative">
               <img src={headerLeftUrl} alt="" className="header-left" />
               <img src={headerRightUrl} alt="" className="header-right" />
               <Hero align="center">

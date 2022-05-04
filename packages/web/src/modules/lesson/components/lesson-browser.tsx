@@ -84,7 +84,7 @@ const LessonBrowser: Components['LessonBrowser'] = ({
       <Row>
         {trainings &&
           lessons?.map(lesson => (
-            <Col key={lesson.id} className="col-auto">
+            <Col key={lesson.id} className="col-auto mb-4">
               <LessonCard
                 lesson={lesson}
                 onClick={handleLessonClick}

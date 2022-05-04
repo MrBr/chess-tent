@@ -16,7 +16,7 @@ const TemplateBrowser: Components['LessonTemplates'] = ({
   return (
     <Row>
       {lessons.map(lesson => (
-        <Col key={lesson.id} className="col-auto">
+        <Col key={lesson.id} className="col-auto mb-4">
           <TemplateCard lesson={lesson} onClick={onLessonClick} />
         </Col>
       ))}

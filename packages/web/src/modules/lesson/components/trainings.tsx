@@ -14,7 +14,7 @@ const Trainings: Components['Trainings'] = ({ trainings }) => {
   return (
     <Row>
       {trainings.map(activity => (
-        <Col key={activity.id} className="col-auto">
+        <Col key={activity.id} className="col-auto mb-4">
           <TrainingCard training={activity} />
         </Col>
       ))}

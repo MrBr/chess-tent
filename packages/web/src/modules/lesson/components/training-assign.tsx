@@ -6,7 +6,7 @@ import {
   useUserTrainings,
 } from '../hooks/training-hooks';
 import { createLessonActivity, createNewLesson } from '../service';
-import ActivityForm from './activity-form';
+import ActivityForm, { ActivityData } from './activity-form';
 
 const { Headline3, Headline4, Button, Text, Modal, Container, Row, Col } = ui;
 const { useActiveUserRecord, useHistory } = hooks;
@@ -18,7 +18,7 @@ const TrainingAssign = ({ close }: { close: () => void }) => {
   const history = useHistory();
 
   const createTraining = useCallback(
-    async data => {
+    async (data: ActivityData) => {
       const { new: newTraining } = data.date
         ? userScheduledTrainings
         : userTrainings;
@@ -26,9 +26,9 @@ const TrainingAssign = ({ close }: { close: () => void }) => {
       const training = createLessonActivity(
         lesson,
         user,
-        { title: data.title },
+        { title: data.title, date: data.date, weekly: data.weekly },
         { activeStepId: 'analysis-step' },
-        [data.user],
+        data.students,
       );
       await newTraining(training);
       history.push(`/activity/${training.id}`);

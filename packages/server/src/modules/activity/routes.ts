@@ -1,5 +1,4 @@
 import application, { middleware } from '@application';
-import { TYPE_ACTIVITY } from '@chess-tent/models';
 import { ActivityFilters } from '@chess-tent/types';
 import {
   canEditActivity,
@@ -7,18 +6,11 @@ import {
   saveActivity,
   findActivities,
   updateActivity,
-  sendActivity,
 } from './middleware';
 
-const {
-  identify,
-  sendData,
-  sendStatusOk,
-  toLocals,
-  createNotification,
-  sendNotification,
-} = middleware;
+const { identify, sendData, sendStatusOk, toLocals } = middleware;
 
+console.warn('TODO - activity notification flow');
 application.service.registerPostRoute(
   '/activity/save',
   identify,

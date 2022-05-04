@@ -6,16 +6,17 @@ import {
   canEditLesson as canEditLessonService,
   canAccessLesson as canAccessLessonService,
 } from '@chess-tent/models';
+import { AppDocument } from '@types';
 import { LessonsRequest, LessonUpdates } from '@chess-tent/types';
-import { MongooseFilterQuery } from 'mongoose';
+import { FilterQuery } from 'mongoose';
 import { utils, db, service } from '@application';
-import { LessonModel, depopulate } from './model';
+import { LessonModel, depopulate, DepupulatedLesson } from './model';
 
 export const saveLesson = (lesson: Lesson) =>
-  new Promise(resolve => {
+  new Promise<void>(resolve => {
     LessonModel.updateOne({ _id: lesson.id }, depopulate(lesson), {
       upsert: true,
-    }).exec((err, result) => {
+    }).exec(err => {
       if (err) {
         throw err;
       }
@@ -34,13 +35,16 @@ export const getLesson = (
         if (err) {
           throw err;
         }
-        resolve(result ? result.toObject() : null);
+        resolve(result ? result.toObject<Lesson>() : null);
       });
   });
 
 export const publishLesson = (lessonId: Lesson['id']) =>
-  new Promise(async resolve => {
+  new Promise<void>(async resolve => {
     const lesson = await getLesson(lessonId, '');
+    if (!lesson) {
+      throw new Error('Publishing non-existing lesson.');
+    }
     LessonModel.bulkWrite(
       [
         {
@@ -49,9 +53,8 @@ export const publishLesson = (lessonId: Lesson['id']) =>
             update: {
               $setOnInsert: { _id: service.generateIndex() },
               $set: {
-                ...lesson,
+                ...publishLessonService(lesson as Lesson),
                 docId: lessonId,
-                published: true,
               },
             },
             upsert: true,
@@ -68,6 +71,7 @@ export const publishLesson = (lessonId: Lesson['id']) =>
           },
         },
       ],
+      {},
       err => {
         if (err) {
           throw err;
@@ -78,7 +82,7 @@ export const publishLesson = (lessonId: Lesson['id']) =>
   });
 
 export const unpublishLesson = (lessonId: Lesson['id']) =>
-  new Promise(resolve => {
+  new Promise<void>(resolve => {
     LessonModel.bulkWrite(
       [
         {
@@ -102,6 +106,7 @@ export const unpublishLesson = (lessonId: Lesson['id']) =>
           },
         },
       ],
+      {},
       err => {
         if (err) {
           throw err;
@@ -112,7 +117,7 @@ export const unpublishLesson = (lessonId: Lesson['id']) =>
   });
 
 export const patchLesson = (lessonId: Lesson['id'], lesson: Partial<Lesson>) =>
-  new Promise(resolve => {
+  new Promise<void>(resolve => {
     LessonModel.updateOne({ _id: lessonId }, { $set: depopulate(lesson) }).exec(
       (err, result) => {
         if (err) {
@@ -128,7 +133,7 @@ export const updateLessonSteps = (
   updates: LessonUpdates,
 ) => {
   const { $set, $unset } = service.subjectPathUpdatesToMongoose(updates);
-  return new Promise(resolve => {
+  return new Promise<void>(resolve => {
     LessonModel.updateOne({ _id: lessonId }, { $set, $unset }).exec(
       (err, result) => {
         if (err) {
@@ -148,10 +153,11 @@ export const findLessons = (
       owner: filters.owner,
     });
     const users = db.inQuery('users', filters.users);
-    const query: MongooseFilterQuery<any> = utils.notNullOrUndefined({
-      published: filters.published,
-      ...db.orQueries(owner, users),
-    });
+    const query: FilterQuery<AppDocument<DepupulatedLesson>> =
+      utils.notNullOrUndefined({
+        published: filters.published,
+        ...db.orQueries(owner, users),
+      });
 
     if (filters.difficulty) {
       query['difficulty'] = { $eq: filters.difficulty };
@@ -166,11 +172,11 @@ export const findLessons = (
     }
 
     if (filters.hasDocId === true) {
-      query['docId'] = { $exists: true, $ne: null };
+      query['docId'] = { $exists: true, $ne: undefined };
     }
 
     if (filters.hasDocId === false) {
-      query['docId'] = { $not: { $exists: true, $ne: null } };
+      query['docId'] = { $not: { $exists: true, $ne: undefined } };
     }
 
     LessonModel.find(query)
@@ -181,7 +187,7 @@ export const findLessons = (
         if (err) {
           throw err;
         }
-        resolve(result.map(item => item.toObject()));
+        resolve(result.map(item => item.toObject<Lesson>()));
       });
   });
 

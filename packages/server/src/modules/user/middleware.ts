@@ -83,7 +83,7 @@ export const verifyUser: MiddlewareFunction = async (req, res, next) => {
     }
 
     const authorized = user
-      ? await validateUserPassword(res.locals.user, user.password)
+      ? await validateUserPassword(res.locals.user, user.password as string)
       : false;
 
     if (!authorized) {

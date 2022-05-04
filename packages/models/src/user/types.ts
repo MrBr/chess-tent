@@ -8,7 +8,7 @@ export interface User extends Subject {
   name: string;
   email: string;
   type: typeof TYPE_USER;
-  password: string;
+  password?: string;
   coach?: boolean;
   active?: boolean;
   state: {
@@ -41,7 +41,7 @@ export interface NormalizedUser {
   active: User['active'];
   nickname: User['nickname'];
   email: User['email'];
-  password: User['password'];
+  password?: User['password'];
   coach?: User['coach'];
   state: User['state'];
 }

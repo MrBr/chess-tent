@@ -1,7 +1,6 @@
 import { action, socket } from '@application';
 import {
   ACTION_EVENT,
-  ROOM_USERS_ACTION,
   SEND_PATCH,
   SUBSCRIBE_EVENT,
   UNSUBSCRIBED_EVENT,

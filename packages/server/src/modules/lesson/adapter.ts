@@ -24,7 +24,7 @@ const exerciseStepAdapter = async (entity: AppDocument<Lesson>) => {
   const updateExerciseSteps = (...args: [Step]): Step => {
     const step = args[0] as Step<{
       exerciseType: 'questionnaire';
-      exerciseState: {
+      exerciseState?: {
         explanation: string;
         question: string;
       };

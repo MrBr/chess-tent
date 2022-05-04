@@ -15,7 +15,7 @@ export const addMessageToConversation = (
   conversationId: Conversation['id'],
   message: NormalizedMessage,
 ) =>
-  new Promise(resolve => {
+  new Promise<void>(resolve => {
     const idRegex = db.getBucketingIdFilterRegex(conversationId);
     // Server should be the source of truth for time
     const updatedMessage = updateMessage(message, {
@@ -76,7 +76,7 @@ export const updateConversationMessage = (
     },
     {},
   );
-  new Promise(resolve => {
+  new Promise<void>(resolve => {
     MessageModel.updateOne(
       {
         _id: {
@@ -110,13 +110,13 @@ export const findConversations = (
         if (err) {
           throw err;
         }
-        resolve(result.map(item => item.toObject()));
+        resolve(result.map(item => item.toObject<Conversation>()));
       });
   });
 
 export const getConversation = (
   conversationId: Conversation['id'],
-): Promise<Conversation> =>
+): Promise<Conversation | undefined> =>
   new Promise(resolve => {
     ConversationModel.findById(conversationId)
       .populate('users')
@@ -130,7 +130,7 @@ export const getConversation = (
         if (err) {
           throw err;
         }
-        resolve(result?.toObject());
+        resolve(result?.toObject<Conversation>());
       });
   });
 

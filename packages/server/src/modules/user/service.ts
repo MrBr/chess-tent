@@ -1,7 +1,8 @@
 import _ from 'lodash';
-import { User } from '@chess-tent/models';
+import { NormalizedUser, User } from '@chess-tent/models';
+import { AppDocument } from '@types';
 import { compare, hash } from 'bcrypt';
-import { MongooseFilterQuery } from 'mongoose';
+import { FilterQuery } from 'mongoose';
 import { utils, service } from '@application';
 import { UserModel } from './model';
 
@@ -10,8 +11,11 @@ export const addUser = (user: User) =>
     new UserModel(user).save((err, result) => {
       if (err) {
         const error =
+          // TODO - see how to make the error typesafe
+          // @ts-ignore
           err.code === 11000
             ? {
+                // @ts-ignore
                 message: `Field(s): ${Object.keys(err.keyValue).join(
                   ',',
                 )} are already taken.`,
@@ -30,15 +34,13 @@ export const updateUser = (
 ): Promise<void> =>
   new Promise((resolve, reject) => {
     const userPatch = service.flattenStateToMongoose$set(user);
-    UserModel.updateOne({ _id: userId }, { $set: userPatch }).exec(
-      (err, result) => {
-        if (err) {
-          reject(err);
-          return;
-        }
-        resolve();
-      },
-    );
+    UserModel.updateOne({ _id: userId }, { $set: userPatch }).exec(err => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve();
+    });
   });
 
 export const getUser = (
@@ -49,6 +51,7 @@ export const getUser = (
     UserModel.findOne(
       UserModel.translateAliases(userDescr),
       projection,
+      {},
       (err, user) => {
         if (err) {
           reject(err);
@@ -62,7 +65,7 @@ export const getUser = (
 export const findUsers = (
   // TODO - validate filters (whole app)
   filters: Partial<{
-    coach?: string;
+    coach?: boolean;
     name?: string;
     search?: string;
     studentElo?: {
@@ -72,10 +75,11 @@ export const findUsers = (
     speciality?: string;
   }>,
 ): Promise<User[]> => {
-  const query: MongooseFilterQuery<any> = utils.notNullOrUndefined({
-    coach: filters.coach,
-    name: filters.name,
-  });
+  const query: FilterQuery<AppDocument<NormalizedUser>> =
+    utils.notNullOrUndefined({
+      coach: filters.coach,
+      name: filters.name,
+    });
 
   if (filters.studentElo) {
     const studentEloFilter: { $gt?: number; $lte?: number } = {};
@@ -112,7 +116,7 @@ export const findUsers = (
   });
 };
 
-export const validateUser = (user: unknown) => {
+export const validateUser = (user: {}) => {
   return new UserModel(user).validateSync();
 };
 

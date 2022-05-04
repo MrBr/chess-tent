@@ -1,4 +1,4 @@
-import { Mentorship, NormalizedMentorship, User } from '@chess-tent/models';
+import { Mentorship, User } from '@chess-tent/models';
 import { MentorshipModel } from './model';
 
 export const requestMentorship = (student: User['id'], coach: User['id']) =>
@@ -20,8 +20,8 @@ export const resolveMentorshipRequest = (
   student: User['id'],
   coach: User['id'],
   approved: boolean,
-): Promise<NormalizedMentorship> =>
-  new Promise(resolve => {
+) =>
+  new Promise<void>(resolve => {
     MentorshipModel.updateOne({ student, coach }, { approved }).exec(
       (err, result) => {
         if (err) {
@@ -40,7 +40,7 @@ export const getStudents = (coach: User['id']): Promise<Mentorship[]> =>
         if (err) {
           throw err;
         }
-        resolve(result.map(item => item.toObject()));
+        resolve(result.map(item => item.toObject<Mentorship>()));
       });
   });
 
@@ -52,6 +52,6 @@ export const getCoaches = (student: User['id']): Promise<Mentorship[]> =>
         if (err) {
           throw err;
         }
-        resolve(result.map(item => item.toObject()));
+        resolve(result.map(item => item.toObject<Mentorship>()));
       });
   });

@@ -7,7 +7,7 @@ import { RecordValue } from '@chess-tent/redux-record/types';
 export interface ActivityData {
   students?: User[];
   title?: string;
-  date?: string;
+  date?: Date;
   weekly?: boolean;
 }
 interface ActivityFormProps {
@@ -49,7 +49,7 @@ const ActivityForm = ({
           .filter(({ role }) => role === LessonActivityRole.STUDENT)
           .map(({ user }) => user) || [],
       title: activity?.title || '',
-      date: activity?.date || '',
+      date: activity?.date,
       repeat: activity?.weekly || false,
     }),
     [activity],

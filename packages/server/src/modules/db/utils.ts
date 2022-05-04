@@ -1,5 +1,5 @@
-import { Document, model, Schema, SchemaOptions } from 'mongoose';
-import { DB } from '@types';
+import { model, Schema, SchemaOptions } from 'mongoose';
+import { AppDocument, DB } from '@types';
 import { v4 as uuid } from 'uuid';
 import { DateRange } from '@chess-tent/types';
 
@@ -14,7 +14,7 @@ export const createSchema: DB['createSchema'] = <T extends {}>(
   definition: T,
   options: SchemaOptions = {},
   useDefault = true,
-) => {
+): Schema => {
   const defaultDefinition = {
     _id: { type: String, default: uuid, alias: 'id' } as unknown as string,
     v: {
@@ -45,15 +45,14 @@ export const createSchema: DB['createSchema'] = <T extends {}>(
       versionKey: false,
     },
   );
-  return schema;
+  return schema as unknown as Schema;
 };
 
 export const createModel: DB['createModel'] = <T>(
   type: string,
   schema: Schema,
 ) => {
-  const newModel = model<Document & T>(type, schema);
-  return newModel;
+  return model<AppDocument<T>>(type, schema);
 };
 
 export const orQueries: DB['orQueries'] = (...queries) => {

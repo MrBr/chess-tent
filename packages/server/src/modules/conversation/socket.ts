@@ -11,6 +11,9 @@ socket.registerMiddleware(async (stream, next) => {
   if (stream.event === ACTION_EVENT && stream.data.type === SEND_MESSAGE) {
     const action = stream.data;
     const conversation = await getConversation(action.meta.conversationId);
+    if (!conversation) {
+      throw new Error('Sending message to non-existing conversation');
+    }
     addMessageToConversation(conversation.id, action.payload);
     conversation.users.forEach(user => {
       user.id !== action.payload.owner &&
@@ -23,7 +26,7 @@ socket.registerMiddleware(async (stream, next) => {
     stream.data.meta.type === TYPE_MESSAGE
   ) {
     const action = stream.data;
-    const message = (stream.data.payload as unknown) as Message;
+    const message = stream.data.payload as unknown as Message;
     updateConversationMessage(
       action.meta.conversationId,
       action.meta.id,

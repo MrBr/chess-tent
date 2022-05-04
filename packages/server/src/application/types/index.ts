@@ -1,12 +1,6 @@
 import { register } from 'core-module';
 import { ErrorRequestHandler, RequestHandler } from 'express';
-import {
-  Schema,
-  SchemaOptions,
-  Document,
-  Model,
-  MongooseFilterQuery,
-} from 'mongoose';
+import { Schema, SchemaOptions, Document, Model, FilterQuery } from 'mongoose';
 import {
   NormalizedUser,
   SubjectPathUpdate,
@@ -56,8 +50,10 @@ export type DB = {
   roleSchema: Schema;
   depopulateRole: <T>(role: Role<T>) => NormalizedRole<T>;
   createModel: <T>(type: string, schema: Schema) => Model<AppDocument<T>>;
-  orQueries: (...args: MongooseFilterQuery<any>[]) => {
-    $or: MongooseFilterQuery<any>[] | undefined;
+  orQueries: <T extends FilterQuery<any>>(
+    ...args: T[]
+  ) => {
+    $or: T[] | undefined;
   };
   inQuery: <T, F extends string>(
     field: F,
@@ -277,11 +273,7 @@ export type SocketService = {
   identify: (stream: SocketStream | Socket) => Auth['apiTokenPayload'] | null;
 };
 
-export class AppError extends Error {
-  constructor() {
-    super();
-  }
-}
+export class AppError extends Error {}
 export type Errors = {
   BadRequest: typeof AppError;
 };

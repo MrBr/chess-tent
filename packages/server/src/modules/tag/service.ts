@@ -1,5 +1,5 @@
-import { TagModel } from './model';
 import { Tag } from '@chess-tent/models';
+import { TagModel } from './model';
 
 export const getAll = (): Promise<Tag[]> =>
   new Promise(resolve => {

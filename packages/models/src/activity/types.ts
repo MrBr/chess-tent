@@ -14,7 +14,7 @@ export interface Activity<
   subjectType?: T['type'];
   type: typeof TYPE_ACTIVITY;
   roles: Role<string>[];
-  date?: string;
+  date?: Date;
   weekly?: boolean;
   title?: string;
 }
@@ -29,7 +29,7 @@ export interface NormalizedActivity<
   subject: Subject;
   subjectType: T['type'];
   roles: NormalizedRole<string>[];
-  date?: string;
+  date?: Date;
   weekly?: boolean;
   title?: string;
 }

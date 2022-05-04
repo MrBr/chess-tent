@@ -43,7 +43,7 @@ const activitySchema = db.createSchema<DepupulatedActivity>(
     } as unknown as typeof TYPE_ACTIVITY,
     date: {
       type: Schema.Types.Date,
-    } as unknown as string,
+    } as unknown as Date,
     weekly: {
       type: Schema.Types.Boolean,
     } as unknown as boolean,

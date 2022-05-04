@@ -39,7 +39,7 @@ const TrainingScheduledCard = (props: { training: LessonActivity }) => {
     training: { title, roles },
   } = props;
   const history = useHistory();
-  const date = new Date(props.training.date as string);
+  const date = new Date(props.training.date as unknown as string);
   const coach = roles.find(
     ({ user, role }) =>
       role === LessonActivityRole.COACH || LessonActivityRole.OWNER,

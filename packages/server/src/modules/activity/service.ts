@@ -1,11 +1,12 @@
-import { MongooseFilterQuery } from 'mongoose';
+import { FilterQuery } from 'mongoose';
+import { AppDocument } from '@types';
 import { service, db, utils } from '@application';
 import { Activity, SubjectPathUpdate, User } from '@chess-tent/models';
 import { ActivityFilters } from '@chess-tent/types';
-import { ActivityModel, depopulate } from './model';
+import { ActivityModel, depopulate, DepupulatedActivity } from './model';
 
 export const saveActivity = (activity: Activity) =>
-  new Promise(resolve => {
+  new Promise<void>(resolve => {
     ActivityModel.updateOne({ _id: activity.id }, depopulate(activity), {
       upsert: true,
     }).exec(err => {
@@ -21,7 +22,7 @@ export const updateActivity = (
   updates: SubjectPathUpdate[],
 ) => {
   const { $set, $unset } = service.subjectPathUpdatesToMongoose(updates);
-  return new Promise(resolve => {
+  return new Promise<void>(resolve => {
     ActivityModel.updateOne(
       { _id: activityId },
       { $set, $unset },
@@ -40,14 +41,14 @@ export const updateActivity = (
 export const getActivity = (
   activityId: Activity['id'],
 ): Promise<Activity | null> =>
-  new Promise(resolve => {
+  new Promise<Activity | null>(resolve => {
     ActivityModel.findById(activityId)
       .populate('roles.user')
       .exec((err, result) => {
         if (err) {
           throw err;
         }
-        resolve(result ? result.toObject() : null);
+        resolve(result ? result.toObject<Activity>() : null);
       });
   });
 
@@ -56,8 +57,8 @@ export const findActivities = (
 ): Promise<Activity[]> =>
   new Promise(resolve => {
     // TODO - subjectType
-    const users = utils.notNullOrUndefined({
-      'roles.user': activityFilters.users,
+    const roles = utils.notNullOrUndefined({
+      'roles.user': { $in: activityFilters.users },
     });
 
     const date = utils.notNullOrUndefined({
@@ -68,11 +69,14 @@ export const findActivities = (
       weekly: activityFilters.weekly,
     });
 
-    const query: MongooseFilterQuery<any> = utils.notNullOrUndefined({
-      subject: activityFilters.subject,
-      ...db.orQueries(users),
-      ...date,
-    });
+    const query: FilterQuery<AppDocument<DepupulatedActivity>> =
+      utils.notNullOrUndefined({
+        subject: activityFilters.subject
+          ? { $eq: activityFilters.subject as unknown as Activity['subject'] } // TODO - verify activity model
+          : undefined,
+        ...db.orQueries(roles),
+        ...date,
+      });
 
     ActivityModel.find(query)
       .populate('roles.user')
@@ -80,7 +84,7 @@ export const findActivities = (
         if (err) {
           throw err;
         }
-        resolve(result.map(item => item.toObject()));
+        resolve(result.map(item => item.toObject<Activity>()));
       });
   });
 

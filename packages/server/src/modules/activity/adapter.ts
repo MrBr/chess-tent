@@ -15,7 +15,6 @@ const activityBoardStateAdapter = async (
     completedSteps: ((entity as any).completedSteps as string[]) || [],
     id: service.generateIndex(),
   };
-  delete entity.state;
   entity.state = {
     mainBoardId: mainBoard.id,
     boards: {

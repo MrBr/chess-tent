@@ -1,6 +1,5 @@
 const CracoAlias = require('craco-alias');
 const webpack = require('webpack');
-const path = require('path');
 
 // TODO - fix deprecation warnings
 module.exports = {
@@ -30,7 +29,7 @@ module.exports = {
       plugin: {
         overrideWebpackConfig: ({ webpackConfig, context: { env } }) => {
           if (env === 'production') {
-            webpackConfig.devtool = 'none';
+            webpackConfig.devtool = false;
           }
           webpackConfig.plugins.push(
             new webpack.optimize.LimitChunkCountPlugin({

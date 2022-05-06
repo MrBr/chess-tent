@@ -6,6 +6,7 @@ import NewLesson from './pages/new-lesson';
 import Activity from './pages/activity';
 import Lessons from './pages/browse-lessons';
 import Templates from './pages/templates';
+import Studies from './pages/studies';
 
 const { Switch, AuthorizedRoute } = components;
 
@@ -36,5 +37,10 @@ application.services.addRoute(() => (
 application.services.addRoute(() => (
   <AuthorizedRoute path="/templates">
     <Templates />
+  </AuthorizedRoute>
+));
+application.services.addRoute(() => (
+  <AuthorizedRoute path="/studies">
+    <Studies />
   </AuthorizedRoute>
 ));

@@ -39,6 +39,7 @@ const Menu: Components['Menu'] = () => {
         <Item icon="logo" label="ChessTent" break />
         <Item icon="dashboard" path="/" label="Dashboard" />
         <Item icon="lightbulb" path="/lessons" label="Lessons" />
+        <Item icon="board" path="/studies" label="Studies" />
         <Item icon="contacts" path="/coaches" label="Coaches" />
         <Item icon="template" path="/templates" label="Templates" />
         <Item bottom>

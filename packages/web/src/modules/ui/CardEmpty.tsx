@@ -6,7 +6,7 @@ import Card from './Card';
 import Icon from './Icon';
 import { Text } from './Text';
 import { Button } from './Button';
-import Tag from './Tag';
+import Badge from './Badge';
 
 /**
  * CardEmpty is designed in a way to inherit height
@@ -16,9 +16,9 @@ const CardEmpty = styled<ComponentProps<UI['CardEmpty']>>(
     return (
       <Card className={className}>
         <Card.Body>
-          <Tag className="mb-3">
+          <Badge className="mb-3">
             <Icon type={icon} />
-          </Tag>
+          </Badge>
           <Text className="mb-1" align="center" weight={500}>
             {title}
           </Text>

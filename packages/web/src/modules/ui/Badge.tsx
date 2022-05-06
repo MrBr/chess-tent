@@ -1,8 +1,8 @@
-import Badge from 'react-bootstrap/Badge';
+import BBadge from 'react-bootstrap/Badge';
 import styled from '@chess-tent/styled-props';
 import { UI } from '@types';
 
-const Tag = styled<UI['Tag']>(Badge).bg.css`
+const Badge = styled<UI['Badge']>(BBadge).bg.css`
   padding: 0.5rem;
   color: inherit !important;
   background-color: var(--grey-300-color) !important;
@@ -16,4 +16,4 @@ const Tag = styled<UI['Tag']>(Badge).bg.css`
   }
 `;
 
-export default Tag;
+export default Badge;

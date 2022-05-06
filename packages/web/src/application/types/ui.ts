@@ -408,7 +408,7 @@ export type UI = {
   Tooltip: UIComponent<TooltipProps>;
   Overlay: typeof BOverlay;
   OverlayTrigger: typeof BOverlayTrigger;
-  Tag: UIComponent<BadgeProps>;
+  Badge: UIComponent<BadgeProps>;
   ProgressBar: UIComponent<ProgressBarProps>;
 
   /* Molecules */

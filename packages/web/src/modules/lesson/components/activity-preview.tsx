@@ -26,7 +26,7 @@ interface PreviewProps {
 }
 
 const { useActiveUserRecord, useComponentState } = hooks;
-const { Modal, Breadcrumbs, Col, Button, Tag } = ui;
+const { Modal, Breadcrumbs, Col, Button, Badge } = ui;
 const { Layout, Header, Menu } = components;
 
 const Preview = ({ lesson, chapter, step }: PreviewProps) => {
@@ -112,7 +112,7 @@ const PreviewModal = ({
         </Breadcrumbs>
       </Col>
       <Col className="text-center">
-        <Tag>You're now previewing as a student</Tag>
+        <Badge>You're now previewing as a student</Badge>
       </Col>
       <Col className="col-auto">
         <Button onClick={close} variant="tertiary" size="small">

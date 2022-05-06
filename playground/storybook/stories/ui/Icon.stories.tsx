@@ -22,14 +22,14 @@ Primary.args = { type: 'comment', variant: 'primary' };
 
 export const All: ComponentStory<UI['Icon']> = withWebNamespace(
   'ui',
-  (args, { Text, Tag, Icon, Container, Row, Col }) => (
+  (args, { Text, Badge, Icon, Container, Row, Col }) => (
     <Container>
       <Row className="g-2">
         {Object.keys(icons).map((type: any) => (
           <Col className="col-auto">
-            <Tag>
+            <Badge>
               <Icon type={type} />
-            </Tag>
+            </Badge>
             <Text>{type}</Text>
           </Col>
         ))}

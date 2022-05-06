@@ -17,7 +17,7 @@ import { Container, Row, Col, Page } from './Grid';
 import { Select, AsyncSelect } from './Select';
 import Dropdown, { OptionsDropdown } from './Dropdown';
 import { Tooltip } from './Tooltip';
-import Tag from './Tag';
+import Badge from './Badge';
 import { Overlay, OverlayTrigger } from './Overlay';
 import {
   Hero,
@@ -104,7 +104,7 @@ application.ui.SearchBox = SearchBox;
 application.ui.Tooltip = Tooltip;
 application.ui.Overlay = Overlay;
 application.ui.OverlayTrigger = OverlayTrigger;
-application.ui.Tag = Tag;
+application.ui.Badge = Badge;
 application.ui.ProgressBar = ProgressBar;
 
 application.ui.Icon = Icon;

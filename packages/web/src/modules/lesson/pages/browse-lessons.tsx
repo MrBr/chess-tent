@@ -25,7 +25,7 @@ const BrowseLessonsPage: React.FC = () => {
 
   return (
     <Page>
-      <Container className="ps-5 pe-5">
+      <Container className="ps-5 pe-5" fluid>
         <Headline4 className="m-0 mt-4">Lessons 📚</Headline4>
         <Text className="mb-5">
           Browse the interactive lessons and study on your own.

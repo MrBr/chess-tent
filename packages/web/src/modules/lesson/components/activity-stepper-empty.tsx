@@ -40,13 +40,15 @@ const ActivityStepperEmpty = styled(
         {chapterImportModal}
         <div className="d-flex flex-column h-100">
           <div className={className}>
-            <Text fontSize="small">Chapters ?</Text>
             <div className="cta-add-chapters" onClick={promptChapterImport}>
               <Icon type="document" />
               <Text fontSize="extra-small" weight={400}>
                 Add chapters
               </Text>
             </div>
+            <Text fontSize="extra-small" align="center" className="mt-3">
+              Use chapters from templates to bootstrap the training
+            </Text>
           </div>
           <ActivityStepperNav prev={noop} next={noop} className="border-top" />
         </div>

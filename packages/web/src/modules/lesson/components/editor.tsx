@@ -31,7 +31,7 @@ import Sidebar from './editor-sidebar';
 import ChaptersDropdown from './chapters-dropdown';
 import RootStepButton from './editor-sidebar-root-step-button';
 import SidebarSection from './editor-sidebar-section';
-import { useLessonParams } from '../hooks/utility';
+import { useLessonParams } from '../hooks/lesson';
 
 const {
   Container,

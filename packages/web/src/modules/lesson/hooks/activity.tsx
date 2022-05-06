@@ -1,6 +1,6 @@
-import { User } from '@chess-tent/models';
+import React, { useEffect, useMemo, useCallback } from 'react';
+import { LessonActivity, User } from '@chess-tent/models';
 import { hooks } from '@application';
-import { useEffect, useMemo } from 'react';
 import {
   ActivityFilters,
   GetRequestFetchArgs,
@@ -9,8 +9,9 @@ import {
   Requests,
 } from '@types';
 import { userTrainings } from '../record';
+import TrainingAssign from '../components/training-assign';
 
-const { useRecordInit } = hooks;
+const { useRecordInit, useHistory, usePrompt } = hooks;
 
 export const useUserTrainings: Hooks['useUserTrainings'] = (user: User) => {
   const record = useRecordInit(userTrainings, `trainings-${user.id}`);
@@ -61,4 +62,19 @@ export const useUserScheduledTrainings: Hooks['useUserScheduledTrainings'] = (
   }, []);
 
   return record;
+};
+
+export const usePromptNewTrainingModal = () => {
+  return usePrompt(close => <TrainingAssign close={close} />);
+};
+
+export const useOpenTraining = () => {
+  const history = useHistory();
+
+  return useCallback(
+    (training: LessonActivity) => {
+      history.push(`/activity/${training.id}`);
+    },
+    [history],
+  );
 };

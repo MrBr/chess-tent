@@ -1,6 +1,6 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { components, hooks, ui } from '@application';
-import { Lesson, User } from '@chess-tent/models';
+import { User } from '@chess-tent/models';
 import Welcome from './welcome';
 
 const { Page, ScheduledTrainings, Trainings, LessonTemplates } = components;
@@ -11,7 +11,8 @@ const {
   useUserScheduledTrainings,
   useUserTrainings,
   useStudents,
-  useHistory,
+  useOpenTraining,
+  useOpenTemplate,
 } = hooks;
 
 const DashboardCoach = ({ user }: { user: User }) => {
@@ -20,14 +21,9 @@ const DashboardCoach = ({ user }: { user: User }) => {
   const students = useStudents(user);
   const [trainingModal, promptNewTrainingModal] = usePromptNewTrainingModal();
   const lessons = useMyLessons();
-  const history = useHistory();
 
-  const handleLessonClick = useCallback(
-    (lesson: Lesson) => {
-      history.push(`/lesson/${lesson.id}`);
-    },
-    [history],
-  );
+  const handleTemplateClick = useOpenTemplate();
+  const handleTrainingClick = useOpenTraining();
 
   const hasStudents = students.value && students.value.length > 0;
   const didLoad =
@@ -78,7 +74,10 @@ const DashboardCoach = ({ user }: { user: User }) => {
               </Col>
             </Row>
             {!trainings.value || trainings.value.length === 0 ? null : (
-              <Trainings trainings={trainings.value} />
+              <Trainings
+                trainings={trainings.value}
+                onTrainingClick={handleTrainingClick}
+              />
             )}
           </>
         )}
@@ -106,7 +105,7 @@ const DashboardCoach = ({ user }: { user: User }) => {
         </Row>
         <LessonTemplates
           lessons={lessons.value}
-          onLessonClick={handleLessonClick}
+          onLessonClick={handleTemplateClick}
         />
         {!lessons.value && (
           <Row>

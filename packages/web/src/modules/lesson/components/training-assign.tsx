@@ -1,10 +1,7 @@
 import React, { useCallback } from 'react';
 import { hooks, ui } from '@application';
 
-import {
-  useUserScheduledTrainings,
-  useUserTrainings,
-} from '../hooks/training-hooks';
+import { useUserScheduledTrainings, useUserTrainings } from '../hooks/activity';
 import { createLessonActivity, createNewLesson } from '../service';
 import ActivityForm, { ActivityData } from './activity-form';
 

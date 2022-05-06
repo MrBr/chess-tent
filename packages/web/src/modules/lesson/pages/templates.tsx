@@ -1,20 +1,14 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { components, hooks, ui } from '@application';
 
 const { Page, LessonTemplates } = components;
-const { useMyLessons, useHistory } = hooks;
+const { useMyLessons, useOpenTemplate } = hooks;
 const { Headline4, Text, Container } = ui;
 
-const BrowseLessonsPage: React.FC = () => {
+const Templates: React.FC = () => {
   const lessons = useMyLessons();
-  const history = useHistory();
 
-  const openTemplatePage = useCallback(
-    lesson => {
-      history.push(`/lesson/${lesson.id}`);
-    },
-    [history],
-  );
+  const openTemplatePage = useOpenTemplate();
 
   return (
     <Page>
@@ -32,4 +26,4 @@ const BrowseLessonsPage: React.FC = () => {
   );
 };
 
-export default BrowseLessonsPage;
+export default Templates;

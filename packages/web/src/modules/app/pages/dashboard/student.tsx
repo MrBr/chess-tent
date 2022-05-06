@@ -5,11 +5,13 @@ import { LessonsRequest } from '@chess-tent/types';
 import Welcome from './welcome';
 
 const { Page, Coaches, LessonBrowser, Trainings } = components;
-const { useLessons, useUserTrainings } = hooks;
+const { useLessons, useUserTrainings, useOpenTraining, useOpenLesson } = hooks;
 const { Row, Col, Container } = ui;
 
 const DashboardStudent = ({ user }: { user: User }) => {
   const { value: trainings } = useUserTrainings(user);
+  const handleTrainingClick = useOpenTraining();
+  const handleLessonClick = useOpenLesson();
 
   const [lessonsFilter, setLessonsFilter] = useState<LessonsRequest>({
     owner: user.id,
@@ -36,11 +38,15 @@ const DashboardStudent = ({ user }: { user: User }) => {
         {!trainings || trainings.length === 0 ? (
           <Coaches />
         ) : (
-          <Trainings trainings={trainings} />
+          <Trainings
+            trainings={trainings}
+            onTrainingClick={handleTrainingClick}
+          />
         )}
         <Row className="g-0">
           <Col>
             <LessonBrowser
+              onLessonClick={handleLessonClick}
               lessons={lessons}
               onFiltersChange={handleFilterChange}
             />

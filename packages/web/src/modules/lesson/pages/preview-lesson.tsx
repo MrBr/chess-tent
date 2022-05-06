@@ -28,6 +28,7 @@ const {
   useUserTrainings,
   useActiveUserRecord,
   useHistory,
+  useOpenTraining,
 } = hooks;
 
 const PreviewLesson = () => {
@@ -37,6 +38,7 @@ const PreviewLesson = () => {
   const [chapter, setActiveChapter] = useState<Chapter>();
   const { value: user } = useActiveUserRecord();
   const { new: newTraining, value: activities } = useUserTrainings(user);
+  const openLesson = useOpenTraining();
 
   const ownedLessonActivity = activities?.find(
     ({ subject }) => subject.id === lessonId,
@@ -54,8 +56,8 @@ const PreviewLesson = () => {
     if (!ownedLessonActivity) {
       return;
     }
-    history.push(`/activity/${ownedLessonActivity.id}`);
-  }, [history, ownedLessonActivity]);
+    openLesson(ownedLessonActivity);
+  }, [history, ownedLessonActivity, openLesson]);
 
   if (!lesson) {
     return null;

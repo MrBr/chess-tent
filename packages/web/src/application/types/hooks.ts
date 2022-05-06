@@ -20,6 +20,7 @@ import {
   ServiceType,
   Activity,
   Lesson,
+  LessonActivity,
 } from '@chess-tent/models';
 import { useRecordInit, useRecordSafe } from '@chess-tent/redux-record';
 import { Action as ReduxAction } from 'redux';
@@ -83,6 +84,9 @@ export type Hooks = {
     fallback?: T,
   ) => RecordHookSafe<InferInitRecord<Records['activeUser']>, T>;
   useOpenConversations: () => [ReactElement | undefined, (user?: User) => void];
+  useOpenTraining: () => (lesson: LessonActivity) => void;
+  useOpenTemplate: () => (lesson: Lesson) => void;
+  useOpenLesson: () => (lesson: Lesson) => void;
   useActiveUserNotifications: (
     limit?: number,
   ) => RecordHookInit<InferInitRecord<Records['activeUserNotifications']>>;

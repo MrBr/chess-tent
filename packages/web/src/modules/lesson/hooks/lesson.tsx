@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import {
   Chapter,
   getChildStep,
@@ -8,14 +8,10 @@ import {
   updateStepState,
 } from '@chess-tent/models';
 import { hooks } from '@application';
-import { useCallback, useContext } from 'react';
+import { useCallback } from 'react';
 import { Hooks, Steps } from '@types';
-import { editorContext } from '../context';
-import TrainingAssign from '../components/training-assign';
 
-export * from './training-hooks';
-
-const { usePrompt, useLocation } = hooks;
+const { useLocation, useHistory } = hooks;
 
 export const useUpdateLessonStepState = <T extends Step>(
   updateStep: (step: T) => void,
@@ -25,14 +21,6 @@ export const useUpdateLessonStepState = <T extends Step>(
     (state: Partial<T['state']>) => updateStep(updateStepState(step, state)),
     [step, updateStep],
   );
-};
-
-export const useEditor = () => {
-  const context = useContext(editorContext);
-  if (!context) {
-    throw new Error('Component using Editor context not in the Editor scope.');
-  }
-  return context;
 };
 
 export const useLessonParams = (lesson: Lesson) => {
@@ -63,8 +51,24 @@ export const useLessonMeta: Hooks['useLessonMeta'] = activity => {
   return hooks.useMeta(`lesson-${activity.id}`, {});
 };
 
-export const usePromptNewTrainingModal = () => {
-  return usePrompt(close => <TrainingAssign close={close} />);
+export const useOpenTemplate: Hooks['useOpenTemplate'] = () => {
+  const history = useHistory();
+
+  return useCallback(
+    (template: Lesson) => {
+      history.push(`/lesson/${template.id}`);
+    },
+    [history],
+  );
 };
 
-export const useLessonActivity = () => {};
+export const useOpenLesson: Hooks['useOpenLesson'] = () => {
+  const history = useHistory();
+
+  return useCallback(
+    (lesson: Lesson) => {
+      history.push(`/lesson/preview/${lesson.id}`);
+    },
+    [history],
+  );
+};

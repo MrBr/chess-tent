@@ -28,16 +28,24 @@ application.register(
   },
 );
 application.register(
-  () => import('./hooks/utility'),
+  () => import('./hooks/lesson'),
   module => {
     application.hooks.useLessonMeta = module.useLessonMeta;
     application.hooks.useUpdateLessonStepState =
       module.useUpdateLessonStepState;
+    application.hooks.useOpenTemplate = module.useOpenTemplate;
+    application.hooks.useOpenLesson = module.useOpenLesson;
+  },
+);
+application.register(
+  () => import('./hooks/activity'),
+  module => {
+    application.hooks.useUserScheduledTrainings =
+      module.useUserScheduledTrainings;
     application.hooks.usePromptNewTrainingModal =
       module.usePromptNewTrainingModal;
     application.hooks.useUserTrainings = module.useUserTrainings;
-    application.hooks.useUserScheduledTrainings =
-      module.useUserScheduledTrainings;
+    application.hooks.useOpenTraining = module.useOpenTraining;
   },
 );
 

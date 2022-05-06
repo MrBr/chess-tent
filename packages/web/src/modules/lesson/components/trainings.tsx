@@ -7,7 +7,7 @@ const { TrainingCard } = components;
 const { Row, Col } = ui;
 
 const Trainings: Components['Trainings'] = ({ trainings }) => {
-  if (trainings.length === 0) {
+  if (!trainings || trainings.length === 0) {
     return null;
   }
 

@@ -3,7 +3,7 @@ import { hooks } from '@application';
 import { Lesson } from '@chess-tent/models';
 import EditorAction from './editor-action';
 import { PreviewModal } from './activity-preview';
-import { useLessonParams } from '../hooks/utility';
+import { useLessonParams } from '../hooks/lesson';
 
 const { usePrompt } = hooks;
 const EditorPageSettings: ComponentType<{ lesson: Lesson }> = ({ lesson }) => {

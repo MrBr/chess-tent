@@ -457,7 +457,10 @@ export type Components = {
     save: Requests['lessonUpdates'];
     onStatusChange?: (status: LessonStatus) => void;
   }>;
-  Trainings: ComponentType<{ trainings: LessonActivity[] }>;
+  Trainings: ComponentType<{
+    trainings: RecordValue<LessonActivity[]>;
+    onTrainingClick: (training: LessonActivity) => void;
+  }>;
   ScheduledTrainings: ComponentType<{
     trainings: LessonActivity[];
   }>;
@@ -479,6 +482,7 @@ export type Components = {
       difficulty?: Difficulty,
       tags?: Tag[],
     ) => void;
+    onLessonClick: (lesson: Lesson) => void;
   }>;
   LessonChapters: ComponentType<{
     chapters: Chapter[];

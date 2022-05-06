@@ -5,12 +5,13 @@ import { LessonsRequest } from '@chess-tent/types';
 import LessonBrowser from '../components/lesson-browser';
 
 const { Page } = components;
-const { useLessons } = hooks;
+const { useLessons, useOpenLesson } = hooks;
 const { Headline4, Text, Container } = ui;
 
 const BrowseLessonsPage: React.FC = () => {
   const [lessonsFilter, setLessonsFilter] = useState<LessonsRequest>({});
   const { value: lessons } = useLessons('all-lessons', lessonsFilter);
+  const handleLessonClick = useOpenLesson();
 
   const handleFilterChange = useCallback(
     (search, difficulty, tags) => {
@@ -30,7 +31,11 @@ const BrowseLessonsPage: React.FC = () => {
         <Text className="mb-5">
           Browse the interactive lessons and study on your own.
         </Text>
-        <LessonBrowser lessons={lessons} onFiltersChange={handleFilterChange} />
+        <LessonBrowser
+          lessons={lessons}
+          onFiltersChange={handleFilterChange}
+          onLessonClick={handleLessonClick}
+        />
       </Container>
     </Page>
   );

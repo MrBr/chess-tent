@@ -48,3 +48,9 @@ application.register(
     application.components.Back = module.default;
   },
 );
+application.register(
+  () => import('./difficulty-label'),
+  module => {
+    application.components.DifficultyLabel = module.default;
+  },
+);

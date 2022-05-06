@@ -397,6 +397,10 @@ export type Components = {
   ChessboardFooter: ComponentType<ChessboardFooterProps>;
   Stepper: FunctionComponent<StepperProps>;
   StepToolbox: StepToolbox;
+  DifficultyLabel: ComponentType<{ difficulty: RecordValue<Difficulty> }>;
+  Tags: ComponentType<
+    { tags: RecordValue<Tag[]>; inline?: boolean } & ClassNameProps
+  >;
   LessonToolboxText: LessonToolboxText;
   LessonPlayground: ComponentType<{ children: ReactNode }> & {
     Board: ComponentType;

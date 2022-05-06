@@ -19,3 +19,9 @@ application.register(
     application.components.TagsSelect = module.default;
   },
 );
+application.register(
+  () => import('./components/tags'),
+  module => {
+    application.components.Tags = module.default;
+  },
+);

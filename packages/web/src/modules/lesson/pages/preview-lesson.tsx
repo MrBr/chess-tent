@@ -3,14 +3,12 @@ import { hooks, ui, components } from '@application';
 import { Chapter } from '@chess-tent/models';
 import { VariationStep } from '@types';
 
-import ChaptersDropdown from '../components/chapters-dropdown';
 import { createLessonActivity } from '../service';
 
-const { Container, Col, Text, Button, Row, Headline4 } = ui;
+const { Container, Col, Text, Button, Row, Headline4, Breadcrumbs, Icon } = ui;
 
-const { Page, Chessboard, UserAvatar, DifficultyLabel, Header, Tags } =
+const { Page, Chessboard, UserAvatar, DifficultyLabel, Header, Tags, Share } =
   components;
-const { Breadcrumbs } = ui;
 
 const {
   useParams,
@@ -18,6 +16,7 @@ const {
   useUserTrainings,
   useActiveUserRecord,
   useOpenTraining,
+  usePrompt,
 } = hooks;
 
 const PreviewLesson = () => {
@@ -27,18 +26,27 @@ const PreviewLesson = () => {
   const { value: user } = useActiveUserRecord();
   const { new: newTraining, value: activities } = useUserTrainings(user);
   const openLesson = useOpenTraining();
+  const [shareOffcanvas, promptShare] = usePrompt(close => (
+    <Share
+      close={close}
+      title="Share lesson"
+      link={window.location.href}
+      description="Copy the link and share it with your friends."
+    />
+  ));
 
   const ownedLessonActivity = activities?.find(
     ({ subject }) => subject.id === lessonId,
   );
 
-  const assignLesson = useCallback(() => {
+  const assignLesson = useCallback(async () => {
     if (!lesson) {
       return;
     }
     const activity = createLessonActivity(lesson, user, {});
-    newTraining(activity);
-  }, [newTraining, lesson, user]);
+    await newTraining(activity);
+    openLesson(activity);
+  }, [newTraining, lesson, user, openLesson]);
 
   const goToLesson = useCallback(() => {
     if (!ownedLessonActivity) {
@@ -56,12 +64,16 @@ const PreviewLesson = () => {
 
   const sidebar = (
     <>
-      <Row className="border-bottom">
+      <Row className="border-bottom align-items-center px-3 py-4">
         <Col>
-          <Text>Price</Text>
-          <Text>Free</Text>
+          <Text fontSize="extra-small" className="mb-0">
+            Price
+          </Text>
+          <Text weight={500} className="mb-0">
+            Free
+          </Text>
         </Col>
-        <Col>
+        <Col className="col-auto">
           {ownedLessonActivity ? (
             <Button size="small" onClick={goToLesson} variant="secondary">
               Continue
@@ -73,17 +85,37 @@ const PreviewLesson = () => {
           )}
         </Col>
       </Row>
-      <Row className="border-bottom">
+      <Row className="border-bottom px-3 py-4">
         <Col>
-          <Text>Description</Text>
-          <Text>{lesson.state.description}</Text>
+          <Text fontSize="small" weight={500} className="mb-1">
+            Description
+          </Text>
+          <Text fontSize="small">{lesson.state.description}</Text>
         </Col>
       </Row>
-      <ChaptersDropdown
-        chapters={lesson.state.chapters}
-        activeChapter={activeChapter}
-        onChange={chapter => setActiveChapter(chapter)}
-      />
+      <Row className="px-3 py-4">
+        <Col>
+          <Text fontSize="small" weight={500}>
+            Chapters
+          </Text>
+          {lesson.state.chapters.map((chapter, index) => (
+            <Text
+              onClick={() => setActiveChapter(chapter)}
+              className="cursor-pointer"
+            >
+              <Icon
+                type="play"
+                className="me-2"
+                variant={activeChapter === chapter ? 'secondary' : 'tertiary'}
+              />
+              <span className="me-2">
+                {index < 9 ? '0' + (index + 1) : index + 1}
+              </span>
+              {chapter.state.title}
+            </Text>
+          ))}
+        </Col>
+      </Row>
     </>
   );
 
@@ -123,7 +155,7 @@ const PreviewLesson = () => {
         </Breadcrumbs>
       </Col>
       <Col className="col-auto">
-        <Button variant="tertiary" size="extra-small">
+        <Button variant="tertiary" size="extra-small" onClick={promptShare}>
           Share
         </Button>
       </Col>
@@ -132,6 +164,7 @@ const PreviewLesson = () => {
 
   return (
     <Page header={pageHeader}>
+      {shareOffcanvas}
       <Container fluid className="h-100">
         <Row className="h-100">
           <Col xs={12} sm={7}>

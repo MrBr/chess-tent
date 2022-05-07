@@ -47,7 +47,7 @@ type UserScheduledTrainingsRecord = RecipeApiLoad<
 > &
   RecordBase<LessonActivity[]> &
   RecipeCollection<LessonActivity>;
-type CreateNewUserTraining = (activity: LessonActivity) => void;
+type CreateNewUserTraining = (activity: LessonActivity) => Promise<void>;
 
 export type Records<T = any> = {
   activeUser: InitRecord<RecipeApiLoad<Requests['me']> & RecordBase<User>>;

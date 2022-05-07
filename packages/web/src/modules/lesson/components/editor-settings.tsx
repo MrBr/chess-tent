@@ -11,7 +11,7 @@ import DifficultyDropdown from './difficulty-dropdown';
 import EditorSidebarAdjustableText from './editor-sidebar-adjustable-text';
 import EditorSettingsCollaborators from './editor-settings-collaborators';
 
-const { Tabs, Tab, Offcanvas, Headline2, Container, Row, Col } = ui;
+const { Tabs, Tab, Offcanvas, Container, Row, Col, Headline5 } = ui;
 const { TagsSelect } = components;
 const { useDispatchService } = hooks;
 
@@ -52,14 +52,16 @@ const EditorSettings: ComponentType<{
 
   return (
     <Offcanvas show onHide={close}>
-      <Offcanvas.Header>Lesson settings</Offcanvas.Header>
+      <Offcanvas.Header>
+        <Headline5 className="m-0">Lesson settings</Headline5>
+      </Offcanvas.Header>
       <Offcanvas.Body>
         <Tabs defaultActiveKey="Details">
           <Tab eventKey="Details" title="Details">
             <Container>
               <Row>
                 <Col>
-                  <Headline2
+                  <Headline5
                     contentEditable
                     html={lesson.state.title}
                     onInput={createUpdateLessonDetails('title')}

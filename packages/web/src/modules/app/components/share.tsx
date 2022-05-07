@@ -44,12 +44,9 @@ const Share: Components['Share'] = ({ close, title, link, description }) => {
   return (
     <Offcanvas onHide={close}>
       <Offcanvas.Header>
-        <Container>
-          <Headline5 className="mb-3">{title}</Headline5>
-          <Line />
-        </Container>
+        <Headline5>{title}</Headline5>
       </Offcanvas.Header>
-      <Offcanvas.Body>
+      <Offcanvas.Body className="mt-3">
         <Container>
           <Headline6>Share link</Headline6>
           <Row className="align-items-center">

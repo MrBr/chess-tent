@@ -9,7 +9,7 @@ import { RecordValue } from '@chess-tent/redux-record/types';
 import { getActivityUserRole } from '@chess-tent/models';
 import ActivityForm, { ActivityData } from './activity-form';
 
-const { Offcanvas, Container, Button } = ui;
+const { Offcanvas, Container, Button, Headline5 } = ui;
 const { useDispatchService } = hooks;
 
 const ActivitySettings: ComponentType<{
@@ -57,7 +57,9 @@ const ActivitySettings: ComponentType<{
 
   return (
     <Offcanvas show onHide={close}>
-      <Offcanvas.Header>Activity settings</Offcanvas.Header>
+      <Offcanvas.Header>
+        <Headline5 className="m-0">Activity settings</Headline5>
+      </Offcanvas.Header>
       <Offcanvas.Body>
         <Container>
           <ActivityForm

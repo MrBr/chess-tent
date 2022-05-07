@@ -49,5 +49,3 @@ application.register(
     application.components.ConversationsStand = module.default;
   },
 );
-
-application.register(() => import('./routes'));

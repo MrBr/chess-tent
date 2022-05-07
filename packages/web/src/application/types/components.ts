@@ -533,5 +533,11 @@ export type Components = {
   NotificationsModal: ComponentType<{
     close: () => void;
   }>;
+  Share: ComponentType<{
+    title: string;
+    link: string;
+    description: string;
+    close: () => void;
+  }>;
   Invitation: ComponentType;
 };

@@ -6,4 +6,5 @@ export type Constants = {
   KINGS_FEN: string;
   MOBILE_ROOT_KEY: string;
   MAX_BOARD_SIZE: number;
+  APP_DOMAIN: string;
 };

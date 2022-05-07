@@ -54,3 +54,9 @@ application.register(
     application.components.DifficultyLabel = module.default;
   },
 );
+application.register(
+  () => import('./share'),
+  module => {
+    application.components.Share = module.default;
+  },
+);

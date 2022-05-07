@@ -42,6 +42,7 @@ const constants = createNamespace({
   KINGS_FEN: '4k3/8/8/8/8/8/8/4K3 w - - 0 1',
   MOBILE_ROOT_KEY: 'mobile-root',
   MAX_BOARD_SIZE: 670,
+  APP_DOMAIN: `${process.env.REACT_APP_PROTOCOL}${process.env.REACT_APP_DOMAIN}`,
 }) as Constants;
 
 const application: Application = createNamespace({

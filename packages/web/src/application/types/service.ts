@@ -112,7 +112,7 @@ export type Services = {
       | ((
           ...args: GenericArguments<GetRequestFetchArgs<T>>
         ) => GetRequestFetchUrl<T>),
-  ): GetRequestFetchMethod<T> extends 'GET' // GET request data is irrelevant
+  ): GetRequestFetchMethod<T> extends 'GET' | 'DELETE' // GET request data is irrelevant
     ? T
     : GetRequestFetchArgs<T> extends GetEndpointData<GetRequestFetchEndpoint<T>>
     ? T

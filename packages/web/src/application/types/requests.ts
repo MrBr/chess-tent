@@ -29,6 +29,7 @@ export interface Requests {
   updateMe: RequestFetch<Endpoints['updateMe']>;
 
   lesson: RequestFetch<Endpoints['lesson'], Lesson['id']>;
+  lessonDelete: RequestFetch<Endpoints['lessonDelete'], Lesson['id']>;
   lessonSave: RequestFetch<Endpoints['lessonSave']>;
   lessonPublish: RequestFetch<Endpoints['lessonPublish']>;
   lessonUnpublish: RequestFetch<Endpoints['lessonUnpublish']>;
@@ -44,6 +45,7 @@ export interface Requests {
   myLessons: RequestFetch<Endpoints['myLessons']>;
 
   activity: RequestFetch<Endpoints['activity'], Activity['id']>;
+  activityDelete: RequestFetch<Endpoints['activityDelete'], Activity['id']>;
   activitySave: RequestFetch<Endpoints['activitySave']>;
   activityUpdate: RequestFetch<
     Endpoints['activityUpdate'],

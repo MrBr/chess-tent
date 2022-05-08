@@ -39,6 +39,9 @@ export const getLesson = (
       });
   });
 
+export const deleteLesson = async (lessonId: Lesson['id']) =>
+  await LessonModel.deleteOne({ _id: lessonId });
+
 export const publishLesson = (lessonId: Lesson['id']) =>
   new Promise<void>(async resolve => {
     const lesson = await getLesson(lessonId, '');
@@ -119,7 +122,7 @@ export const unpublishLesson = (lessonId: Lesson['id']) =>
 export const patchLesson = (lessonId: Lesson['id'], lesson: Partial<Lesson>) =>
   new Promise<void>(resolve => {
     LessonModel.updateOne({ _id: lessonId }, { $set: depopulate(lesson) }).exec(
-      (err, result) => {
+      err => {
         if (err) {
           throw err;
         }

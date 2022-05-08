@@ -36,6 +36,12 @@ export const getActivity: MiddlewareFunction = (req, res, next) => {
     })
     .catch(next);
 };
+export const deleteActivity: MiddlewareFunction = (req, res, next) => {
+  service
+    .deleteActivity(res.locals.activity.id as Activity['id'])
+    .then(next)
+    .catch(next);
+};
 
 export const findActivities: MiddlewareFunction = (req, res, next) => {
   service

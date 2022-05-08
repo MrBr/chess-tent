@@ -38,6 +38,8 @@ application.service.registerPostRoute = (path, ...middlware) =>
   app.post(process.env.API_BASE_PATH + path, ...middlware);
 application.service.registerPutRoute = (path, ...middlware) =>
   app.put(process.env.API_BASE_PATH + path, ...middlware);
+application.service.registerDeleteRoute = (path, ...middlware) =>
+  app.delete(process.env.API_BASE_PATH + path, ...middlware);
 application.service.generateIndex = generateIndex;
 
 application.start = () => {

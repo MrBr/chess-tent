@@ -52,6 +52,10 @@ export const getActivity = (
       });
   });
 
+export const deleteActivity = async (activityId: Activity['id']) => {
+  await ActivityModel.deleteOne({ _id: activityId });
+};
+
 export const findActivities = (
   activityFilters: ActivityFilters,
 ): Promise<Activity[]> =>

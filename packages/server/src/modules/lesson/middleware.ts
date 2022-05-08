@@ -45,6 +45,13 @@ export const getLesson: MiddlewareFunction = (req, res, next) => {
     .catch(next);
 };
 
+export const deleteLesson: MiddlewareFunction = (req, res, next) => {
+  service
+    .deleteLesson(res.locals.lesson.id as Lesson['id'])
+    .then(next)
+    .catch(next);
+};
+
 export const findLessons: MiddlewareFunction = (req, res, next) => {
   service
     .findLessons(res.locals.filters)

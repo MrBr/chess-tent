@@ -122,6 +122,10 @@ export type Service = {
     path: string,
     ...cb: ((...args: Parameters<RequestHandler>) => void)[]
   ) => void;
+  registerDeleteRoute: (
+    path: string,
+    ...cb: ((...args: Parameters<RequestHandler>) => void)[]
+  ) => void;
   registerPostRoute: (
     path: string,
     ...cb: ((...args: Parameters<RequestHandler>) => void)[]

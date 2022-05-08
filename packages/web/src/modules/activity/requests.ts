@@ -5,6 +5,10 @@ const activity = services.createRequest<Requests['activity']>(
   'GET',
   activityId => `/activity/${activityId}`,
 );
+const activityDelete = services.createRequest<Requests['activityDelete']>(
+  'DELETE',
+  activityId => `/activity/${activityId}`,
+);
 
 const activitySave = services.createRequest<Requests['activitySave']>(
   'POST',
@@ -23,6 +27,7 @@ const activities = services.createRequest<Requests['activities']>(
 );
 
 requests.activity = activity;
+requests.activityDelete = activityDelete;
 requests.activitySave = activitySave;
 requests.activityUpdate = activityUpdate;
 requests.activities = activities;

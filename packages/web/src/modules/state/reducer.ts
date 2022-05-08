@@ -1,6 +1,7 @@
 import { Action as ReduxAction, combineReducers, Reducer } from 'redux';
 import {
   Actions,
+  DELETE_ENTITY,
   EntitiesState,
   SEND_PATCH,
   UPDATE_ENTITIES,
@@ -57,7 +58,7 @@ const createEntityReducer =
               [id]: updatedEntity,
             };
       }
-      case SEND_PATCH:
+      case SEND_PATCH: {
         const { next } = action.payload;
         const { type, id } = action.meta;
         const entity = state[id];
@@ -67,6 +68,16 @@ const createEntityReducer =
               [id]: applyPatches(entity, next),
             }
           : state;
+      }
+      case DELETE_ENTITY: {
+        const { type, id } = action.meta;
+        if (type === reducerEntityType) {
+          const newState = { ...state };
+          delete newState[id];
+          return newState;
+        }
+        return state;
+      }
       default: {
         return state;
       }

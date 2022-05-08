@@ -36,6 +36,7 @@ application.register(
   module => {
     application.state.actions.updateEntities = module.updateEntitiesAction;
     application.state.actions.updateEntity = module.updateEntityAction;
+    application.state.actions.deleteEntity = module.deleteEntityAction;
     application.state.actions.serviceAction = module.serviceAction;
     application.state.actions.sendPatchAction = module.sendPatchAction;
   },

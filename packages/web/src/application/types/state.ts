@@ -17,6 +17,7 @@ import {
 } from '@chess-tent/models';
 import {
   AppState,
+  DeleteEntityAction,
   EntitiesState,
   EntityState,
   SendMessageAction,
@@ -65,6 +66,7 @@ export type State = {
       entity: Entity,
       meta?: M,
     ) => UpdateEntityAction;
+    deleteEntity: (entity: Entity) => DeleteEntityAction;
     serviceAction: <T extends (...args: any) => any>(
       service: T extends ServiceType ? T : never,
     ) => (

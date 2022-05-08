@@ -6,6 +6,7 @@ import {
   saveActivity,
   findActivities,
   updateActivity,
+  deleteActivity,
 } from './middleware';
 
 const { identify, sendData, sendStatusOk, toLocals } = middleware;
@@ -66,7 +67,16 @@ application.service.registerGetRoute(
   '/activity/:activityId',
   identify,
   toLocals('activity.id', req => req.params.activityId),
-  getActivity,
   canEditActivity,
+  getActivity,
+  sendData('activity'),
+);
+
+application.service.registerDeleteRoute(
+  '/activity/:activityId',
+  identify,
+  toLocals('activity.id', req => req.params.activityId),
+  canEditActivity,
+  deleteActivity,
   sendData('activity'),
 );

@@ -14,6 +14,7 @@ import {
   ServiceType,
   Patch,
 } from '@chess-tent/models';
+import { DELETE_ENTITY } from '@chess-tent/types';
 
 export const updateEntitiesAction: State['actions']['updateEntities'] =
   root => {
@@ -51,6 +52,18 @@ export const updateEntityAction: State['actions']['updateEntity'] = (
       id: utils.getEntityId(payload.result),
       type: payload.result.type,
       ...(meta || {}),
+    },
+  };
+};
+export const deleteEntityAction: State['actions']['deleteEntity'] = entity => {
+  const payload = utils.normalize(entity);
+
+  return {
+    type: DELETE_ENTITY,
+    payload: undefined,
+    meta: {
+      id: utils.getEntityId(payload.result),
+      type: payload.result.type,
     },
   };
 };

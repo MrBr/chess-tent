@@ -6,6 +6,10 @@ const lesson = services.createRequest<Requests['lesson']>(
   'GET',
   lessonId => `/lesson/${lessonId}`,
 );
+const lessonDelete = services.createRequest<Requests['lessonDelete']>(
+  'DELETE',
+  lessonId => `/lesson/${lessonId}`,
+);
 
 const lessonSave = services.createRequest<Requests['lessonSave']>(
   'POST',
@@ -59,6 +63,7 @@ const scheduledTrainings = services.createRequest<
 requests.trainings = trainings;
 requests.scheduledTrainings = scheduledTrainings;
 requests.lesson = lesson;
+requests.lessonDelete = lessonDelete;
 requests.lessonSave = lessonSave;
 requests.lessonPublish = lessonPublish;
 requests.lessonUnpublish = lessonUnpublish;

@@ -82,7 +82,7 @@ export interface ScheduledLessonActivityFilters extends LessonActivityFilters {
   date: DateRange;
 }
 
-export type ApiMethods = 'GET' | 'POST' | 'PUT';
+export type ApiMethods = 'GET' | 'POST' | 'PUT' | 'DELETE';
 export interface Request<METHOD extends ApiMethods, URL extends string, DATA> {
   url: URL;
   method: METHOD;
@@ -95,6 +95,8 @@ export interface RequestPost<URL extends string, DATA>
   extends Request<'POST', URL, DATA> {}
 export interface RequestPut<URL extends string, DATA>
   extends Request<'PUT', URL, DATA> {}
+export interface RequestDelete<URL extends string>
+  extends Request<'DELETE', URL, undefined> {}
 
 export interface API {
   basePath: string;
@@ -216,6 +218,7 @@ export interface Endpoints {
   user: Endpoint<RequestGet<`/user/${string}`>, UserResponse>;
   // Lesson endpoints
   lesson: Endpoint<RequestGet<`/lesson/${string}`>, LessonResponse>;
+  lessonDelete: Endpoint<RequestDelete<`/lesson/${string}`>, StatusResponse>;
   lessonSave: Endpoint<RequestPost<'/lesson/save', Lesson>, StatusResponse>;
   lessonPublish: Endpoint<
     RequestPut<`/lesson/publish/${string}`, {}>,
@@ -240,6 +243,10 @@ export interface Endpoints {
   >;
   // Activity endpoints
   activity: Endpoint<RequestGet<`/activity/${string}`>, ActivityResponse>;
+  activityDelete: Endpoint<
+    RequestDelete<`/activity/${string}`>,
+    StatusResponse
+  >;
   activitySave: Endpoint<
     RequestPost<'/activity/save', Activity>,
     StatusResponse

@@ -19,6 +19,7 @@ import {
 
 export const UPDATE_ENTITIES = 'UPDATE_ENTITIES';
 export const UPDATE_ENTITY = 'UPDATE_ENTITY';
+export const DELETE_ENTITY = 'DELETE_ENTITY';
 
 export const SYNC_ACTION = 'SYNC_ACTION';
 
@@ -85,8 +86,20 @@ export type UpdateEntityAction = Action<
     id: string;
   } & { [key: string]: any }
 >;
+export type DeleteEntityAction = Action<
+  typeof DELETE_ENTITY,
+  undefined,
+  {
+    type: keyof EntitiesState;
+    id: string;
+  }
+>;
 
-export type LessonAction = UpdateEntityAction | UpdateEntitiesAction;
+// TODO - rename to EntityAction
+export type LessonAction =
+  | UpdateEntityAction
+  | UpdateEntitiesAction
+  | DeleteEntityAction;
 
 export type SyncAction = Action<
   typeof SYNC_ACTION,

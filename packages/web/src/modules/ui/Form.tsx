@@ -122,6 +122,7 @@ const FormCheck: UI['Form']['Check'] = props => {
         type="checkbox"
         isValid={isValid}
         isInvalid={isInvalid}
+        checked={!!field.value}
         {...props}
         {...field}
       />

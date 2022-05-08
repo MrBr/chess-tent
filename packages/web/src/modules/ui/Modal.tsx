@@ -71,8 +71,12 @@ const Confirm = styled<FunctionComponent<ConfirmProps>>(
       <Modal.Header>{title}</Modal.Header>
       <Modal.Body>{message}</Modal.Body>
       <Modal.Footer>
-        <Button onClick={onOk}>{okText}</Button>
-        <Button onClick={onCancel}>{cancelText}</Button>
+        <Button onClick={onOk} size="extra-small" variant="secondary">
+          {okText}
+        </Button>
+        <Button onClick={onCancel} size="extra-small" variant="tertiary">
+          {cancelText}
+        </Button>
       </Modal.Footer>
     </>
   ),

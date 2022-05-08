@@ -1,5 +1,5 @@
 import React, { useMemo, ReactElement } from 'react';
-import { components, hooks, ui } from '@application';
+import { components, hooks, ui, utils } from '@application';
 import * as yup from 'yup';
 import { LessonActivity, LessonActivityRole, User } from '@chess-tent/models';
 import { RecordValue } from '@chess-tent/redux-record/types';
@@ -16,8 +16,9 @@ interface ActivityFormProps {
   submitButton: ReactElement; // has to have type "submit"
 }
 
-const { Label, Headline4, FormGroup, Form, Text, Row, Col } = ui;
+const { Label, Headline5, FormGroup, Form, Text, Row, Col } = ui;
 const { useActiveUserRecord, useStudents } = hooks;
+const { dateToDatetimeLocal } = utils;
 const { UserAvatar } = components;
 
 const TrainingSchema = yup.object().shape({
@@ -40,8 +41,6 @@ const ActivityForm = ({
     [mentorship],
   );
 
-  console.log(students);
-
   const activityData = useMemo(
     () => ({
       students:
@@ -49,7 +48,9 @@ const ActivityForm = ({
           .filter(({ role }) => role === LessonActivityRole.STUDENT)
           .map(({ user }) => user) || [],
       title: activity?.title || '',
-      date: activity?.date,
+      date: activity?.date
+        ? (dateToDatetimeLocal(new Date(activity.date)) as unknown as Date)
+        : undefined,
       repeat: activity?.weekly || false,
     }),
     [activity],
@@ -65,7 +66,7 @@ const ActivityForm = ({
         <Label>Training name</Label>
         <Form.Input name="title" />
       </FormGroup>
-      <FormGroup>
+      <FormGroup className="mt-3">
         <Label>Assign to</Label>
         <Form.Select
           name="students"
@@ -83,9 +84,11 @@ const ActivityForm = ({
           getOptionValue={userOption => userOption.id}
         />
       </FormGroup>
-      <hr />
-      <Headline4>Schedule</Headline4>
-      <Text>Optionally schedule a training for the future</Text>
+      <hr className="mt-4" />
+      <Headline5 className="mt-4">Schedule</Headline5>
+      <Text fontSize="small">
+        Optionally schedule a training for the future
+      </Text>
       <Row>
         <Col>
           <FormGroup>
@@ -96,7 +99,7 @@ const ActivityForm = ({
         <Col>
           <FormGroup>
             <Label>Repeat weekly</Label>
-            <Form.Check type="switch" name="weekly" />
+            <Form.Check type="switch" name="repeat" />
           </FormGroup>
         </Col>
       </Row>

@@ -42,3 +42,8 @@ export const getDiff = (
 
 export const noop = () => {};
 export const noopNoop = () => noop;
+
+export const dateToDatetimeLocal = (date: Date) => {
+  const isoStr = date.toISOString();
+  return isoStr.substring(0, isoStr.length - 1);
+};

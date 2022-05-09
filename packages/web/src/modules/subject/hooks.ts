@@ -61,6 +61,10 @@ export const useDiffUpdates = (
 
         const { type, id } = subjectRef.current;
         const normalizedEntity = store.getState().entities[type][id];
+        if (!normalizedEntity) {
+          // Entity most likely deleted
+          return;
+        }
         const diffs = getDiff(subjectRef.current, normalizedEntity);
 
         const updatedPaths = Object.keys(diffs).map(path =>

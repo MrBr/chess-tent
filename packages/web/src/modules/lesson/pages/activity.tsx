@@ -28,7 +28,7 @@ const PageActivity = () => {
   }
 
   if (!isLesson(activity.subject)) {
-    return <>Error - playground subject miss match</>;
+    return <>Error - playground subject miss-match</>;
   }
 
   const pageHeader = (

@@ -3,7 +3,7 @@ import { components, hooks, requests, ui } from '@application';
 import { Lesson, User } from '@chess-tent/models';
 import { debounce } from 'lodash';
 
-const { Label, Headline3, Text, AsyncSelect } = ui;
+const { Label, Headline6, Text, AsyncSelect } = ui;
 const { useApi } = hooks;
 const { UserAvatar } = components;
 
@@ -33,7 +33,7 @@ const EditorSettingsCollaborators = ({ lesson }: { lesson: Lesson }) => {
 
   return (
     <>
-      <Headline3 className="mt-0">Collaborators</Headline3>
+      <Headline6 className="mt-3">Collaborators</Headline6>
       <Label>Sharing with</Label>
       <AsyncSelect
         name="user"

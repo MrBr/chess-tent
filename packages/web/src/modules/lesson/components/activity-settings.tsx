@@ -32,7 +32,9 @@ const ActivitySettings: ComponentType<{
     <Modal close={close}>
       <Confirm
         title="Delete activity"
-        message={`Are you sure you want to ${activity?.title || 'activity'}?`}
+        message={`Are you sure you want to delete ${
+          activity?.title || 'activity'
+        }?`}
         okText="Cancel"
         cancelText="Delete"
         onOk={close}

@@ -1,6 +1,6 @@
 import React, { useCallback, UIEvent } from 'react';
 import { Components } from '@types';
-import styled from '@emotion/styled';
+import styled, { css } from '@chess-tent/styled-props';
 import { ui } from '@application';
 
 const { Text } = ui;
@@ -37,23 +37,22 @@ export const ToolboxText = styled<Components['LessonToolboxText']>(
       />
     );
   },
-)(
-  {
-    '&:focus': {
-      outline: 0,
-    },
-    color: '#2F3849',
-    fontSize: 13 / 16 + 'em',
-    cursor: 'pointer',
-    margin: 0,
-  },
-  ({ placeholder }) => ({
-    '&:empty:before': {
-      content: `"${placeholder || ''}"`,
-      color: '#A3A7AE',
-    },
-  }),
-);
+).css`
+  &:focus {
+    outline: 0;
+  }
+
+  color: #2F3849;
+  font-size: 0.8em;
+  cursor: pointer;
+  margin: 0;
+  ${({ placeholder }) => css`
+    &:empty:before {
+      content: '${placeholder || ''}';
+      color: #a3a7ae;
+    }
+  `}
+`;
 
 ToolboxText.defaultProps = {
   onChange: () => {},

@@ -13,6 +13,7 @@ const {
   useStudents,
   useOpenTraining,
   useOpenTemplate,
+  useHistory,
 } = hooks;
 
 const DashboardCoach = ({ user }: { user: User }) => {
@@ -21,6 +22,7 @@ const DashboardCoach = ({ user }: { user: User }) => {
   const students = useStudents(user);
   const [trainingModal, promptNewTrainingModal] = usePromptNewTrainingModal();
   const lessons = useMyLessons();
+  const history = useHistory();
 
   const handleTemplateClick = useOpenTemplate();
   const handleTrainingClick = useOpenTraining();
@@ -38,7 +40,7 @@ const DashboardCoach = ({ user }: { user: User }) => {
   return (
     <Page>
       {trainingModal}
-      <Container fluid className="ps-5 pe-5">
+      <Container fluid className="ps-5 pe-5 pb-4">
         <Welcome name={user.name} />
         {hasStudents && (
           <>
@@ -107,7 +109,7 @@ const DashboardCoach = ({ user }: { user: User }) => {
           lessons={lessons.value}
           onLessonClick={handleTemplateClick}
         />
-        {!lessons.value && (
+        {(!lessons.value || lessons.value.length === 0) && (
           <Row>
             <Col>
               <CardEmpty
@@ -115,6 +117,7 @@ const DashboardCoach = ({ user }: { user: User }) => {
                 subtitle="Start by creating a reusable template."
                 cta="Create a template"
                 icon="template"
+                onClick={() => history.push('/lesson/new')}
               />
             </Col>
           </Row>

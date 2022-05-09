@@ -122,9 +122,10 @@ const withRecordDenormalizedCollection: Records['withRecordDenormalizedCollectio
         const entities = store.getState().entities;
         const recordState = record.get();
         // TODO - memoize
-        const value = recordState.value?.map(id =>
-          utils.denormalize(id, type, entities),
-        ) as InferRecordValue<T>;
+        const value = recordState.value
+          ?.map(id => utils.denormalize(id, type, entities))
+          // TODO - handle better case when the entity has been deleted
+          .filter(Boolean) as InferRecordValue<T>;
         return { ...recordState, value };
       };
 

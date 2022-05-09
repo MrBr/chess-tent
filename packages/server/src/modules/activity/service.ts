@@ -65,12 +65,26 @@ export const findActivities = (
       'roles.user': { $in: activityFilters.users },
     });
 
+    // In short
+    // Query by the date range or check if the date exists
+    // If queried by the date range then additionally check for the weekly activity because they eventually occur again
     const date = utils.notNullOrUndefined({
-      date:
-        activityFilters.date && Object.keys(activityFilters.date).length > 0
-          ? db.getDateRangeFilter(activityFilters.date)
-          : undefined,
-      weekly: activityFilters.weekly,
+      ...db.orQueries(
+        {
+          date:
+            typeof activityFilters.date === 'object' &&
+            Object.keys(activityFilters.date).length > 0
+              ? db.getDateRangeFilter(activityFilters.date)
+              : typeof activityFilters.date === 'boolean'
+              ? { $exists: activityFilters.date }
+              : undefined,
+        },
+        {
+          weekly:
+            typeof activityFilters.date === 'object' &&
+            Object.keys(activityFilters.date).length > 0,
+        },
+      ),
     });
 
     const query: FilterQuery<AppDocument<DepupulatedActivity>> =

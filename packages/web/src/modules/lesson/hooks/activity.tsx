@@ -19,6 +19,7 @@ export const useUserTrainings: Hooks['useUserTrainings'] = (user: User) => {
   const filters: ActivityFilters = useMemo(
     () => ({
       users: user.id,
+      date: false,
     }),
     [user.id],
   );

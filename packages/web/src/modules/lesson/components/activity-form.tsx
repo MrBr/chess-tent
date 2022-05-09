@@ -51,7 +51,7 @@ const ActivityForm = ({
       date: activity?.date
         ? (dateToDatetimeLocal(new Date(activity.date)) as unknown as Date)
         : undefined,
-      repeat: activity?.weekly || false,
+      weekly: activity?.weekly || false,
     }),
     [activity],
   );
@@ -99,7 +99,7 @@ const ActivityForm = ({
         <Col>
           <FormGroup>
             <Label>Repeat weekly</Label>
-            <Form.Check type="switch" name="repeat" />
+            <Form.Check type="switch" name="weekly" />
           </FormGroup>
         </Col>
       </Row>

@@ -52,9 +52,13 @@ const TrainingAssign = ({ close }: { close: () => void }) => {
           <ActivityForm
             onSubmit={createTraining}
             submitButton={
-              <Button type="submit" size="small">
-                Create training
-              </Button>
+              <Row className="mt-4">
+                <Col>
+                  <Button type="submit" size="small">
+                    Create training
+                  </Button>
+                </Col>
+              </Row>
             }
           />
         </Container>

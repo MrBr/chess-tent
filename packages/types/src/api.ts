@@ -71,8 +71,7 @@ export interface ActivityFilters {
   users?: User['id'] | User['id'][];
   subject?: string;
   subjectType?: string;
-  date?: DateRange;
-  weekly?: boolean;
+  date?: DateRange | boolean;
 }
 
 export interface LessonActivityFilters extends ActivityFilters {

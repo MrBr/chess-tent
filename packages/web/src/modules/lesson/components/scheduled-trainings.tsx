@@ -16,8 +16,8 @@ const ScheduledTrainings: Components['ScheduledTrainings'] = ({
   return (
     <Row>
       {trainings.map(activity => (
-        <Col md={4} sm={6} xs={12} className="mt-4">
-          <TrainingScheduledCard training={activity} key={activity.id} />
+        <Col md={4} sm={6} xs={12} className="mt-4" key={activity.id}>
+          <TrainingScheduledCard training={activity} />
         </Col>
       ))}
     </Row>

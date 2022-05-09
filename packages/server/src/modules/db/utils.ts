@@ -131,6 +131,6 @@ export const getBucketingIdFilterRegex = (parentId: string) =>
   new RegExp(String.raw`^${parentId}_`);
 
 export const getDateRangeFilter = (date: DateRange) => ({
-  $gte: date.from ? new Date(date.from) : undefined,
-  $lt: date.to ? new Date(date.to) : undefined,
+  ...(date.from ? { $gte: new Date(date.from) } : undefined),
+  ...(date.to ? { $lt: new Date(date.to) } : null),
 });

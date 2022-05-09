@@ -39,8 +39,9 @@ export const getLesson = (
       });
   });
 
-export const deleteLesson = async (lessonId: Lesson['id']) =>
+export const deleteLesson = async (lessonId: Lesson['id']) => {
   await LessonModel.deleteOne({ _id: lessonId });
+};
 
 export const publishLesson = (lessonId: Lesson['id']) =>
   new Promise<void>(async resolve => {

@@ -2,7 +2,8 @@ import { ErrorRequestHandler } from 'express';
 import { Middleware } from '@types';
 import { set } from 'lodash';
 
-export const errorHandler: ErrorRequestHandler = (err, req, res) => {
+// Note - next has to be here; express uses arguments count to determine function signature
+export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   console.error(err.stack);
 
   res.status(err.status || 500).json({ error: err.message });

@@ -4,23 +4,9 @@ import {
   ExerciseStep,
   ExerciseToolboxProps,
 } from '@types';
-import { ui } from '@application';
 
 import { SegmentBoardProps, SegmentProps } from './types';
 import { useUpdateSegment } from './hooks';
-
-const { Tooltip, OverlayTrigger } = ui;
-
-const sidebarSegmentTooltipModifiers = {
-  modifiers: [
-    {
-      name: 'offset',
-      options: {
-        offset: [0, 15],
-      },
-    },
-  ],
-};
 
 // TODO - make more restrictive type, task should expect 'task' segment component
 interface BoardSegments<T extends ExerciseStep<any, any>> {
@@ -63,24 +49,7 @@ export const withSegmentSidebars =
         updateSegment,
       } as ComponentProps<typeof Segment>;
 
-      return (
-        <OverlayTrigger
-          placement="left"
-          trigger="focus"
-          popperConfig={sidebarSegmentTooltipModifiers}
-          overlay={
-            <Tooltip
-              className="text-capitalize"
-              id={`${props.step.id}-${segmentKey}`}
-            >
-              {segmentKey}
-            </Tooltip>
-          }
-          key={segmentKey}
-        >
-          <Segment {...segmentProps} />
-        </OverlayTrigger>
-      );
+      return <Segment {...segmentProps} key={segmentKey} />;
     });
 
     return <>{sidebar}</>;

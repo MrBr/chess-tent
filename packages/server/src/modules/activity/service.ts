@@ -92,7 +92,7 @@ export const findActivities = (
         subject: activityFilters.subject
           ? { $eq: activityFilters.subject as unknown as Activity['subject'] } // TODO - verify activity model
           : undefined,
-        ...db.orQueries(roles),
+        ...roles,
         ...date,
       });
 

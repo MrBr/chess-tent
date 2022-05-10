@@ -55,7 +55,8 @@ class ChaptersDropdown extends React.Component<
   };
   render() {
     const { editing } = this.state;
-    const { chapters, activeChapter, onRemove, onNew, onEdit } = this.props;
+    const { chapters, activeChapter, onRemove, onNew, onEdit, onImport } =
+      this.props;
     return (
       <>
         {editing ? (
@@ -77,10 +78,10 @@ class ChaptersDropdown extends React.Component<
             isMulti={false}
           />
         )}
-        {(onRemove || onEdit || onNew) && (
-          <Row className="mt-1 justify-content-between">
-            <Col>
-              {onNew && (
+        {(onRemove || onEdit || onNew || onImport) && (
+          <Row className="mt-1 g-0 align-items-center justify-content-between">
+            {onNew && (
+              <Col className="col-auto me-2">
                 <Text
                   inline
                   fontSize="extra-small"
@@ -90,8 +91,21 @@ class ChaptersDropdown extends React.Component<
                 >
                   +Add
                 </Text>
-              )}
-            </Col>
+              </Col>
+            )}
+            {onImport && (
+              <Col className="col-auto me-2">
+                <Text
+                  inline
+                  fontSize="extra-small"
+                  weight={400}
+                  className="cursor-pointer"
+                  onClick={onImport}
+                >
+                  Import
+                </Text>
+              </Col>
+            )}
             <Col className="col-auto">
               <Dropdown>
                 <Dropdown.Toggle collapse>

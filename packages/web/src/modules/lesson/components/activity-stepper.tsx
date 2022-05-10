@@ -1,14 +1,16 @@
 import React from 'react';
 import { Chapter } from '@chess-tent/models';
 import { AppStep } from '@types';
-import { components } from '@application';
+import { components, hooks } from '@application';
 import styled from '@chess-tent/styled-props';
 
 import ActivityStepperEmpty from './activity-stepper-empty';
 import ActivityStepperNav from './activity-stepper-nav';
 import ActivityStepperSteps from './activity-stepper-steps';
+import ChaptersImport from './chapters-import';
 
 const { LessonChapters } = components;
+const { usePrompt } = hooks;
 
 export interface ActivityStepperProps {
   activeStepId?: string;
@@ -38,6 +40,9 @@ const ActivityStepper = styled((props: ActivityStepperProps) => {
     onChapterRemove,
     activeStepId,
   } = props;
+  const [chapterImportModal, promptChapterImport] = usePrompt(close => (
+    <ChaptersImport close={close} onImport={onChapterImport as () => void} />
+  ));
 
   if (!onChapterImport && !activeChapter) {
     // This is the case of an initial activity without chapters.
@@ -60,13 +65,14 @@ const ActivityStepper = styled((props: ActivityStepperProps) => {
 
   return (
     <>
+      {chapterImportModal}
       <div className={className}>
         <div className="border-bottom p-3">
           <LessonChapters
             editable={false}
             chapters={chapters}
             activeChapter={activeChapter}
-            onChapterImport={onChapterImport}
+            onImport={onChapterImport && promptChapterImport}
             onChange={onChapterChange}
             onRemove={onChapterRemove}
           />

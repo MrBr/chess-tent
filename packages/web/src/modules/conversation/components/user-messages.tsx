@@ -1,9 +1,8 @@
-import React, { ComponentProps } from 'react';
-import { components, ui } from '@application';
+import { ComponentProps } from 'react';
+import { ui } from '@application';
 import styled from '@chess-tent/styled-props';
 
 const { Text } = ui;
-const { UserAvatar } = components;
 
 const UserMessages = styled<
   ComponentProps<typeof Text> & { variant?: 'tertiary' }

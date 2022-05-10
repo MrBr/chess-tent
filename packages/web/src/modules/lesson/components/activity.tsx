@@ -112,6 +112,7 @@ const Activity: ActivityComponent<LessonActivity> = props => {
       boardState={activeBoardState}
       boards={LESSON_MODULES.boards}
       cards={LESSON_MODULES.cards}
+      importChapters={importChapters}
     />
   );
 };

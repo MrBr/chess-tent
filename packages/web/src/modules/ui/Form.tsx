@@ -1,4 +1,4 @@
-import React, { ComponentProps } from 'react';
+import React, { ComponentProps, ChangeEventHandler } from 'react';
 import { UI } from '@types';
 import { Formik, ErrorMessage, useField } from 'formik';
 import BFormGroup from 'react-bootstrap/FormGroup';
@@ -43,13 +43,53 @@ const InputComponent = styled(BForm.Control).css`
   }
   
   ${inputSizePropStyle}
-` as UI['Input'];
+`;
 
 const InputWithRef = React.forwardRef<HTMLElement, ComponentProps<UI['Input']>>(
+  // @ts-ignore - size props is in conflict, but it's not a problem
   (props, ref) => <InputComponent {...props} ref={ref} />,
 );
 
 InputWithRef.defaultProps = { size: 'small' };
+
+// datetime-local input requires date string without timezone
+// https://stackoverflow.com/a/63138883/2188869
+const dateToDatetimeLocal = (dateStamp: string) => {
+  return new Date(dateStamp)
+    .toLocaleString('sv-SE', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    })
+    .replace(' ', 'T');
+};
+
+const DateTime = ({
+  onChange,
+  value,
+  ...props
+}: ComponentProps<UI['DateTime']>) => {
+  const onChangeAdapter: ChangeEventHandler<HTMLInputElement> = event => {
+    if (!onChange) {
+      return;
+    }
+    const dateTimeWithZone = new Date(event.target.value).toISOString();
+    onChange(dateTimeWithZone);
+  };
+
+  const formattedValue = value ? dateToDatetimeLocal(value) : undefined;
+  return (
+    <InputComponent
+      {...props}
+      value={formattedValue}
+      type="datetime-local"
+      onChange={onChangeAdapter}
+    />
+  );
+};
 
 const StyledInputGroup = styled(InputGroup).css`
   ${InputGroupText}:first-child {
@@ -112,6 +152,27 @@ const FormInput: UI['Form']['Input'] = props => {
     </>
   );
 };
+const FormDateTime: UI['Form']['DateTime'] = ({ onChange, ...props }) => {
+  const [field, { touched, error }, { setValue }] = useField(props);
+  const isValid = !!touched && !error;
+  const isInvalid = !!touched && !!error;
+  const onChangeAdapter = (value: string) => {
+    setValue(value);
+    onChange && onChange(value);
+  };
+  return (
+    <>
+      <DateTime
+        isValid={isValid}
+        isInvalid={isInvalid}
+        {...props}
+        {...field}
+        onChange={onChangeAdapter}
+      />
+      <BForm.Control.Feedback type="invalid">{error}</BForm.Control.Feedback>
+    </>
+  );
+};
 const FormCheck: UI['Form']['Check'] = props => {
   const [field, { touched, error }] = useField(props);
   const isValid = !!touched && !error;
@@ -133,6 +194,7 @@ const FormCheck: UI['Form']['Check'] = props => {
 Form.Input = FormInput;
 Form.Select = FormSelect;
 Form.Check = FormCheck;
+Form.DateTime = FormDateTime;
 
 export {
   Form,

@@ -168,12 +168,18 @@ export interface LoadMoreProps {
 
 export type FormikProps<T> = FFormikProps<T>;
 
+type ControlProps = ComponentProps<typeof FormControl>;
 type InputPropsWithSizeEnhancer = Omit<
-  ComponentProps<typeof FormControl>,
-  'size'
+  ControlProps,
+  'size' | 'value' | 'type'
 > & {
   size?: FormElementsSize;
+  type?: 'color' | 'text' | 'email' | 'password' | 'number';
 };
+
+type DateTimeProps = {
+  onChange?: (value: string) => void;
+} & Omit<InputPropsWithSizeEnhancer, 'onChange' | 'type'>;
 
 export type Icons =
   | 'add'
@@ -271,6 +277,8 @@ export type Icons =
   | 'volume';
 
 export type UI = {
+  // NOTE!
+  // Formik inputs REQUIRE "name" prop to be obligatory
   Form: typeof Formik & {
     Input: UIComponent<
       InputPropsWithSizeEnhancer & {
@@ -280,6 +288,7 @@ export type UI = {
       }
     >;
     Check: UIComponent<FormCheckProps & { name: string } & FormControlProps>;
+    DateTime: UIComponent<DateTimeProps & { name: string }>;
     Select: <T, M extends boolean>(
       props: SelectProps<T, M> & { name: string } & UISelectProps,
     ) => ReactElement;
@@ -344,6 +353,7 @@ export type UI = {
   File: UIComponent<FormControlProps>;
   Label: UIComponent<FormLabelProps>;
   FormGroup: UIComponent<FormGroupProps>;
+  DateTime: UIComponent<DateTimeProps>;
   Input: ComponentType<InputPropsWithSizeEnhancer>;
   InputGroup: typeof InputGroup;
   Select: <T, M extends boolean>(

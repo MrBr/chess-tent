@@ -1,5 +1,5 @@
 import React, { useMemo, ReactElement } from 'react';
-import { components, hooks, ui, utils } from '@application';
+import { components, hooks, ui } from '@application';
 import * as yup from 'yup';
 import { LessonActivity, LessonActivityRole, User } from '@chess-tent/models';
 import { RecordValue } from '@chess-tent/redux-record/types';
@@ -18,7 +18,6 @@ interface ActivityFormProps {
 
 const { Label, Headline5, FormGroup, Form, Text, Row, Col } = ui;
 const { useActiveUserRecord, useStudents } = hooks;
-const { dateToDatetimeLocal } = utils;
 const { UserAvatar } = components;
 
 const TrainingSchema = yup.object().shape({
@@ -48,9 +47,7 @@ const ActivityForm = ({
           .filter(({ role }) => role === LessonActivityRole.STUDENT)
           .map(({ user }) => user) || [],
       title: activity?.title || '',
-      date: activity?.date
-        ? (dateToDatetimeLocal(new Date(activity.date)) as unknown as Date)
-        : undefined,
+      date: activity?.date ? (activity.date as unknown as Date) : undefined,
       weekly: activity?.weekly || false,
     }),
     [activity],
@@ -93,7 +90,7 @@ const ActivityForm = ({
         <Col>
           <FormGroup>
             <Label>Time</Label>
-            <Form.Input type="datetime-local" name="date" />
+            <Form.DateTime name="date" />
           </FormGroup>
         </Col>
         <Col>

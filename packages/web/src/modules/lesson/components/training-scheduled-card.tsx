@@ -1,6 +1,10 @@
 import React from 'react';
 import { hooks, ui } from '@application';
-import { LessonActivity, LessonActivityRole } from '@chess-tent/models';
+import {
+  getActivityNextDate,
+  LessonActivity,
+  LessonActivityRole,
+} from '@chess-tent/models';
 import { css } from '@chess-tent/styled-props';
 
 import UserAvatar from '../../user/components/user-avatar';
@@ -39,7 +43,8 @@ const TrainingScheduledCard = (props: { training: LessonActivity }) => {
     training: { title, roles },
   } = props;
   const history = useHistory();
-  const date = new Date(props.training.date as unknown as string);
+  const date = getActivityNextDate(props.training);
+
   const coach = roles.find(
     ({ user, role }) =>
       role === LessonActivityRole.COACH || LessonActivityRole.OWNER,
@@ -47,28 +52,25 @@ const TrainingScheduledCard = (props: { training: LessonActivity }) => {
 
   const openTraining = () => history.push(`/activity/${props.training.id}`);
 
+  if (!date) {
+    throw new Error('Unscheduled training in scheduled card.');
+  }
+
   return (
     <Container className={className}>
       <Row>
-        {date && (
-          <Col onClick={openTraining} className="col-auto">
-            <div className="training-date">
-              <Text
-                className="m-0"
-                fontSize="large"
-                weight={500}
-                color="inherit"
-              >
-                {date.getDate()}
-              </Text>
-              <Text fontSize="small" className="m-0" color="inherit">
-                {date
-                  .toLocaleDateString('default', { month: 'long' })
-                  .substring(0, 3)}
-              </Text>
-            </div>
-          </Col>
-        )}
+        <Col onClick={openTraining} className="col-auto">
+          <div className="training-date">
+            <Text className="m-0" fontSize="large" weight={500} color="inherit">
+              {date.getDate()}
+            </Text>
+            <Text fontSize="small" className="m-0" color="inherit">
+              {date
+                .toLocaleDateString('default', { month: 'long' })
+                .substring(0, 3)}
+            </Text>
+          </div>
+        </Col>
         <Col className="thumbnail-container" onClick={openTraining}>
           <Row className="g-0 flex-column">
             <Col>

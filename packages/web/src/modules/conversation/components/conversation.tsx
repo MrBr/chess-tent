@@ -146,7 +146,7 @@ export default styled<{
           </Col>
           <Col>
             <Input
-              type="textarea"
+              type="text"
               className="w-100"
               as="textarea"
               placeholder="Type here"

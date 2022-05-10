@@ -8,13 +8,12 @@ import {
   usePrompt,
 } from './hooks';
 import { getEntitySchema, getTypeSchema } from './model';
-import { dateToDatetimeLocal, getDiff, noop, noopNoop } from './utils';
+import { getDiff, noop, noopNoop } from './utils';
 
 application.utils.generateIndex = uuid;
 application.utils.rightMouse = (f: Function) => (e: MouseEvent) =>
   e.button === 2 && f(e);
 application.utils.stopPropagation = e => e.stopPropagation();
-application.utils.dateToDatetimeLocal = dateToDatetimeLocal;
 
 application.utils.getEntitySchema = getEntitySchema;
 application.utils.getTypeSchema = getTypeSchema;

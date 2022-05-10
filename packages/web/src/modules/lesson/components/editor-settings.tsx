@@ -109,7 +109,8 @@ const EditorSettings: ComponentType<{
                   <Col>
                     <Label>Description</Label>
                     <Input
-                      type="textarea"
+                      type="text"
+                      as="textarea"
                       value={lesson.state.description}
                       onChange={createUpdateLessonDetails('description')}
                     />

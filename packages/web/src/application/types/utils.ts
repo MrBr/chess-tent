@@ -30,5 +30,4 @@ export type Utils = {
   isLocalReferrer: () => boolean;
   noop: () => void;
   noopNoop: () => () => void;
-  dateToDatetimeLocal: (date: Date) => string;
 };

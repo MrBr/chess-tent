@@ -105,18 +105,33 @@ export class ActivityRendererStepCard<
   T extends Steps,
   K extends Chapter,
 > extends React.Component<ActivityRendererModuleProps<T, K>> {
+  setSolvingMode = () => {
+    const { updateActivity, activity, boardState } = this.props;
+    updateActivity(
+      applyUpdates(activity)(draft => {
+        const activityStepStateDraft = getLessonActivityBoardState(
+          draft,
+          boardState.id,
+        )[boardState.activeStepId];
+        activityStepStateDraft.mode = ActivityStepMode.SOLVING;
+      }),
+    )();
+  };
+
   render() {
     const { chapter, step } = this.props;
 
     return (
-      <StepRenderer
-        {...this.props}
-        component="ActivitySidebar"
-        stepRoot={chapter}
-        activeStep={step}
-        setActiveStep={() => {}}
-        Chessboard={() => null}
-      />
+      <section onClick={this.setSolvingMode}>
+        <StepRenderer
+          {...this.props}
+          component="ActivitySidebar"
+          stepRoot={chapter}
+          activeStep={step}
+          setActiveStep={() => {}}
+          Chessboard={() => null}
+        />
+      </section>
     );
   }
 }

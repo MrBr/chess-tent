@@ -129,12 +129,25 @@ export class ActivityRendererAnalysisBoard<
 export class ActivityRendererAnalysisCard<
   T extends Steps | undefined,
 > extends ActivityRendererAnalysis<ActivityRendererModuleProps<T>> {
+  setAnalysingMode = () => {
+    const { updateActivity, activity, boardState } = this.props;
+    updateActivity(
+      applyUpdates(activity)(draft => {
+        const activityStepStateDraft = getLessonActivityBoardState(
+          draft,
+          boardState.id,
+        )[boardState.activeStepId];
+        activityStepStateDraft.mode = ActivityStepMode.ANALYSING;
+      }),
+    )();
+  };
+
   render() {
     const { analysis, activityStepState } = this.props;
     const isActive = isActivityStepAnalysing(activityStepState);
 
     return (
-      <LessonPlaygroundCard active={isActive}>
+      <LessonPlaygroundCard active={isActive} onClick={this.setAnalysingMode}>
         <Row className="align-items-center mb-3">
           <Col className="col-auto">
             <ActivityStep active={isActive}>

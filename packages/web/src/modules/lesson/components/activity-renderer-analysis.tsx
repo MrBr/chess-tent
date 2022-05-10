@@ -14,6 +14,9 @@ import {
   getLessonActivityBoardState,
   updateAnalysisStep,
   applyUpdates,
+  getNextStep,
+  getPreviousStep,
+  Step,
 } from '@chess-tent/models';
 import ActivityStep from './activity-step';
 import { isActivityStepAnalysing } from '../service';
@@ -39,6 +42,26 @@ abstract class ActivityRendererAnalysis<
     const { step } = this.props;
     return step ? services.getStepBoardOrientation(step) : undefined;
   }
+
+  setActiveStep(step: Step) {
+    this.updateStepActivityAnalysis(analysis => {
+      analysis.state.activeStepId = step.id;
+    });
+  }
+
+  nextStep = () => {
+    const { analysis } = this.props;
+    const activeStep = getAnalysisActiveStep(analysis);
+    const nextStep = getNextStep(analysis, activeStep);
+    nextStep && this.setActiveStep(nextStep);
+  };
+
+  prevStep = () => {
+    const { analysis } = this.props;
+    const activeStep = getAnalysisActiveStep(analysis);
+    const prevStep = getPreviousStep(analysis, activeStep);
+    prevStep && this.setActiveStep(prevStep);
+  };
 
   updateStepActivityAnalysis: AnalysisSystemProps['updateAnalysis'] =
     service => {
@@ -124,8 +147,18 @@ export class ActivityRendererAnalysisCard<
             </Text>
           </Col>
           <Col className="col-auto">
-            <Icon type="left" size="extra-small" />
-            <Icon type="right" size="extra-small" />
+            <Icon
+              type="left"
+              size="extra-small"
+              className="cursor-pointer"
+              onClick={this.prevStep}
+            />
+            <Icon
+              type="right"
+              size="extra-small"
+              className="cursor-pointer"
+              onClick={this.nextStep}
+            />
           </Col>
         </Row>
         <AnalysisSidebar

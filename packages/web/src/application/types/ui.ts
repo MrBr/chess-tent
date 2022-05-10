@@ -169,7 +169,7 @@ export interface LoadMoreProps {
 export type FormikProps<T> = FFormikProps<T>;
 
 type ControlProps = ComponentProps<typeof FormControl>;
-type InputPropsWithSizeEnhancer = Omit<
+export type InputPropsWithSizeEnhancer = Omit<
   ControlProps,
   'size' | 'value' | 'type'
 > & {

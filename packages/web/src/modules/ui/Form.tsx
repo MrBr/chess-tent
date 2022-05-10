@@ -1,5 +1,5 @@
-import React, { ComponentProps, ChangeEventHandler } from 'react';
-import { UI } from '@types';
+import React, { ComponentProps, ChangeEventHandler, Ref } from 'react';
+import { InputPropsWithSizeEnhancer, UI, UIComponent } from '@types';
 import { Formik, ErrorMessage, useField } from 'formik';
 import BFormGroup from 'react-bootstrap/FormGroup';
 import BForm from 'react-bootstrap/Form';
@@ -23,7 +23,10 @@ const InputGroupText = styled(InputGroup.Text).css`
   border: 1px solid var(--grey-600-color);
 `;
 
-const InputComponent = styled(BForm.Control).css`
+const InputComponent = styled<
+  UIComponent<InputPropsWithSizeEnhancer & { innerRef: Ref<HTMLInputElement> }>
+>(props => <BForm.Control {...props} ref={props.innerRef} size={undefined} />)
+  .css`
   border: 1px solid var(--grey-600-color) !important; // !important is for bootstrap focus override
   color: var(--black-color);
   
@@ -45,10 +48,10 @@ const InputComponent = styled(BForm.Control).css`
   ${inputSizePropStyle}
 `;
 
-const InputWithRef = React.forwardRef<HTMLElement, ComponentProps<UI['Input']>>(
-  // @ts-ignore - size props is in conflict, but it's not a problem
-  (props, ref) => <InputComponent {...props} ref={ref} />,
-);
+const InputWithRef = React.forwardRef<
+  HTMLInputElement,
+  ComponentProps<UI['Input']>
+>((props, ref) => <InputComponent {...props} innerRef={ref} />);
 
 InputWithRef.defaultProps = { size: 'small' };
 
@@ -85,6 +88,7 @@ const DateTime = ({
     <InputComponent
       {...props}
       value={formattedValue}
+      // @ts-ignore
       type="datetime-local"
       onChange={onChangeAdapter}
     />

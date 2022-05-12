@@ -350,7 +350,7 @@ export const LandingPage = () => {
                   Sandro Šafar
                 </Headline5>
                 <Text fontSize="small" align="center">
-                  Chess Coach (content)
+                  Chess Coach - content
                 </Text>
               </div>
             </Col>
@@ -361,7 +361,7 @@ export const LandingPage = () => {
                   Zoia Vasina
                 </Headline5>
                 <Text fontSize="small" align="center">
-                  Design (v2)
+                  Design - v2
                 </Text>
               </div>
             </Col>
@@ -369,10 +369,10 @@ export const LandingPage = () => {
               <div className="contributor">
                 <img src={mendeSrc} alt="" />
                 <Headline5 align="center" className="mt-3 mb-1">
-                  Mende Mitrovski
+                  Mende Mitreski
                 </Headline5>
                 <Text fontSize="small" align="center">
-                  Design (logo)
+                  Design - logo
                 </Text>
               </div>
             </Col>
@@ -383,7 +383,7 @@ export const LandingPage = () => {
                   Boris Belonjek
                 </Headline5>
                 <Text fontSize="small" align="center">
-                  Design (v1)
+                  Design - v1
                 </Text>
               </div>
             </Col>
@@ -416,7 +416,7 @@ export const LandingPage = () => {
                   Tihana Iveković
                 </Headline5>
                 <Text fontSize="small" align="center">
-                  Chess Coach (content)
+                  Chess Coach - content
                 </Text>
               </div>
             </Col>
@@ -427,7 +427,7 @@ export const LandingPage = () => {
                   Božidar Iveković
                 </Headline5>
                 <Text fontSize="small" align="center">
-                  Chess Coach (content)
+                  Chess Coach - content
                 </Text>
               </div>
             </Col>

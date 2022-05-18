@@ -1,11 +1,20 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import styled from '@chess-tent/styled-props';
 import { Components } from '@types';
 
 const Step = styled<Components['LessonPlaygroundStepTag']>(
-  ({ children, className, onClick }) => {
+  ({ children, className, onClick, active }) => {
+    const ref = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+      if (!active || !ref.current) {
+        return;
+      }
+      ref.current.scrollIntoView();
+    }, [active, ref]);
+
     return (
-      <div className={className} onClick={onClick}>
+      <div className={className} onClick={onClick} ref={ref}>
         {children}
       </div>
     );

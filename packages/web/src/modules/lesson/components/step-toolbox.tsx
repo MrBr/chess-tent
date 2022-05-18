@@ -90,6 +90,13 @@ const StepToolbox: Components['StepToolbox'] = ({
     if (!active || !toolboxRef.current) {
       return;
     }
+    toolboxRef.current.scrollIntoView();
+  }, [active, toolboxRef]);
+
+  useEffect(() => {
+    if (!active || !toolboxRef.current) {
+      return;
+    }
     const observer = new IntersectionObserver(
       entries => setVisible(!!entries[0]?.isIntersecting),
       {

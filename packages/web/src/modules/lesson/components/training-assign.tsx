@@ -1,38 +1,24 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { hooks, ui } from '@application';
 
-import { useUserScheduledTrainings, useUserTrainings } from '../hooks/activity';
-import { createLessonActivity, createNewLesson } from '../service';
+import { useCreateNewTraining } from '../hooks/activity';
 import ActivityForm, { ActivityData } from './activity-form';
 
 const { Headline3, Headline4, Button, Text, Modal, Container, Row, Col } = ui;
-const { useActiveUserRecord, useHistory } = hooks;
+const { useActiveUserRecord } = hooks;
 
-const TrainingAssign = ({ close }: { close: () => void }) => {
+interface TrainingAssignProps {
+  close: () => void;
+}
+
+const TrainingAssign = ({ close }: TrainingAssignProps) => {
   const { value: user } = useActiveUserRecord();
-  const userTrainings = useUserTrainings(user);
-  const userScheduledTrainings = useUserScheduledTrainings(user);
-  const history = useHistory();
+  const createNewTraining = useCreateNewTraining(user);
 
-  const createTraining = useCallback(
-    async (data: ActivityData) => {
-      const { new: newTraining } = data.date
-        ? userScheduledTrainings
-        : userTrainings;
-      const lesson = createNewLesson(user, []);
-      const training = createLessonActivity(
-        lesson,
-        user,
-        { title: data.title, date: data.date, weekly: data.weekly },
-        { activeStepId: 'analysis-step' },
-        data.students,
-      );
-      await newTraining(training);
-      history.push(`/activity/${training.id}`);
-      close();
-    },
-    [userScheduledTrainings, userTrainings, user, history, close],
-  );
+  const createTraining = (data: ActivityData) => {
+    createNewTraining(data);
+    close();
+  };
 
   return (
     <Modal show close={close}>

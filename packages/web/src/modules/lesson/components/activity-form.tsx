@@ -6,6 +6,7 @@ import { RecordValue } from '@chess-tent/redux-record/types';
 
 export interface ActivityData {
   students?: User[];
+  coaches?: User[];
   title?: string;
   date?: Date;
   weekly?: boolean;

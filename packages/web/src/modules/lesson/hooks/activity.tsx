@@ -10,6 +10,8 @@ import {
 } from '@types';
 import { userTrainings } from '../record';
 import TrainingAssign from '../components/training-assign';
+import { ActivityData } from '../components/activity-form';
+import { createLessonActivity, createNewLesson } from '../service';
 
 const { useRecordInit, useHistory, usePrompt } = hooks;
 
@@ -77,5 +79,31 @@ export const useOpenTraining = () => {
       history.push(`/activity/${training.id}`);
     },
     [history],
+  );
+};
+
+export const useCreateNewTraining = (user: User) => {
+  const userTrainings = useUserTrainings(user);
+  const userScheduledTrainings = useUserScheduledTrainings(user);
+  const history = useHistory();
+
+  return useCallback(
+    async (data: ActivityData) => {
+      const { new: newTraining } = data.date
+        ? userScheduledTrainings
+        : userTrainings;
+      const lesson = createNewLesson(user, []);
+      const training = createLessonActivity(
+        lesson,
+        user,
+        { title: data.title, date: data.date, weekly: data.weekly },
+        { activeStepId: 'analysis-step' },
+        data.students,
+        data.coaches,
+      );
+      await newTraining(training);
+      history.push(`/activity/${training.id}`);
+    },
+    [userScheduledTrainings, userTrainings, user, history],
   );
 };

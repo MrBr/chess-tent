@@ -17,6 +17,7 @@ export interface Activity<
   date?: Date;
   weekly?: boolean;
   title?: string;
+  completed?: boolean;
 }
 
 export interface NormalizedActivity<
@@ -32,4 +33,5 @@ export interface NormalizedActivity<
   date?: Date;
   weekly?: boolean;
   title?: string;
+  completed?: boolean;
 }

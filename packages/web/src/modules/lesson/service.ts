@@ -181,11 +181,15 @@ export const createNewLesson = (user: User, chapters?: Chapter[]) => {
     ];
   }
 
-  return createLesson(newLessonId, initialChapters, user, 'Lesson');
+  return createLesson(newLessonId, initialChapters, user, 'Untitled lesson');
 };
 
 export const isInitialLessonActivity = (activity: LessonActivity) =>
   activity.subject.state.chapters.length === 0;
+
+// This is a bit implicit. Maybe the subject in the training case should just be a StepRoot and not a Lesson
+export const isLessonActivity = (activity: LessonActivity) =>
+  activity.subject.published && !!activity.subject.docId;
 
 export const importLessonActivityChapters = createService(
   (draft: LessonActivity, chapters: Chapter[]) => {

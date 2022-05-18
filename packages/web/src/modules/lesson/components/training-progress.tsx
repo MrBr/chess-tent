@@ -21,7 +21,7 @@ const TrainingProgress = (props: { training: LessonActivity }) => {
     : 0;
   return (
     <Container>
-      <Row className="g-0 mb-1">
+      <Row className="g-0 mb-1 justify-content-between">
         <Col className="col-auto">
           <Text fontSize="extra-small" className="m-0">
             {initialTraining ? '' : lesson.state.chapters.length}{' '}

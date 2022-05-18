@@ -10,6 +10,7 @@ import { css } from '@chess-tent/styled-props';
 import LessonThumbnail from './thumbnail';
 import UserAvatar from '../../user/components/user-avatar';
 import TrainingProgress from './training-progress';
+import { isLessonActivity } from '../service';
 
 const { Row, Col, Headline6, Card, Stack, Text } = ui;
 const { useHistory } = hooks;
@@ -34,14 +35,17 @@ const TrainingCard = (props: { training: LessonActivity }) => {
       roles,
     },
   } = props;
+  const isLesson = isLessonActivity(props.training);
   const history = useHistory();
   const stepRoot = (lesson.state.chapters[0] ||
     boards[mainBoardId][boards[mainBoardId].activeStepId].analysis) as StepRoot;
 
-  const coach = roles.find(
-    ({ user, role }) =>
-      role === LessonActivityRole.COACH || LessonActivityRole.OWNER,
-  );
+  const coach = isLesson
+    ? lesson.owner
+    : roles.find(
+        ({ user, role }) =>
+          role === LessonActivityRole.COACH || LessonActivityRole.OWNER,
+      )?.user;
   const students = roles
     .map(({ user, role }) =>
       role === LessonActivityRole.STUDENT ? (
@@ -68,7 +72,9 @@ const TrainingCard = (props: { training: LessonActivity }) => {
         </Row>
         <Row>
           <Col onClick={openTraining}>
-            <Headline6 className="m-0 mb-3">{title || 'Untitled'}</Headline6>
+            <Headline6 className="m-0 mb-3">
+              {isLesson ? lesson.state.title : title || 'Untitled'}
+            </Headline6>
           </Col>
         </Row>
         <Row className="mb-2">
@@ -78,18 +84,16 @@ const TrainingCard = (props: { training: LessonActivity }) => {
           <Col xs={8}>
             {coach && (
               <>
-                <UserAvatar
-                  user={coach.user}
-                  size="extra-small"
-                  className="me-2"
-                />
-                {coach.user.name}
+                <UserAvatar user={coach} size="extra-small" className="me-2" />
+                {coach.name}
               </>
             )}
           </Col>
-          <Col xs={4} className="text-right">
-            <Stack>{students}</Stack>
-          </Col>
+          {!isLesson && (
+            <Col xs={4} className="text-right">
+              <Stack>{students}</Stack>
+            </Col>
+          )}
         </Row>
       </Card.Body>
     </Card>

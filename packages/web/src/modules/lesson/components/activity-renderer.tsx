@@ -184,7 +184,7 @@ export class ActivityRenderer<
               activeChapter={chapter}
               chapters={lesson.state.chapters}
               onChapterImport={importChapters}
-              onChapterRemove={this.removeChapterHandler}
+              onChapterRemove={importChapters && this.removeChapterHandler}
               onChapterChange={this.chapterChangeHandler}
             />
           </LessonPlayground.Stepper>

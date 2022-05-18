@@ -264,6 +264,7 @@ export interface AnalysisBoardProps
 export interface ActivityBaseProps {
   activity: LessonActivity;
   updateActivity: ReturnType<Hooks['useDispatchService']>;
+  // If chapters can't be imported then they can't be edited at all
   importChapters?: (chapters: Chapter[]) => void;
 }
 

@@ -17,7 +17,7 @@ import {
   ActivityRendererAnalysisBoard,
   ActivityRendererAnalysisCard,
 } from './activity-renderer-analysis';
-import { importLessonActivityChapters } from '../service';
+import { importLessonActivityChapters, isLessonActivity } from '../service';
 import { ActivityRendererAnalysisEngineCard } from './activity-renderer-engine';
 import { ActivityRendererCommentsCard } from './activity-renderer-comments';
 
@@ -112,7 +112,7 @@ const Activity: ActivityComponent<LessonActivity> = props => {
       boardState={activeBoardState}
       boards={LESSON_MODULES.boards}
       cards={LESSON_MODULES.cards}
-      importChapters={importChapters}
+      importChapters={isLessonActivity(activity) ? undefined : importChapters}
     />
   );
 };

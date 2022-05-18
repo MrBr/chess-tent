@@ -17,6 +17,19 @@ export const saveActivity = (activity: Activity) =>
     });
   });
 
+export const patchActivity = (
+  activityId: Activity['id'],
+  patch: Partial<Activity>,
+) =>
+  new Promise<void>(resolve => {
+    ActivityModel.updateOne({ _id: activityId }, { $set: patch }).exec(err => {
+      if (err) {
+        throw err;
+      }
+      resolve();
+    });
+  });
+
 export const updateActivity = (
   activityId: Activity['id'],
   updates: SubjectPathUpdate[],
@@ -89,6 +102,9 @@ export const findActivities = (
 
     const query: FilterQuery<AppDocument<DepupulatedActivity>> =
       utils.notNullOrUndefined({
+        completed: !activityFilters.completed
+          ? { $in: [undefined, false] }
+          : { $eq: true },
         subject: activityFilters.subject
           ? { $eq: activityFilters.subject as unknown as Activity['subject'] } // TODO - verify activity model
           : undefined,

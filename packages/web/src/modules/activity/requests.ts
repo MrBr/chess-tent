@@ -15,6 +15,12 @@ const activitySave = services.createRequest<Requests['activitySave']>(
   '/activity/save',
 );
 
+const activityPatch = services.createRequest<Requests['activityPatch']>(
+  'PUT',
+  activityId => `/activity/${activityId}`,
+  (id, patch) => patch,
+);
+
 const activityUpdate = services.createRequest<Requests['activityUpdate']>(
   'POST',
   activityId => `/activity-update/${activityId}`,
@@ -27,6 +33,7 @@ const activities = services.createRequest<Requests['activities']>(
 );
 
 requests.activity = activity;
+requests.activityPatch = activityPatch;
 requests.activityDelete = activityDelete;
 requests.activitySave = activitySave;
 requests.activityUpdate = activityUpdate;

@@ -17,6 +17,13 @@ export const saveActivity: MiddlewareFunction = (req, res, next) => {
     .catch(next);
 };
 
+export const patchActivity: MiddlewareFunction = (req, res, next) => {
+  service
+    .patchActivity(res.locals.activity.id, res.locals.patch)
+    .then(next)
+    .catch(next);
+};
+
 export const updateActivity: MiddlewareFunction = (req, res, next) => {
   service
     .updateActivity(res.locals.activity.id, res.locals.updates)

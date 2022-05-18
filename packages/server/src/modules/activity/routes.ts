@@ -7,6 +7,7 @@ import {
   findActivities,
   updateActivity,
   deleteActivity,
+  patchActivity,
 } from './middleware';
 
 const { identify, sendData, sendStatusOk, toLocals } = middleware;
@@ -37,6 +38,7 @@ application.service.registerPostRoute(
 
   sendStatusOk,
 );
+
 application.service.registerPostRoute(
   '/activity-update/:activityId',
   identify,
@@ -44,6 +46,16 @@ application.service.registerPostRoute(
   toLocals('updates', req => req.body),
   canEditActivity,
   updateActivity,
+  sendStatusOk,
+);
+
+application.service.registerPutRoute(
+  '/activity/:activityId',
+  identify,
+  toLocals('activity.id', req => req.params.activityId),
+  toLocals('patch', req => req.body),
+  canEditActivity,
+  patchActivity,
   sendStatusOk,
 );
 
@@ -57,6 +69,7 @@ application.service.registerPostRoute(
       subject: req.body.subject,
       subjectType: req.body.subjectType,
       date: req.body.date,
+      completed: req.body.completed,
     }),
   ),
   findActivities,

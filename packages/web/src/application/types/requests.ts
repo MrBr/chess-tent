@@ -45,6 +45,10 @@ export interface Requests {
   myLessons: RequestFetch<Endpoints['myLessons']>;
 
   activity: RequestFetch<Endpoints['activity'], Activity['id']>;
+  activityPatch: RequestFetch<
+    Endpoints['activityPatch'],
+    [Activity['id'], Partial<Activity>]
+  >;
   activityDelete: RequestFetch<Endpoints['activityDelete'], Activity['id']>;
   activitySave: RequestFetch<Endpoints['activitySave']>;
   activityUpdate: RequestFetch<

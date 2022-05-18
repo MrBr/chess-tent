@@ -17,6 +17,7 @@ export interface DepupulatedActivity {
   date?: NormalizedActivity['date'];
   weekly?: NormalizedActivity['weekly'];
   title?: NormalizedActivity['title'];
+  completed?: NormalizedActivity['completed'];
   v?: number;
 }
 
@@ -45,6 +46,9 @@ const activitySchema = db.createSchema<DepupulatedActivity>(
       type: Schema.Types.Date,
     } as unknown as Date,
     weekly: {
+      type: Schema.Types.Boolean,
+    } as unknown as boolean,
+    completed: {
       type: Schema.Types.Boolean,
     } as unknown as boolean,
     v: {

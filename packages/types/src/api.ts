@@ -72,6 +72,7 @@ export interface ActivityFilters {
   subject?: string;
   subjectType?: string;
   date?: DateRange | boolean;
+  completed?: boolean;
 }
 
 export interface LessonActivityFilters extends ActivityFilters {
@@ -242,6 +243,10 @@ export interface Endpoints {
   >;
   // Activity endpoints
   activity: Endpoint<RequestGet<`/activity/${string}`>, ActivityResponse>;
+  activityPatch: Endpoint<
+    RequestPut<`/activity/${string}`, Partial<Activity>>,
+    ActivityResponse
+  >;
   activityDelete: Endpoint<
     RequestDelete<`/activity/${string}`>,
     StatusResponse

@@ -1,5 +1,6 @@
-import React, { ComponentType, useEffect } from 'react';
+import React, { ComponentType, useEffect, useRef } from 'react';
 import { hooks, requests, state, ui } from '@application';
+import { FormikProps } from '@types';
 import {
   LessonActivity,
   LessonActivityRole,
@@ -24,6 +25,7 @@ const ActivitySettings: ComponentType<{
   const dispatchService = useDispatchService();
   const dispatch = useDispatch();
   const history = useHistory();
+  const activityFormRef = useRef<FormikProps<ActivityData>>(null);
   const { fetch: activityDelete, response: activityDeleted } = useApi(
     requests.activityDelete,
   );
@@ -61,7 +63,11 @@ const ActivitySettings: ComponentType<{
     return null;
   }
 
-  const updateActivity = (data: ActivityData) => {
+  const updateActivity = () => {
+    if (!activityFormRef.current) {
+      return;
+    }
+    const data = activityFormRef.current.values;
     const studentRoles =
       data.students?.map(user => ({
         user,
@@ -97,29 +103,24 @@ const ActivitySettings: ComponentType<{
         </Offcanvas.Header>
         <Offcanvas.Body>
           <Container>
-            <ActivityForm
-              activity={activity}
-              onSubmit={updateActivity}
-              submitButton={
-                <Row className="mt-5">
-                  <Col>
-                    <Button type="submit" size="small">
-                      Save
-                    </Button>
-                  </Col>
-                  <Col className="col-auto">
-                    <Button
-                      type="button"
-                      size="small"
-                      variant="tertiary"
-                      onClick={promptDeleteActivity}
-                    >
-                      Delete
-                    </Button>
-                  </Col>
-                </Row>
-              }
-            />
+            <ActivityForm activity={activity} formRef={activityFormRef} />
+            <Row className="mt-5">
+              <Col>
+                <Button size="small" onClick={updateActivity}>
+                  Save
+                </Button>
+              </Col>
+              <Col className="col-auto">
+                <Button
+                  type="button"
+                  size="small"
+                  variant="tertiary"
+                  onClick={promptDeleteActivity}
+                >
+                  Delete
+                </Button>
+              </Col>
+            </Row>
           </Container>
         </Offcanvas.Body>
       </Offcanvas>

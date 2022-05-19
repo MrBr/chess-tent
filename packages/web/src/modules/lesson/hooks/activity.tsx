@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useCallback } from 'react';
-import { LessonActivity, User } from '@chess-tent/models';
+import { Chapter, LessonActivity, User } from '@chess-tent/models';
 import { hooks } from '@application';
 import {
   ActivityFilters,
@@ -88,21 +88,25 @@ export const useCreateNewTraining = (user: User) => {
   const history = useHistory();
 
   return useCallback(
-    async (data: ActivityData) => {
+    async (
+      data: ActivityData,
+      chapters: Chapter[],
+      options: { redirect?: boolean } = { redirect: true },
+    ) => {
       const { new: newTraining } = data.date
         ? userScheduledTrainings
         : userTrainings;
-      const lesson = createNewLesson(user, []);
+      const lesson = createNewLesson(user, chapters);
       const training = createLessonActivity(
         lesson,
         user,
         { title: data.title, date: data.date, weekly: data.weekly },
-        { activeStepId: 'analysis-step' },
+        {},
         data.students,
         data.coaches,
       );
       await newTraining(training);
-      history.push(`/activity/${training.id}`);
+      options.redirect && history.push(`/activity/${training.id}`);
     },
     [userScheduledTrainings, userTrainings, user, history],
   );

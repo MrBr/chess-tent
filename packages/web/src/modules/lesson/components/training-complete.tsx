@@ -47,13 +47,16 @@ const TrainingComplete = ({
     const coaches = activity.roles
       .filter(({ role }) => role === LessonActivityRole.COACH)
       .map(({ user }) => user);
-    createTraining({
-      title: `${activity.title} (new)`,
-      date: activity.date,
-      weekly: activity.weekly,
-      students,
-      coaches,
-    });
+    createTraining(
+      {
+        title: `${activity.title} (new)`,
+        date: activity.date,
+        weekly: activity.weekly,
+        students,
+        coaches,
+      },
+      [],
+    );
   }, [
     patchResponse,
     patchError,

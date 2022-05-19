@@ -12,7 +12,7 @@ const EditorPageSettings: ComponentType<{ lesson: Lesson }> = ({ lesson }) => {
   // New lesson can't be configured until the lesson has actually been created.
   // The new lesson it basically an empty skeleton.
   const [modal, promptModal] = usePrompt(close => (
-    <TrainingModal close={close} />
+    <TrainingModal close={close} lesson={lesson} />
   ));
   const [settingsOffcanvas, promptOffcanvas] = usePrompt(close => (
     <EditorSettings close={close} lesson={lesson} />

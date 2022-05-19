@@ -66,6 +66,8 @@ application.register(
   module => {
     application.services.updateLessonActivityActiveStep =
       module.updateActivityActiveStep;
+    application.services.createLessonActivityStepState =
+      module.createActivityStepState;
   },
 );
 application.register(

@@ -20,8 +20,6 @@ application.register(
 application.register(
   () => import('./service'),
   module => {
-    application.services.createActivityStepState =
-      module.createActivityStepState;
     application.services.createActivityComment = module.createActivityComment;
   },
 );

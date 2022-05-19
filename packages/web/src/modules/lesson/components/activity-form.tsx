@@ -1,8 +1,9 @@
-import React, { useMemo, ReactElement } from 'react';
-import { components, hooks, ui } from '@application';
+import React, { useMemo, RefObject } from 'react';
+import { components, hooks, ui, utils } from '@application';
 import * as yup from 'yup';
 import { LessonActivity, LessonActivityRole, User } from '@chess-tent/models';
 import { RecordValue } from '@chess-tent/redux-record/types';
+import { FormikProps } from '@types';
 
 export interface ActivityData {
   students?: User[];
@@ -13,13 +14,13 @@ export interface ActivityData {
 }
 interface ActivityFormProps {
   activity?: RecordValue<LessonActivity>;
-  onSubmit: (data: ActivityData) => void;
-  submitButton: ReactElement; // has to have type "submit"
+  formRef?: RefObject<FormikProps<ActivityData>>;
 }
 
-const { Label, Headline5, FormGroup, Form, Text, Row, Col } = ui;
+const { Label, FormGroup, Form, Text, Row, Col } = ui;
 const { useActiveUserRecord, useStudents } = hooks;
 const { UserAvatar } = components;
+const { noop } = utils;
 
 const TrainingSchema = yup.object().shape({
   students: yup.array().of(yup.object()),
@@ -28,11 +29,7 @@ const TrainingSchema = yup.object().shape({
   weekly: yup.boolean(),
 });
 
-const ActivityForm = ({
-  activity,
-  onSubmit,
-  submitButton,
-}: ActivityFormProps) => {
+const ActivityForm = ({ activity, formRef }: ActivityFormProps) => {
   const { value: user } = useActiveUserRecord();
   const { value: mentorship } = useStudents(user);
 
@@ -58,7 +55,8 @@ const ActivityForm = ({
     <Form
       initialValues={activityData}
       validationSchema={TrainingSchema}
-      onSubmit={onSubmit}
+      onSubmit={noop}
+      innerRef={formRef}
     >
       <FormGroup>
         <Label>Training name</Label>
@@ -82,9 +80,11 @@ const ActivityForm = ({
           getOptionValue={userOption => userOption.id}
         />
       </FormGroup>
-      <hr className="mt-4" />
-      <Headline5 className="mt-4">Schedule</Headline5>
-      <Text fontSize="small">
+      <hr className="mt-5" />
+      <Text className="mt-4 mb-1" weight={400}>
+        Schedule
+      </Text>
+      <Text fontSize="extra-small" className="mb-3">
         Optionally schedule a training for the future
       </Text>
       <Row>
@@ -101,7 +101,6 @@ const ActivityForm = ({
           </FormGroup>
         </Col>
       </Row>
-      {submitButton}
     </Form>
   );
 };

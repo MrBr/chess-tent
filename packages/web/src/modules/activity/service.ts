@@ -1,12 +1,5 @@
-import { services, utils } from '@application';
-import { ActivityStepMode, ActivityStepStateBase, Services } from '@types';
-
-export const createActivityStepState =
-  (initialState?: {}): ActivityStepStateBase => ({
-    analysis: services.createAnalysis(),
-    mode: ActivityStepMode.SOLVING,
-    ...(initialState || {}),
-  });
+import { utils } from '@application';
+import { Services } from '@types';
 
 export const createActivityComment: Services['createActivityComment'] = (
   user,

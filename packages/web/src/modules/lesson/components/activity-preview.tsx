@@ -39,7 +39,7 @@ const Preview = ({ lesson, chapter, step }: PreviewProps) => {
       {
         activeStepId: step.id,
         activeChapterId: chapter.id,
-        [step.id]: services.createActivityStepState(),
+        [step.id]: services.createLessonActivityStepState(),
       },
     ),
   );
@@ -63,7 +63,7 @@ const Preview = ({ lesson, chapter, step }: PreviewProps) => {
       const updatedActivity = updateActivityStepState(
         activity,
         activityBoardState,
-        services.createActivityStepState(),
+        services.createLessonActivityStepState(),
       );
       updatePreviewActivity(updatedActivity);
     }

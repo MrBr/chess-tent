@@ -35,13 +35,20 @@ const { createStep } = services;
 const { generateIndex } = utils;
 const { START_FEN } = constants;
 
+export const createActivityStepState =
+  (initialState?: {}): ActivityStepStateBase => ({
+    analysis: services.createAnalysis(),
+    mode: ActivityStepMode.SOLVING,
+    ...(initialState || {}),
+  });
+
 export const createLessonActivityBoard = (
   activeChapterId: string | undefined,
   activeStepId: string,
   boardState = {},
   initialStepState: {} = {},
 ): LessonActivityBoardState => {
-  const stepActivityState = services.createActivityStepState(initialStepState);
+  const stepActivityState = createActivityStepState(initialStepState);
   const newBoardState = {
     id: utils.generateIndex(),
     ...boardState,
@@ -73,7 +80,7 @@ export const updateActivityActiveStep = (
     activity,
     board,
     step,
-    services.createActivityStepState(),
+    createActivityStepState(),
     patchListener,
   );
 
@@ -87,7 +94,7 @@ export const updateActivityActiveChapter = (
     activity,
     board,
     chapter,
-    services.createActivityStepState(),
+    createActivityStepState(),
     patchListener,
   );
 
@@ -116,10 +123,11 @@ export const createLessonActivity = (
   const id = utils.generateIndex();
   const activeChapterId =
     boardState?.activeChapterId || lesson.state.chapters[0]?.id;
-  // TODO - this is not a bullet proof solution
-  // activeStepId in the initial case depends on the optional boardState
+  // There always should be an active step
   const activeStepId =
-    boardState?.activeStepId || lesson.state.chapters[0]?.state.steps[0].id;
+    boardState?.activeStepId ||
+    lesson.state.chapters[0]?.state.steps[0].id ||
+    'analysis-step';
 
   const roles = [
     ...createRoles(owner, LessonActivityRole.OWNER),

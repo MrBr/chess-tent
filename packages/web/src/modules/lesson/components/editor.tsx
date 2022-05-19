@@ -347,10 +347,13 @@ class EditorRenderer extends React.Component<
 
   render() {
     const { activeStep, lesson, activeChapter, lessonStatus } = this.props;
-
+    // classes: editor overflow-hidden position-relative
+    // Used in step-toolbox to prevent scrollbar flickering until toolbox fades
+    const editorClassName =
+      'px-0 h-100 editor overflow-hidden position-relative';
     return (
       <ChessboardContextProvider>
-        <Container fluid className="px-0 h-100">
+        <Container fluid className={editorClassName}>
           <Row className="g-0 h-100">
             <Col className="pt-3">
               <StepRenderer

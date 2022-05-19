@@ -201,10 +201,20 @@ const StepToolbox: Components['StepToolbox'] = ({
     !active && setActiveStep(step);
   };
 
+  // Used to prevent scrollbar flickering
+  /** @see Editor */
+  const getToolboxContainer = () =>
+    (toolboxRef.current?.closest('.editor') as HTMLElement) || null;
+
   return (
     <>
       {active && visible && (
-        <Overlay target={toolboxRef.current} placement="left" show>
+        <Overlay
+          target={toolboxRef.current}
+          placement="left"
+          show
+          container={getToolboxContainer}
+        >
           {/* Excluding props to remove react warning... */}
           {({ arrowProps, popper, show, ...props }) => (
             // Stopping propagation to execute only clicked action

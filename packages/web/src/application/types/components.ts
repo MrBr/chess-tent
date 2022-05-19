@@ -17,6 +17,7 @@ import {
   RedirectProps,
   RouteProps,
   SwitchProps,
+  PromptProps,
 } from 'react-router-dom';
 import {
   Activity,
@@ -68,7 +69,6 @@ import {
   ChessboardContext,
   Hooks,
   NotificationView,
-  Requests,
   StepModules,
   Steps,
 } from './index';
@@ -340,10 +340,11 @@ export interface TagsSelectProps {
 }
 
 export enum LessonStatus {
-  SAVED,
-  ERROR,
-  DIRTY,
-  INITIAL,
+  SAVED = 'SAVED',
+  ERROR = 'ERROR',
+  DIRTY = 'DIRTY',
+  INITIAL = 'INITIAL',
+  LOADING = 'LOADING',
 }
 
 export interface Evaluation {
@@ -419,6 +420,7 @@ export type Components = {
   Switch: ComponentType<SwitchProps>;
   Redirect: ComponentType<RedirectProps>;
   Route: ComponentType<RouteProps>;
+  RedirectPrompt: ComponentType<PromptProps>;
   AuthorizedRoute: ComponentType<
     RouteProps & { children: ReactElement; redirectRoute?: string }
   >;
@@ -459,8 +461,7 @@ export type Components = {
   }>;
   Editor: ComponentType<{
     lesson: Lesson;
-    save: Requests['lessonUpdates'];
-    onStatusChange?: (status: LessonStatus) => void;
+    lessonStatus: LessonStatus;
   }>;
   Trainings: ComponentType<{
     trainings: RecordValue<LessonActivity[]>;

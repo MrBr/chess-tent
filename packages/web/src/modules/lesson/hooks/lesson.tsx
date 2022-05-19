@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Chapter,
   getChildStep,
@@ -8,10 +8,16 @@ import {
   updateStepState,
 } from '@chess-tent/models';
 import { hooks } from '@application';
-import { useCallback } from 'react';
-import { Hooks, Steps } from '@types';
+import { Hooks, LessonStatus, LessonUpdates, Requests, Steps } from '@types';
+import { RecordValue } from '@chess-tent/redux-record/types';
 
-const { useLocation, useHistory } = hooks;
+const {
+  useLocation,
+  useHistory,
+  useApi,
+  useDiffUpdates,
+  useComponentStateSilent,
+} = hooks;
 
 export const useUpdateLessonStepState = <T extends Step>(
   updateStep: (step: T) => void,
@@ -71,4 +77,61 @@ export const useOpenLesson: Hooks['useOpenLesson'] = () => {
     },
     [history],
   );
+};
+
+export const useLessonPartialUpdates = (
+  lesson: RecordValue<Lesson>,
+  save: Requests['lessonUpdates'],
+) => {
+  const { mounted } = useComponentStateSilent();
+  const {
+    fetch: lessonUpdate,
+    error: lessonUpdateError,
+    response: lessonUpdateResponse,
+    reset: lessonUpdateReset,
+  } = useApi(save);
+  const [lessonStatus, setLessonStatus] = useState<LessonStatus>(
+    lesson ? LessonStatus.INITIAL : LessonStatus.LOADING,
+  );
+
+  useDiffUpdates(
+    lesson,
+    (updates: LessonUpdates) => {
+      if (updates.length === 0) {
+        setLessonStatus(LessonStatus.SAVED);
+        return;
+      }
+      lessonUpdate((lesson as Lesson).id, updates);
+    },
+    3000,
+  );
+
+  useEffect(() => {
+    if (!mounted || !lesson) {
+      return;
+    }
+    setLessonStatus(oldStatus =>
+      oldStatus === LessonStatus.LOADING
+        ? LessonStatus.INITIAL
+        : LessonStatus.DIRTY,
+    );
+  }, [lesson, mounted]);
+
+  useEffect(() => {
+    if (lessonUpdateError && lessonStatus !== LessonStatus.ERROR) {
+      setLessonStatus(LessonStatus.ERROR);
+    } else if (lessonUpdateResponse && lessonStatus !== LessonStatus.SAVED) {
+      setLessonStatus(LessonStatus.SAVED);
+    } else if (lessonUpdateResponse || lessonUpdateError) {
+      // All saved, clear state for next change
+      lessonUpdateReset();
+    }
+  }, [
+    lessonStatus,
+    lessonUpdateError,
+    lessonUpdateReset,
+    lessonUpdateResponse,
+  ]);
+
+  return lessonStatus;
 };

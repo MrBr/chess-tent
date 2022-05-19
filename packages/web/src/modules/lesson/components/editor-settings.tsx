@@ -1,4 +1,4 @@
-import React, { ComponentType, useEffect } from 'react';
+import React, { ComponentType, useEffect, ChangeEvent } from 'react';
 import { components, hooks, requests, state, ui } from '@application';
 import {
   Difficulty,
@@ -73,9 +73,10 @@ const EditorSettings: ComponentType<EditorSettingsProps> = ({
   }, [lesson, lessonDeleted, dispatch, history]);
 
   const createUpdateLessonDetails =
-    (field: 'title' | 'description') => (text: string) => {
+    (field: 'title' | 'description') =>
+    (event: ChangeEvent<HTMLInputElement>) => {
       dispatchService(updateSubjectState)(lesson, {
-        [field]: text,
+        [field]: event.currentTarget.value,
       });
     };
 

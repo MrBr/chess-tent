@@ -4,6 +4,7 @@ import { Lesson, TYPE_LESSON } from '@chess-tent/models';
 import { LessonStatus } from '@types';
 import { createNewLesson } from '../service';
 import EditorPageHeader from '../components/editor-page-header';
+import { useLessonPartialUpdates } from '../hooks/lesson';
 
 const {
   useDispatchBatched,
@@ -46,18 +47,17 @@ const NewLesson = () => {
     [lessonId, store],
   );
 
-  const handleStatusChange = useCallback(
-    (lessonStatus: LessonStatus) => {
-      if (lessonStatus !== LessonStatus.SAVED) {
-        return;
-      }
-      const activeStep =
-        new URLSearchParams(history.location.search).get('activeStep') ||
-        lesson.state.chapters[0].state.steps[0].id;
-      history.replace(`/lesson/${lesson.id}?activeStep=${activeStep}`);
-    },
-    [lesson, history],
-  );
+  const lessonStatus = useLessonPartialUpdates(lesson, saveLesson);
+
+  useEffect(() => {
+    if (lessonStatus !== LessonStatus.SAVED) {
+      return;
+    }
+    const activeStep =
+      new URLSearchParams(history.location.search).get('activeStep') ||
+      lesson.state.chapters[0].state.steps[0].id;
+    history.replace(`/lesson/${lesson.id}?activeStep=${activeStep}`);
+  }, [lessonStatus, lesson, history]);
 
   if (!lesson) {
     return null;
@@ -65,11 +65,7 @@ const NewLesson = () => {
 
   return (
     <Page header={<EditorPageHeader />}>
-      <Editor
-        lesson={lesson}
-        save={saveLesson}
-        onStatusChange={handleStatusChange}
-      />
+      <Editor lesson={lesson} lessonStatus={lessonStatus} />
     </Page>
   );
 };

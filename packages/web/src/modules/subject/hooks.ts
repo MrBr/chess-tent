@@ -6,6 +6,7 @@ import {
   SubjectPathUpdate,
 } from '@chess-tent/models';
 import { hooks } from '@application';
+import { RecordValue } from '@chess-tent/redux-record/types';
 import { throttle } from 'lodash';
 import { getDiff } from '../utils/utils';
 
@@ -35,20 +36,27 @@ const removeWeakerPaths = (updates: SubjectPath[]) => {
 };
 
 export const useDiffUpdates = (
-  subject: Subject,
+  subject: RecordValue<Subject>,
   save: (updates: SubjectPathUpdate[]) => void,
   delay = 5000,
 ) => {
   const subjectRef = useRef<Subject | null>(null);
+  // saveRef is needed so that update function get the last save
+  // otherwise the save may be obsolete
+  const saveRef = useRef<typeof save>(save);
+  saveRef.current = save;
   // Use store to get latest entity
   const store = useStore();
 
   useEffect(() => {
+    if (!subject?.id || !subject?.type) {
+      return;
+    }
     // Save initial normalized subject version
     subjectRef.current = store.getState().entities[subject.type][
       subject.id
     ] as Subject;
-  }, [store, subject.id, subject.type]);
+  }, [store, subject?.id, subject?.type]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const entityUpdated = useCallback(
@@ -78,9 +86,7 @@ export const useDiffUpdates = (
           };
         });
 
-        if (minimumUpdate.length > 0) {
-          save(minimumUpdate);
-        }
+        saveRef.current(minimumUpdate);
         subjectRef.current = normalizedEntity;
       },
       delay,

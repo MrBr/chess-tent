@@ -10,6 +10,7 @@ import {
   useParams,
   useLocation,
   Router as BaseRouter,
+  Prompt,
 } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
 import styled from '@chess-tent/styled-props';
@@ -87,6 +88,7 @@ export const isLocalReferrer = () =>
 application.components.Router = Router;
 application.components.Switch = Switch;
 application.components.Route = Route;
+application.components.RedirectPrompt = Prompt;
 application.components.Link = Link;
 application.components.Redirect = Redirect;
 application.services.addRoute = addRoute;

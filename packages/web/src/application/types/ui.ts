@@ -43,7 +43,6 @@ import {
 import DropdownToggle from 'react-bootstrap/DropdownToggle';
 import { ErrorMessageProps, Formik, FormikProps as FFormikProps } from 'formik';
 import FormCheck from 'react-bootstrap/FormCheck';
-import FormControl from 'react-bootstrap/FormControl';
 import type {
   Props as SelectProps,
   GroupBase,
@@ -168,10 +167,9 @@ export interface LoadMoreProps {
 
 export type FormikProps<T> = FFormikProps<T>;
 
-type ControlProps = ComponentProps<typeof FormControl>;
 export type InputPropsWithSizeEnhancer = Omit<
-  ControlProps,
-  'size' | 'value' | 'type'
+  FormControlProps,
+  'size' | 'type'
 > & {
   size?: FormElementsSize;
   type?: 'color' | 'text' | 'email' | 'password' | 'number';

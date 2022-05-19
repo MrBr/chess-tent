@@ -32,6 +32,7 @@ import {
   InferInitRecord,
   RecordHookInit,
   RecordHookSafe,
+  RecordValue,
 } from '@chess-tent/redux-record/types';
 
 import { Records } from './records';
@@ -74,7 +75,7 @@ export type Hooks = {
   useSocketSubscribe: (channel: string) => void;
   useSocketRoomUsers: (room: string) => User[];
   useDiffUpdates: (
-    subject: Subject,
+    subject: RecordValue<Subject>,
     save: (updates: SubjectPathUpdate[]) => void,
     delay?: number,
   ) => void;

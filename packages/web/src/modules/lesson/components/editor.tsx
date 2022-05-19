@@ -1,4 +1,4 @@
-import React, { ComponentProps, useCallback, useEffect, useState } from 'react';
+import React, { ComponentProps } from 'react';
 import {
   Chapter,
   getPreviousStep,
@@ -20,11 +20,11 @@ import {
   EditorSidebarProps,
   LessonStatus,
   LessonUpdatableAction,
-  LessonUpdates,
   Steps,
   History,
   Orientation,
 } from '@types';
+import * as H from 'history';
 import { debounce } from 'lodash';
 import { components, hooks, services, state, ui } from '@application';
 import Sidebar from './editor-sidebar';
@@ -51,12 +51,12 @@ const {
   StepToolbox,
   ChessboardContextProvider,
   Evaluation,
+  RedirectPrompt,
 } = components;
 const {
   actions: { serviceAction },
 } = state;
-const { useDispatchBatched, useApi, useLocation, useHistory, useDiffUpdates } =
-  hooks;
+const { useDispatchBatched, useLocation, useHistory } = hooks;
 
 type EditorRendererProps = ComponentProps<Components['Editor']> & {
   activeChapter: Chapter;
@@ -101,9 +101,29 @@ class EditorRenderer extends React.Component<
     this.setActiveStepHandler();
   }
 
-  closeEditor = () => {
-    const history = this.props.history;
-    history.goBack();
+  componentDidMount() {
+    window.addEventListener('beforeunload', this.handleBeforeUnload);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('beforeunload', this.handleBeforeUnload);
+  }
+
+  handleSilentBeforeUnload = (location: H.Location) => {
+    const { history, lessonStatus } = this.props;
+    if (history.location.pathname === location.pathname) {
+      return true;
+    } else if (lessonStatus !== LessonStatus.DIRTY) {
+      return true;
+    }
+    return 'Please wait until all changes are saved.';
+  };
+
+  handleBeforeUnload = (e: Event) => {
+    const { lessonStatus } = this.props;
+    if (lessonStatus === LessonStatus.DIRTY) {
+      e.returnValue = false;
+    }
   };
 
   recordHistoryChange(undoAction: LessonUpdatableAction) {
@@ -432,58 +452,18 @@ class EditorRenderer extends React.Component<
               </Sidebar>
             </Col>
           </Row>
+          <RedirectPrompt message={this.handleSilentBeforeUnload} />
         </Container>
       </ChessboardContextProvider>
     );
   }
 }
 
-const Editor: Components['Editor'] = ({ lesson, save, onStatusChange }) => {
+const Editor: Components['Editor'] = ({ lesson, lessonStatus }) => {
   const dispatch = useDispatchBatched();
   const location = useLocation();
   const history = useHistory();
   const { activeChapter, activeStep } = useLessonParams(lesson);
-  const {
-    fetch: lessonUpdate,
-    error: lessonUpdateError,
-    response: lessonUpdateResponse,
-    reset: lessonUpdateReset,
-  } = useApi(save);
-  const [lessonStatus, setLessonStatus] = useState<LessonStatus>(
-    LessonStatus.INITIAL,
-  );
-
-  useDiffUpdates(lesson, (updates: LessonUpdates) => {
-    lessonUpdate(lesson.id, updates);
-  });
-
-  useEffect(() => {
-    onStatusChange && onStatusChange(lessonStatus);
-  }, [lessonStatus, onStatusChange]);
-
-  useEffect(() => {
-    if (lessonUpdateError && lessonStatus !== LessonStatus.ERROR) {
-      setLessonStatus(LessonStatus.ERROR);
-    } else if (lessonUpdateResponse && lessonStatus !== LessonStatus.SAVED) {
-      setLessonStatus(LessonStatus.SAVED);
-    } else {
-      // All saved, clear state for next change
-      lessonUpdateReset();
-    }
-  }, [
-    lessonStatus,
-    lessonUpdateError,
-    lessonUpdateReset,
-    lessonUpdateResponse,
-  ]);
-
-  const handleLessonUpdate = useCallback(
-    action => {
-      setLessonStatus(LessonStatus.DIRTY);
-      dispatch(action);
-    },
-    [dispatch],
-  );
 
   return (
     <EditorRenderer
@@ -494,8 +474,7 @@ const Editor: Components['Editor'] = ({ lesson, save, onStatusChange }) => {
       dispatch={dispatch}
       location={location}
       history={history}
-      save={save}
-      addLessonUpdate={handleLessonUpdate}
+      addLessonUpdate={dispatch}
     />
   );
 };

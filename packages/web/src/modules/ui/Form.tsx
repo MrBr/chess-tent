@@ -25,7 +25,7 @@ const InputGroupText = styled(InputGroup.Text).css`
 
 const InputComponent = styled<
   UIComponent<InputPropsWithSizeEnhancer & { innerRef: Ref<HTMLInputElement> }>
->(props => <BForm.Control {...props} ref={props.innerRef} size={undefined} />)
+>(({ innerRef, size, ...props }) => <BForm.Control {...props} ref={innerRef} />)
   .css`
   border: 1px solid var(--grey-600-color) !important; // !important is for bootstrap focus override
   color: var(--black-color);

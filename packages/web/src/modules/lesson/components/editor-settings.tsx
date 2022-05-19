@@ -31,10 +31,17 @@ const {
   actions: { deleteEntity },
 } = state;
 
-const EditorSettings: ComponentType<{
+export interface EditorSettingsProps {
   lesson: Lesson;
   close: () => void;
-}> = ({ lesson, close }) => {
+  defaultTab?: 'Details' | 'Collaborators';
+}
+
+const EditorSettings: ComponentType<EditorSettingsProps> = ({
+  lesson,
+  close,
+  defaultTab,
+}) => {
   const dispatchService = useDispatchService();
   const dispatch = useDispatch();
   const history = useHistory();
@@ -92,7 +99,7 @@ const EditorSettings: ComponentType<{
           <Headline6 className="m-0">Lesson settings</Headline6>
         </Offcanvas.Header>
         <Offcanvas.Body>
-          <Tabs defaultActiveKey="Details">
+          <Tabs defaultActiveKey={defaultTab}>
             <Tab eventKey="Details" title="Details">
               <Container>
                 <Headline6 className="mt-3">Details</Headline6>
@@ -148,7 +155,7 @@ const EditorSettings: ComponentType<{
                 </Row>
               </Container>
             </Tab>
-            <Tab eventKey="Collaborator" title="Collaborators">
+            <Tab eventKey="Collaborators" title="Collaborators">
               <Container>
                 <Row>
                   <Col>
@@ -162,6 +169,10 @@ const EditorSettings: ComponentType<{
       </Offcanvas>
     </>
   );
+};
+
+EditorSettings.defaultProps = {
+  defaultTab: 'Details',
 };
 
 export default EditorSettings;

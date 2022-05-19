@@ -1,9 +1,9 @@
-import React, { ComponentType } from 'react';
+import React, { ComponentType, useState } from 'react';
 import { hooks, ui } from '@application';
 import { Lesson } from '@chess-tent/models';
 import EditorAction from './editor-action';
 import TrainingModal from './training-assign';
-import EditorSettings from './editor-settings';
+import EditorSettings, { EditorSettingsProps } from './editor-settings';
 
 const { Dropdown } = ui;
 const { usePrompt } = hooks;
@@ -14,24 +14,38 @@ const EditorPageSettings: ComponentType<{ lesson: Lesson }> = ({ lesson }) => {
   const [modal, promptModal] = usePrompt(close => (
     <TrainingModal close={close} lesson={lesson} />
   ));
-  const [settingsOffcanvas, promptOffcanvas] = usePrompt(close => (
-    <EditorSettings close={close} lesson={lesson} />
-  ));
+  const [settingsTab, setSettingsTab] =
+    useState<EditorSettingsProps['defaultTab']>();
 
   return (
     <>
       {modal}
-      {settingsOffcanvas}
+      {settingsTab && (
+        <EditorSettings
+          close={() => setSettingsTab(undefined)}
+          defaultTab={settingsTab}
+          lesson={lesson}
+        />
+      )}
       <Dropdown>
         <Dropdown.Toggle>Settings</Dropdown.Toggle>
         <Dropdown.Menu>
           <Dropdown.Item>
             <EditorAction
               id="settings"
-              tooltip="Edit lesson settings"
-              onClick={promptOffcanvas}
+              tooltip="Edit lesson details"
+              onClick={() => setSettingsTab('Details')}
             >
               Settings
+            </EditorAction>
+          </Dropdown.Item>
+          <Dropdown.Item>
+            <EditorAction
+              id="collaborators"
+              tooltip="Edit lesson collaborators"
+              onClick={() => setSettingsTab('Collaborators')}
+            >
+              Collaborators
             </EditorAction>
           </Dropdown.Item>
           <Dropdown.Item>

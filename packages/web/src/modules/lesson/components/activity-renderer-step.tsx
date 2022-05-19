@@ -121,8 +121,9 @@ export class ActivityRendererStepCard<
   render() {
     const { chapter, step } = this.props;
 
+    // key is needed in order to force render once the step changes
     return (
-      <section onClick={this.setSolvingMode}>
+      <section onClick={this.setSolvingMode} key={step.id}>
         <StepRenderer
           {...this.props}
           component="ActivitySidebar"

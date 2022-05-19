@@ -105,8 +105,8 @@ export type DB = {
     adapter: Updater<T>,
   ): void;
   getDateRangeFilter(date: DateRange): {
-    $gte: Date | undefined;
-    $lt: Date | undefined;
+    $gte?: Date;
+    $lt?: Date;
   };
 };
 

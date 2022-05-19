@@ -9,6 +9,7 @@ import {
   ElementType,
   RefCallback,
   ForwardedRef,
+  Ref,
 } from 'react';
 import {
   ColProps,
@@ -171,13 +172,17 @@ export type InputPropsWithSizeEnhancer = Omit<
   FormControlProps,
   'size' | 'type'
 > & {
+  autoFocus?: boolean;
+  rows?: number;
+  ref?: Ref<HTMLInputElement>;
   size?: FormElementsSize;
   type?: 'color' | 'text' | 'email' | 'password' | 'number';
 };
 
 type DateTimeProps = {
   onChange?: (value: string) => void;
-} & Omit<InputPropsWithSizeEnhancer, 'onChange' | 'type'>;
+  value?: string;
+} & Omit<InputPropsWithSizeEnhancer, 'onChange' | 'type' | 'value'>;
 
 export type Icons =
   | 'add'
@@ -280,7 +285,6 @@ export type UI = {
   Form: typeof Formik & {
     Input: UIComponent<
       InputPropsWithSizeEnhancer & {
-        rows?: number;
         name: string;
         placeholder?: string;
       }

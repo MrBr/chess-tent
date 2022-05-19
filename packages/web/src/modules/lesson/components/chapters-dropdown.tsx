@@ -1,4 +1,4 @@
-import React, { ComponentProps } from 'react';
+import React, { ComponentProps, FormEvent } from 'react';
 import { Chapter } from '@chess-tent/models';
 import { debounce } from 'lodash';
 import { ui } from '@application';
@@ -13,11 +13,7 @@ class ChaptersDropdown extends React.Component<
 > {
   state = { editing: false };
 
-  doneEditing = (
-    event:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.KeyboardEvent<HTMLInputElement>,
-  ) => {
+  doneEditing = (event: FormEvent) => {
     const { onEdit } = this.props;
     this.setState({ editing: false });
     this.debouncedEdit.cancel();

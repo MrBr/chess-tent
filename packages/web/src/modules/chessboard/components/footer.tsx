@@ -33,7 +33,7 @@ const PGNModal = ({
   onImport: (pgn: string) => void;
   close: () => void;
 }) => {
-  const inputRef = useRef<HTMLInputElement>();
+  const inputRef = useRef<HTMLInputElement>(null);
   const handleImport = () => {
     close();
     if (inputRef.current) {

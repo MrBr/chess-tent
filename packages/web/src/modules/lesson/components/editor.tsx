@@ -42,6 +42,7 @@ const {
   OverlayTrigger,
   Tooltip,
   ToggleButton,
+  Text,
 } = ui;
 const { createChapter, updateStepRotation, logException } = services;
 const {
@@ -417,6 +418,20 @@ class EditorRenderer extends React.Component<
                     root
                     renderToolbox={this.renderToolbox}
                   />
+                  {activeChapter.state.steps.length === 1 && (
+                    <>
+                      <Text
+                        fontSize="extra-small"
+                        weight={500}
+                        className="mt-5 mb-1"
+                      >
+                        TIP
+                      </Text>
+                      <Text fontSize="extra-small">
+                        Start by making a move or setting the position.
+                      </Text>
+                    </>
+                  )}
                 </SidebarSection>
                 <SidebarSection>
                   <Row>

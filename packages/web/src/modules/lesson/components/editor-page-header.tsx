@@ -24,7 +24,9 @@ const EditorPageHeader: ComponentType<EditorPageHeaderProps> = ({
       <Col>
         <Breadcrumbs className="mb-0">
           <Breadcrumbs.Item href="/">Dashboard</Breadcrumbs.Item>
-          <Breadcrumbs.Item>{'New lesson'}</Breadcrumbs.Item>
+          <Breadcrumbs.Item>
+            {lesson?.state.title || 'New template'}
+          </Breadcrumbs.Item>
         </Breadcrumbs>
       </Col>
       {lessonStatus && (

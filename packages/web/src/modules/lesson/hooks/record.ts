@@ -28,6 +28,9 @@ export const useLesson: Hooks['useLesson'] = (lessonId: Lesson['id']) => {
   useEffect(() => {
     const state = store.getState();
     const lesson = lessonSelector(lessonId)(state);
+    if (record.value) {
+      return;
+    }
     if (lesson) {
       record.update(lesson);
       return;

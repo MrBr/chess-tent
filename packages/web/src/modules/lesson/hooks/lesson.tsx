@@ -11,13 +11,7 @@ import { hooks } from '@application';
 import { Hooks, LessonStatus, LessonUpdates, Requests, Steps } from '@types';
 import { RecordValue } from '@chess-tent/redux-record/types';
 
-const {
-  useLocation,
-  useHistory,
-  useApi,
-  useDiffUpdates,
-  useComponentStateSilent,
-} = hooks;
+const { useLocation, useHistory, useApi, useDiffUpdates } = hooks;
 
 export const useUpdateLessonStepState = <T extends Step>(
   updateStep: (step: T) => void,
@@ -83,7 +77,6 @@ export const useLessonPartialUpdates = (
   lesson: RecordValue<Lesson>,
   save: Requests['lessonUpdates'],
 ) => {
-  const { mounted } = useComponentStateSilent();
   const {
     fetch: lessonUpdate,
     error: lessonUpdateError,
@@ -91,14 +84,16 @@ export const useLessonPartialUpdates = (
     reset: lessonUpdateReset,
   } = useApi(save);
   const [lessonStatus, setLessonStatus] = useState<LessonStatus>(
-    lesson ? LessonStatus.INITIAL : LessonStatus.LOADING,
+    LessonStatus.LOADING,
   );
 
   useDiffUpdates(
     lesson,
     (updates: LessonUpdates) => {
       if (updates.length === 0) {
-        setLessonStatus(LessonStatus.SAVED);
+        if (lessonStatus === LessonStatus.DIRTY) {
+          setLessonStatus(LessonStatus.INITIAL);
+        }
         return;
       }
       lessonUpdate((lesson as Lesson).id, updates);
@@ -107,7 +102,7 @@ export const useLessonPartialUpdates = (
   );
 
   useEffect(() => {
-    if (!mounted || !lesson) {
+    if (!lesson) {
       return;
     }
     setLessonStatus(oldStatus =>
@@ -115,7 +110,7 @@ export const useLessonPartialUpdates = (
         ? LessonStatus.INITIAL
         : LessonStatus.DIRTY,
     );
-  }, [lesson, mounted]);
+  }, [lesson]);
 
   useEffect(() => {
     if (lessonUpdateError && lessonStatus !== LessonStatus.ERROR) {

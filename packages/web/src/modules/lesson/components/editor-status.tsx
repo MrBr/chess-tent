@@ -9,13 +9,14 @@ const getStatusText = (lessonStatus: LessonStatus) => {
     case LessonStatus.DIRTY:
       return 'Have unsaved changes';
     case LessonStatus.ERROR:
-      return 'Something went wrong, lesson not saved.';
+      return 'Something went wrong, template not saved';
     case LessonStatus.LOADING:
-      return 'Initialising the lesson.';
-    case LessonStatus.SAVED:
+      return 'Initialising the template';
     case LessonStatus.INITIAL:
+      return 'Template ready';
+    case LessonStatus.SAVED:
     default:
-      return 'Lesson saved';
+      return 'Template saved';
   }
 };
 const EditorStatus = ({ lessonStatus }: { lessonStatus: LessonStatus }) => (

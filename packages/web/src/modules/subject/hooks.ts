@@ -48,16 +48,6 @@ export const useDiffUpdates = (
   // Use store to get latest entity
   const store = useStore();
 
-  useEffect(() => {
-    if (!subject?.id || !subject?.type) {
-      return;
-    }
-    // Save initial normalized subject version
-    subjectRef.current = store.getState().entities[subject.type][
-      subject.id
-    ] as Subject;
-  }, [store, subject?.id, subject?.type]);
-
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const entityUpdated = useCallback(
     throttle(
@@ -104,4 +94,14 @@ export const useDiffUpdates = (
       entityUpdated();
     }
   }, [subject, entityUpdated]);
+
+  useEffect(() => {
+    if (!subject?.id || !subject?.type) {
+      return;
+    }
+    // Save initial normalized subject version
+    subjectRef.current = store.getState().entities[subject.type][
+      subject.id
+    ] as Subject;
+  }, [store, subject?.id, subject?.type]);
 };

@@ -64,7 +64,7 @@ const NewLesson = () => {
   }
 
   return (
-    <Page header={<EditorPageHeader />}>
+    <Page header={<EditorPageHeader lessonStatus={lessonStatus} />}>
       <Editor lesson={lesson} lessonStatus={lessonStatus} />
     </Page>
   );

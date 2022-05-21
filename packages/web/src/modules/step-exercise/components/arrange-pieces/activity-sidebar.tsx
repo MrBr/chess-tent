@@ -6,7 +6,6 @@ import {
   ExerciseActivityArrangePiecesState,
   ExerciseArrangePiecesStep,
 } from '@types';
-import { isLessonActivityBoardStepCompleted } from '@chess-tent/models';
 import { SegmentActivitySidebar } from '../segment';
 
 const { Text } = ui;
@@ -26,11 +25,10 @@ const getPieceStatus = (
 const Playground: FunctionComponent<
   ComponentProps<ExerciseModule<ExerciseArrangePiecesStep>['ActivitySidebar']>
 > = props => {
-  const { step, stepActivityState, completeStep, boardState } = props;
-  const { moves: activityMoves } =
+  const { step, stepActivityState, completeStep } = props;
+  const { moves: activityMoves, completed } =
     stepActivityState as ExerciseActivityArrangePiecesState;
   const { moves: exerciseMoves } = step.state.task;
-  const completed = isLessonActivityBoardStepCompleted(boardState, step);
 
   useEffect(() => {
     const allCorrect = exerciseMoves?.every(

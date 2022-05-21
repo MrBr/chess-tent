@@ -89,6 +89,8 @@ export type ActivityStepStateBase = {
   comments?: ActivityComment[];
   mode: ActivityStepMode;
   shapes?: Shape[];
+  visited?: boolean;
+  completed?: boolean;
 };
 
 export type ActivityExerciseStepState<T extends {}> = T &

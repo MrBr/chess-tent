@@ -1,5 +1,5 @@
 import React from 'react';
-import { Step } from '@chess-tent/models';
+import { LessonActivityBoardState, Step } from '@chess-tent/models';
 import { AppStep, Icons } from '@types';
 import styled from '@chess-tent/styled-props';
 import { ui } from '@application';
@@ -12,6 +12,7 @@ interface ActivityStepperStepsProps {
   onStepClick: (step: AppStep) => void;
   steps: Step[];
   activeStepId?: string;
+  boardState: LessonActivityBoardState;
 }
 
 const { Icon } = ui;
@@ -32,8 +33,10 @@ function getStepIcon(step: AppStep): Icons {
 }
 
 const ActivityStepperSteps = styled((props: ActivityStepperStepsProps) => {
-  const { step, className, onStepClick, steps, activeStepId } = props;
+  const { step, className, onStepClick, steps, activeStepId, boardState } =
+    props;
 
+  const activityStepState = step ? boardState[step.id] : null;
   return (
     <>
       <div className={className}>
@@ -41,8 +44,13 @@ const ActivityStepperSteps = styled((props: ActivityStepperStepsProps) => {
           <ActivityStep
             onClick={() => onStepClick(step)}
             active={activeStepId === step.id}
+            visited={activityStepState?.visited}
+            completed={activityStepState?.completed}
           >
             <Icon type={getStepIcon(step)} size="extra-small" />
+            {activityStepState?.analysis?.state.steps.length > 0 && (
+              <Icon type="analysis" size="extra-small" />
+            )}
           </ActivityStep>
         )}
         {steps.map(child => {

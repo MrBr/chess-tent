@@ -5,7 +5,6 @@ import {
   ExerciseQuestionnaireActivityState,
   ExerciseQuestionnaireStep,
 } from '@types';
-import { isLessonActivityBoardStepCompleted } from '@chess-tent/models';
 import { SegmentActivitySidebar } from '../segment';
 
 const { Headline5, Row, Col, Check, Container, Text } = ui;
@@ -13,19 +12,12 @@ const { Headline5, Row, Col, Check, Container, Text } = ui;
 const Playground: FunctionComponent<
   ComponentProps<ExerciseModule<ExerciseQuestionnaireStep>['ActivitySidebar']>
 > = props => {
-  const {
-    step,
-    stepActivityState,
-    setStepActivityState,
-    completeStep,
-    boardState,
-  } = props;
-  const { selectedOptions } =
+  const { step, stepActivityState, setStepActivityState, completeStep } = props;
+  const { selectedOptions, completed } =
     stepActivityState as ExerciseQuestionnaireActivityState;
   const {
     task: { options },
   } = step.state;
-  const completed = isLessonActivityBoardStepCompleted(boardState, step);
   const handleAnswerChange = useCallback(
     (optionIndex: number) => {
       if (completed) {

@@ -20,6 +20,7 @@ import {
 } from '@chess-tent/models';
 
 import { components, services } from '@application';
+import { isActivityStepSolving } from '../service';
 
 const { StepRenderer } = components;
 
@@ -106,7 +107,11 @@ export class ActivityRendererStepCard<
   K extends Chapter,
 > extends React.Component<ActivityRendererModuleProps<T, K>> {
   setSolvingMode = () => {
-    const { updateActivity, activity, boardState } = this.props;
+    const { activityStepState, updateActivity, activity, boardState } =
+      this.props;
+    if (isActivityStepSolving(activityStepState)) {
+      return;
+    }
     updateActivity(
       applyUpdates(activity)(draft => {
         const activityStepStateDraft = getLessonActivityBoardState(

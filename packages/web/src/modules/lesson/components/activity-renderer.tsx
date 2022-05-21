@@ -14,8 +14,6 @@ import {
   Chapter,
   getNextStep,
   getPreviousStep,
-  markStepCompleted,
-  Step,
   updateActivityStepState,
 } from '@chess-tent/models';
 import Stepper from './activity-stepper';
@@ -42,6 +40,19 @@ function isStepCard<T extends Steps | undefined>(
 export class ActivityRenderer<
   T extends Steps | undefined,
 > extends React.Component<ActivityRendererProps<T>, ActivityRendererState> {
+  componentDidUpdate() {
+    this.resolveStepStatus();
+  }
+
+  resolveStepStatus() {
+    const { activityStepState, activity, updateActivity, boardState } =
+      this.props;
+    if (!activityStepState.visited) {
+      updateActivity(updateActivityStepState)(activity, boardState, {
+        visited: true,
+      });
+    }
+  }
   updateStepMode = (mode: ActivityStepMode) => {
     const { updateActivity, activity, boardState } = this.props;
     updateActivity(updateActivityStepState)(activity, boardState, {
@@ -55,9 +66,11 @@ export class ActivityRenderer<
     updateActivity(updateActivityStepState)(activity, boardState, state);
   };
 
-  completeStep = (step: Step) => {
+  completeStep = () => {
     const { activity, updateActivity, boardState } = this.props;
-    updateActivity(markStepCompleted)(activity, boardState, step);
+    updateActivity(updateActivityStepState)(activity, boardState, {
+      completed: true,
+    });
   };
 
   chapterChangeHandler = (chapter: Chapter) => {
@@ -166,7 +179,7 @@ export class ActivityRenderer<
   }
 
   render() {
-    const { chapter, lesson, importChapters, step } = this.props;
+    const { chapter, lesson, importChapters, boardState } = this.props;
 
     return (
       <ChessboardContextProvider>
@@ -177,7 +190,7 @@ export class ActivityRenderer<
           </LessonPlayground.Sidebar>
           <LessonPlayground.Stepper>
             <Stepper
-              activeStepId={step?.id}
+              boardState={boardState}
               next={this.nextActivityStep}
               prev={this.prevActivityStep}
               onStepClick={this.updateActiveStep}

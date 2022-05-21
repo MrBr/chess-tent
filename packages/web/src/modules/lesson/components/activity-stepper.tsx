@@ -1,5 +1,5 @@
 import React from 'react';
-import { Chapter } from '@chess-tent/models';
+import { Chapter, LessonActivityBoardState } from '@chess-tent/models';
 import { AppStep } from '@types';
 import { components, hooks } from '@application';
 import styled from '@chess-tent/styled-props';
@@ -13,7 +13,7 @@ const { LessonChapters } = components;
 const { usePrompt } = hooks;
 
 export interface ActivityStepperProps {
-  activeStepId?: string;
+  boardState: LessonActivityBoardState;
   step?: AppStep;
   className?: string;
   onStepClick: (step: AppStep) => void;
@@ -38,8 +38,9 @@ const ActivityStepper = styled((props: ActivityStepperProps) => {
     prev,
     onChapterChange,
     onChapterRemove,
-    activeStepId,
+    boardState,
   } = props;
+  const { activeStepId } = boardState;
   const [chapterImportModal, promptChapterImport] = usePrompt(close => (
     <ChaptersImport close={close} onImport={onChapterImport as () => void} />
   ));
@@ -79,6 +80,7 @@ const ActivityStepper = styled((props: ActivityStepperProps) => {
         </div>
         <div className="h-100 border-bottom pt-3 overflow-y-auto">
           <ActivityStepperSteps
+            boardState={boardState}
             activeStepId={activeStepId}
             steps={steps}
             step={step}

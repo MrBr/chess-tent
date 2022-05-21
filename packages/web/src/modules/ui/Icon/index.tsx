@@ -18,13 +18,11 @@ const Icon = styled<IconProps>(
   display: inline-block;
   box-sizing: content-box;
   position: relative;
-  vertical-align: middle;
+  vertical-align: top;
   padding: 4px;
 
   .svg-icon {
-    margin-top: 50%;
-    margin-left: 50%;
-    transform: translate(-50%, -50%);
+    vertical-align: top;
     width: 100%;
     height: 100%;
   }
@@ -70,11 +68,13 @@ const Icon = styled<IconProps>(
   &.small {
     width: 20px;
     height: 20px;
+    padding: 3px;
   }
 
   &.extra-small {
     width: 18px;
     height: 18px;
+    padding: 2px;
   }
 
   &.regular {

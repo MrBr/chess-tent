@@ -5,7 +5,6 @@ import {
   ExerciseModule,
   ExerciseSelectSquaresAndPiecesStep,
 } from '@types';
-import { isLessonActivityBoardStepCompleted } from '@chess-tent/models';
 import { getCorrectSelectionsCount, isLastSelectionCorrect } from './utils';
 import { SegmentActivitySidebar } from '../segment';
 
@@ -16,9 +15,9 @@ const Playground: FunctionComponent<
     ExerciseModule<ExerciseSelectSquaresAndPiecesStep>['ActivitySidebar']
   >
 > = props => {
-  const { step, stepActivityState, boardState } = props;
+  const { step, stepActivityState } = props;
   const { task } = step.state;
-  const { selectedShapes } =
+  const { selectedShapes, completed } =
     stepActivityState as ExerciseActivitySelectSquaresAndPiecesState;
   const shapes = task.shapes || [];
   const correctAction = isLastSelectionCorrect(shapes, selectedShapes);
@@ -26,7 +25,6 @@ const Playground: FunctionComponent<
     shapes,
     selectedShapes,
   );
-  const completed = isLessonActivityBoardStepCompleted(boardState, step);
   return (
     <SegmentActivitySidebar title="Select the squares and pieces" {...props}>
       {!completed && (

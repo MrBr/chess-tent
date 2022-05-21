@@ -412,7 +412,13 @@ export type Components = {
   LessonPlaygroundCard: LessonPlaygroundCard;
   StepTag: StepTag;
   LessonPlaygroundStepTag: ComponentType<
-    { children: ReactNode; active?: boolean } & ClickProps & ClassNameProps
+    {
+      children: ReactNode;
+      active?: boolean;
+      visited?: boolean;
+      completed?: boolean;
+    } & ClickProps &
+      ClassNameProps
   >;
   StepMove: StepMove;
   PieceIcon: PieceIcon;

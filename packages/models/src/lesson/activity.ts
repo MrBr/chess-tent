@@ -40,23 +40,6 @@ export const getLessonActivityUserActiveBoardState = (
   return activity.state.boards[activeBoardId];
 };
 
-export const markStepCompleted = createService(
-  (
-    draft: LessonActivity,
-    board: LessonActivityBoardState,
-    step: Step,
-  ): LessonActivity => {
-    const state = getLessonActivityBoardState(draft, board.id);
-    if (!state?.completedSteps) {
-      state.completedSteps = [];
-    }
-    if (state && !state?.completedSteps?.includes(step.id)) {
-      state.completedSteps.push(step.id);
-    }
-    return draft;
-  },
-);
-
 export const updateActivityActiveStep = createService(
   (
     draft: LessonActivity,
@@ -137,8 +120,3 @@ export const removeActivityChapter = createService(
     }
   },
 );
-
-export const isLessonActivityBoardStepCompleted = (
-  board: LessonActivityBoardState,
-  step: Step,
-) => board.completedSteps?.some(stepId => stepId === step.id);

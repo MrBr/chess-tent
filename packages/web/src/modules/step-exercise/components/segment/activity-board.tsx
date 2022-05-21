@@ -1,13 +1,11 @@
 import React, { FunctionComponent } from 'react';
-import { isLessonActivityBoardStepCompleted } from '@chess-tent/models';
 import { ChessboardProps, ExerciseSteps } from '@types';
 import { SegmentActivityProps } from '../../types';
 
 const Playground: FunctionComponent<
   SegmentActivityProps<ExerciseSteps> & Partial<ChessboardProps>
 > = ({ step, Chessboard, stepActivityState, boardState, ...props }) => {
-  const { showHint } = stepActivityState;
-  const completed = isLessonActivityBoardStepCompleted(boardState, step);
+  const { showHint, completed } = stepActivityState;
   const activeSegment = completed
     ? step.state.explanation
     : showHint

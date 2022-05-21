@@ -48,7 +48,12 @@ export const createLessonActivityBoard = (
   boardState = {},
   initialStepState: {} = {},
 ): LessonActivityBoardState => {
-  const stepActivityState = createActivityStepState(initialStepState);
+  const stepActivityState = createActivityStepState({
+    // First is automatically visited
+    // Not having it here will trigger update on the very beginning
+    visited: true,
+    ...initialStepState,
+  });
   const newBoardState = {
     id: utils.generateIndex(),
     ...boardState,

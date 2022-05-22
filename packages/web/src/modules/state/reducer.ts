@@ -44,11 +44,23 @@ const createEntityReducer =
         // in other cases, it sends a whole object
         // sending a whole object can leads to the race when the same entity is updated multiple times immediately one after the other
         // basically first update doesn't have to be taken into an account for the second, meaning, the next update used stale state in update which in the end overrides previous action
-        const updatedEntity =
-          // patch can exist but there may be no change
-          reducerEntityType === type && patch?.next?.length && entity
-            ? utils.normalize(applyPatches(entity, patch.next)).result
-            : (action.payload.entities[type][id] as unknown);
+        let updatedEntity;
+        if (!patch?.next) {
+          // Not a patch action
+          updatedEntity = action.payload.entities[type][id];
+        } else if (
+          patch.next.length > 0 &&
+          reducerEntityType === type &&
+          entity
+        ) {
+          // patch action
+          updatedEntity = utils.normalize(
+            applyPatches(entity, patch.next),
+          ).result;
+        } else {
+          // Patch action but no diff
+          return state;
+        }
         return isEmpty(action.payload.entities[reducerEntityType])
           ? state
           : {

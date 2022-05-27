@@ -48,52 +48,49 @@ export const useDiffUpdates = (
   // Use store to get latest entity
   const store = useStore();
 
+  const diffUpdateRef = useRef(() => {
+    if (!subjectRef.current) {
+      console.warn('Updating entity without previous reference.');
+      return;
+    }
+
+    const { type, id } = subjectRef.current;
+    const normalizedEntity = store.getState().entities[type][id];
+    if (!normalizedEntity) {
+      // Entity most likely deleted
+      return;
+    }
+    const diffs = getDiff(subjectRef.current, normalizedEntity);
+
+    const updatedPaths = Object.keys(diffs).map(path =>
+      path.split('.'),
+    ) as SubjectPath[];
+
+    const minimumUpdate = removeWeakerPaths(updatedPaths).map(path => {
+      return {
+        path,
+        value: getSubjectValueAt(normalizedEntity, path),
+      };
+    });
+
+    saveRef.current(minimumUpdate);
+    subjectRef.current = normalizedEntity;
+  });
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const entityUpdated = useCallback(
-    throttle(
-      () => {
-        if (!subjectRef.current) {
-          console.warn('Updating entity without previous reference.');
-          return;
-        }
-
-        const { type, id } = subjectRef.current;
-        const normalizedEntity = store.getState().entities[type][id];
-        if (!normalizedEntity) {
-          // Entity most likely deleted
-          return;
-        }
-        const diffs = getDiff(subjectRef.current, normalizedEntity);
-
-        const updatedPaths = Object.keys(diffs).map(path =>
-          path.split('.'),
-        ) as SubjectPath[];
-
-        const minimumUpdate = removeWeakerPaths(updatedPaths).map(path => {
-          return {
-            path,
-            value: getSubjectValueAt(normalizedEntity, path),
-          };
-        });
-
-        saveRef.current(minimumUpdate);
-        subjectRef.current = normalizedEntity;
-      },
-      delay,
-      {
-        trailing: true,
-        leading: false,
-      },
-    ),
+  const throttledUpdate = useCallback(
+    throttle(diffUpdateRef.current, delay, {
+      trailing: true,
+      leading: false,
+    }),
     // Must be zero dependencies to call the same throttled function
     [subjectRef],
   );
 
   useEffect(() => {
     if (subjectRef.current) {
-      entityUpdated();
+      throttledUpdate();
     }
-  }, [subject, entityUpdated]);
+  }, [subject, throttledUpdate, store]);
 
   useEffect(() => {
     if (!subject?.id || !subject?.type) {
@@ -104,4 +101,11 @@ export const useDiffUpdates = (
       subject.id
     ] as Subject;
   }, [store, subject?.id, subject?.type]);
+
+  // Instant save
+  return useCallback(() => {
+    diffUpdateRef.current();
+    // Canceling any previous throttled calls as the diffUpdate has just been called
+    throttledUpdate.cancel();
+  }, [throttledUpdate]);
 };

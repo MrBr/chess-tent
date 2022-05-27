@@ -9,12 +9,12 @@ import {
   ActivityStepProps,
   ChessboardInterface,
   ChessboardProps,
-  LessonStatus,
   StepToolbox,
 } from './components';
 import { ClassComponent } from './_helpers';
 import { Orientation, Shape } from './chess';
 import { AppAnalysis } from './analysis';
+import { ApiStatus } from './hooks';
 
 export type AppStep<S extends {} = {}, T extends StepType = StepType> = Step<
   S & { orientation?: Orientation },
@@ -30,7 +30,7 @@ export type StepBoardComponentProps = {
   Chessboard:
     | FunctionComponent<ChessboardProps>
     | ClassComponent<ChessboardInterface>;
-  status?: LessonStatus;
+  status?: ApiStatus;
 };
 export type StepProps<S extends AppStep, P = {}> = {
   step: S;

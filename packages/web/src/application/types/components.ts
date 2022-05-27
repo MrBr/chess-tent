@@ -65,6 +65,7 @@ import {
 import { ClassComponent, ClassNameProps, ClickProps } from './_helpers';
 import { OptionsDropdownProps, ButtonProps, UI } from './ui';
 import {
+  ApiStatus,
   AppAnalysis,
   ChessboardContext,
   Hooks,
@@ -339,14 +340,6 @@ export interface TagsSelectProps {
   onChange?: (tags: Tag[]) => void;
 }
 
-export enum LessonStatus {
-  SAVED = 'SAVED',
-  ERROR = 'ERROR',
-  DIRTY = 'DIRTY',
-  INITIAL = 'INITIAL',
-  LOADING = 'LOADING',
-}
-
 export interface Evaluation {
   score: number;
   isMate: boolean;
@@ -385,6 +378,7 @@ export type Components = {
       children: ReactNode;
     }>;
   };
+  ApiStatusLabel: ComponentType<{ status: ApiStatus }>;
   LoadMore: ComponentType;
   // Page with common layout setup
   Page: ComponentType<{ header?: ReactElement; tabbar?: ReactElement }>;
@@ -467,7 +461,7 @@ export type Components = {
   }>;
   Editor: ComponentType<{
     lesson: Lesson;
-    lessonStatus: LessonStatus;
+    lessonStatus: ApiStatus;
   }>;
   Trainings: ComponentType<{
     trainings: RecordValue<LessonActivity[]>;

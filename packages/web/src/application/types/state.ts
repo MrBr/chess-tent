@@ -2,7 +2,7 @@ import {
   Action as ReduxAction,
   Middleware as ReduxMiddleware,
   Reducer,
-  Store,
+  Store as ReduxStore,
 } from 'redux';
 import {
   Activity,
@@ -31,6 +31,8 @@ import {
 } from '@chess-tent/redux-record/types';
 
 export type Middleware = ReduxMiddleware;
+
+export type Store = ReduxStore;
 
 export type State = {
   store: Store;

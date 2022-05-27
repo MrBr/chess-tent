@@ -48,6 +48,23 @@ export interface ConferencingHandlers {
   handleOffer(data: OfferAction): void;
 }
 
+export enum ApiStatus {
+  SAVED = 'SAVED',
+  ERROR = 'ERROR',
+  DIRTY = 'DIRTY',
+  INITIAL = 'INITIAL',
+  LOADING = 'LOADING',
+  SAVING = 'SAVING',
+}
+
+export interface ApiState<T extends RequestFetch<any, any>> {
+  fetch: (...args: GenericArguments<GetRequestFetchArgs<T>>) => void;
+  response: GetRequestFetchResponse<T> | null;
+  loading: boolean;
+  error: null | string | {};
+  reset: () => void;
+}
+
 export type Hooks = {
   useRecordInit: typeof useRecordInit;
   useRecordSafe: typeof useRecordSafe;
@@ -78,7 +95,7 @@ export type Hooks = {
     subject: RecordValue<Subject>,
     save: (updates: SubjectPathUpdate[]) => void,
     delay?: number,
-  ) => void;
+  ) => () => void;
   useTags: () => Tag[];
   useUser: (userId: User['id']) => User;
   useActiveUserRecord: <T = void>(
@@ -106,15 +123,11 @@ export type Hooks = {
   useQuery: <T extends Record<string, string | undefined>>() => T;
   useLocation: typeof useLocation;
   useParams: typeof useParams;
-  useApi: <T extends RequestFetch<any, any>>(
-    request: T,
-  ) => {
-    fetch: (...args: GenericArguments<GetRequestFetchArgs<T>>) => void;
-    response: GetRequestFetchResponse<T> | null;
-    loading: boolean;
-    error: null | string | {};
-    reset: () => void;
-  };
+  useApi: <T extends RequestFetch<any, any>>(request: T) => ApiState<T>;
+  useApiStatus: <T extends RequestFetch<any, any>>(
+    subject: RecordValue<Subject>,
+    apiState: ApiState<T>,
+  ) => [ApiStatus, (status: ApiStatus) => void];
   useMeta: <T>(metaKey: string, defaultValue?: T) => UseMetaReturn<T>;
   useCopyStep: () => [
     boolean,

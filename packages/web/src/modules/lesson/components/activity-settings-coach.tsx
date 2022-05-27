@@ -1,6 +1,6 @@
 import React, { ComponentType, useEffect, useRef } from 'react';
-import { hooks, requests, state, ui } from '@application';
-import { FormikProps } from '@types';
+import { components, hooks, requests, state, ui } from '@application';
+import { ApiStatus, FormikProps } from '@types';
 import {
   LessonActivity,
   LessonActivityRole,
@@ -12,17 +12,18 @@ import ActivityForm, { ActivityData } from './activity-form';
 
 const { Offcanvas, Container, Button, Headline5, Row, Col, Confirm, Modal } =
   ui;
-const { useDispatchService, useApi, useDispatch, useHistory, usePrompt } =
-  hooks;
+const { useApi, useDispatch, useHistory, usePrompt } = hooks;
 const {
   actions: { deleteEntity },
 } = state;
+const { ApiStatusLabel } = components;
 
-const ActivitySettings: ComponentType<{
+const ActivitySettingsCoach: ComponentType<{
   activity: RecordValue<LessonActivity>;
   close: () => void;
-}> = ({ activity, close }) => {
-  const dispatchService = useDispatchService();
+  save: (activity: LessonActivity) => void;
+  status: ApiStatus;
+}> = ({ activity, close, save, status }) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const activityFormRef = useRef<FormikProps<ActivityData>>(null);
@@ -91,7 +92,7 @@ const ActivitySettings: ComponentType<{
     const weekly = data.weekly || activity.weekly;
     // Activity (component, not page) saves all the changes gradually
     // If needed, updateActivity function can be extracted outside the ActivitySettings
-    dispatchService(updateSubject)(activity, { roles, title, date, weekly });
+    save(updateSubject(activity, { roles, title, date, weekly }));
   };
 
   return (
@@ -121,6 +122,11 @@ const ActivitySettings: ComponentType<{
                 </Button>
               </Col>
             </Row>
+            <Row className="justify-content-center mt-4">
+              <Col className="col-auto">
+                <ApiStatusLabel status={status} />
+              </Col>
+            </Row>
           </Container>
         </Offcanvas.Body>
       </Offcanvas>
@@ -128,4 +134,4 @@ const ActivitySettings: ComponentType<{
   );
 };
 
-export default ActivitySettings;
+export default ActivitySettingsCoach;

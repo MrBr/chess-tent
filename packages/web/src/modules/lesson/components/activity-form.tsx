@@ -63,10 +63,10 @@ const ActivityForm = ({ activity, formRef }: ActivityFormProps) => {
         <Form.Input name="title" />
       </FormGroup>
       <FormGroup className="mt-3">
-        <Label>Assign to</Label>
+        <Label>Students</Label>
         <Form.Select
           name="students"
-          placeholder="Select student"
+          placeholder="Select students"
           options={students}
           isMulti
           formatOptionLabel={userOption => (
@@ -85,7 +85,7 @@ const ActivityForm = ({ activity, formRef }: ActivityFormProps) => {
         Schedule
       </Text>
       <Text fontSize="extra-small" className="mb-3">
-        Optionally schedule a training for the future
+        Optionally schedule a training
       </Text>
       <Row>
         <Col>

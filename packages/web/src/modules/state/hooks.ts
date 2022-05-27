@@ -21,7 +21,6 @@ export const useDispatchService = () => {
         service: T extends ServiceType ? T : never,
       ) =>
       (...args: T extends (...args: infer U) => any ? U : never) => {
-        debugger;
         dispatch(serviceAction(service)(...args));
       },
     [dispatch],

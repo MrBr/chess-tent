@@ -74,12 +74,16 @@ const createEntityReducer =
         const { next } = action.payload;
         const { type, id } = action.meta;
         const entity = state[id];
-        return type === reducerEntityType && entity
-          ? {
-              ...state,
-              [id]: applyPatches(entity, next),
-            }
-          : state;
+        if (type !== reducerEntityType || !entity) {
+          return state;
+        }
+        const updatedEntity = utils.normalize(
+          applyPatches(entity, next),
+        ).result;
+        return {
+          ...state,
+          [id]: updatedEntity,
+        };
       }
       case DELETE_ENTITY: {
         const { type, id } = action.meta;

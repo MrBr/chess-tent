@@ -1,18 +1,17 @@
 import React, { ComponentType } from 'react';
 import { components, ui } from '@application';
 import { Lesson } from '@chess-tent/models';
-import { LessonStatus } from '@types';
+import { ApiStatus } from '@types';
 import EditorPageSettings from './editor-page-settings';
 import EditorPagePublish from './editor-page-publish';
 import EditorPagePreview from './editor-page-preview';
-import EditorStatus from './editor-status';
 
-const { Header } = components;
+const { Header, ApiStatusLabel } = components;
 const { Breadcrumbs, Col } = ui;
 
 interface EditorPageHeaderProps {
   lesson?: Lesson;
-  lessonStatus?: LessonStatus;
+  lessonStatus?: ApiStatus;
 }
 
 const EditorPageHeader: ComponentType<EditorPageHeaderProps> = ({
@@ -31,7 +30,7 @@ const EditorPageHeader: ComponentType<EditorPageHeaderProps> = ({
       </Col>
       {lessonStatus && (
         <Col>
-          <EditorStatus lessonStatus={lessonStatus} />
+          <ApiStatusLabel status={lessonStatus} />
         </Col>
       )}
       {lesson && (

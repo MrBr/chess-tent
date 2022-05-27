@@ -18,7 +18,7 @@ import {
   Components,
   EditorContext,
   EditorSidebarProps,
-  LessonStatus,
+  ApiStatus,
   LessonUpdatableAction,
   Steps,
   History,
@@ -65,7 +65,7 @@ type EditorRendererProps = ComponentProps<Components['Editor']> & {
   dispatch: (action: Actions) => void;
   history: History;
   location: ReturnType<typeof useLocation>;
-  lessonStatus: LessonStatus;
+  lessonStatus: ApiStatus;
   addLessonUpdate: (action: LessonUpdatableAction) => void;
 };
 type EditorRendererState = {
@@ -114,7 +114,7 @@ class EditorRenderer extends React.Component<
     const { history, lessonStatus } = this.props;
     if (history.location.pathname === location.pathname) {
       return true;
-    } else if (lessonStatus !== LessonStatus.DIRTY) {
+    } else if (lessonStatus !== ApiStatus.DIRTY) {
       return true;
     }
     return 'Please wait until all changes are saved.';
@@ -122,7 +122,7 @@ class EditorRenderer extends React.Component<
 
   handleBeforeUnload = (e: Event) => {
     const { lessonStatus } = this.props;
-    if (lessonStatus === LessonStatus.DIRTY) {
+    if (lessonStatus === ApiStatus.DIRTY) {
       e.returnValue = false;
     }
   };

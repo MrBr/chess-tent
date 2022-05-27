@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { components, hooks, requests, state } from '@application';
 import { Lesson, TYPE_LESSON } from '@chess-tent/models';
-import { LessonStatus } from '@types';
+import { ApiStatus } from '@types';
 import { createNewLesson } from '../service';
 import EditorPageHeader from '../components/editor-page-header';
 import { useLessonPartialUpdates } from '../hooks/lesson';
@@ -50,7 +50,7 @@ const NewLesson = () => {
   const lessonStatus = useLessonPartialUpdates(lesson, saveLesson);
 
   useEffect(() => {
-    if (lessonStatus !== LessonStatus.SAVED) {
+    if (lessonStatus !== ApiStatus.SAVED) {
       return;
     }
     const activeStep =

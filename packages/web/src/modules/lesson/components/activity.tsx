@@ -1,6 +1,6 @@
 import React from 'react';
 import { ActivityComponent, Steps } from '@types';
-import { hooks, requests } from '@application';
+import { hooks } from '@application';
 import {
   getChildStep,
   getLessonChapter,
@@ -21,8 +21,7 @@ import { importLessonActivityChapters, isLessonActivity } from '../service';
 import { ActivityRendererAnalysisEngineCard } from './activity-renderer-engine';
 import { ActivityRendererCommentsCard } from './activity-renderer-comments';
 
-const { useDiffUpdates, useApi, useDispatchService, useActiveUserRecord } =
-  hooks;
+const { useDispatchService, useActiveUserRecord } = hooks;
 
 const LESSON_MODULES = {
   boards: [ActivityRendererStepBoard, ActivityRendererAnalysisBoard],
@@ -61,16 +60,8 @@ const Activity: ActivityComponent<LessonActivity> = props => {
   const activeStepActivityState = activeBoardState[activeStepId];
 
   const dispatchService = useDispatchService();
-  const { fetch: saveActivity } = useApi(requests.activityUpdate);
   const importChapters = (chapters: Chapter[]) =>
     dispatchService(importLessonActivityChapters)(activity, chapters);
-  useDiffUpdates(
-    props.activity,
-    updates => {
-      saveActivity(props.activity.id, updates);
-    },
-    2000,
-  );
 
   const isEmptyLesson = !activeChapter || !activeStep;
 

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import {
   Chapter,
   getChildStep,
@@ -8,10 +8,10 @@ import {
   updateStepState,
 } from '@chess-tent/models';
 import { hooks } from '@application';
-import { Hooks, LessonStatus, LessonUpdates, Requests, Steps } from '@types';
+import { ApiStatus, Hooks, LessonUpdates, Requests, Steps } from '@types';
 import { RecordValue } from '@chess-tent/redux-record/types';
 
-const { useLocation, useHistory, useApi, useDiffUpdates } = hooks;
+const { useLocation, useHistory, useApi, useApiStatus, useDiffUpdates } = hooks;
 
 export const useUpdateLessonStepState = <T extends Step>(
   updateStep: (step: T) => void,
@@ -77,56 +77,20 @@ export const useLessonPartialUpdates = (
   lesson: RecordValue<Lesson>,
   save: Requests['lessonUpdates'],
 ) => {
-  const {
-    fetch: lessonUpdate,
-    error: lessonUpdateError,
-    response: lessonUpdateResponse,
-    reset: lessonUpdateReset,
-  } = useApi(save);
-  const [lessonStatus, setLessonStatus] = useState<LessonStatus>(
-    LessonStatus.LOADING,
-  );
+  const saveApiState = useApi(save);
+  const [lessonStatus, setLessonStatus] = useApiStatus(lesson, saveApiState);
 
   useDiffUpdates(
     lesson,
     (updates: LessonUpdates) => {
       if (updates.length === 0) {
-        if (lessonStatus === LessonStatus.DIRTY) {
-          setLessonStatus(LessonStatus.INITIAL);
-        }
+        setLessonStatus(ApiStatus.SAVED);
         return;
       }
-      lessonUpdate((lesson as Lesson).id, updates);
+      saveApiState.fetch((lesson as Lesson).id, updates);
     },
     3000,
   );
-
-  useEffect(() => {
-    if (!lesson) {
-      return;
-    }
-    setLessonStatus(oldStatus =>
-      oldStatus === LessonStatus.LOADING
-        ? LessonStatus.INITIAL
-        : LessonStatus.DIRTY,
-    );
-  }, [lesson]);
-
-  useEffect(() => {
-    if (lessonUpdateError && lessonStatus !== LessonStatus.ERROR) {
-      setLessonStatus(LessonStatus.ERROR);
-    } else if (lessonUpdateResponse && lessonStatus !== LessonStatus.SAVED) {
-      setLessonStatus(LessonStatus.SAVED);
-    } else if (lessonUpdateResponse || lessonUpdateError) {
-      // All saved, clear state for next change
-      lessonUpdateReset();
-    }
-  }, [
-    lessonStatus,
-    lessonUpdateError,
-    lessonUpdateReset,
-    lessonUpdateResponse,
-  ]);
 
   return lessonStatus;
 };

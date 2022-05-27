@@ -66,14 +66,21 @@ const ActivityModel = db.createModel<DepupulatedActivity>(
   activitySchema,
 );
 
-const depopulate = (activity: Activity): DepupulatedActivity => {
-  const roles = activity.roles.map(db.depopulateRole);
+const depopulate = <T extends Activity | Partial<Activity>>(
+  activity: T,
+): T extends Activity ? DepupulatedActivity : Partial<DepupulatedActivity> => {
+  const depopulatedActivity = {} as T extends Activity
+    ? DepupulatedActivity
+    : Partial<DepupulatedActivity>;
+  if (activity.roles) {
+    depopulatedActivity.roles = activity.roles.map(db.depopulateRole);
+  }
 
-  return {
-    ...activity,
-    roles,
-    subjectType: activity.subject.type,
-  };
+  if (activity.subject?.type) {
+    depopulatedActivity.subjectType = activity.subject.type;
+  }
+
+  return { ...activity, ...depopulatedActivity };
 };
 
 export { activitySchema, ActivityModel, depopulate };

@@ -175,11 +175,21 @@ export const isOwned = (activities: LessonActivity[], lessonId: Lesson['id']) =>
 
 export const getMentor = (activity: LessonActivity) => activity.subject.owner;
 
-export const isStudent = (activity: LessonActivity, user: User) =>
+export const isRole = (
+  activity: LessonActivity,
+  user: User,
+  role: LessonActivityRole,
+) =>
   activity.roles.find(
-    ({ user: { id }, role }) =>
-      id === user.id && role === LessonActivityRole.STUDENT,
+    ({ user: { id }, role: userRole }) => id === user.id && userRole === role,
   );
+
+export const isStudent = (activity: LessonActivity, user: User) =>
+  isRole(activity, user, LessonActivityRole.STUDENT);
+export const isCoach = (activity: LessonActivity, user: User) =>
+  isRole(activity, user, LessonActivityRole.COACH);
+export const isOwner = (activity: LessonActivity, user: User) =>
+  isRole(activity, user, LessonActivityRole.OWNER);
 
 export const createNewLesson = (user: User, chapters?: Chapter[]) => {
   const newLessonId = generateIndex();

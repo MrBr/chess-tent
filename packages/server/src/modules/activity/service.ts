@@ -22,7 +22,10 @@ export const patchActivity = (
   patch: Partial<Activity>,
 ) =>
   new Promise<void>(resolve => {
-    ActivityModel.updateOne({ _id: activityId }, { $set: patch }).exec(err => {
+    ActivityModel.updateOne(
+      { _id: activityId },
+      { $set: depopulate(patch) },
+    ).exec(err => {
       if (err) {
         throw err;
       }

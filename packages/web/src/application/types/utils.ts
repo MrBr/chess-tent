@@ -16,6 +16,12 @@ export type Utils = {
     result: any;
   };
   getEntityId: (entity: Entity | NormalizedEntity) => string;
+  isRelationship: (path: string[], type: any) => boolean;
+  normalizePath: (
+    path: string[],
+    value: any,
+    type: string,
+  ) => { result: any; entities: {} };
   mobileCss: (style: TemplateStringsArray) => string;
   propEnhancer: <T extends {}>(
     prop: string | ((props: T) => string),

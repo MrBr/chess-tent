@@ -9,7 +9,7 @@ export type RecipeCollection<T> = {
 export type RecipeMethod<
   T extends RecordBase<any>,
   M extends string,
-  F extends (this: T, ...args: any[]) => void
+  F extends (...args: any[]) => void,
 > = {
   [prop in M]: F;
 };

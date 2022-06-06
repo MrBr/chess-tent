@@ -14,77 +14,82 @@ import {
   updateRecordMetaAction,
 } from './redux/actions';
 
-const withRecordCollection = <T extends RecordBase<any[]>>(): RecordRecipe<
-  T,
-  RecipeCollection<InferRecordValueType<T>>
-> => store => record => {
-  const push = (item: InferRecordValueType<T>) => {
-    store.dispatch(pushRecordAction(record.recordKey, item));
-  };
-  const pop = () => {
-    // record.update();
-  };
-  const concat = (items: InferRecordValueType<T>[]) => {};
-
-  return {
-    ...record,
-    push,
-    pop,
-    concat,
-  };
-};
-
-const withRecordBase = <V>(): RecordRecipe<RecordBase<V>> => (
-  store: MiddlewareAPI,
-) => ({ recordKey }) => {
-  const get = () => {
-    const value = selectRecord<V>(recordKey)(store.getState()) || {
-      value: undefined,
-      meta: { recordKey },
+const withRecordCollection =
+  <T extends RecordBase<any[]>>(): RecordRecipe<
+    T,
+    RecipeCollection<InferRecordValueType<T>>
+  > =>
+  store =>
+  record => {
+    const push = (item: InferRecordValueType<T>) => {
+      store.dispatch(pushRecordAction(record.recordKey, item));
     };
-    return value;
-  };
-  const update = (value: V | null | undefined, meta?: {}) => {
-    store.dispatch(updateRecordAction(recordKey, value, meta));
-  };
-  const amend = (meta: {}) => {
-    store.dispatch(updateRecordMetaAction(recordKey, meta));
-  };
-  const reset = () => {
-    store.dispatch(deleteRecordAction(recordKey));
+    const pop = () => {
+      // record.update();
+    };
+    const concat = (items: InferRecordValueType<T>[]) => {};
+
+    return {
+      ...record,
+      push,
+      pop,
+      concat,
+    };
   };
 
-  return {
-    amend,
-    get,
-    update,
-    reset,
-    recordKey,
-  };
-};
+const withRecordBase =
+  <V>(): RecordRecipe<RecordBase<V>> =>
+  (store: MiddlewareAPI) =>
+  ({ recordKey }) => {
+    const get = () => {
+      const value = selectRecord<V>(recordKey)(store.getState()) || {
+        value: undefined,
+        meta: { recordKey },
+      };
+      return value;
+    };
+    const update = (value: V | null | undefined, meta?: {}) => {
+      store.dispatch(updateRecordAction(recordKey, value, meta));
+    };
+    const amend = (meta: {}) => {
+      store.dispatch(updateRecordMetaAction(recordKey, meta));
+    };
+    const reset = () => {
+      store.dispatch(deleteRecordAction(recordKey));
+    };
 
-const withRecordMethod = <
-  A,
-  V,
-  T extends RecordBase<V>,
-  M extends string,
-  F extends (this: T, ...args: any[]) => void
->(
-  method: M,
-  func: F,
-) => () => (
-  record: T,
-): T &
-  {
+    return {
+      amend,
+      get,
+      update,
+      reset,
+      recordKey,
+    };
+  };
+
+const withRecordMethod =
+  <
+    A,
+    V,
+    T extends RecordBase<V>,
+    M extends string,
+    F extends (...args: any[]) => void,
+  >(
+    method: M,
+    func: (store: MiddlewareAPI) => (record: T) => F,
+  ) =>
+  (store: MiddlewareAPI) =>
+  (
+    record: T,
+  ): T & {
     [prop in M]: F;
   } => {
-  return {
-    ...record,
-    [method]: func.bind(record),
-  } as T &
-    {
+    return {
+      ...record,
+      [method]: (...args: Parameters<F>) => func(store)(record)(...args),
+    } as T & {
       [prop in M]: F;
     };
-};
+  };
 
 export { withRecordBase, withRecordCollection, withRecordMethod };

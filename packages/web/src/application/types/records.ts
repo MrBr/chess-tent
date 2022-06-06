@@ -23,7 +23,9 @@ import {
   RecipeMethod,
   RecordBase,
   RecordRecipe,
+  RecordValue,
 } from '@chess-tent/redux-record/types';
+import { MiddlewareAPI } from 'redux';
 import { GenericArguments } from './_helpers';
 import { Requests } from './requests';
 
@@ -78,7 +80,14 @@ export type Records<T = any> = {
 
   conversationParticipant: InitRecord<RecordBase<User>>;
 
-  activity: InitRecord<RecordBase<T>>;
+  activity: InitRecord<
+    RecordBase<T> &
+      RecipeMethod<
+        RecordBase<T>,
+        'applyPatch',
+        (modifier: (draft: RecordValue<T>) => void) => void
+      >
+  >;
   lesson: InitRecord<RecipeApiLoad<Requests['lesson']> & RecordBase<Lesson>>;
   lessons: InitRecord<
     RecipeApiLoad<Requests['lessons']> &
@@ -110,10 +119,10 @@ export type Records<T = any> = {
   withRecordMethod: <
     T extends RecordBase<any>,
     M extends string,
-    F extends (this: T, ...args: any[]) => void,
+    F extends (...args: any[]) => void,
   >(
     method: M,
-    func: F,
+    func: (store: MiddlewareAPI) => (record: T) => F,
   ) => RecordRecipe<T, RecipeMethod<T, M, F>>;
   // TODO - safe type `type` argument - should match selected entity
   withRecordDenormalized: <T extends RecordBase<any>>(

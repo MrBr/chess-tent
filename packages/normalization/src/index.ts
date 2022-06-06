@@ -31,6 +31,49 @@ const initService = (schemaMap: { [key: string]: Schema }) => {
   const cacheEntities: { [key: string]: any } = entitiesEmptyMap(schemaMap);
   const prevEntities: { [key: string]: any } = entitiesEmptyMap(schemaMap);
 
+  const getRelationship = (path: string[], type: string) => {
+    return path.reduce<{ [key: string]: any } | string | null>(
+      (result, nextPath) => {
+        if (typeof result === 'string') {
+          return result;
+        }
+        return result?.[nextPath];
+      },
+      schemaMap[type].relationships,
+    );
+  };
+
+  const isRelationship = (path: string[], type: string) => {
+    return !!getRelationship(path, type);
+  };
+
+  const normalizePath = (path: string[], value: any, type: string) => {
+    const entities = entitiesEmptyMap(schemaMap);
+    const shape = path.reduce<{ [key: string]: any }>(
+      (result, segment, index) => {
+        result[segment] = path.length - 1 === index ? value : {};
+        return result;
+      },
+      {},
+    );
+    const { relationships } = schemaMap[type];
+    if (!relationships) {
+      return value;
+    }
+    const normalizedShape = normalizeRelationships(
+      shape,
+      relationships,
+      entities,
+    );
+    const result = path.reduce<{ [key: string]: any }>(
+      (result, segment, index) => {
+        return result[segment];
+      },
+      normalizedShape,
+    );
+    return { result, entities };
+  };
+
   const getId = (entity: Entity) => {
     const schema = schemaMap[entity.type];
     return !schema.id
@@ -164,7 +207,6 @@ const initService = (schemaMap: { [key: string]: Schema }) => {
           entities,
         );
       } else {
-        // eslint-disable-next-line @typescript-eslint/no-use-before-define
         freshValue = denormalize(
           relationshipValue,
           relationshipSchema.type,
@@ -206,7 +248,7 @@ const initService = (schemaMap: { [key: string]: Schema }) => {
     }
     return freshEntity;
   }
-  return { normalize, denormalize, getId };
+  return { normalize, denormalize, getId, isRelationship, normalizePath };
 };
 
 export default initService;

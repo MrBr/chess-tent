@@ -71,18 +71,26 @@ const createEntityReducer =
             };
       }
       case SEND_PATCH: {
-        const { next } = action.payload;
+        const { patch, entities } = action.payload;
         const { type, id } = action.meta;
         const entity = state[id];
-        if (type !== reducerEntityType || !entity) {
+        const updatedEntities: Record<string, any> = {
+          ...(entities[reducerEntityType] || {}),
+        };
+
+        if (type === reducerEntityType || entity) {
+          // Patch action is NORMALIZED
+          const updatedEntity = applyPatches(entity, patch);
+          updatedEntities[id] = updatedEntity;
+        }
+
+        if (isEmpty(updatedEntities)) {
           return state;
         }
-        const updatedEntity = utils.normalize(
-          applyPatches(entity, next),
-        ).result;
+
         return {
           ...state,
-          [id]: updatedEntity,
+          ...updatedEntities,
         };
       }
       case DELETE_ENTITY: {

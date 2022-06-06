@@ -15,6 +15,7 @@ import {
   Patch,
 } from '@chess-tent/models';
 import { DELETE_ENTITY } from '@chess-tent/types';
+import { normalizePatches } from './service';
 
 export const updateEntitiesAction: State['actions']['updateEntities'] =
   root => {
@@ -87,11 +88,18 @@ export const sendPatchAction = (
   reversiblePatch: ReversiblePatch,
   id: string,
   type: string,
-): SendPatchAction => ({
-  type: SEND_PATCH,
-  payload: reversiblePatch,
-  meta: {
-    id,
+): SendPatchAction => {
+  const { result: patch, entities } = normalizePatches(
+    reversiblePatch.next,
     type,
-  },
-});
+  );
+
+  return {
+    type: SEND_PATCH,
+    payload: { patch, entities },
+    meta: {
+      id,
+      type,
+    },
+  };
+};

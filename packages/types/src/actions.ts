@@ -149,7 +149,10 @@ export type NotificationAction = UpdateEntitiesAction | SendNotificationAction;
  */
 export type SendPatchAction = Action<
   typeof SEND_PATCH,
-  ReversiblePatch,
+  {
+    patch: ReversiblePatch['next'];
+    entities: Partial<EntitiesState>;
+  },
   { type: string; id: string }
 >;
 

@@ -11,15 +11,19 @@ const userTrainings = records.createRecord(
   records.withRecordCollection(),
   records.withRecordDenormalizedCollection(TYPE_ACTIVITY),
   records.withRecordApiLoad(requests.trainings),
-  records.withRecordMethod('new', async function (activity: LessonActivity) {
-    try {
-      await requests.activitySave(activity);
-      this.amend({ loading: true, loaded: false });
-    } finally {
-      this.push(activity);
-      this.amend({ loading: false, loaded: true });
-    }
-  }),
+  records.withRecordMethod(
+    'new',
+    () => record =>
+      async function (activity: LessonActivity) {
+        try {
+          await requests.activitySave(activity);
+          record.amend({ loading: true, loaded: false });
+        } finally {
+          record.push(activity);
+          record.amend({ loading: false, loaded: true });
+        }
+      },
+  ),
 );
 
 const lessons = records.createRecord(

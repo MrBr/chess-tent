@@ -53,6 +53,10 @@ body {
   color: #333;
 }
 
+.fit-content {
+  width: fit-content;
+}
+
 .overflow-y-auto {
   overflow-y: auto;
 }

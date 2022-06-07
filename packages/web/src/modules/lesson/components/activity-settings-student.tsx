@@ -15,7 +15,6 @@ const {
 const ActivitySettingsStudent: ComponentType<{
   activity: RecordValue<LessonActivity>;
   close: () => void;
-  save: (activity: LessonActivity) => void;
   status: ApiStatus;
 }> = ({ activity, close }) => {
   const { fetch: activityPatch, response: activityUpdateResponse } = useApi(
@@ -30,6 +29,7 @@ const ActivitySettingsStudent: ComponentType<{
       return;
     }
     const roles = activity.roles.filter(role => role.user.id !== user.id);
+    // TODO - this is not ideal because the other possible users that are in the room atm aren't getting notified
     activityPatch(activity.id, {
       roles,
     });

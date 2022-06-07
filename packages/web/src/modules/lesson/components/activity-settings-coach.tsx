@@ -2,12 +2,11 @@ import React, { ComponentType, useEffect, useRef } from 'react';
 import { components, hooks, requests, state, ui } from '@application';
 import { ApiStatus, FormikProps } from '@types';
 import {
+  createRole,
   LessonActivity,
   LessonActivityRole,
-  updateSubject,
 } from '@chess-tent/models';
 import { RecordValue } from '@chess-tent/redux-record/types';
-import { getActivityUserRole } from '@chess-tent/models';
 import ActivityForm, { ActivityData } from './activity-form';
 
 const { Offcanvas, Container, Button, Headline5, Row, Col, Confirm, Modal } =
@@ -21,7 +20,7 @@ const { ApiStatusLabel } = components;
 const ActivitySettingsCoach: ComponentType<{
   activity: RecordValue<LessonActivity>;
   close: () => void;
-  save: (activity: LessonActivity) => void;
+  save: (patch: Partial<LessonActivity>) => void;
   status: ApiStatus;
 }> = ({ activity, close, save, status }) => {
   const dispatch = useDispatch();
@@ -70,29 +69,20 @@ const ActivitySettingsCoach: ComponentType<{
     }
     const data = activityFormRef.current.values;
     const studentRoles =
-      data.students?.map(user => ({
-        user,
-        role: LessonActivityRole.STUDENT,
-      })) || [];
-    let roles = activity.roles;
-    if (studentRoles.length > 0) {
-      roles = studentRoles
-        .filter(role => !getActivityUserRole(activity, role.user))
-        .reduce(
-          (res, newRole) => {
-            res.push(newRole);
-            return res;
-          },
-          [...roles],
-        );
-    }
+      data.students?.map(createRole(LessonActivityRole.STUDENT)) || [];
+    const roles = [
+      ...studentRoles,
+      ...activity.roles.filter(
+        ({ role }) => role !== LessonActivityRole.STUDENT,
+      ),
+    ];
 
     const title = data.title || activity.title;
     const date = data.date || activity.date;
     const weekly = data.weekly || activity.weekly;
     // Activity (component, not page) saves all the changes gradually
     // If needed, updateActivity function can be extracted outside the ActivitySettings
-    save(updateSubject(activity, { roles, title, date, weekly }));
+    save({ roles, title, date, weekly });
   };
 
   return (

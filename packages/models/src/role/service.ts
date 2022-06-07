@@ -1,7 +1,7 @@
 import { User } from '../user';
 import { Role } from './types';
 
-const createRole =
+export const createRole =
   <T extends User, R extends string>(role: R) =>
   (user: T): Role<R> => ({
     user,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { components, hooks, requests, ui, utils } from '@application';
+import { components, hooks, requests, ui } from '@application';
 import { ApiStatus } from '@types';
 import { isLesson, LessonActivity, TYPE_ACTIVITY } from '@chess-tent/models';
 import Activity from '../components/activity';
@@ -17,7 +17,6 @@ const {
   useActiveUserRecord,
   useApiStatus,
 } = hooks;
-const { noop } = utils;
 
 const { Breadcrumbs, Col, Button } = ui;
 const { Page, Header, ConferencingProvider } = components;
@@ -28,7 +27,7 @@ const PageActivity = () => {
   const {
     value: activity,
     meta,
-    update,
+    applyPatch,
   } = useActivity<LessonActivity>(activityId);
   const activityUpdateApiState = useApi(requests.activityUpdate);
   const [activityStatus, setActivityStatus] = useApiStatus(
@@ -36,7 +35,7 @@ const PageActivity = () => {
     activityUpdateApiState,
   );
 
-  const instantUpdate = useDiffUpdates(
+  useDiffUpdates(
     activity,
     updates => {
       if (updates.length === 0) {
@@ -54,16 +53,19 @@ const PageActivity = () => {
         close={close}
         activity={activity}
         status={activityStatus}
-        save={noop}
       />
     ) : (
       <ActivitySettingsCoach
         close={close}
         activity={activity}
         status={activityStatus}
-        save={updatedActivity => {
-          update(updatedActivity);
-          instantUpdate();
+        save={patch => {
+          applyPatch(draft => {
+            if (!draft) {
+              return;
+            }
+            Object.assign(draft, patch);
+          });
         }}
       />
     ),

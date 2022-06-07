@@ -1,14 +1,7 @@
-import styled from '@emotion/styled';
-import { constants } from '@application';
+import styled from '@chess-tent/styled-props';
 
-const { MAX_BOARD_SIZE } = constants;
-
-export default styled.div<{
-  width: string | number;
-}>(
-  {
-    margin: '1em auto',
-    maxWidth: MAX_BOARD_SIZE,
-  },
-  ({ width }) => ({ width }),
-);
+export default styled.div.css`
+  &:empty {
+    display: none;
+  }
+`;

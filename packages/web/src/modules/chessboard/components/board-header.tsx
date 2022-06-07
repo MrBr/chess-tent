@@ -1,21 +1,10 @@
-import styled, { css } from '@chess-tent/styled-props';
-import { constants } from '@application';
+import styled from '@chess-tent/styled-props';
 
-const { MAX_BOARD_SIZE } = constants;
-
-export default styled.div.css<{
-  width: string | number;
-  height?: string | number;
-}>`
-  margin: 1em auto;
-  max-width: ${MAX_BOARD_SIZE};
+export default styled.div.css`
+  padding-bottom: 20px;
+  padding-top: 20px;
 
   &:empty {
     display: none;
   }
-
-  ${({ width, height }) => css`
-    width: ${width};
-    height: ${height};
-  `}
 `;

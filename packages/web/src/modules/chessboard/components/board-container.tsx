@@ -1,51 +1,84 @@
-import React, { FunctionComponent, RefObject, ReactElement } from 'react';
-import styled from '@emotion/styled';
-import { constants } from '@application';
+import React, {
+  MutableRefObject,
+  ReactElement,
+  useCallback,
+  ReactNode,
+} from 'react';
+import styled from '@chess-tent/styled-props';
 
-const { MAX_BOARD_SIZE } = constants;
-
-export default styled<
-  FunctionComponent<{
-    size: string | number;
-    className?: string;
-    boardRef: RefObject<any>;
-    boardExtras?: ReactElement | null;
-  }>
->(props => (
-  <div className={props.className}>
-    <div className="board-height">
-      {props.boardExtras}
-      <div ref={props.boardRef} className="board" />
-    </div>
-    {props.children}
-  </div>
-))(({ size }) => ({
-  '& > .board-height': {
-    paddingTop: '100%',
-  },
-  '& .board-height > .board': {
-    position: 'absolute',
-    width: '100%',
-  },
-  '.spare-pieces': {
-    '.piece': {
-      width: '6%',
-      paddingTop: '6%',
-      marginBottom: '2%',
-      backgroundPosition: 'center',
-      backgroundSize: 'cover',
+export default styled<{
+  className?: string;
+  boardRef: MutableRefObject<any>;
+  boardExtras?: ReactElement | null;
+  children: ReactNode;
+}>(props => {
+  const setRef = useCallback(
+    ref => {
+      // TODO - should be revised on resize
+      if (!ref) {
+        return;
+      }
+      // This logic is used to resize board exactly to fit the screen by the smallest dimension
+      // between the board header and footer.
+      const container = ref.parentNode?.parentNode?.parentNode;
+      const availableHeight =
+        container?.clientHeight -
+        container?.children?.item(0)?.clientHeight - // header height
+        container?.children?.item(2)?.clientHeight; // footer height
+      const availableWidth =
+        ref.parentNode?.parentNode?.parentNode?.parentNode?.clientWidth; // width of the content container
+      const ratio =
+        availableHeight > availableWidth
+          ? (availableWidth / availableHeight) * 0.9
+          : (availableHeight / availableWidth) * 0.9;
+      const size = availableWidth * ratio;
+      (ref.parentNode as HTMLDivElement).style.width = `${size}px`;
+      (ref.parentNode as HTMLDivElement).style.height = `${size}px`;
+      props.boardRef.current = ref;
+      // without resize CG has pieces misplaced
+      document.body.dispatchEvent(new Event('chessground.resize'));
     },
-    width: '100%',
-    position: 'absolute',
-    left: 0,
-    top: '50%',
-    transform: 'translateX(calc(-6% - 20px)) translateY(-50%)',
-  },
-  zIndex: 10, // important for dragged piece to cover spare piece base
-  width: size,
-  position: 'relative',
-  margin: 'auto',
-  maxWidth: MAX_BOARD_SIZE,
-  maxHeight: MAX_BOARD_SIZE,
-  boxSizing: 'content-box',
-}));
+    [props.boardRef],
+  );
+
+  return (
+    <div className={props.className}>
+      <div className="board-height">
+        {props.boardExtras}
+        <div ref={setRef} className="board" />
+      </div>
+      {props.children}
+    </div>
+  );
+}).css`
+  & > .board-height {
+    position: relative;
+  }
+
+  & .board-height > .board {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .spare-pieces {
+    .piece {
+      width: 6%;
+      padding-top: 6%;
+      margin-bottom: 2%;
+      background-position: center;
+      background-size: cover;
+    }
+
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateX(calc(-6% - 20px)) translateY(-50%);
+  }
+
+  z-index: 10; // important for dragged piece to cover spare piece base
+  position: relative;
+  box-sizing: content-box;
+`;

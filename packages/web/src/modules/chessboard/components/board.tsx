@@ -80,7 +80,7 @@ class Chessboard
     resizable: true,
     selectablePieces: false,
     eraseDrawableOnClick: false,
-    size: '80%',
+    size: '50%',
     edit: false,
     orientation: 'white',
     shapes: [],
@@ -517,8 +517,7 @@ class Chessboard
   };
 
   render() {
-    const { header, fen, editing, size, sparePieces, footer, onPGN } =
-      this.props;
+    const { header, fen, editing, sparePieces, footer, onPGN } = this.props;
     const { renderPrompt, promotion } = this.context;
 
     const sparePiecesElement = sparePieces ? (
@@ -530,36 +529,37 @@ class Chessboard
 
     return (
       <>
-        <BoardHeader width={size as string}>{header}</BoardHeader>
-        <BoardContainer
-          size={size as string}
-          boardRef={this.boardHost}
-          boardExtras={sparePiecesElement}
-        >
-          {promotion && (
-            <PromotionPrompt
-              promotion={promotion}
-              onPromote={this.onPromotion}
-              onCancel={this.onPromotionCancel}
-            />
-          )}
-        </BoardContainer>
-        <BoardFooter className="mt-4" width={size as number}>
-          {footer === undefined ? (
-            <Footer
-              editing={!!editing}
-              onReset={this.onReset}
-              onClear={this.onClear}
-              updateEditing={this.onUpdateEditing}
-              onFENSet={this.onFENSet}
-              position={fen}
-              onRotate={this.onRotate}
-              onPGN={onPGN && this.onPGN}
-            />
-          ) : (
-            footer
-          )}
-        </BoardFooter>
+        <div className="h-100 overflow-hidden d-flex flex-column fit-content m-auto">
+          <BoardHeader>{header}</BoardHeader>
+          <BoardContainer
+            boardRef={this.boardHost}
+            boardExtras={sparePiecesElement}
+          >
+            {promotion && (
+              <PromotionPrompt
+                promotion={promotion}
+                onPromote={this.onPromotion}
+                onCancel={this.onPromotionCancel}
+              />
+            )}
+          </BoardContainer>
+          <BoardFooter className="mt-4">
+            {footer === undefined ? (
+              <Footer
+                editing={!!editing}
+                onReset={this.onReset}
+                onClear={this.onClear}
+                updateEditing={this.onUpdateEditing}
+                onFENSet={this.onFENSet}
+                position={fen}
+                onRotate={this.onRotate}
+                onPGN={onPGN && this.onPGN}
+              />
+            ) : (
+              footer
+            )}
+          </BoardFooter>
+        </div>
         <Modal
           container={this.boardHost}
           show={!!renderPrompt}

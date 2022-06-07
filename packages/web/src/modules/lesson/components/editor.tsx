@@ -372,6 +372,7 @@ class EditorRenderer extends React.Component<
     // Used in step-toolbox to prevent scrollbar flickering until toolbox fades
     const editorClassName =
       'px-0 h-100 editor overflow-hidden position-relative';
+
     return (
       <ChessboardContextProvider>
         <Container fluid className={editorClassName}>
@@ -418,20 +419,21 @@ class EditorRenderer extends React.Component<
                     root
                     renderToolbox={this.renderToolbox}
                   />
-                  {activeChapter.state.steps.length === 1 && (
-                    <>
-                      <Text
-                        fontSize="extra-small"
-                        weight={500}
-                        className="mt-5 mb-1"
-                      >
-                        TIP
-                      </Text>
-                      <Text fontSize="extra-small">
-                        Start by making a move or setting the position.
-                      </Text>
-                    </>
-                  )}
+                  {activeChapter.state.steps.length === 1 &&
+                    activeChapter.state.steps[0].state.steps.length === 0 && (
+                      <>
+                        <Text
+                          fontSize="extra-small"
+                          weight={500}
+                          className="mt-5 mb-1"
+                        >
+                          TIP
+                        </Text>
+                        <Text fontSize="extra-small">
+                          Start by making a move or setting the position.
+                        </Text>
+                      </>
+                    )}
                 </SidebarSection>
                 <SidebarSection>
                   <Row>

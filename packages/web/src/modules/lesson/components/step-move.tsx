@@ -5,9 +5,13 @@ import { NotableMove, StepMove } from '@types';
 const { PieceIcon } = components;
 
 const isKingSideCastling = (move: NotableMove) =>
-  move.piece.role === 'king' && move.move[0] === 'e1' && move.move[1] === 'g1';
+  move.piece.role === 'king' &&
+  move.move[0].charAt(0) === 'e' &&
+  move.move[1].charAt(0) === 'g';
 const isQueenSideCastling = (move: NotableMove) =>
-  move.piece.role === 'king' && move.move[0] === 'e1' && move.move[1] === 'c1';
+  move.piece.role === 'king' &&
+  move.move[0].charAt(0) === 'e' &&
+  move.move[1].charAt(0) === 'c';
 const getMoveAnnotation = (move: NotableMove) => {
   if (move.piece.role === 'king') {
     return isKingSideCastling(move)

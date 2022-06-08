@@ -1,10 +1,11 @@
 import React, { useMemo } from 'react';
 import { components, hooks, ui } from '@application';
 import { groupBy } from 'lodash';
+import MentorshipCard from '../components/card';
 
 const { useActiveUserRecord, useStudents, useOpenConversations } = hooks;
-const { Container, Row, Col, Headline3, Text, Headline2, Card, Button } = ui;
-const { Link, MentorshipAction, Page, UserAvatar } = components;
+const { Container, Row, Headline6, Headline5, Button } = ui;
+const { MentorshipAction, Page } = components;
 
 const Students = () => {
   const { value: user } = useActiveUserRecord();
@@ -18,83 +19,54 @@ const Students = () => {
   return (
     <Page>
       {conversationCanvas}
-      <Headline2>My students</Headline2>
-      <Container>
-        <Headline3>Pending approval</Headline3>
+      <Container fluid className="px-5 py-4">
+        <Headline5 className="t">My students</Headline5>
+        <Headline6 className="my-3">Pending approval</Headline6>
         <Row>
           {result['undefined']?.map(mentorship => (
-            <Card key={`${mentorship.student.id}`}>
-              <Card.Body>
-                <Row className="g-0 mb-3">
-                  <Col className="col-auto me-3">
-                    <UserAvatar user={mentorship.student} />
-                  </Col>
-                  <Col>
-                    <Link to={`/user/${mentorship.student.id}`}>
-                      <Text>{mentorship.student.name}</Text>
-                    </Link>
-                  </Col>
-                </Row>
-                <Row className="g-0">
-                  <Button
-                    onClick={() => openConversations(mentorship.student)}
-                    className="me-4"
-                    size="extra-small"
-                    variant="regular"
-                  >
-                    Message
-                  </Button>
-                  <MentorshipAction
-                    mentorship={mentorship}
-                    text="Accept"
-                    className="me-4"
-                  />
-                  <MentorshipAction
-                    mentorship={mentorship}
-                    approve={false}
-                    text="Decline"
-                  />
-                </Row>
-              </Card.Body>
-            </Card>
+            <MentorshipCard
+              key={mentorship.student.id}
+              user={mentorship.student}
+            >
+              <Row className="g-0">
+                <Button
+                  onClick={() => openConversations(mentorship.student)}
+                  className="me-4"
+                  size="extra-small"
+                  variant="regular"
+                >
+                  Message
+                </Button>
+                <MentorshipAction
+                  mentorship={mentorship}
+                  text="Accept"
+                  className="me-4"
+                />
+                <MentorshipAction
+                  mentorship={mentorship}
+                  approve={false}
+                  text="Decline"
+                />
+              </Row>
+            </MentorshipCard>
           ))}
         </Row>
-        <Headline3>Active</Headline3>
+        <Headline6 className="my-3">Active</Headline6>
         <Row>
           {result['true']?.map(mentorship => (
-            <Card key={mentorship.student.id}>
-              <Card.Body>
-                <Row>
-                  <Col className="col-auto">
-                    <UserAvatar user={mentorship.student} />
-                  </Col>
-                  <Col>
-                    <Link to={`/user/${mentorship.student.id}`}>
-                      <Text>{mentorship.student.name}</Text>
-                    </Link>
-                  </Col>
-                </Row>
-              </Card.Body>
-            </Card>
+            <MentorshipCard
+              key={mentorship.student.id}
+              user={mentorship.student}
+            />
           ))}
         </Row>
-        <Headline3>Declined</Headline3>
+        <Headline6 className="my-3">Declined</Headline6>
         <Row>
           {result['false']?.map(mentorship => (
-            <Card key={mentorship.student.id}>
-              <Card.Body>
-                <Row>
-                  <Col className="col-auto">
-                    <UserAvatar user={mentorship.student} />
-                  </Col>
-                  <Col>
-                    <Link to={`/user/${mentorship.student.id}`}>
-                      <Text>{mentorship.student.name}</Text>
-                    </Link>
-                  </Col>
-                </Row>
-              </Card.Body>
-            </Card>
+            <MentorshipCard
+              key={mentorship.student.id}
+              user={mentorship.student}
+            />
           ))}
         </Row>
       </Container>

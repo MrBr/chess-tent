@@ -19,11 +19,13 @@ const lessonSave = services.createRequest<Requests['lessonSave']>(
 const lessonPublish = services.createRequest<Requests['lessonPublish']>(
   'PUT',
   id => `/lesson/publish/${id}`,
+  () => ({}),
 );
 
 const lessonUnpublish = services.createRequest<Requests['lessonUnpublish']>(
   'PUT',
   id => `/lesson/unpublish/${id}`,
+  () => ({}),
 );
 
 const lessonPatch = services.createRequest<Requests['lessonPatch']>(

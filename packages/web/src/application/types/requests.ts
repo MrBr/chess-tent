@@ -31,8 +31,8 @@ export interface Requests {
   lesson: RequestFetch<Endpoints['lesson'], Lesson['id']>;
   lessonDelete: RequestFetch<Endpoints['lessonDelete'], Lesson['id']>;
   lessonSave: RequestFetch<Endpoints['lessonSave']>;
-  lessonPublish: RequestFetch<Endpoints['lessonPublish']>;
-  lessonUnpublish: RequestFetch<Endpoints['lessonUnpublish']>;
+  lessonPublish: RequestFetch<Endpoints['lessonPublish'], [Lesson['id']]>;
+  lessonUnpublish: RequestFetch<Endpoints['lessonUnpublish'], [Lesson['id']]>;
   lessonPatch: RequestFetch<
     Endpoints['lessonPatch'],
     [Lesson['id'], Partial<Lesson>]

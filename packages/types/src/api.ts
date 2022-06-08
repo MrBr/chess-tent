@@ -83,17 +83,19 @@ export interface ScheduledLessonActivityFilters extends LessonActivityFilters {
 }
 
 export type ApiMethods = 'GET' | 'POST' | 'PUT' | 'DELETE';
+// a property is needed in order to prevent TS matching empty object with other types
+export type ApiEmptyData = { _plain?: true };
 export interface Request<METHOD extends ApiMethods, URL extends string, DATA> {
   url: URL;
   method: METHOD;
-  data?: DATA;
+  data: DATA;
   headers?: {};
 }
 export interface RequestGet<URL extends string>
   extends Request<'GET', URL, undefined> {}
-export interface RequestPost<URL extends string, DATA>
+export interface RequestPost<URL extends string, DATA = ApiEmptyData>
   extends Request<'POST', URL, DATA> {}
-export interface RequestPut<URL extends string, DATA>
+export interface RequestPut<URL extends string, DATA = ApiEmptyData>
   extends Request<'PUT', URL, DATA> {}
 export interface RequestDelete<URL extends string>
   extends Request<'DELETE', URL, undefined> {}
@@ -221,11 +223,11 @@ export interface Endpoints {
   lessonDelete: Endpoint<RequestDelete<`/lesson/${string}`>, StatusResponse>;
   lessonSave: Endpoint<RequestPost<'/lesson/save', Lesson>, StatusResponse>;
   lessonPublish: Endpoint<
-    RequestPut<`/lesson/publish/${string}`, {}>,
+    RequestPut<`/lesson/publish/${string}`>,
     StatusResponse
   >;
   lessonUnpublish: Endpoint<
-    RequestPut<`/lesson/unpublish/${string}`, {}>,
+    RequestPut<`/lesson/unpublish/${string}`>,
     StatusResponse
   >;
   lessonPatch: Endpoint<

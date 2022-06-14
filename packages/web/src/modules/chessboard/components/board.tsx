@@ -529,7 +529,7 @@ class Chessboard
 
     return (
       <>
-        <div className="h-100 overflow-hidden d-flex flex-column fit-content m-auto">
+        <div className="h-100 overflow-y-hidden d-flex flex-column fit-content m-auto">
           <BoardHeader>{header}</BoardHeader>
           <BoardContainer
             boardRef={this.boardHost}

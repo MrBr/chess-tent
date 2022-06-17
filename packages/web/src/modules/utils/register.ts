@@ -8,7 +8,14 @@ import {
   usePrompt,
 } from './hooks';
 import { getEntitySchema, getTypeSchema } from './model';
-import { getDiff, noop, noopNoop } from './utils';
+import {
+  getCountries,
+  getCountryByCode,
+  getDiff,
+  getLanguages,
+  noop,
+  noopNoop,
+} from './utils';
 
 application.utils.generateIndex = uuid;
 application.utils.rightMouse = (f: Function) => (e: MouseEvent) =>
@@ -24,6 +31,10 @@ application.utils.getDiff = getDiff;
 
 application.utils.noop = noop;
 application.utils.noopNoop = noopNoop;
+
+application.utils.getLanguages = getLanguages;
+application.utils.getCountries = getCountries;
+application.utils.getCountryByCode = getCountryByCode;
 
 application.hooks.useComponentStateSilent = useComponentStateSilent;
 application.hooks.useComponentState = useComponentState;

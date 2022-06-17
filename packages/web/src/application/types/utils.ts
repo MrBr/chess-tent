@@ -4,6 +4,8 @@ import { ReactEventHandler } from 'react';
 import { saveAs } from 'file-saver';
 import { Schema } from './model';
 
+export type Country = { name: string; cca2: string; flag: string };
+
 export type Utils = {
   getEntitySchema: (entity: unknown) => Schema;
   getTypeSchema: (type: string) => Schema;
@@ -36,4 +38,7 @@ export type Utils = {
   isLocalReferrer: () => boolean;
   noop: () => void;
   noopNoop: () => () => void;
+  getLanguages: () => string[];
+  getCountries: () => Country[];
+  getCountryByCode: (cca2: string) => Country;
 };

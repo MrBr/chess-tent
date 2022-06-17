@@ -42,7 +42,12 @@ import {
   BreadcrumbItemProps,
 } from 'react-bootstrap';
 import DropdownToggle from 'react-bootstrap/DropdownToggle';
-import { ErrorMessageProps, Formik, FormikProps as FFormikProps } from 'formik';
+import {
+  ErrorMessageProps,
+  FormikValues,
+  FormikConfig,
+  FormikProps as FFormikProps,
+} from 'formik';
 import FormCheck from 'react-bootstrap/FormCheck';
 import type {
   Props as SelectProps,
@@ -51,7 +56,7 @@ import type {
 } from 'react-select';
 import type { AsyncProps as AsyncSelectProps } from 'react-select/async';
 import Dropdown from 'react-bootstrap/Dropdown';
-import { ClickProps } from './_helpers';
+import { ClassNameProps, ClickProps } from './_helpers';
 import { HtmlProps } from './hoc';
 
 export type UISelectProps = {
@@ -59,6 +64,10 @@ export type UISelectProps = {
   hideDropdownIndicator?: boolean;
   hideMenu?: boolean;
 };
+
+export declare function Formik<Values extends FormikValues = FormikValues>(
+  props: FormikConfig<Values> & ClassNameProps,
+): JSX.Element;
 
 export type BaseButtonProps = {
   variant?:

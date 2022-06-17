@@ -7,10 +7,22 @@ import EditableUserAvatar from '../components/editable-user-avatar';
 
 const { useApi, useHistory, useDispatchService } = hooks;
 const { Page } = components;
-const { Absolute, Button } = ui;
+const { Button } = ui;
 const { withFiles } = hoc;
 const { getLanguages, getCountries, getCountryByCode } = utils;
-const { Col, Row, Headline4, InputGroup, Form, FormGroup, Label, Select } = ui;
+const {
+  Col,
+  Row,
+  InputGroup,
+  Form,
+  FormGroup,
+  Label,
+  Select,
+  Headline5,
+  Headline6,
+  Container,
+  Absolute,
+} = ui;
 
 const languageToSelectValue = (lang: string) => ({
   label: lang,
@@ -78,163 +90,206 @@ export default withFiles(
 
     return (
       <Page>
-        <Form
-          enableReinitialize
-          initialValues={user}
-          onSubmit={user => updateUser(user)}
-        >
-          {({ dirty, handleSubmit, resetForm, values, setFieldValue }) => (
-            <>
-              <Absolute bottom={25} right={25}>
-                <Button
-                  variant="regular"
-                  className="me-4"
-                  onClick={() => {
-                    resetForm();
-                    history.goBack();
-                  }}
-                >
-                  {dirty ? 'Cancel' : 'Done'}
-                </Button>
-                <Button
-                  variant={dirty ? 'secondary' : 'regular'}
-                  disabled={!dirty}
-                  type="button"
-                  onClick={() => {
-                    handleSubmit();
-                    resetForm({ values });
-                  }}
-                >
-                  Save
-                </Button>
-              </Absolute>
-
-              <Row>
-                <Col className="col-auto mt-4">
-                  <EditableUserAvatar
-                    user={user}
-                    onClick={openFileDialog}
-                    uploading={signingImage || uploadingImage}
-                  />
-                </Col>
-                <Col>
-                  <FormGroup>
-                    <Headline4>Name</Headline4>
-                    <Form.Input name="name" />
-                  </FormGroup>
-                  {user.coach && (
-                    <>
-                      <FormGroup>
-                        <Label>Punchline</Label>
-                        <Form.Input
-                          as="textarea"
-                          rows={2}
-                          name="state.punchline"
-                        />
-                      </FormGroup>
-                      <FormGroup>
-                        <Label>Elo</Label>
-                        <Form.Input name="state.elo" type="number" />
-                      </FormGroup>
-                      <FormGroup>
-                        <Label>Preferred student elo</Label>
-                        <Form.Input name="state.studentElo" type="number" />
-                      </FormGroup>
-                      <FormGroup>
-                        <Label>Pricing</Label>
-                        <InputGroup>
-                          <Form.Input name="state.pricing" type="number" />
-                          <InputGroup.Text>$/hr</InputGroup.Text>
-                        </InputGroup>
-                      </FormGroup>
-                      <FormGroup>
-                        <Label>Availability</Label>
-                        <Form.Input name="state.availability" />
-                      </FormGroup>
-                      <FormGroup>
-                        <Label>Speciality</Label>
-                        <Form.Input name="state.speciality" />
-                      </FormGroup>
-                      <FormGroup>
-                        <Label>Country</Label>
-                        <Select
-                          isMulti={false}
-                          defaultValue={
-                            user.state.country
-                              ? getCountryByCode(user.state.country)
-                              : undefined
-                          }
-                          options={getCountries()}
-                          getOptionValue={({ name }) => name}
-                          formatOptionLabel={({ name, flag }) => (
-                            <span>
-                              {flag} {name}
-                            </span>
-                          )}
-                          onChange={val => {
-                            setFieldValue('state.country', val?.cca2);
-                          }}
-                        />
-                      </FormGroup>
-                      <FormGroup>
-                        <Label>Languages</Label>
-                        <Select
-                          defaultValue={user.state.languages?.map(
-                            languageToSelectValue,
-                          )}
-                          options={getLanguages().map(languageToSelectValue)}
-                          onChange={values => {
-                            setFieldValue(
-                              'state.languages',
-                              values.map(({ value }) => value),
-                            );
-                          }}
-                          isMulti
-                        />
-                      </FormGroup>
-                    </>
-                  )}
-                </Col>
-                <Col>
-                  <Headline4>About me</Headline4>
-                  <FormGroup>
-                    <Form.Input as="textarea" rows={5} name="state.about" />
-                  </FormGroup>
-                </Col>
-                <Col>
-                  <Headline4>Playing experience</Headline4>
-                  <FormGroup>
-                    <Form.Input
-                      as="textarea"
-                      rows={5}
-                      name="state.playingExperience"
-                    />
-                  </FormGroup>
-                </Col>
-                {user.coach && (
-                  <Col>
-                    <Headline4>Teaching experience</Headline4>
-                    <FormGroup>
-                      <Form.Input
-                        as="textarea"
-                        rows={5}
-                        name="state.teachingExperience"
-                      />
-                    </FormGroup>
-                    <Headline4>Teaching methodology</Headline4>
-                    <FormGroup>
-                      <Form.Input
-                        as="textarea"
-                        rows={5}
-                        name="state.teachingMethodology"
-                      />
-                    </FormGroup>
-                  </Col>
-                )}
-              </Row>
-            </>
-          )}
-        </Form>
+        <Container fluid className="px-5 py-4 h-100 d-flex flex-column">
+          <Headline5 className="mb-3">Profile</Headline5>
+          <Form
+            enableReinitialize
+            initialValues={user}
+            onSubmit={user => updateUser(user)}
+            className="position-relative d-flex flex-column col"
+          >
+            {({ dirty, handleSubmit, resetForm, values, setFieldValue }) => (
+              <>
+                <Container fluid className="p-0 col position-relative">
+                  <Absolute top={0} left={0} right={0} bottom={0}>
+                    <Container className="overflow-y-auto h-100 mh-100 pb-3">
+                      <Headline6>Basic</Headline6>
+                      <Row className="mt-2">
+                        <Col className="col-auto mt-4">
+                          <EditableUserAvatar
+                            user={user}
+                            onClick={openFileDialog}
+                            uploading={signingImage || uploadingImage}
+                          />
+                        </Col>
+                      </Row>
+                      <Row className="mt-4">
+                        <Col>
+                          <FormGroup>
+                            <Label>Name</Label>
+                            <Form.Input name="name" />
+                          </FormGroup>
+                        </Col>
+                        <Col className="col-md-4">
+                          <FormGroup>
+                            <Label>Country</Label>
+                            <Select
+                              isMulti={false}
+                              defaultValue={
+                                user.state.country
+                                  ? getCountryByCode(user.state.country)
+                                  : undefined
+                              }
+                              options={getCountries()}
+                              getOptionValue={({ name }) => name}
+                              formatOptionLabel={({ name, flag }) => (
+                                <span>
+                                  {flag} {name}
+                                </span>
+                              )}
+                              onChange={val => {
+                                setFieldValue('state.country', val?.cca2);
+                              }}
+                            />
+                          </FormGroup>
+                        </Col>
+                        <Col className="col-md-4">
+                          <FormGroup>
+                            <Label>Languages</Label>
+                            <Select
+                              defaultValue={user.state.languages?.map(
+                                languageToSelectValue,
+                              )}
+                              options={getLanguages().map(
+                                languageToSelectValue,
+                              )}
+                              onChange={values => {
+                                setFieldValue(
+                                  'state.languages',
+                                  values.map(({ value }) => value),
+                                );
+                              }}
+                              isMulti
+                            />
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row className="mt-3">
+                        <Col>
+                          <Label>About me</Label>
+                          <FormGroup>
+                            <Form.Input
+                              as="textarea"
+                              rows={5}
+                              name="state.about"
+                            />
+                          </FormGroup>
+                        </Col>
+                        <Col>
+                          <Label>Playing experience</Label>
+                          <FormGroup>
+                            <Form.Input
+                              as="textarea"
+                              rows={5}
+                              name="state.playingExperience"
+                            />
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      {user.coach && (
+                        <>
+                          <Headline6 className="mt-5">Coach info</Headline6>
+                          <Row className="mt-4">
+                            <Col>
+                              <FormGroup>
+                                <Label>Punchline</Label>
+                                <Form.Input name="state.punchline" />
+                              </FormGroup>
+                              <FormGroup className="mt-3">
+                                <Label>Speciality</Label>
+                                <Form.Input name="state.speciality" />
+                              </FormGroup>
+                            </Col>
+                            <Col>
+                              <FormGroup>
+                                <Label>Elo</Label>
+                                <Form.Input name="state.elo" type="number" />
+                              </FormGroup>
+                              <FormGroup className="mt-3">
+                                <Label>Student elo</Label>
+                                <Form.Input
+                                  name="state.studentElo"
+                                  type="number"
+                                />
+                              </FormGroup>
+                            </Col>
+                            <Col>
+                              <FormGroup>
+                                <Label>Pricing</Label>
+                                <InputGroup>
+                                  <Form.Input
+                                    name="state.pricing"
+                                    type="number"
+                                  />
+                                  <InputGroup.Text>$/hr</InputGroup.Text>
+                                </InputGroup>
+                              </FormGroup>
+                              <FormGroup className="mt-3">
+                                <Label>Availability</Label>
+                                <Form.Input name="state.availability" />
+                              </FormGroup>
+                            </Col>
+                          </Row>
+                          <Row className="mt-4">
+                            <Col>
+                              <Label>Teaching experience</Label>
+                              <FormGroup>
+                                <Form.Input
+                                  as="textarea"
+                                  rows={5}
+                                  name="state.teachingExperience"
+                                />
+                              </FormGroup>
+                            </Col>
+                            <Col>
+                              <Label>Teaching methodology</Label>
+                              <FormGroup>
+                                <Form.Input
+                                  as="textarea"
+                                  rows={5}
+                                  name="state.teachingMethodology"
+                                />
+                              </FormGroup>
+                            </Col>
+                          </Row>
+                        </>
+                      )}
+                    </Container>
+                  </Absolute>
+                </Container>
+                <Container className="col-auto pt-3 w-100 border-top">
+                  <Row>
+                    <Col>
+                      <Button
+                        size="small"
+                        variant="regular"
+                        className="me-4"
+                        onClick={() => {
+                          resetForm();
+                          history.goBack();
+                        }}
+                      >
+                        {dirty ? 'Cancel' : 'Done'}
+                      </Button>
+                      <Button
+                        size="small"
+                        variant={dirty ? 'secondary' : 'regular'}
+                        disabled={!dirty}
+                        type="button"
+                        onClick={() => {
+                          handleSubmit();
+                          resetForm({ values });
+                        }}
+                      >
+                        Save
+                      </Button>
+                    </Col>
+                  </Row>
+                </Container>
+              </>
+            )}
+          </Form>
+        </Container>
       </Page>
     );
   },

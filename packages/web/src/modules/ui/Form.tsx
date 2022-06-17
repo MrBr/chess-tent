@@ -118,7 +118,11 @@ const File = (props: any) => <BForm.Control {...props} type="file" />;
 const Form: UI['Form'] = props => (
   <Formik {...props}>
     {formikProps => (
-      <BForm noValidate onSubmit={formikProps.handleSubmit}>
+      <BForm
+        noValidate
+        onSubmit={formikProps.handleSubmit}
+        className={props.className}
+      >
         {typeof props.children === 'function'
           ? props.children(formikProps)
           : props.children}

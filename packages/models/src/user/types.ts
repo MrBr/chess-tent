@@ -24,6 +24,8 @@ export interface User extends Subject {
     teachingMethodology?: string;
     punchline?: string;
     lastActivity?: Date;
+    languages?: string[];
+    country?: string;
   };
 }
 

@@ -20,7 +20,7 @@ const Students = () => {
     <Page>
       {conversationCanvas}
       <Container fluid className="px-5 py-4">
-        <Headline5 className="t">My students</Headline5>
+        <Headline5>My students</Headline5>
         <Headline6 className="my-3">Pending approval</Headline6>
         <Row>
           {result['undefined']?.map(mentorship => (

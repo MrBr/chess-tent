@@ -128,7 +128,7 @@ const Form: UI['Form'] = props => (
 );
 
 const FormSelect: UI['Form']['Select'] = props => {
-  const [field, { error }, { setValue }] = useField(props.name); // TODO - force "name"
+  const [field, { error }, { setValue }] = useField(props.name);
   return (
     <>
       <Select

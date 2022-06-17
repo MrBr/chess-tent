@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback } from 'react';
-import { components, hooks, ui, requests, hoc } from '@application';
+import { components, hooks, ui, requests, hoc, utils } from '@application';
 import { updateSubject, User } from '@chess-tent/models';
 import { FileUploaderProps } from '@types';
 
@@ -9,7 +9,13 @@ const { useApi, useHistory, useDispatchService } = hooks;
 const { Page } = components;
 const { Absolute, Button } = ui;
 const { withFiles } = hoc;
-const { Col, Row, Headline4, InputGroup, Form, FormGroup, Label } = ui;
+const { getLanguages, getCountries, getCountryByCode } = utils;
+const { Col, Row, Headline4, InputGroup, Form, FormGroup, Label, Select } = ui;
+
+const languageToSelectValue = (lang: string) => ({
+  label: lang,
+  value: lang,
+});
 
 export default withFiles(
   ({ files, openFileDialog, user }: FileUploaderProps & { user: User }) => {
@@ -77,7 +83,7 @@ export default withFiles(
           initialValues={user}
           onSubmit={user => updateUser(user)}
         >
-          {({ dirty, handleSubmit, resetForm, values }) => (
+          {({ dirty, handleSubmit, resetForm, values, setFieldValue }) => (
             <>
               <Absolute bottom={25} right={25}>
                 <Button
@@ -127,7 +133,11 @@ export default withFiles(
                         />
                       </FormGroup>
                       <FormGroup>
-                        <Label>Preferred elo</Label>
+                        <Label>Elo</Label>
+                        <Form.Input name="state.elo" type="number" />
+                      </FormGroup>
+                      <FormGroup>
+                        <Label>Preferred student elo</Label>
                         <Form.Input name="state.studentElo" type="number" />
                       </FormGroup>
                       <FormGroup>
@@ -144,6 +154,43 @@ export default withFiles(
                       <FormGroup>
                         <Label>Speciality</Label>
                         <Form.Input name="state.speciality" />
+                      </FormGroup>
+                      <FormGroup>
+                        <Label>Country</Label>
+                        <Select
+                          isMulti={false}
+                          defaultValue={
+                            user.state.country
+                              ? getCountryByCode(user.state.country)
+                              : undefined
+                          }
+                          options={getCountries()}
+                          getOptionValue={({ name }) => name}
+                          formatOptionLabel={({ name, flag }) => (
+                            <span>
+                              {flag} {name}
+                            </span>
+                          )}
+                          onChange={val => {
+                            setFieldValue('state.country', val?.cca2);
+                          }}
+                        />
+                      </FormGroup>
+                      <FormGroup>
+                        <Label>Languages</Label>
+                        <Select
+                          defaultValue={user.state.languages?.map(
+                            languageToSelectValue,
+                          )}
+                          options={getLanguages().map(languageToSelectValue)}
+                          onChange={values => {
+                            setFieldValue(
+                              'state.languages',
+                              values.map(({ value }) => value),
+                            );
+                          }}
+                          isMulti
+                        />
                       </FormGroup>
                     </>
                   )}

@@ -4,33 +4,33 @@ import { db } from '@application';
 
 const userSchema = db.createSchema<NormalizedUser>(
   {
-    type: ({ type: String, default: TYPE_USER } as unknown) as typeof TYPE_USER,
-    name: (Schema.Types.String as unknown) as string,
-    nickname: ({
+    type: { type: String, default: TYPE_USER } as unknown as typeof TYPE_USER,
+    name: Schema.Types.String as unknown as string,
+    nickname: {
       type: String,
       required: true,
       unique: true,
-    } as unknown) as string,
-    email: ({
+    } as unknown as string,
+    email: {
       type: String,
       required: true,
       unique: true,
-    } as unknown) as string,
-    password: ({
+    } as unknown as string,
+    password: {
       type: String,
       required: true,
       select: false,
-    } as unknown) as string,
-    coach: (Schema.Types.Boolean as unknown) as boolean,
-    active: ({
+    } as unknown as string,
+    coach: Schema.Types.Boolean as unknown as boolean,
+    active: {
       type: Schema.Types.Boolean,
       default: true,
-    } as unknown) as boolean,
-    state: ({
+    } as unknown as boolean,
+    state: {
       type: Schema.Types.Mixed,
       required: true,
       default: {},
-    } as unknown) as NormalizedUser['state'],
+    } as unknown as NormalizedUser['state'],
   },
   {
     minimize: false,
@@ -53,7 +53,12 @@ const userSchema = db.createSchema<NormalizedUser>(
   },
 );
 
-userSchema.index({ name: 'text', nickname: 'text' });
+userSchema.index({
+  name: 'text',
+  nickname: 'text',
+  'state.languages': 1,
+  'state.country': 1,
+});
 
 const UserModel = db.createModel<NormalizedUser>(TYPE_USER, userSchema);
 

@@ -18,12 +18,12 @@ const { Icon, Text } = ui;
 const { useHistory } = hooks;
 
 export const ItemLabel = styled(Text).css`
-  color: var(--light-color);
   margin-left: 10px;
   margin-bottom: 0;
 `;
 ItemLabel.defaultProps = {
   fontSize: 'extra-small',
+  color: 'light',
 };
 
 const Item = styled<ItemProps>(

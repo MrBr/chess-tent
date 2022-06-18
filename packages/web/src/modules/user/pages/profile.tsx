@@ -1,11 +1,38 @@
-import React from 'react';
-import { components, hooks, ui } from '@application';
+import React, { ReactNode } from 'react';
+import { components, hooks, ui, utils } from '@application';
 import { User } from '@chess-tent/models';
 
-const { UserAvatar, Page, MentorshipButton } = components;
-const { useHistory } = hooks;
-const { Col, Row, Headline3, Headline4, Text, Absolute, Button, Container } =
-  ui;
+const { UserAvatar, Page, MentorshipButton, Header } = components;
+const { useHistory, useOpenConversations } = hooks;
+const { getCountryByCode } = utils;
+const {
+  Col,
+  Row,
+  Headline6,
+  Headline4,
+  Text,
+  Button,
+  Container,
+  Breadcrumbs,
+  Badge,
+} = ui;
+
+const Info = ({ label, info }: { label: string; info: ReactNode }) => (
+  <Container className="mt-2">
+    <Text
+      weight={400}
+      color="grey"
+      inline
+      fontSize="extra-small"
+      className="me-2"
+    >
+      {label}
+    </Text>
+    <Text weight={400} color="black" inline fontSize="extra-small">
+      {info}
+    </Text>
+  </Container>
+);
 
 const PageProfile = ({
   user,
@@ -15,70 +42,104 @@ const PageProfile = ({
   editable?: boolean;
 }) => {
   const history = useHistory();
+  const [conversationOffset, openConversation] = useOpenConversations();
   return (
-    <Page>
-      <Row>
-        {editable && (
-          <Absolute bottom={25} right={25}>
-            <Button
-              variant="regular"
-              onClick={() =>
-                history.push({
-                  pathname: history.location.pathname,
-                  search: '?edit=true',
-                })
-              }
-            >
-              Edit
-            </Button>
-          </Absolute>
-        )}
-        <Col className="col-auto mt-4 text-center">
-          <Container>
-            <UserAvatar user={user} size="large" />
-          </Container>
-          <Container className="mt-4">
-            <MentorshipButton user={user} />
-          </Container>
-        </Col>
-        <Col>
-          <Headline3>{user.name}</Headline3>
-          {user.coach && (
-            <>
-              <Text>{user.state.punchline}</Text>
-              <Text>{user.state.studentElo}</Text>
-              <Text className="text-uppercase" fontSize="small">
-                Pricing
-              </Text>
-              <Text>{user.state.pricing}</Text>
-              <Text className="text-uppercase" fontSize="small">
-                Availability
-              </Text>
-              <Text>{user.state.availability}</Text>
-              <Text className="text-uppercase" fontSize="small">
-                Speciality
-              </Text>
-              <Text>{user.state.speciality}</Text>
-            </>
-          )}
-        </Col>
-        <Col>
-          <Headline4>About me</Headline4>
-          <Text>{user.state.about}</Text>
-        </Col>
-        <Col>
-          <Headline4>Playing experience</Headline4>
-          <Text>{user.state.playingExperience}</Text>
-        </Col>
-        {user.coach && (
-          <Col>
-            <Headline4>Teaching experience</Headline4>
-            <Text>{user.state.teachingExperience}</Text>
-            <Headline4>Teaching methodology</Headline4>
-            <Text>{user.state.teachingMethodology}</Text>
+    <Page
+      header={
+        <Header className="border-bottom">
+          <Col className="col-auto">
+            <Breadcrumbs>
+              <Breadcrumbs.Item href="/">Coaches</Breadcrumbs.Item>
+              <Breadcrumbs.Item>{user.name}</Breadcrumbs.Item>
+            </Breadcrumbs>
           </Col>
-        )}
-      </Row>
+          <Col />
+          <Col className="col-auto">
+            {editable ? (
+              <Button
+                size="extra-small"
+                variant="secondary"
+                onClick={() =>
+                  history.push({
+                    pathname: history.location.pathname,
+                    search: '?edit=true',
+                  })
+                }
+              >
+                Edit
+              </Button>
+            ) : (
+              <>
+                <Button
+                  size="extra-small"
+                  variant="regular"
+                  onClick={() => openConversation(user)}
+                  className="me-3"
+                >
+                  Message
+                </Button>
+                <MentorshipButton user={user} />
+              </>
+            )}
+          </Col>
+        </Header>
+      }
+    >
+      {conversationOffset}
+      <Container fluid className="px-5 py-4">
+        <Headline4 className="mb-0">{user.name}</Headline4>
+        {user.state.punchline && <Text>{user.state.punchline}</Text>}
+        <Row>
+          <Col className="col-auto mt-4 text-center">
+            <UserAvatar user={user} size="large" />
+          </Col>
+          <Col>
+            {user.coach && (
+              <Container>
+                <Badge bg="success">{user.state.pricing} $/h</Badge>
+              </Container>
+            )}
+            <Info
+              label="Country:"
+              info={
+                user.state.country
+                  ? getCountryByCode(user.state.country).name
+                  : ''
+              }
+            />
+            <Info label="Languages: " info={user.state.languages?.join(', ')} />
+          </Col>
+          <Col>
+            {user.coach && (
+              <>
+                <Info label="Student elo:" info={user.state.studentElo} />
+                <Info label="Availability:" info={user.state.availability} />
+                <Info label="Speciality:" info={user.state.speciality} />
+              </>
+            )}
+          </Col>
+        </Row>
+        <Row className="mt-5">
+          <Col>
+            <Headline6>About me</Headline6>
+            <Text fontSize="extra-small">{user.state.about}</Text>
+            <Headline6>Playing experience</Headline6>
+            <Text fontSize="extra-small">{user.state.playingExperience}</Text>
+          </Col>
+          {user.coach && (
+            <Col>
+              <Headline6>Teaching methodology</Headline6>
+              <Text fontSize="extra-small">
+                {user.state.teachingMethodology}
+              </Text>
+              <Headline6>Teaching experience</Headline6>
+              <Text fontSize="extra-small">
+                {user.state.teachingExperience}
+              </Text>
+            </Col>
+          )}
+        </Row>
+      </Container>
     </Page>
   );
 };

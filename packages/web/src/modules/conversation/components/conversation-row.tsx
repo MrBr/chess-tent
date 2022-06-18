@@ -25,18 +25,12 @@ const ConversationRow = styled<FunctionComponent<ConversationRowProps>>(
         <UserAvatar user={participant} />
       </Col>
       <Col className="text-truncate">
-        <Text
-          weight={700}
-          className="m-0 text-truncate"
-          fontSize="small"
-          color="title"
-        >
+        <Text weight={700} className="m-0 text-truncate" fontSize="small">
           {participant.name}
         </Text>
         <Text
           className="m-0 text-truncate"
           fontSize="small"
-          color="title"
           weight={read ? 400 : 700}
         >
           {lastMessage}

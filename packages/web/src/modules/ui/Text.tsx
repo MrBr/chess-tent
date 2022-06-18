@@ -57,8 +57,12 @@ const color = styled.props.color.css`
     color: var(--secondary-color);
   }
 
-  &.title {
+  &.black {
     color: var(--black-color);
+  }
+  
+  &.grey {
+    color: var(--grey-700-color);
   }
 
   &.light {
@@ -106,7 +110,7 @@ const Hero = styled(BaseText).css`
 `;
 
 Hero.defaultProps = {
-  color: 'title',
+  color: 'black',
   weight: 700,
 };
 
@@ -120,7 +124,7 @@ const Headline1 = styled(BaseText).css`
 `;
 Headline1.defaultProps = {
   as: 'h1',
-  color: 'title',
+  color: 'black',
   weight: 700,
 };
 
@@ -134,7 +138,7 @@ const Headline2 = styled(BaseText).css`
 `;
 Headline2.defaultProps = {
   as: 'h2',
-  color: 'title',
+  color: 'black',
   weight: 700,
 };
 
@@ -148,7 +152,7 @@ const Headline3 = styled(BaseText).css`
 `;
 Headline3.defaultProps = {
   as: 'h3',
-  color: 'title',
+  color: 'black',
   weight: 700,
 };
 
@@ -162,7 +166,7 @@ const Headline4 = styled(BaseText).css`
 `;
 Headline4.defaultProps = {
   as: 'h4',
-  color: 'title',
+  color: 'black',
   weight: 700,
 };
 
@@ -176,7 +180,7 @@ const Headline5 = styled(BaseText).css`
 `;
 Headline5.defaultProps = {
   as: 'h5',
-  color: 'title',
+  color: 'black',
   weight: 700,
 };
 
@@ -190,7 +194,7 @@ const Headline6 = styled(BaseText).css`
 `;
 Headline6.defaultProps = {
   as: 'h6',
-  color: 'title',
+  color: 'black',
   weight: 700,
 };
 

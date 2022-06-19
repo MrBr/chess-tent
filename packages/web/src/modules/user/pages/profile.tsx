@@ -43,6 +43,9 @@ const PageProfile = ({
 }) => {
   const history = useHistory();
   const [conversationOffset, openConversation] = useOpenConversations();
+  const country = user.state.country
+    ? getCountryByCode(user.state.country)
+    : null;
   return (
     <Page
       header={
@@ -99,14 +102,7 @@ const PageProfile = ({
                 <Badge bg="success">{user.state.pricing} $/h</Badge>
               </Container>
             )}
-            <Info
-              label="Country:"
-              info={
-                user.state.country
-                  ? getCountryByCode(user.state.country).name
-                  : ''
-              }
-            />
+            <Info label="Country:" info={`${country?.name} ${country?.flag}`} />
             <Info label="Languages: " info={user.state.languages?.join(', ')} />
           </Col>
           <Col>

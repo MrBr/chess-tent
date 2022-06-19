@@ -4,7 +4,7 @@ import { CoachEloRange } from '@chess-tent/models';
 import CoachCard from './coach-card';
 import CoachLevelDropdown from './coach-level-dropdown';
 
-const { useApi, useComponentStateSilent, useIsMobile } = hooks;
+const { useApi, useComponentStateSilent } = hooks;
 const { Row, Col } = ui;
 const { Filters } = components;
 
@@ -13,7 +13,6 @@ const Coaches = () => {
   const { fetch: fetchCoaches, response } = useApi(requests.users);
 
   const [studentElo, setStudentElo] = useState<CoachEloRange | undefined>();
-  const isMobile = useIsMobile();
 
   useEffect(() => {
     !mounted && fetchCoaches({ coach: true });
@@ -28,16 +27,10 @@ const Coaches = () => {
   }, [fetchCoaches, studentElo, mounted]);
 
   const cols = response?.data.map(coach => (
-    <Col key={coach.id} className="col-auto">
+    <Col key={coach.id} className="col-auto mb-3">
       <CoachCard coach={coach} />
     </Col>
   ));
-
-  const rows = isMobile ? (
-    <Row className="flex-nowrap overflow-auto">{cols}</Row>
-  ) : (
-    <Row>{cols}</Row>
-  );
 
   return (
     <>
@@ -61,7 +54,7 @@ const Coaches = () => {
           </Filters>
         </Col>
       </Row>
-      {rows}
+      <Row>{cols}</Row>
     </>
   );
 };

@@ -97,16 +97,17 @@ export const LandingPage = () => {
           <Row>
             <Col md={{ offset: 2, span: 8 }}>
               <Hero align="center">
-                Chess Tent is an expression of{' '}
+                Chess Tent is a{' '}
                 <Text inherit className="position-relative d-inline-block">
                   <Underline />
-                  an idea
+                  community
                 </Text>
+                driven platform
               </Hero>
               <Text align="center" fontSize="large">
-                Idea of a fair and transparent product which is primarily built
-                for the people. We live in times where things are free but with
-                a hidden cost and this is attempt to make a change.
+                Fair and transparent product built for people. We live in times
+                where everything is about the money and this is attempt to make
+                a change.
               </Text>
             </Col>
           </Row>
@@ -123,10 +124,9 @@ export const LandingPage = () => {
           <Row className="mb-4">
             <Col>
               <Text fontSize="small">
-                Product as a platform means users can both consume and
-                create/sell content. Chess tent will try to develop those tools
-                that help both consumers and creators to express themselves and
-                grow in the context of chess.
+                A place for users to teach and learn. Aiming for the tools
+                needed by the users to express themselves and grow in the
+                context of chess.
               </Text>
             </Col>
             <Col className="col-auto">
@@ -152,26 +152,26 @@ export const LandingPage = () => {
               <Icon type="video" background variant="secondary" />
               <Headline5 className="mt-4 mb-4">Video conference</Headline5>
               <Text fontSize="small">
-                Interactive chess board and video conference all in one{' '}
+                Interactive chess board and video conference all in one
               </Text>
             </Col>
             <Col xs={6} md={4} className="mt-4 mb-4">
               <Icon type="message" background variant="secondary" />
               <Headline5 className="mt-4 mb-4">Conversations</Headline5>
-              <Text fontSize="small">In app chat for brief discussions</Text>
+              <Text fontSize="small">In app chat for discussions</Text>
             </Col>
             <Col xs={6} md={4} className="mt-4 mb-4">
               <Icon type="support" background variant="secondary" />
               <Headline5 className="mt-4 mb-4">Group training</Headline5>
               <Text fontSize="small">
-                Group trainings beyond over the board experience
+                Collaborate with multiple students at the same time
               </Text>
             </Col>
             <Col xs={6} md={4} className="mt-4 mb-4">
               <Icon type="settings" background variant="secondary" />
               <Headline5 className="mt-4 mb-4">Engine</Headline5>
               <Text fontSize="small">
-                Stockfish 14 integrated with the board
+                Stockfish 14 integrated within the board
               </Text>
             </Col>
           </Row>
@@ -189,7 +189,7 @@ export const LandingPage = () => {
                 </Col>
                 <Col xs={6}>
                   <Headline3 align="center">...</Headline3>
-                  <Text align="center">Training</Text>
+                  <Text align="center">Trainings</Text>
                 </Col>
                 <Col xs={6}>
                   <Headline3 align="center">4</Headline3>
@@ -204,11 +204,15 @@ export const LandingPage = () => {
             <Col md={{ offset: 1, span: 6 }} sm={12}>
               <Headline2>Community driven</Headline2>
               <Text fontSize="small">
-                Being a part of the community provides a set of rights and
-                responsibilities. The only responsibility in this context is a
-                monthly subscription for the active users. This will be
-                discussed more in the times ahead. For the time being (beta
-                version) everything remains free.
+                The primary goal of Chess tent is to provide first class chess
+                learning experience. This can only be achieved together with our
+                users. Every feedback and suggestion is most appreciated.
+              </Text>
+              <Text fontSize="small" className="mt-3">
+                To have the best price for both coaches and students there will
+                be zero fees. Our intention is to earn from{' '}
+                <b>adjustable monthly subscription</b>. Every user will be able
+                to define wanted amount. Zero is an option.
               </Text>
             </Col>
           </Row>

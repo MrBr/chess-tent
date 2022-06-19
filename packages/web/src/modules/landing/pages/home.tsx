@@ -115,7 +115,7 @@ export const LandingPage = () => {
               <Text fontSize="small">
                 Anyone who trained chess knows how much questions needs to be
                 asked in a lesson or a training and for the first time you can
-                do it.
+                do have that experience online.
               </Text>
               <Text fontSize="small">
                 Create the most interactive online lessons and training. Become
@@ -142,7 +142,7 @@ export const LandingPage = () => {
             <Col md={6} sm={12}>
               <Headline2>Get a coach!</Headline2>
               <Text fontSize="small" weight={700}>
-                Unique lessons editor provides a simple way to create custom
+                Unique lesson editor provides a simple way to create custom
                 tailored trainings and lessons.
               </Text>
               <Headline5>

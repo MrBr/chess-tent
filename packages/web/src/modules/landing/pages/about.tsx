@@ -1,5 +1,5 @@
 import React from 'react';
-import { ui } from '@application';
+import { components, ui } from '@application';
 import { css } from '@chess-tent/styled-props';
 
 import lukaSrc from '../images/contributors/luka.png';
@@ -34,6 +34,7 @@ const {
   Icon,
   Headline3,
 } = ui;
+const { Link } = components;
 
 const { className } = css`
   .user-stats {
@@ -130,7 +131,9 @@ export const LandingPage = () => {
               </Text>
             </Col>
             <Col className="col-auto">
-              <Button>Start creating</Button>
+              <Link to="/register" ghost>
+                <Button>Start creating</Button>
+              </Link>
             </Col>
           </Row>
           <Row>

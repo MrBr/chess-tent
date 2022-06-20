@@ -97,7 +97,9 @@ export const LandingPage = () => {
                 Create engaging chess lessons and build your audience. Join
                 early beta and help us build flexible creator platform.
               </Text>
-              <Button className="m-auto d-block">Get beta access</Button>
+              <Link to="/register" ghost>
+                <Button className="m-auto d-block">Get beta access</Button>
+              </Link>
             </Col>
           </Row>
         </Container>

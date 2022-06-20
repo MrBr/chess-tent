@@ -1,11 +1,12 @@
 import React from 'react';
-import { ui } from '@application';
+import { components, ui } from '@application';
 import styled from '@chess-tent/styled-props';
 
 import Section from './section';
 import pawnsSrc from '../images/pawns.svg';
 
 const { Row, Col, Container, Text, Headline3, Button } = ui;
+const { Link } = components;
 
 const CTA = styled<{ className?: string }>(({ className }) => (
   <Section className={className}>
@@ -23,7 +24,9 @@ const CTA = styled<{ className?: string }>(({ className }) => (
           md={{ offset: 1, span: 4 }}
           className="d-flex align-items-center justify-content-end"
         >
-          <Button>Get beta access</Button>
+          <Link to="/register" ghost>
+            <Button>Get beta access</Button>
+          </Link>
         </Col>
       </Row>
     </Container>

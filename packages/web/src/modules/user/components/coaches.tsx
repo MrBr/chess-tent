@@ -4,27 +4,18 @@ import { CoachEloRange } from '@chess-tent/models';
 import CoachCard from './coach-card';
 import CoachLevelDropdown from './coach-level-dropdown';
 
-const { useApi, useComponentStateSilent } = hooks;
+const { useApi } = hooks;
 const { Row, Col } = ui;
 const { Filters } = components;
 
 const Coaches = () => {
-  const { mounted } = useComponentStateSilent();
   const { fetch: fetchCoaches, response } = useApi(requests.users);
 
   const [studentElo, setStudentElo] = useState<CoachEloRange | undefined>();
 
   useEffect(() => {
-    !mounted && fetchCoaches({ coach: true });
-  }, [mounted, fetchCoaches]);
-
-  useEffect(() => {
-    mounted &&
-      fetchCoaches({
-        coach: true,
-        studentElo,
-      });
-  }, [fetchCoaches, studentElo, mounted]);
+    fetchCoaches({ coach: true, studentElo });
+  }, [fetchCoaches, studentElo]);
 
   const cols = response?.data.map(coach => (
     <Col key={coach.id} className="col-auto mb-3">

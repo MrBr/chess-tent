@@ -1,10 +1,13 @@
-import { useEffect } from 'react';
-import { User } from '@chess-tent/models';
-import { hooks, records } from '@application';
+import { useEffect, useCallback } from 'react';
+import { Mentorship, User } from '@chess-tent/models';
+import { hooks, records, requests, state } from '@application';
 import { Hooks } from '@types';
 import { students, coaches } from './record';
 
-const { useRecordInit } = hooks;
+const { useRecordInit, useDispatch, useApi } = hooks;
+const {
+  actions: { updateEntities },
+} = state;
 const { isInitialized } = records;
 
 const useCoaches: Hooks['useCoaches'] = (user: User) => {
@@ -35,4 +38,26 @@ const useStudents: Hooks['useStudents'] = (user: User) => {
   return record;
 };
 
-export { useCoaches, useStudents };
+const useMentorship: Hooks['useMentorship'] = (mentorship: Mentorship) => {
+  const dispatch = useDispatch();
+  const { fetch, loading } = useApi(requests.mentorshipResolve);
+  const update = useCallback(
+    (approved: boolean) => {
+      fetch({
+        studentId: mentorship.student.id,
+        coachId: mentorship.coach.id,
+        approved,
+      });
+      dispatch(
+        updateEntities({
+          ...mentorship,
+          approved,
+        }),
+      );
+    },
+    [fetch, mentorship.coach.id, mentorship.student.id],
+  );
+  return { update, loading };
+};
+
+export { useCoaches, useStudents, useMentorship };

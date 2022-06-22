@@ -7,6 +7,7 @@ application.register(
   module => {
     application.hooks.useCoaches = module.useCoaches;
     application.hooks.useStudents = module.useStudents;
+    application.hooks.useMentorship = module.useMentorship;
   },
 );
 

@@ -21,6 +21,7 @@ import {
   Activity,
   Lesson,
   LessonActivity,
+  Mentorship,
 } from '@chess-tent/models';
 import { useRecordInit, useRecordSafe } from '@chess-tent/redux-record';
 import { Action as ReduxAction } from 'redux';
@@ -105,6 +106,10 @@ export type Hooks = {
   useOpenTraining: () => (lesson: LessonActivity) => void;
   useOpenTemplate: () => (lesson: Lesson) => void;
   useOpenLesson: () => (lesson: Lesson) => void;
+  useMentorship: (mentorship: Mentorship) => {
+    update: (approved: boolean) => void;
+    loading: boolean;
+  };
   useActiveUserNotifications: (
     limit?: number,
   ) => RecordHookInit<InferInitRecord<Records['activeUserNotifications']>>;

@@ -50,6 +50,10 @@ type UserScheduledTrainingsRecord = RecipeApiLoad<
   RecordBase<LessonActivity[]> &
   RecipeCollection<LessonActivity>;
 type CreateNewUserTraining = (activity: LessonActivity) => Promise<void>;
+type RequestMentorship = (coach: User, student: User) => Promise<void>;
+type CoachesRecord = RecipeApiLoad<Requests['coaches']> &
+  RecordBase<Mentorship[]> &
+  RecipeCollection<Mentorship>;
 
 export type Records<T = any> = {
   activeUser: InitRecord<RecipeApiLoad<Requests['me']> & RecordBase<User>>;
@@ -100,9 +104,8 @@ export type Records<T = any> = {
       RecipeCollection<Mentorship>
   >;
   coaches: InitRecord<
-    RecipeApiLoad<Requests['coaches']> &
-      RecordBase<Mentorship[]> &
-      RecipeCollection<Mentorship>
+    CoachesRecord &
+      RecipeMethod<CoachesRecord, 'requestMentorship', RequestMentorship>
   >;
 
   // Service

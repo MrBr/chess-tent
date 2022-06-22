@@ -1,31 +1,17 @@
-import React, { useCallback, useEffect } from 'react';
-import { hooks, requests, ui } from '@application';
+import React from 'react';
+import { hooks, ui } from '@application';
 import { Components } from '@types';
-import { Mentorship } from '@chess-tent/models';
 
-const { useActiveUserRecord, useCoaches, useApi } = hooks;
+const { useActiveUserRecord, useCoaches } = hooks;
 const { Button } = ui;
 
-export default (({ user, className }) => {
+export default (({ user, className, textual }) => {
   const { value: me } = useActiveUserRecord();
-  const { value: coaches, update: setCoaches } = useCoaches(me);
   const {
-    fetch: requestMentorship,
-    response,
-    loading,
-    reset,
-  } = useApi(requests.mentorshipRequest);
-  const requestMentorshipHandle = useCallback(() => {
-    requestMentorship({ coachId: user.id, studentId: me.id });
-  }, [requestMentorship, user.id, me.id]);
-
-  useEffect(() => {
-    if (!response) {
-      return;
-    }
-    reset();
-    setCoaches([...(coaches || []), response.data as unknown as Mentorship]);
-  }, [coaches, reset, response, setCoaches]);
+    value: coaches,
+    requestMentorship,
+    meta: { loading },
+  } = useCoaches(me);
 
   if (!user.coach || user.id === me.id) {
     // Prevent user from coaching himself
@@ -34,22 +20,19 @@ export default (({ user, className }) => {
 
   const coach = coaches?.find(mentor => mentor.coach.id === user.id);
 
-  return !coach ? (
+  return (
     <Button
       size="extra-small"
-      onClick={requestMentorshipHandle}
+      onClick={() => !coach && requestMentorship(me, user)}
       disabled={loading}
       className={className}
+      variant={textual ? 'text' : coach ? 'primary' : 'secondary'}
     >
-      Request mentorship
-    </Button>
-  ) : !coach.approved ? (
-    <Button size="extra-small" variant="regular" className={className}>
-      Mentorship requested
-    </Button>
-  ) : (
-    <Button size="extra-small" variant="secondary" className={className}>
-      Your mentor
+      {!coach
+        ? 'Request mentorship'
+        : !coach.approved
+        ? 'Mentorship requested'
+        : 'Your mentor'}
     </Button>
   );
 }) as Components['MentorshipButton'];

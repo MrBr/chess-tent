@@ -520,7 +520,11 @@ export type Components = {
     }
   >;
   TagsSelect: ComponentType<TagsSelectProps>;
-  MentorshipButton: ComponentType<{ user: User; className?: string }>;
+  MentorshipButton: ComponentType<{
+    user: User;
+    className?: string;
+    textual?: boolean;
+  }>;
   MentorshipAction: ComponentType<{
     mentorship: Mentorship;
     approve?: boolean;

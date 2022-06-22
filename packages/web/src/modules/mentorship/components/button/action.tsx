@@ -1,11 +1,8 @@
-import React, { useCallback, useEffect } from 'react';
-import { hooks, requests, state, ui } from '@application';
+import React from 'react';
+import { hooks, ui } from '@application';
 import { Components } from '@types';
 
-const { useApi, useDispatch } = hooks;
-const {
-  actions: { updateEntities },
-} = state;
+const { useMentorship } = hooks;
 const { Button } = ui;
 
 const MentorshipActionButton = (({
@@ -15,33 +12,11 @@ const MentorshipActionButton = (({
   className,
   text,
 }) => {
-  const dispatch = useDispatch();
-  const { fetch, response, loading, reset } = useApi(
-    requests.mentorshipResolve,
-  );
-  const resolveMentorshipHandle = useCallback(() => {
-    fetch({
-      studentId: mentorship.student.id,
-      coachId: mentorship.coach.id,
-      approved: !!approve,
-    });
-  }, [approve, fetch, mentorship.coach.id, mentorship.student.id]);
-  useEffect(() => {
-    if (!response) {
-      return;
-    }
-    reset();
-    dispatch(
-      updateEntities({
-        ...mentorship,
-        approved: approve,
-      }),
-    );
-  }, [response, dispatch, mentorship, reset, approve]);
+  const { update, loading } = useMentorship(mentorship);
   return (
     <Button
       size={size}
-      onClick={resolveMentorshipHandle}
+      onClick={() => update(!mentorship.approved)}
       disabled={loading || approve === mentorship.approved}
       variant={approve ? 'primary' : 'secondary'}
       className={className}

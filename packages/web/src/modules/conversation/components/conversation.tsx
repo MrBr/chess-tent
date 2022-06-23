@@ -37,7 +37,7 @@ export default styled<{
   participant: User;
   conversation: Conversation;
   close: () => void;
-}>(({ className, activeUser, participant, conversation, close }) => {
+}>(({ activeUser, participant, conversation, close }) => {
   const dispatch = useDispatchBatched();
   const [loadMoreMessages, loading, noMore] = useLoadMoreMessages(conversation);
   const { messages } = conversation;
@@ -45,6 +45,7 @@ export default styled<{
   useEffect(() => {
     const lastMessage = last(messages);
     if (
+      !loading &&
       lastMessage &&
       !lastMessage.read &&
       lastMessage.owner !== activeUser.id
@@ -56,7 +57,7 @@ export default styled<{
         updateEntity(updatedMessage, { conversationId: conversation.id }),
       );
     }
-  }, [activeUser.id, conversation.id, dispatch, messages]);
+  }, [activeUser.id, conversation.id, dispatch, loading, messages]);
 
   const handleEnter = useCallback(
     event => {

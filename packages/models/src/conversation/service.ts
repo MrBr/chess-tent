@@ -17,6 +17,9 @@ const createConversation = (
 const getParticipant = (conversation: Conversation, userId: User['id']) =>
   conversation.users.find(user => user.id === userId);
 
+const getLatestMessage = (conversation: Conversation) =>
+  conversation.messages[conversation.messages.length - 1];
+
 const updateConversationMessage = createService(
   (draft: Conversation, message: Message): Conversation => {
     const messageIndex = draft.messages.findIndex(
@@ -39,9 +42,16 @@ const addConversationMessage = createService(
   },
 );
 
+const isConversationRead = (conversation: Conversation, user: User) => {
+  const lastMessage = getLatestMessage(conversation);
+  return lastMessage ? user.id === lastMessage.owner || lastMessage.read : true;
+};
+
 export {
   createConversation,
   getParticipant,
+  isConversationRead,
+  getLatestMessage,
   updateConversationMessage,
   addConversationMessage,
 };

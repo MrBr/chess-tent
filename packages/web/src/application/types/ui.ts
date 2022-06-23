@@ -382,7 +382,7 @@ export type UI = {
     left?: number;
     zIndex?: number;
   }>;
-  Dot: UIComponent<{ background?: string }>;
+  Dot: UIComponent;
   Line: UIComponent;
   LoadMore: UIComponent<LoadMoreProps>;
   Spinner: UIComponent<SpinnerProps>;

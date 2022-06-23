@@ -48,7 +48,7 @@ export const middleware: Middleware = store => next => action => {
     } else {
       const updatedConversation = updateConversationMessage(
         conversation,
-        action.payload,
+        action.payload.result,
       );
       store.dispatch(updateEntity(updatedConversation));
     }

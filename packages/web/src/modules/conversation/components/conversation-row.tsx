@@ -19,19 +19,19 @@ const ConversationRow = styled<FunctionComponent<ConversationRowProps>>(
     <Row
       onClick={() => setParticipant(participant)}
       key={participant.id}
-      className={`g-0 ${className}`}
+      className={`g-0 ${className} border-bottom align-items-center`}
     >
-      <Col className="col-auto d-flex align-items-center pr-0">
+      <Col className="col-auto d-flex align-items-center pr-0 me-3">
         <UserAvatar user={participant} />
       </Col>
       <Col className="text-truncate">
-        <Text weight={700} className="m-0 text-truncate" fontSize="small">
+        <Text weight={500} className="m-0 text-truncate" fontSize="small">
           {participant.name}
         </Text>
         <Text
           className="m-0 text-truncate"
-          fontSize="small"
-          weight={read ? 400 : 700}
+          fontSize="extra-small"
+          weight={read ? 300 : 700}
         >
           {lastMessage}
         </Text>

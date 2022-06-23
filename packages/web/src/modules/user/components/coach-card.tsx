@@ -66,10 +66,19 @@ const CoachCard: Components['CoachCard'] = ({ coach }) => {
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
                   <Dropdown.Item onClick={() => openConversation(coach)}>
-                    Message
+                    <Text fontSize="extra-small" className="mb-0">
+                      <Icon type="comment" size="extra-small" /> Message
+                    </Text>
                   </Dropdown.Item>
                   <Dropdown.Item>
-                    <MentorshipButton user={coach} textual className="p-0" />
+                    <Text fontSize="extra-small" className="mb-0">
+                      <Icon
+                        type="lightbulb"
+                        size="extra-small"
+                        className="mt-1 me-1"
+                      />
+                      <MentorshipButton user={coach} textual className="p-0" />
+                    </Text>
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>

@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react';
 import { components, hooks, ui, utils } from '@application';
 import { User } from '@chess-tent/models';
+import { Icons } from '@types';
 
 const { UserAvatar, Page, MentorshipButton, Header } = components;
 const { useHistory, useOpenConversations } = hooks;
@@ -15,9 +16,18 @@ const {
   Container,
   Breadcrumbs,
   Badge,
+  Icon,
 } = ui;
 
-const Info = ({ label, info }: { label: string; info: ReactNode }) => (
+const Info = ({
+  label,
+  info,
+  icon,
+}: {
+  label: string;
+  info: ReactNode;
+  icon: Icons;
+}) => (
   <Container className="mt-2">
     <Text
       weight={400}
@@ -26,6 +36,7 @@ const Info = ({ label, info }: { label: string; info: ReactNode }) => (
       fontSize="extra-small"
       className="me-2"
     >
+      <Icon type={icon} size="extra-small" className="me-1" />
       {label}
     </Text>
     <Text weight={400} color="black" inline fontSize="extra-small">
@@ -102,15 +113,35 @@ const PageProfile = ({
                 <Badge bg="success">{user.state.pricing} $/h</Badge>
               </Container>
             )}
-            <Info label="Country:" info={`${country?.name} ${country?.flag}`} />
-            <Info label="Languages: " info={user.state.languages?.join(', ')} />
+            <Info
+              icon="profile"
+              label="Country:"
+              info={`${country?.name} ${country?.flag}`}
+            />
+            <Info
+              icon="published"
+              label="Languages: "
+              info={user.state.languages?.join(', ')}
+            />
           </Col>
           <Col>
             {user.coach && (
               <>
-                <Info label="Student elo:" info={user.state.studentElo} />
-                <Info label="Availability:" info={user.state.availability} />
-                <Info label="Speciality:" info={user.state.speciality} />
+                <Info
+                  icon="barChart"
+                  label="Student elo:"
+                  info={user.state.studentElo}
+                />
+                <Info
+                  icon="time"
+                  label="Availability:"
+                  info={user.state.availability}
+                />
+                <Info
+                  icon="team"
+                  label="Speciality:"
+                  info={user.state.speciality}
+                />
               </>
             )}
           </Col>
@@ -118,14 +149,16 @@ const PageProfile = ({
         <Row className="mt-5">
           <Col>
             <Headline6>About me</Headline6>
-            <Text fontSize="extra-small">{user.state.about}</Text>
+            <Text fontSize="extra-small" className="mb-4">
+              {user.state.about}
+            </Text>
             <Headline6>Playing experience</Headline6>
             <Text fontSize="extra-small">{user.state.playingExperience}</Text>
           </Col>
           {user.coach && (
             <Col>
               <Headline6>Teaching methodology</Headline6>
-              <Text fontSize="extra-small">
+              <Text fontSize="extra-small" className="mb-4">
                 {user.state.teachingMethodology}
               </Text>
               <Headline6>Teaching experience</Headline6>

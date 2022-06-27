@@ -38,7 +38,8 @@ export type UpdateNotificationsRequest = {
   ids: Notification['id'][];
   updates: Partial<Pick<Notification, 'seen' | 'read' | 'state' | 'timestamp'>>;
 };
-export type Pagination = number | undefined;
+export type PaginationBucket = number | undefined;
+export type Pagination = { skip?: number; size: number };
 
 export interface StatusResponse {
   error: string | null;
@@ -99,6 +100,11 @@ export interface RequestPut<URL extends string, DATA = ApiEmptyData>
   extends Request<'PUT', URL, DATA> {}
 export interface RequestDelete<URL extends string>
   extends Request<'DELETE', URL, undefined> {}
+
+export interface RequestData<DATA, META> {
+  data: DATA;
+  meta: META;
+}
 
 export interface API {
   basePath: string;
@@ -299,7 +305,7 @@ export interface Endpoints {
   messages: Endpoint<
     RequestPost<
       `/conversation/${string}/messages`,
-      { lastDocumentTimestamp: Pagination }
+      { lastDocumentTimestamp: PaginationBucket }
     >,
     ConversationMessagesResponse
   >;

@@ -3,7 +3,7 @@ import {
   InviteUserParams,
   LessonActivityFilters,
   LessonUpdates,
-  Pagination,
+  PaginationBucket,
   RegisterRequestParams,
   RequestFetch,
   ScheduledLessonActivityFilters,
@@ -80,7 +80,7 @@ export interface Requests {
   conversation: RequestFetch<Endpoints['conversation'], Conversation['id']>;
   messages: RequestFetch<
     Endpoints['messages'],
-    [Conversation['id'], Pagination]
+    [Conversation['id'], PaginationBucket]
   >;
 
   mentorshipRequest: RequestFetch<Endpoints['mentorshipRequest']>;
@@ -90,11 +90,11 @@ export interface Requests {
 
   notifications: RequestFetch<
     Endpoints['notifications'],
-    [boolean?, Pagination?]
+    [boolean?, PaginationBucket?]
   >;
   loadMoreNotifications: RequestFetch<
     Endpoints['loadMoreNotifications'],
-    [Pagination?]
+    [PaginationBucket?]
   >;
   updateNotifications: RequestFetch<Endpoints['updateNotifications']>;
 

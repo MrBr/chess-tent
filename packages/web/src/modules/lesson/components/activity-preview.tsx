@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect } from 'react';
-import { components, hooks, services, ui } from '@application';
+import { components, hooks, services, state, ui } from '@application';
 import {
   Chapter,
   getChildStep,
@@ -9,6 +9,7 @@ import {
   getLessonChapter,
   updateActivityStepState,
   getLessonActivityUserActiveBoardState,
+  applyPatches,
 } from '@chess-tent/models';
 import { Steps } from '@types';
 import ActivityRenderer from './activity-renderer';
@@ -28,6 +29,9 @@ interface PreviewProps {
 const { useActiveUserRecord, useComponentState } = hooks;
 const { Modal, Breadcrumbs, Col, Button, Badge } = ui;
 const { Layout, Header, Menu } = components;
+const {
+  actions: { serviceAction },
+} = state;
 
 const Preview = ({ lesson, chapter, step }: PreviewProps) => {
   const { value: user } = useActiveUserRecord();
@@ -72,7 +76,17 @@ const Preview = ({ lesson, chapter, step }: PreviewProps) => {
   const updateActivity = useCallback(
     service =>
       (...args: Parameters<typeof service>) => {
-        updatePreviewActivity(service(...args));
+        const {
+          meta: { patch },
+        } = serviceAction(service)(...args);
+
+        if (!patch?.next) {
+          throw new Error('Updating without patch. That`s not an option. ');
+        }
+
+        updatePreviewActivity(latestActivity =>
+          applyPatches(latestActivity, patch.next),
+        );
       },
     [updatePreviewActivity],
   );

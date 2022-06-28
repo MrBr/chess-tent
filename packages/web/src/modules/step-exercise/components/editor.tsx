@@ -6,7 +6,12 @@ import React, {
 } from 'react';
 
 import { addStepToRightOf, isStep } from '@chess-tent/models';
-import { ExerciseModule, ExerciseToolboxProps, ExerciseTypes } from '@types';
+import {
+  ChessboardProps,
+  ExerciseModule,
+  ExerciseToolboxProps,
+  ExerciseTypes,
+} from '@types';
 import { components, services, ui } from '@application';
 
 import QuestionnaireEditorBoard from './questionnaire/editor-board';
@@ -30,55 +35,52 @@ import {
   getPositionAndOrientation,
   changeExercise,
 } from '../service';
-import { useUpdateSegment } from '../hooks';
 import EditorBoards from './editor-boards';
 
 const { Col, Row, Dropdown, Icon } = ui;
 const { StepTag } = components;
 
-const EditorBoard: FunctionComponent<
+class EditorBoard extends React.Component<
   ComponentProps<ExerciseModule['EditorBoard']>
-> = props => {
-  const { activeSegment } = props.step.state;
-  const segment = props.step.state[activeSegment];
-  const updateSegment = useUpdateSegment(
-    props.step,
-    props.updateStep,
-    activeSegment,
-  );
-  const Chessboard: typeof props['Chessboard'] = chessboardProps => (
-    <props.Chessboard
-      {...chessboardProps}
-      header={
-        <EditorBoards
-          activeSegment={activeSegment}
-          step={props.step}
-          updateStep={props.updateStep}
-        />
-      }
-    />
-  );
-  const editorProps = { ...props, updateSegment, segment, Chessboard };
-
-  if (isVariationExerciseStep(props.step)) {
-    return <VariationEditorBoard {...editorProps} step={props.step} />;
-  }
-  if (isQuestionExerciseStep(props.step)) {
-    return <QuestionEditorBoard {...editorProps} step={props.step} />;
-  }
-  if (isQuestionnaireExerciseStep(props.step)) {
-    return <QuestionnaireEditorBoard {...editorProps} step={props.step} />;
-  }
-  if (isSelectSquarePiecesExerciseStep(props.step)) {
+> {
+  renderChessboard = (chessboardProps: ChessboardProps) => {
+    const { Chessboard, step, updateStep } = this.props;
     return (
-      <SelectSquaresPiecesEditorBoard {...editorProps} step={props.step} />
+      <Chessboard
+        {...chessboardProps}
+        header={
+          <EditorBoards
+            activeSegment={step.state.activeSegment}
+            step={step}
+            updateStep={updateStep}
+          />
+        }
+      />
     );
+  };
+
+  render() {
+    const { step } = this.props;
+    const editorProps = { ...this.props, Chessboard: this.renderChessboard };
+
+    if (isVariationExerciseStep(step)) {
+      return <VariationEditorBoard {...editorProps} step={step} />;
+    }
+    if (isQuestionExerciseStep(step)) {
+      return <QuestionEditorBoard {...editorProps} step={step} />;
+    }
+    if (isQuestionnaireExerciseStep(step)) {
+      return <QuestionnaireEditorBoard {...editorProps} step={step} />;
+    }
+    if (isSelectSquarePiecesExerciseStep(step)) {
+      return <SelectSquaresPiecesEditorBoard {...editorProps} step={step} />;
+    }
+    if (isArrangePiecesExerciseStep(step)) {
+      return <ArrangePiecesEditorBoard {...editorProps} step={step} />;
+    }
+    return null;
   }
-  if (isArrangePiecesExerciseStep(props.step)) {
-    return <ArrangePiecesEditorBoard {...editorProps} step={props.step} />;
-  }
-  return null;
-};
+}
 
 const ExerciseToolbox: FunctionComponent<ExerciseToolboxProps> = props => {
   if (isVariationExerciseStep(props.step)) {

@@ -23,10 +23,24 @@ interface SidebarSegments<T extends ExerciseStep<any, any>> {
 
 export const withSegmentBoards =
   <T extends ExerciseStep<any, any>>(Segments: BoardSegments<T>) =>
-  (props: SegmentBoardProps<T, ExerciseSegmentKeys>) => {
+  (
+    props: Omit<
+      SegmentBoardProps<T, ExerciseSegmentKeys>,
+      'segment' | 'updateSegment'
+    >,
+  ) => {
     const { activeSegment } = props.step.state;
     const Segment = Segments[(activeSegment || 'task') as ExerciseSegmentKeys];
-    return <Segment {...props} />;
+    const updateSegment = useUpdateSegment(
+      props.step,
+      props.updateStep,
+      activeSegment,
+    );
+    const segment = props.step.state[activeSegment];
+
+    return (
+      <Segment {...props} updateSegment={updateSegment} segment={segment} />
+    );
   };
 
 export const withSegmentSidebars =

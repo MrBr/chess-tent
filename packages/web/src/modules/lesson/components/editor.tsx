@@ -378,6 +378,11 @@ class EditorRenderer extends React.Component<
         <Container fluid className={editorClassName}>
           <Row className="g-0 h-100">
             <Col className="pt-3">
+              {/*
+               Maybe it can be optimised by making a function call like stepRenderer().
+               React shouldn't unmount the same components lower in chain such as board in that case.
+               Currently, different step types unmount the board.
+              */}
               <StepRenderer
                 key={lesson.id}
                 step={activeStep}

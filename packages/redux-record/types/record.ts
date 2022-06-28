@@ -5,13 +5,12 @@ export type RecordValueNormalizedList = string[];
 export type RecordValueNormalized =
   | RecordValueNormalizedSingle
   | RecordValueNormalizedList;
-export type GetRecordNormalizedValue<
-  T extends RecordValue<any>
-> = T extends {}[]
-  ? RecordValueNormalizedList
-  : T extends {}
-  ? RecordValueNormalizedSingle
-  : RecordValueNormalized;
+export type GetRecordNormalizedValue<T extends RecordValue<any>> =
+  T extends {}[]
+    ? RecordValueNormalizedList
+    : T extends {}
+    ? RecordValueNormalizedSingle
+    : RecordValueNormalized;
 
 export type RecordValue<V> = V | null | undefined;
 
@@ -28,9 +27,8 @@ export type InitRecord<T extends RecordBase<any>> = (
   recordKey: string,
 ) => T;
 
-export type InferRecordValueType<
-  T extends RecordBase<any>
-> = T extends RecordBase<infer V> ? (V extends (infer AV)[] ? AV : V) : never;
+export type InferRecordValueType<T extends RecordBase<any>> =
+  T extends RecordBase<infer V> ? (V extends (infer AV)[] ? AV : V) : never;
 
 export type InferRecordValue<T extends RecordBase<any>> = T extends RecordBase<
   infer V
@@ -38,9 +36,8 @@ export type InferRecordValue<T extends RecordBase<any>> = T extends RecordBase<
   ? RecordValue<V>
   : never;
 
-export type InferRecordValueSafe<
-  T extends RecordBase<any>
-> = T extends RecordBase<infer V> ? V : never;
+export type InferRecordValueSafe<T extends RecordBase<any>> =
+  T extends RecordBase<infer V> ? V : never;
 
 export type InferInitRecord<T extends InitRecord<any>> = T extends InitRecord<
   infer V
@@ -64,6 +61,7 @@ export type RecordType<T> = {
 export type RecordMeta = {
   loading?: boolean;
   loaded?: boolean;
+  saved?: boolean;
   recordKey: string;
 };
 

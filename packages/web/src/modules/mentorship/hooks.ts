@@ -55,7 +55,7 @@ const useMentorship: Hooks['useMentorship'] = (mentorship: Mentorship) => {
         }),
       );
     },
-    [fetch, mentorship.coach.id, mentorship.student.id],
+    [fetch, mentorship, dispatch],
   );
   return { update, loading };
 };

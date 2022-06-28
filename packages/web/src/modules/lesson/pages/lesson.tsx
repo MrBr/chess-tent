@@ -10,9 +10,16 @@ const { Editor, Redirect, Page } = components;
 const PageLesson = () => {
   const { value: user } = useActiveUserRecord();
   const { lessonId } = useParams<{ lessonId: string }>();
-  const { value: lesson } = useLesson(lessonId as string);
+  const { value: lesson, meta, create } = useLesson(lessonId as string);
 
-  const lessonStatus = useLessonPartialUpdates(lesson, requests.lessonUpdates);
+  const lessonStatus = useLessonPartialUpdates(lesson, (...args) => {
+    if (!meta.saved && !meta.loaded) {
+      // Handle new lesson case
+      return create();
+    }
+
+    return requests.lessonUpdates(...args);
+  });
 
   if (!lesson) {
     return null;

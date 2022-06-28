@@ -42,22 +42,23 @@ const DashboardCoach = ({ user }: { user: User }) => {
       {trainingModal}
       <Container fluid className="ps-5 pe-5 pb-4">
         <Welcome name={user.name} />
+        <Row className="mt-5 mb-3">
+          <Col>
+            <Headline5>Upcoming trainings</Headline5>
+          </Col>
+          <Col className="col-auto">
+            <Button
+              onClick={promptNewTrainingModal}
+              size="small"
+              variant="ghost"
+            >
+              New training
+            </Button>
+          </Col>
+        </Row>
+
         {hasStudents && (
           <>
-            <Row className="mt-5 mb-3">
-              <Col>
-                <Headline5>Upcoming trainings</Headline5>
-              </Col>
-              <Col className="col-auto">
-                <Button
-                  onClick={promptNewTrainingModal}
-                  size="small"
-                  variant="ghost"
-                >
-                  New training
-                </Button>
-              </Col>
-            </Row>
             {!scheduledTrainings.value ||
             scheduledTrainings.value.length === 0 ? (
               <CardEmpty

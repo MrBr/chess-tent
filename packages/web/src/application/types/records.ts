@@ -3,6 +3,7 @@ import {
   Endpoint,
   GetRequestFetchArgs,
   RequestFetch,
+  StatusResponse,
 } from '@chess-tent/types';
 import {
   Lesson,
@@ -54,6 +55,7 @@ type RequestMentorship = (coach: User, student: User) => Promise<void>;
 type CoachesRecord = RecipeApiLoad<Requests['coaches']> &
   RecordBase<Mentorship[]> &
   RecipeCollection<Mentorship>;
+type LessonRecord = RecipeApiLoad<Requests['lesson']> & RecordBase<Lesson>;
 
 export type Records<T = any> = {
   activeUser: InitRecord<RecipeApiLoad<Requests['me']> & RecordBase<User>>;
@@ -92,7 +94,10 @@ export type Records<T = any> = {
         (modifier: (draft: RecordValue<T>) => void) => void
       >
   >;
-  lesson: InitRecord<RecipeApiLoad<Requests['lesson']> & RecordBase<Lesson>>;
+  lesson: InitRecord<
+    LessonRecord &
+      RecipeMethod<LessonRecord, 'create', () => Promise<StatusResponse>>
+  >;
   lessons: InitRecord<
     RecipeApiLoad<Requests['lessons']> &
       RecordBase<Lesson[]> &

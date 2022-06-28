@@ -28,7 +28,7 @@ const EditorPageSettings: ComponentType<{ lesson: Lesson }> = ({ lesson }) => {
         />
       )}
       <Dropdown>
-        <Dropdown.Toggle>Settings</Dropdown.Toggle>
+        <Dropdown.Toggle>Manage</Dropdown.Toggle>
         <Dropdown.Menu>
           <Dropdown.Item>
             <EditorAction

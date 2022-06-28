@@ -5,6 +5,7 @@ import {
   TYPE_ACTIVITY,
   TYPE_LESSON,
 } from '@chess-tent/models';
+import { RECORD_ACTIVE_USER_LESSONS_KEY } from './constants';
 
 const userTrainings = records.createRecord(
   records.withRecordBase<LessonActivity[]>(),
@@ -37,6 +38,27 @@ const lesson = records.createRecord(
   records.withRecordBase<Lesson>(),
   records.withRecordDenormalized(TYPE_LESSON),
   records.withRecordApiLoad(requests.lesson),
+  records.withRecordMethod('create', store => record => async () => {
+    const lesson = record.get().value;
+    if (!lesson) {
+      throw new Error('Saving non-existing lesson');
+    }
+
+    const statusResponse = await requests.lessonSave(lesson);
+    record.amend({ saved: true });
+
+    // Add lesson to user lessons if not there
+    const myLessonsRecord = myLessons(store, RECORD_ACTIVE_USER_LESSONS_KEY);
+    const hasLesson = !!myLessonsRecord
+      .get()
+      .value?.some(({ id }) => lesson.id === id);
+
+    if (!hasLesson) {
+      myLessonsRecord.push(lesson);
+    }
+
+    return statusResponse;
+  }),
 );
 
 const myLessons = records.createRecord(

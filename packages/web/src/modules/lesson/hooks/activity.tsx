@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useCallback } from 'react';
 import { Chapter, LessonActivity, User } from '@chess-tent/models';
-import { hooks } from '@application';
+import { hooks, records } from '@application';
 import {
   ActivityFilters,
   GetRequestFetchArgs,
@@ -14,6 +14,7 @@ import { ActivityData } from '../components/activity-form';
 import { createLessonActivity, createNewLesson } from '../service';
 
 const { useRecordInit, useHistory, usePrompt } = hooks;
+const { isInitialized } = records;
 
 export const useUserTrainings: Hooks['useUserTrainings'] = (user: User) => {
   const record = useRecordInit(userTrainings, `trainings-${user.id}`);
@@ -27,7 +28,7 @@ export const useUserTrainings: Hooks['useUserTrainings'] = (user: User) => {
   );
 
   useEffect(() => {
-    if (record.get().meta.loading) {
+    if (isInitialized(record)) {
       return;
     }
     record.load(filters);
@@ -57,7 +58,7 @@ export const useUserScheduledTrainings: Hooks['useUserScheduledTrainings'] = (
   );
 
   useEffect(() => {
-    if (record.get().meta.loading) {
+    if (isInitialized(record)) {
       return;
     }
     record.load(filters);

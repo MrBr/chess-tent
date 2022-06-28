@@ -30,6 +30,7 @@ const activityUpdate = services.createRequest<Requests['activityUpdate']>(
 const activities = services.createRequest<Requests['activities']>(
   'POST',
   '/activities',
+  filters => filters,
 );
 
 requests.activity = activity;

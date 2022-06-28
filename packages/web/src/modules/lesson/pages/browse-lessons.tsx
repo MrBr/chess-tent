@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { components, hooks, ui } from '@application';
 import { Tag } from '@chess-tent/models';
-import { LessonsRequest } from '@chess-tent/types';
+import { LessonsFilters } from '@chess-tent/types';
 import LessonBrowser from '../components/lesson-browser';
 
 const { Page } = components;
@@ -9,7 +9,7 @@ const { useLessons, useOpenLesson } = hooks;
 const { Headline4, Text, Container } = ui;
 
 const BrowseLessonsPage: React.FC = () => {
-  const [lessonsFilter, setLessonsFilter] = useState<LessonsRequest>({});
+  const [lessonsFilter, setLessonsFilter] = useState<LessonsFilters>({});
   const { value: lessons } = useLessons('all-lessons', lessonsFilter);
   const handleLessonClick = useOpenLesson();
 

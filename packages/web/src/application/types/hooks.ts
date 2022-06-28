@@ -5,7 +5,7 @@ import {
   GetRequestFetchArgs,
   GetRequestFetchResponse,
   ICECandidateAction,
-  LessonsRequest,
+  LessonsFilters,
   OfferAction,
   RequestFetch,
   ScheduledLessonActivityFilters,
@@ -149,10 +149,10 @@ export type Hooks = {
   useLessonMeta: (activity: Lesson) => UseMetaReturn<{ evaluation?: boolean }>;
   useLessons: (
     key: string,
-    filters?: LessonsRequest,
+    filters?: LessonsFilters,
   ) => RecordHookInit<InferInitRecord<Records['lessons']>>;
   useMyLessons: (
-    filters?: LessonsRequest,
+    filters?: LessonsFilters,
   ) => RecordHookInit<InferInitRecord<Records['activeUserLessons']>>;
   useCoaches: (
     user: User,

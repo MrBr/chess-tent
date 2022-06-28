@@ -1,8 +1,10 @@
 import {
   Endpoints,
+  GetEndpointData,
   InviteUserParams,
   LessonActivityFilters,
   LessonUpdates,
+  Pagination,
   PaginationBucket,
   RegisterRequestParams,
   RequestFetch,
@@ -24,7 +26,10 @@ export interface Requests {
   login: RequestFetch<Endpoints['login'], Pick<User, 'email' | 'password'>>;
   logout: RequestFetch<Endpoints['logout']>;
   me: RequestFetch<Endpoints['me']>;
-  users: RequestFetch<Endpoints['users']>;
+  users: RequestFetch<
+    Endpoints['users'],
+    [GetEndpointData<Endpoints['users']>, Pagination?]
+  >;
   user: RequestFetch<Endpoints['user'], User['id']>;
   updateMe: RequestFetch<Endpoints['updateMe']>;
 
@@ -41,8 +46,14 @@ export interface Requests {
     Endpoints['lessonUpdates'],
     [Lesson['id'], LessonUpdates]
   >;
-  lessons: RequestFetch<Endpoints['lessons']>;
-  myLessons: RequestFetch<Endpoints['myLessons']>;
+  lessons: RequestFetch<
+    Endpoints['lessons'],
+    [GetEndpointData<Endpoints['lessons']>, Pagination?]
+  >;
+  myLessons: RequestFetch<
+    Endpoints['myLessons'],
+    [GetEndpointData<Endpoints['myLessons']>, Pagination?]
+  >;
 
   activity: RequestFetch<Endpoints['activity'], Activity['id']>;
   activityPatch: RequestFetch<
@@ -55,7 +66,10 @@ export interface Requests {
     Endpoints['activityUpdate'],
     [Activity['id'], SubjectPathUpdate[]]
   >;
-  activities: RequestFetch<Endpoints['activities']>;
+  activities: RequestFetch<
+    Endpoints['activities'],
+    [GetEndpointData<Endpoints['activities']>, Pagination?]
+  >;
   scheduledTrainings: RequestFetch<
     Endpoints['trainings'],
     Omit<ScheduledLessonActivityFilters, 'subjectType'>

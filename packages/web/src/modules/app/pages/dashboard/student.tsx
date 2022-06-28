@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { components, hooks, ui } from '@application';
 import { Tag, User } from '@chess-tent/models';
-import { LessonsRequest } from '@chess-tent/types';
+import { LessonsFilters } from '@chess-tent/types';
 import Welcome from './welcome';
 
 const { Page, Coaches, LessonBrowser, Trainings } = components;
@@ -13,7 +13,7 @@ const DashboardStudent = ({ user }: { user: User }) => {
   const handleTrainingClick = useOpenTraining();
   const handleLessonClick = useOpenLesson();
 
-  const [lessonsFilter, setLessonsFilter] = useState<LessonsRequest>({
+  const [lessonsFilter, setLessonsFilter] = useState<LessonsFilters>({
     owner: user.id,
   });
   const { value: lessons } = useLessons(`lessons`, lessonsFilter);

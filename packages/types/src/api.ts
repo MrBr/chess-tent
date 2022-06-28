@@ -24,7 +24,7 @@ export interface DateRange {
   to?: Date;
 }
 
-export type LessonsRequest = {
+export type LessonsFilters = {
   owner?: User['id'];
   users?: User['id'][];
   search?: string;
@@ -33,13 +33,14 @@ export type LessonsRequest = {
   hasDocId?: boolean;
   published?: boolean;
 };
-export type MyLessonsRequest = Omit<LessonsRequest, 'users' | 'owner'>;
+export type MyLessonsFilters = Omit<LessonsFilters, 'users' | 'owner'>;
 export type UpdateNotificationsRequest = {
   ids: Notification['id'][];
   updates: Partial<Pick<Notification, 'seen' | 'read' | 'state' | 'timestamp'>>;
 };
 export type PaginationBucket = number | undefined;
 export type Pagination = { skip?: number; size: number };
+export type WithPagination = { pagination?: Pagination };
 
 export interface StatusResponse {
   error: string | null;
@@ -101,11 +102,6 @@ export interface RequestPut<URL extends string, DATA = ApiEmptyData>
 export interface RequestDelete<URL extends string>
   extends Request<'DELETE', URL, undefined> {}
 
-export interface RequestData<DATA, META> {
-  data: DATA;
-  meta: META;
-}
-
 export interface API {
   basePath: string;
   makeRequest: <ENDPOINT extends Endpoint<any, any>>(
@@ -151,8 +147,8 @@ export type GetEndpointResponse<T extends Endpoint<any, any>> =
 
 export type RequestFetch<
   ENDPOINT extends Endpoint<any, any>,
-  T = GetEndpointData<ENDPOINT>,
-> = (...args: GenericArguments<T>) => Promise<GetEndpointResponse<ENDPOINT>>;
+  DATA = GetEndpointData<ENDPOINT>,
+> = (...args: GenericArguments<DATA>) => Promise<GetEndpointResponse<ENDPOINT>>;
 
 export type GetRequestFetchEndpoint<T> = T extends RequestFetch<
   infer ENDPOINT,
@@ -193,6 +189,14 @@ export type InviteUserParams = {
   link: string;
 };
 
+export type UsersFilters = {
+  coach?: boolean;
+  name?: string;
+  search?: string;
+  studentElo?: CoachEloRange;
+  tagIds?: Tag['id'][];
+};
+
 export interface Endpoints {
   // User endpoints
   register: Endpoint<
@@ -210,19 +214,7 @@ export interface Endpoints {
   logout: Endpoint<RequestGet<'/logout'>, StatusResponse>;
   me: Endpoint<RequestGet<'/me'>, UserResponse>;
   updateMe: Endpoint<RequestPut<'/me', Partial<User>>, UserResponse>;
-  users: Endpoint<
-    RequestPost<
-      '/users',
-      {
-        coach?: boolean;
-        name?: string;
-        search?: string;
-        studentElo?: CoachEloRange;
-        tagIds?: Tag['id'][];
-      }
-    >,
-    UsersResponse
-  >;
+  users: Endpoint<RequestPost<'/users', UsersFilters>, UsersResponse>;
   user: Endpoint<RequestGet<`/user/${string}`>, UserResponse>;
   // Lesson endpoints
   lesson: Endpoint<RequestGet<`/lesson/${string}`>, LessonResponse>;
@@ -244,9 +236,9 @@ export interface Endpoints {
     RequestPut<`/lesson-update/${string}`, LessonUpdates>,
     StatusResponse
   >;
-  lessons: Endpoint<RequestPost<'/lessons', LessonsRequest>, LessonsResponse>;
+  lessons: Endpoint<RequestPost<'/lessons', LessonsFilters>, LessonsResponse>;
   myLessons: Endpoint<
-    RequestPost<'/my-lessons', MyLessonsRequest>,
+    RequestPost<'/my-lessons', MyLessonsFilters>,
     LessonsResponse
   >;
   // Activity endpoints
@@ -268,7 +260,7 @@ export interface Endpoints {
     StatusResponse
   >;
   activities: Endpoint<
-    RequestPost<'/activities', ActivityFilters>,
+    RequestPost<'/activities', LessonsFilters>,
     ActivitiesResponse
   >;
   scheduledTrainings: Endpoint<

@@ -13,7 +13,11 @@ const inviteUser = services.createRequest<Requests['inviteUser']>(
 
 const login = services.createRequest<Requests['login']>('POST', '/login');
 
-const users = services.createRequest<Requests['users']>('POST', '/users');
+const users = services.createRequest<Requests['users']>(
+  'POST',
+  '/users',
+  filters => filters,
+);
 
 const logout = services.createRequest<Requests['logout']>('GET', '/logout');
 

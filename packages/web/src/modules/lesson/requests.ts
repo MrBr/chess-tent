@@ -40,10 +40,15 @@ const lessonUpdates = services.createRequest<Requests['lessonUpdates']>(
   (id, update) => update,
 );
 
-const lessons = services.createRequest<Requests['lessons']>('POST', '/lessons');
+const lessons = services.createRequest<Requests['lessons']>(
+  'POST',
+  '/lessons',
+  filters => filters,
+);
 const myLessons = services.createRequest<Requests['myLessons']>(
   'POST',
   '/my-lessons',
+  filters => filters,
 );
 
 const trainings = services.createRequest<Requests['trainings']>(

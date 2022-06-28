@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { NormalizedUser, User } from '@chess-tent/models';
+import { WithPagination } from '@chess-tent/types';
 import { AppDocument } from '@types';
 import { compare, hash } from 'bcrypt';
 import { FilterQuery } from 'mongoose';
@@ -74,6 +75,7 @@ export const findUsers = (
     };
     speciality?: string;
   }>,
+  options: WithPagination,
 ): Promise<User[]> => {
   const query: FilterQuery<AppDocument<NormalizedUser>> =
     utils.notNullOrUndefined({
@@ -106,13 +108,16 @@ export const findUsers = (
   }
 
   return new Promise((resolve, reject) => {
-    UserModel.find(query).exec((err, result) => {
-      if (err) {
-        reject(err);
-        return;
-      }
-      resolve(result.map(item => item.toObject()));
-    });
+    UserModel.find(query)
+      // .limit()
+      // .skip()
+      .exec((err, result) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve(result.map(item => item.toObject()));
+      });
   });
 };
 

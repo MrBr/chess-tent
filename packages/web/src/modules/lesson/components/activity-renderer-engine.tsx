@@ -9,7 +9,7 @@ export class ActivityRendererAnalysisEngineCard<
 > extends React.Component<ActivityRendererModuleProps<T>> {
   render() {
     return (
-      <LessonPlaygroundCard className="stretch">
+      <LessonPlaygroundCard stretch>
         <Evaluation />
       </LessonPlaygroundCard>
     );

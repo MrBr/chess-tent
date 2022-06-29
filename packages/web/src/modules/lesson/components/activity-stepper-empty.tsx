@@ -5,11 +5,9 @@ import { hooks, ui, utils } from '@application';
 import styled from '@chess-tent/styled-props';
 
 import ChaptersImport from './chapters-import';
-import ActivityStepperNav from './activity-stepper-nav';
 
 const { Text, Icon } = ui;
 const { usePrompt } = hooks;
-const { noop } = utils;
 
 interface ActivityStepperProps {
   step?: AppStep;
@@ -50,7 +48,6 @@ const ActivityStepperEmpty = styled(
               Use chapters from templates to bootstrap the training
             </Text>
           </div>
-          <ActivityStepperNav prev={noop} next={noop} className="border-top" />
         </div>
       </>
     );

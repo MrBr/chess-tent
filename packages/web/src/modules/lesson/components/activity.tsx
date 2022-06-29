@@ -19,6 +19,7 @@ import {
 } from './activity-renderer-analysis';
 import { importLessonActivityChapters, isLessonActivity } from '../service';
 import { ActivityRendererAnalysisEngineCard } from './activity-renderer-engine';
+import { ActivityRendererNavigationCard } from './activity-renderer-navigation';
 import { ActivityRendererCommentsCard } from './activity-renderer-comments';
 
 const { useDispatchService, useActiveUserRecord } = hooks;
@@ -30,6 +31,7 @@ const LESSON_MODULES = {
     ActivityRendererStepCard,
     ActivityRendererAnalysisCard,
     ActivityRendererCommentsCard,
+    ActivityRendererNavigationCard,
   ],
 };
 
@@ -39,6 +41,7 @@ const EMPTY_LESSON_MODULES = {
     ActivityRendererAnalysisEngineCard,
     ActivityRendererAnalysisCard,
     ActivityRendererCommentsCard,
+    ActivityRendererNavigationCard,
   ],
 };
 

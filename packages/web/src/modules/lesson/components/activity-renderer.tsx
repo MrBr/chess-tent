@@ -191,8 +191,6 @@ export class ActivityRenderer<
           <LessonPlayground.Stepper>
             <Stepper
               boardState={boardState}
-              next={this.nextActivityStep}
-              prev={this.prevActivityStep}
               onStepClick={this.updateActiveStep}
               activeChapter={chapter}
               chapters={lesson.state.chapters}

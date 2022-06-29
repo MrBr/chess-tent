@@ -19,6 +19,7 @@ import {
   ActivityRendererStepCard,
 } from './activity-renderer-step';
 import { ActivityRendererAnalysisEngineCard } from './activity-renderer-engine';
+import { ActivityRendererNavigationCard } from './activity-renderer-navigation';
 
 interface PreviewProps {
   lesson: Lesson;
@@ -105,7 +106,11 @@ const Preview = ({ lesson, chapter, step }: PreviewProps) => {
       updateActivity={updateActivity}
       activityStepState={activityStepState}
       boardState={activityBoardState}
-      cards={[ActivityRendererAnalysisEngineCard, ActivityRendererStepCard]}
+      cards={[
+        ActivityRendererAnalysisEngineCard,
+        ActivityRendererStepCard,
+        ActivityRendererNavigationCard,
+      ]}
       boards={[ActivityRendererStepBoard]}
     />
   );

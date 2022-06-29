@@ -5,7 +5,6 @@ import { components, hooks } from '@application';
 import styled from '@chess-tent/styled-props';
 
 import ActivityStepperEmpty from './activity-stepper-empty';
-import ActivityStepperNav from './activity-stepper-nav';
 import ActivityStepperSteps from './activity-stepper-steps';
 import ChaptersImport from './chapters-import';
 
@@ -22,8 +21,6 @@ export interface ActivityStepperProps {
   onChapterImport?: (chapter: Chapter[]) => void;
   onChapterRemove?: (chapter: Chapter) => void;
   onChapterChange?: (chapter: Chapter) => void;
-  next: () => void;
-  prev: () => void;
 }
 
 const ActivityStepper = styled((props: ActivityStepperProps) => {
@@ -34,8 +31,6 @@ const ActivityStepper = styled((props: ActivityStepperProps) => {
     activeChapter,
     chapters,
     onChapterImport,
-    next,
-    prev,
     onChapterChange,
     onChapterRemove,
     boardState,
@@ -87,7 +82,6 @@ const ActivityStepper = styled((props: ActivityStepperProps) => {
             onStepClick={onStepClick}
           />
         </div>
-        <ActivityStepperNav prev={prev} next={next} />
       </div>
     </>
   );

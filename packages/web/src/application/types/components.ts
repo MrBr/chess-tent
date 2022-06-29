@@ -209,6 +209,8 @@ export type LessonPlaygroundCard = FunctionComponent<{
   className?: string;
   onClick?: () => void;
   active?: boolean;
+  stretch?: boolean;
+  bottom?: boolean;
 }>;
 
 export type LessonToolboxText = FunctionComponent<{

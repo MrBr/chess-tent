@@ -116,7 +116,7 @@ const PageProfile = ({
             <Info
               icon="profile"
               label="Country:"
-              info={`${country?.name} ${country?.flag}`}
+              info={`${country?.name || ''} ${country?.flag || ''}`}
             />
             <Info
               icon="published"

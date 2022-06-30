@@ -49,8 +49,6 @@ export const createLessonActivityBoard = (
   initialStepState: {} = {},
 ): LessonActivityBoardState => {
   const stepActivityState = createActivityStepState({
-    // First is automatically visited
-    // Not having it here will trigger update on the very beginning
     visited: true,
     ...initialStepState,
   });
@@ -85,7 +83,7 @@ export const updateActivityActiveStep = (
     activity,
     board,
     step,
-    createActivityStepState(),
+    createActivityStepState({ visited: true }),
     patchListener,
   );
 
@@ -99,7 +97,7 @@ export const updateActivityActiveChapter = (
     activity,
     board,
     chapter,
-    createActivityStepState(),
+    createActivityStepState({ visited: true }),
     patchListener,
   );
 

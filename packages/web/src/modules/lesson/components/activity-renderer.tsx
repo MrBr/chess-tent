@@ -40,19 +40,6 @@ function isStepCard<T extends Steps | undefined>(
 export class ActivityRenderer<
   T extends Steps | undefined,
 > extends React.Component<ActivityRendererProps<T>, ActivityRendererState> {
-  componentDidUpdate() {
-    this.resolveStepStatus();
-  }
-
-  resolveStepStatus() {
-    const { activityStepState, activity, updateActivity, boardState } =
-      this.props;
-    if (!activityStepState.visited) {
-      updateActivity(updateActivityStepState)(activity, boardState, {
-        visited: true,
-      });
-    }
-  }
   updateStepMode = (mode: ActivityStepMode) => {
     const { updateActivity, activity, boardState } = this.props;
     updateActivity(updateActivityStepState)(activity, boardState, {

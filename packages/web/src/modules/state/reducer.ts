@@ -77,8 +77,7 @@ const createEntityReducer =
         const updatedEntities: Record<string, any> = {
           ...(entities[reducerEntityType] || {}),
         };
-
-        if (type === reducerEntityType || entity) {
+        if (type === reducerEntityType && entity) {
           // Patch action is NORMALIZED
           const updatedEntity = applyPatches(entity, patch);
           updatedEntities[id] = updatedEntity;

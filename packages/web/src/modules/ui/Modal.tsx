@@ -38,9 +38,13 @@ const Modal = (({ close, fullScreen, ...props }) =>
     <BModal
       {...props}
       onHide={close}
-      dialogClassName={fullScreen ? fullScreenDialogClassName : ''}
-      contentClassName={contentClassName}
-      backdropClassName={backdropClassName}
+      dialogClassName={`${props.dialogClassName || ''} ${
+        fullScreen ? fullScreenDialogClassName : ''
+      }`}
+      contentClassName={`${contentClassName} ${props.contentClassName || ''}`}
+      backdropClassName={`${backdropClassName} ${
+        props.backdropClassName || ''
+      }`}
     >
       {props.children}
       {close && (

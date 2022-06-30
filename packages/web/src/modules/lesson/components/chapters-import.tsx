@@ -1,12 +1,13 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { components, ui } from '@application';
+import { components, ui, utils } from '@application';
 import { Chapter, Lesson } from '@chess-tent/models';
 import { RecordValue } from '@chess-tent/redux-record/types';
-import styled from '@chess-tent/styled-props';
+import styled, { css } from '@chess-tent/styled-props';
 import { useMyLessons } from '../hooks/record';
 
 const { Headline5, Text, Modal, Container, Row, Col, Icon, Check, Button } = ui;
 const { LessonTemplates } = components;
+const { noop } = utils;
 
 interface ChaptersImportProps {
   close: () => void;
@@ -21,12 +22,17 @@ interface ChaptersOptionProps {
   className?: string;
 }
 
+const { className: modalClassName } = css`
+  width: 100%;
+  max-width: 680px;
+`;
+
 const ChapterOption = styled(
   ({ onClick, label, checked, className }: ChaptersOptionProps) => {
     return (
       <Row className={className} onClick={onClick}>
         <Col xs={1}>
-          <Check checked={checked} />
+          <Check checked={checked} onChange={noop} />
         </Col>
         <Col>
           <Text className="m-0" fontSize="small">
@@ -97,9 +103,30 @@ export const ChaptersImport = ({
     [selectedLesson, chapters],
   );
 
+  let content = (
+    <>
+      <Modal.Header>
+        <Container>
+          <Headline5>Import chapter</Headline5>
+          <Text className="m-0" fontSize="extra-small">
+            Reuse chapters from existing templates
+          </Text>
+        </Container>
+      </Modal.Header>
+      <Modal.Body>
+        <Container>
+          <LessonTemplates
+            lessons={lessons}
+            onLessonClick={setSelectedLesson}
+          />
+        </Container>
+      </Modal.Body>
+    </>
+  );
+
   if (selectedLesson) {
-    return (
-      <Modal show close={close}>
+    content = (
+      <>
         <Modal.Header>
           <Container>
             <Row>
@@ -127,6 +154,7 @@ export const ChaptersImport = ({
             />
             {selectedLesson.state.chapters.map(chapter => (
               <ChapterOption
+                key={chapter.id}
                 label={chapter.state.title}
                 onClick={() => toggleChapter(chapter)}
                 checked={!!chapters[chapter.id]}
@@ -150,28 +178,13 @@ export const ChaptersImport = ({
             Import
           </Button>
         </Modal.Footer>
-      </Modal>
+      </>
     );
   }
 
   return (
-    <Modal show close={close}>
-      <Modal.Header>
-        <Container>
-          <Headline5>Import chapter</Headline5>
-          <Text className="m-0" fontSize="extra-small">
-            Reuse chapters from existing templates
-          </Text>
-        </Container>
-      </Modal.Header>
-      <Modal.Body>
-        <Container>
-          <LessonTemplates
-            lessons={lessons}
-            onLessonClick={setSelectedLesson}
-          />
-        </Container>
-      </Modal.Body>
+    <Modal show close={close} dialogClassName={modalClassName}>
+      {content}
     </Modal>
   );
 };

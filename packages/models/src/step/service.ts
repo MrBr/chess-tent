@@ -261,6 +261,17 @@ const updateNestedStep = createService(
   },
 );
 
+const flattenSteps = (stepRoot: StepRoot, steps: Step[] = []) => {
+  let index = 0;
+  while (index < stepRoot.state.steps.length) {
+    const step = stepRoot.state.steps[index];
+    steps.push(step);
+    flattenSteps(step, steps);
+    index += 1;
+  }
+  return steps;
+};
+
 const createStep = <T>(
   id: string,
   stepType: T extends Step<infer U, infer K> ? K : never,
@@ -297,4 +308,5 @@ export {
   updateStepState,
   addStepToLeft,
   replaceStep,
+  flattenSteps,
 };

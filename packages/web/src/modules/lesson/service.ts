@@ -31,6 +31,8 @@ import {
   User,
 } from '@chess-tent/models';
 
+import { LESSON_ACTIVITY_ANALYSIS_STEP_ID } from './constants';
+
 const { createStep } = services;
 const { generateIndex } = utils;
 const { START_FEN } = constants;
@@ -107,11 +109,14 @@ export const removeActivityChapter = createService(
     board: LessonActivityBoardState,
     chapter: Chapter,
   ) => {
-    const fallbackBoardState = createLessonActivityBoard(
-      undefined,
-      'analysis-step',
+    const fallbackStepState = createActivityStepState();
+    const fallbackStepId = LESSON_ACTIVITY_ANALYSIS_STEP_ID;
+    modelRemoveActivityChapter(
+      draft,
+      chapter,
+      fallbackStepState,
+      fallbackStepId,
     );
-    modelRemoveActivityChapter(draft, board, chapter, fallbackBoardState);
   },
 );
 
@@ -130,7 +135,7 @@ export const createLessonActivity = (
   const activeStepId =
     boardState?.activeStepId ||
     lesson.state.chapters[0]?.state.steps[0].id ||
-    'analysis-step';
+    LESSON_ACTIVITY_ANALYSIS_STEP_ID;
 
   const roles = [
     ...createRoles(owner, LessonActivityRole.OWNER),

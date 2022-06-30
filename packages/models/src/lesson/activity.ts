@@ -1,4 +1,4 @@
-import { Step } from '../step';
+import { flattenSteps, Step } from '../step';
 import { Chapter } from '../chapter';
 import { Analysis } from '../analysis';
 import { createService } from '../_helpers';
@@ -100,23 +100,39 @@ export const updateActivityStepState = createService(
   },
 );
 
+export const removeActivityBoardStepSate = createService(
+  (draft: LessonActivity, board: LessonActivityBoardState, stepId: string) => {
+    const state = getLessonActivityBoardState(draft, board.id);
+    delete state[stepId];
+  },
+);
+
 export const removeActivityChapter = createService(
   (
     draft: LessonActivity,
-    board: LessonActivityBoardState,
     chapter: Chapter,
-    fallbackBoard: LessonActivityBoardState,
+    fallbackStepState: {},
+    fallbackStepId: string,
   ) => {
     removeChapterFromLesson(draft.subject, chapter);
-    const state = getLessonActivityBoardState(draft, board.id);
-    const newActiveChapter = draft.subject.state.chapters[0];
-    if (newActiveChapter) {
-      state.activeChapterId = newActiveChapter.id;
-      state.activeStepId = newActiveChapter.state.steps[0].id;
-    } else {
-      delete draft.state.boards[board.id];
-      draft.state.boards[fallbackBoard.id] = fallbackBoard;
-      draft.state.mainBoardId = fallbackBoard.id;
-    }
+
+    const steps = flattenSteps(chapter);
+
+    Object.values(draft.state.boards).forEach(boardState => {
+      const newActiveChapter = draft.subject.state.chapters[0];
+
+      // Cleanup deleted chapter step states from the board
+      steps.forEach(({ id }) => {
+        delete boardState[id];
+      });
+
+      if (boardState.activeChapterId === chapter.id && newActiveChapter) {
+        boardState.activeChapterId = newActiveChapter.id;
+        boardState.activeStepId = newActiveChapter.state.steps[0].id;
+      } else if (!newActiveChapter) {
+        boardState.activeStepId = fallbackStepId;
+        boardState[fallbackStepId] = { ...fallbackStepState };
+      }
+    });
   },
 );

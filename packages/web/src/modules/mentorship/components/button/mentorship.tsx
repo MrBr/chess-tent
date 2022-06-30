@@ -23,7 +23,7 @@ export default (({ user, className, textual }) => {
   return (
     <Button
       size="extra-small"
-      onClick={() => !coach && requestMentorship(me, user)}
+      onClick={() => !coach && requestMentorship(user, me)}
       disabled={loading}
       className={className}
       variant={textual ? 'text' : coach ? 'primary' : 'secondary'}

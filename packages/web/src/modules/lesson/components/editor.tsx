@@ -11,6 +11,7 @@ import {
   addChapterToLesson,
   Lesson,
   getNextStep,
+  getRightStep,
 } from '@chess-tent/models';
 import {
   Actions,
@@ -237,9 +238,10 @@ class EditorRenderer extends React.Component<
     // It's very helpful behavior that only selected step can be deleted
     // It makes undo action much simpler regarding setting new active step
     const { activeChapter, history } = this.props;
-    const newActiveStep = getPreviousStep(activeChapter, step);
+    const newActiveStep =
+      getPreviousStep(activeChapter, step) || getRightStep(activeChapter, step);
+
     if (!newActiveStep) {
-      // Don't allow deleting first step (for now)
       return;
     }
 

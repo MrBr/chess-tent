@@ -69,6 +69,9 @@ const getPreviousStep = (
   return null;
 };
 
+/**
+ * The next step horizontally or vertically.
+ */
 const getNextStep = (
   parent: Step | StepRoot,
   cursorStep: Step,
@@ -99,6 +102,9 @@ const getNextStep = (
   return null;
 };
 
+/**
+ * The next horizontal step. The same depth level.
+ */
 const getRightStep = (
   parent: Step | StepRoot,
   cursorStep: Step,

@@ -112,7 +112,9 @@ const StyledInputGroup = styled(InputGroup).css`
 StyledInputGroup.Text = InputGroupText;
 
 const Check = BForm.Check;
-const File = (props: any) => <BForm.Control {...props} type="file" />;
+const File = React.forwardRef<HTMLInputElement, ComponentProps<UI['File']>>(
+  (props, ref) => <BForm.Control {...props} ref={ref} type="file" />,
+);
 
 // Form connected components
 const Form: UI['Form'] = props => (

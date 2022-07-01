@@ -3,66 +3,18 @@ import React, {
   useCallback,
   useEffect,
   useState,
-  useRef,
 } from 'react';
 import { services, ui, hooks, constants } from '@application';
 import { ChessboardFooterProps } from '@types';
 import EditBoardToggle from './edit';
+import PGNModal from './pgn-import';
 
-const {
-  Modal,
-  Button,
-  Col,
-  Row,
-  Input,
-  Tooltip,
-  OverlayTrigger,
-  FormGroup,
-  Icon,
-} = ui;
+const { Col, Row, Input, Tooltip, OverlayTrigger, Icon } = ui;
 const { Chess, createNotableMovesFromGame } = services;
 const { START_FEN } = constants;
 const { usePrompt } = hooks;
 
 const chess = new Chess();
-
-const PGNModal = ({
-  onImport,
-  close,
-}: {
-  onImport: (pgn: string) => void;
-  close: () => void;
-}) => {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const handleImport = () => {
-    close();
-    if (inputRef.current) {
-      onImport(inputRef.current.value);
-    }
-  };
-
-  return (
-    <Modal close={close} show>
-      <Modal.Header>Import a PGN</Modal.Header>
-      <Modal.Body>
-        <FormGroup>
-          <Input
-            as="textarea"
-            ref={inputRef}
-            rows={25}
-            placeholder="Paste PGN here"
-            size="small"
-          />
-        </FormGroup>
-      </Modal.Body>
-      <Modal.Footer>
-        <Button onClick={handleImport} size="small">
-          Import
-        </Button>
-      </Modal.Footer>
-    </Modal>
-  );
-};
 
 const Footer: FunctionComponent<ChessboardFooterProps> = ({
   updateEditing,

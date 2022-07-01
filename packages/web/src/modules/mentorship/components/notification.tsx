@@ -1,10 +1,11 @@
 import React from 'react';
 import { NotificationComponent } from '@types';
 import { Notification } from '@chess-tent/models';
-import { hooks, ui } from '@application';
+import { components, hooks, ui } from '@application';
 
-const { ToastHeader, ToastBody, Text, Dropdown, Button } = ui;
+const { ToastHeader, ToastBody, Text, Button } = ui;
 const { useHistory } = hooks;
+const { NotificationStandItem } = components;
 
 export const Toast: NotificationComponent<
   Notification & {
@@ -43,11 +44,11 @@ export const DropdownItem: NotificationComponent<
   const history = useHistory();
   const { text } = notification.state;
   return (
-    <Dropdown.Item onClick={() => history.push('/me/students')}>
-      <Text weight={700} fontSize="small">
+    <NotificationStandItem onClick={() => history.push('/me/students')}>
+      <Text weight={500} fontSize="small">
         Mentorship request
       </Text>
       <Text fontSize="extra-small">{text}</Text>
-    </Dropdown.Item>
+    </NotificationStandItem>
   );
 };

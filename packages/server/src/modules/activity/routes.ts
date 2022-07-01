@@ -1,18 +1,27 @@
 import application, { middleware } from '@application';
 import { ActivityFilters } from '@chess-tent/types';
+import { LessonActivityRole, Role, TYPE_ACTIVITY } from '@chess-tent/models';
 import {
   canEditActivity,
-  getActivity,
-  saveActivity,
-  findActivities,
-  updateActivity,
   deleteActivity,
+  findActivities,
+  getActivity,
   patchActivity,
+  saveActivity,
+  sendActivity,
+  updateActivity,
 } from './middleware';
 
-const { identify, sendData, sendStatusOk, toLocals } = middleware;
+const {
+  identify,
+  sendData,
+  sendStatusOk,
+  toLocals,
+  sendNotifications,
+  createNotifications,
+  conditional,
+} = middleware;
 
-console.warn('TODO - activity notification flow');
 application.service.registerPostRoute(
   '/activity/save',
   identify,
@@ -25,17 +34,24 @@ application.service.registerPostRoute(
   // - configure notifications to accept multiple users - notification.users
   // - configure notification.type instead of notificationType
   // - create/send notification should be the same?
-  // toLocals('user', (req, res) => res.locals.activity.owner),
-  // toLocals('notificationType', TYPE_ACTIVITY),
-  // toLocals('state', (req, res) => ({
-  //   activityId: res.locals.activity.id,
-  //   activityTitle: res.locals.activity.subject.state.title,
-  // })),
-  // createNotification,
-  // sendNotification,
-  // TODO - Distinct create and update; send only on create
-  // sendActivity,
-
+  conditional((req, res) => !res.locals.activity.v)(
+    toLocals('notification.users', (req, res) =>
+      res.locals.activity.roles
+        .map(
+          ({ user, role }: Role<LessonActivityRole>) =>
+            role === LessonActivityRole.STUDENT && user,
+        )
+        .filter(Boolean),
+    ),
+    toLocals('notification.type', TYPE_ACTIVITY),
+    toLocals('notification.state', (req, res) => ({
+      activityId: res.locals.activity.id,
+      activityTitle: res.locals.activity.subject.state.title,
+    })),
+    createNotifications,
+    sendNotifications,
+    sendActivity,
+  ),
   sendStatusOk,
 );
 

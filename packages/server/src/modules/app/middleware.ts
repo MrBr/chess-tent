@@ -1,5 +1,5 @@
-import { ErrorRequestHandler } from 'express';
-import { Middleware } from '@types';
+import { ErrorRequestHandler, RequestHandler } from 'express';
+import { Middleware, MiddlewareFunction } from '@types';
 import { set } from 'lodash';
 
 // Note - next has to be here; express uses arguments count to determine function signature
@@ -73,3 +73,31 @@ export const toLocals: Middleware['toLocals'] =
     set(args[1].locals, localsKey, localValue);
     next();
   };
+
+const execChainedMiddleware = async (
+  chainedMiddleware: MiddlewareFunction[],
+  ...args: Parameters<RequestHandler>
+) => {
+  let index = 0;
+  const next = args[2];
+  const middlewareArgs = [...args];
+  const stubNext = async () => {
+    const nextMiddleware = chainedMiddleware[index];
+    if (!nextMiddleware) {
+      next();
+      return;
+    }
+    await nextMiddleware(...args);
+    index++;
+    await stubNext();
+  };
+  middlewareArgs[2] = stubNext;
+  await stubNext();
+};
+export const conditional: Middleware['conditional'] =
+  test =>
+  (...chainedMiddleware) =>
+  async (...args) =>
+    test(...args)
+      ? execChainedMiddleware(chainedMiddleware, ...args)
+      : args[2]();

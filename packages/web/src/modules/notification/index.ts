@@ -23,6 +23,12 @@ application.register(
   },
 );
 application.register(
+  () => import('./components/stand-item'),
+  module => {
+    application.components.NotificationStandItem = module.default;
+  },
+);
+application.register(
   () => import('./components/render'),
   module => {
     application.components.NotificationRender = module.default;

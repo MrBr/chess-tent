@@ -75,7 +75,7 @@ export const findUsers = (
     };
     speciality?: string;
   }>,
-  options: WithPagination,
+  options?: WithPagination,
 ): Promise<User[]> => {
   const query: FilterQuery<AppDocument<NormalizedUser>> =
     utils.notNullOrUndefined({

@@ -12,8 +12,8 @@ const {
   sendData,
   sendStatusOk,
   toLocals,
-  sendNotification,
-  createNotification,
+  sendNotifications,
+  createNotifications,
 } = middleware;
 
 application.service.registerPostRoute(
@@ -24,14 +24,14 @@ application.service.registerPostRoute(
   requestMentorship,
 
   // Notification flow
-  toLocals('user', (req, res) => res.locals.mentorship.coach),
-  toLocals('notificationType', TYPE_MENTORSHIP),
-  toLocals('state', (req, res) => ({
+  toLocals('notification.users', (req, res) => [res.locals.mentorship.coach]),
+  toLocals('notification.type', TYPE_MENTORSHIP),
+  toLocals('notification.state', (req, res) => ({
     text: `${res.locals.mentorship.student.name} requested mentorship`,
     student: res.locals.mentorship.student.id,
   })),
-  createNotification,
-  sendNotification,
+  createNotifications,
+  sendNotifications,
 
   sendData('mentorship'),
 );

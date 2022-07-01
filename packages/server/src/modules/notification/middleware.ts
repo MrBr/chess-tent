@@ -1,38 +1,55 @@
 import { service, socket } from '@application';
 import { MiddlewareFunction } from '@types';
 import { SEND_NOTIFICATION } from '@chess-tent/types';
-import { createNotification as modelCreateNotification } from '@chess-tent/models';
+import {
+  createNotification as modelCreateNotification,
+  Notification,
+  User,
+} from '@chess-tent/models';
 import * as notificationService from './service';
 
 import { NotificationNotPreparedError } from './errors';
 
-export const createNotification: MiddlewareFunction = (req, res, next) => {
-  const notification = modelCreateNotification(
-    service.generateIndex(),
-    res.locals.user,
-    res.locals.notificationType,
-    res.locals.state,
+export const createNotifications: MiddlewareFunction = async (
+  req,
+  res,
+  next,
+) => {
+  const notifications = res.locals.notification.users.map((user: User) =>
+    modelCreateNotification(
+      service.generateIndex(),
+      user,
+      res.locals.notification.type,
+      res.locals.notification.state,
+    ),
   );
-  notificationService
-    .saveNotification(notification)
+
+  await Promise.all(
+    notifications.map((notification: Notification) =>
+      notificationService.saveNotification(notification),
+    ),
+  )
     .then(() => {
-      res.locals.notification = notification;
+      res.locals.notifications = notifications;
       next();
     })
     .catch(next);
 };
 
-export const sendNotification: MiddlewareFunction = (req, res, next) => {
-  const notification = res.locals.notification;
-  if (!notification) {
+export const sendNotifications: MiddlewareFunction = (req, res, next) => {
+  const notifications = res.locals.notifications;
+  if (!notifications) {
     throw new NotificationNotPreparedError();
   }
 
-  socket.sendServerAction(`user-${notification.user.id}`, {
-    type: SEND_NOTIFICATION,
-    payload: notification,
-    meta: {},
+  notifications.forEach((notification: Notification) => {
+    socket.sendServerAction(`user-${notification.user.id}`, {
+      type: SEND_NOTIFICATION,
+      payload: notification,
+      meta: {},
+    });
   });
+
   next();
 };
 

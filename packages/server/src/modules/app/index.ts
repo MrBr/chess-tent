@@ -5,6 +5,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import {
   catchError,
+  conditional,
   errorHandler,
   logLocal,
   sendData,
@@ -32,6 +33,7 @@ application.middleware.logLocal = logLocal;
 application.middleware.validate = validate;
 application.middleware.toLocals = toLocals;
 application.middleware.catchError = catchError;
+application.middleware.conditional = conditional;
 application.service.registerGetRoute = (path, ...middlware) =>
   app.get(process.env.API_BASE_PATH + path, ...middlware);
 application.service.registerPostRoute = (path, ...middlware) =>

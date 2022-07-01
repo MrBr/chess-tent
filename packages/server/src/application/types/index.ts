@@ -152,6 +152,9 @@ export type Service = {
 
 export type MailData = Parameters<Messages['send']>[0];
 export type Middleware = {
+  conditional: (
+    controller: MiddlewareFunction<boolean>,
+  ) => (...args: MiddlewareFunction[]) => MiddlewareFunction;
   identify: (...args: Parameters<RequestHandler>) => void;
   errorHandler: ErrorRequestHandler;
   sendData: (localProp: string) => MiddlewareFunction;
@@ -182,8 +185,8 @@ export type Middleware = {
   webLogin: (...args: Parameters<RequestHandler>) => void;
   webLogout: (...args: Parameters<RequestHandler>) => void;
   sendStatusOk: (...args: Parameters<RequestHandler>) => void;
-  sendNotification: (...args: Parameters<RequestHandler>) => void;
-  createNotification: (...args: Parameters<RequestHandler>) => void;
+  sendNotifications: (...args: Parameters<RequestHandler>) => void;
+  createNotifications: (...args: Parameters<RequestHandler>) => void;
   updateNotifications: (...args: Parameters<RequestHandler>) => void;
   createInitialFounderConversation: (
     ...args: Parameters<RequestHandler>
@@ -204,7 +207,9 @@ export type Middleware = {
       | ((...args: Parameters<RequestHandler>) => void),
   ) => (...args: Parameters<RequestHandler>) => void;
 };
-export type MiddlewareFunction = (...args: Parameters<RequestHandler>) => void;
+export type MiddlewareFunction<T = void> = (
+  ...args: Parameters<RequestHandler>
+) => T;
 
 export type Utils = {
   notNullOrUndefined: <T>(object: T) => T;

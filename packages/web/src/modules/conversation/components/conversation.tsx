@@ -79,8 +79,8 @@ export default styled<{
 
   return (
     <>
-      <Offcanvas.Header>
-        <Row className="g-0 align-items-center">
+      <Offcanvas.Header closeButton={false} className="flex-column">
+        <Row className="g-0 align-items-center w-100">
           <Col className="col-auto me-1">
             <Icon type="left" size="extra-small" onClick={close} />
           </Col>
@@ -91,9 +91,9 @@ export default styled<{
             <Headline5 className="m-0">{participant.name}</Headline5>
           </Col>
         </Row>
-        <Row>
+        <Row className="w-100">
           <Col>
-            <MentorshipButton user={participant} className="mt-3" />
+            <MentorshipButton user={participant} className="mt-4" />
           </Col>
         </Row>
       </Offcanvas.Header>

@@ -25,4 +25,6 @@ Offcanvas.Header = styled(Offcanvas.Header).css`
   }
 `;
 
+Offcanvas.Header.defaultProps = { ...Offcanvas.Header, closeButton: true };
+
 application.ui.Offcanvas = Offcanvas;

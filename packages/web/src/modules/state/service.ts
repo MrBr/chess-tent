@@ -1,4 +1,4 @@
-import { utils } from 'application';
+import { utils } from '@application';
 import { ReversiblePatch } from '@chess-tent/models';
 
 export const normalizePatches = (

@@ -7,7 +7,7 @@ import {
   canAccessLesson as canAccessLessonService,
 } from '@chess-tent/models';
 import { AppDocument } from '@types';
-import { LessonsRequest, LessonUpdates } from '@chess-tent/types';
+import { LessonsFilters, LessonUpdates } from '@chess-tent/types';
 import { FilterQuery } from 'mongoose';
 import { utils, db, service } from '@application';
 import { LessonModel, depopulate, DepupulatedLesson } from './model';
@@ -150,7 +150,7 @@ export const updateLessonSteps = (
 };
 
 export const findLessons = (
-  filters: Partial<LessonsRequest>,
+  filters: Partial<LessonsFilters>,
 ): Promise<Lesson[]> =>
   new Promise(resolve => {
     const owner = utils.notNullOrUndefined({

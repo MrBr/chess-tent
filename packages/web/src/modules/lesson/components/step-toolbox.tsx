@@ -112,13 +112,17 @@ const StepToolbox: Components['StepToolbox'] = ({
     };
   }, [active, toolboxRef, setVisible]);
 
-  const pasteAdd = () => {
+  const pasteAdd: ReactEventHandler = event => {
+    // Same as pasteReplace
+    event.stopPropagation();
     const copiedStep = getCopiedStep() as Steps;
     updateStep(addStepNextToTheComments(step as Steps, copiedStep as Steps));
     setActiveStep(copiedStep);
   };
 
-  const pasteReplace = () => {
+  const pasteReplace: ReactEventHandler = event => {
+    // The modal is placed inside the step container hence clicking on the modal triggers events on the step that are unwanted
+    event.stopPropagation();
     const copiedStep = getCopiedStep() as Steps;
     const parent = getParentStep(stepRoot, step) as StepRoot;
     const updatedParent = replaceStep(parent, step, copiedStep);

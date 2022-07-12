@@ -147,7 +147,11 @@ export class ActivityRendererAnalysisCard<
     const isActive = isActivityStepAnalysing(activityStepState);
 
     return (
-      <LessonPlaygroundCard active={isActive} onClick={this.setAnalysingMode}>
+      <LessonPlaygroundCard
+        active={isActive}
+        onClick={this.setAnalysingMode}
+        className="overflow-visible"
+      >
         <Row className="align-items-center mb-3">
           <Col className="col-auto">
             <ActivityStep active={isActive}>

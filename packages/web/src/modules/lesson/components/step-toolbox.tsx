@@ -206,6 +206,7 @@ const StepToolbox: Components['StepToolbox'] = ({
   };
 
   // Used to prevent scrollbar flickering
+  // TODO - make it configurable
   /** @see Editor */
   const getToolboxContainer = () =>
     (toolboxRef.current?.closest('.editor') as HTMLElement) || null;

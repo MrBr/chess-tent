@@ -28,15 +28,17 @@ class AnalysisSidebar extends Analysis<
     }
 
     return (
-      <Stepper
-        stepRoot={analysis}
-        setActiveStep={this.setActiveStep}
-        activeStep={step}
-        updateStep={this.updateStep}
-        removeStep={this.removeStep}
-        renderToolbox={this.renderToolbox}
-        updateChapter={noop}
-      />
+      <section className="editor">
+        <Stepper
+          stepRoot={analysis}
+          setActiveStep={this.setActiveStep}
+          activeStep={step}
+          updateStep={this.updateStep}
+          removeStep={this.removeStep}
+          renderToolbox={this.renderToolbox}
+          updateChapter={noop}
+        />
+      </section>
     );
   }
 }

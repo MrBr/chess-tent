@@ -3,8 +3,9 @@ import { components, hooks, ui } from '@application';
 
 import HeaderContainer from './container';
 
-const { Col, Button, SearchBox } = ui;
-const { NotificationStand, Invitation, ConversationsStand } = components;
+const { Col, Button } = ui;
+const { NotificationStand, Invitation, ConversationsStand, Search } =
+  components;
 const { useHistory } = hooks;
 
 // Default dashboard header
@@ -14,7 +15,7 @@ const HeaderDashboard: ComponentType = () => {
   return (
     <HeaderContainer>
       <Col>
-        <SearchBox onSearch={console.log} />
+        <Search />
       </Col>
       <Col className="d-flex align-items-center justify-content-end">
         <ConversationsStand />

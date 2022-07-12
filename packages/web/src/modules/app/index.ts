@@ -4,6 +4,12 @@ application.register(() => import('./components'));
 application.register(() => import('./provider'));
 application.register(() => import('./routes'));
 application.register(
+  () => import('./service/search'),
+  module => {
+    application.services.registerSearchable = module.register;
+  },
+);
+application.register(
   () => import('./pages/home'),
   module => {
     application.pages.Home = module.default;

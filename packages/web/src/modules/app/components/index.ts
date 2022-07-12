@@ -60,3 +60,4 @@ application.register(
     application.components.Share = module.default;
   },
 );
+application.register(() => import('./search'));

@@ -20,6 +20,18 @@ application.register(
   },
 );
 application.register(
+  () => import('./search/lessons'),
+  module => {
+    application.services.registerSearchable(module.LessonsSearchable);
+  },
+);
+application.register(
+  () => import('./search/studies'),
+  module => {
+    application.services.registerSearchable(module.StudiesSearchable);
+  },
+);
+application.register(
   () => import('./hooks/record'),
   module => {
     application.hooks.useLesson = module.useLesson;

@@ -57,4 +57,11 @@ application.register(
   },
 );
 
+application.register(
+  () => import('./search'),
+  module => {
+    application.services.registerSearchable(module.CoachSearchable);
+  },
+);
+
 application.model.userSchema = userSchema;

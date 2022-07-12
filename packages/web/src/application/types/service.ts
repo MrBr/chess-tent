@@ -45,6 +45,7 @@ import {
   NotificationRenderer,
   StepModules,
 } from './index';
+import { Searchable } from './search';
 
 export type Services = {
   Chess: {
@@ -104,6 +105,7 @@ export type Services = {
   // Allow modules to inject their own non dependant Providers
   addProvider: (provider: ComponentType) => void;
   addRoute: (route: ComponentType) => void;
+
   api: API;
   createRequest<T extends RequestFetch<any, any>>(
     method: GetRequestFetchMethod<T>,
@@ -154,6 +156,7 @@ export type Services = {
     notificationType: Notification['notificationType'],
     renderer: T extends Notification ? NotificationRenderer<T> : never,
   ) => void;
+  registerSearchable(searchable: Searchable): void;
   isMentorship: (
     mentorship: Mentorship[],
     student: User,

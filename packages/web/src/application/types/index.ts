@@ -33,6 +33,7 @@ export * from './model';
 export * from './hooks';
 export * from './state';
 export * from './service';
+export * from './search';
 export * from './utils';
 export * from './pages';
 export * from './notification';

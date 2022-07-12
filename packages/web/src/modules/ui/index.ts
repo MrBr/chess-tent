@@ -29,7 +29,6 @@ import {
   Headline6,
   Text,
 } from './Text';
-import SearchBox from './SearchBox';
 import { Avatar, Img, Thumbnail } from './Img';
 import Card from './Card';
 import CardEmpty from './CardEmpty';
@@ -99,7 +98,6 @@ application.ui.Headline4 = Headline4;
 application.ui.Headline5 = Headline5;
 application.ui.Headline6 = Headline6;
 application.ui.Text = Text;
-application.ui.SearchBox = SearchBox;
 
 application.ui.Tooltip = Tooltip;
 application.ui.Overlay = Overlay;

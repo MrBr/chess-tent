@@ -361,6 +361,7 @@ export type RenderPropComponentType = ComponentType<{
 
 export type Components = {
   ConferencingProvider: ComponentType<{ room: string }>;
+  Search: ComponentType<ClassNameProps>;
   ConferencingPeer: ComponentType<{
     fromUserId: string;
     toUserId: string;

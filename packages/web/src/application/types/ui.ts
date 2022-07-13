@@ -55,6 +55,7 @@ import type {
   SingleValue,
 } from 'react-select';
 import type { AsyncProps as AsyncSelectProps } from 'react-select/async';
+import { SliderProps } from 'rc-slider';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { ClassNameProps, ClickProps } from './_helpers';
 import { HtmlProps } from './hoc';
@@ -304,7 +305,7 @@ export type UI = {
       props: SelectProps<T, M> & { name: string } & UISelectProps,
     ) => ReactElement;
   };
-  SearchBox: UIComponent<SearchBoxProps>;
+  Slider: UIComponent<SliderProps>;
   Text: UIComponent<TextProps>;
   Hero: UIComponent<TextProps>;
   Headline1: UIComponent<TextProps>;

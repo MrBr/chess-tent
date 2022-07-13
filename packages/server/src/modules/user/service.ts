@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { NormalizedUser, User } from '@chess-tent/models';
 import { WithPagination } from '@chess-tent/types';
 import { AppDocument } from '@types';
@@ -84,17 +83,12 @@ export const findUsers = (
     });
 
   if (filters.studentElo) {
-    const studentEloFilter: { $gt?: number; $lte?: number } = {};
     if (filters.studentElo.from) {
-      studentEloFilter['$gt'] = filters.studentElo.from;
+      query['state.studentEloMin'] = { $lte: filters.studentElo.from };
     }
 
     if (filters.studentElo.to) {
-      studentEloFilter['$lte'] = filters.studentElo.to;
-    }
-
-    if (!_.isEmpty(studentEloFilter)) {
-      query['state.studentElo'] = studentEloFilter;
+      query['state.studentEloMax'] = { $gte: filters.studentElo.to };
     }
   }
 

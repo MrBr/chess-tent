@@ -101,7 +101,14 @@ const PageProfile = ({
     >
       {conversationOffset}
       <Container fluid className="px-5 py-4">
-        <Headline4 className="mb-0">{user.name}</Headline4>
+        <Headline4 className="mb-0">
+          {user.name}{' '}
+          {user.state.elo && (
+            <Text color="grey" inline>
+              ({user.state.elo})
+            </Text>
+          )}
+        </Headline4>
         {user.state.punchline && <Text>{user.state.punchline}</Text>}
         <Row>
           <Col className="col-auto mt-4 text-center">
@@ -130,7 +137,9 @@ const PageProfile = ({
                 <Info
                   icon="barChart"
                   label="Student elo:"
-                  info={user.state.studentElo}
+                  info={`${user.state.studentEloMin || 0} - ${
+                    user.state.studentEloMax || 3000
+                  }`}
                 />
                 <Info
                   icon="time"

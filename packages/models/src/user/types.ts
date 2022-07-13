@@ -2,6 +2,19 @@ import { Subject } from '../subject';
 
 export const TYPE_USER = 'users';
 
+export enum FideTitles {
+  GM = 'GM',
+  IM = 'IM',
+  FM = 'FM',
+  NM = 'NM',
+  CM = 'CM',
+  I = 'I',
+  II = 'II',
+  III = 'III',
+  IV = 'IV',
+  V = 'V',
+}
+
 export interface User extends Subject {
   id: string;
   nickname: string;
@@ -14,7 +27,8 @@ export interface User extends Subject {
   state: {
     imageUrl?: string;
     elo?: number;
-    studentElo?: number;
+    studentEloMin?: number;
+    studentEloMax?: number;
     about?: string;
     availability?: string;
     pricing?: string;
@@ -26,6 +40,7 @@ export interface User extends Subject {
     lastActivity?: Date;
     languages?: string[];
     country?: string;
+    fideTitle?: FideTitles;
   };
 }
 

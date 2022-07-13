@@ -22,12 +22,15 @@ const {
   Headline6,
   Container,
   Breadcrumbs,
+  Slider,
 } = ui;
 
 const languageToSelectValue = (lang: string) => ({
   label: lang,
   value: lang,
 });
+
+const studentEloRangeMarks = { 500: 500, 1200: 1200, 1600: 1600, 2200: 2200 };
 
 export default withFiles(
   ({ files, openFileDialog, user }: FileUploaderProps & { user: User }) => {
@@ -235,7 +238,24 @@ export default withFiles(
                       </FormGroup>
                       <FormGroup className="mt-3">
                         <Label>Student elo</Label>
-                        <Form.Input name="state.studentElo" type="number" />
+                        <Slider
+                          min={0}
+                          max={3000}
+                          step={100}
+                          range
+                          defaultValue={[
+                            user.state.studentEloMin || 500,
+                            user.state.studentEloMax || 1200,
+                          ]}
+                          marks={studentEloRangeMarks}
+                          onChange={val => {
+                            if (Array.isArray(val)) {
+                              const [min, max] = val;
+                              setFieldValue('state.studentEloMin', min);
+                              setFieldValue('state.studentEloMax', max);
+                            }
+                          }}
+                        />
                       </FormGroup>
                     </Col>
                     <Col>

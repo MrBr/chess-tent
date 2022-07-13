@@ -1,7 +1,7 @@
 import React from 'react';
 import { Chapter } from '@chess-tent/models';
 import { AppStep } from '@types';
-import { hooks, ui, utils } from '@application';
+import { hooks, ui } from '@application';
 import styled from '@chess-tent/styled-props';
 
 import ChaptersImport from './chapters-import';

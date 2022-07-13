@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { hooks } from '@application';
 import { createNewLesson } from '../service';
 import { lesson as lessonRecord } from '../record';
@@ -8,6 +8,7 @@ const { useActiveUserRecord, useHistory, useRecordInit } = hooks;
 const NewLesson = () => {
   const { value: user } = useActiveUserRecord();
 
+  // eslint-disable-next-line
   const tempLesson = useMemo(() => createNewLesson(user), []);
   const { update, value: lesson } = useRecordInit(
     lessonRecord,
@@ -18,6 +19,7 @@ const NewLesson = () => {
 
   useEffect(() => {
     update(tempLesson, { saved: false });
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
@@ -28,7 +30,7 @@ const NewLesson = () => {
       new URLSearchParams(history.location.search).get('activeStep') ||
       lesson.state.chapters[0].state.steps[0].id;
     history.replace(`/lesson/${lesson.id}?activeStep=${activeStep}`);
-  }, [lesson]);
+  }, [history, lesson]);
 
   return null;
 };

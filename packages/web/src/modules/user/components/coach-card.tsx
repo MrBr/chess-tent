@@ -35,6 +35,10 @@ const CoachCard: Components['CoachCard'] = ({ coach }) => {
   const history = useHistory();
   const [conversationOffcanvas, openConversation] = useOpenConversations();
 
+  // TODO - transform to more human friendly text
+  const studentElo = `${coach.state.studentEloMin || 0} - ${
+    coach.state.studentEloMax || 3000
+  }`;
   return (
     <>
       {conversationOffcanvas}
@@ -53,7 +57,7 @@ const CoachCard: Components['CoachCard'] = ({ coach }) => {
               <Text className="mt-1 mb-0" weight={400}>
                 {coach.name}{' '}
                 <Text className="m-0" fontSize="extra-small" inline>
-                  ({coach.state.elo ? coach.state.elo : 'unrated'})
+                  {coach.state.elo && `(${coach.state.elo})`}
                 </Text>{' '}
                 {coach.state.country &&
                   getCountryByCode(coach.state.country).flag}
@@ -90,14 +94,9 @@ const CoachCard: Components['CoachCard'] = ({ coach }) => {
           <Line />
           <Row className="mt-3">
             <Col className="col-auto">
-              {coach.state.studentElo ? (
-                <Text className="m-0" fontSize="extra-small" inline>
-                  {coach.state.studentElo &&
-                    `Up to ${coach.state.studentElo} elo`}
-                </Text>
-              ) : (
-                'Unrated'
-              )}
+              <Text className="m-0" fontSize="extra-small" inline>
+                Elo {studentElo}
+              </Text>
             </Col>
             {coach.state.languages && (
               <Col className="col-auto">

@@ -10,7 +10,7 @@ import {
   updateUserActivity,
 } from './middleware';
 import { getUser as getUserService } from './service';
-import { UserAlreadyActivated, UserAlreadyExists } from './errors';
+import { UserAlreadyExists } from './errors';
 
 const {
   sendData,
@@ -73,32 +73,6 @@ application.service.registerPostRoute(
     subject: 'Invitation link',
     html: `<p>Hey,</p> 
       <p>You've been invited to join Chess Tent. You can register at <a href=${req.body.link}> ${process.env.APP_DOMAIN}/register<a></p>
-      <p>Best Regards, <br/>Chess Tent Team</p>`,
-  })),
-  sendStatusOk,
-);
-
-application.service.registerGetRoute(
-  '/user-activate/:id',
-  identify,
-  toLocals('user.id', req => req.params.id),
-  getUser,
-  validate((req, res) => {
-    if (res.locals.user.active) {
-      throw new UserAlreadyActivated();
-    }
-  }),
-  toLocals('user', (req, res) => ({
-    ...res.locals.user,
-    active: true,
-  })),
-  updateUser,
-  sendMail((req, res) => ({
-    from: 'Chess Tent <noreply@chesstent.com>',
-    to: res.locals.user.email,
-    subject: 'Beta Account Activated',
-    html: `<p>Dear ${res.locals.user.name},</p> 
-      <p>Great news! Your account for Chess Tent has been activated. You can now log in with your credentials by visiting link <a href="https://chestent.com/login">chesstent.com</a>.</p>
       <p>Best Regards, <br/>Chess Tent Team</p>`,
   })),
   sendStatusOk,

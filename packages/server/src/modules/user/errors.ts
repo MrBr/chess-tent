@@ -18,13 +18,6 @@ export class UserNotFoundError extends Error {
   }
 }
 
-export class UserAlreadyActivated extends Error {
-  status = 400;
-  constructor() {
-    super('User already activated.');
-  }
-}
-
 export class UserAlreadyExists extends Error {
   status = 400;
   constructor() {

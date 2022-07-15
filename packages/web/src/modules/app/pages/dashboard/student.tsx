@@ -1,57 +1,84 @@
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import { components, hooks, ui } from '@application';
-import { Tag, User } from '@chess-tent/models';
-import { LessonsFilters } from '@chess-tent/types';
+import { User } from '@chess-tent/models';
 import Welcome from './welcome';
 
-const { Page, Coaches, LessonBrowser, Trainings } = components;
-const { useLessons, useUserTrainings, useOpenTraining, useOpenLesson } = hooks;
-const { Row, Col, Container } = ui;
+const { Page, Trainings, ScheduledTrainings } = components;
+const {
+  useUserTrainings,
+  useOpenTraining,
+  useUserScheduledTrainings,
+  useCoaches,
+  useHistory,
+  useOpenConversations,
+} = hooks;
+const { Row, Col, Container, Headline5, CardEmpty } = ui;
 
 const DashboardStudent = ({ user }: { user: User }) => {
   const { value: trainings } = useUserTrainings(user);
+  const scheduledTrainings = useUserScheduledTrainings(user);
+  const history = useHistory();
+  const coaches = useCoaches(user);
+
   const handleTrainingClick = useOpenTraining();
-  const handleLessonClick = useOpenLesson();
+  const [offcanvas, openConversation] = useOpenConversations();
 
-  const [lessonsFilter, setLessonsFilter] = useState<LessonsFilters>({
-    owner: user.id,
-  });
-  const { value: lessons } = useLessons(`lessons`, lessonsFilter);
-
-  const handleFilterChange = useCallback(
-    (search, difficulty, tags) => {
-      setLessonsFilter({
-        owner: user.id,
-        search,
-        tagIds: tags.map((it: Tag) => it.id),
-        difficulty,
-        published: true,
-      });
-    },
-    [setLessonsFilter, user.id],
-  );
-
+  const hasStudy = !!scheduledTrainings.value?.length || !!trainings?.length;
   return (
     <Page>
-      <Container className="ps-5 pe-5">
+      {offcanvas}
+      <Container fluid className="ps-5 pe-5 pb-5">
         <Welcome name={user.name} />
-        {!trainings || trainings.length === 0 ? (
-          <Coaches />
-        ) : (
+        {coaches.value && coaches.value.length === 0 && (
+          <CardEmpty
+            title="It's more fun with coach"
+            subtitle="Learn faster with experienced coaches"
+            cta="Find a coach"
+            onClick={() => history.push('/coaches')}
+            icon="profile"
+          />
+        )}
+        {!!scheduledTrainings.value?.length && (
+          <>
+            <Headline5 className="mt-5 mb-3">Upcoming trainings</Headline5>
+            <ScheduledTrainings trainings={scheduledTrainings.value} />
+          </>
+        )}
+        <Row className="mt-5 mb-3">
+          <Col>
+            <Headline5>Studies</Headline5>
+          </Col>
+        </Row>
+        {!!trainings?.length && (
           <Trainings
             trainings={trainings}
             onTrainingClick={handleTrainingClick}
           />
         )}
-        <Row className="g-0">
-          <Col>
-            <LessonBrowser
-              onLessonClick={handleLessonClick}
-              lessons={lessons}
-              onFiltersChange={handleFilterChange}
-            />
-          </Col>
-        </Row>
+        {!hasStudy && (
+          <Row>
+            {coaches.value?.length && (
+              <Col className="col-auto">
+                <CardEmpty
+                  title="Get a custom lesson"
+                  subtitle="Learn with lessons made specifically for you"
+                  cta="Message a coach"
+                  onClick={() => openConversation(coaches.value?.[0].coach)}
+                  icon="profile"
+                />
+              </Col>
+            )}
+            <Col className="col-auto">
+              <CardEmpty
+                title="Learn with public lesson"
+                subtitle="Lessons are "
+                cta="Find a lesson"
+                onClick={() => history.push('/lessons')}
+                icon="profile"
+              />
+            </Col>
+          </Row>
+        )}
       </Container>
     </Page>
   );

@@ -29,6 +29,12 @@ const TrainingSchema = yup.object().shape({
   weekly: yup.boolean(),
 });
 
+const filterUsers = (
+  option: { label: string; value: string; data: User },
+  inputValue: string,
+) =>
+  !inputValue ? true : new RegExp(`^${inputValue}`, 'i').test(option.data.name);
+
 const ActivityForm = ({ activity, formRef }: ActivityFormProps) => {
   const { value: user } = useActiveUserRecord();
   const { value: mentorship } = useStudents(user);
@@ -68,6 +74,7 @@ const ActivityForm = ({ activity, formRef }: ActivityFormProps) => {
           name="students"
           placeholder="Select students"
           options={students}
+          filterOption={filterUsers}
           isMulti
           formatOptionLabel={userOption => (
             <>

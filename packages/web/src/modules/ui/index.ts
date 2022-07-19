@@ -1,6 +1,7 @@
 import application from '@application';
 
 import './style';
+import './utils';
 
 import { Button, ButtonGroup, ToggleButton } from './Button';
 import {

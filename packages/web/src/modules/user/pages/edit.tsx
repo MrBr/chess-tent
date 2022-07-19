@@ -1,6 +1,6 @@
 import React, { useEffect, useCallback } from 'react';
 import { components, hooks, ui, requests, hoc, utils } from '@application';
-import { updateSubject, User } from '@chess-tent/models';
+import { FideTitles, updateSubject, User } from '@chess-tent/models';
 import { FileUploaderProps } from '@types';
 
 import EditableUserAvatar from '../components/editable-user-avatar';
@@ -24,11 +24,7 @@ const {
   Breadcrumbs,
   Slider,
 } = ui;
-
-const languageToSelectValue = (lang: string) => ({
-  label: lang,
-  value: lang,
-});
+const { stringToSelectValue } = utils;
 
 const studentEloRangeMarks = { 500: 500, 1200: 1200, 1600: 1600, 2200: 2200 };
 
@@ -185,12 +181,42 @@ export default withFiles(
                     <Label>Languages</Label>
                     <Select
                       defaultValue={user.state.languages?.map(
-                        languageToSelectValue,
+                        stringToSelectValue,
                       )}
-                      options={getLanguages().map(languageToSelectValue)}
+                      options={getLanguages().map(stringToSelectValue)}
                       onChange={values => {
                         setFieldValue(
                           'state.languages',
+                          values.map(({ value }) => value),
+                        );
+                      }}
+                      isMulti
+                    />
+                  </FormGroup>
+                </Col>
+              </Row>
+              <Row className="mb-4">
+                <Col>
+                  <FormGroup>
+                    <Label>Elo</Label>
+                    <Form.Input name="state.elo" type="number" />
+                  </FormGroup>
+                </Col>
+                <Col>
+                  <FormGroup>
+                    <Label>FIDE title</Label>
+                    <Select
+                      defaultValue={
+                        user.state.fideTitle
+                          ? stringToSelectValue(user.state.fideTitle)
+                          : null
+                      }
+                      options={Object.values(FideTitles).map(
+                        stringToSelectValue,
+                      )}
+                      onChange={values => {
+                        setFieldValue(
+                          'state.fideTitle',
                           values.map(({ value }) => value),
                         );
                       }}
@@ -232,10 +258,6 @@ export default withFiles(
                       </FormGroup>
                     </Col>
                     <Col>
-                      <FormGroup>
-                        <Label>Elo</Label>
-                        <Form.Input name="state.elo" type="number" />
-                      </FormGroup>
                       <FormGroup className="mt-3">
                         <Label>Student elo</Label>
                         <Slider

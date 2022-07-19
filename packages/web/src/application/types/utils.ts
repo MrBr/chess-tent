@@ -41,4 +41,5 @@ export type Utils = {
   getLanguages: () => string[];
   getCountries: () => Country[];
   getCountryByCode: (cca2: string) => Country;
+  stringToSelectValue: (value: string) => { value: string; label: string };
 };

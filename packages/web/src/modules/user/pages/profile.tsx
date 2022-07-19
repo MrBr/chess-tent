@@ -102,6 +102,9 @@ const PageProfile = ({
       {conversationOffset}
       <Container fluid className="px-5 py-4">
         <Headline4 className="mb-0">
+          <Text inherit color="secondary">
+            {user.state.fideTitle}
+          </Text>{' '}
           {user.name}{' '}
           {user.state.elo && (
             <Text color="grey" inline>

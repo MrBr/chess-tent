@@ -55,6 +55,9 @@ const CoachCard: Components['CoachCard'] = ({ coach }) => {
           <Row className="align-items-center">
             <Col>
               <Text className="mt-1 mb-0" weight={400}>
+                <Text inherit color="secondary">
+                  {coach.state.fideTitle}
+                </Text>{' '}
                 {coach.name}{' '}
                 <Text className="m-0" fontSize="extra-small" inline>
                   {coach.state.elo && `(${coach.state.elo})`}

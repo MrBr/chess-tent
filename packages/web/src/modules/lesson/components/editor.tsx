@@ -105,10 +105,12 @@ class EditorRenderer extends React.Component<
 
   componentDidMount() {
     window.addEventListener('beforeunload', this.handleBeforeUnload);
+    document.addEventListener('keyup', this.handleKeypress);
   }
 
   componentWillUnmount() {
     window.removeEventListener('beforeunload', this.handleBeforeUnload);
+    document.removeEventListener('keyup', this.handleKeypress);
   }
 
   handleSilentBeforeUnload = (location: H.Location) => {
@@ -125,6 +127,17 @@ class EditorRenderer extends React.Component<
     const { lessonStatus } = this.props;
     if (lessonStatus === ApiStatus.DIRTY) {
       e.returnValue = false;
+    }
+  };
+
+  handleKeypress = (e: KeyboardEvent) => {
+    switch (e.code) {
+      case 'ArrowLeft':
+        this.prevStepHandler();
+        return;
+      case 'ArrowRight':
+        this.nextStepHandler();
+        return;
     }
   };
 

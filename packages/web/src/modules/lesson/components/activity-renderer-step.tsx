@@ -29,6 +29,27 @@ export class ActivityRendererStepBoard<
   K extends Chapter,
 > extends React.Component<ActivityRendererModuleBoardProps<T, K>> {
   static mode = ActivityStepMode.SOLVING;
+
+  componentDidMount() {
+    document.addEventListener('keyup', this.handleKeypress);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keyup', this.handleKeypress);
+  }
+
+  handleKeypress = (e: KeyboardEvent) => {
+    const { nextStep, prevStep } = this.props;
+    switch (e.code) {
+      case 'ArrowLeft':
+        prevStep();
+        return;
+      case 'ArrowRight':
+        nextStep();
+        return;
+    }
+  };
+
   updateStepShapes = (shapes: Shape[]) => {
     this.props.setStepActivityState({ shapes });
   };

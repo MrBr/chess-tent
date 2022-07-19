@@ -84,6 +84,25 @@ export class ActivityRendererAnalysisBoard<
 > extends ActivityRendererAnalysis<ActivityRendererModuleBoardProps<T>> {
   static mode = ActivityStepMode.ANALYSING;
 
+  componentDidMount() {
+    document.addEventListener('keyup', this.handleKeypress);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keyup', this.handleKeypress);
+  }
+
+  handleKeypress = (e: KeyboardEvent) => {
+    switch (e.code) {
+      case 'ArrowLeft':
+        this.prevStep();
+        return;
+      case 'ArrowRight':
+        this.nextStep();
+        return;
+    }
+  };
+
   updateStepRotation = (orientation?: Orientation) => {
     const step = getAnalysisActiveStep(this.props.analysis);
     const updatedStep = services.updateStepRotation(step, orientation);

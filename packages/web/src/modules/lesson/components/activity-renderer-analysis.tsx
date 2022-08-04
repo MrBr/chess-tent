@@ -91,6 +91,7 @@ class ActivityRendererAnalysisNavigation<
   T extends Steps | undefined,
 > extends ActivityRendererAnalysis<ActivityRendererModuleProps<T>> {
   render() {
+    const { chapter } = this.props;
     return (
       <>
         <Row>
@@ -114,16 +115,18 @@ class ActivityRendererAnalysisNavigation<
               <Icon type="right" />
             </Button>
           </Col>
-          <Col>
-            <Button
-              variant="ghost"
-              stretch
-              size="small"
-              onClick={this.closeAnalysis}
-            >
-              Stop analysing
-            </Button>
-          </Col>
+          {chapter && (
+            <Col>
+              <Button
+                variant="ghost"
+                stretch
+                size="small"
+                onClick={this.closeAnalysis}
+              >
+                Stop analysing
+              </Button>
+            </Col>
+          )}
         </Row>
       </>
     );
@@ -145,6 +148,7 @@ export class ActivityRendererAnalysisBoard<
   }
 
   handleKeypress = (e: KeyboardEvent) => {
+    console.warn('TODO - add tooltip when analysis end is reached');
     switch (e.code) {
       case 'ArrowLeft':
         this.prevStep();

@@ -51,8 +51,15 @@ class ChaptersDropdown extends React.Component<
   };
   render() {
     const { editing } = this.state;
-    const { chapters, activeChapter, onRemove, onNew, onEdit, onImport } =
-      this.props;
+    const {
+      chapters,
+      activeChapter,
+      onRemove,
+      onNew,
+      onEdit,
+      onImport,
+      onMove,
+    } = this.props;
     return (
       <>
         {editing ? (
@@ -128,6 +135,20 @@ class ChaptersDropdown extends React.Component<
                         Remove
                       </Text>
                     </Dropdown.Item>
+                  )}
+                  {onMove && (
+                    <>
+                      <Dropdown.Item onClick={() => onMove()}>
+                        <Text inline fontSize="extra-small" weight={400}>
+                          Move down
+                        </Text>
+                      </Dropdown.Item>
+                      <Dropdown.Item onClick={() => onMove(true)}>
+                        <Text inline fontSize="extra-small" weight={400}>
+                          Move up
+                        </Text>
+                      </Dropdown.Item>
+                    </>
                   )}
                 </Dropdown.Menu>
               </Dropdown>

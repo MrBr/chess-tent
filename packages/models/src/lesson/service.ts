@@ -39,6 +39,29 @@ const addChapterToLesson = createService(
   },
 );
 
+const moveLessonChapter = createService(
+  <T extends Lesson | NormalizedLesson>(
+    draft: T,
+    chapter: Chapter,
+    up?: boolean,
+  ): T => {
+    const index = getLessonChapterIndex(draft, chapter.id);
+
+    if (
+      (!up && index === draft.state.chapters.length - 1) ||
+      (up && index === 0)
+    ) {
+      return draft;
+    }
+
+    const nextIndex = up ? index - 1 : index + 1;
+    draft.state.chapters[index] = draft.state.chapters[nextIndex];
+    draft.state.chapters[nextIndex] = chapter;
+
+    return draft;
+  },
+);
+
 const removeChapterFromLesson = createService(
   <T extends Lesson | NormalizedLesson>(draft: T, chapter: Chapter): T => {
     const index = draft.state.chapters.findIndex(({ id }) => chapter.id === id);
@@ -140,4 +163,5 @@ export {
   isLessonDraft,
   isLessonPublicDocument,
   removeChapterFromLesson,
+  moveLessonChapter,
 };

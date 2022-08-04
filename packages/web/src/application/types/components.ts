@@ -495,6 +495,7 @@ export type Components = {
     onNew?: () => void;
     onRemove?: (chapter: Chapter) => void;
     onImport?: () => void;
+    onMove?: (up?: boolean) => void;
   }>;
   UserAvatar: ComponentType<
     {

@@ -21,6 +21,7 @@ export interface ActivityStepperProps {
   onChapterImport?: (chapter: Chapter[]) => void;
   onChapterRemove?: (chapter: Chapter) => void;
   onChapterChange?: (chapter: Chapter) => void;
+  onChapterMove?: (up?: boolean) => void;
 }
 
 const ActivityStepper = styled((props: ActivityStepperProps) => {
@@ -33,6 +34,7 @@ const ActivityStepper = styled((props: ActivityStepperProps) => {
     onChapterImport,
     onChapterChange,
     onChapterRemove,
+    onChapterMove,
     boardState,
   } = props;
   const { activeStepId } = boardState;
@@ -71,6 +73,7 @@ const ActivityStepper = styled((props: ActivityStepperProps) => {
             onImport={onChapterImport && promptChapterImport}
             onChange={onChapterChange}
             onRemove={onChapterRemove}
+            onMove={onChapterMove}
           />
         </div>
         <div className="h-100 border-bottom pt-3 overflow-y-auto">

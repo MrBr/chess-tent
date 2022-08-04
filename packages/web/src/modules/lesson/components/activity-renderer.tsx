@@ -10,9 +10,11 @@ import {
 } from '@types';
 import { components, services, ui } from '@application';
 import {
+  applyUpdates,
   Chapter,
   getNextStep,
   getPreviousStep,
+  moveLessonChapter,
   updateActivityStepState,
 } from '@chess-tent/models';
 import Stepper from './activity-stepper';
@@ -55,6 +57,15 @@ export class ActivityRenderer<
   chapterChangeHandler = (chapter: Chapter) => {
     const { updateActivity, activity, boardState } = this.props;
     updateActivity(updateActivityActiveChapter)(activity, boardState, chapter);
+  };
+
+  chapterMoveHandler = (up?: boolean) => {
+    const { updateActivity, activity, chapter } = this.props;
+    updateActivity(
+      applyUpdates(activity)(draft => {
+        moveLessonChapter(draft.subject, chapter as Chapter, up);
+      }),
+    )();
   };
 
   removeChapterHandler = (chapter: Chapter) => {
@@ -163,7 +174,7 @@ export class ActivityRenderer<
               chapters={lesson.state.chapters}
               onChapterImport={importChapters}
               onChapterRemove={importChapters && this.removeChapterHandler}
-              onChapterChange={this.chapterChangeHandler}
+              onChapterMove={importChapters && this.chapterMoveHandler}
             />
           </LessonPlayground.Stepper>
         </LessonPlayground>

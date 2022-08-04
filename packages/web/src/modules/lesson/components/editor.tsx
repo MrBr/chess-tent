@@ -12,6 +12,7 @@ import {
   Lesson,
   getNextStep,
   getRightStep,
+  moveLessonChapter,
 } from '@chess-tent/models';
 import {
   Actions,
@@ -285,6 +286,13 @@ class EditorRenderer extends React.Component<
     this.setActiveChapterHandler(newChapter);
   };
 
+  moveChapter = (up?: boolean) => {
+    const { lesson, activeChapter } = this.props;
+    const action = serviceAction(moveLessonChapter)(lesson, activeChapter, up);
+    this.addLessonUpdate(action);
+    this.setActiveChapterHandler(activeChapter);
+  };
+
   removeChapter = (chapter: Chapter) => {
     const { history, lesson, location } = this.props;
     const newChapters = lesson.state.chapters.filter(
@@ -423,6 +431,7 @@ class EditorRenderer extends React.Component<
                     onEdit={this.updateChapterTitle}
                     onNew={this.addNewChapter}
                     onRemove={this.removeChapter}
+                    onMove={this.moveChapter}
                   />
                 </SidebarSection>
                 <SidebarSection>

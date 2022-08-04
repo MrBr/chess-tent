@@ -82,7 +82,13 @@ const ActivitySettingsCoach: ComponentType<{
     const weekly = data.weekly || activity.weekly;
     // Activity (component, not page) saves all the changes gradually
     // If needed, updateActivity function can be extracted outside the ActivitySettings
-    save({ roles, title, date, weekly });
+    save({
+      roles,
+      title,
+      date,
+      weekly,
+      state: { ...activity.state, ...data.state },
+    });
   };
 
   return (

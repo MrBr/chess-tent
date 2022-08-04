@@ -101,7 +101,7 @@ export const useCreateNewTraining = (user: User) => {
       const training = createLessonActivity(
         lesson,
         user,
-        { title: data.title, date: data.date, weekly: data.weekly },
+        data,
         {},
         data.students,
         data.coaches,

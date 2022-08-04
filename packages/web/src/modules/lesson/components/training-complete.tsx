@@ -54,6 +54,7 @@ const TrainingComplete = ({
         weekly: activity.weekly,
         students,
         coaches,
+        state: {},
       },
       [],
     );

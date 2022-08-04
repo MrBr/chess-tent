@@ -123,7 +123,9 @@ export const removeActivityChapter = createService(
 export const createLessonActivity = (
   lesson: Lesson,
   owner: User,
-  optionals?: Partial<LessonActivity>,
+  optionals?: Partial<Omit<LessonActivity, 'state'>> & {
+    state?: Partial<LessonActivity['state']>;
+  },
   boardState?: Partial<LessonActivityBoardState>,
   students: User[] = [],
   coaches: User[] = [],
@@ -156,6 +158,7 @@ export const createLessonActivity = (
       [mainBoard.id]: mainBoard,
     },
     userSettings: {},
+    ...optionals?.state,
   };
   return createActivity(id, lesson, roles, activityInitialState, optionals);
 };

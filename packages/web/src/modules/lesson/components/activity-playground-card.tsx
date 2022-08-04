@@ -12,6 +12,10 @@ export default styled<Components['LessonPlaygroundCard']>(
     </Card>
   ),
 ).props.active.bottom.stretch.css`
+   &:first-child:not(.stretch) {
+     margin-top: 24px;
+  }
+
   &.active {
     border: 1px solid var(--black-color);
   }

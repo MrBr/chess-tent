@@ -11,6 +11,7 @@ export interface ActivityData {
   title?: string;
   date?: Date;
   weekly?: boolean;
+  state: { disableEngine?: boolean };
 }
 interface ActivityFormProps {
   activity?: RecordValue<LessonActivity>;
@@ -53,6 +54,7 @@ const ActivityForm = ({ activity, formRef }: ActivityFormProps) => {
       title: activity?.title || '',
       date: activity?.date ? (activity.date as unknown as Date) : undefined,
       weekly: activity?.weekly || false,
+      state: { disableEngine: !!activity?.state.disableEngine },
     }),
     [activity],
   );
@@ -87,7 +89,13 @@ const ActivityForm = ({ activity, formRef }: ActivityFormProps) => {
           getOptionValue={userOption => userOption.id}
         />
       </FormGroup>
-      <hr className="mt-5" />
+      <FormGroup className="mt-3">
+        <Col>
+          <Label>Disable engine</Label>
+          <Form.Check type="switch" name="state.disableEngine" />
+        </Col>
+      </FormGroup>
+      <hr className="mt-3" />
       <Text className="mt-4 mb-1" weight={400}>
         Schedule
       </Text>

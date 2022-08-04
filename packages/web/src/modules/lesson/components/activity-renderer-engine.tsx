@@ -8,6 +8,12 @@ export class ActivityRendererAnalysisEngineCard<
   T extends Steps | undefined,
 > extends React.Component<ActivityRendererModuleProps<T>> {
   render() {
+    const { activity } = this.props;
+
+    if (activity.state.disableEngine) {
+      return null;
+    }
+
     return (
       <LessonPlaygroundCard stretch>
         <Evaluation />

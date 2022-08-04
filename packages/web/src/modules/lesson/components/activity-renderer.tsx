@@ -4,12 +4,11 @@ import {
   ActivityRendererModuleCard,
   ActivityRendererProps,
   ActivityRendererState,
-  ActivityStepMode,
   AppStep,
   ChessboardProps,
   Steps,
 } from '@types';
-import { components, services } from '@application';
+import { components, services, ui } from '@application';
 import {
   Chapter,
   getNextStep,
@@ -17,10 +16,10 @@ import {
   updateActivityStepState,
 } from '@chess-tent/models';
 import Stepper from './activity-stepper';
-import Header from './activity-header';
 import { removeActivityChapter, updateActivityActiveChapter } from '../service';
 
 const { LessonPlayground, ChessboardContextProvider, Chessboard } = components;
+const { Container } = ui;
 const { updateLessonActivityActiveStep } = services;
 
 function isStepBoard<T extends Steps | undefined>(
@@ -40,13 +39,6 @@ function isStepCard<T extends Steps | undefined>(
 export class ActivityRenderer<
   T extends Steps | undefined,
 > extends React.Component<ActivityRendererProps<T>, ActivityRendererState> {
-  updateStepMode = (mode: ActivityStepMode) => {
-    const { updateActivity, activity, boardState } = this.props;
-    updateActivity(updateActivityStepState)(activity, boardState, {
-      mode,
-    });
-  };
-
   setStepActivityState = (state: {}) => {
     const { activity, updateActivity, boardState } = this.props;
 
@@ -108,19 +100,7 @@ export class ActivityRenderer<
   };
 
   renderChessboard = (props: ChessboardProps) => {
-    const { boards, activityStepState } = this.props;
-    return (
-      <Chessboard
-        {...props}
-        header={
-          <Header
-            boards={boards}
-            activeMode={activityStepState.mode}
-            onChange={this.updateStepMode}
-          />
-        }
-      />
-    );
+    return <Chessboard {...props} header={<Container />} />;
   };
 
   renderCards() {
@@ -142,7 +122,7 @@ export class ActivityRenderer<
   }
 
   renderBoard() {
-    const { activityStepState, boards, step } = this.props;
+    const { activityStepState, boards, step, chapter } = this.props;
 
     if (isStepBoard(boards, step)) {
       const Board = boards.find(board => board.mode === activityStepState.mode);
@@ -153,7 +133,7 @@ export class ActivityRenderer<
         <Board
           {...this.props}
           step={step}
-          chapter={step}
+          chapter={chapter}
           setStepActivityState={this.setStepActivityState}
           stepActivityState={activityStepState}
           nextStep={this.nextActivityStep}

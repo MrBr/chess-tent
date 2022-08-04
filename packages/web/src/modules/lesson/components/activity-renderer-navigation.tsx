@@ -1,83 +1,57 @@
 import React from 'react';
-import { ActivityRendererModuleProps, Steps } from '@types';
+import {
+  ActivityRendererModuleBoard,
+  ActivityRendererModuleProps,
+  ActivityStepMode,
+  Steps,
+} from '@types';
 import { components, ui } from '@application';
-import { getLessonChapterIndex } from '@chess-tent/models';
-
-import { updateActivityActiveChapter } from '../service';
+import { updateActivityStepState } from '@chess-tent/models';
 
 const { LessonPlaygroundCard } = components;
-const { Button, Icon, Row, Col } = ui;
+const { ToggleButton, ButtonGroup } = ui;
 
 export class ActivityRendererNavigationCard<
   T extends Steps | undefined,
 > extends React.Component<ActivityRendererModuleProps<T>> {
-  nextChapter = () => {
-    const { chapter, activity, updateActivity, boardState } = this.props;
-
-    if (!chapter) {
-      return;
-    }
-
-    const nextChapterIndex =
-      getLessonChapterIndex(activity.subject, chapter.id) + 1;
-    const nextChapter = activity.subject.state.chapters[nextChapterIndex];
-
-    if (!nextChapter) {
-      return;
-    }
-
-    updateActivity(updateActivityActiveChapter)(
-      activity,
-      boardState,
-      nextChapter,
-    );
+  onBoardChange = (mode: ActivityStepMode) => {
+    const { updateActivity, activity, boardState } = this.props;
+    updateActivity(updateActivityStepState)(activity, boardState, {
+      mode,
+    });
   };
 
-  nextStep = () => {
-    const { nextStep } = this.props;
-    nextStep();
-  };
+  renderActiveBoardNavigation() {
+    const { stepActivityState, boards } = this.props;
+    const { Navigation } = boards.find(
+      ({ mode }) => stepActivityState.mode === mode,
+    ) as ActivityRendererModuleBoard<T>;
 
-  prevStep = () => {
-    const { prevStep } = this.props;
-    prevStep();
-  };
+    return <Navigation {...this.props} />;
+  }
 
   render() {
+    const { boards, activityStepState } = this.props;
     return (
       <LessonPlaygroundCard stretch bottom>
-        <Row>
-          <Col>
-            <Button
-              variant="ghost"
-              stretch
+        <ButtonGroup className="mb-3">
+          {boards.map((Board, idx) => (
+            <ToggleButton
+              key={idx}
+              id={`radio-${idx}`}
+              type="radio"
+              variant="tertiary"
               size="small"
-              onClick={this.prevStep}
+              name="radio"
+              value={Board.mode}
+              checked={activityStepState.mode === Board.mode}
+              onChange={() => this.onBoardChange(Board.mode)}
             >
-              <Icon type="left" />
-            </Button>
-          </Col>
-          <Col>
-            <Button
-              variant="ghost"
-              stretch
-              size="small"
-              onClick={this.nextStep}
-            >
-              <Icon type="right" />
-            </Button>
-          </Col>
-          <Col>
-            <Button
-              variant="ghost"
-              stretch
-              size="small"
-              onClick={this.nextChapter}
-            >
-              Chapter <Icon type="right" textual />
-            </Button>
-          </Col>
-        </Row>
+              {Board.mode}
+            </ToggleButton>
+          ))}
+        </ButtonGroup>
+        {this.renderActiveBoardNavigation()}
       </LessonPlaygroundCard>
     );
   }

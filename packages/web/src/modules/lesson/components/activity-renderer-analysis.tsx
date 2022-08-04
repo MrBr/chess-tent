@@ -17,16 +17,17 @@ import {
   getNextStep,
   getPreviousStep,
   Step,
+  updateActivityStepState,
 } from '@chess-tent/models';
 import ActivityStep from './activity-step';
 import { isActivityStepAnalysing } from '../service';
 
 const { AnalysisBoard, AnalysisSidebar, LessonPlaygroundCard } = components;
-const { Row, Col, Icon, Text } = ui;
+const { Row, Col, Icon, Text, Button } = ui;
 const { START_FEN } = constants;
 
 abstract class ActivityRendererAnalysis<
-  T extends ActivityRendererModuleProps<Steps | undefined>,
+  T extends ActivityRendererModuleProps<any>,
 > extends React.Component<T> {
   isAnalysing() {
     const { activityStepState } = this.props;
@@ -63,6 +64,13 @@ abstract class ActivityRendererAnalysis<
     prevStep && this.setActiveStep(prevStep);
   };
 
+  closeAnalysis = () => {
+    const { updateActivity, activity, boardState } = this.props;
+    updateActivity(updateActivityStepState)(activity, boardState, {
+      mode: ActivityStepMode.SOLVING,
+    });
+  };
+
   updateStepActivityAnalysis: AnalysisSystemProps['updateAnalysis'] =
     service => {
       const { updateActivity, activity, boardState } = this.props;
@@ -79,10 +87,54 @@ abstract class ActivityRendererAnalysis<
     };
 }
 
+class ActivityRendererAnalysisNavigation<
+  T extends Steps | undefined,
+> extends ActivityRendererAnalysis<ActivityRendererModuleProps<T>> {
+  render() {
+    return (
+      <>
+        <Row>
+          <Col>
+            <Button
+              variant="ghost"
+              stretch
+              size="small"
+              onClick={this.prevStep}
+            >
+              <Icon type="left" />
+            </Button>
+          </Col>
+          <Col>
+            <Button
+              variant="ghost"
+              stretch
+              size="small"
+              onClick={this.nextStep}
+            >
+              <Icon type="right" />
+            </Button>
+          </Col>
+          <Col>
+            <Button
+              variant="ghost"
+              stretch
+              size="small"
+              onClick={this.closeAnalysis}
+            >
+              Stop analysing
+            </Button>
+          </Col>
+        </Row>
+      </>
+    );
+  }
+}
+
 export class ActivityRendererAnalysisBoard<
   T extends Steps | undefined,
 > extends ActivityRendererAnalysis<ActivityRendererModuleBoardProps<T>> {
   static mode = ActivityStepMode.ANALYSING;
+  static Navigation = ActivityRendererAnalysisNavigation;
 
   componentDidMount() {
     document.addEventListener('keyup', this.handleKeypress);
@@ -181,20 +233,6 @@ export class ActivityRendererAnalysisCard<
             <Text fontSize="small" weight={500} className="mb-2">
               Analysis
             </Text>
-          </Col>
-          <Col className="col-auto">
-            <Icon
-              type="left"
-              size="extra-small"
-              className="cursor-pointer"
-              onClick={this.prevStep}
-            />
-            <Icon
-              type="right"
-              size="extra-small"
-              className="cursor-pointer"
-              onClick={this.nextStep}
-            />
           </Col>
         </Row>
         <AnalysisSidebar

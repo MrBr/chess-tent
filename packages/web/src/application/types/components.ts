@@ -264,11 +264,13 @@ export interface AnalysisBoardProps
   extends AnalysisSystemProps,
     StepBoardComponentProps {}
 
-export interface ActivityBaseProps {
+export interface ActivityBaseProps<T extends Steps | undefined> {
   activity: LessonActivity;
   updateActivity: ReturnType<Hooks['useDispatchService']>;
   // If chapters can't be imported then they can't be edited at all
   importChapters?: (chapters: Chapter[]) => void;
+  boards: ActivityRendererModuleBoard<T>[];
+  cards: ActivityRendererModuleCard<T>[];
 }
 
 export interface ActivityDataProps<
@@ -286,17 +288,7 @@ export interface ActivityDataProps<
 export type ActivityRendererProps<
   T extends Steps | undefined,
   K extends Chapter | undefined = Chapter | undefined,
-> = T extends undefined
-  ? ActivityDataProps<T, K> &
-      ActivityBaseProps & {
-        boards: ActivityRendererModuleBoard<Steps | undefined>[];
-        cards: ActivityRendererModuleCard<Steps | undefined>[];
-      }
-  : ActivityDataProps<T, K> &
-      ActivityBaseProps & {
-        boards: ActivityRendererModuleBoard<Steps>[];
-        cards: ActivityRendererModuleCard<Steps>[];
-      };
+> = ActivityDataProps<T, K> & ActivityBaseProps<T>;
 
 export interface ActivityStepProps<T> {
   // TODO - update name to updateStepActivityState
@@ -313,7 +305,7 @@ export interface ActivityRendererModuleProps<
   U extends Chapter | undefined = Chapter | undefined,
   T = any,
 > extends ActivityStepProps<T>,
-    ActivityBaseProps,
+    ActivityBaseProps<K>,
     ActivityDataProps<K, U> {}
 
 export interface ActivityRendererModuleBoardProps<
@@ -328,6 +320,7 @@ export type ActivityRendererModuleBoard<
   U extends Chapter | undefined = Chapter | undefined,
 > = ComponentType<ActivityRendererModuleBoardProps<T, U>> & {
   mode: ActivityStepMode;
+  Navigation: ComponentType<ActivityRendererModuleProps<T>>;
 };
 export type ActivityRendererModuleCard<
   T extends Steps | undefined,

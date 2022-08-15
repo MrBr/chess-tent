@@ -13,7 +13,7 @@ const Header = styled<{ className?: string }>(({ className }) => (
       <Row>
         <Col md={3}>
           <Logo />
-          <Text fontSize="extra-small">Virtual chess place for everyone.</Text>
+          <Text fontSize="extra-small">A virtual chess gym for everyone.</Text>
         </Col>
         <Col md={{ offset: 3, span: 6 }}>
           <ul className="footer-links">

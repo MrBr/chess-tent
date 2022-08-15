@@ -11,7 +11,7 @@ const PageCoachBrowser = () => {
       <Container fluid className="ps-5 pe-5">
         <Headline4 className="m-0 mt-4">Coaches 🎓</Headline4>
         <Text className="mb-5">
-          Browse the interactive lessons and study on your own.
+          Find the right coach for yourself and start learning.
         </Text>
         <Coaches />
       </Container>

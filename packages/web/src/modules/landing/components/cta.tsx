@@ -5,7 +5,7 @@ import styled from '@chess-tent/styled-props';
 import Section from './section';
 import pawnsSrc from '../images/pawns.svg';
 
-const { Row, Col, Container, Text, Headline3, Button } = ui;
+const { Row, Col, Container, Headline3, Button } = ui;
 const { Link } = components;
 
 const CTA = styled<{ className?: string }>(({ className }) => (
@@ -16,16 +16,13 @@ const CTA = styled<{ className?: string }>(({ className }) => (
           <Headline3 color="light" className="mb-2">
             Want to learn from experienced chess coaches? Join us!
           </Headline3>
-          <Text fontSize="small" color="light">
-            Join early beta and help us build flexible creator platform.
-          </Text>
         </Col>
         <Col
           md={{ offset: 1, span: 4 }}
           className="d-flex align-items-center justify-content-end"
         >
           <Link to="/register" ghost>
-            <Button>Get beta access</Button>
+            <Button>Sign up</Button>
           </Link>
         </Col>
       </Row>

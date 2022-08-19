@@ -8,6 +8,7 @@ import {
   findUsers,
   getUser,
   updateUserActivity,
+  welcomeMailMiddleware,
 } from './middleware';
 import { getUser as getUserService } from './service';
 import { UserAlreadyExists } from './errors';
@@ -25,18 +26,6 @@ const {
   createInitialFounderConversation,
   catchError,
 } = middleware;
-
-const welcomeMailMiddleware = sendMail((req, res) => ({
-  from: 'Chess Tent <noreply@chesstent.com>',
-  to: res.locals.user.email,
-  subject: 'Beta Registration',
-  html: `<p>Dear ${res.locals.user.name},</p>
-       <p>Thank you for registering. We are still in very early phase and feedback is much appreciated.</p>
-       <p>${
-         res.locals.user.coach ? 'Start teaching at ' : 'Start learning at '
-       } <a href="https://chesstent.com">chesstent.com</a>. </p>
-       <p>Best Regards, <br/>Chess Tent Team</p>`,
-}));
 
 application.service.registerPostRoute(
   '/register',
@@ -119,5 +108,12 @@ application.service.registerPutRoute(
   identify,
   toLocals('user', (req, res) => ({ ...req.body, ...res.locals.me })),
   updateUser,
+  sendStatusOk,
+);
+
+application.service.registerPostRoute(
+  '/user/validate',
+  toLocals('user', req => req.body.user),
+  validateUser,
   sendStatusOk,
 );

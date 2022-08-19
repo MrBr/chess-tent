@@ -31,6 +31,7 @@ export interface Requests {
     [GetEndpointData<Endpoints['users']>, Pagination?]
   >;
   user: RequestFetch<Endpoints['user'], User['id']>;
+  userValidate: RequestFetch<Endpoints['userValidate'], Partial<User>>;
   updateMe: RequestFetch<Endpoints['updateMe']>;
 
   lesson: RequestFetch<Endpoints['lesson'], Lesson['id']>;

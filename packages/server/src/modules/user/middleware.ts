@@ -1,6 +1,6 @@
 import { MiddlewareFunction } from '@types';
 import { User } from '@chess-tent/models';
-import { errors } from '@application';
+import { errors, middleware } from '@application';
 import * as service from './service';
 import {
   AccountNotActivatedError,
@@ -9,6 +9,20 @@ import {
   PasswordEncryptionError,
 } from './errors';
 import { validateUserPassword } from './service';
+
+const { sendMail } = middleware;
+
+export const welcomeMailMiddleware = sendMail((req, res) => ({
+  from: 'Chess Tent <noreply@chesstent.com>',
+  to: res.locals.user.email,
+  subject: 'Beta Registration',
+  html: `<p>Dear ${res.locals.user.name},</p>
+       <p>Thank you for registering. We are still in very early phase and feedback is much appreciated.</p>
+       <p>${
+         res.locals.user.coach ? 'Start teaching at ' : 'Start learning at '
+       } <a href="https://chesstent.com">chesstent.com</a>. </p>
+       <p>Best Regards, <br/>Chess Tent Team</p>`,
+}));
 
 export const addUser: MiddlewareFunction = (req, res, next) => {
   service

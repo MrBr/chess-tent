@@ -30,6 +30,11 @@ const user = services.createRequest<Requests['user']>(
   userId => `/user/${userId}`,
 );
 
+const userValidate = services.createRequest<Requests['userValidate']>(
+  'POST',
+  '/user/validate',
+);
+
 requests.register = register;
 requests.inviteUser = inviteUser;
 requests.login = login;
@@ -38,3 +43,4 @@ requests.me = me;
 requests.users = users;
 requests.user = user;
 requests.updateMe = updateMe;
+requests.userValidate = userValidate;

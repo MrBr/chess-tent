@@ -216,6 +216,10 @@ export interface Endpoints {
   updateMe: Endpoint<RequestPut<'/me', Partial<User>>, UserResponse>;
   users: Endpoint<RequestPost<'/users', UsersFilters>, UsersResponse>;
   user: Endpoint<RequestGet<`/user/${string}`>, UserResponse>;
+  userValidate: Endpoint<
+    RequestPost<`/user/validate`, Partial<User>>,
+    StatusResponse
+  >;
   // Lesson endpoints
   lesson: Endpoint<RequestGet<`/lesson/${string}`>, LessonResponse>;
   lessonDelete: Endpoint<RequestDelete<`/lesson/${string}`>, StatusResponse>;

@@ -10,7 +10,7 @@ import {
   RequestFetch,
   ScheduledLessonActivityFilters,
 } from '@chess-tent/types';
-import { ReactElement } from 'react';
+import { ReactElement, ReactNode } from 'react';
 import {
   Step,
   Tag,
@@ -35,11 +35,13 @@ import {
   RecordHookSafe,
   RecordValue,
 } from '@chess-tent/redux-record/types';
+import { ObjectSchema, ValidationError as YupValidationError } from 'yup';
 
 import { Records } from './records';
 import { History } from './router';
 import { GenericArguments } from './_helpers';
 import { ChessboardContext } from './context';
+import { WizardStep } from './ui';
 
 type UseMetaReturn<T> = [T, (meta: T) => void, () => void];
 
@@ -66,7 +68,14 @@ export interface ApiState<T extends RequestFetch<any, any>> {
   reset: () => void;
 }
 
+export type ValidationError = YupValidationError & {
+  params: { label?: string };
+};
+
 export type Hooks = {
+  useValidation: (
+    schema: ObjectSchema,
+  ) => [ValidationError | null, (state: {}) => boolean];
   useRecordInit: typeof useRecordInit;
   useRecordSafe: typeof useRecordSafe;
   useIsMobile: () => boolean;
@@ -79,9 +88,30 @@ export type Hooks = {
   useSocketActionListener: (
     listener: (action: Actions | string) => void,
   ) => void;
+  useInputStateUpdate: (
+    delay: number,
+    update: (patch: {}) => void,
+  ) => (e: React.ChangeEvent<HTMLInputElement>) => void;
   usePrompt: (
     render: (close: () => void) => ReactElement,
   ) => [ReactElement | undefined, () => void];
+  useWizard: <T extends {}>(
+    steps: WizardStep<T>[],
+    initialState: T,
+  ) => {
+    activeStep: WizardStep<T>;
+    activeStepIndex: number;
+    node: ReactNode;
+    nextStep: () => void;
+    prevStep: () => void;
+    resetWizardState: (resetState: Partial<T>) => void;
+    setActiveStep: (step: WizardStep<T>) => void;
+    completeStep: (step: WizardStep<T>) => void;
+    updateState: (state: Partial<T>) => void;
+    mergeUpdateState: (state: Partial<T>) => void;
+    steps: typeof steps;
+    visitedSteps: Set<WizardStep<T>>;
+  };
   useUpdateLessonStepState: <T extends Step>(
     updateStep: (step: T) => void,
     step: T,

@@ -52,6 +52,7 @@ application.hoc.withFiles = withFiles;
 application.hoc.withHtml = withHtml;
 
 application.register(() => import('./Modal'));
+application.register(() => import('./Wizard'));
 application.register(() => import('./Offcanvas'));
 
 application.ui.FormGroup = FormGroup;

@@ -187,12 +187,36 @@ export type InputPropsWithSizeEnhancer = Omit<
   ref?: Ref<HTMLInputElement>;
   size?: FormElementsSize;
   type?: 'color' | 'text' | 'email' | 'password' | 'number';
+  name?: string;
 };
 
 type DateTimeProps = {
   onChange?: (value: string) => void;
   value?: string;
 } & Omit<InputPropsWithSizeEnhancer, 'onChange' | 'type' | 'value'>;
+
+export interface WizardStepProps<T extends {}> {
+  nextStep: () => void;
+  prevStep: () => void;
+  state: T;
+  updateState: (patch: Partial<T>) => void;
+  mergeUpdateState: (patch: Partial<T>) => void;
+  completeStep: (status?: boolean) => void;
+  completed: boolean;
+}
+
+export interface WizardStep<T extends {}> {
+  label: ReactNode;
+  Component: ComponentType<WizardStepProps<T>>;
+  required?: boolean;
+}
+
+export interface WizardStepperProps<T extends {}> {
+  steps: WizardStep<T>[];
+  activeStep: WizardStep<T>;
+  setActiveStep: (wizard: WizardStep<T>) => void;
+  visitedSteps: Set<WizardStep<T>>;
+}
 
 export type Icons =
   | 'add'
@@ -430,8 +454,11 @@ export type UI = {
   Tooltip: UIComponent<TooltipProps>;
   Overlay: typeof BOverlay;
   OverlayTrigger: typeof BOverlayTrigger;
-  Badge: UIComponent<BadgeProps>;
+  Badge: UIComponent<BadgeProps & { circle?: boolean }>;
   ProgressBar: UIComponent<ProgressBarProps>;
+  WizardStepper: <T extends {}>(
+    props: WizardStepperProps<T>,
+  ) => ReactElement | null;
 
   /* Molecules */
   CardEmpty: UIComponent<{

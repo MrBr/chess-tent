@@ -1,6 +1,9 @@
+import { Hooks, ValidationError } from '@types';
 import { useEffect, useRef, useState, useCallback, ReactElement } from 'react';
-import { defer } from 'lodash';
-import { Hooks } from '@types';
+import defer from 'lodash/defer';
+import debounce from 'lodash/debounce';
+import set from 'lodash/set';
+import { ObjectSchema } from 'yup';
 
 export const useComponentStateSilent = () => {
   const ref = useRef<{ mounted: boolean }>({ mounted: false });
@@ -58,4 +61,37 @@ export const usePrompt = (
     shouldRender && renderOffcanvas(() => setShouldRender(undefined)),
     promptOffcanvas,
   ];
+};
+
+export const useInputStateUpdate = (
+  delay: number,
+  updateState: (update: {}) => void,
+) => {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debouncedUpdate = useCallback(debounce(updateState, delay), [
+    delay,
+    updateState,
+  ]);
+  return (e: React.ChangeEvent<HTMLInputElement>) =>
+    debouncedUpdate(set({}, e.target.name, e.target.value));
+};
+
+export const useValidation: Hooks['useValidation'] = (schema: ObjectSchema) => {
+  const [error, setError] = useState<ValidationError | null>(null);
+
+  const validate = useCallback(
+    (state: {}) => {
+      try {
+        schema.validateSync(state);
+        setError(null);
+      } catch (e) {
+        setError(e as ValidationError);
+        return false;
+      }
+      return true;
+    },
+    [schema],
+  );
+
+  return [error, validate];
 };

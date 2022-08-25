@@ -4,8 +4,10 @@ import { saveAs } from 'file-saver';
 import {
   useComponentState,
   useComponentStateSilent,
+  useInputStateUpdate,
   useOutsideClick,
   usePrompt,
+  useValidation,
 } from './hooks';
 import { getEntitySchema, getTypeSchema } from './model';
 import {
@@ -40,3 +42,5 @@ application.hooks.useComponentStateSilent = useComponentStateSilent;
 application.hooks.useComponentState = useComponentState;
 application.hooks.useOutsideClick = useOutsideClick;
 application.hooks.usePrompt = usePrompt;
+application.hooks.useInputStateUpdate = useInputStateUpdate;
+application.hooks.useValidation = useValidation;

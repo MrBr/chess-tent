@@ -1,7 +1,16 @@
-import { model, Schema, SchemaOptions } from 'mongoose';
+import {
+  model,
+  Schema,
+  SchemaOptions,
+  Model,
+  SchemaTypeOptions,
+  FilterQuery,
+  EnforceDocument,
+} from 'mongoose';
 import { AppDocument, DB } from '@types';
 import { v4 as uuid } from 'uuid';
 import { DateRange } from '@chess-tent/types';
+import _get from 'lodash/get';
 
 const createTransformRemoveId =
   <T>(transform?: (doc: any, ret: any, options: any) => any) =>
@@ -134,3 +143,30 @@ export const getDateRangeFilter = (date: DateRange) => ({
   ...(date.from ? { $gte: new Date(date.from) } : {}),
   ...(date.to ? { $lt: new Date(date.to) } : {}),
 });
+
+export const testUniqueFields = async <T>(
+  model: Model<T>,
+  data: Partial<T>,
+): Promise<string[]> => {
+  const uniquePaths = Object.entries<Record<string, SchemaTypeOptions<T>>>(
+    model.schema.obj,
+  )
+    .filter(([, { unique }]) => !!unique)
+    .map(([path]) => path);
+
+  const uniqueValues = uniquePaths.map(
+    path =>
+      ({ [path]: _get(data, path) } as FilterQuery<EnforceDocument<T, {}>>),
+  );
+
+  const users = await model.find().or(uniqueValues);
+
+  return users.reduce<string[]>((result, user) => {
+    uniquePaths.forEach(path => {
+      if (_get(user, path) === _get(data, path)) {
+        result.push(path);
+      }
+    });
+    return result;
+  }, []);
+};

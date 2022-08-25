@@ -113,7 +113,7 @@ application.service.registerPutRoute(
 
 application.service.registerPostRoute(
   '/user/validate',
-  toLocals('user', req => req.body.user),
+  toLocals('user', req => req.body),
   validateUser,
   sendStatusOk,
 );

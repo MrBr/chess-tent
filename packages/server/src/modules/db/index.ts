@@ -13,6 +13,7 @@ import {
   flattenBuckets,
   getBucketingIdFilterRegex,
   getDateRangeFilter,
+  testUniqueFields,
 } from './utils';
 import { applyAdapter, createAdapter } from './adapter';
 
@@ -32,10 +33,13 @@ application.db.connect = () => {
     autoIndex: true,
   });
 
-  const db = mongoose.connection;
+  application.db.connection = mongoose.connection;
 
-  db.on('error', console.error.bind(console, 'connection error:'));
-  db.once('open', function () {
+  application.db.connection.on(
+    'error',
+    console.error.bind(console, 'connection error:'),
+  );
+  application.db.connection.once('open', function () {
     console.log('DB connection open');
   });
 };
@@ -54,3 +58,4 @@ application.db.getBucketingIdFilterRegex = getBucketingIdFilterRegex;
 application.db.createAdapter = createAdapter;
 application.db.applyAdapter = applyAdapter;
 application.db.getDateRangeFilter = getDateRangeFilter;
+application.db.testUniqueFields = testUniqueFields;

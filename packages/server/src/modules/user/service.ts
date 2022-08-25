@@ -3,25 +3,14 @@ import { WithPagination } from '@chess-tent/types';
 import { AppDocument } from '@types';
 import { compare, hash } from 'bcrypt';
 import { FilterQuery } from 'mongoose';
-import { utils, service } from '@application';
+import { utils, service, db } from '@application';
 import { UserModel } from './model';
 
 export const addUser = (user: User) =>
   new Promise((resolve, reject) => {
     new UserModel(user).save((err, result) => {
       if (err) {
-        const error =
-          // TODO - see how to make the error typesafe
-          // @ts-ignore
-          err.code === 11000
-            ? {
-                // @ts-ignore
-                message: `Field(s): ${Object.keys(err.keyValue).join(
-                  ',',
-                )} are already taken.`,
-              }
-            : 'Failed to create user';
-        reject(error);
+        reject('Failed to create user');
         return;
       }
       resolve(result.toObject() as typeof user);
@@ -115,8 +104,18 @@ export const findUsers = (
   });
 };
 
-export const validateUser = (user: {}) => {
-  return new UserModel(user).validateSync();
+export const validateUser = async (user: Partial<User>) => {
+  const invalidUserDataError = new UserModel(user).validateSync();
+  if (invalidUserDataError) {
+    throw invalidUserDataError;
+  }
+
+  const takenUniqueFields = await db.testUniqueFields(UserModel, user);
+  if (takenUniqueFields.length > 0) {
+    throw new Error(
+      `Field(s): ${takenUniqueFields.join(',')} are already taken.`,
+    );
+  }
 };
 
 export const hashPassword = (password: string) => {

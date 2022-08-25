@@ -1,6 +1,6 @@
 import { MiddlewareFunction } from '@types';
 import { User } from '@chess-tent/models';
-import { errors, middleware } from '@application';
+import { errors, middleware, db } from '@application';
 import * as service from './service';
 import {
   AccountNotActivatedError,
@@ -64,10 +64,11 @@ export const findUsers: MiddlewareFunction = (req, res, next) => {
     .catch(next);
 };
 
-export const validateUser: MiddlewareFunction = (req, res, next) => {
-  const error = service.validateUser(res.locals.user);
-  if (error) {
-    throw error;
+export const validateUser: MiddlewareFunction = async (req, res, next) => {
+  try {
+    await service.validateUser(res.locals.user);
+  } catch (e) {
+    next(e);
   }
   next();
 };

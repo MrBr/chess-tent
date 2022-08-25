@@ -1,6 +1,14 @@
 import { register } from 'core-module';
 import { ErrorRequestHandler, RequestHandler } from 'express';
-import { Schema, SchemaOptions, Document, Model, FilterQuery } from 'mongoose';
+import {
+  Schema,
+  SchemaOptions,
+  Document,
+  Model,
+  FilterQuery,
+  Connection,
+  ClientSession,
+} from 'mongoose';
 import {
   NormalizedUser,
   SubjectPathUpdate,
@@ -42,6 +50,8 @@ export type Action = {
 
 export type DB = {
   connect: () => void;
+  connection: Connection;
+  testUniqueFields: <T>(model: Model<T>, data: Partial<T>) => Promise<string[]>;
   createSchema: <T extends {}>(
     definition: Omit<T, 'id'>,
     options?: SchemaOptions,

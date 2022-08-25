@@ -17,6 +17,8 @@ import {
   User,
 } from '@chess-tent/models';
 
+export const RESET_STATE = 'RESET_STATE';
+
 export const UPDATE_ENTITIES = 'UPDATE_ENTITIES';
 export const UPDATE_ENTITY = 'UPDATE_ENTITY';
 export const DELETE_ENTITY = 'DELETE_ENTITY';
@@ -68,6 +70,8 @@ export interface AppState {
   entities: EntitiesState;
   meta: MetaState;
 }
+
+export type ResetStateAction = Action<typeof RESET_STATE, void>;
 
 export type UpdateEntitiesAction = Action<
   typeof UPDATE_ENTITIES,
@@ -198,6 +202,7 @@ export type ConferencingAction =
   | ICECandidateAction;
 
 export type Actions =
+  | ResetStateAction
   | UpdateEntityAction
   | SyncAction
   | UpdateEntitiesAction

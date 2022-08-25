@@ -6,6 +6,7 @@ import {
   UPDATE_ENTITY,
   SEND_PATCH,
   SendPatchAction,
+  RESET_STATE,
 } from '@types';
 import {
   createReversiblePatch,
@@ -16,6 +17,12 @@ import {
 } from '@chess-tent/models';
 import { DELETE_ENTITY } from '@chess-tent/types';
 import { normalizePatches } from './service';
+
+export const resetStateAction: State['actions']['resetState'] = () => ({
+  type: RESET_STATE,
+  payload: undefined,
+  meta: {},
+});
 
 export const updateEntitiesAction: State['actions']['updateEntities'] =
   root => {

@@ -16,10 +16,12 @@ import {
   User,
 } from '@chess-tent/models';
 import {
+  Actions,
   AppState,
   DeleteEntityAction,
   EntitiesState,
   EntityState,
+  ResetStateAction,
   SendMessageAction,
   SendPatchAction,
   UpdateEntitiesAction,
@@ -50,7 +52,7 @@ export type State = {
     reducer?: Reducer<S, U>,
   ) => void;
   registerMiddleware: (middleware: Middleware) => void;
-  getRootReducer: () => Reducer;
+  getRootReducer: () => Reducer<AppState, Actions>;
   actions: {
     updateRecord: <T>(
       recordKey: string,
@@ -63,6 +65,7 @@ export type State = {
       meta?: {},
     ) => RecordPushAction<T>;
 
+    resetState: () => ResetStateAction;
     updateEntities: (entity: Entity | Entity[]) => UpdateEntitiesAction;
     updateEntity: <M extends {}>(
       entity: Entity,

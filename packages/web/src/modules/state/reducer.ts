@@ -1,8 +1,10 @@
 import { Action as ReduxAction, combineReducers, Reducer } from 'redux';
 import {
   Actions,
+  AppState,
   DELETE_ENTITY,
   EntitiesState,
+  RESET_STATE,
   SEND_PATCH,
   UPDATE_ENTITIES,
   UPDATE_ENTITY,
@@ -129,8 +131,15 @@ export const registerEntityReducer = <
 };
 
 export const getRootReducer = () => {
-  return combineReducers({
+  const rootReducer = combineReducers({
     ...appReducer,
     entities: combineReducers(entityReducer),
   });
+
+  return ((state, action) => {
+    if (action.type === RESET_STATE) {
+      return rootReducer(undefined, action);
+    }
+    return rootReducer(state, action);
+  }) as Reducer<AppState, Actions>;
 };

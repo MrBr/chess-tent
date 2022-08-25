@@ -39,6 +39,7 @@ application.register(
     application.state.actions.deleteEntity = module.deleteEntityAction;
     application.state.actions.serviceAction = module.serviceAction;
     application.state.actions.sendPatchAction = module.sendPatchAction;
+    application.state.actions.resetState = module.resetStateAction;
   },
 );
 application.register(() => import('./provider'));

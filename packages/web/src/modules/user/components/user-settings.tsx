@@ -1,21 +1,25 @@
 import React, { useEffect } from 'react';
-import { components, hooks, requests, ui } from '@application';
+import { components, hooks, requests, state, ui } from '@application';
 import { Components } from '@types';
 
 const { Dropdown, Text } = ui;
-const { useHistory, useActiveUserRecord, useApi } = hooks;
+const { useHistory, useActiveUserRecord, useApi, useDispatch } = hooks;
 const { UserAvatar } = components;
+const {
+  actions: { resetState },
+} = state;
 
 const UserSettings: Components['UserSettings'] = ({ label }) => {
   const history = useHistory();
-  const { value: user, reset: clear } = useActiveUserRecord();
+  const { value: user } = useActiveUserRecord();
+  const dispatch = useDispatch();
   const { fetch: logout, response: logoutResponse } = useApi(requests.logout);
 
   useEffect(() => {
     if (logoutResponse) {
-      clear();
+      dispatch(resetState());
     }
-  }, [clear, logoutResponse]);
+  }, [dispatch, logoutResponse]);
 
   if (!user) {
     return null;

@@ -50,12 +50,6 @@ application.register(
     application.components.Invitation = module.default;
   },
 );
-application.register(
-  () => import('./pages/register'),
-  module => {
-    application.pages.Register = module.default;
-  },
-);
 
 application.register(
   () => import('./search'),

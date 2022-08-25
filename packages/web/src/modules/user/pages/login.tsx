@@ -3,6 +3,7 @@ import { ui, hooks, requests, components } from '@application';
 import * as yup from 'yup';
 
 import AuthPage from '../components/auth-page';
+import RegistrationHero from '../components/registration-hero';
 
 const { useApi } = hooks;
 const { Redirect, Link } = components;
@@ -33,7 +34,7 @@ const PageLogin = () => {
   }
 
   return (
-    <AuthPage>
+    <AuthPage sidebar={<RegistrationHero />}>
       <Row>
         <Col>
           <Headline4>Sign in</Headline4>

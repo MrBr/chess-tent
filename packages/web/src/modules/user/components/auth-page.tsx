@@ -2,8 +2,6 @@ import React, { ReactNode } from 'react';
 import { css } from '@chess-tent/styled-props';
 import { ui, hooks, components } from '@application';
 
-import boardHeroSrc from '../images/board-hero.png';
-
 const { Redirect, Link, Logo } = components;
 const { Container, Col, Row, Page } = ui;
 
@@ -11,14 +9,22 @@ const { className } = css`
   ${Logo} {
     margin: 40px 0 100px;
   }
-  .auth-hero {
-    object-fit: cover;
-    width: auto;
-    height: 100vh;
+  .registration-sidebar {
+    position: absolute;
+    right: 0;
+    width: 50%;
+    height: 100%;
+    top: 0;
   }
 `;
 
-const PageAuth = ({ children }: { children: ReactNode }) => {
+const PageAuth = ({
+  children,
+  sidebar,
+}: {
+  children: ReactNode;
+  sidebar: ReactNode;
+}) => {
   const { value: user } = hooks.useActiveUserRecord(null);
 
   if (user) {
@@ -27,8 +33,8 @@ const PageAuth = ({ children }: { children: ReactNode }) => {
 
   return (
     <Page className={className}>
-      <Container>
-        <Row>
+      <Container className="h-100">
+        <Row className="overflow-y-auto">
           <Col md={5} xs={12}>
             <Row>
               <Col>
@@ -39,10 +45,8 @@ const PageAuth = ({ children }: { children: ReactNode }) => {
             </Row>
             {children}
           </Col>
-          <Col md={{ offset: 1, span: 6 }} className="d-md-block d-none">
-            <img src={boardHeroSrc} alt="" className="auth-hero" />
-          </Col>
         </Row>
+        <div className="registration-sidebar">{sidebar}</div>
       </Container>
     </Page>
   );

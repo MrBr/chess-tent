@@ -103,13 +103,19 @@ export const LandingPage = () => {
             </Col>
             <Row className="justify-content-center">
               <Col className="col-auto mt-4">
-                <Button variant="ghost">Connect with mentor</Button>
+                <Link to="/register?flow=student" ghost>
+                  <Button variant="ghost">Connect with mentor</Button>
+                </Link>
               </Col>
               <Col className="col-auto mt-4">
-                <Button variant="ghost">Learn on your own</Button>
+                <Link to="/register?flow=practice" ghost>
+                  <Button variant="ghost">Learn on your own</Button>
+                </Link>
               </Col>
               <Col className="col-auto mt-4">
-                <Button variant="ghost">Be mentor</Button>
+                <Link to="/register?flow=teach" ghost>
+                  <Button variant="ghost">Be mentor</Button>
+                </Link>
               </Col>
             </Row>
           </Row>

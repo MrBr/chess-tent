@@ -30,6 +30,11 @@ const Badge: UI['Badge'] = styled(BBadge).bg.circle.css`
     background-color: var(--primary-color) !important;
     color: var(--light-color) !important;
   }
+  
+  &.bg {
+    background-color: var(--bg-color) !important;
+    color: var(--black-color) !important;
+  }
 `;
 
 export default Badge;

@@ -57,7 +57,7 @@ const DashboardStudent = ({ user }: { user: User }) => {
         )}
         {!hasStudy && (
           <Row>
-            {coaches.value?.length && (
+            {!!coaches.value?.length && (
               <Col className="col-auto">
                 <CardEmpty
                   title="Get a custom lesson"

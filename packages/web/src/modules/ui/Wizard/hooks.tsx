@@ -37,7 +37,7 @@ const useWizard: Hooks['useWizard'] = <T extends {}>(
     }
 
     setActiveStepIndex(activeStepIndex + 1);
-  }, [activeStep, activeStepIndex, steps]);
+  }, [activeStep, activeStepIndex, completedSteps, steps.length]);
 
   const prevStep = useCallback(() => {
     if (activeStepIndex <= 0) {
@@ -65,7 +65,7 @@ const useWizard: Hooks['useWizard'] = <T extends {}>(
         setActiveStepIndex(newActiveIndex);
       }
     },
-    [steps],
+    [completedSteps, steps],
   );
 
   const updateState = useCallback(newState => {

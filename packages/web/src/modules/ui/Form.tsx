@@ -16,7 +16,12 @@ import { Select } from './Select';
 const FormGroup = styled(BFormGroup).css`
   position: relative;
 `;
-const Label = BForm.Label;
+
+const Label = styled<typeof BForm.Label>(BForm.Label).css`
+  font-weight: 400;
+  font-size: 14px;
+  margin-bottom: 0.25rem;
+`;
 
 const InputGroupText = styled(InputGroup.Text).css`
   background: transparent;

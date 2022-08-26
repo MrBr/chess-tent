@@ -6,6 +6,7 @@ import { Hooks, WizardStep } from '@types';
 const useWizard: Hooks['useWizard'] = <T extends {}>(
   steps: WizardStep<T>[],
   initialState: T,
+  close: () => void,
 ) => {
   const [state, setState] = useState<T>(initialState);
   const [activeStepIndex, setActiveStepIndex] = useState(0);
@@ -89,6 +90,7 @@ const useWizard: Hooks['useWizard'] = <T extends {}>(
       updateState={updateState}
       mergeUpdateState={mergeUpdateState}
       completed={completedSteps.has(activeStep)}
+      close={close}
     />
   );
 

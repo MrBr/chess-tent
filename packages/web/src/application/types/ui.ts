@@ -60,6 +60,8 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import { ClassNameProps, ClickProps } from './_helpers';
 import { HtmlProps } from './hoc';
 
+export type { MultiValue, SingleValue } from 'react-select';
+
 export type UISelectProps = {
   icon?: Icons;
   hideDropdownIndicator?: boolean;
@@ -203,6 +205,7 @@ export interface WizardStepProps<T extends {}> {
   mergeUpdateState: (patch: Partial<T>) => void;
   completeStep: (status?: boolean) => void;
   completed: boolean;
+  close: () => void;
 }
 
 export interface WizardStep<T extends {}> {

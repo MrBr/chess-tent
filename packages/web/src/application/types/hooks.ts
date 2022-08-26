@@ -28,7 +28,8 @@ import { Action as ReduxAction } from 'redux';
 import { RefObject } from 'react';
 import { useSelector, useDispatch, useStore } from 'react-redux';
 import { BatchAction } from 'redux-batched-actions';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import type * as H from 'history';
 import {
   InferInitRecord,
   RecordHookInit,
@@ -38,7 +39,7 @@ import {
 import { ObjectSchema, ValidationError as YupValidationError } from 'yup';
 
 import { Records } from './records';
-import { History } from './router';
+import { History, LocationState } from './router';
 import { GenericArguments } from './_helpers';
 import { ChessboardContext } from './context';
 import { WizardStep } from './ui';
@@ -98,6 +99,7 @@ export type Hooks = {
   useWizard: <T extends {}>(
     steps: WizardStep<T>[],
     initialState: T,
+    close: () => void,
   ) => {
     activeStep: WizardStep<T>;
     activeStepIndex: number;
@@ -156,7 +158,7 @@ export type Hooks = {
   ) => RecordHookInit<InferInitRecord<Records['lessons']>>;
   useHistory: () => History;
   useQuery: <T extends Record<string, string | undefined>>() => T;
-  useLocation: typeof useLocation;
+  useLocation(): H.Location<LocationState>;
   useParams: typeof useParams;
   useApi: <T extends RequestFetch<any, any>>(request: T) => ApiState<T>;
   useApiStatus: <T extends RequestFetch<any, any>>(

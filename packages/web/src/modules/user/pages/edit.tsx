@@ -1,15 +1,18 @@
 import React, { useEffect, useCallback } from 'react';
 import { components, hooks, ui, requests, hoc, utils } from '@application';
-import { FideTitles, updateSubject, User } from '@chess-tent/models';
+import { updateSubject, User } from '@chess-tent/models';
 import { FileUploaderProps } from '@types';
 
 import EditableUserAvatar from '../components/editable-user-avatar';
+import SelectStudentElo from '../components/select-student-elo';
+import SelectFideTitle from '../components/select-fide-title';
+import SelectLanguages from '../components/select-languages';
 
 const { useApi, useHistory, useDispatchService } = hooks;
 const { Page, Header } = components;
 const { Button } = ui;
 const { withFiles } = hoc;
-const { getLanguages, getCountries, getCountryByCode } = utils;
+const { getCountries, getCountryByCode } = utils;
 const {
   Col,
   Row,
@@ -22,11 +25,7 @@ const {
   Headline6,
   Container,
   Breadcrumbs,
-  Slider,
 } = ui;
-const { stringToSelectValue } = utils;
-
-const studentEloRangeMarks = { 500: 500, 1200: 1200, 1600: 1600, 2200: 2200 };
 
 export default withFiles(
   ({ files, openFileDialog, user }: FileUploaderProps & { user: User }) => {
@@ -179,18 +178,11 @@ export default withFiles(
                 <Col className="col-md-4">
                   <FormGroup>
                     <Label>Languages</Label>
-                    <Select
-                      defaultValue={user.state.languages?.map(
-                        stringToSelectValue,
-                      )}
-                      options={getLanguages().map(stringToSelectValue)}
-                      onChange={values => {
-                        setFieldValue(
-                          'state.languages',
-                          values.map(({ value }) => value),
-                        );
+                    <SelectLanguages
+                      languages={user.state.languages}
+                      onChange={languages => {
+                        setFieldValue('state.languages', languages);
                       }}
-                      isMulti
                     />
                   </FormGroup>
                 </Col>
@@ -205,22 +197,11 @@ export default withFiles(
                 <Col>
                   <FormGroup>
                     <Label>FIDE title</Label>
-                    <Select
-                      defaultValue={
-                        user.state.fideTitle
-                          ? stringToSelectValue(user.state.fideTitle)
-                          : null
-                      }
-                      options={Object.values(FideTitles).map(
-                        stringToSelectValue,
-                      )}
-                      onChange={values => {
-                        setFieldValue(
-                          'state.fideTitle',
-                          values.map(({ value }) => value),
-                        );
+                    <SelectFideTitle
+                      fideTitle={user.state.fideTitle}
+                      onChange={value => {
+                        setFieldValue('state.fideTitle', value);
                       }}
-                      isMulti
                     />
                   </FormGroup>
                 </Col>
@@ -260,22 +241,14 @@ export default withFiles(
                     <Col>
                       <FormGroup className="mt-3">
                         <Label>Student elo</Label>
-                        <Slider
-                          min={0}
-                          max={3000}
-                          step={100}
-                          range
-                          defaultValue={[
+                        <SelectStudentElo
+                          range={[
                             user.state.studentEloMin || 500,
                             user.state.studentEloMax || 1200,
                           ]}
-                          marks={studentEloRangeMarks}
-                          onChange={val => {
-                            if (Array.isArray(val)) {
-                              const [min, max] = val;
-                              setFieldValue('state.studentEloMin', min);
-                              setFieldValue('state.studentEloMax', max);
-                            }
+                          onChange={([min, max]) => {
+                            setFieldValue('state.studentEloMin', min);
+                            setFieldValue('state.studentEloMax', max);
                           }}
                         />
                       </FormGroup>

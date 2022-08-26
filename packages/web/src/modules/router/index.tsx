@@ -21,10 +21,17 @@ const routes: ComponentType[] = [];
 
 const history: History = createBrowserHistory();
 const basePush = history.push.bind(history);
+const baseReplace = history.replace.bind(history);
 const baseGoBack = history.goBack.bind(history);
 history.push = function <T extends {}>(path: string, state?: T) {
   basePush(path, {
-    from: history.location.pathname,
+    from: `${history.location.pathname}${history.location.search}`,
+    ...state,
+  });
+};
+history.replace = function <T extends {}>(path: string, state?: T) {
+  baseReplace(path, {
+    from: `${history.location.pathname}${history.location.search}`,
     ...state,
   });
 };

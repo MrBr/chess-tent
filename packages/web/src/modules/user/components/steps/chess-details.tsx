@@ -1,11 +1,11 @@
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import { hooks, ui } from '@application';
-import { WizardStep } from '@types';
 import * as yup from 'yup';
 
 import { RegistrationWizardStep } from '../../types';
+import SelectFideTitle from '../select-fide-title';
 
-const { Button, FormGroup, Label, Col, Row, Input, Text, Line } = ui;
+const { Button, FormGroup, Col, Row, Input, Modal, Label } = ui;
 const { useInputStateUpdate, useValidation } = hooks;
 
 const ChessDetailsSchema = yup.object().shape({
@@ -22,80 +22,89 @@ const ChessDetailsSchema = yup.object().shape({
 const ChessDetailsStep: RegistrationWizardStep = {
   required: true,
   label: 'Chess details',
-  Component: ({ updateState, state, nextStep }) => {
+  Component: props => {
+    const { state, nextStep, mergeUpdateState, close, completeStep } = props;
     const [error, validate] = useValidation(ChessDetailsSchema);
-    const updateInput = useInputStateUpdate(300, updateState);
+    const updateInput = useInputStateUpdate(300, mergeUpdateState);
     return (
       <>
-        <Row>
-          <Col>
-            <FormGroup>
-              <Input
-                className="mt-4"
-                size="medium"
-                type="number"
-                placeholder="ELO rating"
-                name="state.elo"
-                value={state.state?.elo}
-                onChange={updateInput}
-              />
-            </FormGroup>
-            <Text fontSize="small" className="mt-3 mb-2">
-              Optional
-            </Text>
-            <Line />
-            <FormGroup>
-              <Input
-                className="mt-3"
-                size="medium"
-                type="text"
-                placeholder="FIDE title"
-                name="state.fideTitle"
-                value={state.state?.fideTitle}
-                onChange={updateInput}
-              />
-            </FormGroup>
-            <FormGroup>
-              <Input
-                className="mt-4"
-                size="medium"
-                type="email"
-                placeholder="Playing experience"
-                name="state.playingExperience"
-                value={state.state?.playingExperience}
-                onChange={updateInput}
-              />
-            </FormGroup>
-            <FormGroup>
-              <Input
-                className="mt-4"
-                size="medium"
-                type="email"
-                placeholder="Speciality"
-                name="state.speciality"
-                value={state.state?.speciality}
-                onChange={updateInput}
-              />
-            </FormGroup>
-            {error && (
-              <FormGroup>
-                <Label>{error.message}</Label>
+        <Modal.Body className="px-4 pt-0 pb-5">
+          <Row>
+            <Col>
+              <FormGroup className="mt-3">
+                <Label>Rating*</Label>
+                <Input
+                  size="small"
+                  type="number"
+                  placeholder="Elo"
+                  name="state.elo"
+                  value={state.state?.elo}
+                  onChange={updateInput}
+                />
               </FormGroup>
-            )}
-            <FormGroup className="mt-4 ">
-              <Button
-                stretch
-                type="submit"
-                onClick={() => {
-                  console.log(validate(state), state);
-                  validate(state) && nextStep();
-                }}
-              >
-                Next
-              </Button>
-            </FormGroup>
-          </Col>
-        </Row>
+              <FormGroup className="mt-3">
+                <Label>FIDE title</Label>
+                <SelectFideTitle
+                  fideTitle={state.state?.fideTitle}
+                  onChange={fideTitle =>
+                    mergeUpdateState({
+                      state: { fideTitle },
+                    })
+                  }
+                />
+              </FormGroup>
+              <FormGroup className="mt-3">
+                <Label>Experience</Label>
+                <Input
+                  size="small"
+                  type="email"
+                  placeholder="Shortly"
+                  name="state.playingExperience"
+                  value={state.state?.playingExperience}
+                  onChange={updateInput}
+                />
+              </FormGroup>
+              <FormGroup className="mt-3">
+                <Label>Play style</Label>
+                <Input
+                  size="small"
+                  placeholder="Speciality"
+                  name="state.speciality"
+                  value={state.state?.speciality}
+                  onChange={updateInput}
+                />
+              </FormGroup>
+              {error && (
+                <FormGroup className="mt-2">
+                  <Label>{error.message}</Label>
+                </FormGroup>
+              )}
+            </Col>
+          </Row>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="ghost"
+            size="small"
+            onClick={() => {
+              close();
+            }}
+          >
+            Maybe later
+          </Button>
+          <Button
+            variant="secondary"
+            size="small"
+            onClick={() => {
+              if (validate(state)) {
+                completeStep();
+                nextStep();
+              }
+            }}
+          >
+            Next
+          </Button>
+        </Modal.Footer>
       </>
     );
   },

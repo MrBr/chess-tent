@@ -31,8 +31,8 @@ const RegistrationTips: FunctionComponent<RegistrationTipsProps> = ({
         <Text fontSize="extra-small" color="light" className="mb-5">
           {subtitle}
         </Text>
-        {tips.map(({ sign, tip }) => (
-          <Row className="align-items-center mb-4">
+        {tips.map(({ sign, tip }, index) => (
+          <Row key={index} className="align-items-center mb-4">
             <Col className="col-auto">
               <Badge circle className="p-4" bg="bg">
                 <Text className="m-0">{sign}</Text>

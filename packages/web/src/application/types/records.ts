@@ -42,6 +42,7 @@ function getRecordInitByNamespace(
   );
 }
 
+type ActiveUserRecord = RecipeApiLoad<Requests['me']> & RecordBase<User>;
 type UserTrainingsRecord = RecipeApiLoad<Requests['trainings']> &
   RecordBase<LessonActivity[]> &
   RecipeCollection<LessonActivity>;
@@ -58,7 +59,10 @@ type CoachesRecord = RecipeApiLoad<Requests['coaches']> &
 type LessonRecord = RecipeApiLoad<Requests['lesson']> & RecordBase<Lesson>;
 
 export type Records<T = any> = {
-  activeUser: InitRecord<RecipeApiLoad<Requests['me']> & RecordBase<User>>;
+  activeUser: InitRecord<
+    ActiveUserRecord &
+      RecipeMethod<ActiveUserRecord, 'save', () => Promise<void>>
+  >;
   activeUserNotifications: InitRecord<
     RecipeApiLoad<Requests['notifications']> &
       RecordBase<Notification[]> &

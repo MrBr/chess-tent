@@ -26,8 +26,8 @@ const PageRegister = () => {
   const { update } = useActiveUserRecord(null);
   const history = useHistory();
   const query = useQuery<RegisterOptions>();
-
   const { flow } = query;
+
   useEffect(() => {
     if (response && !error) {
       update(response.data);

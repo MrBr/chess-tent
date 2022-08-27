@@ -42,7 +42,7 @@ import { Records } from './records';
 import { History, LocationState } from './router';
 import { GenericArguments } from './_helpers';
 import { ChessboardContext } from './context';
-import { WizardStep } from './ui';
+import { Wizard, WizardStep } from './ui';
 
 type UseMetaReturn<T> = [T, (meta: T) => void, () => void];
 
@@ -96,24 +96,10 @@ export type Hooks = {
   usePrompt: (
     render: (close: () => void) => ReactElement,
   ) => [ReactElement | undefined, () => void];
-  useWizard: <T extends {}>(
-    steps: WizardStep<T>[],
+  useWizard: <T extends {}, P extends {}>(
+    steps: WizardStep<T, P>[],
     initialState: T,
-    close: () => void,
-  ) => {
-    activeStep: WizardStep<T>;
-    activeStepIndex: number;
-    node: ReactNode;
-    nextStep: () => void;
-    prevStep: () => void;
-    resetWizardState: (resetState: Partial<T>) => void;
-    setActiveStep: (step: WizardStep<T>) => void;
-    completeStep: (step: WizardStep<T>) => void;
-    updateState: (state: Partial<T>) => void;
-    mergeUpdateState: (state: Partial<T>) => void;
-    steps: typeof steps;
-    visitedSteps: Set<WizardStep<T>>;
-  };
+  ) => Wizard<T, P>;
   useUpdateLessonStepState: <T extends Step>(
     updateStep: (step: T) => void,
     step: T,

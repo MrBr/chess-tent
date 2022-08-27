@@ -197,28 +197,32 @@ type DateTimeProps = {
   value?: string;
 } & Omit<InputPropsWithSizeEnhancer, 'onChange' | 'type' | 'value'>;
 
-export interface WizardStepProps<T extends {}> {
+export interface Wizard<T extends {}, P extends {} = {}> {
   nextStep: () => void;
   prevStep: () => void;
   state: T;
   updateState: (patch: Partial<T>) => void;
   mergeUpdateState: (patch: Partial<T>) => void;
   completeStep: (status?: boolean) => void;
-  completed: boolean;
-  close: () => void;
+  activeStepCompleted: boolean;
+  activeStepIndex: number;
+  steps: WizardStep<T, P>[];
+  activeStep: WizardStep<T, P>;
+  setActiveStep: (wizard: WizardStep<T, P>) => void;
+  visitedSteps: Set<WizardStep<T, P>>;
 }
 
-export interface WizardStep<T extends {}> {
+export interface WizardStep<T extends {}, P extends {} = {}> {
   label: ReactNode;
-  Component: ComponentType<WizardStepProps<T>>;
+  Component: ComponentType<Wizard<T, P> & P>;
   required?: boolean;
 }
 
-export interface WizardStepperProps<T extends {}> {
-  steps: WizardStep<T>[];
-  activeStep: WizardStep<T>;
-  setActiveStep: (wizard: WizardStep<T>) => void;
-  visitedSteps: Set<WizardStep<T>>;
+export interface WizardStepperProps<T extends {}, P extends {} = {}> {
+  steps: WizardStep<T, P>[];
+  activeStep: WizardStep<T, P>;
+  setActiveStep: (wizard: WizardStep<T, P>) => void;
+  visitedSteps: Set<WizardStep<T, P>>;
 }
 
 export type Icons =
@@ -459,8 +463,8 @@ export type UI = {
   OverlayTrigger: typeof BOverlayTrigger;
   Badge: UIComponent<BadgeProps & { circle?: boolean }>;
   ProgressBar: UIComponent<ProgressBarProps>;
-  WizardStepper: <T extends {}>(
-    props: WizardStepperProps<T>,
+  WizardStepper: <T extends {}, P extends {}>(
+    props: WizardStepperProps<T, P>,
   ) => ReactElement | null;
 
   /* Molecules */

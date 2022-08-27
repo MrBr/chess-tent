@@ -17,12 +17,12 @@ const { className } = css`
   }
 `;
 
-const Stepper = <T extends {}>({
+const Stepper = <T extends {}, P extends {}>({
   activeStep,
   setActiveStep,
   steps,
   visitedSteps,
-}: WizardStepperProps<T>) => {
+}: WizardStepperProps<T, P>) => {
   return (
     <div className={className}>
       {steps.map((step, index) => {

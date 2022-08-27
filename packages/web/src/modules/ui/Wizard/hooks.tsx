@@ -1,12 +1,11 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import merge from 'lodash/merge';
 
 import { Hooks, WizardStep } from '@types';
 
-const useWizard: Hooks['useWizard'] = <T extends {}>(
-  steps: WizardStep<T>[],
+const useWizard: Hooks['useWizard'] = <T extends {}, P extends {}>(
+  steps: WizardStep<T, P>[],
   initialState: T,
-  close: () => void,
 ) => {
   const [state, setState] = useState<T>(initialState);
   const [activeStepIndex, setActiveStepIndex] = useState(0);
@@ -81,18 +80,7 @@ const useWizard: Hooks['useWizard'] = <T extends {}>(
     setState(prevState => ({ ...prevState, ...newState }));
   }, []);
 
-  const node = (
-    <activeStep.Component
-      completeStep={completeStep}
-      nextStep={nextStep}
-      prevStep={prevStep}
-      state={state}
-      updateState={updateState}
-      mergeUpdateState={mergeUpdateState}
-      completed={completedSteps.has(activeStep)}
-      close={close}
-    />
-  );
+  const activeStepCompleted = completedSteps.has(activeStep);
 
   useEffect(() => {
     if (!visitedSteps.has(activeStep)) {
@@ -106,7 +94,6 @@ const useWizard: Hooks['useWizard'] = <T extends {}>(
   return {
     activeStep,
     activeStepIndex,
-    node,
     nextStep,
     prevStep,
     resetWizardState,
@@ -116,6 +103,8 @@ const useWizard: Hooks['useWizard'] = <T extends {}>(
     steps,
     visitedSteps,
     completeStep,
+    state,
+    activeStepCompleted,
   };
 };
 

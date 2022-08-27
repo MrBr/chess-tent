@@ -1,14 +1,13 @@
 import React from 'react';
 import { hooks, ui } from '@application';
 import * as yup from 'yup';
-import { updateSubject } from '@chess-tent/models';
 
 import { RegistrationWizardStep } from '../../types';
 import SelectLanguages from '../select-languages';
 import SelectStudentElo from '../select-student-elo';
 
 const { Button, FormGroup, Col, Row, Input, Modal, Label, InputGroup } = ui;
-const { useInputStateUpdate, useValidation, useActiveUserRecord } = hooks;
+const { useInputStateUpdate, useValidation } = hooks;
 
 const TeachingSchema = yup.object().shape({
   state: yup.object().shape({
@@ -27,10 +26,9 @@ const TeachingStep: RegistrationWizardStep = {
   required: true,
   label: 'Teaching',
   Component: props => {
-    const { state, mergeUpdateState, close } = props;
+    const { state, mergeUpdateState, nextStep, completeStep } = props;
     const [error, validate] = useValidation(TeachingSchema);
     const updateInput = useInputStateUpdate(300, mergeUpdateState);
-    const { update, save, value: user } = useActiveUserRecord();
     return (
       <>
         <Modal.Body className="px-4 pt-0 pb-5">
@@ -85,16 +83,6 @@ const TeachingStep: RegistrationWizardStep = {
                   }}
                 />
               </FormGroup>
-              <FormGroup className="mt-3">
-                <Label>Experience</Label>
-                <Input
-                  size="small"
-                  placeholder="In a few words"
-                  name="state.speciality"
-                  value={state.state?.teachingExperience}
-                  onChange={updateInput}
-                />
-              </FormGroup>
               {error && (
                 <FormGroup className="mt-2">
                   <Label>{error.message}</Label>
@@ -108,13 +96,13 @@ const TeachingStep: RegistrationWizardStep = {
             variant="secondary"
             size="small"
             onClick={() => {
-              if (validate(state) && state) {
-                update(updateSubject(user, state));
-                save().then(close);
+              if (validate(state)) {
+                completeStep();
+                nextStep();
               }
             }}
           >
-            Complete
+            Next
           </Button>
         </Modal.Footer>
       </>

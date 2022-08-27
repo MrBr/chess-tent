@@ -12,22 +12,18 @@ interface PostRegistrationWizardProps {
   subtitle: string;
 }
 
-const FunnelWizard = ({
+const RoleWizard = ({
   steps,
   close,
   title,
   subtitle,
 }: PostRegistrationWizardProps) => {
-  const wizard = useWizard(
-    steps,
-    {
-      state: {
-        studentEloMax: 1200,
-        studentEloMin: 500,
-      },
+  const wizard = useWizard(steps, {
+    state: {
+      studentEloMax: 1200,
+      studentEloMin: 500,
     },
-    close,
-  );
+  });
   return (
     <Modal close={close}>
       <Modal.Header className="border-0 pt-4 px-4">
@@ -39,9 +35,9 @@ const FunnelWizard = ({
           <WizardStepper {...wizard} />
         </Row>
       </Modal.Header>
-      {wizard.node}
+      {<wizard.activeStep.Component {...wizard} close={close} />}
     </Modal>
   );
 };
 
-export default FunnelWizard;
+export default RoleWizard;

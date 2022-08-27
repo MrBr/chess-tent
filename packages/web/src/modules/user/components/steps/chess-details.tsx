@@ -53,27 +53,6 @@ const ChessDetailsStep: RegistrationWizardStep = {
                   }
                 />
               </FormGroup>
-              <FormGroup className="mt-3">
-                <Label>Experience</Label>
-                <Input
-                  size="small"
-                  type="email"
-                  placeholder="Shortly"
-                  name="state.playingExperience"
-                  value={state.state?.playingExperience}
-                  onChange={updateInput}
-                />
-              </FormGroup>
-              <FormGroup className="mt-3">
-                <Label>Play style</Label>
-                <Input
-                  size="small"
-                  placeholder="Speciality"
-                  name="state.speciality"
-                  value={state.state?.speciality}
-                  onChange={updateInput}
-                />
-              </FormGroup>
               {error && (
                 <FormGroup className="mt-2">
                   <Label>{error.message}</Label>

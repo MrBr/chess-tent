@@ -33,7 +33,9 @@ const UserSettings: Components['UserSettings'] = ({ label }) => {
       </Dropdown.Toggle>
       <Dropdown.Menu>
         <Dropdown.Item>
-          <Text onClick={() => history.push('/me')}>Profile</Text>
+          <Text className="mb-0" onClick={() => history.push('/me')}>
+            Profile
+          </Text>
         </Dropdown.Item>
         {user.coach && (
           <Dropdown.Item>
@@ -41,10 +43,14 @@ const UserSettings: Components['UserSettings'] = ({ label }) => {
           </Dropdown.Item>
         )}
         <Dropdown.Item>
-          <Text onClick={() => history.push('/me/coaches')}>Coaches</Text>
+          <Text className="mb-0" onClick={() => history.push('/me/coaches')}>
+            Coaches
+          </Text>
         </Dropdown.Item>
         <Dropdown.Item>
-          <Text onClick={() => logout()}>Logout</Text>
+          <Text className="mb-0" onClick={() => logout()}>
+            Logout
+          </Text>
         </Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>

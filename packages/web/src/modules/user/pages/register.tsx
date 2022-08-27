@@ -56,7 +56,7 @@ const PageRegister = () => {
     >
       {({ setFieldValue, values }) => {
         const content =
-          registrationFlows[flow || values['coach'] ? 'teach' : 'student'];
+          registrationFlows[flow || (values['coach'] ? 'teach' : 'student')];
         return (
           <AuthPage sidebar={<RegistrationTips {...content.tips} />}>
             <RegistrationHeader

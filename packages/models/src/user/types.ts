@@ -1,4 +1,6 @@
 import { Subject } from '../subject';
+import { Difficulty } from '../lesson';
+import { Tag } from '../tag';
 
 export const TYPE_USER = 'users';
 
@@ -41,6 +43,11 @@ export interface User extends Subject {
     languages?: string[];
     country?: string;
     fideTitle?: FideTitles;
+    role?: {
+      level?: Difficulty;
+      tags?: Tag[];
+      note?: string;
+    };
   };
 }
 

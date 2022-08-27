@@ -1,13 +1,21 @@
 import React, { ComponentType, ReactElement, useEffect } from 'react';
 import { hooks, services } from '@application';
 import { LocationState } from '@types';
-import RoleWizard from '../components/role-wizard';
-import ChessDetailsStep from '../components/steps/chess-details';
-import TeachingStep from '../components/steps/teaching';
-import FinalizeStep from '../components/steps/finalize';
+import { User } from '@chess-tent/models';
+import RoleWizard, { RoleWizardProps } from '../components/role-wizard';
 
 const { useLocation, usePrompt, useActiveUserRecord } = hooks;
 const { addProvider } = services;
+
+const getUserFlow = (user: User, state?: LocationState) => {
+  if (!state?.from) {
+    return user?.coach ? 'teach' : 'student';
+  }
+  const flow = new URLSearchParams('?' + state.from.split('?')[1]).get(
+    'flow',
+  ) as RoleWizardProps['flow'];
+  return flow;
+};
 
 const shouldShowWizard = (state?: LocationState) =>
   state?.from
@@ -20,14 +28,8 @@ const Provider: ComponentType = ({ children }) => {
 
   const [prompt, promptWizard] = usePrompt(close => (
     <RoleWizard
-      steps={[ChessDetailsStep, TeachingStep, FinalizeStep]}
+      flow={getUserFlow(user as User, state) as RoleWizardProps['flow']}
       close={close}
-      title="Tell us a bit about yourself"
-      subtitle={
-        user?.coach
-          ? 'This will help students find you more easily'
-          : 'This will help the platform make better suggestions'
-      }
     />
   ));
 

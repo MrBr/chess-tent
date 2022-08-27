@@ -10,7 +10,7 @@ import {
   RequestFetch,
   ScheduledLessonActivityFilters,
 } from '@chess-tent/types';
-import { ReactElement, ReactNode } from 'react';
+import { ReactElement } from 'react';
 import {
   Step,
   Tag,

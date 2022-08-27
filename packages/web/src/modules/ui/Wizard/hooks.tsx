@@ -32,7 +32,10 @@ const useWizard: Hooks['useWizard'] = <T extends {}, P extends {}>(
   );
 
   const nextStep = useCallback(() => {
-    if (activeStepIndex >= steps.length - 1 || completedSteps.has(activeStep)) {
+    if (
+      activeStepIndex >= steps.length - 1 ||
+      !completedSteps.has(activeStep)
+    ) {
       return;
     }
 

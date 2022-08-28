@@ -24,7 +24,7 @@ export type Utils = {
     value: any,
     type: string,
   ) => { result: any; entities: {} };
-  mobileCss: (style: TemplateStringsArray) => string;
+  mobileCss: (style: TemplateStringsArray, ...args: any[]) => string;
   propEnhancer: <T extends {}>(
     prop: string | ((props: T) => string),
     style: Record<string, CSSObject>,

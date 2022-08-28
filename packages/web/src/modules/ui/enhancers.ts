@@ -1,6 +1,6 @@
 import { ComponentProps } from 'react';
 import { UI, Utils } from '@types';
-import styled from '@chess-tent/styled-props';
+import styled, { css } from '@chess-tent/styled-props';
 
 export const inputSizePropStyle = styled.props.size.css`
   &.small {
@@ -76,10 +76,13 @@ export const sizeEnhancer = (
   }
 };
 
-export const mobileCss: Utils['mobileCss'] = (style: TemplateStringsArray) => {
+export const mobileCss: Utils['mobileCss'] = (
+  style: TemplateStringsArray,
+  ...args: any[]
+) => {
   return `
     @media screen and (max-width: 768px) {
-      ${style}
+      ${css(style, ...args).staticStyle}
     }
   `;
 };

@@ -14,7 +14,7 @@ const UserAvatar: Components['UserAvatar'] = ({
     className={className}
     size={size}
     onClick={onClick}
-    src={undefined}
+    src={user.state.imageUrl}
     name={user.name}
   />
 );

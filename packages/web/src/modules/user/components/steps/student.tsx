@@ -12,7 +12,7 @@ const StudentStep: RegistrationWizardStep = {
   label: 'Learning',
   Component: props => {
     const { state, mergeUpdateState, nextStep } = props;
-    const updateInput = useInputStateUpdate(300, mergeUpdateState);
+    const updateInput = useInputStateUpdate(200, mergeUpdateState);
     return (
       <>
         <Modal.Body className="px-4 pt-0 pb-5">
@@ -26,7 +26,7 @@ const StudentStep: RegistrationWizardStep = {
                   rows={2}
                   placeholder="Current problems"
                   name="state.role.note"
-                  value={state.state?.role?.note}
+                  defaultValue={state.state?.role?.note}
                   onChange={updateInput}
                 />
               </FormGroup>

@@ -12,7 +12,7 @@ const FinalizeStep: RegistrationWizardStep = {
   label: 'Finalize',
   Component: props => {
     const { state, mergeUpdateState, close } = props;
-    const updateInput = useInputStateUpdate(300, mergeUpdateState);
+    const updateInput = useInputStateUpdate(200, mergeUpdateState);
     const { update, save, value: user } = useActiveUserRecord();
     return (
       <>
@@ -31,7 +31,7 @@ const FinalizeStep: RegistrationWizardStep = {
                   size="small"
                   placeholder="Few words about yourself"
                   name="state.about"
-                  value={state.state?.about}
+                  defaultValue={state.state?.about}
                   onChange={updateInput}
                 />
               </FormGroup>

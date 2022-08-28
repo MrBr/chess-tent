@@ -25,7 +25,7 @@ const ChessDetailsStep: RegistrationWizardStep = {
   Component: props => {
     const { state, nextStep, mergeUpdateState, close, completeStep } = props;
     const [error, validate] = useValidation(ChessDetailsSchema);
-    const updateInput = useInputStateUpdate(300, mergeUpdateState);
+    const updateInput = useInputStateUpdate(200, mergeUpdateState);
     return (
       <>
         <Modal.Body className="px-4 pt-0 pb-5">
@@ -38,7 +38,7 @@ const ChessDetailsStep: RegistrationWizardStep = {
                   type="number"
                   placeholder="Elo"
                   name="state.elo"
-                  value={state.state?.elo}
+                  defaultValue={state.state?.elo}
                   onChange={updateInput}
                 />
               </FormGroup>

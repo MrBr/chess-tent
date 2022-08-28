@@ -28,7 +28,7 @@ const TeachingStep: RegistrationWizardStep = {
   Component: props => {
     const { state, mergeUpdateState, nextStep, completeStep } = props;
     const [error, validate] = useValidation(TeachingSchema);
-    const updateInput = useInputStateUpdate(300, mergeUpdateState);
+    const updateInput = useInputStateUpdate(200, mergeUpdateState);
     return (
       <>
         <Modal.Body className="px-4 pt-0 pb-5">
@@ -40,7 +40,7 @@ const TeachingStep: RegistrationWizardStep = {
                   size="small"
                   placeholder="Be creative"
                   name="state.punchline"
-                  value={state.state?.punchline}
+                  defaultValue={state.state?.punchline}
                   onChange={updateInput}
                 />
               </FormGroup>
@@ -52,7 +52,7 @@ const TeachingStep: RegistrationWizardStep = {
                     type="number"
                     placeholder="Be fair"
                     name="state.pricing"
-                    value={state.state?.pricing}
+                    defaultValue={state.state?.pricing}
                     onChange={updateInput}
                   />
                   <InputGroup.Text>$/hr</InputGroup.Text>

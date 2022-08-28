@@ -17,8 +17,8 @@ const getUserFlow = (user: User, state?: LocationState) => {
   return flow;
 };
 
-const shouldShowWizard = (state?: LocationState) =>
-  state?.from
+const shouldShowWizard = (state?: LocationState, elo?: number) =>
+  state?.from && !elo
     ? state?.from?.search(/^.*?\bregister\b.*?\bflow\b.*?$/) > -1
     : false;
 
@@ -34,10 +34,10 @@ const Provider: ComponentType = ({ children }) => {
   ));
 
   useEffect(() => {
-    if (shouldShowWizard(state) && user?.id) {
+    if (shouldShowWizard(state, user?.state.elo) && user?.id) {
       promptWizard();
     }
-  }, [user?.id, state, promptWizard]);
+  }, [user?.id, user?.state.elo, state, promptWizard]);
 
   return (
     <>

@@ -34,10 +34,10 @@ const PageLogin = () => {
   }
 
   return (
-    <AuthPage sidebar={<RegistrationHero />}>
+    <AuthPage tips={<RegistrationHero />}>
       <Row>
         <Col>
-          <Headline4>Sign in</Headline4>
+          <Headline4 className="mt-4">Sign in</Headline4>
           <Text fontSize="extra-small">
             Don’t have an account? <Link to="/register">Sign Up</Link>
           </Text>

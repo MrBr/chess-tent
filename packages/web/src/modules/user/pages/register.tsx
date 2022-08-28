@@ -58,7 +58,7 @@ const PageRegister = () => {
         const content =
           registrationFlows[flow || (values['coach'] ? 'teach' : 'student')];
         return (
-          <AuthPage sidebar={<RegistrationTips {...content.tips} />}>
+          <AuthPage tips={<RegistrationTips {...content.tips} />}>
             <RegistrationHeader
               title={content.title}
               subtitle={content.subtitle}

@@ -25,14 +25,14 @@ const RegistrationTips: FunctionComponent<RegistrationTipsProps> = ({
   subtitle,
 }) => {
   return (
-    <div className={className}>
-      <Col xs="10">
+    <Row className={className}>
+      <Col sm={10}>
         <Headline4 color="light">{title}</Headline4>
         <Text fontSize="extra-small" color="light" className="mb-5">
           {subtitle}
         </Text>
         {tips.map(({ sign, tip }, index) => (
-          <Row key={index} className="align-items-center mb-4">
+          <Row key={index} className="align-items-center mb-4 d-none d-sm-flex">
             <Col className="col-auto">
               <Badge circle className="p-4" bg="bg">
                 <Text className="m-0">{sign}</Text>
@@ -46,7 +46,7 @@ const RegistrationTips: FunctionComponent<RegistrationTipsProps> = ({
           </Row>
         ))}
       </Col>
-    </div>
+    </Row>
   );
 };
 

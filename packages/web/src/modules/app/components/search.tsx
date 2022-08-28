@@ -94,7 +94,7 @@ const Search: Components['Search'] = ({ className }) => {
       formatOptionLabel={formatOptionLabel}
       filterOption={() => true}
       icon="search"
-      placeholder="Search anything"
+      placeholder="Search"
       className={className}
       isSearchable
       hideDropdownIndicator

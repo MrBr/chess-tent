@@ -3,7 +3,7 @@ import { components, hooks, ui } from '@application';
 import MentorshipCard from '../components/card';
 
 const { useActiveUserRecord, useCoaches, useOpenConversations } = hooks;
-const { Container, Row, Col, Headline5, Button } = ui;
+const { Row, Col, Headline5, Button } = ui;
 const { MentorshipAction, Page } = components;
 
 const Coaches = () => {
@@ -13,7 +13,7 @@ const Coaches = () => {
   return (
     <Page>
       {conversationCanvas}
-      <Container fluid className="px-5 py-4">
+      <Page.Body>
         <Headline5 className="mb-3">My coaches</Headline5>
         <Row>
           {coaches?.map(mentorship => (
@@ -37,7 +37,7 @@ const Coaches = () => {
             </MentorshipCard>
           ))}
         </Row>
-      </Container>
+      </Page.Body>
     </Page>
   );
 };

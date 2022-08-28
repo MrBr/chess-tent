@@ -6,7 +6,7 @@ const { Container, Row } = ui;
 
 const HeaderContainer: Components['Header'] = ({ children, className }) => {
   return (
-    <Container fluid className={`${className} h-100 ps-5 pe-5`}>
+    <Container fluid className={`${className} h-100 px-sm-5 px-xs-3`}>
       <Row className="h-100 align-items-center">{children}</Row>
     </Container>
   );

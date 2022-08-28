@@ -17,15 +17,15 @@ const HeaderDashboard: ComponentType = () => {
       <Col>
         <Search />
       </Col>
-      <Col className="d-flex align-items-center justify-content-end">
+      <Col className="d-flex align-items-center justify-content-end col-auto">
         <ConversationsStand />
         <NotificationStand />
-        <Invitation />
+        <Invitation className="d-none d-sm-inline-block" />
         <Button
           onClick={() => history.push('/lesson/new')}
           size="small"
           variant="secondary"
-          className="ps-3 pe-3"
+          className="ps-3 pe-3 d-none d-sm-inline-block"
         >
           New template
         </Button>

@@ -63,8 +63,7 @@ const PageProfile = ({
         <Header className="border-bottom">
           <Col className="col-auto">
             <Breadcrumbs>
-              <Breadcrumbs.Item href="/">Coaches</Breadcrumbs.Item>
-              <Breadcrumbs.Item>{user.name}</Breadcrumbs.Item>
+              <Breadcrumbs.Item>User profile</Breadcrumbs.Item>
             </Breadcrumbs>
           </Col>
           <Col />
@@ -100,7 +99,7 @@ const PageProfile = ({
       }
     >
       {conversationOffset}
-      <Container fluid className="px-5 py-4">
+      <Page.Body className="py-4">
         <Headline4 className="mb-0">
           <Text inherit color="secondary">
             {user.state.fideTitle}
@@ -180,7 +179,7 @@ const PageProfile = ({
             </Col>
           )}
         </Row>
-      </Container>
+      </Page.Body>
     </Page>
   );
 };

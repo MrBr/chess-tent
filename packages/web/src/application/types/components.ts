@@ -63,7 +63,7 @@ import {
   StepSystemProps,
 } from './step';
 import { ClassComponent, ClassNameProps, ClickProps } from './_helpers';
-import { OptionsDropdownProps, ButtonProps, UI } from './ui';
+import { OptionsDropdownProps, ButtonProps, UI, UIComponent } from './ui';
 import {
   ApiStatus,
   AppAnalysis,
@@ -369,7 +369,7 @@ export type Components = {
   Logo: ComponentType<ImgHTMLAttributes<HTMLImageElement>>;
   TabBar: ComponentType & {
     TabButton: ComponentType<{
-      path: string;
+      path?: string;
       className?: string;
       children: ReactNode;
     }>;
@@ -377,7 +377,9 @@ export type Components = {
   ApiStatusLabel: ComponentType<{ status: ApiStatus }>;
   LoadMore: ComponentType;
   // Page with common layout setup
-  Page: ComponentType<{ header?: ReactElement; tabbar?: ReactElement }>;
+  Page: ComponentType<{ header?: ReactElement; tabbar?: ReactElement }> & {
+    Body: UIComponent;
+  };
   Layout: ComponentType<{
     className?: string;
     footer?: ReactElement | null;
@@ -543,5 +545,5 @@ export type Components = {
     description: string;
     close: () => void;
   }>;
-  Invitation: ComponentType;
+  Invitation: ComponentType<ClassNameProps>;
 };

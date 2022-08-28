@@ -3,7 +3,7 @@ import { css } from '@chess-tent/styled-props';
 import { ui, hooks, components, utils } from '@application';
 
 const { Redirect, Link, Logo } = components;
-const { Container, Col, Row, Page } = ui;
+const { Container, Col, Row } = ui;
 const { mobileCss } = utils;
 
 const { className } = css`
@@ -60,7 +60,7 @@ const PageAuth = ({
   }
 
   return (
-    <Page className={className}>
+    <Container fluid className={className}>
       <Container className="h-100">
         <Row>
           <Col>
@@ -78,7 +78,7 @@ const PageAuth = ({
           {tips}
         </Container>
       </Container>
-    </Page>
+    </Container>
   );
 };
 

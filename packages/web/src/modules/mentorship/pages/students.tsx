@@ -4,7 +4,7 @@ import { groupBy } from 'lodash';
 import MentorshipCard from '../components/card';
 
 const { useActiveUserRecord, useStudents, useOpenConversations } = hooks;
-const { Container, Row, Headline6, Headline5, Button } = ui;
+const { Row, Headline6, Headline5, Button } = ui;
 const { MentorshipAction, Page } = components;
 
 const Students = () => {
@@ -19,7 +19,7 @@ const Students = () => {
   return (
     <Page>
       {conversationCanvas}
-      <Container fluid className="px-5 py-4">
+      <Page.Body>
         <Headline5>My students</Headline5>
         <Headline6 className="my-3">Pending approval</Headline6>
         <Row>
@@ -69,7 +69,7 @@ const Students = () => {
             />
           ))}
         </Row>
-      </Container>
+      </Page.Body>
     </Page>
   );
 };

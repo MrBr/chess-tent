@@ -1,12 +1,13 @@
 import React from 'react';
 import { hooks, ui, components, constants } from '@application';
+import { Components } from '@types';
 
 const { useActiveUserRecord, usePrompt } = hooks;
 const { Share } = components;
 const { Button } = ui;
 const { APP_DOMAIN } = constants;
 
-const Invitation = () => {
+const Invitation: Components['Invitation'] = ({ className }) => {
   const { value: activeUser } = useActiveUserRecord();
 
   const link = `${APP_DOMAIN}/register?referrer=${activeUser.id}`;
@@ -19,7 +20,7 @@ const Invitation = () => {
   ));
 
   return (
-    <div className="h-25 me-3">
+    <div className={`h-25 me-3 ${className}`}>
       {inviteOffcanvas}
       <Button onClick={promptInvite} size="extra-small" variant="text">
         Invite

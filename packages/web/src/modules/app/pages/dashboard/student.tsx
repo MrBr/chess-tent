@@ -12,7 +12,7 @@ const {
   useHistory,
   useOpenConversations,
 } = hooks;
-const { Row, Col, Container, Headline5, CardEmpty } = ui;
+const { Row, Col, Headline5, CardEmpty } = ui;
 
 const DashboardStudent = ({ user }: { user: User }) => {
   const { value: trainings } = useUserTrainings(user);
@@ -27,7 +27,7 @@ const DashboardStudent = ({ user }: { user: User }) => {
   return (
     <Page>
       {offcanvas}
-      <Container fluid className="ps-5 pe-5 pb-5">
+      <Page.Body>
         <Welcome name={user.name} />
         {coaches.value && coaches.value.length === 0 && (
           <CardEmpty
@@ -79,7 +79,7 @@ const DashboardStudent = ({ user }: { user: User }) => {
             </Col>
           </Row>
         )}
-      </Container>
+      </Page.Body>
     </Page>
   );
 };

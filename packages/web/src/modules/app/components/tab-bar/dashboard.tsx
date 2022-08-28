@@ -1,10 +1,11 @@
 import React from 'react';
-import { ui } from '@application';
+import { components, ui } from '@application';
 
 import TabBarContainer from './container';
 import TabButton from './tab-button';
 
 const { Icon } = ui;
+const { UserSettings } = components;
 
 const TabBarDashboard = () => {
   return (
@@ -19,11 +20,14 @@ const TabBarDashboard = () => {
       </TabButton>
       <TabButton path="/lesson/new">
         <Icon type="plus" textual />
-        Create
+        Template
       </TabButton>
       <TabButton path="/coaches">
         <Icon type="crown" textual />
         Coaches
+      </TabButton>
+      <TabButton>
+        <UserSettings />
       </TabButton>
     </TabBarContainer>
   );

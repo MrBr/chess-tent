@@ -16,11 +16,9 @@ export default styled<Components['Layout']>(
     height: 54,
     boxShadow: '0px 1px 0px #ECECEC',
     zIndex: 11,
-    padding: '0 3em',
   },
   '.layout-content': {
     gridArea: 'content',
-    padding: '0 3em',
     background: '#FAFBFB',
     position: 'relative',
     overflowY: 'scroll',

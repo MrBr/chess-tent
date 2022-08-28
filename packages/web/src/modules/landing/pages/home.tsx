@@ -25,7 +25,6 @@ const {
   Text,
   Headline1,
   Img,
-  Page,
   Hero,
   Button,
   Icon,
@@ -77,7 +76,7 @@ const { className } = css`
 
 export const LandingPage = () => {
   return (
-    <Page className={className}>
+    <Container fluid className={className}>
       <Topbar />
       <Section>
         <Container>
@@ -327,7 +326,7 @@ export const LandingPage = () => {
       </Section>
       <CTA />
       <Footer />
-    </Page>
+    </Container>
   );
 };
 

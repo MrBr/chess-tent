@@ -3,7 +3,7 @@ import { components, hooks, ui } from '@application';
 
 const { Page, LessonTemplates } = components;
 const { useMyLessons, useOpenTemplate } = hooks;
-const { Headline4, Text, Container } = ui;
+const { Headline4, Text } = ui;
 
 const Templates: React.FC = () => {
   const lessons = useMyLessons();
@@ -12,7 +12,7 @@ const Templates: React.FC = () => {
 
   return (
     <Page>
-      <Container className="ps-5 pe-5" fluid>
+      <Page.Body>
         <Headline4 className="m-0 mt-4">Templates ✏️</Headline4>
         <Text className="mb-5">Your training and lesson templates.</Text>
         {lessons.value && (
@@ -21,7 +21,7 @@ const Templates: React.FC = () => {
             onLessonClick={openTemplatePage}
           />
         )}
-      </Container>
+      </Page.Body>
     </Page>
   );
 };

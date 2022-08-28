@@ -14,7 +14,7 @@ import {
   File,
   InputGroup,
 } from './Form';
-import { Container, Row, Col, Page } from './Grid';
+import { Container, Row, Col } from './Grid';
 import { Select, AsyncSelect } from './Select';
 import Dropdown, { OptionsDropdown } from './Dropdown';
 import { Tooltip } from './Tooltip';
@@ -85,7 +85,6 @@ application.ui.Avatar = Avatar;
 application.ui.Thumbnail = Thumbnail;
 
 application.ui.Container = Container;
-application.ui.Page = Page;
 application.ui.Breadcrumbs = Breadcrumbs;
 application.ui.Tabs = Tabs;
 application.ui.Tab = Tab;

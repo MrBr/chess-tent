@@ -418,7 +418,6 @@ export type UI = {
   Line: UIComponent;
   LoadMore: UIComponent<LoadMoreProps>;
   Spinner: UIComponent<SpinnerProps>;
-  Page: UIComponent<ContainerProps>;
   Breadcrumbs: UIComponent & { Item: ComponentType<BreadcrumbItemProps> };
   Tabs: typeof Tabs;
   Tab: typeof Tab;

@@ -12,7 +12,7 @@ const TabButton = styled<Components['TabBar']['TabButton']>(
     return (
       <div
         className={`${className} ${active ? 'active' : ''}`}
-        onClick={() => history.push(path)}
+        onClick={() => !!path && history.push(path)}
       >
         {children}
       </div>

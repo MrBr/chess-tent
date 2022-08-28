@@ -21,7 +21,6 @@ const {
   Select,
   Headline5,
   Headline6,
-  Container,
   Breadcrumbs,
 } = ui;
 
@@ -50,7 +49,6 @@ const EditUserPage = ({ user }: { user: User }) => {
             <Header className="justify-content-between border-bottom">
               <Col className="col-auto">
                 <Breadcrumbs>
-                  <Breadcrumbs.Item href="/">Coaches</Breadcrumbs.Item>
                   <Breadcrumbs.Item>{user.name}</Breadcrumbs.Item>
                   <Breadcrumbs.Item>Edit</Breadcrumbs.Item>
                 </Breadcrumbs>
@@ -84,7 +82,7 @@ const EditUserPage = ({ user }: { user: User }) => {
             </Header>
           }
         >
-          <Container fluid className="px-5 py-4">
+          <Page.Body className="py-4">
             <Headline5 className="mb-3">Profile</Headline5>
             <Headline6>Basic</Headline6>
             <Row className="mt-2">
@@ -238,7 +236,7 @@ const EditUserPage = ({ user }: { user: User }) => {
                 </Row>
               </>
             )}
-          </Container>
+          </Page.Body>
         </Page>
       )}
     </Form>

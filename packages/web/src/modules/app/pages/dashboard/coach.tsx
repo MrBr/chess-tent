@@ -4,7 +4,7 @@ import { User } from '@chess-tent/models';
 import Welcome from './welcome';
 
 const { Page, ScheduledTrainings, Trainings, LessonTemplates } = components;
-const { Button, Row, Col, Headline5, CardEmpty, Container } = ui;
+const { Button, Row, Col, Headline5, CardEmpty } = ui;
 const {
   useMyLessons,
   usePromptNewTrainingModal,
@@ -40,7 +40,7 @@ const DashboardCoach = ({ user }: { user: User }) => {
   return (
     <Page>
       {trainingModal}
-      <Container fluid className="ps-5 pe-5 pb-4">
+      <Page.Body>
         <Welcome name={user.name} />
         <Row className="mt-5 mb-3">
           <Col>
@@ -123,7 +123,7 @@ const DashboardCoach = ({ user }: { user: User }) => {
             </Col>
           </Row>
         )}
-      </Container>
+      </Page.Body>
     </Page>
   );
 };

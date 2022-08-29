@@ -103,7 +103,7 @@ export const LandingPage = () => {
             <Row className="justify-content-center">
               <Col className="col-auto mt-4">
                 <Link to="/register?flow=student" ghost>
-                  <Button variant="ghost">Connect with mentor</Button>
+                  <Button variant="ghost">Connect with a coach</Button>
                 </Link>
               </Col>
               <Col className="col-auto mt-4">
@@ -113,7 +113,7 @@ export const LandingPage = () => {
               </Col>
               <Col className="col-auto mt-4">
                 <Link to="/register?flow=teach" ghost>
-                  <Button variant="ghost">Be mentor</Button>
+                  <Button variant="ghost">Be a coach</Button>
                 </Link>
               </Col>
             </Row>
@@ -128,19 +128,16 @@ export const LandingPage = () => {
               sm={12}
               className="d-flex flex-column justify-content-center"
             >
-              <Headline2>Connect with mentor</Headline2>
+              <Headline2>Connect with a coach</Headline2>
               <Text fontSize="small" className="my-4">
-                The best way to improve your chess skill and break plateau is
-                with a{' '}
-                <Text weight={500} inline>
-                  mentor
-                </Text>
-                . Mentor can guide you in the process, create custom tailored
-                lessons and teach in real time or asynchronously.
+                Want to improve your chess skills? Having a coach is fun and
+                exciting way to get better. Experienced chess coach can guide
+                you in the process, create custom tailored lessons and teach in
+                real-time or on-demand.
               </Text>
               <div className="mb-5">
                 <Link to="/register" ghost>
-                  <Button>Let's find you a mentor</Button>
+                  <Button>Let's find you a coach</Button>
                 </Link>
               </div>
             </Col>
@@ -159,16 +156,17 @@ export const LandingPage = () => {
             <Col>
               <Text weight={500}>🚀 Live training</Text>
               <Text>
-                The best way to improve your chess skills. Coach guides and
-                tailors training that fits your skill in real time online.
+                The best way to improve your chess skills. Learn in real-time
+                with a coach in custom tailored lesson that perfectly fits your
+                skills.
               </Text>
             </Col>
             <Col>
               <Text weight={500}>📖 Individual program</Text>
               <Text>
-                Coach creates a lesson specifically for you, based on your level
-                and type of play. Solve the lesson at your own pace and
-                communicate with coach through the comments.
+                Training plan created just for you, based on your level and
+                style of play. Learn at your own pace and communicate with a
+                coach through the comments.
               </Text>
             </Col>
           </Row>
@@ -184,9 +182,10 @@ export const LandingPage = () => {
             >
               <Headline2>Prefer learning alone?</Headline2>
               <Text fontSize="small" className="my-4">
-                No problem! We understand everyone has an unique way of learning
-                and got your back. Our official team of coaches is working hard
-                to create free public lessons.
+                No problem! We understand everyone has a unique way of learning
+                and got we your back. Our official team of coaches is working
+                hard to create free public lessons designed to help you practice
+                on your own.
               </Text>
               <div className="mb-5">
                 <Link to="/register" ghost>
@@ -252,7 +251,7 @@ export const LandingPage = () => {
                 you teach in the best possible way.
               </Text>
               <Link to="/register" ghost className="text-center">
-                <Button>Become mentor</Button>
+                <Button>Become a coach</Button>
               </Link>
             </Col>
           </Row>
@@ -264,7 +263,7 @@ export const LandingPage = () => {
                 fontSize="extra-small"
                 color="secondary"
               >
-                Coach tools
+                Tools for coaches
               </Text>
               <Headline3>Editor</Headline3>
               <Text className="mb-4">
@@ -300,11 +299,11 @@ export const LandingPage = () => {
                 fontSize="extra-small"
                 color="secondary"
               >
-                Coach tools
+                Tools for coaches
               </Text>
               <Headline3>Training room</Headline3>
               <Text className="mb-4">
-                Work together with your students in real time or asynchronously.
+                Collaborate with your students in real-time or on-demand.
               </Text>
               <ul className="list-unstyled">
                 <Text fontSize="small" as="li" className="mb-3">

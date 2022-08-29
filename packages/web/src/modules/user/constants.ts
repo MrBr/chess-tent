@@ -13,7 +13,7 @@ export const registrationFlows: Record<
     title: 'Register as a Coach',
     subtitle: 'Help people exceed in the game of chess',
     tips: {
-      title: 'Be a mentor',
+      title: 'Be a coach',
       subtitle:
         'Our platform offers a variety of tools to help you teach in the best possible way',
       tips: [
@@ -58,9 +58,9 @@ export const registrationFlows: Record<
     title: 'Register as a Student',
     subtitle: 'Find a guide for your chess endeavours',
     tips: {
-      title: 'Connect with a mentor',
+      title: 'Connect with a coach',
       subtitle:
-        'Create your account to start searching a mentor and improve your chess skills',
+        'Create your account to start searching a coach and improve your chess skills',
       tips: [
         {
           sign: '🎓',

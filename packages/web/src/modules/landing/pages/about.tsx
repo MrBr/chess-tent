@@ -334,7 +334,7 @@ export const LandingPage = () => {
                   Luka Bracanović
                 </Headline5>
                 <Text fontSize="small" align="center">
-                  The founder
+                  Founder
                 </Text>
               </div>
             </Col>

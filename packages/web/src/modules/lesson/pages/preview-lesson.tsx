@@ -167,7 +167,7 @@ const PreviewLesson = () => {
       {shareOffcanvas}
       <Container fluid className="h-100">
         <Row className="h-100">
-          <Col xs={12} sm={7}>
+          <Col xs={12} sm={7} className="h-75 h-sm-auto">
             <Chessboard
               fen={firstStep.state.position as string}
               shapes={firstStep.state.shapes}

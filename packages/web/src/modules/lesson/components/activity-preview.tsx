@@ -123,16 +123,25 @@ const PreviewModal = ({
     <Header className="border-bottom">
       <Col className="col-auto">
         <Breadcrumbs>
-          <Breadcrumbs.Item href="/">Dashboard</Breadcrumbs.Item>
-          <Breadcrumbs.Item onClick={close}>Template</Breadcrumbs.Item>
-          <Breadcrumbs.Item>Preview</Breadcrumbs.Item>
+          <Breadcrumbs.Item href="/" className="d-none d-sm-inline-block">
+            Dashboard
+          </Breadcrumbs.Item>
+          <Breadcrumbs.Item
+            onClick={close}
+            className="d-none d-sm-inline-block"
+          >
+            Template
+          </Breadcrumbs.Item>
+          <Breadcrumbs.Item className="d-none d-sm-inline-block">
+            Preview
+          </Breadcrumbs.Item>
         </Breadcrumbs>
       </Col>
       <Col className="text-center">
-        <Badge>You're now previewing as a student</Badge>
+        <Badge>Previewing as a student</Badge>
       </Col>
-      <Col className="col-auto">
-        <Button onClick={close} variant="tertiary" size="small">
+      <Col className="col-auto ">
+        <Button onClick={close} variant="tertiary" size="extra-small">
           Close
         </Button>
       </Col>

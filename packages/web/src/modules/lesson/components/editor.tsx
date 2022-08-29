@@ -28,24 +28,14 @@ import {
 } from '@types';
 import * as H from 'history';
 import { debounce } from 'lodash';
-import { components, hooks, services, state, ui } from '@application';
-import Sidebar from './editor-sidebar';
+import { components, hooks, services, state, ui, utils } from '@application';
+import { css } from '@chess-tent/styled-props';
 import ChaptersDropdown from './chapters-dropdown';
 import RootStepButton from './editor-sidebar-root-step-button';
-import SidebarSection from './editor-sidebar-section';
 import { useLessonParams } from '../hooks/lesson';
 
-const {
-  Container,
-  Row,
-  Col,
-  Icon,
-  Button,
-  OverlayTrigger,
-  Tooltip,
-  ToggleButton,
-  Text,
-} = ui;
+const { Row, Col, Icon, Button, OverlayTrigger, Tooltip, ToggleButton, Text } =
+  ui;
 const { createChapter, updateStepRotation, logException } = services;
 const {
   Stepper,
@@ -60,6 +50,79 @@ const {
   actions: { serviceAction },
 } = state;
 const { useDispatchBatched, useLocation, useHistory } = hooks;
+const { mobileCss } = utils;
+
+const { className } = css`
+  width: 100%;
+  // class "editor" and styles overflow-hidden position-relative
+  // Used in step-toolbox to prevent scrollbar flickering until toolbox fades
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+
+  .editor-board {
+    grid-area: board;
+    border-right: 1px solid var(--grey-400-color);
+    padding: 25px 80px 0 90px;
+  }
+
+  .editor-actions {
+    grid-area: actions;
+    padding: 24px 24px 0 24px;
+    border-bottom: 1px solid var(--grey-400-color);
+  }
+
+  .editor-sidebar {
+    grid-area: sidebar;
+    padding: 12px 0px;
+
+    > * {
+      margin-bottom: 24px;
+    }
+  }
+
+  .editor-navigation {
+    grid-area: navigation;
+    background: var(--light-color);
+    padding: 24px;
+  }
+
+  display: grid;
+  grid-template-rows: min-content 1fr min-content;
+  grid-template-columns: 6fr 3.5fr;
+  grid-template-areas:
+    'board actions'
+    'board sidebar'
+    'board navigation';
+
+  ${mobileCss`
+    overflow: unset;
+
+    .editor-board {
+      padding: 0px;
+    }
+
+    .editor-sidebar {
+      padding-left: 12px;
+    }
+
+    .editor-navigation {
+      border-top: 1px solid var(--grey-400-color);
+      position: sticky;
+      width: 100%;
+      left: 0;
+      bottom: 0;
+    }
+
+    grid-template-rows: 75% min-content min-content auto;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+    'board'
+    'actions'
+    'sidebar'
+    'navigation';
+  `}
+`;
 
 type EditorRendererProps = ComponentProps<Components['Editor']> & {
   activeChapter: Chapter;
@@ -391,115 +454,107 @@ class EditorRenderer extends React.Component<
 
   render() {
     const { activeStep, lesson, activeChapter, lessonStatus } = this.props;
-    // classes: editor overflow-hidden position-relative
-    // Used in step-toolbox to prevent scrollbar flickering until toolbox fades
-    const editorClassName =
-      'px-0 h-100 editor overflow-hidden position-relative';
 
     return (
       <ChessboardContextProvider>
-        <Container fluid className={editorClassName}>
-          <Row className="g-0 h-100">
-            <Col className="pt-3">
-              {/*
+        <div className={`${className} editor`}>
+          <div className="editor-board">
+            {/*
                Maybe it can be optimised by making a function call like stepRenderer().
                React shouldn't unmount the same components lower in chain such as board in that case.
                Currently, different step types unmount the board.
               */}
-              <StepRenderer
-                key={lesson.id}
-                step={activeStep}
-                component="EditorBoard"
+            <StepRenderer
+              key={lesson.id}
+              step={activeStep}
+              component="EditorBoard"
+              activeStep={activeStep}
+              setActiveStep={this.setActiveStepHandler}
+              stepRoot={activeChapter}
+              status={lessonStatus}
+              Chessboard={this.renderChessboard}
+              updateChapter={this.updateChapter}
+              updateStep={this.updateStep}
+              removeStep={this.deleteStep}
+            />
+          </div>
+          <div className="editor-actions">
+            <ChaptersDropdown
+              editable
+              activeChapter={activeChapter}
+              chapters={lesson.state.chapters}
+              onChange={this.setActiveChapterHandler}
+              onEdit={this.updateChapterTitle}
+              onNew={this.addNewChapter}
+              onRemove={this.removeChapter}
+              onMove={this.moveChapter}
+            />
+          </div>
+          <div className="editor-sidebar">
+            <div className="ps-3">
+              <Evaluation />
+            </div>
+            <div className="h-100 overflow-y-auto position-relative ps-4">
+              <Stepper
                 activeStep={activeStep}
                 setActiveStep={this.setActiveStepHandler}
                 stepRoot={activeChapter}
-                status={lessonStatus}
-                Chessboard={this.renderChessboard}
                 updateChapter={this.updateChapter}
                 updateStep={this.updateStep}
                 removeStep={this.deleteStep}
+                root
+                renderToolbox={this.renderToolbox}
               />
-            </Col>
-            <Col md={6} lg={4} className="mh-100 position-relative">
-              <Sidebar>
-                <SidebarSection>
-                  <ChaptersDropdown
-                    editable
-                    activeChapter={activeChapter}
-                    chapters={lesson.state.chapters}
-                    onChange={this.setActiveChapterHandler}
-                    onEdit={this.updateChapterTitle}
-                    onNew={this.addNewChapter}
-                    onRemove={this.removeChapter}
-                    onMove={this.moveChapter}
-                  />
-                </SidebarSection>
-                <SidebarSection>
-                  <Evaluation />
-                </SidebarSection>
-                <SidebarSection className="h-100 overflow-y-auto position-relative">
-                  <Stepper
-                    activeStep={activeStep}
-                    setActiveStep={this.setActiveStepHandler}
-                    stepRoot={activeChapter}
-                    updateChapter={this.updateChapter}
-                    updateStep={this.updateStep}
-                    removeStep={this.deleteStep}
-                    root
-                    renderToolbox={this.renderToolbox}
-                  />
-                  {activeChapter.state.steps.length === 1 &&
-                    activeChapter.state.steps[0].state.steps.length === 0 && (
-                      <>
-                        <Text
-                          fontSize="extra-small"
-                          weight={500}
-                          className="mt-5 mb-1"
-                        >
-                          TIP
-                        </Text>
-                        <Text fontSize="extra-small">
-                          Start by making a move or setting the position.
-                        </Text>
-                      </>
-                    )}
-                </SidebarSection>
-                <SidebarSection>
-                  <Row>
-                    <Col>
-                      <RootStepButton
-                        updateChapter={this.updateChapter}
-                        setActiveStep={this.setActiveStepHandler}
-                        chapter={activeChapter}
-                      />
-                    </Col>
-                    <Col>
-                      <Button
-                        variant="ghost"
-                        stretch
-                        size="small"
-                        onClick={this.prevStepHandler}
-                      >
-                        <Icon type="left" />
-                      </Button>
-                    </Col>
-                    <Col>
-                      <Button
-                        variant="ghost"
-                        stretch
-                        size="small"
-                        onClick={this.nextStepHandler}
-                      >
-                        <Icon type="right" />
-                      </Button>
-                    </Col>
-                  </Row>
-                </SidebarSection>
-              </Sidebar>
-            </Col>
-          </Row>
+              {activeChapter.state.steps.length === 1 &&
+                activeChapter.state.steps[0].state.steps.length === 0 && (
+                  <>
+                    <Text
+                      fontSize="extra-small"
+                      weight={500}
+                      className="mt-5 mb-1"
+                    >
+                      TIP
+                    </Text>
+                    <Text fontSize="extra-small">
+                      Start by making a move or setting the position.
+                    </Text>
+                  </>
+                )}
+            </div>
+          </div>
+          <div className="editor-navigation">
+            <Row>
+              <Col>
+                <RootStepButton
+                  updateChapter={this.updateChapter}
+                  setActiveStep={this.setActiveStepHandler}
+                  chapter={activeChapter}
+                />
+              </Col>
+              <Col>
+                <Button
+                  variant="ghost"
+                  stretch
+                  size="small"
+                  onClick={this.prevStepHandler}
+                >
+                  <Icon type="left" />
+                </Button>
+              </Col>
+              <Col>
+                <Button
+                  variant="ghost"
+                  stretch
+                  size="small"
+                  onClick={this.nextStepHandler}
+                >
+                  <Icon type="right" />
+                </Button>
+              </Col>
+            </Row>
+          </div>
           <RedirectPrompt message={this.handleSilentBeforeUnload} />
-        </Container>
+        </div>
       </ChessboardContextProvider>
     );
   }

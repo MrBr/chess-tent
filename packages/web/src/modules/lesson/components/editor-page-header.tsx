@@ -2,6 +2,7 @@ import React, { ComponentType } from 'react';
 import { components, ui } from '@application';
 import { Lesson } from '@chess-tent/models';
 import { ApiStatus } from '@types';
+
 import EditorPageSettings from './editor-page-settings';
 import EditorPagePublish from './editor-page-publish';
 import EditorPagePreview from './editor-page-preview';
@@ -22,9 +23,14 @@ const EditorPageHeader: ComponentType<EditorPageHeaderProps> = ({
     <Header className="border-bottom">
       <Col>
         <Breadcrumbs className="mb-0">
-          <Breadcrumbs.Item href="/">Dashboard</Breadcrumbs.Item>
-          <Breadcrumbs.Item>
+          <Breadcrumbs.Item href="/" className="d-none d-sm-inline-block">
+            Dashboard
+          </Breadcrumbs.Item>
+          <Breadcrumbs.Item className="d-none d-sm-inline-block">
             {lesson?.state.title || 'New template'}
+          </Breadcrumbs.Item>
+          <Breadcrumbs.Item className="d-sm-none" href="/">
+            Back
           </Breadcrumbs.Item>
         </Breadcrumbs>
       </Col>
@@ -35,7 +41,7 @@ const EditorPageHeader: ComponentType<EditorPageHeaderProps> = ({
       )}
       {lesson && (
         <>
-          <Col className="col-auto">
+          <Col className="col-auto d-none d-sm-inline-block">
             <EditorPagePublish lesson={lesson} />
           </Col>
           <Col className="col-auto">

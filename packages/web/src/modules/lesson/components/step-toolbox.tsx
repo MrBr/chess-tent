@@ -17,6 +17,7 @@ import {
   StepRoot,
 } from '@chess-tent/models';
 import { over } from 'lodash';
+import { isMobile } from 'react-device-detect';
 
 const {
   Container,
@@ -87,7 +88,7 @@ const StepToolbox: Components['StepToolbox'] = ({
   const [hasStepCopy, copy, getCopiedStep] = useCopyStep();
 
   useEffect(() => {
-    if (!active || !toolboxRef.current) {
+    if (!active || !toolboxRef.current || isMobile) {
       return;
     }
     toolboxRef.current.scrollIntoView();

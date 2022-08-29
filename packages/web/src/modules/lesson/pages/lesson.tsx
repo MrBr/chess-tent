@@ -32,6 +32,7 @@ const PageLesson = () => {
   return (
     <Page
       header={<EditorPageHeader lesson={lesson} lessonStatus={lessonStatus} />}
+      tabbar={<></>}
     >
       <Editor lesson={lesson} lessonStatus={lessonStatus} />
     </Page>

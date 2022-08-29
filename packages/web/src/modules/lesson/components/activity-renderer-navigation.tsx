@@ -33,7 +33,7 @@ export class ActivityRendererNavigationCard<
   render() {
     const { boards, activityStepState } = this.props;
     return (
-      <LessonPlaygroundCard stretch bottom>
+      <LessonPlaygroundCard stretch>
         <ButtonGroup className="mb-3">
           {boards.map((Board, idx) => (
             <ToggleButton

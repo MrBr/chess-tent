@@ -74,7 +74,7 @@ class ActivityRendererStepNavigation<
               size="small"
               onClick={this.nextChapter}
             >
-              Next chapter
+              Chapter <Icon type="right" size="small" />
             </Button>
           </Col>
         </Row>

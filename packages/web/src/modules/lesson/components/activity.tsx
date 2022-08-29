@@ -26,23 +26,20 @@ const { useDispatchService, useActiveUserRecord } = hooks;
 
 const LESSON_MODULES = {
   boards: [ActivityRendererStepBoard, ActivityRendererAnalysisBoard],
+  navigation: [ActivityRendererNavigationCard],
+  actions: [ActivityRendererAnalysisEngineCard],
   cards: [
-    ActivityRendererAnalysisEngineCard,
     ActivityRendererStepCard,
     ActivityRendererAnalysisCard,
     ActivityRendererCommentsCard,
-    ActivityRendererNavigationCard,
   ],
 };
 
 const EMPTY_LESSON_MODULES = {
   boards: [ActivityRendererAnalysisBoard],
-  cards: [
-    ActivityRendererAnalysisEngineCard,
-    ActivityRendererAnalysisCard,
-    ActivityRendererCommentsCard,
-    ActivityRendererNavigationCard,
-  ],
+  navigation: [ActivityRendererNavigationCard],
+  actions: [ActivityRendererAnalysisEngineCard],
+  cards: [ActivityRendererAnalysisCard, ActivityRendererCommentsCard],
 };
 
 const Activity: ActivityComponent<LessonActivity> = props => {
@@ -89,6 +86,8 @@ const Activity: ActivityComponent<LessonActivity> = props => {
         boardState={activeBoardState}
         boards={EMPTY_LESSON_MODULES.boards}
         cards={EMPTY_LESSON_MODULES.cards}
+        actions={EMPTY_LESSON_MODULES.actions}
+        navigation={EMPTY_LESSON_MODULES.navigation}
         importChapters={importChapters}
       />
     );
@@ -106,6 +105,8 @@ const Activity: ActivityComponent<LessonActivity> = props => {
       boardState={activeBoardState}
       boards={LESSON_MODULES.boards}
       cards={LESSON_MODULES.cards}
+      actions={LESSON_MODULES.actions}
+      navigation={LESSON_MODULES.navigation}
       importChapters={isLessonActivity(activity) ? undefined : importChapters}
     />
   );

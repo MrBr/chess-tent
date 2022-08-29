@@ -99,29 +99,44 @@ const PageActivity = () => {
     <Header className="border-bottom">
       <Col>
         <Breadcrumbs>
-          <Breadcrumbs.Item href="/">Dashboard</Breadcrumbs.Item>
-          <Breadcrumbs.Item>{activity.title || 'Untitled'}</Breadcrumbs.Item>
+          <Breadcrumbs.Item href="/" className="d-none d-sm-inline-block">
+            Dashboard
+          </Breadcrumbs.Item>
+          <Breadcrumbs.Item className="d-none d-sm-inline-block">
+            {activity.title || 'Untitled'}
+          </Breadcrumbs.Item>
+          <Breadcrumbs.Item className="d-sm-none" href="/">
+            Back
+          </Breadcrumbs.Item>
         </Breadcrumbs>
       </Col>
       <Col>
         <ConferencingProvider room={`${TYPE_ACTIVITY}-${activity.id}`} />
       </Col>
       <Col className="col-auto">
-        <Button variant="ghost" size="small" onClick={promptActivitySettings}>
+        <Button
+          variant="ghost"
+          size="extra-small"
+          onClick={promptActivitySettings}
+        >
           Settings
         </Button>
       </Col>
-      <Col className="col-auto">
-        {canComplete && (
-          <Button variant="secondary" size="small" onClick={promptComplete}>
+      {canComplete && (
+        <Col className="col-auto">
+          <Button
+            variant="secondary"
+            size="extra-small"
+            onClick={promptComplete}
+          >
             Complete
           </Button>
-        )}
-      </Col>
+        </Col>
+      )}
     </Header>
   );
   return (
-    <Page header={pageHeader}>
+    <Page header={pageHeader} tabbar={<></>}>
       {activityCompleteModal}
       {activitySettingsModal}
       <Activity activity={activity} />

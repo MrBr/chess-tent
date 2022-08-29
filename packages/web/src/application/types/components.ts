@@ -210,7 +210,6 @@ export type LessonPlaygroundCard = FunctionComponent<{
   onClick?: () => void;
   active?: boolean;
   stretch?: boolean;
-  bottom?: boolean;
 }>;
 
 export type LessonToolboxText = FunctionComponent<{
@@ -271,6 +270,8 @@ export interface ActivityBaseProps<T extends Steps | undefined> {
   importChapters?: (chapters: Chapter[]) => void;
   boards: ActivityRendererModuleBoard<T>[];
   cards: ActivityRendererModuleCard<T>[];
+  actions: ActivityRendererModuleCard<T>[];
+  navigation: ActivityRendererModuleCard<T>[];
 }
 
 export interface ActivityDataProps<
@@ -398,6 +399,8 @@ export type Components = {
   LessonToolboxText: LessonToolboxText;
   LessonPlayground: ComponentType<{ children: ReactNode }> & {
     Board: ComponentType;
+    Actions: ComponentType;
+    Navigation: ComponentType;
     Sidebar: ComponentType;
     Stepper: ComponentType;
   };

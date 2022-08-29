@@ -12,10 +12,9 @@ export default styled<Components['LessonPlaygroundCard']>(
     </Card>
   ),
 ).props.active.bottom.stretch.css`
-   &:first-child:not(.stretch) {
-     margin-top: 24px;
+  &:last-child {
+    margin-bottom: 0;
   }
-
   &.active {
     border: 1px solid var(--black-color);
   }
@@ -26,15 +25,7 @@ export default styled<Components['LessonPlaygroundCard']>(
     border-radius: 0;
     border-bottom: 1px solid var(--grey-400-color);
   }
-  &.bottom {
-    margin-top: auto;
-    order: 10;
-    border-top: 1px solid var(--grey-400-color);
-    border-bottom: 0;
-    margin-bottom: 0;
-  }
   width: calc(100% - 48px);
-  margin-bottom: 24px;
   margin-left: 24px;
   border-radius: 8px;
 `;

@@ -1,39 +1,43 @@
 import React from 'react';
-import styled from '@emotion/styled';
+import { css } from '@chess-tent/styled-props';
 import { Components } from '@types';
 
-export default styled<Components['Layout']>(
-  ({ className, children, footer, header }) => (
-    <div className={className}>
-      <div className="layout-header">{header}</div>
-      <div className="layout-content">{children}</div>
-      <div className="layout-footer">{footer}</div>
-    </div>
-  ),
-)({
-  '.layout-header': {
-    gridArea: 'header',
-    height: 54,
-    boxShadow: '0px 1px 0px #ECECEC',
-    zIndex: 11,
-  },
-  '.layout-content': {
-    gridArea: 'content',
-    background: '#FAFBFB',
-    position: 'relative',
-    overflowY: 'scroll',
-  },
-  '.layout-footer': {
-    gridArea: 'footer',
-    position: 'relative',
-  },
-  display: 'grid',
-  gridTemplateRows: 'min-content calc(100vh - 54px - 64px) 64px',
-  gridTemplateAreas: `
-    "header"
-    "content"
-    "footer"
-    `,
-  width: '100%',
-  height: '100%',
-});
+const style = css`
+  .layout-header {
+    height: 54px;
+    box-shadow: 0 1px 0 #ececec;
+    z-index: 11;
+  }
+  .layout-content {
+    background: #fafbfb;
+    position: relative;
+    overflow-y: scroll;
+    flex: 1;
+  }
+  .layout-footer {
+    position: relative;
+    height: 64px;
+    &:empty {
+      display: none;
+    }
+  }
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+`;
+
+const LayoutMobile: Components['Layout'] = ({
+  className,
+  children,
+  footer,
+  header,
+}) => (
+  <div className={`${className} ${style.className}`}>
+    <div className="layout-header">{header}</div>
+    <div className="layout-content">{children}</div>
+    <div className="layout-footer">{footer}</div>
+  </div>
+);
+
+export default LayoutMobile;

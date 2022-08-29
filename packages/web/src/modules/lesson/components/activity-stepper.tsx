@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Chapter, LessonActivityBoardState } from '@chess-tent/models';
 import { AppStep } from '@types';
-import { components, hooks } from '@application';
+import { components, hooks, ui } from '@application';
 import styled from '@chess-tent/styled-props';
+import { isMobile } from 'react-device-detect';
 
 import ActivityStepperEmpty from './activity-stepper-empty';
 import ActivityStepperSteps from './activity-stepper-steps';
 import ChaptersImport from './chapters-import';
 
-const { LessonChapters } = components;
+const { LessonChapters, MobilePortal, Layout, Header } = components;
+const { Button, Col, Absolute } = ui;
 const { usePrompt } = hooks;
 
 export interface ActivityStepperProps {
@@ -38,9 +40,14 @@ const ActivityStepper = styled((props: ActivityStepperProps) => {
     boardState,
   } = props;
   const { activeStepId } = boardState;
+  const [showStepper, setShowStepper] = useState<boolean>(!isMobile);
   const [chapterImportModal, promptChapterImport] = usePrompt(close => (
     <ChaptersImport close={close} onImport={onChapterImport as () => void} />
   ));
+  const stepClickHandler = (step: AppStep) => {
+    onStepClick(step);
+    isMobile && showStepper && setShowStepper(false);
+  };
 
   if (!onChapterImport && !activeChapter) {
     // This is the case of an initial activity without chapters.
@@ -61,7 +68,7 @@ const ActivityStepper = styled((props: ActivityStepperProps) => {
 
   const steps = (step || activeChapter).state.steps;
 
-  return (
+  const content = (
     <>
       {chapterImportModal}
       <div className={className}>
@@ -82,12 +89,49 @@ const ActivityStepper = styled((props: ActivityStepperProps) => {
             activeStepId={activeStepId}
             steps={steps}
             step={step}
-            onStepClick={onStepClick}
+            onStepClick={stepClickHandler}
           />
         </div>
       </div>
     </>
   );
+
+  if (isMobile) {
+    return showStepper ? (
+      <MobilePortal>
+        <Layout
+          header={
+            <Header>
+              <Col className="col-auto">
+                <Button
+                  size="extra-small"
+                  onClick={() => setShowStepper(false)}
+                  variant="tertiary"
+                >
+                  Close
+                </Button>
+              </Col>
+            </Header>
+          }
+        >
+          {content}
+        </Layout>
+      </MobilePortal>
+    ) : (
+      <Absolute right={20} top={-10}>
+        <Button
+          size="extra-small"
+          onClick={() => setShowStepper(true)}
+          variant="text"
+          className="mt-3 me-3"
+        >
+          Steps
+        </Button>
+      </Absolute>
+    );
+  }
+
+  return content;
 }).css`
   display: flex;
   flex-direction: column;

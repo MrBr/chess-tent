@@ -114,11 +114,11 @@ export class ActivityRenderer<
     return <Chessboard {...props} header={<Container />} />;
   };
 
-  renderCards() {
-    const { activityStepState, cards, step } = this.props;
+  renderCardModules(modules: ActivityRendererModuleCard<T>[]) {
+    const { activityStepState, step } = this.props;
 
-    if (isStepCard(cards, step)) {
-      return cards.map((Card, index) => (
+    if (isStepCard(modules, step)) {
+      return modules.map((Card, index) => (
         <Card
           key={index}
           {...this.props}
@@ -157,15 +157,29 @@ export class ActivityRenderer<
   }
 
   render() {
-    const { chapter, lesson, importChapters, boardState } = this.props;
+    const {
+      chapter,
+      lesson,
+      importChapters,
+      boardState,
+      cards,
+      actions,
+      navigation,
+    } = this.props;
 
     return (
       <ChessboardContextProvider>
         <LessonPlayground>
           <LessonPlayground.Board>{this.renderBoard()}</LessonPlayground.Board>
+          <LessonPlayground.Actions>
+            {this.renderCardModules(actions)}
+          </LessonPlayground.Actions>
           <LessonPlayground.Sidebar>
-            {this.renderCards()}
+            {this.renderCardModules(cards)}
           </LessonPlayground.Sidebar>
+          <LessonPlayground.Navigation>
+            {this.renderCardModules(navigation)}
+          </LessonPlayground.Navigation>
           <LessonPlayground.Stepper>
             <Stepper
               boardState={boardState}

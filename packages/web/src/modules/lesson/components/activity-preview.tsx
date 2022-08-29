@@ -106,11 +106,9 @@ const Preview = ({ lesson, chapter, step }: PreviewProps) => {
       updateActivity={updateActivity}
       activityStepState={activityStepState}
       boardState={activityBoardState}
-      cards={[
-        ActivityRendererAnalysisEngineCard,
-        ActivityRendererStepCard,
-        ActivityRendererNavigationCard,
-      ]}
+      cards={[ActivityRendererStepCard]}
+      navigation={[ActivityRendererNavigationCard]}
+      actions={[ActivityRendererAnalysisEngineCard]}
       boards={[ActivityRendererStepBoard]}
     />
   );

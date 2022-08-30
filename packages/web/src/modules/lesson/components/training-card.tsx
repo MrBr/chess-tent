@@ -40,19 +40,15 @@ const TrainingCard = (props: { training: LessonActivity }) => {
   const stepRoot = (lesson.state.chapters[0] ||
     boards[mainBoardId][boards[mainBoardId].activeStepId].analysis) as StepRoot;
 
-  const coach = isLesson
-    ? lesson.owner
-    : roles.find(
-        ({ user, role }) =>
-          role === LessonActivityRole.COACH || LessonActivityRole.OWNER,
-      )?.user;
+  const coach = roles.find(
+    ({ user, role }) =>
+      role === LessonActivityRole.COACH || role === LessonActivityRole.OWNER,
+  )?.user;
   const students = roles
-    .map(({ user, role }) =>
-      role === LessonActivityRole.STUDENT ? (
-        <UserAvatar user={user} size="extra-small" key={user.id} />
-      ) : null,
-    )
-    .filter(Boolean);
+    .filter(({ role }) => role === LessonActivityRole.STUDENT)
+    .map(({ user }) => (
+      <UserAvatar user={user} size="extra-small" key={user.id} />
+    ));
   const openTraining = () => history.push(`/activity/${props.training.id}`);
 
   return (

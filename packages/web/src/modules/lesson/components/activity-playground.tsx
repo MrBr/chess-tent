@@ -10,6 +10,7 @@ const { className } = css`
   .playground-board {
     grid-area: board;
     border-right: 1px solid var(--grey-400-color);
+    padding: 25px 80px 0 90px;
   }
 
   .playground-actions {
@@ -19,6 +20,7 @@ const { className } = css`
   .playground-sidebar {
     grid-area: sidebar;
     padding-top: 24px;
+    overflow-y: scroll;
     ${PlaygroundCard} {
       margin-bottom: 24px;
     }
@@ -27,6 +29,8 @@ const { className } = css`
   .playground-navigation {
     grid-area: navigation;
     background: var(--light-color);
+    position: sticky;
+    border-top: 1px solid var(--grey-400-color);
   }
 
   .playground-stepper {
@@ -52,9 +56,11 @@ const { className } = css`
   height: 100%;
 
   ${mobileCss`
+    .playground-sidebar {
+      overflow-y: unset;
+    }
+    
     .playground-navigation {
-      border-top: 1px solid var(--grey-400-color);
-      position: sticky;
       width: 100%;
       left: 0;
       bottom: 0;

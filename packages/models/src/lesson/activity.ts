@@ -111,28 +111,23 @@ export const removeActivityChapter = createService(
   (
     draft: LessonActivity,
     chapter: Chapter,
-    fallbackStepState: {},
-    fallbackStepId: string,
+    activeChapterId: string | undefined,
+    activeStepId: string,
+    stepState: {},
   ) => {
     removeChapterFromLesson(draft.subject, chapter);
 
     const steps = flattenSteps(chapter);
 
     Object.values(draft.state.boards).forEach(boardState => {
-      const newActiveChapter = draft.subject.state.chapters[0];
-
       // Cleanup deleted chapter step states from the board
       steps.forEach(({ id }) => {
         delete boardState[id];
       });
 
-      if (boardState.activeChapterId === chapter.id && newActiveChapter) {
-        boardState.activeChapterId = newActiveChapter.id;
-        boardState.activeStepId = newActiveChapter.state.steps[0].id;
-      } else if (!newActiveChapter) {
-        boardState.activeStepId = fallbackStepId;
-        boardState[fallbackStepId] = { ...fallbackStepState };
-      }
+      boardState.activeChapterId = activeChapterId;
+      boardState.activeStepId = activeStepId;
+      boardState[activeStepId] = { ...stepState };
     });
   },
 );

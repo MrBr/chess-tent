@@ -109,13 +109,23 @@ export const removeActivityChapter = createService(
     board: LessonActivityBoardState,
     chapter: Chapter,
   ) => {
-    const fallbackStepState = createActivityStepState();
-    const fallbackStepId = LESSON_ACTIVITY_ANALYSIS_STEP_ID;
+    const activeChapter = draft.subject.state.chapters.find(
+      ({ id }) => id !== chapter.id,
+    );
+    const activeStepId =
+      activeChapter?.state.steps[0]?.id || LESSON_ACTIVITY_ANALYSIS_STEP_ID;
+    const tepState = createActivityStepState({
+      // If there are no chapters left, use dummy step for analysing
+      mode: activeChapter
+        ? ActivityStepMode.SOLVING
+        : ActivityStepMode.ANALYSING,
+    });
     modelRemoveActivityChapter(
       draft,
       chapter,
-      fallbackStepState,
-      fallbackStepId,
+      activeChapter?.id,
+      activeStepId,
+      tepState,
     );
   },
 );

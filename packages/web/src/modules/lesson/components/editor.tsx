@@ -74,9 +74,18 @@ const { className } = css`
 
   .editor-sidebar {
     grid-area: sidebar;
-    padding: 12px 0px;
+    position: relative;
 
-    > * {
+    > div {
+      // Needed to get properly scrollable sidebar
+      padding: 12px 0px;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0px;
+      top: 0px;
+    }
+    > div > * {
       margin-bottom: 24px;
     }
   }
@@ -85,6 +94,7 @@ const { className } = css`
     grid-area: navigation;
     background: var(--light-color);
     padding: 24px;
+    z-index: 10;
   }
 
   display: grid;
@@ -491,35 +501,37 @@ class EditorRenderer extends React.Component<
             />
           </div>
           <div className="editor-sidebar">
-            <div className="ps-3">
-              <Evaluation />
-            </div>
-            <div className="h-100 overflow-y-auto position-relative ps-4">
-              <Stepper
-                activeStep={activeStep}
-                setActiveStep={this.setActiveStepHandler}
-                stepRoot={activeChapter}
-                updateChapter={this.updateChapter}
-                updateStep={this.updateStep}
-                removeStep={this.deleteStep}
-                root
-                renderToolbox={this.renderToolbox}
-              />
-              {activeChapter.state.steps.length === 1 &&
-                activeChapter.state.steps[0].state.steps.length === 0 && (
-                  <>
-                    <Text
-                      fontSize="extra-small"
-                      weight={500}
-                      className="mt-5 mb-1"
-                    >
-                      TIP
-                    </Text>
-                    <Text fontSize="extra-small">
-                      Start by making a move or setting the position.
-                    </Text>
-                  </>
-                )}
+            <div>
+              <div className="ps-3">
+                <Evaluation />
+              </div>
+              <div className="h-100 overflow-y-auto position-relative ps-4">
+                <Stepper
+                  activeStep={activeStep}
+                  setActiveStep={this.setActiveStepHandler}
+                  stepRoot={activeChapter}
+                  updateChapter={this.updateChapter}
+                  updateStep={this.updateStep}
+                  removeStep={this.deleteStep}
+                  root
+                  renderToolbox={this.renderToolbox}
+                />
+                {activeChapter.state.steps.length === 1 &&
+                  activeChapter.state.steps[0].state.steps.length === 0 && (
+                    <>
+                      <Text
+                        fontSize="extra-small"
+                        weight={500}
+                        className="mt-5 mb-1"
+                      >
+                        TIP
+                      </Text>
+                      <Text fontSize="extra-small">
+                        Start by making a move or setting the position.
+                      </Text>
+                    </>
+                  )}
+              </div>
             </div>
           </div>
           <div className="editor-navigation">

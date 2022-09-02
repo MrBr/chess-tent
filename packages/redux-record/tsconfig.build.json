@@ -6,12 +6,17 @@
     "esModuleInterop": true,
     "baseUrl": ".",
     "paths": {
-      "@types": ["types"]
+      "@types": [
+        "types"
+      ]
     }
   },
   "include": [
     "src/**/*",
     "types/**/*"
   ],
-  "exclude": ["dist"]
+  "exclude": [
+    "dist",
+    "src/__tests__"
+  ]
 }

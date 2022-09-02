@@ -1,46 +1,40 @@
 import { useMemo } from 'react';
 import { useStore, useSelector } from 'react-redux';
 import {
-  InferRecordValue,
-  InitRecord,
+  InferRecord,
   RecordBase,
-  RecordHookInit,
   RecordHookReturn,
   RecordHookSafe,
-  RecordMeta,
-  RecordValue,
+  RecordWith,
 } from '../types';
 
-const useRecordInit = <T extends RecordBase<any>>(
-  initRecord: InitRecord<T>,
+const useRecordInit = <T extends RecordWith<any>>(
+  initRecord: T,
   suffix: string,
-): RecordHookReturn<
-  T,
-  { value: RecordValue<InferRecordValue<T>>; meta: RecordMeta }
-> => {
+): RecordHookReturn<InferRecord<T>> => {
+  // TODO - use selector to select record entry
   useSelector(() => NaN);
   const store = useStore();
-  const record = useMemo(() => initRecord(store, suffix), [
-    store,
-    initRecord,
-    suffix,
-  ]);
+  const record = useMemo(
+    () => initRecord(suffix)(store),
+    [store, initRecord, suffix],
+  );
   const { value, meta } = record.get();
   return {
     ...record,
     value,
     meta,
-  };
+  } as RecordHookReturn<InferRecord<T>>;
 };
 
-const useRecordSafe = <T extends RecordBase<any>, U = void>(
-  ...args: [RecordHookInit<T>, U?]
+const useRecordSafe = <T extends RecordBase<any, any>, U = void>(
+  ...args: [RecordHookReturn<T>, U?]
 ): RecordHookSafe<T, U> => {
   const [record, fallback] = args;
 
   if (args.length === 1 && record.value === undefined) {
     throw new Error(
-      `Record ${record.recordKey} expected truthy but got ${record.value}.`,
+      `Record ${record.meta.recordKey} expected truthy but got ${record.value}.`,
     );
   } else if (record.value === undefined) {
     return {

@@ -1,9 +1,11 @@
 import { MiddlewareAPI } from 'redux';
 import {
-  InferRecordValueType,
   RecipeCollection,
+  RecipeMeta,
   RecordBase,
   RecordRecipe,
+  RecordValue,
+  InferRecordValueType,
 } from '../types';
 
 import { selectRecord } from './redux/selectors';
@@ -15,19 +17,23 @@ import {
 } from './redux/actions';
 
 const withRecordCollection =
-  <T extends RecordBase<any[]>>(): RecordRecipe<
+  <T extends RecordBase>(): RecordRecipe<
     T,
     RecipeCollection<InferRecordValueType<T>>
   > =>
+  recordKey =>
   store =>
   record => {
     const push = (item: InferRecordValueType<T>) => {
-      store.dispatch(pushRecordAction(record.recordKey, item));
+      store.dispatch(pushRecordAction(recordKey, item));
     };
     const pop = () => {
       // record.update();
+      console.warn('Record collection pop not implemented');
     };
-    const concat = (items: InferRecordValueType<T>[]) => {};
+    const concat = (items: InferRecordValueType<T>[]) => {
+      console.warn('Record collection concat not implemented');
+    };
 
     return {
       ...record,
@@ -38,13 +44,19 @@ const withRecordCollection =
   };
 
 const withRecordBase =
-  <V>(): RecordRecipe<RecordBase<V>> =>
+  <V, M extends {}>(
+    initialValue?: RecordValue<V>,
+    initialMeta?: M,
+  ): RecordRecipe<{}, RecordBase<V, M>> =>
+  (recordKey: string) =>
   (store: MiddlewareAPI) =>
-  ({ recordKey }) => {
+  () => {
     const get = () => {
-      const value = selectRecord<V>(recordKey)(store.getState()) || {
-        value: undefined,
-        meta: { recordKey },
+      const value = selectRecord<RecordBase<V, M>>(recordKey)(
+        store.getState(),
+      ) || {
+        value: initialValue,
+        meta: { ...(initialMeta || {}), recordKey },
       };
       return value;
     };
@@ -59,11 +71,13 @@ const withRecordBase =
     };
 
     return {
-      amend,
+      get $entry() {
+        return this.get();
+      },
       get,
+      amend,
       update,
       reset,
-      recordKey,
     };
   };
 
@@ -76,8 +90,9 @@ const withRecordMethod =
     F extends (...args: any[]) => void,
   >(
     method: M,
-    func: (store: MiddlewareAPI) => (record: T) => F,
+    func: (recordKey: string) => (store: MiddlewareAPI) => (record: T) => F,
   ) =>
+  (recordKey: string) =>
   (store: MiddlewareAPI) =>
   (
     record: T,
@@ -86,10 +101,24 @@ const withRecordMethod =
   } => {
     return {
       ...record,
-      [method]: (...args: Parameters<F>) => func(store)(record)(...args),
+      [method]: (...args: Parameters<F>) =>
+        func(recordKey)(store)(record)(...args),
     } as T & {
       [prop in M]: F;
     };
   };
 
-export { withRecordBase, withRecordCollection, withRecordMethod };
+const withRecordMeta =
+  <M extends {}>() =>
+  <B extends RecordBase>(): RecordRecipe<B, RecipeMeta<Partial<M>>> =>
+  () =>
+  () =>
+  record =>
+    record;
+
+export {
+  withRecordBase,
+  withRecordCollection,
+  withRecordMethod,
+  withRecordMeta,
+};

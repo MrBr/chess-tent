@@ -1,27 +1,13 @@
-import {
-  InferRecordValue,
-  InferRecordValueSafe,
-  RecordBase,
-  RecordMeta,
-  RecordValue,
-} from './record';
+import { RecordBase, RecordEntry } from './record';
 
-export type RecordHookReturn<T extends RecordBase<any>, U> = T & U;
-
-export type RecordHookInit<T extends RecordBase<any>> = RecordHookReturn<
-  T,
-  { value: InferRecordValue<T>; meta: RecordMeta }
->;
+export type RecordHookReturn<T extends RecordBase<any, any>> =
+  T extends RecordBase<infer V, infer M> ? T & RecordEntry<V, M> : never;
 
 export type RecordHookSafe<
-  T extends RecordBase<any>,
+  T extends RecordBase,
   FALLBACK = void,
-> = RecordHookReturn<
-  T,
-  {
-    value: FALLBACK extends void
-      ? InferRecordValueSafe<T>
-      : InferRecordValueSafe<T> | FALLBACK;
-    meta: RecordMeta;
-  }
->;
+> = T extends RecordBase<infer V, infer M>
+  ? FALLBACK extends void
+    ? T & { value: V; meta: M }
+    : T & RecordEntry<V, M>
+  : never;

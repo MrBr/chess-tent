@@ -14,7 +14,7 @@ const userTrainings = records.createRecord(
   records.withRecordApiLoad(requests.trainings),
   records.withRecordMethod(
     'new',
-    () => record =>
+    () => () => record =>
       async function (activity: LessonActivity) {
         try {
           await requests.activitySave(activity);
@@ -28,17 +28,17 @@ const userTrainings = records.createRecord(
 );
 
 const lessons = records.createRecord(
-  records.withRecordBase<Lesson[]>(),
+  records.withRecordBase<Lesson[], {}>(),
   records.withRecordCollection(),
   records.withRecordDenormalizedCollection(TYPE_LESSON),
   records.withRecordApiLoad(requests.lessons),
 );
 
 const lesson = records.createRecord(
-  records.withRecordBase<Lesson>(),
+  records.withRecordBase<Lesson, { saved?: boolean }>(),
   records.withRecordDenormalized(TYPE_LESSON),
   records.withRecordApiLoad(requests.lesson),
-  records.withRecordMethod('create', store => record => async () => {
+  records.withRecordMethod('create', () => store => record => async () => {
     const lesson = record.get().value;
     if (!lesson) {
       throw new Error('Saving non-existing lesson');
@@ -48,7 +48,7 @@ const lesson = records.createRecord(
     record.amend({ saved: true });
 
     // Add lesson to user lessons if not there
-    const myLessonsRecord = myLessons(store, RECORD_ACTIVE_USER_LESSONS_KEY);
+    const myLessonsRecord = myLessons(RECORD_ACTIVE_USER_LESSONS_KEY)(store);
     const hasLesson = !!myLessonsRecord
       .get()
       .value?.some(({ id }) => lesson.id === id);
@@ -62,7 +62,7 @@ const lesson = records.createRecord(
 );
 
 const myLessons = records.createRecord(
-  records.withRecordBase<Lesson[]>(),
+  records.withRecordBase<Lesson[], {}>(),
   records.withRecordCollection(),
   records.withRecordDenormalizedCollection(TYPE_LESSON),
   records.withRecordApiLoad(requests.myLessons),

@@ -23,7 +23,7 @@ const SignupSchema = yup.object().shape({
 const PageRegister = () => {
   const { fetch, loading, response, error } = useApi(requests.register);
 
-  const { update } = useActiveUserRecord(null);
+  const { update } = useActiveUserRecord<null>();
   const history = useHistory();
   const query = useQuery<RegisterOptions>();
   const { flow } = query;

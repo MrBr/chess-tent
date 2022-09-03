@@ -33,6 +33,7 @@ const DashboardCoach = ({ user }: { user: User }) => {
     scheduledTrainings.meta.loaded &&
     students.meta.loaded;
 
+  console.log(trainings.meta, scheduledTrainings.meta, students.meta);
   if (!didLoad) {
     return null;
   }

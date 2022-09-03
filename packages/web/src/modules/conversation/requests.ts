@@ -9,7 +9,10 @@ const conversation = services.createRequest<Requests['conversation']>(
 const conversations = services.createRequest<Requests['conversations']>(
   'POST',
   '/conversations',
-  users => ({ users: Array.isArray(users) ? users : [users] }),
+  (users, pagination) => ({
+    users: Array.isArray(users) ? users : [users],
+    pagination,
+  }),
 );
 
 const messageSend: Requests['messageSend'] = services.createRequest<

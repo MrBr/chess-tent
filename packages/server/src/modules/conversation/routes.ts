@@ -33,6 +33,7 @@ application.service.registerPostRoute(
   '/conversations',
   identify,
   toLocals('filters', req => ({ users: req.body.users })),
+  toLocals('pagination', req => req.body.pagination),
   findConversations,
   sendData('conversations'),
 );

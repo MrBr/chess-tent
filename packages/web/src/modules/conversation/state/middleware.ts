@@ -16,7 +16,7 @@ const { updateEntity } = actions;
 export const middleware: Middleware = store => next => action => {
   if (action.type === SEND_MESSAGE) {
     const state = store.getState();
-    const record = activeUserConversations(store, 'conversations');
+    const record = activeUserConversations('conversations')(store);
     const { conversationId } = action.meta;
     const conversation = selectConversation(conversationId)(state);
     if (conversation?.messages.length === 0) {

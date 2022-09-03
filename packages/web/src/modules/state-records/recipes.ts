@@ -3,9 +3,8 @@ import {
   RequestFetch,
   DataResponse,
   Records,
-  GetRequestFetchArgs,
-  GenericArguments,
   Endpoint,
+  RecipeApiLoad,
 } from '@types';
 import { Entity } from '@chess-tent/models';
 import {
@@ -21,21 +20,21 @@ import { formatEntityValue } from './_helpers';
 
 const { withRequestHandler } = hof;
 
-const withRecordApiLoad =
+const withRecordApiLoad: Records['withRecordApiLoad'] =
   <
     RESPONSE extends DataResponse<any>,
     E extends Endpoint<any, RESPONSE>,
     R extends RequestFetch<E, any>,
-    T extends RecordBase<RESPONSE extends DataResponse<infer U> ? U : never>,
+    T extends RecordBase<
+      RESPONSE extends DataResponse<infer U> ? U : never,
+      any
+    >,
   >(
     request: R,
-  ) =>
+  ): RecordRecipe<T, RecipeApiLoad<R>> =>
   () =>
-  (
-    record: T,
-  ): T & {
-    load: (...args: GenericArguments<GetRequestFetchArgs<R>>) => void;
-  } => {
+  () =>
+  (record: T) => {
     const load = withRequestHandler(request)(({ loading, response }) => {
       if (loading) {
         record.amend({ loading });
@@ -53,10 +52,11 @@ const withRecordApiLoad =
     };
   };
 
-const withRecordDenormalized =
-  <T extends RecordBase<any>>(
+const withRecordDenormalized: Records['withRecordDenormalized'] =
+  <T extends RecordBase>(
     type: string,
-  ): RecordRecipe<InferRecordValueSafe<T> extends Entity ? T : never> =>
+  ): RecordRecipe<InferRecordValueType<T> extends Entity ? T : never, {}> =>
+  recordKey =>
   store =>
   record => {
     const update = (value: InferRecordValue<T>, meta: {}) => {
@@ -64,20 +64,20 @@ const withRecordDenormalized =
       store.dispatch(
         batchActions([
           state.actions.updateEntity(value),
-          state.actions.updateRecord(record.recordKey, descriptor, meta),
+          state.actions.updateRecord(recordKey, descriptor, meta),
         ]),
       );
     };
 
     const get = () => {
       const entities = store.getState().entities;
-      const recordState = record.get();
+      const recordEntry = record.get();
       const value = utils.denormalize<InferRecordValue<T>>(
-        recordState.value,
+        recordEntry.value,
         type,
         entities,
       );
-      return { ...recordState, value };
+      return { ...recordEntry, value };
     };
 
     return {
@@ -90,12 +90,13 @@ const withRecordDenormalized =
 const withRecordDenormalizedCollection: Records['withRecordDenormalizedCollection'] =
 
     <T extends RecordBase<any[]> & RecipeCollection<any>>(type: string) =>
+    recordKey =>
     store =>
     record => {
       const updateRaw = (descriptor: string[], meta = {}) => {
         store.dispatch(
           batchActions([
-            state.actions.updateRecord(record.recordKey, descriptor, meta),
+            state.actions.updateRecord(recordKey, descriptor, meta),
           ]),
         );
       };
@@ -104,7 +105,7 @@ const withRecordDenormalizedCollection: Records['withRecordDenormalizedCollectio
         store.dispatch(
           batchActions([
             state.actions.updateEntities(value),
-            state.actions.updateRecord(record.recordKey, descriptor, meta),
+            state.actions.updateRecord(recordKey, descriptor, meta),
           ]),
         );
       };
@@ -113,7 +114,7 @@ const withRecordDenormalizedCollection: Records['withRecordDenormalizedCollectio
         store.dispatch(
           batchActions([
             state.actions.updateEntities(value),
-            state.actions.pushRecord(record.recordKey, descriptor, meta),
+            state.actions.pushRecord(recordKey, descriptor, meta),
           ]),
         );
       };

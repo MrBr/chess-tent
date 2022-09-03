@@ -2,6 +2,7 @@ import {
   DataResponse,
   Endpoint,
   GetRequestFetchArgs,
+  GetRequestFetchResponse,
   RequestFetch,
   StatusResponse,
 } from '@chess-tent/types';
@@ -17,9 +18,8 @@ import {
 } from '@chess-tent/models';
 import {
   CreateRecord,
-  InferRecordValueSafe,
   InferRecordValueType,
-  InitRecord,
+  RecordWith,
   RecipeCollection,
   RecipeMethod,
   RecordBase,
@@ -30,7 +30,10 @@ import { MiddlewareAPI } from 'redux';
 import { GenericArguments } from './_helpers';
 import { Requests } from './requests';
 
-export type RecipeApiLoad<T extends RequestFetch<any, any>> = {
+export type RecipeApiLoad<T extends RequestFetch<any, any>> = RecordBase<
+  GetRequestFetchResponse<T> extends DataResponse<infer D> ? D : never,
+  { loaded?: boolean; loading?: boolean }
+> & {
   load: (...args: GenericArguments<GetRequestFetchArgs<T>>) => void;
 };
 
@@ -42,80 +45,72 @@ function getRecordInitByNamespace(
   );
 }
 
-type ActiveUserRecord = RecipeApiLoad<Requests['me']> & RecordBase<User>;
+type ActiveUserRecord = RecipeApiLoad<Requests['me']> &
+  RecordBase<User> &
+  RecipeMethod<'save', () => Promise<void>>;
 type UserTrainingsRecord = RecipeApiLoad<Requests['trainings']> &
   RecordBase<LessonActivity[]> &
-  RecipeCollection<LessonActivity>;
+  RecipeCollection<LessonActivity> &
+  RecipeMethod<'new', CreateNewUserTraining>;
 type UserScheduledTrainingsRecord = RecipeApiLoad<
   Requests['scheduledTrainings']
 > &
   RecordBase<LessonActivity[]> &
-  RecipeCollection<LessonActivity>;
+  RecipeCollection<LessonActivity> &
+  RecipeMethod<'new', CreateNewUserTraining>;
 type CreateNewUserTraining = (activity: LessonActivity) => Promise<void>;
 type RequestMentorship = (coach: User, student: User) => Promise<void>;
 type CoachesRecord = RecipeApiLoad<Requests['coaches']> &
   RecordBase<Mentorship[]> &
-  RecipeCollection<Mentorship>;
-type LessonRecord = RecipeApiLoad<Requests['lesson']> & RecordBase<Lesson>;
+  RecipeCollection<Mentorship> &
+  RecipeMethod<'requestMentorship', RequestMentorship>;
+type LessonRecord = RecipeApiLoad<Requests['lesson']> &
+  RecordBase<Lesson, { saved?: boolean }> &
+  RecipeMethod<'create', () => Promise<StatusResponse>>;
 
 export type Records<T = any> = {
-  activeUser: InitRecord<
-    ActiveUserRecord &
-      RecipeMethod<ActiveUserRecord, 'save', () => Promise<void>>
-  >;
-  activeUserNotifications: InitRecord<
+  activeUser: RecordWith<ActiveUserRecord>;
+  activeUserNotifications: RecordWith<
     RecipeApiLoad<Requests['notifications']> &
       RecordBase<Notification[]> &
       RecipeCollection<Notification>
   >;
-  activeUserLessons: InitRecord<
+  activeUserLessons: RecordWith<
     RecipeApiLoad<Requests['myLessons']> &
       RecordBase<Lesson[]> &
       RecipeCollection<Lesson>
   >;
-  activeUserConversations: InitRecord<
+  activeUserConversations: RecordWith<
     RecipeApiLoad<Requests['conversations']> &
-      RecordBase<Conversation[]> &
-      RecipeCollection<Conversation>
+      RecordBase<Conversation[], { userId?: string }> &
+      RecipeCollection<Conversation> //&
+    // RecipeMethod<'loadMore', () => void>
   >;
 
-  userTrainings: InitRecord<
-    UserTrainingsRecord &
-      RecipeMethod<UserTrainingsRecord, 'new', CreateNewUserTraining>
-  >;
-  userScheduledTrainings: InitRecord<
-    UserScheduledTrainingsRecord &
-      RecipeMethod<UserScheduledTrainingsRecord, 'new', CreateNewUserTraining>
-  >;
+  userTrainings: RecordWith<UserTrainingsRecord>;
+  userScheduledTrainings: RecordWith<UserScheduledTrainingsRecord>;
 
-  conversationParticipant: InitRecord<RecordBase<User>>;
+  conversationParticipant: RecordWith<RecordBase<User>>;
 
-  activity: InitRecord<
-    RecordBase<T> &
+  activity: RecordWith<
+    RecordBase<T, { loaded?: boolean; loading?: boolean }> &
       RecipeMethod<
-        RecordBase<T>,
         'applyPatch',
         (modifier: (draft: RecordValue<T>) => void) => void
       >
   >;
-  lesson: InitRecord<
-    LessonRecord &
-      RecipeMethod<LessonRecord, 'create', () => Promise<StatusResponse>>
-  >;
-  lessons: InitRecord<
+  lesson: RecordWith<LessonRecord>;
+  lessons: RecordWith<
     RecipeApiLoad<Requests['lessons']> &
       RecordBase<Lesson[]> &
       RecipeCollection<Lesson>
   >;
-  students: InitRecord<
+  students: RecordWith<
     RecipeApiLoad<Requests['students']> &
       RecordBase<Mentorship[]> &
       RecipeCollection<Mentorship>
   >;
-  coaches: InitRecord<
-    CoachesRecord &
-      RecipeMethod<CoachesRecord, 'requestMentorship', RequestMentorship>
-  >;
+  coaches: RecordWith<CoachesRecord>;
 
   // Service
   createRecord: typeof CreateRecord;
@@ -123,8 +118,11 @@ export type Records<T = any> = {
   isInitialized: <T>(record: RecordBase<T>) => boolean;
 
   // Recipes
-  withRecordBase: <V>() => RecordRecipe<RecordBase<V>>;
-  withRecordCollection: <T extends RecordBase<any[]>>() => RecordRecipe<
+  withRecordBase: <V, M extends {} = {}>(
+    initialValue?: RecordValue<V>,
+    initialMeta?: M,
+  ) => RecordRecipe<{}, RecordBase<V, M>>;
+  withRecordCollection: <T extends RecordBase>() => RecordRecipe<
     T,
     RecipeCollection<InferRecordValueType<T>>
   >;
@@ -134,12 +132,12 @@ export type Records<T = any> = {
     F extends (...args: any[]) => void,
   >(
     method: M,
-    func: (store: MiddlewareAPI) => (record: T) => F,
-  ) => RecordRecipe<T, RecipeMethod<T, M, F>>;
+    func: (recordKey: string) => (store: MiddlewareAPI) => (record: T) => F,
+  ) => RecordRecipe<T, RecipeMethod<M, F>>;
   // TODO - safe type `type` argument - should match selected entity
-  withRecordDenormalized: <T extends RecordBase<any>>(
+  withRecordDenormalized: <T extends RecordBase<any, any>>(
     type: string,
-  ) => RecordRecipe<InferRecordValueSafe<T> extends Entity ? T : never>;
+  ) => RecordRecipe<InferRecordValueType<T> extends Entity ? T : never, {}>;
   withRecordDenormalizedCollection: <
     T extends RecordBase<any[]> & RecipeCollection<any>,
   >(
@@ -152,11 +150,11 @@ export type Records<T = any> = {
     RESPONSE extends DataResponse<any>,
     E extends Endpoint<any, RESPONSE>,
     R extends RequestFetch<E, any>,
-    T extends RecordBase<RESPONSE extends DataResponse<infer U> ? U : never>,
+    T extends RecordBase<
+      RESPONSE extends DataResponse<infer U> ? U : never,
+      any
+    >,
   >(
     request: R,
-  ) => RecordRecipe<
-    T,
-    { load: (...args: GenericArguments<GetRequestFetchArgs<R>>) => void }
-  >;
+  ) => RecordRecipe<T, RecipeApiLoad<R>>;
 };

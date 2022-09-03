@@ -15,7 +15,7 @@ const coaches = records.createRecord(
   records.withRecordApiLoad(requests.coaches),
   records.withRecordMethod(
     'requestMentorship',
-    () => record => async (coach, student) => {
+    () => () => record => async (coach, student) => {
       record.amend({ loading: true });
       const { data } = await requests.mentorshipRequest({
         coachId: coach.id,

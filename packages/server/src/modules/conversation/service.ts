@@ -11,37 +11,35 @@ import { MessageModel, ConversationModel, depopulate } from './model';
 
 const MESSAGES_BUCKET_LIMIT = 50;
 
-export const addMessageToConversation = (
+export const addMessageToConversation = async (
   conversationId: Conversation['id'],
   message: NormalizedMessage,
-) =>
-  new Promise<void>(resolve => {
-    const idRegex = db.getBucketingIdFilterRegex(conversationId);
-    // Server should be the source of truth for time
-    const updatedMessage = updateMessage(message, {
-      timestamp: Date.now(),
-    });
-    MessageModel.updateOne(
-      {
-        _id: idRegex,
-        count: { $lt: MESSAGES_BUCKET_LIMIT },
-      },
-      {
-        $push: { messages: updatedMessage },
-        $inc: { count: 1 },
-        $set: { conversationId },
-        $setOnInsert: {
-          _id: `${conversationId}_${updatedMessage.timestamp}`,
-        },
-      },
-      { upsert: true },
-    ).exec(err => {
-      if (err) {
-        throw err;
-      }
-      resolve();
-    });
+) => {
+  const idRegex = db.getBucketingIdFilterRegex(conversationId);
+  // Server should be the source of truth for time
+  const updatedMessage = updateMessage(message, {
+    timestamp: Date.now(),
   });
+  await ConversationModel.updateOne(
+    { _id: conversationId },
+    { lastMessageTimestamp: updatedMessage.timestamp },
+  );
+  await MessageModel.updateOne(
+    {
+      _id: idRegex,
+      count: { $lt: MESSAGES_BUCKET_LIMIT },
+    },
+    {
+      $push: { messages: updatedMessage },
+      $inc: { count: 1 },
+      $set: { conversationId },
+      $setOnInsert: {
+        _id: `${conversationId}_${updatedMessage.timestamp}`,
+      },
+    },
+    { upsert: true },
+  ).exec();
+};
 
 export const saveConversation = async (conversation: Conversation) => {
   await ConversationModel.updateOne(
@@ -94,25 +92,22 @@ export const updateConversationMessage = (
   });
 };
 
-export const findConversations = (
+export const findConversations = async (
   users: User['id'][],
-): Promise<Conversation[]> =>
-  new Promise(resolve => {
-    ConversationModel.find({ users: { $in: users } })
-      .populate('users')
-      .populate({
-        path: 'virtualMessages',
-        options: {
-          limit: 1,
-        },
-      })
-      .exec((err, result) => {
-        if (err) {
-          throw err;
-        }
-        resolve(result.map(item => item.toObject<Conversation>()));
-      });
-  });
+  pagination: Pagination,
+) => {
+  return await ConversationModel.find({ users: { $in: users } }, null, {
+    sort: '-lastMessageTimestamp',
+    ...pagination,
+  })
+    .populate('users')
+    .populate({
+      path: 'virtualMessages',
+      options: {
+        limit: 1,
+      },
+    });
+};
 
 export const getConversation = (
   conversationId: Conversation['id'],

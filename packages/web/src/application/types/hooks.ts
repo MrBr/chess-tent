@@ -31,8 +31,8 @@ import { BatchAction } from 'redux-batched-actions';
 import { useParams } from 'react-router-dom';
 import type * as H from 'history';
 import {
-  InferInitRecord,
-  RecordHookInit,
+  InferRecord,
+  RecordHookReturn,
   RecordHookSafe,
   RecordValue,
 } from '@chess-tent/redux-record/types';
@@ -119,7 +119,7 @@ export type Hooks = {
   useUser: (userId: User['id']) => User;
   useActiveUserRecord: <T = void>(
     fallback?: T,
-  ) => RecordHookSafe<InferInitRecord<Records['activeUser']>, T>;
+  ) => RecordHookSafe<InferRecord<Records['activeUser']>, T>;
   useOpenConversations: () => [ReactElement | undefined, (user?: User) => void];
   useOpenTraining: () => (lesson: LessonActivity) => void;
   useOpenTemplate: () => (lesson: Lesson) => void;
@@ -130,18 +130,18 @@ export type Hooks = {
   };
   useActiveUserNotifications: (
     limit?: number,
-  ) => RecordHookInit<InferInitRecord<Records['activeUserNotifications']>>;
+  ) => RecordHookReturn<InferRecord<Records['activeUserNotifications']>>;
   useUserTrainings: (
     user: User,
-  ) => RecordHookInit<InferInitRecord<Records['userTrainings']>>;
+  ) => RecordHookReturn<InferRecord<Records['userTrainings']>>;
   useUserScheduledTrainings: (
     user: User,
     initialFilters?: Partial<ScheduledLessonActivityFilters>,
-  ) => RecordHookInit<InferInitRecord<Records['userScheduledTrainings']>>;
+  ) => RecordHookReturn<InferRecord<Records['userScheduledTrainings']>>;
   usePromptNewTrainingModal: () => [ReactElement | undefined, () => void];
   useUserLessonsRecord: (
     user: User,
-  ) => RecordHookInit<InferInitRecord<Records['lessons']>>;
+  ) => RecordHookReturn<InferRecord<Records['lessons']>>;
   useHistory: () => History;
   useQuery: <T extends Record<string, string | undefined>>() => T;
   useLocation(): H.Location<LocationState>;
@@ -160,24 +160,22 @@ export type Hooks = {
   ];
   useLesson: <T extends Activity>(
     lessonId: Lesson['id'],
-  ) => RecordHookInit<InferInitRecord<Records<T>['lesson']>>;
+  ) => RecordHookReturn<InferRecord<Records<T>['lesson']>>;
   useActivity: <T extends Activity>(
     key: string,
-  ) => RecordHookInit<InferInitRecord<Records<T>['activity']>>;
+  ) => RecordHookReturn<InferRecord<Records<T>['activity']>>;
   useLessonMeta: (activity: Lesson) => UseMetaReturn<{ evaluation?: boolean }>;
   useLessons: (
     key: string,
     filters?: LessonsFilters,
-  ) => RecordHookInit<InferInitRecord<Records['lessons']>>;
+  ) => RecordHookReturn<InferRecord<Records['lessons']>>;
   useMyLessons: (
     filters?: LessonsFilters,
-  ) => RecordHookInit<InferInitRecord<Records['activeUserLessons']>>;
-  useCoaches: (
-    user: User,
-  ) => RecordHookInit<InferInitRecord<Records['coaches']>>;
+  ) => RecordHookReturn<InferRecord<Records['activeUserLessons']>>;
+  useCoaches: (user: User) => RecordHookReturn<InferRecord<Records['coaches']>>;
   useStudents: (
     user: User,
-  ) => RecordHookInit<InferInitRecord<Records['students']>>;
+  ) => RecordHookReturn<InferRecord<Records['students']>>;
   useDispatchService: () => <T extends (...args: any) => any>(
     service: T extends ServiceType ? T : never,
   ) => (...payload: T extends (...args: infer U) => any ? U : never) => void;

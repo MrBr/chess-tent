@@ -8,25 +8,40 @@ import {
 } from '@chess-tent/models';
 import { db } from '@application';
 
+const transformVirtualMessages = (
+  doc: unknown,
+  ret: { virtualMessages?: []; messages: [] },
+) => {
+  if (!ret.virtualMessages) {
+    return;
+  }
+  ret.messages = db.flattenBuckets(ret.virtualMessages, 'messages');
+  delete ret.virtualMessages;
+};
+
 const conversationSchema = db
   .createSchema<NormalizedConversation>({
-    type: ({
+    type: {
       type: String,
       default: TYPE_CONVERSATION,
-    } as unknown) as typeof TYPE_CONVERSATION,
-    users: ([
+    } as unknown as typeof TYPE_CONVERSATION,
+    users: [
       { type: String, ref: TYPE_USER },
-    ] as unknown) as NormalizedConversation['users'],
-    messages: ({
+    ] as unknown as NormalizedConversation['users'],
+    lastMessageTimestamp: [
+      { type: Schema.Types.Number },
+    ] as unknown as NormalizedConversation['lastMessageTimestamp'],
+    messages: {
       type: Schema.Types.Mixed,
-    } as unknown) as NormalizedConversation['messages'],
+    } as unknown as NormalizedConversation['messages'],
   })
   .set('toObject', {
     virtuals: true,
-    transform: (doc, ret) => {
-      ret.messages = db.flattenBuckets(ret.virtualMessages, 'messages');
-      delete ret.virtualMessages;
-    },
+    transform: transformVirtualMessages,
+  })
+  .set('toJSON', {
+    virtuals: true,
+    transform: transformVirtualMessages,
   });
 
 conversationSchema.virtual('virtualMessages', {

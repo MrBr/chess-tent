@@ -53,7 +53,7 @@ export function unfreeze<T>(value: T): T {
     Array.isArray(value)
       ? value.map(unfreeze)
       : typeof value === 'object'
-      ? Object.keys(value).reduce((result, key) => {
+      ? Object.keys(value || {}).reduce((result, key) => {
           // @ts-ignore
           result[key] = unfreeze(value[key]);
           return result;

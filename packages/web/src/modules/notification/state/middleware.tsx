@@ -10,7 +10,7 @@ const { NotificationRender } = components;
 export const notificationMiddleware: Middleware = store => next => action => {
   if (action.type === SEND_NOTIFICATION) {
     const notification = action.payload;
-    const record = activeUserNotifications(store, 'notifications');
+    const record = activeUserNotifications('notifications')(store);
     record.push(notification);
   }
   if (

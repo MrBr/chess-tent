@@ -39,7 +39,7 @@ export type UpdateNotificationsRequest = {
   updates: Partial<Pick<Notification, 'seen' | 'read' | 'state' | 'timestamp'>>;
 };
 export type PaginationBucket = number | undefined;
-export type Pagination = { skip?: number; size: number };
+export type Pagination = { skip?: number; limit: number };
 export type WithPagination = { pagination?: Pagination };
 
 export interface StatusResponse {
@@ -284,7 +284,7 @@ export interface Endpoints {
   >;
   // Conversations endpoints
   conversations: Endpoint<
-    RequestPost<'/conversations', { users: User['id'][] }>,
+    RequestPost<'/conversations', WithPagination & { users: User['id'][] }>,
     ConversationsResponse
   >;
   messageSend: Endpoint<

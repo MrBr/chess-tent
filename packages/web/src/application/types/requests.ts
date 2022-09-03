@@ -85,7 +85,7 @@ export interface Requests {
 
   conversations: RequestFetch<
     Endpoints['conversations'],
-    User['id'][] | User['id']
+    [User['id'][] | User['id'], Pagination]
   >;
   messageSend: RequestFetch<
     Endpoints['messageSend'],

@@ -52,7 +52,7 @@ export const getConversationMessages: MiddlewareFunction = (req, res, next) => {
 
 export const findConversations: MiddlewareFunction = (req, res, next) => {
   service
-    .findConversations(res.locals.filters.users)
+    .findConversations(res.locals.filters.users, res.locals.pagination)
     .then(conversations => {
       res.locals.conversations = conversations;
       next();

@@ -10,11 +10,9 @@ export const useUser = (userId: User['id']) => {
   return useSelector(userSelector(userId));
 };
 
-export const useActiveUserRecord: Hooks['useActiveUserRecord'] = (
-  ...args: any[]
-) => {
+export const useActiveUserRecord = (fallback => {
   return hooks.useRecordSafe(
     hooks.useRecordInit(activeUser, 'activeUser'),
-    ...args,
+    fallback,
   );
-};
+}) as Hooks['useActiveUserRecord'];

@@ -17,7 +17,7 @@ export const middleware: Middleware = store => next => action => {
     //  probably there should be option to extend record reducer
     const { value } = action.payload;
     const { key } = action.meta;
-    userTrainings(store, key).push(value);
+    userTrainings(key)(store).push(value);
     return;
   }
   next(action);

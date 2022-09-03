@@ -26,6 +26,7 @@ const Conversations = ({ initialParticipant, close }: ConversationsProps) => {
   const [conversations, conversation] = useConversations(participant);
   const haveSelectedConversation = participant && conversation;
 
+  console.log(conversations?.map(({ users }) => users));
   useEffect(() => {
     if (participant && !conversation) {
       const newConversation = createConversation(

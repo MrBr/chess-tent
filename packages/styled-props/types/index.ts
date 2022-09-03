@@ -31,7 +31,7 @@ export type DynamicCssDescriptorResolver<T extends {}> = (
 // TODO - make all attributes optional; it will make much simpler composition
 // Currently different type of composites are needed to make it simple (such as omitProps composite).
 // It is created just to write shorter descriptor.
-export type CssDescriptor<T> = {
+export type CssDescriptor<T extends {}> = {
   className: string;
   staticStyle: string;
   resolveDynamicClassNames: DynamicClassNameResolver<T>;
@@ -71,7 +71,7 @@ export type WithCss<T extends {}, CssReturnType extends {}> = {
   css: CssReturnType;
 };
 
-export type RecursiveWithCss<T> = WithCss<
+export type RecursiveWithCss<T extends {}> = WithCss<
   WithCss<WithCss<WithCss<WithCss<{}, T>, T>, T>, T>,
   T
 >;

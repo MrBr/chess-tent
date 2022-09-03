@@ -11,7 +11,10 @@ const isStep = (entity: unknown): entity is Step =>
  * Unfortunately there is no guaranteed that single step will
  * always have the same reference hence ID must be used to check steps.
  */
-const isSameStep = <T>(leftStep: Step<T> | null, rightStep: Step<T> | null) => {
+const isSameStep = <T extends {}>(
+  leftStep: Step<T> | null,
+  rightStep: Step<T> | null,
+) => {
   return leftStep?.id === rightStep?.id;
 };
 

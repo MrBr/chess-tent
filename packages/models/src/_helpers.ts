@@ -109,7 +109,7 @@ const applyNestedPatches =
  * TODO - Needs verification
  */
 const applyUpdates =
-  <T>(entity: T) =>
+  <T extends Objectish>(entity: T) =>
   (update: (draft: T) => void) =>
   (patchListener?: PatchListener): T => {
     const draft = createDraft(entity);

@@ -5,7 +5,7 @@ import { RecordValue } from '@chess-tent/redux-record/types';
 const activity = records.createRecord(
   records.withRecordBase<Activity, {}>(),
   records.withRecordDenormalized(TYPE_ACTIVITY),
-  records.withRecordMethod(
+  records.withRecordMethod()(
     'applyPatch',
     () =>
       store =>

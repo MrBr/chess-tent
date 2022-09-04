@@ -12,7 +12,7 @@ const userTrainings = records.createRecord(
   records.withRecordCollection(),
   records.withRecordDenormalizedCollection(TYPE_ACTIVITY),
   records.withRecordApiLoad(requests.trainings),
-  records.withRecordMethod(
+  records.withRecordMethod()(
     'new',
     () => () => record =>
       async function (activity: LessonActivity) {
@@ -38,7 +38,7 @@ const lesson = records.createRecord(
   records.withRecordBase<Lesson, { saved?: boolean }>(),
   records.withRecordDenormalized(TYPE_LESSON),
   records.withRecordApiLoad(requests.lesson),
-  records.withRecordMethod('create', () => store => record => async () => {
+  records.withRecordMethod()('create', () => store => record => async () => {
     const lesson = record.get().value;
     if (!lesson) {
       throw new Error('Saving non-existing lesson');

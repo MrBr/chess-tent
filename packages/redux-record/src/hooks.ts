@@ -1,17 +1,11 @@
 import { useMemo } from 'react';
 import { useStore, useSelector } from 'react-redux';
-import {
-  InferRecord,
-  RecordBase,
-  RecordHookReturn,
-  RecordHookSafe,
-  RecordWith,
-} from '../types';
+import { RecordHookReturn, RecordHookSafe, RecordWith } from '../types';
 
 const useRecordInit = <T extends RecordWith<any>>(
   initRecord: T,
   suffix: string,
-): RecordHookReturn<InferRecord<T>> => {
+): RecordHookReturn<T> => {
   // TODO - use selector to select record entry
   useSelector(() => NaN);
   const store = useStore();
@@ -24,10 +18,10 @@ const useRecordInit = <T extends RecordWith<any>>(
     ...record,
     value,
     meta,
-  } as RecordHookReturn<InferRecord<T>>;
+  } as RecordHookReturn<T>;
 };
 
-const useRecordSafe = <T extends RecordBase<any, any>, U = void>(
+const useRecordSafe = <T extends RecordWith<any>, U = void>(
   ...args: [RecordHookReturn<T>, U?]
 ): RecordHookSafe<T, U> => {
   const [record, fallback] = args;

@@ -13,7 +13,7 @@ const coaches = records.createRecord(
   records.withRecordCollection(),
   records.withRecordDenormalizedCollection(TYPE_MENTORSHIP),
   records.withRecordApiLoad(requests.coaches),
-  records.withRecordMethod(
+  records.withRecordMethod()(
     'requestMentorship',
     () => () => record => async (coach, student) => {
       record.amend({ loading: true });

@@ -25,6 +25,7 @@ import {
   RecordBase,
   RecordRecipe,
   RecordValue,
+  RecipeMeta,
 } from '@chess-tent/redux-record/types';
 import { MiddlewareAPI } from 'redux';
 import { GenericArguments } from './_helpers';
@@ -83,8 +84,8 @@ export type Records<T = any> = {
   activeUserConversations: RecordWith<
     RecipeApiLoad<Requests['conversations']> &
       RecordBase<Conversation[], { userId?: string }> &
-      RecipeCollection<Conversation> //&
-    // RecipeMethod<'loadMore', () => void>
+      RecipeCollection<Conversation> &
+      RecipeMethod<'loadMore', () => void>
   >;
 
   userTrainings: RecordWith<UserTrainingsRecord>;
@@ -126,20 +127,22 @@ export type Records<T = any> = {
     T,
     RecipeCollection<InferRecordValueType<T>>
   >;
-  withRecordMethod: <
-    T extends RecordBase<any>,
-    M extends string,
+  withRecordMethod: <M extends {}>() => <
+    T extends RecordBase<any, any>,
+    N extends string,
     F extends (...args: any[]) => void,
   >(
-    method: M,
-    func: (recordKey: string) => (store: MiddlewareAPI) => (record: T) => F,
-  ) => RecordRecipe<T, RecipeMethod<M, F>>;
+    method: N,
+    func: (
+      recordKey: string,
+    ) => (store: MiddlewareAPI) => (record: T & RecipeMeta<M>) => F,
+  ) => RecordRecipe<T, RecipeMethod<N, F, M>>;
   // TODO - safe type `type` argument - should match selected entity
   withRecordDenormalized: <T extends RecordBase<any, any>>(
     type: string,
   ) => RecordRecipe<InferRecordValueType<T> extends Entity ? T : never, {}>;
   withRecordDenormalizedCollection: <
-    T extends RecordBase<any[]> & RecipeCollection<any>,
+    T extends RecordBase<any[], any> & RecipeCollection<any>,
   >(
     type: string,
   ) => RecordRecipe<

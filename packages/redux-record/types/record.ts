@@ -61,7 +61,9 @@ export type InferRecordValueSafe<T extends RecordBase> = T extends RecordBase<
 export type InferRecord<T extends RecordWith<any>> = T extends RecordWith<
   infer R
 >
-  ? R
+  ? R extends RecordBase<infer V, infer M>
+    ? R
+    : never
   : never;
 
 export type InferRecordEntry<T extends RecordBase> = T extends RecordBase<

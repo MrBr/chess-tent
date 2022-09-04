@@ -1,9 +1,9 @@
 import { RecordBase } from './record';
 
 export interface RecipeCollection<T> extends RecordBase<T[]> {
-  push: (item: T) => void;
+  push: (item: T, meta?: Partial<this['$entry']['meta']>) => void;
   pop: () => void;
-  concat: (items: T[]) => void;
+  concat: (items: T[], meta?: Partial<this['$entry']['meta']>) => void;
 }
 
 export type RecipeMeta<T extends {}> = RecordBase<unknown, T>;

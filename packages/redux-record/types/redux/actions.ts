@@ -28,21 +28,21 @@ export type RecordUpdateMetaAction = Action<
   {},
   { key: string }
 >;
-export type RecordUpdateAction<T> = Action<
+export type RecordUpdateAction<T, M extends {}> = Action<
   typeof UPDATE_RECORD,
-  { value: T; meta?: {} },
+  { value: T; meta?: Partial<M> },
   { key: string }
 >;
 
-export type RecordPushAction<T> = Action<
+export type RecordPushAction<T, M extends {}> = Action<
   typeof PUSH_RECORD,
-  { value: T },
+  { value: T; meta?: Partial<M> },
   { key: string }
 >;
 
-export type RecordConcatAction<T> = Action<
+export type RecordConcatAction<T, M extends {}> = Action<
   typeof CONCAT_RECORD,
-  { value: T[] },
+  { value: T[]; meta?: Partial<M> },
   { key: string }
 >;
 
@@ -53,8 +53,8 @@ export type RecordDeleteAction = Action<
 >;
 
 export type RecordAction =
-  | RecordUpdateAction<unknown>
+  | RecordUpdateAction<unknown, {}>
   | RecordDeleteAction
   | RecordUpdateMetaAction
-  | RecordPushAction<unknown>
-  | RecordConcatAction<unknown>;
+  | RecordPushAction<unknown, {}>
+  | RecordConcatAction<unknown, {}>;

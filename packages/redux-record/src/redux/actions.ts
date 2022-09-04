@@ -7,14 +7,13 @@ import {
   RecordPushAction,
   RecordUpdateAction,
   RecordUpdateMetaAction,
-  RecordValue,
   UPDATE_RECORD,
   UPDATE_RECORD_META,
 } from '../../types';
 
-export const updateRecordMetaAction = (
+export const updateRecordMetaAction = <M extends {}>(
   key: string,
-  meta: {},
+  meta: M,
 ): RecordUpdateMetaAction => ({
   type: UPDATE_RECORD_META,
   payload: meta,
@@ -23,11 +22,11 @@ export const updateRecordMetaAction = (
   },
 });
 
-export const updateRecordAction = <T>(
+export const updateRecordAction = <T, M extends {}>(
   key: string,
   value: T,
-  meta?: {},
-): RecordUpdateAction<T> => ({
+  meta: Partial<M> = {},
+): RecordUpdateAction<T, M> => ({
   type: UPDATE_RECORD,
   payload: {
     value,
@@ -38,26 +37,30 @@ export const updateRecordAction = <T>(
   },
 });
 
-export const pushRecordAction = <T extends RecordValue<unknown>>(
+export const pushRecordAction = <T, M extends {}>(
   key: string,
   entity: T,
-): RecordPushAction<T> => ({
+  meta: Partial<M> = {},
+): RecordPushAction<T, M> => ({
   type: PUSH_RECORD,
   payload: {
     value: entity,
+    meta,
   },
   meta: {
     key,
   },
 });
 
-export const concatRecordAction = <T extends RecordValue<unknown>>(
+export const concatRecordAction = <T, M extends {}>(
   key: string,
   entities: T[],
-): RecordConcatAction<T> => ({
+  meta: Partial<M> = {},
+): RecordConcatAction<T, M> => ({
   type: CONCAT_RECORD,
   payload: {
     value: entities,
+    meta,
   },
   meta: {
     key,

@@ -8,6 +8,7 @@ import {
 } from '@types';
 import { Entity } from '@chess-tent/models';
 import {
+  InferRecordMeta,
   InferRecordValue,
   InferRecordValueSafe,
   InferRecordValueType,
@@ -93,14 +94,17 @@ const withRecordDenormalizedCollection: Records['withRecordDenormalizedCollectio
     recordKey =>
     store =>
     record => {
-      const updateRaw = (descriptor: string[], meta = {}) => {
+      const updateRaw = (descriptor: string[], meta?: InferRecordMeta<T>) => {
         store.dispatch(
           batchActions([
             state.actions.updateRecord(recordKey, descriptor, meta),
           ]),
         );
       };
-      const update = (value: InferRecordValueSafe<T>, meta: {}) => {
+      const update = (
+        value: InferRecordValueSafe<T>,
+        meta?: InferRecordMeta<T>,
+      ) => {
         const descriptor = formatEntityValue(value);
         store.dispatch(
           batchActions([
@@ -109,7 +113,10 @@ const withRecordDenormalizedCollection: Records['withRecordDenormalizedCollectio
           ]),
         );
       };
-      const push = (value: InferRecordValueType<T>, meta: {}) => {
+      const push = (
+        value: InferRecordValueType<T>,
+        meta?: InferRecordMeta<T>,
+      ) => {
         const descriptor = formatEntityValue(value);
         store.dispatch(
           batchActions([
@@ -118,12 +125,15 @@ const withRecordDenormalizedCollection: Records['withRecordDenormalizedCollectio
           ]),
         );
       };
-      const concat = (items: InferRecordValueType<T>[]) => {
+      const concat = (
+        items: InferRecordValueType<T>[],
+        meta?: InferRecordMeta<T>,
+      ) => {
         const normalizedItems = formatEntityValue(items) as string[];
         store.dispatch(
           batchActions([
             state.actions.updateEntities(items),
-            state.actions.concatRecord(recordKey, normalizedItems),
+            state.actions.concatRecord(recordKey, normalizedItems, meta),
           ]),
         );
       };

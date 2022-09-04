@@ -40,13 +40,14 @@ export const records: Reducer<RecordState, RecordAction> = (
     }
     case PUSH_RECORD: {
       const previousValue = (state[action.meta.key]?.value as []) || [];
-      const payloadValue = action.payload.value;
+      const { value, meta } = action.payload;
       return {
         ...state,
         [action.meta.key]: {
-          value: [...previousValue, payloadValue],
+          value: [...previousValue, value],
           meta: {
             ...state[action.meta.key]?.meta,
+            ...meta,
           },
         },
       };
@@ -54,12 +55,14 @@ export const records: Reducer<RecordState, RecordAction> = (
     case CONCAT_RECORD: {
       const previousValue = (state[action.meta.key]?.value as []) || [];
       const payloadValue = action.payload.value || [];
+      const meta = action.payload.meta;
       return {
         ...state,
         [action.meta.key]: {
           value: [...previousValue, ...payloadValue],
           meta: {
             ...state[action.meta.key]?.meta,
+            ...meta,
           },
         },
       };

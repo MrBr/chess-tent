@@ -55,21 +55,21 @@ export type State = {
   registerMiddleware: (middleware: Middleware) => void;
   getRootReducer: () => Reducer<AppState, Actions>;
   actions: {
-    updateRecord: <T>(
+    updateRecord: <T, M extends {}>(
       recordKey: string,
       value: T,
-      meta?: {},
-    ) => RecordUpdateAction<T>;
-    pushRecord: <T>(
+      meta?: M,
+    ) => RecordUpdateAction<T, M>;
+    pushRecord: <T, M extends {}>(
       recordKey: string,
       value: T,
-      meta?: {},
-    ) => RecordPushAction<T>;
-    concatRecord: <T>(
+      meta?: M,
+    ) => RecordPushAction<T, M>;
+    concatRecord: <T, M extends {}>(
       recordKey: string,
       value: T[],
-      meta?: {},
-    ) => RecordConcatAction<T>;
+      meta?: M,
+    ) => RecordConcatAction<T, M>;
 
     resetState: () => ResetStateAction;
     updateEntities: (entity: Entity | Entity[]) => UpdateEntitiesAction;

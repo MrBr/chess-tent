@@ -23,12 +23,15 @@ const activeUserConversations = records.createRecord(
         return;
       }
       const skip = value?.length || 0;
+      record.amend({ loading: true });
       const response = await requests.conversations(userId as string, {
         skip,
         limit,
       });
-      record.concat(response.data);
-      record.amend({ allLoaded: response.data.length < limit, loading: false });
+      record.concat(response.data, {
+        allLoaded: response.data.length < limit,
+        loading: false,
+      });
     },
   ),
 );

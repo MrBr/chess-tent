@@ -1,13 +1,15 @@
 import {
+  CONCAT_RECORD,
   DELETE_RECORD,
   PUSH_RECORD,
+  RecordConcatAction,
   RecordDeleteAction,
   RecordPushAction,
   RecordUpdateAction,
-  UPDATE_RECORD,
-  RecordValue,
-  UPDATE_RECORD_META,
   RecordUpdateMetaAction,
+  RecordValue,
+  UPDATE_RECORD,
+  UPDATE_RECORD_META,
 } from '../../types';
 
 export const updateRecordMetaAction = (
@@ -43,6 +45,19 @@ export const pushRecordAction = <T extends RecordValue<unknown>>(
   type: PUSH_RECORD,
   payload: {
     value: entity,
+  },
+  meta: {
+    key,
+  },
+});
+
+export const concatRecordAction = <T extends RecordValue<unknown>>(
+  key: string,
+  entities: T[],
+): RecordConcatAction<T> => ({
+  type: CONCAT_RECORD,
+  payload: {
+    value: entities,
   },
   meta: {
     key,

@@ -36,7 +36,13 @@ export type RecordUpdateAction<T> = Action<
 
 export type RecordPushAction<T> = Action<
   typeof PUSH_RECORD,
-  { value: RecordValue<T> },
+  { value: T },
+  { key: string }
+>;
+
+export type RecordConcatAction<T> = Action<
+  typeof CONCAT_RECORD,
+  { value: T[] },
   { key: string }
 >;
 
@@ -50,4 +56,5 @@ export type RecordAction =
   | RecordUpdateAction<unknown>
   | RecordDeleteAction
   | RecordUpdateMetaAction
-  | RecordPushAction<unknown>;
+  | RecordPushAction<unknown>
+  | RecordConcatAction<unknown>;

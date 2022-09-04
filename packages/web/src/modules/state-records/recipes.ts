@@ -118,6 +118,15 @@ const withRecordDenormalizedCollection: Records['withRecordDenormalizedCollectio
           ]),
         );
       };
+      const concat = (items: InferRecordValueType<T>[]) => {
+        const normalizedItems = formatEntityValue(items) as string[];
+        store.dispatch(
+          batchActions([
+            state.actions.updateEntities(items),
+            state.actions.concatRecord(recordKey, normalizedItems),
+          ]),
+        );
+      };
 
       const get = () => {
         const entities = store.getState().entities;
@@ -132,6 +141,7 @@ const withRecordDenormalizedCollection: Records['withRecordDenormalizedCollectio
 
       return {
         ...record,
+        concat,
         get,
         update,
         push,

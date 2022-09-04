@@ -6,6 +6,7 @@ import {
   UPDATE_RECORD,
   PUSH_RECORD,
   UPDATE_RECORD_META,
+  CONCAT_RECORD,
 } from '../../types';
 
 export const records: Reducer<RecordState, RecordAction> = (
@@ -44,6 +45,19 @@ export const records: Reducer<RecordState, RecordAction> = (
         ...state,
         [action.meta.key]: {
           value: [...previousValue, payloadValue],
+          meta: {
+            ...state[action.meta.key]?.meta,
+          },
+        },
+      };
+    }
+    case CONCAT_RECORD: {
+      const previousValue = (state[action.meta.key]?.value as []) || [];
+      const payloadValue = action.payload.value || [];
+      return {
+        ...state,
+        [action.meta.key]: {
+          value: [...previousValue, ...payloadValue],
           meta: {
             ...state[action.meta.key]?.meta,
           },

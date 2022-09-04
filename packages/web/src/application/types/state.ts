@@ -28,6 +28,7 @@ import {
   UpdateEntityAction,
 } from '@chess-tent/types';
 import {
+  RecordConcatAction,
   RecordPushAction,
   RecordUpdateAction,
 } from '@chess-tent/redux-record/types';
@@ -64,6 +65,11 @@ export type State = {
       value: T,
       meta?: {},
     ) => RecordPushAction<T>;
+    concatRecord: <T>(
+      recordKey: string,
+      value: T[],
+      meta?: {},
+    ) => RecordConcatAction<T>;
 
     resetState: () => ResetStateAction;
     updateEntities: (entity: Entity | Entity[]) => UpdateEntitiesAction;

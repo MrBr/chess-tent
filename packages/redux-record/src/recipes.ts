@@ -11,6 +11,7 @@ import {
 
 import { selectRecord } from './redux/selectors';
 import {
+  concatRecordAction,
   deleteRecordAction,
   pushRecordAction,
   updateRecordAction,
@@ -29,11 +30,10 @@ const withRecordCollection =
       store.dispatch(pushRecordAction(recordKey, item));
     };
     const pop = () => {
-      // record.update();
       console.warn('Record collection pop not implemented');
     };
     const concat = (items: InferRecordValueType<T>[]) => {
-      console.warn('Record collection concat not implemented');
+      store.dispatch(concatRecordAction(recordKey, items));
     };
 
     return {

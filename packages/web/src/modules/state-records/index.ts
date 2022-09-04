@@ -1,5 +1,6 @@
 import application from '@application';
 import {
+  concatRecordAction,
   createRecord,
   pushRecordAction,
   records,
@@ -21,6 +22,7 @@ application.hooks.useRecordInit = useRecordInit;
 application.hooks.useRecordSafe = useRecordSafe;
 application.state.actions.pushRecord = pushRecordAction;
 application.state.actions.updateRecord = updateRecordAction;
+application.state.actions.concatRecord = concatRecordAction;
 application.records.createRecord = createRecord;
 application.records.isInitialized = isInitialized;
 application.records.withRecordBase = withRecordBase;

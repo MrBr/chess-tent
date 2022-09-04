@@ -6,6 +6,7 @@ import {
   RecordRecipe,
   RecordValue,
   InferRecordValueType,
+  RecipeMethod,
 } from '../types';
 
 import { selectRecord } from './redux/selectors';
@@ -82,29 +83,27 @@ const withRecordBase =
   };
 
 const withRecordMethod =
+  <M extends {}>() =>
   <
-    A,
-    V,
-    T extends RecordBase<V>,
-    M extends string,
+    T extends RecordBase<any, any>,
+    N extends string,
     F extends (...args: any[]) => void,
   >(
-    method: M,
-    func: (recordKey: string) => (store: MiddlewareAPI) => (record: T) => F,
-  ) =>
-  (recordKey: string) =>
-  (store: MiddlewareAPI) =>
-  (
-    record: T,
-  ): T & {
-    [prop in M]: F;
-  } => {
+    method: N,
+    func: (
+      recordKey: string,
+    ) => (store: MiddlewareAPI) => (record: T & RecipeMeta<M>) => F,
+  ): RecordRecipe<T, RecipeMethod<N, F, M>> =>
+  recordKey =>
+  store =>
+  record => {
+    const test = {
+      [method as N]: ((...args: Parameters<F>) =>
+        func(recordKey)(store)(record)(...args)) as F,
+    } as { [key in N]: F };
     return {
       ...record,
-      [method]: (...args: Parameters<F>) =>
-        func(recordKey)(store)(record)(...args),
-    } as T & {
-      [prop in M]: F;
+      ...test,
     };
   };
 

@@ -72,10 +72,15 @@ export type InferRecordEntry<T extends RecordBase> = T extends RecordBase<
   : never;
 
 export interface RecordBase<V = any, M extends {} = {}> {
+  // $entry is a placeholder property used to get a proper type inference in the methods
+  // Objects aren't extended/inferred in a right way when encapsulated within method return
   $entry: RecordEntry<V, M>;
   get: () => this['$entry'];
-  update: (value: RecordValue<V>, meta?: Partial<RecordMeta<M>>) => void;
-  amend: (meta: Partial<RecordMeta<M>>) => void;
+  update: (
+    value: RecordValue<V>,
+    meta?: Partial<this['$entry']['meta']>,
+  ) => void;
+  amend: (meta: Partial<this['$entry']['meta']>) => void;
   reset: () => void;
 }
 

@@ -7,7 +7,7 @@ import Conversation from './conversation';
 import ConversationRow from './conversation-row';
 import { useConversations } from '../hooks/useConversations';
 
-const { Offcanvas, Headline5 } = ui;
+const { Offcanvas, Headline5, Button, Row, Col, Spinner } = ui;
 const {
   actions: { updateEntities },
 } = state;
@@ -23,10 +23,13 @@ const Conversations = ({ initialParticipant, close }: ConversationsProps) => {
   const dispatch = useDispatchBatched();
   const { value: activeUser } = useActiveUserRecord();
   const [participant, setParticipant] = useState(initialParticipant);
-  const [conversations, conversation] = useConversations(participant);
+  const [conversations, conversation, , record] = useConversations(participant);
   const haveSelectedConversation = participant && conversation;
+  const {
+    meta: { loading, allLoaded },
+    loadMore,
+  } = record;
 
-  console.log(conversations?.map(({ users }) => users));
   useEffect(() => {
     if (participant && !conversation) {
       const newConversation = createConversation(
@@ -84,6 +87,20 @@ const Conversations = ({ initialParticipant, close }: ConversationsProps) => {
               );
             })}
           </Offcanvas.Body>
+          {!allLoaded && (
+            <Row className="justify-content-center mb-3">
+              <Col className="col-auto">
+                <Button
+                  size="small"
+                  variant="tertiary"
+                  disabled={loading}
+                  onClick={loadMore}
+                >
+                  Load more {loading && <Spinner animation="border" />}
+                </Button>
+              </Col>
+            </Row>
+          )}
         </>
       )}
     </Offcanvas>

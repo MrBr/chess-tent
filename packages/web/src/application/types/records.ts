@@ -85,7 +85,7 @@ export type Records<T = any> = {
     RecipeApiLoad<Requests['conversations']> &
       RecordBase<Conversation[], { userId?: string }> &
       RecipeCollection<Conversation> &
-      RecipeMethod<'loadMore', () => void>
+      RecipeMethod<'loadMore', () => void, { allLoaded?: boolean }>
   >;
 
   userTrainings: RecordWith<UserTrainingsRecord>;

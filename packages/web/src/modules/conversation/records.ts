@@ -11,14 +11,26 @@ const activeUserConversations = records.createRecord(
   records.withRecordCollection(),
   records.withRecordDenormalizedCollection(TYPE_CONVERSATION),
   records.withRecordApiLoad(requests.conversations),
-  records.withRecordMethod('loadMore', () => () => record => async () => {
-    const {
-      value,
-      meta: { userId },
-    } = record.get();
-    const skip = value?.length || 0;
-    record.load(userId as string, { skip, limit: 5 });
-  }),
+  records.withRecordMethod<{ allLoaded: boolean }>()(
+    'loadMore',
+    () => () => record => async () => {
+      const limit = 10;
+      const {
+        value,
+        meta: { userId, allLoaded },
+      } = record.get();
+      if (allLoaded) {
+        return;
+      }
+      const skip = value?.length || 0;
+      const response = await requests.conversations(userId as string, {
+        skip,
+        limit,
+      });
+      record.concat(response.data);
+      record.amend({ allLoaded: response.data.length < limit, loading: false });
+    },
+  ),
 );
 
 const conversationParticipant = records.createRecord(

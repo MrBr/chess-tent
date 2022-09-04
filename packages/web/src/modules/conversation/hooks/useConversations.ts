@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Conversation, isConversationRead, User } from '@chess-tent/models';
-import { RecordValue } from '@chess-tent/redux-record/types';
+import { RecordHookReturn, RecordValue } from '@chess-tent/redux-record/types';
+import { Records } from '@types';
 import { hooks, records } from '@application';
 
 import { selectConversationByUsers } from '../state/selectors';
@@ -9,14 +10,23 @@ const { useSelector, useRecordInit, useActiveUserRecord } = hooks;
 
 export const useConversations = (
   participant?: User,
-): [RecordValue<Conversation[]>, Conversation | null, boolean] => {
+): [
+  RecordValue<Conversation[]>,
+  Conversation | null,
+  boolean,
+  RecordHookReturn<Records['activeUserConversations']>,
+] => {
   const { value: activeUser } = useActiveUserRecord();
+  const conversationsRecord = useRecordInit(
+    records.activeUserConversations,
+    'conversations',
+  );
   const {
     value: conversations,
     load,
     meta: { loading, userId },
     amend,
-  } = useRecordInit(records.activeUserConversations, 'conversations');
+  } = conversationsRecord;
 
   const conversation = useSelector(
     selectConversationByUsers(activeUser, participant),
@@ -33,8 +43,8 @@ export const useConversations = (
     if (loading || conversations || !userId) {
       return;
     }
-    load(userId, { skip: 0, limit: 5 });
+    load(userId, { skip: 0, limit: 10 });
   }, [load, userId, loading, conversations]);
 
-  return [conversations, conversation, haveUnreadMessages];
+  return [conversations, conversation, haveUnreadMessages, conversationsRecord];
 };

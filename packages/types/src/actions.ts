@@ -83,7 +83,7 @@ export type UpdateEntitiesAction = Action<
 //        depending on meta.type entity should infer type making it typesafe
 export type UpdateEntityAction = Action<
   typeof UPDATE_ENTITY,
-  { result: NormalizedEntity; entities: EntitiesState },
+  { result?: NormalizedEntity; entities: Partial<EntitiesState> },
   {
     patch?: ReversiblePatch;
     type: keyof EntitiesState;

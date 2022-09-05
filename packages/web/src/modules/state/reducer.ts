@@ -40,36 +40,34 @@ const createEntityReducer =
       case UPDATE_ENTITY: {
         const { patch, type, id } = action.meta;
         const entity = state[id];
+
+        // This automatically takes care of a none patch actions
+        // takes [type][id] entity from the updates
+        const updatedEntities = {
+          ...action.payload.entities[reducerEntityType],
+        } as Record<string, EntitiesState[T]>;
         // TODO - standardise "patching"
         // update entity has a dual behavior
         // it ONLY sometimes sends a patch which should be applied
         // in other cases, it sends a whole object
         // sending a whole object can leads to the race when the same entity is updated multiple times immediately one after the other
         // basically first update doesn't have to be taken into an account for the second, meaning, the next update used stale state in update which in the end overrides previous action
-        let updatedEntity;
-        if (!patch?.next) {
-          // Not a patch action
-          updatedEntity = action.payload.entities[type][id];
-        } else if (
-          patch.next.length > 0 &&
-          reducerEntityType === type &&
-          entity
-        ) {
+        if (!!patch?.next?.length && reducerEntityType === type && entity) {
           // patch action
-          updatedEntity = utils.normalize(
+          updatedEntities[id] = utils.normalize(
             applyPatches(entity, patch.next),
           ).result;
-        } else {
-          // Patch action but no diff
-          return state;
+        } else if (!!patch?.next?.length && patch?.next?.length === 0) {
+          // Patch action with no update, don't change the entity
+          delete updatedEntities[id];
         }
-        return isEmpty(action.payload.entities[reducerEntityType])
+
+        return isEmpty(updatedEntities)
           ? state
           : {
               ...state,
               // TODO - is this valid - to update related entities (produced by normalization)
-              ...action.payload.entities[reducerEntityType],
-              [id]: updatedEntity,
+              ...updatedEntities,
             };
       }
       case SEND_PATCH: {

@@ -12,7 +12,7 @@ import {
   Router as BaseRouter,
   Prompt,
 } from 'react-router-dom';
-import { createBrowserHistory } from 'history';
+import { createBrowserHistory, LocationDescriptor } from 'history';
 import styled from '@chess-tent/styled-props';
 
 const { APP_URL } = constants;
@@ -23,18 +23,28 @@ const history: History = createBrowserHistory();
 const basePush = history.push.bind(history);
 const baseReplace = history.replace.bind(history);
 const baseGoBack = history.goBack.bind(history);
-history.push = function <T extends {}>(path: string, state?: T) {
-  basePush(path, {
-    from: `${history.location.pathname}${history.location.search}`,
-    ...state,
-  });
-};
-history.replace = function <T extends {}>(path: string, state?: T) {
-  baseReplace(path, {
-    from: `${history.location.pathname}${history.location.search}`,
-    ...state,
-  });
-};
+
+const createHistoryMethodWithFromState =
+  <T extends { from?: string }>(
+    method: (path: string | LocationDescriptor<T>) => void,
+  ): ((path: string | LocationDescriptor<T>, state?: T) => void) =>
+  (path, state) => {
+    const stateWithFrom = {
+      from: `${history.location.pathname}${history.location.search}`,
+      ...((typeof path === 'object' && path.state) || state),
+    };
+    const locationDescriptor = {
+      ...(typeof path === 'string' ? { pathname: path } : path),
+      state: stateWithFrom,
+    } as LocationDescriptor<T>;
+
+    // Router methods ignore second state argument if the first one is LocationDescriptor
+    // This is used to reconcile signatures
+    method(locationDescriptor);
+  };
+
+history.push = createHistoryMethodWithFromState(basePush);
+history.replace = createHistoryMethodWithFromState(baseReplace);
 history.goBack = function (this: typeof history) {
   // Go back in this case doesn't lead out of the application
   // eslint-disable-next-line @typescript-eslint/no-use-before-define

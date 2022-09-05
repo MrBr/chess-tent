@@ -8,7 +8,7 @@ import {
   Orientation,
   Steps,
 } from '@types';
-import { components, constants, services, ui } from '@application';
+import { components, constants, services, ui, utils } from '@application';
 import {
   getAnalysisActiveStep,
   getLessonActivityBoardState,
@@ -24,6 +24,7 @@ import { isActivityStepAnalysing } from '../service';
 
 const { AnalysisBoard, AnalysisSidebar, LessonPlaygroundCard } = components;
 const { Row, Col, Icon, Text, Button } = ui;
+const { createKeyboardNavigationHandler } = utils;
 const { START_FEN } = constants;
 
 abstract class ActivityRendererAnalysis<
@@ -149,14 +150,7 @@ export class ActivityRendererAnalysisBoard<
 
   handleKeypress = (e: KeyboardEvent) => {
     console.warn('TODO - add tooltip when analysis end is reached');
-    switch (e.code) {
-      case 'ArrowLeft':
-        this.prevStep();
-        return;
-      case 'ArrowRight':
-        this.nextStep();
-        return;
-    }
+    createKeyboardNavigationHandler(this.prevStep, this.nextStep)(e);
   };
 
   updateStepRotation = (orientation?: Orientation) => {

@@ -19,13 +19,22 @@ import {
   noop,
   noopNoop,
 } from './utils';
-import { rightMouse, stopPropagation, isElementInViewport } from './html';
+import {
+  rightMouse,
+  stopPropagation,
+  isElementInViewport,
+  isInputTypeElement,
+  createKeyboardNavigationHandler,
+} from './html';
 
 application.utils.generateIndex = uuid;
 
 application.utils.rightMouse = rightMouse;
 application.utils.stopPropagation = stopPropagation;
 application.utils.isElementInViewport = isElementInViewport;
+application.utils.isInputTypeElement = isInputTypeElement;
+application.utils.createKeyboardNavigationHandler =
+  createKeyboardNavigationHandler;
 
 application.utils.getEntitySchema = getEntitySchema;
 application.utils.getTypeSchema = getTypeSchema;

@@ -50,7 +50,7 @@ const {
   actions: { serviceAction },
 } = state;
 const { useDispatchBatched, useLocation, useHistory } = hooks;
-const { mobileCss } = utils;
+const { mobileCss, createKeyboardNavigationHandler } = utils;
 
 const { className } = css`
   width: 100%;
@@ -204,17 +204,6 @@ class EditorRenderer extends React.Component<
     }
   };
 
-  handleKeypress = (e: KeyboardEvent) => {
-    switch (e.code) {
-      case 'ArrowLeft':
-        this.prevStepHandler();
-        return;
-      case 'ArrowRight':
-        this.nextStepHandler();
-        return;
-    }
-  };
-
   recordHistoryChange(undoAction: LessonUpdatableAction) {
     const { activeStep, activeChapter } = this.props;
     this.updateHistory([
@@ -286,6 +275,11 @@ class EditorRenderer extends React.Component<
     const prevStep = getPreviousStep(activeChapter, activeStep);
     prevStep && this.setActiveStepHandler(prevStep);
   };
+
+  handleKeypress = createKeyboardNavigationHandler(
+    this.prevStepHandler,
+    this.nextStepHandler,
+  );
 
   setActiveChapterHandler = (chapter: Chapter, activeStepId?: Step['id']) => {
     const { history } = this.props;

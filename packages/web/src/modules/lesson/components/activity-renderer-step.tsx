@@ -20,11 +20,12 @@ import {
   getLessonChapterIndex,
 } from '@chess-tent/models';
 
-import { components, services, ui } from '@application';
+import { components, services, ui, utils } from '@application';
 import { isActivityStepSolving, updateActivityActiveChapter } from '../service';
 
 const { StepRenderer } = components;
 const { Button, Icon, Row, Col } = ui;
+const { createKeyboardNavigationHandler } = utils;
 
 class ActivityRendererStepNavigation<
   T extends Steps,
@@ -99,14 +100,7 @@ export class ActivityRendererStepBoard<
 
   handleKeypress = (e: KeyboardEvent) => {
     const { nextStep, prevStep } = this.props;
-    switch (e.code) {
-      case 'ArrowLeft':
-        prevStep();
-        return;
-      case 'ArrowRight':
-        nextStep();
-        return;
-    }
+    createKeyboardNavigationHandler(prevStep, nextStep)(e);
   };
 
   updateStepShapes = (shapes: Shape[]) => {

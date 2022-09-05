@@ -11,6 +11,7 @@ export type Utils = {
   getTypeSchema: (type: string) => Schema;
   rightMouse: (f: Function) => (e: MouseEvent) => void;
   stopPropagation: ReactEventHandler;
+  isElementInViewport: (el: HTMLElement) => boolean;
   generateIndex: () => string;
   denormalize: <T>(id: string, type: string, entities: {}) => T;
   normalize: (entity: Entity | NormalizedEntity) => {

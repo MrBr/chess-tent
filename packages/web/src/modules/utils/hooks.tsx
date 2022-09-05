@@ -4,6 +4,27 @@ import defer from 'lodash/defer';
 import debounce from 'lodash/debounce';
 import set from 'lodash/set';
 import { ObjectSchema } from 'yup';
+import { isMobile } from 'react-device-detect';
+
+import { isElementInViewport } from './html';
+
+export const useShowOnActive = <T extends HTMLElement>(active?: boolean) => {
+  const ref = useRef<T>(null);
+
+  useEffect(() => {
+    if (
+      !active ||
+      !ref.current ||
+      isMobile ||
+      isElementInViewport(ref.current)
+    ) {
+      return;
+    }
+    ref.current.scrollIntoView();
+  }, [active, ref]);
+
+  return ref;
+};
 
 export const useComponentStateSilent = () => {
   const ref = useRef<{ mounted: boolean }>({ mounted: false });

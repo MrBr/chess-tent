@@ -175,7 +175,7 @@ export type StepperProps = {
 
 export type StepToolbox = FunctionComponent<
   {
-    active?: boolean | (() => void);
+    active?: boolean;
     comment?: boolean | (() => void);
     exercise?: boolean | (() => void);
     remove?: boolean | (() => void);

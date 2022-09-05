@@ -78,7 +78,7 @@ const { className } = css`
 
     > div {
       // Needed to get properly scrollable sidebar
-      padding: 12px 0px;
+      padding: 12px 0 48px;
       position: absolute;
       width: 100%;
       height: 100%;

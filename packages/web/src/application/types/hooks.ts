@@ -79,6 +79,7 @@ export type Hooks = {
   useRecordInit: typeof useRecordInit;
   useRecordSafe: typeof useRecordSafe;
   useIsMobile: () => boolean;
+  useShowOnActive: <T extends HTMLElement>(active?: boolean) => RefObject<T>;
   useComponentStateSilent: () => { mounted: boolean };
   useComponentState: () => { mounted: boolean };
   useOutsideClick: (

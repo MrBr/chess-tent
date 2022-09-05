@@ -1,7 +1,6 @@
 import React, {
   useCallback,
   ReactEventHandler,
-  useRef,
   useEffect,
   useState,
 } from 'react';
@@ -17,7 +16,6 @@ import {
   StepRoot,
 } from '@chess-tent/models';
 import { over } from 'lodash';
-import { isMobile } from 'react-device-detect';
 
 const {
   Container,
@@ -31,7 +29,7 @@ const {
   Overlay,
 } = ui;
 const { LessonToolboxText } = components;
-const { useCopyStep, usePrompt } = hooks;
+const { useCopyStep, usePrompt, useShowOnActive } = hooks;
 const { stopPropagation } = utils;
 const { getStepPosition, addStepNextToTheComments, getStepBoardOrientation } =
   services;
@@ -43,6 +41,10 @@ function pickFunction(...funcs: any[]) {
 const { className: toolboxContainerClassName } = css`
   position: absolute;
   left: 0;
+`;
+
+const { className: toolboxClassName } = css`
+  z-index: 100;
 `;
 
 const ToolboxActions = styled.div.css`
@@ -83,16 +85,10 @@ const StepToolbox: Components['StepToolbox'] = ({
   stepRoot,
   updateChapter,
 }) => {
-  const toolboxRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState<boolean>(false);
   const [hasStepCopy, copy, getCopiedStep] = useCopyStep();
 
-  useEffect(() => {
-    if (!active || !toolboxRef.current || isMobile) {
-      return;
-    }
-    toolboxRef.current.scrollIntoView();
-  }, [active, toolboxRef]);
+  const toolboxRef = useShowOnActive<HTMLDivElement>(active);
 
   useEffect(() => {
     if (!active || !toolboxRef.current) {
@@ -222,10 +218,14 @@ const StepToolbox: Components['StepToolbox'] = ({
           container={getToolboxContainer}
         >
           {/* Excluding props to remove react warning... */}
-          {({ arrowProps, popper, show, ...props }) => (
+          {({ arrowProps, popper, show, className, ...props }) => (
             // Stopping propagation to execute only clicked action
             // and not triggers bellow the toolbox
-            <div {...props} onClick={stopPropagation}>
+            <div
+              {...props}
+              onClick={stopPropagation}
+              className={`${className} ${toolboxClassName}`}
+            >
               <ToolboxActions className={actionsClassName}>
                 {exercise && (
                   <OverlayTrigger

@@ -1,19 +1,13 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import styled from '@chess-tent/styled-props';
 import { Components } from '@types';
-import { isMobile } from 'react-device-detect';
+import { hooks } from '@application';
+
+const { useShowOnActive } = hooks;
 
 const Step = styled<Components['LessonPlaygroundStepTag']>(
   ({ children, className, onClick, active }) => {
-    const ref = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-      // On mobile scrollIntoView moves board out of the sight.
-      if (!active || !ref.current || isMobile) {
-        return;
-      }
-      ref.current.scrollIntoView();
-    }, [active, ref]);
+    const ref = useShowOnActive<HTMLDivElement>(active);
 
     return (
       <div className={`${className} $`} onClick={onClick} ref={ref}>

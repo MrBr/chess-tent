@@ -7,6 +7,7 @@ import {
   useInputStateUpdate,
   useOutsideClick,
   usePrompt,
+  useShowOnActive,
   useValidation,
 } from './hooks';
 import { getEntitySchema, getTypeSchema } from './model';
@@ -18,11 +19,13 @@ import {
   noop,
   noopNoop,
 } from './utils';
+import { rightMouse, stopPropagation, isElementInViewport } from './html';
 
 application.utils.generateIndex = uuid;
-application.utils.rightMouse = (f: Function) => (e: MouseEvent) =>
-  e.button === 2 && f(e);
-application.utils.stopPropagation = e => e.stopPropagation();
+
+application.utils.rightMouse = rightMouse;
+application.utils.stopPropagation = stopPropagation;
+application.utils.isElementInViewport = isElementInViewport;
 
 application.utils.getEntitySchema = getEntitySchema;
 application.utils.getTypeSchema = getTypeSchema;
@@ -38,6 +41,7 @@ application.utils.getLanguages = getLanguages;
 application.utils.getCountries = getCountries;
 application.utils.getCountryByCode = getCountryByCode;
 
+application.hooks.useShowOnActive = useShowOnActive;
 application.hooks.useComponentStateSilent = useComponentStateSilent;
 application.hooks.useComponentState = useComponentState;
 application.hooks.useOutsideClick = useOutsideClick;

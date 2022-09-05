@@ -25,6 +25,7 @@ import {
   Steps,
   History,
   Orientation,
+  UPDATE_ENTITY,
 } from '@types';
 import * as H from 'history';
 import { debounce } from 'lodash';
@@ -220,17 +221,32 @@ class EditorRenderer extends React.Component<
     this.setState({ history });
   }
 
-  addLessonUpdate(
-    action: LessonUpdatableAction,
-    undoAction?: LessonUpdatableAction,
-  ) {
+  addLessonUpdate(action: LessonUpdatableAction) {
     const { addLessonUpdate, lesson } = this.props;
 
     if (lesson.state.status !== LessonStateStatus.DRAFT) {
       this.updateLessonStatusToDraft();
     }
 
-    undoAction && this.recordHistoryChange(undoAction);
+    if (
+      action.type === UPDATE_ENTITY &&
+      action.meta.patch &&
+      action.meta.patch.prev.length > 0
+    ) {
+      this.recordHistoryChange({
+        type: UPDATE_ENTITY,
+        meta: {
+          ...action.meta,
+          patch: {
+            // TODO - Use for redo
+            // prev: action.meta.patch.next,
+            prev: [],
+            next: action.meta.patch.prev,
+          },
+        },
+        payload: { entities: {} },
+      });
+    }
     addLessonUpdate(action);
   }
 
@@ -301,13 +317,9 @@ class EditorRenderer extends React.Component<
     const { lesson, activeChapter } = this.props;
 
     const action = serviceAction(updateLessonStep)(lesson, activeChapter, step);
-    const undoAction = serviceAction(updateLessonChapter)(
-      lesson,
-      activeChapter,
-    );
 
     // Only tracking history for the current chapter
-    this.addLessonUpdate(action, undoAction);
+    this.addLessonUpdate(action);
   };
 
   updateStepRotation = (orientation?: Orientation) => {
@@ -373,11 +385,8 @@ class EditorRenderer extends React.Component<
     const action = serviceAction(updateSubjectState)(lesson, {
       chapters: newChapters,
     });
-    const undoAction = serviceAction(updateSubjectState)(lesson, {
-      chapters: lesson.state.chapters,
-    });
 
-    this.addLessonUpdate(action, undoAction);
+    this.addLessonUpdate(action);
     history.replace(location.pathname);
   };
 

@@ -14,7 +14,9 @@ const Icon = styled<IconProps>(
       </span>
     );
   },
-).size.textual.variant.background.css`
+).size.textual.variant.background.css<IconProps>`
+  ${{ omitProps: ['background'] }}
+
   display: inline-block;
   box-sizing: content-box;
   position: relative;

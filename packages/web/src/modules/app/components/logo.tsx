@@ -12,7 +12,7 @@ const Logo: UIComponent = ({ className }) => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <g clip-path="url(#clip0_3213_14355)">
+      <g clipPath="url(#clip0_3213_14355)">
         <path
           d="M25.7843 26.8428H5.10156V45.3592H25.7843V26.8428Z"
           fill="currentColor"

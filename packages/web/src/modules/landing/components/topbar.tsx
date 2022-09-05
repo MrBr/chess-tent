@@ -38,6 +38,8 @@ const topbarCss = styled.props.isMenuOpen.css`
   }
 
   ${mobileCss`
+    margin-bottom: 0px;
+
     &.isMenuOpen {
       background: var(--bg-color);
     }

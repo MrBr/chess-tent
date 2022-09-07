@@ -8,22 +8,11 @@ import {
   User,
 } from '@chess-tent/models';
 import styled from '@chess-tent/styled-props';
-import { DateTime } from 'luxon';
 import last from 'lodash/last';
 import useLoadMoreMessages from '../hooks/useLoadMoreMessages';
-import UserMessages from './user-messages';
+import ConversationMessage from './conversation-message';
 
-const {
-  Container,
-  Headline5,
-  Text,
-  Row,
-  Col,
-  Input,
-  Icon,
-  LoadMore,
-  Offcanvas,
-} = ui;
+const { Headline5, Row, Col, Input, Icon, LoadMore, Offcanvas } = ui;
 const { UserAvatar, MentorshipButton } = components;
 const { generateIndex } = utils;
 const {
@@ -106,37 +95,25 @@ export default styled<{
               noMore={noMore}
             />
             {messages?.reduce<ReactElement[]>((result, message, index) => {
-              const messageOwner = getParticipant(conversation, message.owner);
-              const messageElement =
-                message.owner !== activeUser.id ? (
-                  <Container key={message.id} className="pl-0">
-                    {messages[index - 1]?.owner !== message.owner && (
-                      <>
-                        {messageOwner && (
-                          <UserAvatar size="small" user={messageOwner} />
-                        )}
-                        <Text
-                          inline
-                          fontSize="extra-small"
-                          weight={700}
-                          className="ms-3"
-                        >
-                          {DateTime.fromMillis(
-                            message.timestamp,
-                          ).toLocaleString(DateTime.TIME_24_SIMPLE)}
-                        </Text>
-                      </>
-                    )}
-                    <UserMessages className="pl-4 mt-1" variant="tertiary">
-                      {message.message}
-                    </UserMessages>
-                  </Container>
-                ) : (
-                  <UserMessages key={message.id}>
-                    {message.message}
-                  </UserMessages>
-                );
-              result.push(messageElement);
+              const messageOwner = getParticipant(
+                conversation,
+                message.owner,
+              ) as User;
+              const lastMessageOwner = getParticipant(
+                conversation,
+                messages[index - 1]?.owner,
+              );
+
+              result.push(
+                <ConversationMessage
+                  message={message.message}
+                  activeUser={activeUser}
+                  messageOwner={messageOwner}
+                  lastMessageOwner={lastMessageOwner}
+                  timestamp={message.timestamp}
+                  key={message.id}
+                />,
+              );
               return result;
             }, [])}
           </Col>

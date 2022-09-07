@@ -28,9 +28,10 @@ const conversationSchema = db
     users: [
       { type: String, ref: TYPE_USER },
     ] as unknown as NormalizedConversation['users'],
-    lastMessageTimestamp: [
-      { type: Schema.Types.Number },
-    ] as unknown as NormalizedConversation['lastMessageTimestamp'],
+    lastMessageTimestamp: {
+      type: Schema.Types.Number,
+      default: 0,
+    } as unknown as NormalizedConversation['lastMessageTimestamp'],
     messages: {
       type: Schema.Types.Mixed,
     } as unknown as NormalizedConversation['messages'],

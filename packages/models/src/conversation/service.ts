@@ -12,6 +12,7 @@ const createConversation = (
   type: TYPE_CONVERSATION,
   users,
   messages,
+  lastMessageTimestamp: Date.now(),
 });
 
 const getParticipant = (conversation: Conversation, userId: User['id']) =>

@@ -27,15 +27,20 @@ export const addMessageToConversation: MiddlewareFunction = (
     .catch(next);
 };
 
-export const getConversation: MiddlewareFunction = (req, res, next) => {
-  service
-    .getConversation(res.locals.conversation.id as Conversation['id'])
-    .then(conversation => {
-      res.locals.conversation = conversation;
-      next();
-    })
-    .catch(next);
-};
+export const getConversation =
+  (withMessages = true): MiddlewareFunction =>
+  (req, res, next) => {
+    service
+      .getConversation(
+        res.locals.conversation.id as Conversation['id'],
+        withMessages,
+      )
+      .then(conversation => {
+        res.locals.conversation = conversation;
+        next();
+      })
+      .catch(next);
+  };
 
 export const getConversationMessages: MiddlewareFunction = (req, res, next) => {
   service
@@ -60,20 +65,15 @@ export const findConversations: MiddlewareFunction = (req, res, next) => {
     .catch(next);
 };
 
-export const canEditConversation: MiddlewareFunction = (req, res, next) => {
-  service
-    .getConversation(res.locals.conversation.id)
-    .then(conversation => {
-      if (
-        !conversation ||
-        conversation.users.some(user => user.id === res.locals.me.id)
-      ) {
-        next();
-        return;
-      }
-      throw new UnauthorizedConversationEditError();
-    })
-    .catch(next);
+export const canEditConversations: MiddlewareFunction = (req, res, next) => {
+  const canEdit = service.canEditConversations(
+    res.locals.conversations || [res.locals.conversation],
+    res.locals.me,
+  );
+  if (!canEdit) {
+    throw new UnauthorizedConversationEditError();
+  }
+  next();
 };
 
 export const createInitialFounderConversation: MiddlewareFunction = async (

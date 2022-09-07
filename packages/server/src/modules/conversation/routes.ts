@@ -1,6 +1,6 @@
 import application, { middleware } from '@application';
 import {
-  canEditConversation,
+  canEditConversations,
   getConversation,
   saveConversation,
   findConversations,
@@ -14,7 +14,7 @@ application.service.registerPostRoute(
   '/conversation/save',
   identify,
   toLocals('conversation', req => req.body),
-  canEditConversation,
+  canEditConversations,
   saveConversation,
   sendStatusOk,
 );
@@ -24,7 +24,7 @@ application.service.registerPutRoute(
   identify,
   toLocals('message', req => req.body),
   toLocals('conversation.id', req => req.params.conversationId),
-  canEditConversation,
+  canEditConversations,
   addMessageToConversation,
   sendStatusOk,
 );
@@ -35,6 +35,7 @@ application.service.registerPostRoute(
   toLocals('filters', req => ({ users: req.body.users })),
   toLocals('pagination', req => req.body.pagination),
   findConversations,
+  canEditConversations,
   sendData('conversations'),
 );
 
@@ -42,8 +43,8 @@ application.service.registerGetRoute(
   '/conversation/:conversationId',
   identify,
   toLocals('conversation.id', req => req.params.conversationId),
-  canEditConversation,
-  getConversation,
+  getConversation(),
+  canEditConversations,
   sendData('conversation'),
 );
 
@@ -52,7 +53,8 @@ application.service.registerPostRoute(
   identify,
   toLocals('conversation.id', req => req.params.conversationId),
   toLocals('lastDocumentTimestamp', req => req.body.lastDocumentTimestamp),
-  canEditConversation,
+  getConversation(false),
+  canEditConversations,
   getConversationMessages,
   sendData('messages'),
 );

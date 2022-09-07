@@ -20,10 +20,12 @@ export const addMessageToConversation = async (
   const updatedMessage = updateMessage(message, {
     timestamp: Date.now(),
   });
+
   await ConversationModel.updateOne(
     { _id: conversationId },
     { lastMessageTimestamp: updatedMessage.timestamp },
   );
+
   await MessageModel.updateOne(
     {
       _id: idRegex,
@@ -97,9 +99,13 @@ export const findConversations = async (
   pagination: Pagination,
 ) => {
   return await ConversationModel.find({ users: { $in: users } }, null, {
-    sort: '-lastMessageTimestamp',
-    ...pagination,
+    skip: pagination.skip,
+    limit: pagination.limit,
   })
+    .sort([
+      ['lastMessageTimestamp', -1],
+      ['_id', 1],
+    ])
     .populate('users')
     .populate({
       path: 'virtualMessages',
@@ -109,25 +115,23 @@ export const findConversations = async (
     });
 };
 
-export const getConversation = (
+export const getConversation = async (
   conversationId: Conversation['id'],
-): Promise<Conversation | undefined> =>
-  new Promise(resolve => {
-    ConversationModel.findById(conversationId)
-      .populate('users')
-      .populate({
-        path: 'virtualMessages',
-        options: {
-          limit: 1,
-        },
-      })
-      .exec((err, result) => {
-        if (err) {
-          throw err;
-        }
-        resolve(result?.toObject<Conversation>());
-      });
-  });
+  withMessages = true,
+): Promise<Conversation | undefined> => {
+  const find = ConversationModel.findById(conversationId).populate('users');
+
+  withMessages &&
+    find.populate({
+      path: 'virtualMessages',
+      options: {
+        limit: 1,
+      },
+    });
+
+  const conversation = await find.exec();
+  return conversation?.toObject<Conversation>() || undefined;
+};
 
 export const getConversationMessages = (
   conversationId: Conversation['id'],
@@ -153,3 +157,12 @@ export const getConversationMessages = (
         resolve(db.flattenBuckets(result, 'messages'));
       });
   });
+
+export const canEditConversations = (
+  conversations: Conversation[],
+  user: User,
+) => {
+  return conversations.every(conversation =>
+    conversation.users.some(({ id }) => id === user.id),
+  );
+};

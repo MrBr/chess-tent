@@ -548,5 +548,4 @@ export type Components = {
     description: string;
     close: () => void;
   }>;
-  Invitation: ComponentType<ClassNameProps>;
 };

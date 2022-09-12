@@ -13,6 +13,7 @@ application.register(
   module => {
     application.hooks.useUser = module.useUser;
     application.hooks.useActiveUserRecord = module.useActiveUserRecord;
+    application.hooks.useInviteUser = module.useInviteUser;
   },
 );
 application.register(() => import('./providers/active-user'));
@@ -42,13 +43,6 @@ application.register(
   () => import('./components/user-settings'),
   module => {
     application.components.UserSettings = module.default;
-  },
-);
-
-application.register(
-  () => import('./components/invitation'),
-  module => {
-    application.components.Invitation = module.default;
   },
 );
 

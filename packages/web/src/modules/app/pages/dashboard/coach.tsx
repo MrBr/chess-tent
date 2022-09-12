@@ -14,6 +14,7 @@ const {
   useOpenTraining,
   useOpenTemplate,
   useHistory,
+  useInviteUser,
 } = hooks;
 
 const DashboardCoach = ({ user }: { user: User }) => {
@@ -23,6 +24,7 @@ const DashboardCoach = ({ user }: { user: User }) => {
   const [trainingModal, promptNewTrainingModal] = usePromptNewTrainingModal();
   const lessons = useMyLessons();
   const history = useHistory();
+  const [inviteUserOffcanvas, promptInvite] = useInviteUser();
 
   const handleTemplateClick = useOpenTemplate();
   const handleTrainingClick = useOpenTraining();
@@ -40,6 +42,7 @@ const DashboardCoach = ({ user }: { user: User }) => {
   return (
     <Page>
       {trainingModal}
+      {inviteUserOffcanvas}
       <Page.Body>
         <Welcome name={user.name} />
         <Row className="mt-5 mb-3">
@@ -92,6 +95,7 @@ const DashboardCoach = ({ user }: { user: User }) => {
                 subtitle="You need students to start coaching."
                 cta="Invite a student"
                 icon="invite"
+                onClick={promptInvite}
               />
             </Col>
           </Row>

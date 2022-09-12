@@ -150,7 +150,7 @@ const PreviewLesson = () => {
     <Header className="border-bottom">
       <Col>
         <Breadcrumbs>
-          <Breadcrumbs.Item>Back</Breadcrumbs.Item>
+          <Breadcrumbs.Item href="/lessons">Lessons</Breadcrumbs.Item>
           <Breadcrumbs.Item>{lesson.state.title}</Breadcrumbs.Item>
         </Breadcrumbs>
       </Col>

@@ -8,7 +8,7 @@ const { Link } = components;
 // it makes hard refresh when opening new page
 Breadcrumbs.Item = ({ href, children, title, className, ...props }) => (
   <li className={`breadcrumb-item ${className}`} {...props}>
-    <Link to={href || '#'} ghost>
+    <Link to={href || ''} ghost>
       {children}
     </Link>
   </li>

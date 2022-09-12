@@ -23,24 +23,31 @@ const history: History = createBrowserHistory();
 const basePush = history.push.bind(history);
 const baseReplace = history.replace.bind(history);
 const baseGoBack = history.goBack.bind(history);
-
 const createHistoryMethodWithFromState =
   <T extends { from?: string }>(
-    method: (path: string | LocationDescriptor<T>) => void,
+    cb: (path: string | LocationDescriptor<T>, state?: T) => void,
   ): ((path: string | LocationDescriptor<T>, state?: T) => void) =>
   (path, state) => {
     const stateWithFrom = {
       from: `${history.location.pathname}${history.location.search}`,
       ...((typeof path === 'object' && path.state) || state),
     };
+    const [pathname, search, hash, key] =
+      typeof path === 'string'
+        ? path.replace('?', '${}?').split('${}')
+        : [path.pathname, path.search, path.hash, path.key];
+
     const locationDescriptor = {
-      ...(typeof path === 'string' ? { pathname: path } : path),
+      pathname,
+      search,
+      hash,
+      key,
       state: stateWithFrom,
     } as LocationDescriptor<T>;
 
     // Router methods ignore second state argument if the first one is LocationDescriptor
     // This is used to reconcile signatures
-    method(locationDescriptor);
+    cb(locationDescriptor);
   };
 
 history.push = createHistoryMethodWithFromState(basePush);

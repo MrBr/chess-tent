@@ -14,7 +14,6 @@ import {
   Activity,
   Conversation,
   Lesson,
-  Message,
   SubjectPathUpdate,
   User,
 } from '@chess-tent/models';

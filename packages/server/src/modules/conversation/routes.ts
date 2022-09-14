@@ -19,16 +19,6 @@ application.service.registerPostRoute(
   sendStatusOk,
 );
 
-application.service.registerPutRoute(
-  '/conversation/:conversationId/message',
-  identify,
-  toLocals('message', req => req.body),
-  toLocals('conversation.id', req => req.params.conversationId),
-  canEditConversations,
-  addMessageToConversation,
-  sendStatusOk,
-);
-
 application.service.registerPostRoute(
   '/conversations',
   identify,

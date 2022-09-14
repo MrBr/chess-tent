@@ -15,14 +15,6 @@ const conversations = services.createRequest<Requests['conversations']>(
   }),
 );
 
-const messageSend: Requests['messageSend'] = services.createRequest<
-  Requests['messageSend']
->(
-  'PUT',
-  conversationId => `/conversation/${conversationId}/message`,
-  (conversationId, message) => message,
-);
-
 const conversationSave = services.createRequest<Requests['conversationSave']>(
   'POST',
   '/conversation/save',
@@ -36,6 +28,5 @@ const messages = services.createRequest<Requests['messages']>(
 
 requests.conversations = conversations;
 requests.conversationSave = conversationSave;
-requests.messageSend = messageSend;
 requests.conversation = conversation;
 requests.messages = messages;

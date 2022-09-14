@@ -287,10 +287,6 @@ export interface Endpoints {
     RequestPost<'/conversations', WithPagination & { users: User['id'][] }>,
     ConversationsResponse
   >;
-  messageSend: Endpoint<
-    RequestPut<`/conversation/${string}/message`, Message>,
-    StatusResponse
-  >;
   conversationSave: Endpoint<
     RequestPost<'/conversation/save', Conversation>,
     StatusResponse

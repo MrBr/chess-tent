@@ -81,7 +81,7 @@ export const createInitialFounderConversation: MiddlewareFunction = async (
   res,
   next,
 ) => {
-  const { founder, user } = res.locals;
+  const { founder, user, rawMessages } = res.locals;
   const participants = [user, founder];
   if (!founder) {
     console.log(
@@ -96,13 +96,13 @@ export const createInitialFounderConversation: MiddlewareFunction = async (
     return;
   }
 
-  const messages = [
-    `Hi!`,
-    `I am Luka. The founder of Chess Tent platform. For the time being I'll be you support :)`,
-    `Chess Tent is truly aiming to be a community driven platform, every feedback is of great value. The platform is still in early phase so don't mind a bug or few. `,
-    `Feel free to let me know if you have any questions.`,
-    `Thank you for signing up! Have a good chess time.`,
-  ].map(message =>
+  if (!Array.isArray(rawMessages)) {
+    console.log('Missing raw messages');
+    next();
+    return;
+  }
+
+  const messages = rawMessages.map((message: string) =>
     createMessage(application.service.generateIndex(), founder, message),
   );
 

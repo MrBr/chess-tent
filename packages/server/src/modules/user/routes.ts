@@ -12,6 +12,7 @@ import {
 } from './middleware';
 import { getUser as getUserService } from './service';
 import { UserAlreadyExists } from './errors';
+import { introMessagesCoach, introMessagesStudent } from './constants';
 
 const {
   sendData,
@@ -39,6 +40,9 @@ application.service.registerPostRoute(
   addMentor,
   // Initial founder message flow
   toLocals('founder', () => getUserService({ id: process.env.FOUNDER_ID })),
+  toLocals('rawMessages', (req, res) =>
+    res.locals.user.coach ? introMessagesCoach : introMessagesStudent,
+  ),
   createInitialFounderConversation,
 
   catchError(welcomeMailMiddleware),

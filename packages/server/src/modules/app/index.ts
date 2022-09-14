@@ -15,6 +15,7 @@ import {
 } from './middleware';
 import { generateIndex } from './service';
 import { BadRequest } from './errors';
+import { formatAppLink } from './utils';
 
 const { connect } = db;
 
@@ -43,6 +44,7 @@ application.service.registerPutRoute = (path, ...middlware) =>
 application.service.registerDeleteRoute = (path, ...middlware) =>
   app.delete(process.env.API_BASE_PATH + path, ...middlware);
 application.service.generateIndex = generateIndex;
+application.utils.formatAppLink = formatAppLink;
 
 application.start = () => {
   connect();

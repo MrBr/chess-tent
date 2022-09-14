@@ -6,7 +6,7 @@ import { formatMessageLinks } from '../utils';
 
 const { Text } = ui;
 
-const Message = styled<ComponentProps<typeof Text> & { variant?: 'tertiary' }>(
+const Message = styled<ComponentProps<typeof Text>>(
   ({ children, ...props }) => {
     const formattedMessage =
       typeof children === 'string'
@@ -14,13 +14,14 @@ const Message = styled<ComponentProps<typeof Text> & { variant?: 'tertiary' }>(
         : children;
     return <Text {...props}>{formattedMessage}</Text>;
   },
-).props.variant.css`
+).props.owner.css<{ owner?: boolean }>`
+  ${{ omitProps: ['owner'] }}
   background: var(--grey-300-color);
   border-radius: 8px;
   padding: 0.25em 0.5em;
   align-self: end;
   
-  &.tertiary {
+  &.owner {
     background: var(--black-color);
     color: var(--light-color);
   }

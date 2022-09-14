@@ -24,7 +24,7 @@ const ConversationMessage = ({
   timestamp,
 }: ConversationMessageProps) => {
   if (messageOwner.id === activeUser.id) {
-    return <Message>{message}</Message>;
+    return <Message owner>{message}</Message>;
   }
 
   return (

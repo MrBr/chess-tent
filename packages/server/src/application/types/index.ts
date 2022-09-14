@@ -7,7 +7,6 @@ import {
   Model,
   FilterQuery,
   Connection,
-  ClientSession,
 } from 'mongoose';
 import {
   NormalizedUser,
@@ -223,6 +222,7 @@ export type MiddlewareFunction<T = void> = (
 
 export type Utils = {
   notNullOrUndefined: <T>(object: T) => T;
+  formatAppLink: (path: string) => string;
 };
 
 export type Application = {

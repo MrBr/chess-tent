@@ -183,7 +183,7 @@ export const LandingPage = () => {
               <Headline2>Prefer learning alone?</Headline2>
               <Text fontSize="small" className="my-4">
                 No problem! We understand everyone has a unique way of learning
-                and got we your back. Our official team of coaches is working
+                and we got your back. Our official team of coaches is working
                 hard to create free public lessons designed to help you practice
                 on your own.
               </Text>

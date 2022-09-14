@@ -1,4 +1,4 @@
-import { db } from '@application';
+import { db, service } from '@application';
 import {
   Conversation,
   Message,
@@ -8,9 +8,9 @@ import {
 } from '@chess-tent/models';
 import { Pagination } from '@chess-tent/types';
 import { MessageModel, ConversationModel, depopulate } from './model';
+import { MESSAGES_BUCKET_LIMIT, MESSAGE_EMAIL_TIME_DIFF_MS } from './constant';
 
-const MESSAGES_BUCKET_LIMIT = 50;
-
+const { sendMail } = service;
 export const addMessageToConversation = async (
   conversationId: Conversation['id'],
   message: NormalizedMessage,
@@ -165,4 +165,26 @@ export const canEditConversations = (
   return conversations.every(conversation =>
     conversation.users.some(({ id }) => id === user.id),
   );
+};
+
+export const shouldEmailMessage = (conversation: Conversation) =>
+  !conversation.lastMessageTimestamp ||
+  Date.now() - conversation.lastMessageTimestamp > MESSAGE_EMAIL_TIME_DIFF_MS;
+
+export const sendMessageNotificationViaEmail = (
+  owner: User,
+  user: User,
+  message: string,
+) => {
+  sendMail({
+    from: 'Chess Tent <noreply@chesstent.com>',
+    to: user.email,
+    subject: 'Chess Tent - New message',
+    html: `<p>Hey ${user.name},</p>
+      <p>You've received a new message from ${owner.name}.</p>
+      <p><i>${message}</i></p>
+      <p>You can see the full conversation at <a href="${
+        process.env.APP_DOMAIN
+      }">${process.env.APP_DOMAIN?.replace('https://', '')}</a></p>`,
+  });
 };

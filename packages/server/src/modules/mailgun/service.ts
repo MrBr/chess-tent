@@ -8,7 +8,9 @@ const mg = mailgun({
   host: process.env.MAILGUN_API_HOST as string,
 });
 
-export const sendMail = (data: MailData) =>
+export const sendMail = (
+  data: MailData,
+): Promise<mailgun.messages.SendResponse> =>
   new Promise((resolve, reject) => {
     mg.messages().send(data, function (error, body) {
       if (error) {

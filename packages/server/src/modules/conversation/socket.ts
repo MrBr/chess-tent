@@ -4,6 +4,8 @@ import { Message, TYPE_MESSAGE } from '@chess-tent/models';
 import {
   addMessageToConversation,
   getConversation,
+  sendMessageNotificationViaEmail,
+  shouldEmailMessage,
   updateConversationMessage,
 } from './service';
 
@@ -14,10 +16,17 @@ socket.registerMiddleware(async (stream, next) => {
     if (!conversation) {
       throw new Error('Sending message to non-existing conversation');
     }
-    addMessageToConversation(conversation.id, action.payload);
+    await addMessageToConversation(conversation.id, action.payload);
+    const owner = conversation.users.find(
+      ({ id }) => id === action.payload.owner,
+    );
+    const shouldSendEmail = shouldEmailMessage(conversation);
     conversation.users.forEach(user => {
-      user.id !== action.payload.owner &&
+      if (owner && user.id !== owner.id) {
         socket.sendAction(`user-${user.id}`, stream);
+        shouldSendEmail &&
+          sendMessageNotificationViaEmail(owner, user, action.payload.message);
+      }
     });
   }
   if (

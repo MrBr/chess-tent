@@ -127,6 +127,10 @@ export type Auth = {
 
 export type Service = {
   generateIndex: () => string;
+  sendMail: (data: MailData) => Promise<{
+    message: string;
+    id: string;
+  }>;
   registerGetRoute: (
     path: string,
     ...cb: ((...args: Parameters<RequestHandler>) => void)[]

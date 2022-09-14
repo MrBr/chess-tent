@@ -6,3 +6,9 @@ application.register(
     application.middleware.sendMail = module.sendMail;
   },
 );
+application.register(
+  () => import('./service'),
+  module => {
+    application.service.sendMail = module.sendMail;
+  },
+);

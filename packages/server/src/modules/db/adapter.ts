@@ -1,43 +1,47 @@
 import { EntityDocument, Updater } from '@types';
 import { Schema } from 'mongoose';
 
-export const createAdapter = <T extends EntityDocument>(
-  ...updaters: Updater<T>[]
-) => async (entity: T): Promise<T | false> => {
-  if (!entity) {
-    return false;
-  }
-  const version = entity.v;
-  let lastEntity = entity;
-
-  for (const update of updaters) {
-    const updatedEntity = await update(lastEntity);
-    if (updatedEntity) {
-      lastEntity = updatedEntity;
+export const createAdapter =
+  <T extends EntityDocument>(...updaters: Updater<T>[]) =>
+  async (entity: T): Promise<T | false> => {
+    if (!entity) {
+      return false;
     }
-  }
+    const version = entity.v;
+    let lastEntity = entity;
 
-  return version === lastEntity.v ? false : lastEntity;
-};
+    for (const update of updaters) {
+      const updatedEntity = await update(lastEntity);
+      if (updatedEntity) {
+        lastEntity = updatedEntity;
+      }
+    }
+
+    return version === lastEntity.v ? false : lastEntity;
+  };
 
 export const applyAdapter = <T extends EntityDocument>(
   schema: Schema,
   adapter: Updater<T>,
 ) => {
-  schema.post('find', async function (docs) {
+  // @ts-ignore - it works?
+  schema.post(['find', 'finOne'], async function (docs) {
+    const formattedDocs = Array.isArray(docs) ? docs : [docs];
+    formattedDocs.forEach(doc => {
+      if (!doc.isSelected('v')) {
+        console.log(doc);
+        // Version is a must because of migration
+        throw new Error(
+          'Document missing version. This usually means some properties are selected but not version.',
+        );
+      }
+    });
     return Promise.all(
-      ((docs as unknown) as T[]).map(doc =>
+      (formattedDocs as unknown as T[]).map(doc =>
         adapter(doc as T)
           // @ts-ignore
           .then(updatedDoc => updatedDoc && updatedDoc.save()),
       ),
     );
-  });
-  schema.post('findOne', async function (doc) {
-    const updatedDoc = await adapter((doc as unknown) as T);
-    if (updatedDoc) {
-      // @ts-ignore
-      updatedDoc.save();
-    }
   });
 };

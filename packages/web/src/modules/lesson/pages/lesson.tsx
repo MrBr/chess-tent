@@ -1,11 +1,12 @@
 import React from 'react';
-import { components, hooks, requests } from '@application';
+import { components, hooks, requests, ui } from '@application';
 import { canEditLesson, isLessonPublicDocument } from '@chess-tent/models';
 import EditorPageHeader from '../components/editor-page-header';
 import { useLessonPartialUpdates } from '../hooks/lesson';
 
 const { useParams, useActiveUserRecord, useLesson } = hooks;
 const { Editor, Redirect, Page } = components;
+const { Spinner } = ui;
 
 const PageLesson = () => {
   const { value: user } = useActiveUserRecord();
@@ -21,8 +22,8 @@ const PageLesson = () => {
     return requests.lessonUpdates(...args);
   });
 
-  if (!lesson) {
-    return null;
+  if (!lesson || !meta.loaded) {
+    return <Spinner animation="border" />;
   }
 
   if (isLessonPublicDocument(lesson) || !canEditLesson(lesson, user.id)) {

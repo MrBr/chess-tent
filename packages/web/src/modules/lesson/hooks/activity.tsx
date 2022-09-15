@@ -21,7 +21,7 @@ export const useUserTrainings: Hooks['useUserTrainings'] = (user: User) => {
 
   const filters: ActivityFilters = useMemo(
     () => ({
-      users: user.id,
+      users: [user.id],
       date: false,
     }),
     [user.id],
@@ -49,7 +49,7 @@ export const useUserScheduledTrainings: Hooks['useUserScheduledTrainings'] = (
 
   const filters: GetRequestFetchArgs<Requests['scheduledTrainings']> = useMemo(
     () => ({
-      users: user.id,
+      users: [user.id],
       date: { from: new Date() },
       ...initialFilters,
     }),

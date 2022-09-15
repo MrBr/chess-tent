@@ -187,6 +187,7 @@ export const findLessons = (
       .populate('owner')
       .populate('tags')
       .populate('users')
+      .select('-state.chapters.state.steps.state.steps')
       .exec((err, result) => {
         if (err) {
           throw err;

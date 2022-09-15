@@ -4,6 +4,7 @@ import { service, db, utils } from '@application';
 import { Activity, SubjectPathUpdate, User } from '@chess-tent/models';
 import { ActivityFilters } from '@chess-tent/types';
 import { ActivityModel, depopulate, DepupulatedActivity } from './model';
+import { Role, TYPE_ACTIVITY } from '@chess-tent/models/src';
 
 export const saveActivity = (activity: Activity) =>
   new Promise<void>(resolve => {
@@ -115,8 +116,12 @@ export const findActivities = (
         ...date,
       });
 
+    // TODO - selecting activity only necessary fields should be defined by the subjectType
+    // Probably the solution is to implement find for each subject type in corresponding module
+    // TODO - remove the state, just keep the preview position
     ActivityModel.find(query)
       .populate('roles.user')
+      .select('-subject.state.chapters.state.steps.state.steps')
       .exec((err, result) => {
         if (err) {
           throw err;

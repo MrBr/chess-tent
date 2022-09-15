@@ -3,10 +3,9 @@ import { hooks, records } from '@application';
 import { Hooks } from '@types';
 import { Lesson } from '@chess-tent/models';
 import { lesson, lessons, myLessons } from '../record';
-import { lessonSelector } from '../state/selectors';
 import { RECORD_ACTIVE_USER_LESSONS_KEY } from '../constants';
 
-const { useRecordInit, useStore } = hooks;
+const { useRecordInit } = hooks;
 const { isInitialized } = records;
 
 export const useLessons: Hooks['useLessons'] = (key: string, filters) => {
@@ -24,17 +23,10 @@ export const useLessons: Hooks['useLessons'] = (key: string, filters) => {
 };
 
 export const useLesson: Hooks['useLesson'] = (lessonId: Lesson['id']) => {
-  const store = useStore();
   const record = useRecordInit(lesson, 'lesson' + lessonId);
 
   useEffect(() => {
-    const state = store.getState();
-    const lesson = lessonSelector(lessonId)(state);
-    if (record.value) {
-      return;
-    }
-    if (lesson) {
-      record.update(lesson);
+    if (record.meta.loaded) {
       return;
     }
     record.load(lessonId);

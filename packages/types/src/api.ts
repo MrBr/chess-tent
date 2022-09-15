@@ -70,7 +70,7 @@ export interface NotificationsResponse extends DataResponse<Notification[]> {}
 export interface TagsResponse extends DataResponse<Tag[]> {}
 
 export interface ActivityFilters {
-  users?: User['id'] | User['id'][];
+  users?: User['id'][];
   subject?: string;
   subjectType?: string;
   date?: DateRange | boolean;

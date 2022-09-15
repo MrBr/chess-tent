@@ -18,7 +18,7 @@ const { generateIndex } = utils;
 const {
   actions: { sendMessage, updateEntity },
 } = state;
-const { useDispatchBatched } = hooks;
+const { useDispatchBatched, useHistory } = hooks;
 
 export default styled<{
   className?: string;
@@ -28,6 +28,7 @@ export default styled<{
   close: () => void;
 }>(({ activeUser, participant, conversation, close }) => {
   const dispatch = useDispatchBatched();
+  const history = useHistory();
   const [loadMoreMessages, loading, noMore] = useLoadMoreMessages(conversation);
   const { messages } = conversation;
 
@@ -76,7 +77,10 @@ export default styled<{
           <Col className="col-auto me-1">
             <UserAvatar user={participant} size="small" />
           </Col>
-          <Col>
+          <Col
+            onClick={() => history.push(`/user/${participant.id}`)}
+            className="cursor-pointer"
+          >
             <Headline5 className="m-0">{participant.name}</Headline5>
           </Col>
         </Row>

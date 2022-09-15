@@ -4,7 +4,6 @@ import {
   getConversation,
   saveConversation,
   findConversations,
-  addMessageToConversation,
   getConversationMessages,
 } from './middleware';
 

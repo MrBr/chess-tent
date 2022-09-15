@@ -8,17 +8,16 @@ const mg = mailgun({
   host: process.env.MAILGUN_API_HOST as string,
 });
 
-export const sendMail = (
+export const sendMail = async (
   data: MailData,
-): Promise<mailgun.messages.SendResponse> =>
-  new Promise((resolve, reject) => {
-    mg.messages().send(data, function (error, body) {
-      if (error) {
-        reject(error);
-      } else if (!body) {
-        reject(new FailedToSendMAil());
-      } else {
-        resolve(body);
-      }
-    });
-  });
+): Promise<mailgun.messages.SendResponse | FailedToSendMAil | unknown> => {
+  try {
+    const response = mg.messages().send(data);
+    if (!response) {
+      throw new FailedToSendMAil();
+    }
+    return response;
+  } catch (e) {
+    return e;
+  }
+};

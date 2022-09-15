@@ -15,7 +15,7 @@ const { sendMail } = middleware;
 export const welcomeMailMiddleware = sendMail((req, res) => ({
   from: 'Chess Tent <noreply@chesstent.com>',
   to: res.locals.user.email,
-  subject: 'Beta Registration',
+  subject: 'Welcome to the virtual chess gym',
   html: `<p>Dear ${res.locals.user.name},</p>
        <p>Thank you for registering. We are still in very early phase and feedback is much appreciated.</p>
        <p>${

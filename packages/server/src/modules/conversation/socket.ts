@@ -17,15 +17,19 @@ socket.registerMiddleware(async (stream, next) => {
       throw new Error('Sending message to non-existing conversation');
     }
     await addMessageToConversation(conversation.id, action.payload);
-    const owner = conversation.users.find(
+    const sender = conversation.users.find(
       ({ id }) => id === action.payload.owner,
     );
-    const shouldSendEmail = shouldEmailMessage(conversation);
+    const shouldSendEmail = shouldEmailMessage(conversation, action.payload);
     conversation.users.forEach(user => {
-      if (owner && user.id !== owner.id) {
+      if (sender && user.id !== sender.id) {
         socket.sendAction(`user-${user.id}`, stream);
         shouldSendEmail &&
-          sendMessageNotificationViaEmail(owner, user, action.payload.message);
+          sendMessageNotificationViaEmail(
+            sender,
+            user,
+            action.payload.message,
+          ).catch(console.error);
       }
     });
   }

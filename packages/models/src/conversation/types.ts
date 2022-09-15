@@ -7,7 +7,7 @@ export interface Conversation {
   id: string;
   users: User[];
   messages: Message[];
-  lastMessageTimestamp?: number;
+  lastMessage?: Message;
   type: typeof TYPE_CONVERSATION;
 }
 
@@ -15,6 +15,6 @@ export interface NormalizedConversation {
   id: Conversation['id'];
   users: User['id'][];
   messages: NormalizedMessage[];
-  lastMessageTimestamp?: number;
+  lastMessage?: NormalizedMessage;
   type: Conversation['type'];
 }

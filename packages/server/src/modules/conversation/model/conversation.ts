@@ -28,10 +28,10 @@ const conversationSchema = db
     users: [
       { type: String, ref: TYPE_USER },
     ] as unknown as NormalizedConversation['users'],
-    lastMessageTimestamp: {
-      type: Schema.Types.Number,
+    lastMessage: {
+      type: Schema.Types.Mixed,
       default: 0,
-    } as unknown as NormalizedConversation['lastMessageTimestamp'],
+    } as unknown as NormalizedConversation['lastMessage'],
     messages: {
       type: Schema.Types.Mixed,
     } as unknown as NormalizedConversation['messages'],
@@ -49,7 +49,12 @@ conversationSchema.virtual('virtualMessages', {
   ref: TYPE_MESSAGE,
   localField: '_id',
   foreignField: 'conversationId',
-  options: { sort: { _id: -1 } },
+  options: { sort: { _id: -1 }, limit: 1, lean: true },
+  // Without perDocumentLimit and with _id sort
+  // query sometimes fails to populate messages
+  // perDocumentLimit seems to ensure everything works.
+  // TODO - remove virtualMessages, use conversation.lastMessage for conversation info and load other messages via API.
+  perDocumentLimit: 1,
 });
 
 const ConversationModel = db.createModel<NormalizedConversation>(

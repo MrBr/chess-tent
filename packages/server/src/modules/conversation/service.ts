@@ -23,7 +23,7 @@ export const addMessageToConversation = async (
 
   await ConversationModel.updateOne(
     { _id: conversationId },
-    { lastMessageTimestamp: updatedMessage.timestamp },
+    { lastMessage: updatedMessage },
   );
 
   await MessageModel.updateOne(
@@ -98,21 +98,16 @@ export const findConversations = async (
   users: User['id'][],
   pagination: Pagination,
 ) => {
-  return await ConversationModel.find({ users: { $in: users } }, null, {
+  return ConversationModel.find({ users: { $in: users } }, null, {
     skip: pagination.skip,
     limit: pagination.limit,
   })
     .sort([
-      ['lastMessageTimestamp', -1],
+      ['lastMessage.timestamp', -1],
       ['_id', 1],
     ])
     .populate('users')
-    .populate({
-      path: 'virtualMessages',
-      options: {
-        limit: 1,
-      },
-    });
+    .populate('virtualMessages');
 };
 
 export const getConversation = async (
@@ -121,13 +116,7 @@ export const getConversation = async (
 ): Promise<Conversation | undefined> => {
   const find = ConversationModel.findById(conversationId).populate('users');
 
-  withMessages &&
-    find.populate({
-      path: 'virtualMessages',
-      options: {
-        limit: 1,
-      },
-    });
+  withMessages && find.populate('virtualMessages');
 
   const conversation = await find.exec();
   return conversation?.toObject<Conversation>() || undefined;
@@ -167,21 +156,25 @@ export const canEditConversations = (
   );
 };
 
-export const shouldEmailMessage = (conversation: Conversation) =>
-  !conversation.lastMessageTimestamp ||
-  Date.now() - conversation.lastMessageTimestamp > MESSAGE_EMAIL_TIME_DIFF_MS;
+export const shouldEmailMessage = (
+  conversation: Conversation,
+  newMessage: NormalizedMessage,
+) =>
+  !conversation.lastMessage ||
+  newMessage.owner !== conversation.lastMessage.owner ||
+  Date.now() - conversation.lastMessage.timestamp > MESSAGE_EMAIL_TIME_DIFF_MS;
 
-export const sendMessageNotificationViaEmail = (
-  owner: User,
+export const sendMessageNotificationViaEmail = async (
+  sender: User,
   user: User,
   message: string,
 ) => {
-  sendMail({
+  await sendMail({
     from: 'Chess Tent <noreply@chesstent.com>',
     to: user.email,
-    subject: 'Chess Tent - New message',
+    subject: 'New message',
     html: `<p>Hey ${user.name},</p>
-      <p>You've received a new message from ${owner.name}.</p>
+      <p>You've received a new message from ${sender.name}.</p>
       <p><i>${message}</i></p>
       <p>You can see the full conversation at <a href="${
         process.env.APP_DOMAIN

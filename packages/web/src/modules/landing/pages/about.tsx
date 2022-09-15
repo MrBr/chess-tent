@@ -14,6 +14,7 @@ import zoiaSrc from '../images/contributors/zoia.jpg';
 import antonioSrc from '../images/contributors/antonio.png';
 import tihanaSrc from '../images/contributors/tihana.jpeg';
 import ivaSrc from '../images/contributors/iva.jpeg';
+import majaSrc from '../images/contributors/maja.png';
 
 import Topbar from '../components/topbar';
 import Section from '../components/section';
@@ -454,6 +455,17 @@ export const LandingPage = () => {
                 <img src={ivaSrc} alt="" />
                 <Headline5 align="center" className="mt-3 mb-1">
                   Iva Kopf
+                </Headline5>
+                <Text fontSize="small" align="center">
+                  Marketing, Content
+                </Text>
+              </div>
+            </Col>{' '}
+            <Col md={4} xs={6} className="mb-5">
+              <div className="contributor">
+                <img src={majaSrc} alt="" />
+                <Headline5 align="center" className="mt-3 mb-1">
+                  Maja Ogrizović
                 </Headline5>
                 <Text fontSize="small" align="center">
                   Marketing, Content

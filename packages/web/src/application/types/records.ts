@@ -66,7 +66,7 @@ type CoachesRecord = RecipeApiLoad<Requests['coaches']> &
   RecipeCollection<Mentorship> &
   RecipeMethod<'requestMentorship', RequestMentorship>;
 type LessonRecord = RecipeApiLoad<Requests['lesson']> &
-  RecordBase<Lesson, { saved?: boolean }> &
+  RecordBase<Lesson, { local?: boolean }> &
   RecipeMethod<'create', () => Promise<StatusResponse>>;
 
 export type Records<T = any> = {

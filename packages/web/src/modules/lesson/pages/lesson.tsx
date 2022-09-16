@@ -14,7 +14,7 @@ const PageLesson = () => {
   const { value: lesson, meta, create } = useLesson(lessonId as string);
 
   const lessonStatus = useLessonPartialUpdates(lesson, (...args) => {
-    if (!meta.saved && !meta.loaded) {
+    if (meta.local) {
       // Handle new lesson case
       return create();
     }
@@ -22,7 +22,7 @@ const PageLesson = () => {
     return requests.lessonUpdates(...args);
   });
 
-  if (!lesson || !meta.loaded) {
+  if (!lesson) {
     return <Spinner animation="border" />;
   }
 

@@ -18,7 +18,7 @@ const NewLesson = () => {
   const history = useHistory();
 
   useEffect(() => {
-    update(tempLesson, { saved: false });
+    update(tempLesson, { loaded: true, local: true });
     // eslint-disable-next-line
   }, []);
 

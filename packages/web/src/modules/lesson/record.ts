@@ -35,7 +35,7 @@ const lessons = records.createRecord(
 );
 
 const lesson = records.createRecord(
-  records.withRecordBase<Lesson, { saved?: boolean }>(),
+  records.withRecordBase<Lesson, { local?: boolean }>(),
   records.withRecordDenormalized(TYPE_LESSON),
   records.withRecordApiLoad(requests.lesson),
   records.withRecordMethod()('create', () => store => record => async () => {
@@ -45,7 +45,7 @@ const lesson = records.createRecord(
     }
 
     const statusResponse = await requests.lessonSave(lesson);
-    record.amend({ saved: true });
+    record.amend({ local: false });
 
     // Add lesson to user lessons if not there
     const myLessonsRecord = myLessons(RECORD_ACTIVE_USER_LESSONS_KEY)(store);

@@ -68,7 +68,7 @@ const TrainingCard = (props: { training: LessonActivity }) => {
         </Row>
         <Row>
           <Col onClick={openTraining}>
-            <Headline6 className="m-0 mb-3">
+            <Headline6 className="m-0 mb-3 text-truncate">
               {isLesson ? lesson.state.title : title || 'Untitled'}
             </Headline6>
           </Col>

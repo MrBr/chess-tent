@@ -44,7 +44,9 @@ const LessonCard: React.FC<{
       </Row>
       <Row>
         <Col>
-          <Headline6 className="m-0 mb-2">{lesson.state.title}</Headline6>
+          <Headline6 className="m-0 mb-2 text-truncate">
+            {lesson.state.title}
+          </Headline6>
         </Col>
       </Row>
       <Row className="g-0">

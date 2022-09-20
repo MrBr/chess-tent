@@ -15,6 +15,7 @@ import {
   SubjectPathUpdate,
   TYPE_LESSON,
   LessonActivity,
+  Chapter,
 } from '@chess-tent/models';
 import { GenericArguments } from './_helpers';
 import { LessonAction } from './actions';
@@ -54,6 +55,7 @@ export interface DataResponse<T> extends StatusResponse {
 export interface UserResponse extends DataResponse<User> {}
 export interface UsersResponse extends DataResponse<User[]> {}
 export interface LessonResponse extends DataResponse<Lesson> {}
+export interface LessonChaptersResponse extends DataResponse<Chapter[]> {}
 export interface LessonsResponse extends DataResponse<Lesson[]> {}
 export interface ActivityResponse extends DataResponse<Activity> {}
 export interface ActivitiesResponse<T extends Activity = Activity>
@@ -223,6 +225,10 @@ export interface Endpoints {
   >;
   // Lesson endpoints
   lesson: Endpoint<RequestGet<`/lesson/${string}`>, LessonResponse>;
+  lessonChapters: Endpoint<
+    RequestPost<`/lesson/${string}/chapters`, string[]>,
+    LessonChaptersResponse
+  >;
   lessonDelete: Endpoint<RequestDelete<`/lesson/${string}`>, StatusResponse>;
   lessonSave: Endpoint<RequestPost<'/lesson/save', Lesson>, StatusResponse>;
   lessonPublish: Endpoint<

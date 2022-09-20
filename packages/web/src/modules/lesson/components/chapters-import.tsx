@@ -1,13 +1,25 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { components, ui, utils } from '@application';
+import { components, hooks, requests, ui, utils } from '@application';
 import { Chapter, Lesson } from '@chess-tent/models';
 import { RecordValue } from '@chess-tent/redux-record/types';
 import styled, { css } from '@chess-tent/styled-props';
 import { useMyLessons } from '../hooks/record';
 
-const { Headline5, Text, Modal, Container, Row, Col, Icon, Check, Button } = ui;
+const {
+  Headline5,
+  Text,
+  Modal,
+  Container,
+  Row,
+  Col,
+  Icon,
+  Check,
+  Button,
+  Spinner,
+} = ui;
 const { LessonTemplates } = components;
 const { noop } = utils;
+const { useApi } = hooks;
 
 interface ChaptersImportProps {
   close: () => void;
@@ -57,6 +69,12 @@ export const ChaptersImport = ({
 }: ChaptersImportProps) => {
   const [selectedLesson, setSelectedLesson] = useState<Lesson>();
   const [chapters, setChapters] = useState<Record<string, Chapter>>({});
+  const {
+    fetch: fetchChapters,
+    loading,
+    response: responseChapters,
+    reset,
+  } = useApi(requests.lessonChapters);
   const allSelected =
     !!selectedLesson &&
     selectedLesson.state.chapters.length === Object.keys(chapters).length;
@@ -67,6 +85,18 @@ export const ChaptersImport = ({
       setChapters({});
     }
   }, [chapters, selectedLesson]);
+
+  useEffect(() => {
+    if (responseChapters) {
+      reset();
+      onImport(responseChapters.data);
+    }
+  }, [responseChapters, onImport]);
+
+  const importChapters = useCallback(() => {
+    const chapterIds = Object.values(chapters).map(({ id }) => id);
+    fetchChapters(selectedLesson?.id as string, chapterIds);
+  }, [selectedLesson?.id, chapters]);
 
   const toggleAllChapters = useCallback(() => {
     if (!selectedLesson) {
@@ -173,8 +203,10 @@ export const ChaptersImport = ({
           <Button
             variant="primary"
             size="extra-small"
-            onClick={() => onImport(Object.values(chapters))}
+            onClick={importChapters}
+            disabled={loading}
           >
+            {loading && <Spinner animation="border" />}
             Import
           </Button>
         </Modal.Footer>

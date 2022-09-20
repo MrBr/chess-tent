@@ -5,6 +5,7 @@ import {
   publishLesson as publishLessonService,
   canEditLesson as canEditLessonService,
   canAccessLesson as canAccessLessonService,
+  Chapter,
 } from '@chess-tent/models';
 import { AppDocument } from '@types';
 import { LessonsFilters, LessonUpdates } from '@chess-tent/types';
@@ -38,6 +39,31 @@ export const getLesson = (
         resolve(result ? result.toObject<Lesson>() : null);
       });
   });
+
+export const getLessonChapters = async (
+  lessonId: Lesson['id'],
+  chapterIds: string[],
+): Promise<Chapter[]> => {
+  const lessons = await LessonModel.aggregate([
+    { $match: { _id: lessonId } },
+    { $limit: 1 },
+    {
+      $project: {
+        'state.chapters': {
+          $filter: {
+            input: '$state.chapters',
+            as: 'chapters',
+            cond: {
+              $in: ['$$chapters.id', chapterIds],
+            },
+          },
+        },
+      },
+    },
+  ]);
+
+  return lessons[0].state.chapters;
+};
 
 export const deleteLesson = async (lessonId: Lesson['id']) => {
   await LessonModel.deleteOne({ _id: lessonId });

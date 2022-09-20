@@ -45,6 +45,19 @@ export const getLesson: MiddlewareFunction = (req, res, next) => {
     .catch(next);
 };
 
+export const getLessonChapters: MiddlewareFunction = (req, res, next) => {
+  service
+    .getLessonChapters(
+      res.locals.lesson.id as Lesson['id'],
+      res.locals.chapterIds,
+    )
+    .then(chapters => {
+      res.locals.chapters = chapters;
+      next();
+    })
+    .catch(next);
+};
+
 export const deleteLesson: MiddlewareFunction = (req, res, next) => {
   service
     .deleteLesson(res.locals.lesson.id as Lesson['id'])

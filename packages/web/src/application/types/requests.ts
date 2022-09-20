@@ -34,6 +34,10 @@ export interface Requests {
   updateMe: RequestFetch<Endpoints['updateMe']>;
 
   lesson: RequestFetch<Endpoints['lesson'], Lesson['id']>;
+  lessonChapters: RequestFetch<
+    Endpoints['lessonChapters'],
+    [Lesson['id'], string[]]
+  >;
   lessonDelete: RequestFetch<Endpoints['lessonDelete'], Lesson['id']>;
   lessonSave: RequestFetch<Endpoints['lessonSave']>;
   lessonPublish: RequestFetch<Endpoints['lessonPublish'], [Lesson['id']]>;

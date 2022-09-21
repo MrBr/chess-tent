@@ -124,11 +124,10 @@ export const LandingPage = () => {
             </Col>
           </Row>
           <Row className="mb-4">
-            <Col>
+            <Col xs={12} className="col-sm">
               <Text fontSize="small">
-                A place for users to teach and learn. Aiming for the tools
-                needed by the users to express themselves and grow in the
-                context of chess.
+                A place for chess masters and beginners to teach and learn.
+                Providing needed tools for the best online learning experience.
               </Text>
             </Col>
             <Col className="col-auto">
@@ -188,7 +187,7 @@ export const LandingPage = () => {
             <Col md={5} sm={12}>
               <Row className="user-stats">
                 <Col xs={6}>
-                  <Headline3 align="center">3</Headline3>
+                  <Headline3 align="center">5</Headline3>
                   <Text align="center">Lessons</Text>
                 </Col>
                 <Col xs={6}>
@@ -196,11 +195,11 @@ export const LandingPage = () => {
                   <Text align="center">Trainings</Text>
                 </Col>
                 <Col xs={6}>
-                  <Headline3 align="center">4</Headline3>
+                  <Headline3 align="center">30+</Headline3>
                   <Text align="center">Coaches</Text>
                 </Col>
                 <Col xs={6}>
-                  <Headline3 align="center">...</Headline3>
+                  <Headline3 align="center">100+</Headline3>
                   <Text align="center">Students</Text>
                 </Col>
               </Row>
@@ -228,7 +227,7 @@ export const LandingPage = () => {
           <Row>
             <Col xs={6} md={4} className="d-flex align-items-center">
               <Headline2>
-                To our users we
+                To our users we{' '}
                 <span className="d-inline-block position-relative">
                   <Underline />
                   provide
@@ -294,11 +293,11 @@ export const LandingPage = () => {
               <Headline2>Open source</Headline2>
               <Text fontSize="small">
                 We are building a first class application and want other
-                engineers to help achieve that. Open source pushes us to deliver
-                better code and leaves a lot more room to learn. This platform
-                would have never been built if there weren’t other pioneers that
-                provided open source tools and we hope to give something back to
-                the community.
+                engineers to help us achieve that. Open source pushes us to
+                deliver better code and leaves a lot more room to learn. This
+                platform would have never been built if there weren’t other
+                pioneers that provided open source tools and we hope to give
+                something back to the community.
               </Text>
             </Col>
             <Col md={{ offset: 2, span: 3 }} xs={12}>
@@ -313,7 +312,7 @@ export const LandingPage = () => {
                 </Col>
                 <Col>
                   <Headline3>5+</Headline3>
-                  <Text>Contributions</Text>
+                  <Text>Contributors</Text>
                 </Col>
               </Row>
             </Col>

@@ -7,9 +7,10 @@ const Underline = styled.span.css`
   left: 0;
   bottom: 0;
   width: 100%;
-  transform: translateY(25%);
+  transform: translateY(50%);
   background: url(${underlineUrl}) center no-repeat;
   height: 25px;
+  background-size: contain;
 `;
 
 export default Underline;

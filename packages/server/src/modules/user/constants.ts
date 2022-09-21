@@ -17,12 +17,9 @@ export const introMessagesCoach = [
 export const introMessagesStudent = [
   `Hi!`,
   `I am Luka, the founder of Chess Tent platform.`,
-  'Chess Tent offers multiple ways to start learning.',
-  `The most fun way is to find yourself a coach. You can do it on the ${formatAppLink(
-    '/coaches',
-  )} page.`,
-  `If you prefer learning on your own, find yourself a lesson on ${formatAppLink(
+  "Are you looking for a coach? Let's schedule an online call and I'll help you find the best one for you.",
+  `If you prefer learning on your own, find yourself a lesson at ${formatAppLink(
     '/lessons',
   )} page.`,
-  `Please don't hesitate to ask if you have any question or suggestion.`,
+  `Feel free to let me know if you have any questions.`,
 ];

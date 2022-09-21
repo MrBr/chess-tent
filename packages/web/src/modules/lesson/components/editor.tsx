@@ -79,7 +79,7 @@ const { className } = css`
 
     > div {
       // Needed to get properly scrollable sidebar
-      padding: 12px 0 48px;
+      padding: 12px 0 64px;
       position: absolute;
       width: 100%;
       height: 100%;
@@ -96,6 +96,7 @@ const { className } = css`
     background: var(--light-color);
     padding: 24px;
     z-index: 10;
+    border-top: 1px solid var(--grey-400-color);
   }
 
   display: grid;
@@ -508,7 +509,7 @@ class EditorRenderer extends React.Component<
               <div className="ps-3">
                 <Evaluation />
               </div>
-              <div className="h-100 overflow-y-auto position-relative ps-4">
+              <div className="h-100 overflow-y-auto position-relative ps-4 pe-3">
                 <Stepper
                   activeStep={activeStep}
                   setActiveStep={this.setActiveStepHandler}

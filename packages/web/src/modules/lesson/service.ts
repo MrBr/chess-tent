@@ -220,7 +220,7 @@ export const createNewLesson = (user: User, chapters?: Chapter[]) => {
     ];
   }
 
-  return createLesson(newLessonId, initialChapters, user, 'Untitled lesson');
+  return createLesson(newLessonId, initialChapters, user, 'Untitled template');
 };
 
 export const isInitialLessonActivity = (activity: LessonActivity) =>

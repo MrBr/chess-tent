@@ -115,3 +115,20 @@ export declare function CreateRecord<T1, T2, T3, T4, T5, T6>(
   f4: (recordKey: string) => (store: MiddlewareAPI) => (record: T4) => T5,
   f5: (recordKey: string) => (store: MiddlewareAPI) => (record: T5) => T6,
 ): (recordKey: string) => (store: MiddlewareAPI) => T6;
+export declare function CreateRecord<T1, T2, T3, T4, T5, T6, T7>(
+  f1: (recordKey: string) => (store: MiddlewareAPI) => (record: T1) => T2,
+  f2: (recordKey: string) => (store: MiddlewareAPI) => (record: T2) => T3,
+  f3: (recordKey: string) => (store: MiddlewareAPI) => (record: T3) => T4,
+  f4: (recordKey: string) => (store: MiddlewareAPI) => (record: T4) => T5,
+  f: (recordKey: string) => (store: MiddlewareAPI) => (record: T5) => T6,
+  f6: (recordKey: string) => (store: MiddlewareAPI) => (record: T6) => T7,
+): (recordKey: string) => (store: MiddlewareAPI) => T7;
+export declare function CreateRecord<T1, T2, T3, T4, T5, T6, T7, T8>(
+  f1: (recordKey: string) => (store: MiddlewareAPI) => (record: T1) => T2,
+  f2: (recordKey: string) => (store: MiddlewareAPI) => (record: T2) => T3,
+  f3: (recordKey: string) => (store: MiddlewareAPI) => (record: T3) => T4,
+  f4: (recordKey: string) => (store: MiddlewareAPI) => (record: T4) => T5,
+  f: (recordKey: string) => (store: MiddlewareAPI) => (record: T5) => T6,
+  f6: (recordKey: string) => (store: MiddlewareAPI) => (record: T6) => T7,
+  f7: (recordKey: string) => (store: MiddlewareAPI) => (record: T7) => T8,
+): (recordKey: string) => (store: MiddlewareAPI) => T8;

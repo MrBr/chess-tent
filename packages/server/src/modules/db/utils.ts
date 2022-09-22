@@ -76,6 +76,12 @@ export const inQuery: DB['inQuery'] = (field, value) => {
   }
   return { [field]: { $in: value } };
 };
+export const allQuery: DB['allQuery'] = (field, value) => {
+  if (!value) {
+    return {};
+  }
+  return { [field]: { $all: value } };
+};
 
 export const dotNotate = (
   obj: Record<string, any>,

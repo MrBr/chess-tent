@@ -79,7 +79,7 @@ export const findActivities = (
   new Promise(resolve => {
     // TODO - subjectType
     const roles = utils.notNullOrUndefined({
-      'roles.user': { $in: activityFilters.users },
+      'roles.user': { $all: activityFilters.users },
     });
 
     // In short

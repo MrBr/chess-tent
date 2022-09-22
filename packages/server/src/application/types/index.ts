@@ -68,6 +68,10 @@ export type DB = {
     field: F,
     value: T[] | T,
   ) => Record<F, { $in: T[] | undefined }> | {};
+  allQuery: <T, F extends string>(
+    field: F,
+    value: T[] | T,
+  ) => Record<F, { $all: T[] | undefined }> | {};
   dotNotate: (
     obj: Record<string, any>,
     target?: Record<string, any>,

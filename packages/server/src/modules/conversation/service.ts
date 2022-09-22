@@ -98,7 +98,7 @@ export const findConversations = async (
   users: User['id'][],
   pagination: Pagination,
 ) => {
-  return ConversationModel.find({ users: { $in: users } }, null, {
+  return ConversationModel.find({ users: { $all: users } }, null, {
     skip: pagination.skip,
     limit: pagination.limit,
   })

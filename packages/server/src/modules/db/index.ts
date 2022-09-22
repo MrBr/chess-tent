@@ -14,6 +14,7 @@ import {
   getBucketingIdFilterRegex,
   getDateRangeFilter,
   testUniqueFields,
+  allQuery,
 } from './utils';
 import { applyAdapter, createAdapter } from './adapter';
 
@@ -48,6 +49,7 @@ application.db.createSchema = createSchema;
 application.db.createModel = createModel;
 application.db.orQueries = orQueries;
 application.db.inQuery = inQuery;
+application.db.allQuery = allQuery;
 application.db.dotNotate = dotNotate;
 application.db.get$SetForArrayElemUpdate = get$SetForArrayElemUpdate;
 application.db.getOptionsForArrayElemUpdate = getOptionsForArrayElemUpdate;

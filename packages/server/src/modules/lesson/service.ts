@@ -182,7 +182,7 @@ export const findLessons = (
     const owner = utils.notNullOrUndefined({
       owner: filters.owner,
     });
-    const users = db.inQuery('users', filters.users);
+    const users = db.allQuery('users', filters.users);
     const query: FilterQuery<AppDocument<DepupulatedLesson>> =
       utils.notNullOrUndefined({
         published: filters.published,

@@ -20,6 +20,7 @@ const Message = styled<ComponentProps<typeof Text>>(
   border-radius: 8px;
   padding: 0.25em 0.5em;
   align-self: end;
+  width: 100%;
   
   &.owner {
     background: var(--black-color);

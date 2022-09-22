@@ -16,17 +16,11 @@ const useOpenConversations = (): [
     <Conversations close={close} initialParticipant={initialParticipant} />
   ));
 
-  useEffect(() => {
-    if (initialParticipant) {
-      promptOffcanvas();
-    }
-  }, [promptOffcanvas, initialParticipant]);
-
   const promptConversation = useCallback(
-    (initialParticipant?: User) =>
-      initialParticipant
-        ? setInitialParticipant(initialParticipant)
-        : promptOffcanvas(),
+    (initialParticipant?: User) => {
+      initialParticipant && setInitialParticipant(initialParticipant);
+      promptOffcanvas();
+    },
     [promptOffcanvas],
   );
 

@@ -12,17 +12,26 @@ const Message = styled<ComponentProps<typeof Text>>(
       typeof children === 'string'
         ? formatMessageLinks(children as string)
         : children;
-    return <Text {...props}>{formattedMessage}</Text>;
+    return (
+      <Text weight={300} {...props}>
+        {formattedMessage}
+      </Text>
+    );
   },
 ).props.owner.css<{ owner?: boolean }>`
   ${{ omitProps: ['owner'] }}
   background: var(--grey-300-color);
   border-radius: 8px;
-  padding: 0.25em 0.5em;
+  padding: 0.5em 0.5em;
   align-self: end;
-  width: 100%;
+  max-width: 100%;
+  word-break: break-word;
   
-  &.owner {
+  a {
+    color: inherit;
+  }
+  
+  &:not(.owner) {
     background: var(--black-color);
     color: var(--light-color);
   }

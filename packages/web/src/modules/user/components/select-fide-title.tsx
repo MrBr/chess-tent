@@ -13,7 +13,7 @@ interface SelectFideTitleProps {
 const SelectFideTitle = ({ fideTitle, onChange }: SelectFideTitleProps) => {
   return (
     <Select
-      value={fideTitle ? stringToSelectValue(fideTitle) : null}
+      defaultValue={fideTitle ? stringToSelectValue(fideTitle) : null}
       options={Object.values(FideTitles).map(stringToSelectValue)}
       onChange={value => onChange(value?.value as FideTitles)}
       isMulti={false}

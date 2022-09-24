@@ -189,10 +189,14 @@ const EditUserPage = ({ user }: { user: User }) => {
                     <FormGroup className="mt-3">
                       <Label>Student elo</Label>
                       <SelectStudentElo
-                        range={[
-                          user.state.studentEloMin || 500,
-                          user.state.studentEloMax || 1200,
-                        ]}
+                        range={
+                          user.state.studentEloMin && user.state.studentEloMax
+                            ? [
+                                user.state.studentEloMin,
+                                user.state.studentEloMax,
+                              ]
+                            : undefined
+                        }
                         onChange={([min, max]) => {
                           setFieldValue('state.studentEloMin', min);
                           setFieldValue('state.studentEloMax', max);

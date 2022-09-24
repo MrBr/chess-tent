@@ -60,33 +60,18 @@ const DashboardCoach = ({ user }: { user: User }) => {
           </Col>
         </Row>
 
-        {hasStudents && (
-          <>
-            {!scheduledTrainings.value ||
-            scheduledTrainings.value.length === 0 ? (
-              <CardEmpty
-                title="No upcoming trainings."
-                subtitle="Best way to teach is live training."
-                cta="Schedule a training"
-                onClick={promptNewTrainingModal}
-                icon="board"
-              />
-            ) : (
-              <ScheduledTrainings trainings={scheduledTrainings.value} />
-            )}
-            <Row className="mt-5 mb-3">
-              <Col>
-                <Headline5>Studies</Headline5>
-              </Col>
-            </Row>
-            {!trainings.value || trainings.value.length === 0 ? null : (
-              <Trainings
-                trainings={trainings.value}
-                onTrainingClick={handleTrainingClick}
-              />
-            )}
-          </>
-        )}
+        {hasStudents &&
+          (scheduledTrainings.value?.length ? (
+            <ScheduledTrainings trainings={scheduledTrainings.value} />
+          ) : (
+            <CardEmpty
+              title="No upcoming trainings."
+              subtitle="Best way to teach is live training."
+              cta="Schedule a training"
+              onClick={promptNewTrainingModal}
+              icon="board"
+            />
+          ))}
         {!hasStudents && (
           <Row>
             <Col>
@@ -100,6 +85,30 @@ const DashboardCoach = ({ user }: { user: User }) => {
             </Col>
           </Row>
         )}
+
+        {hasStudents || trainings.value?.length ? (
+          <>
+            <Row className="mt-5 mb-3">
+              <Col>
+                <Headline5>Studies</Headline5>
+              </Col>
+            </Row>
+            {trainings.value?.length ? (
+              <Trainings
+                trainings={trainings.value}
+                onTrainingClick={handleTrainingClick}
+              />
+            ) : (
+              <CardEmpty
+                title="No active studies"
+                subtitle="Teach your students virtually"
+                cta="Create a training"
+                icon="board"
+                onClick={promptNewTrainingModal}
+              />
+            )}
+          </>
+        ) : null}
         <Row className="mt-5 mb-3">
           <Col>
             <Headline5>Templates</Headline5>

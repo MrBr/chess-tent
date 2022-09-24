@@ -169,8 +169,8 @@ export type Hooks = {
   useMyLessons: (
     filters?: LessonsFilters,
   ) => RecordHookReturn<Records['activeUserLessons']>;
-  useCoaches: (user: User) => RecordHookReturn<Records['coaches']>;
-  useStudents: (user: User) => RecordHookReturn<Records['students']>;
+  useCoaches: () => RecordHookReturn<Records['myCoaches']>;
+  useStudents: () => RecordHookReturn<Records['myStudents']>;
   useDispatchService: () => <T extends (...args: any) => any>(
     service: T extends ServiceType ? T : never,
   ) => (...payload: T extends (...args: infer U) => any ? U : never) => void;

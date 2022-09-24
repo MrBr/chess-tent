@@ -51,12 +51,12 @@ export const getUser: MiddlewareFunction = (req, res, next) => {
     .catch(next);
 };
 
-export const findUsers: MiddlewareFunction = (req, res, next) => {
+export const findCoaches: MiddlewareFunction = (req, res, next) => {
   if (!res.locals.filters || Object.keys(res.locals.filters).length < 0) {
     throw new InvalidUserFiltersError();
   }
   service
-    .findUsers(res.locals.filters)
+    .findCoaches(res.locals.filters)
     .then(users => {
       res.locals.users = users;
       next();

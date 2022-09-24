@@ -1,5 +1,5 @@
 import { NormalizedUser, User } from '@chess-tent/models';
-import { WithPagination } from '@chess-tent/types';
+import { COACH_REQUIRED_STATE, WithPagination } from '@chess-tent/types';
 import { AppDocument } from '@types';
 import { compare, hash } from 'bcrypt';
 import { FilterQuery } from 'mongoose';
@@ -51,10 +51,9 @@ export const getUser = (
     );
   });
 
-export const findUsers = (
+export const findCoaches = (
   // TODO - validate filters (whole app)
   filters: Partial<{
-    coach?: boolean;
     name?: string;
     search?: string;
     studentElo?: {
@@ -67,7 +66,7 @@ export const findUsers = (
 ): Promise<User[]> => {
   const query: FilterQuery<AppDocument<NormalizedUser>> =
     utils.notNullOrUndefined({
-      coach: filters.coach,
+      coach: true,
       name: filters.name,
     });
 
@@ -89,6 +88,14 @@ export const findUsers = (
   if (filters.search) {
     query['$text'] = { $search: filters.search, $caseSensitive: false };
   }
+
+  // Check all required public info
+  COACH_REQUIRED_STATE.forEach(key => {
+    query[`state.${key}`] = query[`state.${key}`] || {
+      $exists: true,
+      $ne: '',
+    };
+  });
 
   return new Promise((resolve, reject) => {
     UserModel.find(query)

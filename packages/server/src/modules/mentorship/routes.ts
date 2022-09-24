@@ -14,12 +14,14 @@ const {
   toLocals,
   sendNotifications,
   createNotifications,
+  conditional,
 } = middleware;
 
 application.service.registerPostRoute(
   '/mentorship',
   identify,
-  toLocals('studentId', req => req.body.studentId),
+  // Users can only request mentorship from coaches, not the other way around
+  toLocals('studentId', (req, res) => res.locals.me.id),
   toLocals('coachId', req => req.body.coachId),
   requestMentorship,
 
@@ -42,22 +44,25 @@ application.service.registerPutRoute(
   toLocals('studentId', req => req.body.studentId),
   toLocals('coachId', req => req.body.coachId),
   toLocals('approved', req => req.body.approved),
-  resolveMentorshipRequest,
+  conditional((req, { locals: { coachId, me, studentId } }) =>
+    // Every party can manipulate mentorship once requested
+    [coachId, studentId].includes(me.id),
+  )(resolveMentorshipRequest),
   sendStatusOk,
 );
 
 application.service.registerGetRoute(
-  '/mentorship/:userId/coaches',
+  '/mentorship/coaches',
   identify,
-  toLocals('studentId', req => req.params.userId),
+  toLocals('studentId', (req, res) => res.locals.me.id),
   getCoaches,
   sendData('coaches'),
 );
 
 application.service.registerGetRoute(
-  '/mentorship/:userId/students',
+  '/mentorship/students',
   identify,
-  toLocals('coachId', req => req.params.userId),
+  toLocals('coachId', (req, res) => res.locals.me.id),
   getStudents,
   sendData('students'),
 );

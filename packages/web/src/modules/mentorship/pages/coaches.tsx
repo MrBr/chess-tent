@@ -2,13 +2,12 @@ import React from 'react';
 import { components, hooks, ui } from '@application';
 import MentorshipCard from '../components/card';
 
-const { useActiveUserRecord, useCoaches, useOpenConversations } = hooks;
+const { useCoaches, useOpenConversations } = hooks;
 const { Row, Col, Headline5, Button } = ui;
 const { MentorshipAction, Page } = components;
 
 const Coaches = () => {
-  const { value: user } = useActiveUserRecord();
-  const { value: coaches } = useCoaches(user);
+  const { value: coaches } = useCoaches();
   const [conversationCanvas, openConversations] = useOpenConversations();
   return (
     <Page>

@@ -1,5 +1,5 @@
 import { useEffect, useCallback } from 'react';
-import { Mentorship, User } from '@chess-tent/models';
+import { Mentorship } from '@chess-tent/models';
 import { hooks, records, requests, state } from '@application';
 import { Hooks } from '@types';
 import { students, coaches } from './record';
@@ -10,28 +10,28 @@ const {
 } = state;
 const { isInitialized } = records;
 
-const useCoaches: Hooks['useCoaches'] = (user: User) => {
-  const record = useRecordInit(coaches, `coaches-${user.id}`);
+const useCoaches: Hooks['useCoaches'] = () => {
+  const record = useRecordInit(coaches, `my-coaches`);
 
   useEffect(() => {
     if (isInitialized(record)) {
       return;
     }
-    record.load(user);
+    record.load();
     // eslint-disable-next-line
   }, []);
 
   return record;
 };
 
-const useStudents: Hooks['useStudents'] = (user: User) => {
-  const record = useRecordInit(students, `students-${user.id}`);
+const useStudents: Hooks['useStudents'] = () => {
+  const record = useRecordInit(students, `my-students`);
 
   useEffect(() => {
     if (isInitialized(record)) {
       return;
     }
-    record.load(user);
+    record.load();
     // eslint-disable-next-line
   }, []);
 

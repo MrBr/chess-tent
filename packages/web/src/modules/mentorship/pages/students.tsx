@@ -3,13 +3,12 @@ import { components, hooks, ui } from '@application';
 import { groupBy } from 'lodash';
 import MentorshipCard from '../components/card';
 
-const { useActiveUserRecord, useStudents, useOpenConversations } = hooks;
+const { useStudents, useOpenConversations } = hooks;
 const { Row, Headline6, Headline5, Button } = ui;
 const { MentorshipAction, Page } = components;
 
 const Students = () => {
-  const { value: user } = useActiveUserRecord();
-  const { value: students } = useStudents(user);
+  const { value: students } = useStudents();
   const [conversationCanvas, openConversations] = useOpenConversations();
   const result = useMemo(
     () => groupBy(students, student => student.approved),

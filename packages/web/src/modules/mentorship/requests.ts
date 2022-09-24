@@ -11,16 +11,16 @@ const mentorshipResolve = services.createRequest<Requests['mentorshipResolve']>(
   '/mentorship',
 );
 
-const coaches = services.createRequest<Requests['coaches']>(
+const myCoaches = services.createRequest<Requests['myCoaches']>(
   'GET',
-  user => `/mentorship/${user.id}/coaches`,
+  '/mentorship/coaches',
 );
-const students = services.createRequest<Requests['students']>(
+const myStudents = services.createRequest<Requests['myStudents']>(
   'GET',
-  user => `/mentorship/${user.id}/students`,
+  '/mentorship/students',
 );
 
-requests.coaches = coaches;
-requests.students = students;
+requests.myCoaches = myCoaches;
+requests.myStudents = myStudents;
 requests.mentorshipRequest = mentorshipRequest;
 requests.mentorshipResolve = mentorshipResolve;

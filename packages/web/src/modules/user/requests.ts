@@ -13,9 +13,9 @@ const inviteUser = services.createRequest<Requests['inviteUser']>(
 
 const login = services.createRequest<Requests['login']>('POST', '/login');
 
-const users = services.createRequest<Requests['users']>(
+const coaches = services.createRequest<Requests['coaches']>(
   'POST',
-  '/users',
+  '/coaches',
   filters => filters,
 );
 
@@ -40,7 +40,7 @@ requests.inviteUser = inviteUser;
 requests.login = login;
 requests.logout = logout;
 requests.me = me;
-requests.users = users;
+requests.coaches = coaches;
 requests.user = user;
 requests.updateMe = updateMe;
 requests.userValidate = userValidate;

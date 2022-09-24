@@ -61,7 +61,7 @@ type UserScheduledTrainingsRecord = RecipeApiLoad<
   RecipeMethod<'new', CreateNewUserTraining>;
 type CreateNewUserTraining = (activity: LessonActivity) => Promise<void>;
 type RequestMentorship = (coach: User, student: User) => Promise<void>;
-type CoachesRecord = RecipeApiLoad<Requests['coaches']> &
+type CoachesRecord = RecipeApiLoad<Requests['myCoaches']> &
   RecordBase<Mentorship[]> &
   RecipeCollection<Mentorship> &
   RecipeMethod<'requestMentorship', RequestMentorship>;
@@ -106,12 +106,12 @@ export type Records<T = any> = {
       RecordBase<Lesson[]> &
       RecipeCollection<Lesson>
   >;
-  students: RecordWith<
-    RecipeApiLoad<Requests['students']> &
+  myStudents: RecordWith<
+    RecipeApiLoad<Requests['myStudents']> &
       RecordBase<Mentorship[]> &
       RecipeCollection<Mentorship>
   >;
-  coaches: RecordWith<CoachesRecord>;
+  myCoaches: RecordWith<CoachesRecord>;
 
   // Service
   createRecord: typeof CreateRecord;

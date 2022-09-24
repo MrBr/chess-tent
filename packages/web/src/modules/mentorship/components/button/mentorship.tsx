@@ -11,7 +11,7 @@ export default (({ user, className, textual }) => {
     value: coaches,
     requestMentorship,
     meta: { loading },
-  } = useCoaches(me);
+  } = useCoaches();
 
   if (!user.coach || user.id === me.id) {
     // Prevent user from coaching himself

@@ -18,7 +18,7 @@ const DashboardStudent = ({ user }: { user: User }) => {
   const { value: trainings } = useUserTrainings(user);
   const scheduledTrainings = useUserScheduledTrainings(user);
   const history = useHistory();
-  const coaches = useCoaches(user);
+  const coaches = useCoaches();
 
   const handleTrainingClick = useOpenTraining();
   const [offcanvas, openConversation] = useOpenConversations();

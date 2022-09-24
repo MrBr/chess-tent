@@ -19,7 +19,7 @@ interface ActivityFormProps {
 }
 
 const { Label, FormGroup, Form, Text, Row, Col } = ui;
-const { useActiveUserRecord, useStudents } = hooks;
+const { useStudents } = hooks;
 const { UserAvatar } = components;
 const { noop } = utils;
 
@@ -37,8 +37,7 @@ const filterUsers = (
   !inputValue ? true : new RegExp(`^${inputValue}`, 'i').test(option.data.name);
 
 const ActivityForm = ({ activity, formRef }: ActivityFormProps) => {
-  const { value: user } = useActiveUserRecord();
-  const { value: mentorship } = useStudents(user);
+  const { value: mentorship } = useStudents();
 
   const students = useMemo(
     () => mentorship?.map(({ student }) => student),

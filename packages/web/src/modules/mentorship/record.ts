@@ -5,21 +5,20 @@ const students = records.createRecord(
   records.withRecordBase<Mentorship[]>(),
   records.withRecordCollection(),
   records.withRecordDenormalizedCollection(TYPE_MENTORSHIP),
-  records.withRecordApiLoad(requests.students),
+  records.withRecordApiLoad(requests.myStudents),
 );
 
 const coaches = records.createRecord(
   records.withRecordBase<Mentorship[]>(),
   records.withRecordCollection(),
   records.withRecordDenormalizedCollection(TYPE_MENTORSHIP),
-  records.withRecordApiLoad(requests.coaches),
+  records.withRecordApiLoad(requests.myCoaches),
   records.withRecordMethod()(
     'requestMentorship',
-    () => () => record => async (coach, student) => {
+    () => () => record => async coach => {
       record.amend({ loading: true });
       const { data } = await requests.mentorshipRequest({
         coachId: coach.id,
-        studentId: student.id,
       });
       record.update(
         [...(record.get().value || []), data as unknown as Mentorship],

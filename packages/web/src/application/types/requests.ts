@@ -25,9 +25,9 @@ export interface Requests {
   login: RequestFetch<Endpoints['login'], Pick<User, 'email' | 'password'>>;
   logout: RequestFetch<Endpoints['logout']>;
   me: RequestFetch<Endpoints['me']>;
-  users: RequestFetch<
-    Endpoints['users'],
-    [GetEndpointData<Endpoints['users']>, Pagination?]
+  coaches: RequestFetch<
+    Endpoints['coaches'],
+    [GetEndpointData<Endpoints['coaches']>, Pagination?]
   >;
   user: RequestFetch<Endpoints['user'], User['id']>;
   userValidate: RequestFetch<Endpoints['userValidate'], Partial<User>>;
@@ -99,8 +99,8 @@ export interface Requests {
 
   mentorshipRequest: RequestFetch<Endpoints['mentorshipRequest']>;
   mentorshipResolve: RequestFetch<Endpoints['mentorshipResolve']>;
-  coaches: RequestFetch<Endpoints['coaches'], User>;
-  students: RequestFetch<Endpoints['students'], User>;
+  myCoaches: RequestFetch<Endpoints['myCoaches']>;
+  myStudents: RequestFetch<Endpoints['myStudents']>;
 
   notifications: RequestFetch<
     Endpoints['notifications'],

@@ -8,7 +8,7 @@ const { useApi } = hooks;
 const { UserAvatar } = components;
 
 const searchUsers = debounce((name, callback) => {
-  requests.users({ search: name }).then(({ data }) => {
+  requests.coaches({ search: name }).then(({ data }) => {
     callback(data);
   });
 }, 500);

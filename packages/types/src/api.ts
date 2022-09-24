@@ -1,20 +1,20 @@
 import {
   Activity,
-  Conversation,
-  Lesson,
-  SubjectPath,
-  NormalizedMessage,
-  User,
-  Tag,
-  Difficulty,
+  Chapter,
   CoachEloRange,
+  Conversation,
+  Difficulty,
+  Lesson,
+  LessonActivity,
   Mentorship,
   NormalizedMentorship,
+  NormalizedMessage,
   Notification,
+  SubjectPath,
   SubjectPathUpdate,
+  Tag,
   TYPE_LESSON,
-  LessonActivity,
-  Chapter,
+  User,
 } from '@chess-tent/models';
 import { GenericArguments } from './_helpers';
 import { LessonAction } from './actions';
@@ -216,7 +216,7 @@ export interface Endpoints {
   logout: Endpoint<RequestGet<'/logout'>, StatusResponse>;
   me: Endpoint<RequestGet<'/me'>, UserResponse>;
   updateMe: Endpoint<RequestPut<'/me', Partial<User>>, UserResponse>;
-  users: Endpoint<RequestPost<'/users', UsersFilters>, UsersResponse>;
+  coaches: Endpoint<RequestPost<'/coaches', UsersFilters>, UsersResponse>;
   user: Endpoint<RequestGet<`/user/${string}`>, UserResponse>;
   userValidate: Endpoint<
     RequestPost<`/user/validate`, Partial<User>>,
@@ -309,7 +309,7 @@ export interface Endpoints {
   >;
   // Mentorship endpoints
   mentorshipRequest: Endpoint<
-    RequestPost<'/mentorship', { studentId: User['id']; coachId: User['id'] }>,
+    RequestPost<'/mentorship', { coachId: User['id'] }>,
     RequestMentorshipResponse
   >;
   mentorshipResolve: Endpoint<
@@ -319,14 +319,8 @@ export interface Endpoints {
     >,
     StatusResponse
   >;
-  coaches: Endpoint<
-    RequestGet<`/mentorship/${string}/coaches`>,
-    CoachesResponse
-  >;
-  students: Endpoint<
-    RequestGet<`/mentorship/${string}/students`>,
-    StudentsResponse
-  >;
+  myCoaches: Endpoint<RequestGet<`/mentorship/coaches`>, CoachesResponse>;
+  myStudents: Endpoint<RequestGet<`/mentorship/students`>, StudentsResponse>;
   // Notifications endpoints
   notifications: Endpoint<
     RequestGet<`/notifications?${string}`>,

@@ -1,11 +1,12 @@
 import application, { middleware } from '@application';
+import { UsersFilters } from '@chess-tent/types';
 import {
   addUser,
   validateUser,
   verifyUser,
   hashPassword,
   updateUser,
-  findUsers,
+  findCoaches,
   getUser,
   updateUserActivity,
   welcomeMailMiddleware,
@@ -81,10 +82,19 @@ application.service.registerPostRoute(
 );
 
 application.service.registerPostRoute(
-  '/users',
+  '/coaches',
   identify,
-  toLocals('filters', req => req.body),
-  findUsers,
+  toLocals('filters', req => {
+    const { name, studentElo, tagIds, search } = req.body as UsersFilters;
+    return {
+      name,
+      studentElo,
+      tagIds,
+      search,
+      coach: true,
+    };
+  }),
+  findCoaches,
   sendData('users'),
 );
 

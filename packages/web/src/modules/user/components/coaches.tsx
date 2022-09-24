@@ -9,7 +9,7 @@ const { Row, Col } = ui;
 const { Filters } = components;
 
 const Coaches = () => {
-  const { fetch: fetchCoaches, response } = useApi(requests.users);
+  const { fetch: fetchCoaches, response } = useApi(requests.coaches);
 
   const [studentElo, setStudentElo] = useState<CoachEloRange | undefined>();
 

@@ -20,7 +20,7 @@ const {
 const DashboardCoach = ({ user }: { user: User }) => {
   const trainings = useUserTrainings(user);
   const scheduledTrainings = useUserScheduledTrainings(user);
-  const students = useStudents(user);
+  const students = useStudents();
   const [trainingModal, promptNewTrainingModal] = usePromptNewTrainingModal();
   const lessons = useMyLessons();
   const history = useHistory();

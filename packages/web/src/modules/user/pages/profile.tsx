@@ -2,6 +2,7 @@ import React, { ReactNode } from 'react';
 import { components, hooks, ui, utils } from '@application';
 import { User } from '@chess-tent/models';
 import { Icons } from '@types';
+import AlertPublicProfile from '../components/AlertPublicProfile';
 
 const { UserAvatar, Page, MentorshipButton, Header } = components;
 const { useHistory, useOpenConversations } = hooks;
@@ -100,6 +101,7 @@ const PageProfile = ({
     >
       {conversationOffset}
       <Page.Body className="py-4">
+        <AlertPublicProfile />
         <Headline4 className="mb-0">
           <Text inherit color="secondary">
             {user.state.fideTitle}

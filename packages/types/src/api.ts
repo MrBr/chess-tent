@@ -3,7 +3,6 @@ import {
   Conversation,
   Lesson,
   SubjectPath,
-  Message,
   NormalizedMessage,
   User,
   Tag,

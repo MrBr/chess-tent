@@ -47,6 +47,7 @@ import { mobileCss } from './enhancers';
 import Stack from './Stack';
 import Line from './Line';
 import Breadcrumbs from './Breadcrumbs';
+import Alert from './Alert';
 
 application.hoc.withFiles = withFiles;
 application.hoc.withHtml = withHtml;
@@ -106,6 +107,7 @@ application.ui.Tooltip = Tooltip;
 application.ui.Overlay = Overlay;
 application.ui.OverlayTrigger = OverlayTrigger;
 application.ui.Badge = Badge;
+application.ui.Alert = Alert;
 application.ui.ProgressBar = ProgressBar;
 
 application.ui.Icon = Icon;

@@ -6,6 +6,7 @@ import EditableUserAvatar from '../components/editable-user-avatar';
 import SelectStudentElo from '../components/select-student-elo';
 import SelectFideTitle from '../components/select-fide-title';
 import SelectLanguages from '../components/select-languages';
+import AlertPublicProfile from '../components/AlertPublicProfile';
 
 const { useActiveUserRecord, useHistory } = hooks;
 const { Page, Header } = components;
@@ -83,6 +84,7 @@ const EditUserPage = ({ user }: { user: User }) => {
           }
         >
           <Page.Body className="py-4">
+            <AlertPublicProfile />
             <Headline5 className="mb-3">Profile</Headline5>
             <Headline6>Basic</Headline6>
             <Row className="mt-2">

@@ -40,6 +40,7 @@ import {
   ProgressBarProps,
   CardImgProps,
   BreadcrumbItemProps,
+  Alert,
 } from 'react-bootstrap';
 import DropdownToggle from 'react-bootstrap/DropdownToggle';
 import {
@@ -463,6 +464,7 @@ export type UI = {
   Overlay: typeof BOverlay;
   OverlayTrigger: typeof BOverlayTrigger;
   Badge: UIComponent<BadgeProps & { circle?: boolean }>;
+  Alert: typeof Alert;
   ProgressBar: UIComponent<ProgressBarProps>;
   WizardStepper: <T extends {}, P extends {}>(
     props: WizardStepperProps<T, P>,

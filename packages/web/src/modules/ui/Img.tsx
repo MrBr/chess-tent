@@ -1,38 +1,27 @@
-import styled from '@emotion/styled';
-import { UI } from '@types';
-import React, { ComponentProps } from 'react';
+import styled, { css } from '@chess-tent/styled-props';
+import { Size, UI } from '@types';
+import React from 'react';
 import { getBorderRadiusSize } from './enhancers';
 
-export const Img = styled.img(
-  ({ width, height }) =>
-    !width &&
-    !height && {
-      width: '100%',
-    },
-) as UI['Img'];
+export const Img: UI['Img'] = styled.img.css`${({ width, height }) => css`
+  width: ${!width && !height ? '100%' : 'auto'};
+`}`;
 
-const sizeEnhancer = (props: ComponentProps<UI['Avatar']>) => {
-  let size;
-  switch (props.size) {
-    case 'extra-small':
-      size = 25;
-      break;
-    case 'small':
-      size = 32;
-      break;
-    case 'large':
-      size = 64;
-      break;
-    case 'regular':
-    default:
-      size = 40;
+const sizeEnhancer = styled.props.size.css<{ size: Size }>`
+  --thumbnail--size: 40px;
+  &.extra-small {
+    --thumbnail--size: 25px;
   }
-  return {
-    width: size,
-    height: size,
-    lineHeight: size + 'px',
-  };
-};
+  &.small {
+    --thumbnail--size: 32px;
+  }
+  &.large {
+    --thumbnail--size: 64px;
+  }
+  width: var(--thumbnail--size);
+  height: var(--thumbnail--size);
+  line-height: var(--thumbnail--size);
+`;
 
 export const Avatar = styled<UI['Avatar']>(
   ({ src, name, className, onClick }) => {
@@ -44,24 +33,29 @@ export const Avatar = styled<UI['Avatar']>(
       </div>
     );
   },
-)(
-  {
-    borderRadius: '50%',
-    display: 'inline-block',
-    background: 'linear-gradient(90deg, #6664CF 0%, #5026D9 100%)',
-    textAlign: 'center',
-    color: '#fff',
-    fontWeight: 700,
-  },
-  sizeEnhancer,
-);
+).css`
+  border-radius: 50%;
+  display: inline-block;
+  background: linear-gradient(90deg, #6664CF 0%, #5026D9 100%);
+  text-align: center;
+  color: #fff;
+  font-weight: 700;
+  object-fit: cover;
+  ${sizeEnhancer}
+` as UI['Avatar'];
+
 Avatar.defaultProps = {
   size: 'regular',
 };
 
-export const Thumbnail = styled.img(sizeEnhancer, props => ({
-  borderRadius: getBorderRadiusSize(props.size),
-}));
+export const Thumbnail = styled.img.css`
+  ${sizeEnhancer}
+  ${props =>
+    css`
+      border-right: ${getBorderRadiusSize(props.size)};
+    `}
+` as UI['Thumbnail'];
+
 Thumbnail.defaultProps = {
   size: 'regular',
 };

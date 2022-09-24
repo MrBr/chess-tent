@@ -225,6 +225,8 @@ export interface WizardStepperProps<T extends {}, P extends {} = {}> {
   visitedSteps: Set<WizardStep<T, P>>;
 }
 
+export type Size = 'regular' | 'small' | 'large' | 'extra-small';
+
 export type Icons =
   | 'add'
   | 'addFilled'
@@ -348,7 +350,7 @@ export type UI = {
   Icon: UIComponent<{
     type: Icons;
     textual?: boolean;
-    size?: 'large' | 'regular' | 'small' | 'extra-small';
+    size?: Size;
     variant?:
       | 'primary'
       | 'secondary'
@@ -384,14 +386,14 @@ export type UI = {
   OptionsDropdown: ComponentType<OptionsDropdownProps<any>>;
   Avatar: UIComponent<{
     src: string | undefined;
-    size?: 'regular' | 'small' | 'large' | 'extra-small';
+    size?: Size;
     onClick?: ReactEventHandler;
     name?: string;
     className?: string;
   }>;
   Thumbnail: ComponentType<{
     src: string | undefined;
-    size?: 'regular' | 'small' | 'large' | 'extra-small';
+    size?: Size;
   }>;
   File: UIComponent<FormControlProps>;
   Label: UIComponent<FormLabelProps>;

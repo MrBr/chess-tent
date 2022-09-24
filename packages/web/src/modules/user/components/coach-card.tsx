@@ -10,23 +10,25 @@ const { useHistory, useOpenConversations } = hooks;
 
 const { className } = css`
   width: 300px;
-  height: 310px;
+  height: 450px;
 
   .profile-image {
-    height: 167px;
+    height: 298px;
     justify-content: center;
     align-items: center;
     background: var(--tertiary-color);
     display: flex;
 
-    img {
-      width: auto;
+    object {
+      width: 100%;
+      object-fit: cover;
     }
 
     .piece {
       width: 70px;
       height: 70px;
-      margin-top: 45px;
+      margin-top: 105px;
+      margin-left: 105px;
     }
   }
 `;
@@ -47,7 +49,7 @@ const CoachCard: Components['CoachCard'] = ({ coach }) => {
         onClick={() => history.push(`/user/${coach.id}`)}
       >
         <div className="profile-image">
-          <object data={coach.state.imageUrl} height={167} type="image/png">
+          <object data={coach.state.imageUrl} height={298} type="image/png">
             <div className="piece white knight" />
           </object>
         </div>

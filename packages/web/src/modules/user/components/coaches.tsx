@@ -18,7 +18,7 @@ const Coaches = () => {
   }, [fetchCoaches, studentElo]);
 
   const cols = response?.data.map(coach => (
-    <Col key={coach.id} className="col-auto mb-3">
+    <Col key={coach.id} className="col-auto mb-4">
       <CoachCard coach={coach} />
     </Col>
   ));

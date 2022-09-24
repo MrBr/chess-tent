@@ -91,12 +91,12 @@ export const ChaptersImport = ({
       reset();
       onImport(responseChapters.data);
     }
-  }, [responseChapters, onImport]);
+  }, [responseChapters, onImport, reset]);
 
   const importChapters = useCallback(() => {
     const chapterIds = Object.values(chapters).map(({ id }) => id);
     fetchChapters(selectedLesson?.id as string, chapterIds);
-  }, [selectedLesson?.id, chapters]);
+  }, [chapters, fetchChapters, selectedLesson?.id]);
 
   const toggleAllChapters = useCallback(() => {
     if (!selectedLesson) {

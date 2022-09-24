@@ -99,14 +99,8 @@ const PageActivity = () => {
     <Header className="border-bottom">
       <Col>
         <Breadcrumbs>
-          <Breadcrumbs.Item href="/" className="d-none d-sm-inline-block">
-            Dashboard
-          </Breadcrumbs.Item>
           <Breadcrumbs.Item className="d-none d-sm-inline-block">
             {activity.title || 'Untitled'}
-          </Breadcrumbs.Item>
-          <Breadcrumbs.Item className="d-sm-none" href="/">
-            Back
           </Breadcrumbs.Item>
         </Breadcrumbs>
       </Col>

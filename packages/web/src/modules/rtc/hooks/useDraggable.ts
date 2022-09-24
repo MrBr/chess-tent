@@ -1,10 +1,10 @@
 import { useRef, useCallback } from 'react';
 
 // Bit adapted - https://www.w3schools.com/howto/howto_js_draggable.asp
-const useDraggable = () => {
+const useDraggable = (shouldDrag = true) => {
   const draggableElemRef = useRef<HTMLDivElement>();
   return useCallback((ref: HTMLDivElement | null) => {
-    if (!ref) {
+    if (!ref || !shouldDrag) {
       return;
     }
     draggableElemRef.current = ref;

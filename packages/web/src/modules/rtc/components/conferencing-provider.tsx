@@ -1,14 +1,19 @@
 import React, { useCallback, useState, useMemo, useEffect } from 'react';
 import { components, hooks, ui, utils } from '@application';
 import { Components } from '@types';
+import { isMobile } from 'react-device-detect';
 
-import { DEFAULT_CONSTRAINTS, DEFAULT_ICE_SERVERS } from '../constants';
+import {
+  DEFAULT_CONSTRAINTS_DESKTOP,
+  DEFAULT_CONSTRAINTS_MOBILE,
+  DEFAULT_ICE_SERVERS,
+} from '../constants';
 
 import ConferencingPeer from './conferencing-peer';
 import RTCVideo from './rtc-video';
 import { ConferencingContextType, ConferencingContext } from '../context';
 
-const { Icon, Stack, Dropdown, Button, Row, Col } = ui;
+const { Icon, Stack, Dropdown, Button, Row, Col, Absolute } = ui;
 const { useActiveUserRecord, useSocketRoomUsers } = hooks;
 const { UserAvatar } = components;
 const { noop } = utils;
@@ -20,7 +25,9 @@ const ConferencingProvider: Components['ConferencingProvider'] = ({ room }) => {
     mutedAudio: false,
     connectionStarted: false,
     iceServers: DEFAULT_ICE_SERVERS,
-    mediaConstraints: DEFAULT_CONSTRAINTS,
+    mediaConstraints: isMobile
+      ? DEFAULT_CONSTRAINTS_MOBILE
+      : DEFAULT_CONSTRAINTS_DESKTOP,
   });
   const { value: user } = useActiveUserRecord();
   const {
@@ -118,8 +125,8 @@ const ConferencingProvider: Components['ConferencingProvider'] = ({ room }) => {
 
   return (
     <ConferencingContext.Provider value={state}>
-      <Row>
-        <Col>
+      <Row className="justify-content-between">
+        <Col className="col-auto">
           <Dropdown show={showConfMenu} onToggle={toggleShowConfMenu}>
             <Dropdown.Toggle collapse onClick={noop}>
               {!connectionStarted && (
@@ -132,10 +139,12 @@ const ConferencingProvider: Components['ConferencingProvider'] = ({ room }) => {
                     type={mutedAudio ? 'micOff' : 'microphone'}
                     onClick={handleMuteUnmute}
                   />
-                  <Icon
-                    type={mutedVideo ? 'hide' : 'videoCamera'}
-                    onClick={handleToggleCamera}
-                  />
+                  {!isMobile && (
+                    <Icon
+                      type={mutedVideo ? 'hide' : 'videoCamera'}
+                      onClick={handleToggleCamera}
+                    />
+                  )}
                 </>
               )}
             </Dropdown.Toggle>
@@ -150,10 +159,12 @@ const ConferencingProvider: Components['ConferencingProvider'] = ({ room }) => {
                       />
                     </Col>
                     <Col className="col-auto">
-                      <Icon
-                        type={mutedVideo ? 'hide' : 'videoCamera'}
-                        onClick={handleToggleCamera}
-                      />
+                      {!isMobile && (
+                        <Icon
+                          type={mutedVideo ? 'hide' : 'videoCamera'}
+                          onClick={handleToggleCamera}
+                        />
+                      )}
                     </Col>
                     <Col onClick={toggleShowConfMenu}>
                       <Button
@@ -168,6 +179,7 @@ const ConferencingProvider: Components['ConferencingProvider'] = ({ room }) => {
                     mediaStream={localMediaStream}
                     muted
                     className="position-relative mt-3"
+                    preview
                   />
                 </>
               )}
@@ -190,27 +202,34 @@ const ConferencingProvider: Components['ConferencingProvider'] = ({ room }) => {
         {connectionStarted && (
           <Col>
             <div style={{ position: 'relative' }}>
-              {!mutedVideo && <RTCVideo mediaStream={localMediaStream} muted />}
+              <Absolute left={0}>
+                {!mutedVideo && (
+                  <RTCVideo mediaStream={localMediaStream} muted />
+                )}
+              </Absolute>
 
               {localMediaStream &&
-                remoteUsers.map(({ id }) => (
-                  <ConferencingPeer
-                    key={id}
-                    room={room}
-                    fromUserId={id}
-                    toUserId={user.id as string}
-                  />
+                remoteUsers.map(({ id }, index) => (
+                  <Absolute left={60 * (index + 1)} key={id}>
+                    <ConferencingPeer
+                      room={room}
+                      fromUserId={id}
+                      toUserId={user.id as string}
+                    />
+                  </Absolute>
                 ))}
             </div>
           </Col>
         )}
-        <Col className="col-auto position-relative">
-          <Stack>
-            {liveUsers.map(user => (
-              <UserAvatar key={user.id} user={user} size="small" />
-            ))}
-          </Stack>
-        </Col>
+        {!isMobile && (
+          <Col className="col-auto position-relative">
+            <Stack>
+              {liveUsers.map(user => (
+                <UserAvatar key={user.id} user={user} size="small" />
+              ))}
+            </Stack>
+          </Col>
+        )}
       </Row>
     </ConferencingContext.Provider>
   );

@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import styled from '@chess-tent/styled-props';
+import { isMobile } from 'react-device-detect';
 
 import useDraggable from '../hooks/useDraggable';
 
@@ -7,12 +8,13 @@ export interface RTCVideoProps {
   mediaStream?: MediaStream;
   muted?: boolean;
   className?: string;
+  preview?: boolean;
 }
 
 const RTCVideo = styled<RTCVideoProps>(props => {
-  const { mediaStream, muted, className } = props;
+  const { mediaStream, muted, className, preview } = props;
   const videoRef = useRef<HTMLVideoElement>(null);
-  const containerRef = useDraggable();
+  const containerRef = useDraggable(!preview);
 
   useEffect(() => {
     if (!videoRef.current) {
@@ -31,28 +33,32 @@ const RTCVideo = styled<RTCVideoProps>(props => {
 
   return (
     <div className={className} ref={containerRef}>
-      <video autoPlay muted={muted} ref={videoRef}>
-        <track default kind="captions" />
-      </video>
+      <video
+        autoPlay
+        muted={muted}
+        ref={videoRef}
+        webkit-playsinline
+        playsInline
+      />
     </div>
   );
 }).css`
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
+  width: ${isMobile ? 0 : '115px'};
+  height: ${isMobile ? 0 : '115px'};
+  max-width: 115px;
+  border-radius: 10px;
   overflow: hidden;
-  max-width: 80px;
   position: absolute;
 
   video {
-    width: 144px;
-    height: 108px;
+    width: 200px;
+    height: 200px;
     background-color: var(--grey-700-color);
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translateX(-50%) translateY(-50%);
-    zoom: 1.2;
+    zoom: 1.3;
   }
 `;
 

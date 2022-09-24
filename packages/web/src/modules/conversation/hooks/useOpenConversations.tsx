@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect, ReactElement } from 'react';
+import React, { useCallback, useState, ReactElement } from 'react';
 import { hooks } from '@application';
 import { User } from '@chess-tent/models';
 

@@ -43,7 +43,8 @@ export const ToolboxText = styled<Components['LessonToolboxText']>(
   }
 
   color: #2F3849;
-  font-size: 0.8rem;
+  font-size: 1rem;
+  font-weight: 400;
   cursor: pointer;
   margin: 0;
   ${({ placeholder }) => css`

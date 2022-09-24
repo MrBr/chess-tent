@@ -86,6 +86,7 @@ const { className } = css`
       left: 0px;
       top: 0px;
     }
+
     > div > * {
       margin-bottom: 24px;
     }
@@ -116,6 +117,10 @@ const { className } = css`
 
     .editor-sidebar {
       padding-left: 12px;
+
+      > div {
+        position: relative;
+      }
     }
 
     .editor-navigation {

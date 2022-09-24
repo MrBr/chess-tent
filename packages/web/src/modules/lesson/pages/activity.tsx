@@ -2,6 +2,7 @@ import React from 'react';
 import { components, hooks, requests, ui } from '@application';
 import { ApiStatus } from '@types';
 import { isLesson, LessonActivity, TYPE_ACTIVITY } from '@chess-tent/models';
+import { isMobile } from 'react-device-detect';
 import Activity from '../components/activity';
 import ActivitySettingsCoach from '../components/activity-settings-coach';
 import ActivitySettingsStudent from '../components/activity-settings-student';
@@ -99,9 +100,11 @@ const PageActivity = () => {
     <Header className="border-bottom">
       <Col>
         <Breadcrumbs>
-          <Breadcrumbs.Item className="d-none d-sm-inline-block">
-            {activity.title || 'Untitled'}
-          </Breadcrumbs.Item>
+          {isMobile ? (
+            <Breadcrumbs.Item href="/">Back</Breadcrumbs.Item>
+          ) : (
+            <Breadcrumbs.Item>{activity.title || 'Untitled'}</Breadcrumbs.Item>
+          )}
         </Breadcrumbs>
       </Col>
       <Col>

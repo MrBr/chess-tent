@@ -56,6 +56,11 @@ const { className } = css`
   height: 100%;
 
   ${mobileCss`
+    .playground-board {
+      padding: 25px 0px;
+      min-height: 100vw;
+    }
+    
     .playground-sidebar {
       overflow-y: unset;
     }
@@ -66,7 +71,7 @@ const { className } = css`
       bottom: 0;
     }
 
-    grid-template-rows: 10px 75% auto min-content auto;
+    grid-template-rows: 10px min-content auto min-content auto;
     grid-template-columns: 1fr;
     grid-template-areas:
     'stepper'

@@ -25,6 +25,7 @@ import {
   isElementInViewport,
   isInputTypeElement,
   createKeyboardNavigationHandler,
+  getFileImageDimensions,
 } from './html';
 
 application.utils.generateIndex = uuid;
@@ -33,6 +34,7 @@ application.utils.rightMouse = rightMouse;
 application.utils.stopPropagation = stopPropagation;
 application.utils.isElementInViewport = isElementInViewport;
 application.utils.isInputTypeElement = isInputTypeElement;
+application.utils.getFileImageDimensions = getFileImageDimensions;
 application.utils.createKeyboardNavigationHandler =
   createKeyboardNavigationHandler;
 

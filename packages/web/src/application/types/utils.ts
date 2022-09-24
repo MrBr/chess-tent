@@ -13,6 +13,9 @@ export type Utils = {
   stopPropagation: ReactEventHandler;
   isElementInViewport: (el: HTMLElement) => boolean;
   isInputTypeElement: (el: Element) => boolean;
+  getFileImageDimensions: (
+    file: File,
+  ) => Promise<{ width: number; height: number }>;
   createKeyboardNavigationHandler: (
     prev: () => void,
     next: () => void,

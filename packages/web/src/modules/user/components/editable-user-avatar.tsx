@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { css } from '@chess-tent/styled-props';
-import { components, hoc, hooks, requests, ui } from '@application';
+import { components, hoc, hooks, requests, ui, utils } from '@application';
 import { updateSubject } from '@chess-tent/models';
 import { FileUploaderProps } from '@types';
 
@@ -8,6 +8,7 @@ const { UserAvatar } = components;
 const { Icon, Spinner } = ui;
 const { withFiles } = hoc;
 const { useApi, useActiveUserRecord } = hooks;
+const { getFileImageDimensions } = utils;
 
 interface EditableUserAvatarProps extends FileUploaderProps {}
 
@@ -47,9 +48,17 @@ const EditableUserAvatar = withFiles<EditableUserAvatarProps>(
       if (files.length === 0) {
         return;
       }
-      signImage({
-        contentType: files[0].type,
-        key: user.id,
+      getFileImageDimensions(files[0]).then(({ width, height }) => {
+        if (width !== height) {
+          alert(
+            'Please select square image (width and height must be the same).',
+          );
+          return;
+        }
+        signImage({
+          contentType: files[0].type,
+          key: user.id,
+        });
       });
     }, [files, signImage, user.id]);
 

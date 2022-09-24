@@ -37,3 +37,39 @@ export const isElementInViewport = (el: HTMLElement) => {
         document.documentElement.clientWidth) /* or $(window).width() */
   );
 };
+
+export const getFileImageDimensions = (
+  file: File,
+): Promise<{ width: number; height: number }> => {
+  return new Promise((resolve, reject) => {
+    if (file.type.search('image') < -1) {
+      reject();
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+
+    reader.onload = e => {
+      if (!e.target?.result) {
+        reject();
+        return;
+      }
+
+      const image = new Image();
+      image.src = e.target.result as string;
+
+      image.onload = () => {
+        if (!image?.height || !image?.width) {
+          reject();
+          return;
+        }
+        const { width, height } = image;
+        resolve({
+          width,
+          height,
+        });
+      };
+    };
+  });
+};

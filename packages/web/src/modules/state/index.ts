@@ -16,7 +16,7 @@ application.register(
     application.state.registerReducer = registerReducer;
     application.state.registerMiddleware = registerMiddleware;
     application.state.middleware = middleware;
-    process.env.NODE_ENV === 'development' && registerMiddleware(logger);
+    // process.env.NODE_ENV === 'development' && registerMiddleware(logger);
     registerMiddleware(batchDispatchMiddleware);
     registerMiddleware(syncMiddleware);
   },

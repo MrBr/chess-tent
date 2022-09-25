@@ -1,15 +1,7 @@
-export interface RTC_CONSTRAINTS {
-  audio: boolean;
-  video?: {};
-}
-
-export const DEFAULT_CONSTRAINTS_DESKTOP = {
+export const DEFAULT_CONSTRAINTS = {
   video: {
     facingMode: 'user',
   },
-  audio: true,
-};
-export const DEFAULT_CONSTRAINTS_MOBILE = {
   audio: true,
 };
 export const DEFAULT_ICE_SERVERS = [

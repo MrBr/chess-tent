@@ -1,20 +1,19 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, RefCallback } from 'react';
 import styled from '@chess-tent/styled-props';
-import { isMobile } from 'react-device-detect';
-
 import useDraggable from '../hooks/useDraggable';
 
 export interface RTCVideoProps {
   mediaStream?: MediaStream;
   muted?: boolean;
   className?: string;
-  preview?: boolean;
+  containerRef?: RefCallback<HTMLDivElement>;
+  draggable?: boolean;
 }
 
 const RTCVideo = styled<RTCVideoProps>(props => {
-  const { mediaStream, muted, className, preview } = props;
+  const { mediaStream, muted, className, draggable } = props;
   const videoRef = useRef<HTMLVideoElement>(null);
-  const containerRef = useDraggable(!preview);
+  const containerRef = useDraggable(!!draggable);
 
   useEffect(() => {
     if (!videoRef.current) {
@@ -33,18 +32,12 @@ const RTCVideo = styled<RTCVideoProps>(props => {
 
   return (
     <div className={className} ref={containerRef}>
-      <video
-        autoPlay
-        muted={muted}
-        ref={videoRef}
-        webkit-playsinline
-        playsInline
-      />
+      <video autoPlay muted={muted} ref={videoRef} playsInline />
     </div>
   );
 }).css`
-  width: ${isMobile ? 0 : '115px'};
-  height: ${isMobile ? 0 : '115px'};
+  width: 115px;
+  height: 115px;
   max-width: 115px;
   border-radius: 10px;
   overflow: hidden;
@@ -61,5 +54,9 @@ const RTCVideo = styled<RTCVideoProps>(props => {
     zoom: 1.3;
   }
 `;
+
+RTCVideo.defaultProps = {
+  draggable: true,
+};
 
 export default RTCVideo;

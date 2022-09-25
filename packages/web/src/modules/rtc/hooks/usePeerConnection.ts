@@ -16,6 +16,7 @@ export const usePeerConnection = (
   room: string,
   fromUserId: string,
   toUserId: string,
+  polite: boolean,
 ) => {
   const [remoteMediaStream, setRemoteMediaStream] = useState<MediaStream>();
   const { iceServers, localMediaStream } = useConferencingContext();
@@ -30,14 +31,12 @@ export const usePeerConnection = (
       (trackEvent?: RTCTrackEvent) => {
         setRemoteMediaStream(trackEvent?.streams[0]);
       },
+      polite,
     );
-  }, [fromUserId, iceServers, room, toUserId]);
+  }, [fromUserId, iceServers, polite, room, toUserId]);
 
   // Setup RTC tracks once the local media stream is up
   useEffect(() => {
-    if (!localMediaStream) {
-      return;
-    }
     rtcController.setMediaStream(localMediaStream);
   }, [rtcController, localMediaStream]);
 

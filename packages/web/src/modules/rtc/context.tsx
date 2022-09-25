@@ -1,10 +1,8 @@
 import { createContext, useContext } from 'react';
 
-import { DEFAULT_ICE_SERVERS, RTC_CONSTRAINTS } from './constants';
-
 export interface ConferencingContextType {
-  mediaConstraints: RTC_CONSTRAINTS;
-  iceServers: typeof DEFAULT_ICE_SERVERS;
+  mediaConstraints: MediaStreamConstraints;
+  iceServers: RTCIceServer[];
   localMediaStream?: MediaStream;
   connectionStarted?: boolean;
   mutedAudio?: boolean;

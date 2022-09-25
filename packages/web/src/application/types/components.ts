@@ -360,6 +360,7 @@ export type Components = {
     fromUserId: string;
     toUserId: string;
     room: string;
+    polite: boolean;
   }>;
   App: ComponentType;
   MobileRoot: ComponentType;

@@ -36,10 +36,11 @@ export class RTCController {
   private room: string;
   private fromUserId: string;
   private toUserId: string;
+  private polite: boolean;
   private rtcConfig: RTCConfiguration;
   // @ts-ignore - will be created in the constructor
   private rtcPeerConnection: RTCPeerConnection;
-  private mediaStream: MediaStream | null;
+  private mediaStream: MediaStream | null | undefined;
   private handleTrack: (track?: RTCTrackEvent) => void;
 
   constructor(
@@ -48,10 +49,12 @@ export class RTCController {
     fromUserId: string,
     toUserId: string,
     handleTrack: (track?: RTCTrackEvent) => void,
+    polite: boolean,
   ) {
     this.room = room;
     this.fromUserId = fromUserId;
     this.toUserId = toUserId;
+    this.polite = polite;
     this.rtcConfig = rtcConfig;
     this.handleTrack = handleTrack;
 
@@ -59,44 +62,32 @@ export class RTCController {
     this.createRTCPeerConnection();
   }
 
-  setMediaStream(mediaStream: MediaStream) {
+  setMediaStream(mediaStream?: MediaStream) {
     this.mediaStream = mediaStream;
     this.syncRTCPeerConnectionTracks();
   }
 
   syncRTCPeerConnectionTracks() {
+    this.rtcPeerConnection
+      .getSenders()
+      .forEach(sender => this.rtcPeerConnection.removeTrack(sender));
+
     if (!this.mediaStream) {
       this.handleTrack();
-      this.rtcPeerConnection
-        .getSenders()
-        .forEach(track => this.rtcPeerConnection.removeTrack(track));
       return;
     }
-    this.mediaStream
-      .getTracks()
-      .forEach(mediaStreamTrack =>
-        this.rtcPeerConnection.addTrack(
-          mediaStreamTrack,
-          this.mediaStream as MediaStream,
-        ),
+
+    this.mediaStream.getTracks().forEach(mediaStreamTrack => {
+      this.rtcPeerConnection.addTrack(
+        mediaStreamTrack,
+        this.mediaStream as MediaStream,
       );
+    });
   }
 
   createRTCPeerConnection() {
-    // Remove old listeners
-    this.rtcPeerConnection?.removeEventListener(
-      'icecandidate',
-      this.handleOnIceEvent,
-    );
-    this.rtcPeerConnection?.addEventListener(
-      'negotiationneeded',
-      this.handleOnNegotiationNeeded,
-    );
-    this.rtcPeerConnection?.removeEventListener('track', this.handleTrack);
-    this.rtcPeerConnection?.removeEventListener(
-      'connectionstatechange',
-      this.handleConnectionStatusChange,
-    );
+    // @ts-ignore
+    delete this.rtcPeerConnection;
 
     this.rtcPeerConnection = new RTCPeerConnection(this.rtcConfig);
 
@@ -124,6 +115,11 @@ export class RTCController {
         offerToReceiveAudio: true,
         offerToReceiveVideo: true,
       });
+      // Because createOffer is async this check is done after it's resolved to prevent
+      // condition race
+      if (this.rtcPeerConnection.signalingState !== 'stable') {
+        return;
+      }
       await this.rtcPeerConnection.setLocalDescription(offer);
 
       if (!this.rtcPeerConnection.localDescription) {
@@ -132,7 +128,12 @@ export class RTCController {
 
       this.emmitOffer(this.rtcPeerConnection.localDescription);
     } catch (error) {
-      console.error(error);
+      if (this.rtcPeerConnection.signalingState === 'have-remote-offer') {
+        const answer = await this.rtcPeerConnection.createAnswer();
+        await this.rtcPeerConnection.setLocalDescription(answer);
+      } else {
+        console.log(error);
+      }
     }
   }
 
@@ -178,33 +179,41 @@ export class RTCController {
 
   // Signaling server listeners
   handleOffer = async (message: RTCSessionDescriptionInit) => {
-    if (
-      this.rtcPeerConnection.signalingState === 'stable' ||
-      this.rtcPeerConnection.signalingState === 'closed'
-    ) {
-      // Not trying to recover existing RTCPeerConnection after interruption.
-      // Creating new makes better user experience.
-      this.createRTCPeerConnection();
+    if (this.rtcPeerConnection.signalingState !== 'stable' && !this.polite) {
+      if (
+        this.rtcPeerConnection.signalingState === 'have-local-offer' &&
+        this.rtcPeerConnection.localDescription
+      ) {
+        this.emmitOffer(this.rtcPeerConnection.localDescription);
+      }
+      return;
     }
+    try {
+      if (this.rtcPeerConnection.signalingState !== 'stable') {
+        await this.rtcPeerConnection.setLocalDescription({ type: 'rollback' });
+      }
+      await this.rtcPeerConnection.setRemoteDescription(message);
 
-    await this.rtcPeerConnection.setRemoteDescription(message);
-    const answer = await this.rtcPeerConnection.createAnswer();
+      const answer = await this.rtcPeerConnection.createAnswer();
 
-    await this.rtcPeerConnection.setLocalDescription(answer);
+      await this.rtcPeerConnection.setLocalDescription(answer);
+    } catch (e) {
+      console.log(e);
+    }
     if (!this.rtcPeerConnection.localDescription) {
       throw new Error('Failed to set local description');
     }
     this.emmitAnswer(this.rtcPeerConnection.localDescription);
   };
 
-  handleAnswer = (message: RTCSessionDescriptionInit) => {
-    this.rtcPeerConnection.setRemoteDescription(message);
+  handleAnswer = async (message: RTCSessionDescriptionInit) => {
+    await this.rtcPeerConnection.setRemoteDescription(message);
   };
 
-  handleICECandidate = (message: string) => {
+  handleICECandidate = async (message: string) => {
     const candidate = JSON.parse(message);
 
-    this.rtcPeerConnection.addIceCandidate(candidate);
+    await this.rtcPeerConnection.addIceCandidate(candidate);
   };
 
   // RTC listeners

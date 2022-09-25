@@ -1,13 +1,9 @@
-import React, { useCallback, useState, useMemo, useEffect } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { components, hooks, ui, utils } from '@application';
 import { Components } from '@types';
 import { isMobile } from 'react-device-detect';
 
-import {
-  DEFAULT_CONSTRAINTS_DESKTOP,
-  DEFAULT_CONSTRAINTS_MOBILE,
-  DEFAULT_ICE_SERVERS,
-} from '../constants';
+import { DEFAULT_CONSTRAINTS, DEFAULT_ICE_SERVERS } from '../constants';
 
 import ConferencingPeer from './conferencing-peer';
 import RTCVideo from './rtc-video';
@@ -21,13 +17,11 @@ const { noop } = utils;
 const ConferencingProvider: Components['ConferencingProvider'] = ({ room }) => {
   const [showConfMenu, setShowConfMenu] = useState(false);
   const [state, setState] = useState<ConferencingContextType>({
-    mutedVideo: false,
+    mutedVideo: isMobile,
     mutedAudio: false,
     connectionStarted: false,
     iceServers: DEFAULT_ICE_SERVERS,
-    mediaConstraints: isMobile
-      ? DEFAULT_CONSTRAINTS_MOBILE
-      : DEFAULT_CONSTRAINTS_DESKTOP,
+    mediaConstraints: DEFAULT_CONSTRAINTS,
   });
   const { value: user } = useActiveUserRecord();
   const {
@@ -38,11 +32,7 @@ const ConferencingProvider: Components['ConferencingProvider'] = ({ room }) => {
     connectionStarted,
   } = state;
   const liveUsers = useSocketRoomUsers(room);
-
-  const remoteUsers = useMemo(
-    () => liveUsers.filter(({ id }) => id !== user.id),
-    [liveUsers, user.id],
-  );
+  const currentUserIndex = liveUsers.findIndex(({ id }) => id === user.id);
 
   // Close media tracks on unmount
   useEffect(
@@ -50,11 +40,17 @@ const ConferencingProvider: Components['ConferencingProvider'] = ({ room }) => {
     [localMediaStream],
   );
 
+  useEffect(() => {
+    localMediaStream?.getAudioTracks().forEach(audioTrack => {
+      audioTrack.enabled = !mutedAudio;
+    });
+    localMediaStream?.getVideoTracks().forEach(videoTrack => {
+      videoTrack.enabled = !mutedVideo;
+    });
+  }, [localMediaStream, mutedAudio, mutedVideo]);
+
   const openCamera = useCallback(async () => {
     try {
-      if (localMediaStream) {
-        return;
-      }
       const mediaStream = await navigator.mediaDevices.getUserMedia(
         mediaConstraints,
       );
@@ -66,7 +62,7 @@ const ConferencingProvider: Components['ConferencingProvider'] = ({ room }) => {
     } catch (error) {
       console.error('getUserMedia Error: ', error);
     }
-  }, [mediaConstraints, setState, localMediaStream]);
+  }, [mediaConstraints]);
 
   const handleStartConferencing = useCallback(() => {
     setState(pevState => ({
@@ -82,46 +78,42 @@ const ConferencingProvider: Components['ConferencingProvider'] = ({ room }) => {
       ...pevState,
       localMediaStream: undefined,
       connectionStarted: false,
-      mutedAudio: false,
-      mutedVideo: false,
     }));
   }, [setState, localMediaStream]);
 
   const handleMuteUnmute = useCallback(() => {
-    localMediaStream?.getAudioTracks().forEach(audioTrack => {
-      audioTrack.enabled = !!mutedAudio;
-    });
-
     setState(pevState => ({
       ...pevState,
       mutedAudio: !mutedAudio,
     }));
-  }, [setState, localMediaStream, mutedAudio]);
+  }, [setState, mutedAudio]);
 
   const handleToggleCamera = useCallback(() => {
-    localMediaStream?.getVideoTracks().forEach(videoTrack => {
-      videoTrack.enabled = !!mutedVideo;
-    });
-
     setState(pevState => ({
       ...pevState,
       mutedVideo: !mutedVideo,
     }));
-  }, [localMediaStream, mutedVideo]);
+  }, [mutedVideo]);
 
   const toggleShowConfMenu = useCallback(() => {
     setShowConfMenu(prevVal => !prevVal);
   }, [setShowConfMenu]);
 
   useEffect(() => {
-    if (showConfMenu && !connectionStarted) {
+    if (!localMediaStream && showConfMenu && !connectionStarted) {
       openCamera();
     }
 
     if (!showConfMenu && !connectionStarted) {
       handleStopConferencing();
     }
-  }, [showConfMenu, handleStopConferencing, openCamera, connectionStarted]);
+  }, [
+    showConfMenu,
+    handleStopConferencing,
+    openCamera,
+    connectionStarted,
+    localMediaStream,
+  ]);
 
   return (
     <ConferencingContext.Provider value={state}>
@@ -179,7 +171,7 @@ const ConferencingProvider: Components['ConferencingProvider'] = ({ room }) => {
                     mediaStream={localMediaStream}
                     muted
                     className="position-relative mt-3"
-                    preview
+                    draggable={false}
                   />
                 </>
               )}
@@ -209,15 +201,19 @@ const ConferencingProvider: Components['ConferencingProvider'] = ({ room }) => {
               </Absolute>
 
               {localMediaStream &&
-                remoteUsers.map(({ id }, index) => (
-                  <Absolute left={60 * (index + 1)} key={id}>
-                    <ConferencingPeer
-                      room={room}
-                      fromUserId={id}
-                      toUserId={user.id as string}
-                    />
-                  </Absolute>
-                ))}
+                liveUsers.map(
+                  ({ id }, index) =>
+                    id !== user.id && (
+                      <Absolute left={60 * (index + 1)} key={id}>
+                        <ConferencingPeer
+                          room={room}
+                          fromUserId={id}
+                          toUserId={user.id as string}
+                          polite={index > currentUserIndex}
+                        />
+                      </Absolute>
+                    ),
+                )}
             </div>
           </Col>
         )}

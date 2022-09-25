@@ -101,7 +101,7 @@ const PageProfile = ({
     >
       {conversationOffset}
       <Page.Body className="py-4">
-        <AlertPublicProfile />
+        <AlertPublicProfile user={user} />
         <Headline4 className="mb-0">
           <Text inherit color="secondary">
             {user.state.fideTitle}

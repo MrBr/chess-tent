@@ -84,7 +84,7 @@ const EditUserPage = ({ user }: { user: User }) => {
           }
         >
           <Page.Body className="py-4">
-            <AlertPublicProfile />
+            <AlertPublicProfile user={user} />
             <Headline5 className="mb-3">Profile</Headline5>
             <Headline6>Basic</Headline6>
             <Row className="mt-2">
@@ -137,7 +137,7 @@ const EditUserPage = ({ user }: { user: User }) => {
             <Row className="mb-4">
               <Col>
                 <FormGroup>
-                  <Label>Elo</Label>
+                  <Label>Approximate Elo</Label>
                   <Form.Input name="state.elo" type="number" />
                 </FormGroup>
               </Col>

@@ -39,7 +39,9 @@ const UserSettings: Components['UserSettings'] = ({ label }) => {
         </Dropdown.Item>
         {user.coach && (
           <Dropdown.Item>
-            <Text onClick={() => history.push('/me/students')}>Students</Text>
+            <Text className="mb-0" onClick={() => history.push('/me/students')}>
+              Students
+            </Text>
           </Dropdown.Item>
         )}
         <Dropdown.Item>

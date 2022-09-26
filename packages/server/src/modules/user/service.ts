@@ -101,6 +101,10 @@ export const findCoaches = (
     UserModel.find(query)
       // .limit()
       // .skip()
+      .sort([
+        ['state.lastActivity', -1],
+        ['_id', 1],
+      ])
       .exec((err, result) => {
         if (err) {
           reject(err);

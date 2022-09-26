@@ -93,16 +93,16 @@ export const verifyUser: MiddlewareFunction = async (req, res, next) => {
       '+password',
     );
 
-    if (!user?.active) {
-      throw new AccountNotActivatedError();
-    }
-
     const authorized = user
       ? await validateUserPassword(res.locals.user, user.password as string)
       : false;
 
     if (!authorized) {
       throw new LoginFailedError();
+    }
+
+    if (!user?.active) {
+      throw new AccountNotActivatedError();
     }
 
     delete user.password;

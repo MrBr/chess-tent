@@ -69,6 +69,10 @@ const color = styled.props.color.css`
     color: var(--light-color);
   }
 
+  &.error {
+    color: var(--error-color);
+  }
+
   color: var(--grey-800-color);
 `;
 

@@ -15,15 +15,11 @@ const LoginSchema = yup.object().shape({
 });
 
 const PageLogin = () => {
-  const { fetch, loading, response } = useApi(requests.login);
+  const { fetch, loading, response, error } = useApi(requests.login);
   const record = hooks.useActiveUserRecord(null);
   const { value: user, update: updateUser } = record;
 
   useEffect(() => {
-    if (response?.error) {
-      alert('Login failed');
-      return;
-    }
     if (response?.data) {
       updateUser(response.data);
     }
@@ -69,6 +65,11 @@ const PageLogin = () => {
                 placeholder="Password"
               />
             </FormGroup>
+            {error && (
+              <Text color="error" className="mt-2" weight={400}>
+                {error}
+              </Text>
+            )}
             <FormGroup className="w-100 mt-4">
               <Button stretch type="submit" disabled={loading} className="mb-3">
                 Sign in

@@ -126,7 +126,14 @@ export type TextProps = {
   inherit?: boolean;
   fontSize?: FontSize;
   align?: 'center' | 'left' | 'right';
-  color?: 'primary' | 'secondary' | 'grey' | 'inherit' | 'light' | 'black';
+  color?:
+    | 'primary'
+    | 'secondary'
+    | 'grey'
+    | 'inherit'
+    | 'light'
+    | 'black'
+    | 'error';
 
   onClick?: ReactEventHandler;
   onPaste?: ReactEventHandler;

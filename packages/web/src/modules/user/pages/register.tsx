@@ -20,6 +20,9 @@ const SignupSchema = yup.object().shape({
   coach: yup.boolean(),
 });
 
+const resolveFlow = (flow: RegisterOptions['flow'], coach?: boolean) => {
+  return flow || (coach ? 'teach' : 'student');
+};
 const PageRegister = () => {
   const { fetch, loading, response, error } = useApi(requests.register);
 
@@ -31,9 +34,14 @@ const PageRegister = () => {
   useEffect(() => {
     if (response && !error) {
       update(response.data);
-      history.replace('/');
+      history.replace('/', {
+        from: `/${history.location.pathname}?flow=${resolveFlow(
+          flow,
+          response.data.coach,
+        )}`,
+      });
     }
-  }, [response, error, history, update]);
+  }, [response, error, history, update, flow]);
 
   const handleSubmit = ({ ...user }) => {
     fetch({
@@ -55,8 +63,7 @@ const PageRegister = () => {
       onSubmit={handleSubmit}
     >
       {({ setFieldValue, values }) => {
-        const content =
-          registrationFlows[flow || (values['coach'] ? 'teach' : 'student')];
+        const content = registrationFlows[resolveFlow(flow, values['coach'])];
         return (
           <AuthPage tips={<RegistrationTips {...content.tips} />}>
             <RegistrationHeader

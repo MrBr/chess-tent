@@ -25,9 +25,7 @@ export const useActiveUserRecord = (fallback => {
 export const useInviteUser = () => {
   const { value: activeUser } = useActiveUserRecord();
 
-  const link = `${APP_DOMAIN}/register?referrer=${activeUser.id}?flow=${
-    activeUser.coach ? 'teach' : 'student'
-  }`;
+  const link = `${APP_DOMAIN}/register?referrer=${activeUser.id}`;
   const title = activeUser.coach ? 'Invite student' : 'Invite friend';
   const description = activeUser.coach
     ? 'Copy the link and share it with your students. The students will have to create their own accounts and they will be added to your student list automatically.'

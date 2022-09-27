@@ -424,7 +424,7 @@ export type UI = {
     left?: number;
     zIndex?: number;
   }>;
-  Dot: UIComponent;
+  Dot: UIComponent<{ variant?: 'neutral'; size?: 'small' }>;
   Line: UIComponent;
   LoadMore: UIComponent<LoadMoreProps>;
   Spinner: UIComponent<SpinnerProps>;

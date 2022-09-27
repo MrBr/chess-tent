@@ -62,6 +62,10 @@ const Icon = styled<IconProps>(
     color: var(--grey-700-color);
   }
   
+  &.light {
+    color: var(--light-color);
+  }
+  
   &.large {
     width: 36px;
     height: 36px;

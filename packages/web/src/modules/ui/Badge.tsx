@@ -8,7 +8,8 @@ const Badge: UI['Badge'] = styled(BBadge).bg.circle.css`
   padding: 0.5rem;
   color: inherit !important;
   background-color: var(--grey-300-color) !important;
-  font-weight: 300;
+  font-weight: 400;
+  font-size: 14px;
   
   &.circle {
     display: flex;
@@ -34,6 +35,11 @@ const Badge: UI['Badge'] = styled(BBadge).bg.circle.css`
   &.bg {
     background-color: var(--bg-color) !important;
     color: var(--black-color) !important;
+  }
+  
+  &.success {
+    background-color: var(--success-color) !important;
+    color: var(--light-color) !important;
   }
 `;
 

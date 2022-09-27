@@ -172,9 +172,9 @@ export const sendMessageNotificationViaEmail = async (
   await sendMail({
     from: 'Chess Tent <noreply@chesstent.com>',
     to: user.email,
-    subject: 'New message',
+    subject: `Conversation - ${sender.name}`,
     html: `<p>Hey ${user.name},</p>
-      <p>You've received a new message from ${sender.name}.</p>
+      <p>You've received a new message from <b>${sender.name}</b>:</p>
       <p><i>${message}</i></p>
       <p>You can see the full conversation at <a href="${
         process.env.APP_DOMAIN

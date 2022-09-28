@@ -143,6 +143,8 @@ class EvaluationEngine extends React.Component<EvaluationEngineProps> {
 
   sync = () => {
     const { position, evaluate, depth, lines } = this.props;
+    // If not stopped here it continues evaluating old positions
+    this.worker.postMessage('stop');
     this.worker.postMessage('ucinewgame');
     this.worker.postMessage(`position fen ${position}`);
     this.worker.postMessage(`setoption name MultiPV value ${lines}`);

@@ -515,7 +515,7 @@ export const LandingPage = () => {
                   thanks for the chessground.
                 </Text>
                 <Text fontSize="base" weight={700}>
-                  <a href="https://lichess.com">Lichess</a>
+                  <a href="https://lichess.org">Lichess</a>
                 </Text>
                 <Text fontSize="small">Free gaming platform</Text>
               </div>

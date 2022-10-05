@@ -12,8 +12,8 @@ const pop: MF<(meta?: Partial<{}>) => void> =
     console.warn('Record collection pop not implemented');
   };
 const concat: MF<(items: any[], meta?: Partial<{}>) => void> =
-  (recordKey: string) => (store: MiddlewareAPI) => () => items => {
-    store.dispatch(concatRecordAction(recordKey, items));
+  (recordKey: string) => (store: MiddlewareAPI) => () => (items, meta) => {
+    store.dispatch(concatRecordAction(recordKey, items, meta));
   };
 
 const collectionRecipe = {

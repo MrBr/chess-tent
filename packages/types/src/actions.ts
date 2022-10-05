@@ -9,12 +9,10 @@ import {
   NormalizedUser,
   Subject,
   NormalizedTag,
-  Notification,
   NormalizedNotification,
   NormalizedMentorship,
   NormalizedEntity,
   ReversiblePatch,
-  User,
 } from '@chess-tent/models';
 
 export const RESET_STATE = 'RESET_STATE';
@@ -25,9 +23,6 @@ export const DELETE_ENTITY = 'DELETE_ENTITY';
 
 export const SYNC_ACTION = 'SYNC_ACTION';
 
-export const ROOM_USERS_ACTION = 'ROOM_USERS_ACTION';
-
-export const SEND_NOTIFICATION = 'SEND_NOTIFICATION';
 export const SEND_MESSAGE = 'SEND_MESSAGE';
 export const SEND_PATCH = 'SEND_PATCH';
 
@@ -139,16 +134,6 @@ export type MessageAction = SendMessageAction;
 export type ConversationAction = UpdateEntitiesAction | SendMessageAction;
 
 /**
- * Notification
- */
-export type SendNotificationAction = Action<
-  typeof SEND_NOTIFICATION,
-  Notification
->;
-
-export type NotificationAction = UpdateEntitiesAction | SendNotificationAction;
-
-/**
  * Patch
  */
 export type SendPatchAction = Action<
@@ -161,17 +146,6 @@ export type SendPatchAction = Action<
 >;
 
 export type PatchAction = SendPatchAction;
-
-/**
- * Socket actions
- */
-export type RoomUsersAction = Action<
-  typeof ROOM_USERS_ACTION,
-  User['id'][],
-  { room: string }
->;
-
-export type SocketAction = RoomUsersAction;
 
 type SenderReceiverBase<T> = {
   fromUserId: string;
@@ -208,10 +182,8 @@ export type Actions =
   | UpdateEntitiesAction
   | PatchAction
   | MessageAction
-  | NotificationAction
   | ConversationAction
   | LessonAction
   | UserAction
-  | SocketAction
   | ActivityAction<any>
   | ConferencingAction;

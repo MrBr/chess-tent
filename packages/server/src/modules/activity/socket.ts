@@ -1,14 +1,13 @@
 import { action, socket } from '@application';
 import {
   ACTION_EVENT,
-  ROOM_USERS_ACTION,
   SEND_PATCH,
   SUBSCRIBE_EVENT,
   UNSUBSCRIBED_EVENT,
 } from '@chess-tent/types';
 import { TYPE_ACTIVITY } from '@chess-tent/models';
+import { PUSH_RECORD, UPDATE_RECORD } from '@chess-tent/redux-record';
 import { canEditActivity, getActivity } from './service';
-import { PUSH_RECORD } from '@chess-tent/redux-record';
 
 socket.registerMiddleware(async (stream, next) => {
   // Handle activity channel subscription
@@ -56,14 +55,7 @@ socket.registerMiddleware(async (stream, next) => {
         socket.sendServerAction(channel, sync, socketId);
       }
 
-      const users = socket.getRoomUsers(channel);
-      socket.sendServerAction(channel, {
-        type: PUSH_RECORD,
-        payload: {
-          value: users,
-        },
-        meta: { key: `room-${channel}-users` },
-      });
+      socket.dispatchRoomUsers(stream.data);
     }
   }
 

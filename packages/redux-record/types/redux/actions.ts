@@ -1,4 +1,3 @@
-import { RecordValue } from '../record';
 /**
  * Records are used to store a single entity
  * or a collection which have a domain meaning.
@@ -14,6 +13,7 @@ export type Action<T, P, M = {}> = {
 };
 
 export const UPDATE_RECORD_META = 'UPDATE_RECORD_META';
+export const INIT_RECORD = 'INIT_RECORD';
 export const UPDATE_RECORD = 'UPDATE_RECORD';
 export const PUSH_RECORD = 'PUSH_RECORD';
 export const CONCAT_RECORD = 'CONCAT_RECORD';
@@ -30,6 +30,11 @@ export type RecordUpdateMetaAction = Action<
 >;
 export type RecordUpdateAction<T, M extends {}> = Action<
   typeof UPDATE_RECORD,
+  { value: T; meta?: Partial<M> },
+  { key: string }
+>;
+export type RecordInitAction<T, M extends {}> = Action<
+  typeof INIT_RECORD,
   { value: T; meta?: Partial<M> },
   { key: string }
 >;
@@ -57,4 +62,5 @@ export type RecordAction =
   | RecordDeleteAction
   | RecordUpdateMetaAction
   | RecordPushAction<unknown, {}>
-  | RecordConcatAction<unknown, {}>;
+  | RecordConcatAction<unknown, {}>
+  | RecordInitAction<unknown, {}>;

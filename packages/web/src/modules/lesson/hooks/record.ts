@@ -11,6 +11,7 @@ const { isInitialized } = records;
 export const useLessons: Hooks['useLessons'] = (key: string, filters) => {
   const record = useRecordInit(lessons, key);
 
+  console.log(record.get());
   useEffect(() => {
     if (isInitialized(record)) {
       return;

@@ -17,9 +17,3 @@ application.register(
     application.hooks.useSocketActionListener = module.useSocketActionListener;
   },
 );
-application.register(
-  () => import('./state/middleware'),
-  module => {
-    application.state.registerMiddleware(module.middleware);
-  },
-);

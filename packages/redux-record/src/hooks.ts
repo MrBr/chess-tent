@@ -1,29 +1,38 @@
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import { useStore, useSelector } from 'react-redux';
-import { RecordHookReturn, RecordHookSafe, RecordWith } from '../types';
+import {
+  RecordBase,
+  RecordHookReturn,
+  RecordHookSafe,
+  RecordWith,
+} from '../types';
 
-const useRecordInit = <T extends RecordWith<any>>(
-  initRecord: T,
-  suffix: string,
-): RecordHookReturn<T> => {
-  // TODO - use selector to select record entry
+const useRecordInit = <T extends RecordBase>(
+  initRecord: RecordWith<T>,
+  recordKey: string,
+): RecordHookReturn<RecordWith<T>> => {
+  // TODO - implement more specific didChange
   useSelector(() => NaN);
   const store = useStore();
   const record = useMemo(
-    () => initRecord(suffix)(store),
-    [store, initRecord, suffix],
+    () => initRecord(recordKey)(store),
+    [store, initRecord, recordKey],
   );
+  useEffect(() => {
+    record.init();
+  }, [record]);
+  // TODO - improve uninitialized record case
   const { value, meta } = record.get();
   return {
     ...record,
     value,
     meta,
-  } as RecordHookReturn<T>;
+  } as RecordHookReturn<RecordWith<T>>;
 };
 
-const useRecordSafe = <T extends RecordWith<any>, U = void>(
-  ...args: [RecordHookReturn<T>, U?]
-): RecordHookSafe<T, U> => {
+const useRecordSafe = <T extends RecordBase, U = void>(
+  ...args: [RecordHookReturn<RecordWith<T>>, U?]
+): RecordHookSafe<RecordWith<T>, U> => {
   const [record, fallback] = args;
 
   if (args.length === 1 && record.value === undefined) {
@@ -34,10 +43,10 @@ const useRecordSafe = <T extends RecordWith<any>, U = void>(
     return {
       ...record,
       value: fallback,
-    } as RecordHookSafe<T, U>;
+    } as RecordHookSafe<RecordWith<T>, U>;
   }
 
-  return record as RecordHookSafe<T, never>;
+  return record as RecordHookSafe<RecordWith<T>, never>;
 };
 
 export { useRecordInit, useRecordSafe };

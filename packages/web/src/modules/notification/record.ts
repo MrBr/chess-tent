@@ -1,11 +1,12 @@
 import { records, requests } from '@application';
-import { Notification, TYPE_NOTIFICATION } from '@chess-tent/models';
+import { TYPE_NOTIFICATION } from '@chess-tent/models';
+import { ActiveUserNotificationsRecord } from '@types';
 
-const activeUserNotifications = records.createRecord(
-  records.withRecordBase<Notification[]>(),
-  records.withRecordCollection(),
-  records.withRecordDenormalizedCollection(TYPE_NOTIFICATION),
-  records.withRecordApiLoad(requests.notifications),
-);
+const activeUserNotifications =
+  records.createRecord<ActiveUserNotificationsRecord>({
+    ...records.collectionRecipe,
+    ...records.createApiRecipe(requests.notifications),
+    ...records.createDenormalizedCollectionRecipe(TYPE_NOTIFICATION),
+  });
 
 export { activeUserNotifications };

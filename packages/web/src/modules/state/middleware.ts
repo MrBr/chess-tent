@@ -1,7 +1,13 @@
-import { Middleware, Records, State, SYNC_ACTION } from '@types';
+import {
+  ActivityRecord,
+  Middleware,
+  Records,
+  State,
+  SYNC_ACTION,
+} from '@types';
 import { socket, utils, records } from '@application';
-import { TYPE_ACTIVITY } from '@chess-tent/models';
-import { InferRecord } from '@chess-tent/redux-record/types';
+import { LessonActivity, TYPE_ACTIVITY } from '@chess-tent/models';
+import { InferRecord, InitedRecord } from '@chess-tent/redux-record/types';
 
 export const middleware: State['middleware'] = [];
 
@@ -21,11 +27,15 @@ export const syncMiddleware: Middleware = store => next => action => {
       const record = records.getRecordInitByNamespace(type)(`${type}-${id}`)(
         store,
       );
+      record.init();
       if (entity.type === TYPE_ACTIVITY) {
-        (record as InferRecord<Records['activity']>).update(entity, {
-          loading: false,
-          loaded: true,
-        });
+        (record as InitedRecord<ActivityRecord<LessonActivity>>).update(
+          entity,
+          {
+            loading: false,
+            loaded: true,
+          },
+        );
       }
     }
     return;

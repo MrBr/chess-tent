@@ -7,6 +7,7 @@ import {
   PUSH_RECORD,
   UPDATE_RECORD_META,
   CONCAT_RECORD,
+  INIT_RECORD,
 } from '../../types';
 
 export const records: Reducer<RecordState, RecordAction> = (
@@ -14,6 +15,7 @@ export const records: Reducer<RecordState, RecordAction> = (
   action,
 ) => {
   switch (action.type) {
+    case INIT_RECORD:
     case UPDATE_RECORD: {
       return {
         ...state,

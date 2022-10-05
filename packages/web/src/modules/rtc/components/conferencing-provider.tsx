@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect } from 'react';
-import { components, hooks, ui, utils } from '@application';
+import { hooks, ui, utils } from '@application';
 import { Components } from '@types';
 import { isMobile } from 'react-device-detect';
 
@@ -9,9 +9,8 @@ import ConferencingPeer from './conferencing-peer';
 import RTCVideo from './rtc-video';
 import { ConferencingContextType, ConferencingContext } from '../context';
 
-const { Icon, Stack, Dropdown, Button, Row, Col, Absolute } = ui;
+const { Icon, Dropdown, Button, Row, Col, Absolute } = ui;
 const { useActiveUserRecord, useSocketRoomUsers } = hooks;
-const { UserAvatar } = components;
 const { noop } = utils;
 
 const ConferencingProvider: Components['ConferencingProvider'] = ({ room }) => {
@@ -215,15 +214,6 @@ const ConferencingProvider: Components['ConferencingProvider'] = ({ room }) => {
                     ),
                 )}
             </div>
-          </Col>
-        )}
-        {!isMobile && (
-          <Col className="col-auto position-relative">
-            <Stack>
-              {liveUsers.map(user => (
-                <UserAvatar key={user.id} user={user} size="small" />
-              ))}
-            </Stack>
           </Col>
         )}
       </Row>

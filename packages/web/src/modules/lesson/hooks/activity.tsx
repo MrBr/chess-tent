@@ -18,7 +18,6 @@ const { isInitialized } = records;
 
 export const useUserTrainings: Hooks['useUserTrainings'] = (user: User) => {
   const record = useRecordInit(userTrainings, `trainings-${user.id}`);
-
   const filters: ActivityFilters = useMemo(
     () => ({
       users: [user.id],

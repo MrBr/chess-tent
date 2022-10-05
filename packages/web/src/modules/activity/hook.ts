@@ -8,7 +8,10 @@ export const useActivity: Hooks['useActivity'] = <T extends Activity>(
   activityId: string,
 ): RecordHookReturn<Records<T>['activity']> => {
   const recordKey = `${TYPE_ACTIVITY}-${activityId}`;
-  const record = hooks.useRecordInit(records.activity, recordKey);
+  const record = hooks.useRecordInit(
+    records.activity as Records<T>['activity'],
+    recordKey,
+  );
 
   useEffect(() => {
     socket.subscribe(recordKey);

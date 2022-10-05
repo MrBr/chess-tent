@@ -11,20 +11,21 @@ export type GetRecordNormalizedValue<T extends RecordValue<any>> =
     : T extends {}
     ? RecordValueNormalizedSingle
     : RecordValueNormalized;
-
+export type UninitializedRecord = { value: undefined; meta: {} };
 export type RecordValue<V> = V | null | undefined;
 
-export type MF = (
+export type MF<
+  F extends (...args: any[]) => any,
+  R extends RecordBase = any,
+> = (
   recordKey: string,
-) => (store: MiddlewareAPI) => (record: {}) => {};
+) => (store: MiddlewareAPI) => (record: InitedRecord<R>) => F;
 
-export type RecordRecipe<U, T> = (
-  recordKey: string,
-) => (store: MiddlewareAPI) => (record: U) => U & T;
+export type InitRecord<T> = (recordKey: string) => (store: MiddlewareAPI) => T;
 
 export type RecordWith<T extends RecordBase> = (
   recordKey: string,
-) => (store: MiddlewareAPI) => T;
+) => (store: MiddlewareAPI) => InitedRecord<T>;
 
 export type RecordEntry<T, M extends {} = {}> = {
   value: RecordValue<T>;
@@ -73,62 +74,51 @@ export type InferRecordEntry<T extends RecordBase> = T extends RecordBase<
   ? RecordEntry<V, M>
   : never;
 
-export interface RecordBase<V = any, M extends {} = {}> {
+export type InitedRecord<T extends {}> = {
+  [Property in keyof T]: InferFunction<T[Property]>;
+};
+export type MFInitedRecord<T extends {}, R extends {}> = {
+  [Property in keyof T]: T[Property] extends (recordKey: string) => infer R1
+    ? R1 extends (store: MiddlewareAPI) => infer R2
+      ? R2 extends (record: any) => infer R3
+        ? (
+            recordKey: string,
+          ) => (store: MiddlewareAPI) => (record: InitedRecord<R>) => R3
+        : T[Property]
+      : T[Property]
+    : T[Property];
+};
+
+export interface RecordEntryType<V = any, M extends {} = {}> {
   // $entry is a placeholder property used to get a proper type inference in the methods
   // Objects aren't extended/inferred in a right way when encapsulated within method return
-  $entry: RecordEntry<V, M>;
-  get: () => this['$entry'];
-  update: (
-    value: RecordValue<V>,
-    meta?: Partial<this['$entry']['meta']>,
-  ) => void;
-  amend: (meta: Partial<this['$entry']['meta']>) => void;
-  reset: () => void;
+  $value: RecordValue<V>;
+  $meta: Partial<M>;
+  // Used to initialise record state
+  initialMeta: Partial<M>;
+  initialValue: RecordValue<V>;
 }
 
-export type RecordMeta<M extends {}> = {
-  recordKey: string;
-} & M;
+export interface RecordBase<V = any, M extends {} = {}>
+  extends RecordEntryType<V, M & { recordKey: string }> {
+  get: MF<() => RecordEntry<V, this['$meta']>>;
+  update: MF<(value: RecordValue<V>, meta?: this['$meta']) => void>;
+  amend: MF<(meta: this['$meta']) => void>;
+  reset: MF<() => void>;
+  init: MF<() => void, RecordBase>;
+}
 
-export declare function CreateRecord<T1, T2>(
-  f1: (recordKey: string) => (store: MiddlewareAPI) => (record: T1) => T2,
-): (recordKey: string) => (store: MiddlewareAPI) => T2;
-export declare function CreateRecord<T1, T2, T3>(
-  f1: (recordKey: string) => (store: MiddlewareAPI) => (record: T1) => T2,
-  f2: (recordKey: string) => (store: MiddlewareAPI) => (record: T2) => T3,
-): (recordKey: string) => (store: MiddlewareAPI) => T3;
-export declare function CreateRecord<T1, T2, T3, T4>(
-  f1: (recordKey: string) => (store: MiddlewareAPI) => (record: T1) => T2,
-  f2: (recordKey: string) => (store: MiddlewareAPI) => (record: T2) => T3,
-  f3: (recordKey: string) => (store: MiddlewareAPI) => (record: T3) => T4,
-): (recordKey: string) => (store: MiddlewareAPI) => T4;
-export declare function CreateRecord<T1, T2, T3, T4, T5>(
-  f1: (recordKey: string) => (store: MiddlewareAPI) => (record: T1) => T2,
-  f2: (recordKey: string) => (store: MiddlewareAPI) => (record: T2) => T3,
-  f3: (recordKey: string) => (store: MiddlewareAPI) => (record: T3) => T4,
-  f4: (recordKey: string) => (store: MiddlewareAPI) => (record: T4) => T5,
-): (recordKey: string) => (store: MiddlewareAPI) => T5;
-export declare function CreateRecord<T1, T2, T3, T4, T5, T6>(
-  f1: (recordKey: string) => (store: MiddlewareAPI) => (record: T1) => T2,
-  f2: (recordKey: string) => (store: MiddlewareAPI) => (record: T2) => T3,
-  f3: (recordKey: string) => (store: MiddlewareAPI) => (record: T3) => T4,
-  f4: (recordKey: string) => (store: MiddlewareAPI) => (record: T4) => T5,
-  f5: (recordKey: string) => (store: MiddlewareAPI) => (record: T5) => T6,
-): (recordKey: string) => (store: MiddlewareAPI) => T6;
-export declare function CreateRecord<T1, T2, T3, T4, T5, T6, T7>(
-  f1: (recordKey: string) => (store: MiddlewareAPI) => (record: T1) => T2,
-  f2: (recordKey: string) => (store: MiddlewareAPI) => (record: T2) => T3,
-  f3: (recordKey: string) => (store: MiddlewareAPI) => (record: T3) => T4,
-  f4: (recordKey: string) => (store: MiddlewareAPI) => (record: T4) => T5,
-  f: (recordKey: string) => (store: MiddlewareAPI) => (record: T5) => T6,
-  f6: (recordKey: string) => (store: MiddlewareAPI) => (record: T6) => T7,
-): (recordKey: string) => (store: MiddlewareAPI) => T7;
-export declare function CreateRecord<T1, T2, T3, T4, T5, T6, T7, T8>(
-  f1: (recordKey: string) => (store: MiddlewareAPI) => (record: T1) => T2,
-  f2: (recordKey: string) => (store: MiddlewareAPI) => (record: T2) => T3,
-  f3: (recordKey: string) => (store: MiddlewareAPI) => (record: T3) => T4,
-  f4: (recordKey: string) => (store: MiddlewareAPI) => (record: T4) => T5,
-  f: (recordKey: string) => (store: MiddlewareAPI) => (record: T5) => T6,
-  f6: (recordKey: string) => (store: MiddlewareAPI) => (record: T6) => T7,
-  f7: (recordKey: string) => (store: MiddlewareAPI) => (record: T7) => T8,
-): (recordKey: string) => (store: MiddlewareAPI) => T8;
+type InferFunction<T extends MF<any> | any> = T extends MF<infer R> ? R : T;
+
+export type CreateRecord = <R extends RecordBase<any, any>>(
+  descriptor: MFInitedRecord<
+    Required<Omit<R, keyof RecordBase>> & Partial<Pick<R, keyof RecordBase>>,
+    R
+  >,
+) => RecordWith<R>;
+
+export type RecordMeta<M extends {}> = Partial<
+  {
+    recordKey: string;
+  } & M
+>;

@@ -92,7 +92,7 @@ const sendAction = (channel: string, stream: ClientSocketStream) => {
   stream.client.in(channel).emit(ACTION_EVENT, stream.data);
 };
 
-const sendServerAction = (
+export const sendServerAction = (
   channel: string,
   action: Actions | RecordAction,
   toSocketId?: string,

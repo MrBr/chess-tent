@@ -1,45 +1,42 @@
 import { records, requests } from '@application';
+import { LessonActivity, TYPE_ACTIVITY, TYPE_LESSON } from '@chess-tent/models';
 import {
-  Lesson,
-  LessonActivity,
-  TYPE_ACTIVITY,
-  TYPE_LESSON,
-} from '@chess-tent/models';
+  ActiveUserLessonsRecord,
+  LessonRecord,
+  LessonsRecord,
+  StatusResponse,
+  UserTrainingsRecord,
+} from '@types';
+import { MF } from '@chess-tent/redux-record/types';
 import { RECORD_ACTIVE_USER_LESSONS_KEY } from './constants';
 
-const userTrainings = records.createRecord(
-  records.withRecordBase<LessonActivity[]>(),
-  records.withRecordCollection(),
-  records.withRecordDenormalizedCollection(TYPE_ACTIVITY),
-  records.withRecordApiLoad(requests.trainings),
-  records.withRecordMethod()(
-    'new',
-    () => () => record =>
-      async function (activity: LessonActivity) {
-        try {
-          await requests.activitySave(activity);
-          record.amend({ loading: true, loaded: false });
-        } finally {
-          record.push(activity);
-          record.amend({ loading: false, loaded: true });
-        }
-      },
-  ),
-);
+const newTraining: MF<(activity: LessonActivity) => Promise<void>> =
+  () => () => record =>
+    async function (activity: LessonActivity) {
+      try {
+        await requests.activitySave(activity);
+        record.amend({ loading: true, loaded: false });
+      } finally {
+        record.push(activity);
+        record.amend({ loading: false, loaded: true });
+      }
+    };
+const userTrainings = records.createRecord<UserTrainingsRecord>({
+  ...records.collectionRecipe,
+  ...records.createApiRecipe(requests.trainings),
+  ...records.createDenormalizedCollectionRecipe(TYPE_ACTIVITY),
+  new: newTraining,
+});
 
-const lessons = records.createRecord(
-  records.withRecordBase<Lesson[], {}>(),
-  records.withRecordCollection(),
-  records.withRecordDenormalizedCollection(TYPE_LESSON),
-  records.withRecordApiLoad(requests.lessons),
-);
+const lessons = records.createRecord<LessonsRecord>({
+  ...records.collectionRecipe,
+  ...records.createApiRecipe(requests.lessons),
+  ...records.createDenormalizedCollectionRecipe(TYPE_LESSON),
+});
 
-const lesson = records.createRecord(
-  records.withRecordBase<Lesson, { local?: boolean }>(),
-  records.withRecordDenormalized(TYPE_LESSON),
-  records.withRecordApiLoad(requests.lesson),
-  records.withRecordMethod()('create', () => store => record => async () => {
-    const lesson = record.get().value;
+const createLesson: MF<() => Promise<StatusResponse>, LessonRecord> =
+  () => store => record => async () => {
+    const lesson = record.get()?.value;
     if (!lesson) {
       throw new Error('Saving non-existing lesson');
     }
@@ -51,21 +48,25 @@ const lesson = records.createRecord(
     const myLessonsRecord = myLessons(RECORD_ACTIVE_USER_LESSONS_KEY)(store);
     const hasLesson = !!myLessonsRecord
       .get()
-      .value?.some(({ id }) => lesson.id === id);
+      ?.value?.some(({ id }) => lesson.id === id);
 
     if (!hasLesson) {
       myLessonsRecord.push(lesson);
     }
 
     return statusResponse;
-  }),
-);
+  };
+const lesson = records.createRecord<LessonRecord>({
+  ...records.collectionRecipe,
+  ...records.createDenormalizedRecipe(TYPE_LESSON),
+  ...records.createApiRecipe(requests.lesson),
+  create: createLesson,
+});
 
-const myLessons = records.createRecord(
-  records.withRecordBase<Lesson[], {}>(),
-  records.withRecordCollection(),
-  records.withRecordDenormalizedCollection(TYPE_LESSON),
-  records.withRecordApiLoad(requests.myLessons),
-);
+const myLessons = records.createRecord<ActiveUserLessonsRecord>({
+  ...records.collectionRecipe,
+  ...records.createDenormalizedCollectionRecipe(TYPE_LESSON),
+  ...records.createApiRecipe(requests.myLessons),
+});
 
 export { userTrainings, lessons, myLessons, lesson };

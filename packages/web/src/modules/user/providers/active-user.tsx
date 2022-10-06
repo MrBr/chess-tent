@@ -38,14 +38,14 @@ const Provider: ComponentType = ({ children }) => {
   }, [dispatch, response, updateActiveUser]);
 
   useEffect(() => {
-    if (user) {
+    if (user && response) {
       // Once logged in clear the state
       reset();
     }
   }, [user, response, reset]);
 
   if (!mounted || loading || (response && !user)) {
-    return <>Loading</>;
+    return <>Loading user</>;
   }
 
   if (user) {

@@ -23,12 +23,19 @@ export const useApi: Hooks['useApi'] = <T extends RequestFetch<any, any>>(
   });
 
   const fetch = useMemo(
-    () => withRequestHandler(request)(setApiRequestState),
+    () =>
+      withRequestHandler(request)((...args) => {
+        setApiRequestState(...args);
+      }),
     [request, setApiRequestState],
   );
 
   const reset = useCallback(() => {
-    setApiRequestState({ response: null, loading: false, error: null });
+    setApiRequestState({
+      response: null,
+      loading: false,
+      error: null,
+    });
   }, [setApiRequestState]);
 
   return { fetch, ...apiRequestState, reset };

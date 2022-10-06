@@ -1,17 +1,17 @@
-import { RecordBase } from './record';
+import { MF, RecordBase, RecordEntryType } from './record';
 
-export interface RecipeCollection<T> extends RecordBase<T[]> {
-  push: (item: T, meta?: Partial<this['$entry']['meta']>) => void;
-  pop: () => void;
-  concat: (items: T[], meta?: Partial<this['$entry']['meta']>) => void;
+export interface RecipeCollection<V, M extends {} = {}>
+  extends RecordEntryType<V[], M> {
+  push: MF<(item: V, meta?: Partial<this['$meta']>) => void>;
+  pop: MF<() => void>;
+  concat: MF<(items: V[], meta: Partial<this['$meta']>) => void>;
 }
-
-export type RecipeMeta<T extends {}> = RecordBase<unknown, T>;
 
 export type RecipeMethod<
   NAME extends string,
   FUNC extends (...args: any[]) => any,
+  VALUE,
   META extends {} = {},
-> = RecordBase<unknown, META> & {
-  [prop in NAME]: FUNC;
+> = RecordEntryType<VALUE, META> & {
+  [prop in NAME]: MF<FUNC>;
 };

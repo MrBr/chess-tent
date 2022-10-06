@@ -23,17 +23,20 @@ import {
   LessonActivity,
   Mentorship,
 } from '@chess-tent/models';
-import { useRecordInit, useRecordSafe } from '@chess-tent/redux-record';
-import { Action as ReduxAction } from 'redux';
+import { useRecordSafe } from '@chess-tent/redux-record';
+import { Action as ReduxAction, Store } from 'redux';
 import { RefObject } from 'react';
-import { useSelector, useDispatch, useStore } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { BatchAction } from 'redux-batched-actions';
 import { useParams } from 'react-router-dom';
 import type * as H from 'history';
 import {
+  AppState,
+  RecordBase,
   RecordHookReturn,
   RecordHookSafe,
   RecordValue,
+  RecordWith,
 } from '@chess-tent/redux-record/types';
 import { ObjectSchema, ValidationError as YupValidationError } from 'yup';
 
@@ -76,7 +79,10 @@ export type Hooks = {
   useValidation: (
     schema: ObjectSchema,
   ) => [ValidationError | null, (state: {}) => boolean];
-  useRecordInit: typeof useRecordInit;
+  useRecordInit: <T extends RecordBase>(
+    initRecord: RecordWith<T>,
+    recordKey: string,
+  ) => RecordHookReturn<RecordWith<T>>;
   useRecordSafe: typeof useRecordSafe;
   useIsMobile: () => boolean;
   useShowOnActive: <T extends HTMLElement>(active?: boolean) => RefObject<T>;
@@ -108,7 +114,7 @@ export type Hooks = {
   useDispatchBatched: () => (...args: ReduxAction[]) => BatchAction;
   useDispatch: typeof useDispatch;
   useSelector: typeof useSelector;
-  useStore: typeof useStore;
+  useStore: () => Store<AppState, Actions>;
   useSocketSubscribe: (channel: string) => void;
   useSocketRoomUsers: (room: string) => User[];
   useDiffUpdates: (

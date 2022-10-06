@@ -1,44 +1,35 @@
-import { utils, state, hof } from '@application';
+import { utils, hof } from '@application';
 import {
   RequestFetch,
   DataResponse,
   Records,
   Endpoint,
-  RecipeApiLoad,
+  GetRequestFetchResponse,
 } from '@types';
+import { MF, RecordBase, RecordEntry } from '@chess-tent/redux-record/types';
 import { Entity } from '@chess-tent/models';
-import {
-  InferRecordMeta,
-  InferRecordValue,
-  InferRecordValueSafe,
-  InferRecordValueType,
-  RecipeCollection,
-  RecordBase,
-  RecordRecipe,
-} from '@chess-tent/redux-record/types';
-import { batchActions } from 'redux-batched-actions';
-import { formatEntityValue } from './_helpers';
+import { selectRecord } from '@chess-tent/redux-record';
 
 const { withRequestHandler } = hof;
 
-const withRecordApiLoad: Records['withRecordApiLoad'] =
-  <
-    RESPONSE extends DataResponse<any>,
-    E extends Endpoint<any, RESPONSE>,
-    R extends RequestFetch<E, any>,
-    T extends RecordBase<
-      RESPONSE extends DataResponse<infer U> ? U : never,
-      any
-    >,
-  >(
-    request: R,
-  ): RecordRecipe<T, RecipeApiLoad<R>> =>
-  () =>
-  () =>
-  (record: T) => {
-    const load = withRequestHandler(request)(({ loading, response }) => {
+const createApiRecipe: Records['createApiRecipe'] = <
+  RESPONSE extends DataResponse<any>,
+  E extends Endpoint<any, RESPONSE>,
+  R extends RequestFetch<E, any>,
+>(
+  request: R,
+) => {
+  const requestInitiator = withRequestHandler(request);
+  const load: MF<
+    () => void,
+    RecordBase<
+      GetRequestFetchResponse<R> extends DataResponse<infer D> ? D : never,
+      { loaded?: boolean; loading?: boolean }
+    >
+  > = () => () => record =>
+    requestInitiator(({ loading, response }) => {
       if (loading) {
-        record.amend({ loading });
+        record.amend({ loading: true });
         return;
       }
       if (response) {
@@ -47,120 +38,64 @@ const withRecordApiLoad: Records['withRecordApiLoad'] =
       }
     });
 
-    return {
-      ...record,
-      load,
-    };
+  return {
+    load,
+  };
+};
+
+const createDenormalizedRecipe: Records['createDenormalizedRecipe'] = <
+  T extends Entity,
+>(
+  type: string,
+) => {
+  const get: MF<() => RecordEntry<T, any>> = recordKey => store => () => () => {
+    const appState = store.getState();
+    const recordEntry =
+      selectRecord<RecordBase<string, any>>(recordKey)(appState);
+    const entities = appState.entities;
+    const value = recordEntry?.value
+      ? utils.denormalize(recordEntry.value, type, entities)
+      : undefined;
+    return { ...recordEntry, value } as RecordEntry<T, any>;
   };
 
-const withRecordDenormalized: Records['withRecordDenormalized'] =
-  <T extends RecordBase>(
-    type: string,
-  ): RecordRecipe<InferRecordValueType<T> extends Entity ? T : never, {}> =>
-  recordKey =>
-  store =>
-  record => {
-    const update = (value: InferRecordValue<T>, meta: {}) => {
-      const descriptor = formatEntityValue(value);
-      store.dispatch(
-        batchActions([
-          state.actions.updateEntity(value),
-          state.actions.updateRecord(recordKey, descriptor, meta),
-        ]),
-      );
-    };
-
-    const get = () => {
-      const entities = store.getState().entities;
-      const recordEntry = record.get();
-      const value = utils.denormalize<InferRecordValue<T>>(
-        recordEntry.value,
-        type,
-        entities,
-      );
-      return { ...recordEntry, value };
-    };
-
-    return {
-      ...record,
-      get,
-      update,
-    };
+  const initialMeta = {
+    normalized: true as true,
   };
 
-const withRecordDenormalizedCollection: Records['withRecordDenormalizedCollection'] =
+  return {
+    get,
+    initialMeta,
+  };
+};
 
-    <T extends RecordBase<any[]> & RecipeCollection<any>>(type: string) =>
-    recordKey =>
-    store =>
-    record => {
-      const updateRaw = (descriptor: string[], meta?: InferRecordMeta<T>) => {
-        store.dispatch(
-          batchActions([
-            state.actions.updateRecord(recordKey, descriptor, meta),
-          ]),
-        );
-      };
-      const update = (
-        value: InferRecordValueSafe<T>,
-        meta?: InferRecordMeta<T>,
-      ) => {
-        const descriptor = formatEntityValue(value);
-        store.dispatch(
-          batchActions([
-            state.actions.updateEntities(value),
-            state.actions.updateRecord(recordKey, descriptor, meta),
-          ]),
-        );
-      };
-      const push = (
-        value: InferRecordValueType<T>,
-        meta?: InferRecordMeta<T>,
-      ) => {
-        const descriptor = formatEntityValue(value);
-        store.dispatch(
-          batchActions([
-            state.actions.updateEntities(value),
-            state.actions.pushRecord(recordKey, descriptor, meta),
-          ]),
-        );
-      };
-      const concat = (
-        items: InferRecordValueType<T>[],
-        meta?: InferRecordMeta<T>,
-      ) => {
-        const normalizedItems = formatEntityValue(items) as string[];
-        store.dispatch(
-          batchActions([
-            state.actions.updateEntities(items),
-            state.actions.concatRecord(recordKey, normalizedItems, meta),
-          ]),
-        );
-      };
-
-      const get = () => {
-        const entities = store.getState().entities;
-        const recordState = record.get();
-        // TODO - memoize
-        const value = recordState.value
+const createDenormalizedCollectionRecipe: Records['createDenormalizedCollectionRecipe'] =
+  <T extends Entity[]>(type: string) => {
+    const get: MF<() => RecordEntry<T[], any>> =
+      recordKey => store => () => () => {
+        const appState = store.getState();
+        const recordEntry =
+          selectRecord<RecordBase<string[], any>>(recordKey)(appState);
+        const entities = appState.entities;
+        const value = recordEntry?.value
           ?.map(id => utils.denormalize(id, type, entities))
           // TODO - handle better case when the entity has been deleted
-          .filter(Boolean) as InferRecordValue<T>;
-        return { ...recordState, value };
+          .filter(Boolean);
+        return { ...recordEntry, value } as RecordEntry<T[], any>;
       };
 
-      return {
-        ...record,
-        concat,
-        get,
-        update,
-        push,
-        updateRaw,
-      };
+    const initialMeta = {
+      normalized: true as true,
     };
 
+    return {
+      get,
+      initialMeta,
+    };
+  };
+
 export {
-  withRecordApiLoad,
-  withRecordDenormalized,
-  withRecordDenormalizedCollection,
+  createApiRecipe,
+  createDenormalizedCollectionRecipe,
+  createDenormalizedRecipe,
 };

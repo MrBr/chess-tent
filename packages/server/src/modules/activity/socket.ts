@@ -6,6 +6,7 @@ import {
   UNSUBSCRIBED_EVENT,
 } from '@chess-tent/types';
 import { TYPE_ACTIVITY } from '@chess-tent/models';
+import { PUSH_RECORD, UPDATE_RECORD } from '@chess-tent/redux-record';
 import { canEditActivity, getActivity } from './service';
 
 socket.registerMiddleware(async (stream, next) => {
@@ -54,7 +55,7 @@ socket.registerMiddleware(async (stream, next) => {
         socket.sendServerAction(channel, sync, socketId);
       }
 
-      socket.dispatchRoomUsers(channel);
+      socket.dispatchRoomUsers(stream.data);
     }
   }
 

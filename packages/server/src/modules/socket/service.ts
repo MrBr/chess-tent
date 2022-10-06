@@ -5,12 +5,12 @@ import {
   ACTION_EVENT,
   Actions,
   CONNECTION_EVENT,
-  ROOM_USERS_ACTION,
   SUBSCRIBE_EVENT,
   UNSUBSCRIBE_EVENT,
   UNSUBSCRIBED_EVENT,
 } from '@chess-tent/types';
 import { RecordAction } from '@chess-tent/redux-record/types';
+import { UPDATE_RECORD } from '@chess-tent/redux-record';
 
 let io: Server;
 
@@ -92,7 +92,7 @@ const sendAction = (channel: string, stream: ClientSocketStream) => {
   stream.client.in(channel).emit(ACTION_EVENT, stream.data);
 };
 
-const sendServerAction = (
+export const sendServerAction = (
   channel: string,
   action: Actions | RecordAction,
   toSocketId?: string,
@@ -114,9 +114,11 @@ const shouldSyncData = (roomId: string) => {
 const dispatchRoomUsers: SocketService['dispatchRoomUsers'] = room => {
   const users = socket.getRoomUsers(room);
   socket.sendServerAction(room, {
-    type: ROOM_USERS_ACTION,
-    payload: users,
-    meta: { room },
+    type: UPDATE_RECORD,
+    payload: {
+      value: users,
+    },
+    meta: { key: `room-${room}-users` },
   });
 };
 

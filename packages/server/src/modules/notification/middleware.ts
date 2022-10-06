@@ -1,6 +1,6 @@
 import { service, socket } from '@application';
 import { MiddlewareFunction } from '@types';
-import { SEND_NOTIFICATION } from '@chess-tent/types';
+import { PUSH_RECORD } from '@chess-tent/redux-record';
 import {
   createNotification as modelCreateNotification,
   Notification,
@@ -44,9 +44,9 @@ export const sendNotifications: MiddlewareFunction = (req, res, next) => {
 
   notifications.forEach((notification: Notification) => {
     socket.sendServerAction(`user-${notification.user.id}`, {
-      type: SEND_NOTIFICATION,
-      payload: notification,
-      meta: {},
+      type: PUSH_RECORD,
+      payload: { value: notification },
+      meta: { key: 'notifications' },
     });
   });
 

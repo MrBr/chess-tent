@@ -24,11 +24,3 @@ export interface NormalizedNotification {
   seen: Notification['seen'];
   state: Notification['state'];
 }
-
-export interface NormalizedNotificationBucket {
-  id: string;
-  user: User['id'];
-  count: number;
-  notifications: NormalizedNotification[];
-  type: typeof TYPE_NOTIFICATION;
-}

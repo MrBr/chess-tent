@@ -17,19 +17,22 @@ const {
   usePrompt,
   useActiveUserRecord,
   useApiStatus,
+  useSocketRoomUsers,
 } = hooks;
 
-const { Breadcrumbs, Col, Button } = ui;
-const { Page, Header, ConferencingProvider } = components;
+const { Breadcrumbs, Col, Button, Stack } = ui;
+const { Page, Header, ConferencingProvider, UserAvatar } = components;
 
 const PageActivity = () => {
   const { value: user } = useActiveUserRecord();
   const { activityId } = useParams<{ activityId: string }>();
+  const room = `${TYPE_ACTIVITY}-${activityId}`;
   const {
     value: activity,
     meta,
     applyPatch,
   } = useActivity<LessonActivity>(activityId);
+  const liveUsers = useSocketRoomUsers(room);
   const activityUpdateApiState = useApi(requests.activityUpdate);
   const [activityStatus, setActivityStatus] = useApiStatus(
     activity,
@@ -108,8 +111,17 @@ const PageActivity = () => {
         </Breadcrumbs>
       </Col>
       <Col>
-        <ConferencingProvider room={`${TYPE_ACTIVITY}-${activity.id}`} />
+        <ConferencingProvider room={room} />
       </Col>
+      {!isMobile && (
+        <Col className="col-auto position-relative">
+          <Stack>
+            {liveUsers.map(user => (
+              <UserAvatar key={user.id} user={user} size="small" />
+            ))}
+          </Stack>
+        </Col>
+      )}
       <Col className="col-auto">
         <Button
           variant="ghost"

@@ -1,5 +1,6 @@
 import application from '@application';
 import {
+  collectionRecipe,
   concatRecordAction,
   createRecord,
   pushRecordAction,
@@ -7,16 +8,14 @@ import {
   updateRecordAction,
   useRecordInit,
   useRecordSafe,
-  withRecordBase,
-  withRecordCollection,
-  withRecordMethod,
 } from '@chess-tent/redux-record';
 import {
-  withRecordApiLoad,
-  withRecordDenormalized,
-  withRecordDenormalizedCollection,
+  createApiRecipe,
+  createDenormalizedRecipe,
+  createDenormalizedCollectionRecipe,
 } from './recipes';
 import { isInitialized } from './service';
+import { middleware } from './state/middleware';
 
 application.hooks.useRecordInit = useRecordInit;
 application.hooks.useRecordSafe = useRecordSafe;
@@ -25,11 +24,10 @@ application.state.actions.updateRecord = updateRecordAction;
 application.state.actions.concatRecord = concatRecordAction;
 application.records.createRecord = createRecord;
 application.records.isInitialized = isInitialized;
-application.records.withRecordBase = withRecordBase;
-application.records.withRecordCollection = withRecordCollection;
-application.records.withRecordApiLoad = withRecordApiLoad;
-application.records.withRecordDenormalized = withRecordDenormalized;
-application.records.withRecordDenormalizedCollection =
-  withRecordDenormalizedCollection;
-application.records.withRecordMethod = withRecordMethod;
+application.records.collectionRecipe = collectionRecipe;
+application.records.createApiRecipe = createApiRecipe;
+application.records.createDenormalizedRecipe = createDenormalizedRecipe;
+application.records.createDenormalizedCollectionRecipe =
+  createDenormalizedCollectionRecipe;
 application.state.registerReducer('records', records);
+application.state.registerMiddleware(middleware);

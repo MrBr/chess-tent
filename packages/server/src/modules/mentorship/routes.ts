@@ -1,5 +1,6 @@
 import application, { middleware } from '@application';
-import { TYPE_MENTORSHIP } from '@chess-tent/models';
+import { Mentorship, TYPE_MENTORSHIP } from '@chess-tent/models';
+import { PUSH_RECORD, RecordPushAction } from '@chess-tent/redux-record/types';
 import {
   getCoaches,
   getStudents,
@@ -15,6 +16,7 @@ const {
   sendNotifications,
   createNotifications,
   conditional,
+  sendAction,
 } = middleware;
 
 application.service.registerPostRoute(
@@ -35,6 +37,21 @@ application.service.registerPostRoute(
   createNotifications,
   sendNotifications,
 
+  toLocals(
+    'action.channel',
+    (req, res) => `user-${res.locals.mentorship.coach.id}`,
+  ),
+  toLocals('action.data', (req, res) => ({
+    type: PUSH_RECORD,
+    payload: {
+      value: res.locals.mentorship,
+    },
+    meta: {
+      key: 'my-students',
+    },
+  })),
+
+  sendAction,
   sendData('mentorship'),
 );
 

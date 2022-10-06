@@ -1,22 +1,15 @@
 import { records, state } from '@application';
 import { Activity, applyUpdates, TYPE_ACTIVITY } from '@chess-tent/models';
-import { RecordValue } from '@chess-tent/redux-record/types';
+import { ActivityRecord } from '@types';
 
-const activity = records.createRecord(
-  records.withRecordBase<Activity, {}>(),
-  records.withRecordDenormalized(TYPE_ACTIVITY),
-  records.withRecordMethod()(
-    'applyPatch',
-    () =>
-      store =>
-      record =>
-      (modifier: (draft: RecordValue<Activity>) => void) => {
-        const action = state.actions.serviceAction(
-          applyUpdates(record.get().value as Activity)(modifier),
-        )();
-        store.dispatch(action);
-      },
-  ),
-);
+const activity = records.createRecord<ActivityRecord<Activity>>({
+  ...records.createDenormalizedRecipe(TYPE_ACTIVITY),
+  applyPatch: () => store => record => modifier => {
+    const action = state.actions.serviceAction(
+      applyUpdates(record.get()?.value as Activity)(modifier),
+    )();
+    store.dispatch(action);
+  },
+});
 
 export { activity };

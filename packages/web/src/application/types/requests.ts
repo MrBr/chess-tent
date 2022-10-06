@@ -86,6 +86,7 @@ export interface Requests {
   uploadImage: RequestFetch<Endpoints['uploadImage'], [string, File]>;
   signImageUrl: RequestFetch<Endpoints['signImageUrl']>;
 
+  contacts: RequestFetch<Endpoints['contacts'], [Pagination]>;
   conversations: RequestFetch<
     Endpoints['conversations'],
     [User['id'][] | User['id'], Pagination]

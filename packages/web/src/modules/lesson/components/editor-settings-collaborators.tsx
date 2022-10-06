@@ -1,17 +1,10 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { components, hooks, requests, ui } from '@application';
 import { Lesson, User } from '@chess-tent/models';
-import { debounce } from 'lodash';
 
-const { Label, Headline6, Text, AsyncSelect } = ui;
+const { Label, Headline6, Text, Select } = ui;
 const { useApi } = hooks;
 const { UserAvatar } = components;
-
-const searchUsers = debounce((name, callback) => {
-  requests.coaches({ search: name }).then(({ data }) => {
-    callback(data);
-  });
-}, 500);
 
 const EditorSettingsCollaborators = ({ lesson }: { lesson: Lesson }) => {
   const users = lesson.users || [];
@@ -20,6 +13,12 @@ const EditorSettingsCollaborators = ({ lesson }: { lesson: Lesson }) => {
     response: assignResponse,
     loading,
   } = useApi(requests.lessonPatch);
+  const { fetch: loadContacts, response: contacts } = useApi(requests.contacts);
+
+  useEffect(() => {
+    loadContacts({ skip: 0, limit: 20 });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onUsersChange = useCallback(
     selectOptions => {
@@ -35,11 +34,10 @@ const EditorSettingsCollaborators = ({ lesson }: { lesson: Lesson }) => {
     <>
       <Headline6 className="mt-3">Collaborators</Headline6>
       <Label>Sharing with</Label>
-      <AsyncSelect
+      <Select
         name="user"
-        cacheOptions
+        options={contacts?.data}
         placeholder="Find collaborator"
-        loadOptions={searchUsers}
         isMulti
         onChange={onUsersChange}
         defaultValue={users}

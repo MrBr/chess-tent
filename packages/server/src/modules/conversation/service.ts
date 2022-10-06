@@ -94,7 +94,7 @@ export const updateConversationMessage = (
   });
 };
 
-export const findConversations = async (
+export const getConversations = async (
   users: User['id'][],
   pagination: Pagination,
 ) => {
@@ -108,6 +108,27 @@ export const findConversations = async (
     ])
     .populate('users')
     .populate('virtualMessages');
+};
+
+export const getConversationsContacts = async (
+  user: User['id'],
+  pagination: Pagination,
+) => {
+  const conversations = await ConversationModel.find(
+    { users: { $all: [user] } },
+    null,
+    {
+      skip: pagination.skip,
+      limit: pagination.limit,
+    },
+  )
+    .select('-messages')
+    .populate('users')
+    .exec();
+  return (conversations as unknown as Conversation[])
+    .map(({ users }) => users)
+    .flat()
+    .filter(({ id }) => id !== user);
 };
 
 export const getConversation = async (

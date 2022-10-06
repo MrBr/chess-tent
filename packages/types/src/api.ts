@@ -41,6 +41,9 @@ export type UpdateNotificationsRequest = {
 export type PaginationBucket = number | undefined;
 export type Pagination = { skip?: number; limit: number };
 export type WithPagination = { pagination?: Pagination };
+type WithPaginationQueryParams<T extends string> =
+  | T
+  | `${T}?skip=${number}&limit=${number}`;
 
 export interface StatusResponse {
   error: string | null;
@@ -288,6 +291,10 @@ export interface Endpoints {
     SignedImageResponse
   >;
   // Conversations endpoints
+  contacts: Endpoint<
+    RequestGet<WithPaginationQueryParams<`/contacts`>>,
+    UsersResponse
+  >;
   conversations: Endpoint<
     RequestPost<'/conversations', WithPagination & { users: User['id'][] }>,
     ConversationsResponse

@@ -55,11 +55,25 @@ export const getConversationMessages: MiddlewareFunction = (req, res, next) => {
     .catch(next);
 };
 
-export const findConversations: MiddlewareFunction = (req, res, next) => {
+export const getConversations: MiddlewareFunction = (req, res, next) => {
   service
-    .findConversations(res.locals.filters.users, res.locals.pagination)
+    .getConversations(res.locals.filters.users, res.locals.pagination)
     .then(conversations => {
       res.locals.conversations = conversations;
+      next();
+    })
+    .catch(next);
+};
+
+export const getConversationsContacts: MiddlewareFunction = (
+  req,
+  res,
+  next,
+) => {
+  service
+    .getConversationsContacts(res.locals.me.id, res.locals.pagination)
+    .then(contacts => {
+      res.locals.contacts = contacts;
       next();
     })
     .catch(next);

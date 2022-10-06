@@ -15,6 +15,11 @@ const conversations = services.createRequest<Requests['conversations']>(
   }),
 );
 
+const contacts = services.createRequest<Requests['contacts']>(
+  'GET',
+  ({ skip, limit }) => `/contacts?skip=${skip || 0}&limit=${limit}`,
+);
+
 const conversationSave = services.createRequest<Requests['conversationSave']>(
   'POST',
   '/conversation/save',
@@ -26,6 +31,7 @@ const messages = services.createRequest<Requests['messages']>(
   (conversationId, lastDocumentTimestamp) => ({ lastDocumentTimestamp }),
 );
 
+requests.contacts = contacts;
 requests.conversations = conversations;
 requests.conversationSave = conversationSave;
 requests.conversation = conversation;

@@ -159,7 +159,7 @@ cg-board piece.fading {
   font-size: 9px;
 }
 .cg-wrap coords.ranks {
-  right: -15px;
+  right: -22px;
   top: 0;
   flex-flow: column-reverse;
   height: 100%;
@@ -169,7 +169,7 @@ cg-board piece.fading {
   flex-flow: column;
 }
 .cg-wrap coords.files {
-  bottom: -16px;
+  bottom: -20px;
   left: 0;
   flex-flow: row;
   width: 100%;
@@ -182,6 +182,8 @@ cg-board piece.fading {
 }
 .cg-wrap coords coord {
   flex: 1 1 auto;
+  font-size: 12px;
+  font-weight: bold;
 }
 .cg-wrap coords.ranks coord {
   transform: translateY(39%);

@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  AnalysisBaseInterface,
   AnalysisSystemProps,
   EditorSidebarProps,
   FEN,
@@ -20,9 +21,10 @@ import { components, services } from '@application';
 
 const { StepToolbox } = components;
 
-export default class AnalysisBase<
-  T extends AnalysisSystemProps,
-> extends React.Component<T> {
+export default class AnalysisBase<T extends AnalysisSystemProps>
+  extends React.Component<T>
+  implements AnalysisBaseInterface
+{
   updateStep = (step: Step) => {
     const { updateAnalysis } = this.props;
     updateAnalysis(analysis => {

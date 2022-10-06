@@ -3,6 +3,7 @@ import {
   ActivityRendererModuleBoardProps,
   ActivityRendererModuleProps,
   ActivityStepMode,
+  AnalysisBaseInterface,
   AnalysisSystemProps,
   ChessboardProps,
   Orientation,
@@ -30,6 +31,11 @@ const { START_FEN } = constants;
 abstract class ActivityRendererAnalysis<
   T extends ActivityRendererModuleProps<any>,
 > extends React.Component<T> {
+  protected analysisRef: React.RefObject<AnalysisBaseInterface>;
+  constructor(props: T) {
+    super(props);
+    this.analysisRef = React.createRef<AnalysisBaseInterface>();
+  }
   isAnalysing() {
     const { activityStepState } = this.props;
     return activityStepState.mode === ActivityStepMode.ANALYSING;
@@ -198,6 +204,19 @@ export class ActivityRendererAnalysisBoard<
 export class ActivityRendererAnalysisCard<
   T extends Steps | undefined,
 > extends ActivityRendererAnalysis<ActivityRendererModuleProps<T>> {
+  componentDidMount() {
+    const { analysis, activityStepState } = this.props;
+    const isActive = isActivityStepAnalysing(activityStepState);
+    console.log(
+      isActive,
+      getAnalysisActiveStep(analysis),
+      this.analysisRef.current,
+    );
+    isActive &&
+      !getAnalysisActiveStep(analysis) &&
+      this.analysisRef.current?.startAnalysis();
+  }
+
   setAnalysingMode = () => {
     const { updateActivity, activity, boardState } = this.props;
     updateActivity(
@@ -234,6 +253,7 @@ export class ActivityRendererAnalysisCard<
           </Col>
         </Row>
         <AnalysisSidebar
+          ref={this.analysisRef}
           analysis={analysis}
           updateAnalysis={this.updateStepActivityAnalysis}
           initialPosition={this.getInitialPosition()}

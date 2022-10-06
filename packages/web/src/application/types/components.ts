@@ -33,6 +33,7 @@ import {
   User,
   LessonActivity,
   LessonActivityBoardState,
+  Step,
 } from '@chess-tent/models';
 import { RecordValue } from '@chess-tent/redux-record/types';
 import {
@@ -50,6 +51,7 @@ import {
   MovableColor,
   UciMove,
   ChessInstance,
+  PieceRole,
 } from './chess';
 import {
   ActivityStepStateBase,
@@ -252,11 +254,25 @@ export type ActivityComponent<T> = ComponentType<
   T extends Activity<any> ? { activity: T } : never
 >;
 
+export interface AnalysisBaseInterface {
+  updateStep(step: Step): void;
+  removeStep(step: Step): void;
+  setActiveStep(step: Step): void;
+  startAnalysis(
+    position?: FEN,
+    move?: Move,
+    piece?: Piece,
+    captured?: boolean,
+    promoted?: PieceRole,
+  ): void;
+  renderToolbox: EditorSidebarProps['renderToolbox'];
+}
 export interface AnalysisSystemProps {
   analysis: Analysis<any>;
   updateAnalysis: (service: (analysis: Analysis<any>) => void) => void;
   initialPosition?: FEN;
   initialOrientation?: Color;
+  ref?: RefObject<AnalysisBaseInterface>;
 }
 
 export interface AnalysisBoardProps

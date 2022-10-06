@@ -19,7 +19,7 @@ export const middleware: Middleware = store => next => action => {
     const { value } = action.payload;
 
     // meta.normalized is an escape hatch, to save normalized data directly to record value
-    const { key, normalized } = action.meta;
+    const { key } = action.meta;
     const shouldNormalize = selectRecord(key)(store.getState())?.meta
       ?.normalized;
     if (

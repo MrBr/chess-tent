@@ -6,8 +6,8 @@ import { ui } from '@application';
 const { Card } = ui;
 
 export default styled<Components['LessonPlaygroundCard']>(
-  ({ children, className, onClick }) => (
-    <Card className={className} onClick={onClick}>
+  ({ children, className, onClick, active }) => (
+    <Card className={className} onClick={!active ? onClick : undefined}>
       <Card.Body>{children}</Card.Body>
     </Card>
   ),

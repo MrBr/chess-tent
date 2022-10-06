@@ -19,9 +19,9 @@ const { className } = css`
     bottom: 0;
     left: 0;
     // style is set to match current board sizing
-    width: ${100 / 0.85}%;
+    width: 100%;
     height: 200%;
-    transform: translateX(-7.4%) translateY(20%);
+    transform: translateY(20%);
   }
 `;
 

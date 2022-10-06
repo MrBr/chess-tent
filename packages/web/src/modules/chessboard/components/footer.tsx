@@ -97,7 +97,7 @@ const Footer: FunctionComponent<ChessboardFooterProps> = ({
           </OverlayTrigger>
         </Col>
       </Row>
-      <Row className="g-0 mt-4 align-items-center">
+      <Row className="g-0 mt-2 align-items-center">
         <OverlayTrigger
           overlay={<Tooltip id="fen">Press enter to confirm</Tooltip>}
         >

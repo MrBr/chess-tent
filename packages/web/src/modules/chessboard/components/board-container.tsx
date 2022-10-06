@@ -27,11 +27,8 @@ export default styled<{
         container?.children?.item(2)?.clientHeight; // footer height
       const availableWidth =
         ref.parentNode?.parentNode?.parentNode?.parentNode?.clientWidth; // width of the content container
-      const ratio =
-        availableHeight > availableWidth
-          ? (availableWidth / availableHeight) * 0.9
-          : (availableHeight / availableWidth) * 0.9;
-      const size = availableWidth * ratio;
+      const size =
+        availableHeight > availableWidth ? availableWidth : availableHeight;
       (ref.parentNode as HTMLDivElement).style.width = `${size}px`;
       (ref.parentNode as HTMLDivElement).style.height = `${size}px`;
       props.boardRef.current = ref;

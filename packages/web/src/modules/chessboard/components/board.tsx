@@ -543,7 +543,7 @@ class Chessboard
               />
             )}
           </BoardContainer>
-          <BoardFooter className="mt-4">
+          <BoardFooter className="pt-4 pb-4">
             {footer === undefined ? (
               <Footer
                 editing={!!editing}

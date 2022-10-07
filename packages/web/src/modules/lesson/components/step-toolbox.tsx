@@ -14,6 +14,7 @@ import {
   isStep,
   replaceStep,
   StepRoot,
+  addVariationStep,
 } from '@chess-tent/models';
 import { over } from 'lodash';
 
@@ -31,8 +32,7 @@ const {
 const { LessonToolboxText } = components;
 const { useCopyStep, usePrompt, useShowOnActive } = hooks;
 const { stopPropagation } = utils;
-const { getStepPosition, addStepNextToTheComments, getStepBoardOrientation } =
-  services;
+const { getStepPosition, getStepBoardOrientation } = services;
 
 function pickFunction(...funcs: any[]) {
   return funcs.find(f => typeof f === 'function');
@@ -113,7 +113,7 @@ const StepToolbox: Components['StepToolbox'] = ({
     // Same as pasteReplace
     event.stopPropagation();
     const copiedStep = getCopiedStep() as Steps;
-    updateStep(addStepNextToTheComments(step as Steps, copiedStep as Steps));
+    updateStep(addVariationStep(step as Steps, copiedStep as Steps));
     setActiveStep(copiedStep);
   };
 
@@ -162,7 +162,7 @@ const StepToolbox: Components['StepToolbox'] = ({
     setActiveStep(descriptionStep);
   }, [step, updateStep, setActiveStep]);
 
-  const addVariationStep = useCallback(() => {
+  const addNewVariationStep = useCallback(() => {
     const position = getStepPosition(step as Steps);
     const orientation = getStepBoardOrientation(step as Steps);
     const variationStep = services.createStep('variation', {
@@ -170,7 +170,7 @@ const StepToolbox: Components['StepToolbox'] = ({
       editing: true,
       orientation,
     });
-    updateStep(addStepNextToTheComments(step as Steps, variationStep));
+    updateStep(addVariationStep(step as Steps, variationStep));
     setActiveStep(variationStep);
   }, [step, updateStep, setActiveStep]);
 
@@ -189,7 +189,7 @@ const StepToolbox: Components['StepToolbox'] = ({
       position,
       orientation,
     });
-    updateStep(addStepNextToTheComments(step as Steps, exerciseStep));
+    updateStep(addVariationStep(step as Steps, exerciseStep));
     setActiveStep(exerciseStep);
   }, [setActiveStep, step, updateStep]);
 
@@ -249,7 +249,7 @@ const StepToolbox: Components['StepToolbox'] = ({
                     <Icon
                       size="extra-small"
                       type="add"
-                      onClick={pickFunction(add, addVariationStep)}
+                      onClick={pickFunction(add, addNewVariationStep)}
                     />
                   </OverlayTrigger>
                 )}

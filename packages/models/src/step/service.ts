@@ -1,4 +1,4 @@
-import { Step, StepRoot, TYPE_STEP } from './types';
+import { Step, StepRoot, StepType, TYPE_STEP } from './types';
 import { updateSubject } from '../subject';
 import { createService } from '../_helpers';
 import { replaceStepRecursive, removeStepRecursive } from './_helpers';
@@ -222,15 +222,32 @@ const removeStep = createService(
   },
 );
 
-const addStepRightToSame = createService(
-  <T extends Step | StepRoot>(draft: T, newStep: Step, onEnd = false): T => {
-    const newStepIndex = draft.state.steps
-      .map(({ stepType }) => stepType)
-      .lastIndexOf(newStep.stepType);
+const addStepAfterType = createService(
+  <T extends Step | StepRoot>(
+    draft: T,
+    types: StepType[] | StepType,
+    newStep: Step,
+  ): T => {
+    let lastIndexOfType = -1;
 
-    newStepIndex >= 0
-      ? draft.state.steps.splice(newStepIndex + 1, 0, newStep)
-      : draft.state.steps.push(newStep);
+    draft.state.steps.forEach(({ stepType }, index) => {
+      if (
+        (Array.isArray(types) && types.includes(stepType)) ||
+        stepType === types
+      ) {
+        lastIndexOfType = index;
+      }
+    });
+
+    draft.state.steps.splice(lastIndexOfType + 1, 0, newStep);
+
+    return draft;
+  },
+);
+
+const addVariationStep = createService(
+  <T extends Step | StepRoot>(draft: T, newStep: Step): T => {
+    addStepAfterType(draft, ['variation', 'description'], newStep);
 
     return draft;
   },
@@ -309,7 +326,8 @@ export {
   getPreviousStep,
   getParentStep,
   isLastStep,
-  addStepRightToSame,
+  addVariationStep,
+  addStepAfterType,
   addStepToRightOf,
   getChildStep,
   updateNestedStep,

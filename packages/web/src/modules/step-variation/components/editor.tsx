@@ -4,7 +4,7 @@ import {
   addStep,
   updateStepState,
   getLastStep,
-  addStepRightToSame,
+  addVariationStep,
 } from '@chess-tent/models';
 import {
   AppStep,
@@ -24,7 +24,6 @@ import BoardSrc from '../images/board.svg';
 const { Col, Row, Img } = ui;
 const { Stepper, StepTag, StepMove } = components;
 const {
-  addStepNextToTheComments,
   createStep,
   getSameMoveStep,
   createNotableMove,
@@ -73,7 +72,7 @@ const boardChange = (
       orientation,
     });
     const updatedStep = updateStepState(
-      addStepNextToTheComments(step, newVariationStep) as VariationStep,
+      addVariationStep(step, newVariationStep) as VariationStep,
       {},
     );
     updateStep(updatedStep);
@@ -110,7 +109,7 @@ const boardChange = (
       move: notableMove,
       orientation,
     });
-    updateStep(addStepRightToSame(step, newMoveStep));
+    updateStep(addVariationStep(step, newMoveStep));
     setActiveStep(newMoveStep);
     return;
   }

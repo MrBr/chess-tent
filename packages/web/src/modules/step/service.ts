@@ -1,6 +1,6 @@
 import { FEN, Orientation, PieceColor, Services, Steps } from '@types';
 import { services } from '@application';
-import { addStepToLeft, updateStepState } from '@chess-tent/models';
+import { updateStepState } from '@chess-tent/models';
 import { createStepModuleStep } from './model';
 
 const { getComment } = services;
@@ -27,16 +27,6 @@ export const updateStepRotation = (
   orientation?: Orientation,
 ): Steps => {
   return updateStepState(step, { orientation });
-};
-
-export const addStepNextToTheComments = <T extends Steps>(
-  parentStep: T,
-  step: Steps,
-): T => {
-  const commentsCount = parentStep.state.steps.filter(
-    ({ stepType }) => stepType === 'description',
-  ).length;
-  return addStepToLeft(parentStep, step, commentsCount) as T;
 };
 
 export const createStepsFromNotableMoves: Services['createStepsFromNotableMoves'] =

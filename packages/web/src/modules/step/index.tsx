@@ -9,7 +9,6 @@ import {
   stepSchema,
 } from './model';
 import {
-  addStepNextToTheComments,
   getStepBoardOrientation,
   updateStepRotation,
   getStepPosition,
@@ -25,7 +24,6 @@ application.services.getSameMoveStep = getSameMoveStep;
 application.services.getStepPosition = getStepPosition;
 application.services.getStepBoardOrientation = getStepBoardOrientation;
 application.services.updateStepRotation = updateStepRotation;
-application.services.addStepNextToTheComments = addStepNextToTheComments;
 application.components.StepRenderer = StepComponentRenderer;
 
 application.register(

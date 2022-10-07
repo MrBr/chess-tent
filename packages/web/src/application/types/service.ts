@@ -146,7 +146,6 @@ export type Services = {
   getStepPosition: (step: Steps) => FEN;
   getStepBoardOrientation: (step: Steps) => PieceColor;
   updateStepRotation: (step: Steps, orientation?: Orientation) => Steps;
-  addStepNextToTheComments: <T extends Steps>(parentStep: T, step: Steps) => T;
   createChapter: (title?: string, steps?: Step[]) => Chapter;
   history: History;
   createAnalysis: () => AppAnalysis;

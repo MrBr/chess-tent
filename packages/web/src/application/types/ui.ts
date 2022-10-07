@@ -114,6 +114,7 @@ export interface ConfirmProps {
   cancelText: string;
   onOk: () => void;
   onCancel: () => void;
+  autoClose?: () => void;
 }
 
 type FontSize = 'base' | 'small' | 'extra-small' | 'large';

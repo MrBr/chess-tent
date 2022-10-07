@@ -69,17 +69,23 @@ export const useOutsideClick: Hooks['useOutsideClick'] = (
   }, [onOutsideClick, ...refs]);
 };
 
-export const usePrompt = (
-  renderOffcanvas: (close: () => void) => ReactElement,
-): ReturnType<Hooks['usePrompt']> => {
-  const [shouldRender, setShouldRender] = useState<true>();
+export const usePrompt: Hooks['usePrompt'] = <
+  T extends {} | undefined = undefined,
+>(
+  renderOffcanvas: (...args: [() => void, T]) => ReactElement,
+) => {
+  const [promptConfig, setPromptConfig] = useState<T | undefined>();
 
-  const promptOffcanvas = useCallback(() => {
-    setShouldRender(true);
-  }, [setShouldRender]);
+  const promptOffcanvas = useCallback(
+    (config?: T) => {
+      setPromptConfig((config || {}) as T);
+    },
+    [setPromptConfig],
+  );
 
   return [
-    shouldRender && renderOffcanvas(() => setShouldRender(undefined)),
+    promptConfig &&
+      renderOffcanvas(() => setPromptConfig(undefined), promptConfig),
     promptOffcanvas,
   ];
 };

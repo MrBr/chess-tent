@@ -100,9 +100,12 @@ export type Hooks = {
     delay: number,
     update: (patch: {}) => void,
   ) => (e: React.ChangeEvent<HTMLInputElement>) => void;
-  usePrompt: (
-    render: (close: () => void) => ReactElement,
-  ) => [ReactElement | undefined, () => void];
+  usePrompt: <T extends {} | undefined>(
+    render: (close: () => void, config: T) => ReactElement,
+  ) => [
+    ReactElement | undefined,
+    (...args: T extends undefined ? [] : [T]) => void,
+  ];
   useWizard: <T extends {}, P extends {}>(
     steps: WizardStep<T, P>[],
     initialState: T,

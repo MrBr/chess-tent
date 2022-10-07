@@ -70,15 +70,29 @@ Modal.Footer = BModal.Footer;
 Modal.Dialog = BModal.Dialog;
 
 const Confirm = styled<FunctionComponent<ConfirmProps>>(
-  ({ title, message, okText, cancelText, onOk, onCancel }) => (
+  ({ title, message, okText, cancelText, onOk, onCancel, autoClose }) => (
     <>
       <Modal.Header>{title}</Modal.Header>
       <Modal.Body>{message}</Modal.Body>
       <Modal.Footer>
-        <Button onClick={onOk} size="extra-small" variant="secondary">
+        <Button
+          onClick={() => {
+            onOk();
+            autoClose && autoClose();
+          }}
+          size="extra-small"
+          variant="secondary"
+        >
           {okText}
         </Button>
-        <Button onClick={onCancel} size="extra-small" variant="tertiary">
+        <Button
+          onClick={() => {
+            onCancel();
+            autoClose && autoClose();
+          }}
+          size="extra-small"
+          variant="tertiary"
+        >
           {cancelText}
         </Button>
       </Modal.Footer>

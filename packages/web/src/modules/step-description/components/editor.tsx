@@ -5,7 +5,7 @@ import {
   getParentStep,
   updateStepState,
 } from '@chess-tent/models';
-import { DescriptionModule, DescriptionStep, VariationStep } from '@types';
+import { DescriptionModule, DescriptionStep, FEN, VariationStep } from '@types';
 import { components, ui, stepModules, services } from '@application';
 import Comment from './comment';
 
@@ -19,8 +19,17 @@ export const EditorBoard: DescriptionModule['EditorBoard'] = ({
   stepRoot,
   ...props
 }) => {
+  const {
+    state: { position },
+  } = step;
   const updateShapes = useCallback(
     (shapes: DrawShape[]) => updateStep(updateStepState(step, { shapes })),
+    [step, updateStep],
+  );
+
+  const onChangeHandle = useCallback(
+    (newPosition: FEN) =>
+      updateStep(updateStepState(step, { position: newPosition })),
     [step, updateStep],
   );
 
@@ -35,9 +44,16 @@ export const EditorBoard: DescriptionModule['EditorBoard'] = ({
       updateStep={updateStep}
       Chessboard={props => (
         <Chessboard
-          {...props}
+          sparePieces
+          editing
+          fen={position}
           shapes={step.state.shapes}
+          onPGN={props.onPGN}
           onShapesChange={updateShapes}
+          onPieceDrop={onChangeHandle}
+          onPieceRemove={onChangeHandle}
+          onChange={onChangeHandle}
+          onFENSet={onChangeHandle}
         />
       )}
     />

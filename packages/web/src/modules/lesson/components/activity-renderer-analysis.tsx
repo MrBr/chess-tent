@@ -207,11 +207,7 @@ export class ActivityRendererAnalysisCard<
   componentDidMount() {
     const { analysis, activityStepState } = this.props;
     const isActive = isActivityStepAnalysing(activityStepState);
-    console.log(
-      isActive,
-      getAnalysisActiveStep(analysis),
-      this.analysisRef.current,
-    );
+
     isActive &&
       !getAnalysisActiveStep(analysis) &&
       this.analysisRef.current?.startAnalysis();

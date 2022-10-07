@@ -13,7 +13,7 @@ export const sendAction: MiddlewareFunction = async (req, res, next) => {
       return;
     }
     const { data, channel } = res.locals.action;
-    console.log(channel);
+
     service.sendServerAction(channel, data);
     next();
   } catch (e) {

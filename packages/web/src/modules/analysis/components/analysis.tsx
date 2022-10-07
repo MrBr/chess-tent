@@ -10,6 +10,7 @@ import {
 } from '@types';
 import {
   addStep,
+  getAnalysisActiveStep,
   getPreviousStep,
   removeStep,
   Step,
@@ -18,6 +19,7 @@ import {
   updateSubjectState,
 } from '@chess-tent/models';
 import { components, services } from '@application';
+import { getStepPosition } from '../../step/service';
 
 const { StepToolbox } = components;
 
@@ -48,6 +50,14 @@ export default class AnalysisBase<T extends AnalysisSystemProps>
       updateAnalysisActiveStepId(analysis, step.id);
     });
   };
+
+  addNewAnalysisVariation = () => {
+    const { analysis } = this.props;
+    const step = getAnalysisActiveStep(analysis);
+    const position = getStepPosition(step);
+    this.startAnalysis(position);
+  };
+
   startAnalysis = (
     position?: FEN,
     move?: Move,
@@ -68,16 +78,15 @@ export default class AnalysisBase<T extends AnalysisSystemProps>
           )
         : undefined;
 
-    updateAnalysis(analysis => {
-      addStep(
-        analysis,
-        services.createStep('variation', {
-          position: position || initialPosition,
-          orientation: initialOrientation,
-          move: notableMove,
-        }),
-      );
+    const newStep = services.createStep('variation', {
+      position: position || initialPosition,
+      orientation: initialOrientation,
+      move: notableMove,
     });
+    updateAnalysis(analysis => {
+      addStep(analysis, newStep);
+    });
+    this.setActiveStep(newStep);
   };
 
   renderToolbox: EditorSidebarProps['renderToolbox'] = props => {
@@ -93,7 +102,7 @@ export default class AnalysisBase<T extends AnalysisSystemProps>
         updateChapter={() => {}}
         {...props}
         comment={false}
-        add={false}
+        add={this.addNewAnalysisVariation}
         exercise={false}
         paste={false}
       />

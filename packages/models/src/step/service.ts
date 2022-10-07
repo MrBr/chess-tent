@@ -223,10 +223,10 @@ const removeStep = createService(
 );
 
 const addStepRightToSame = createService(
-  <T extends Step | StepRoot>(draft: T, newStep: Step): T => {
-    const newStepIndex = draft.state.steps.findIndex(
-      childStep => childStep.stepType === newStep.stepType,
-    );
+  <T extends Step | StepRoot>(draft: T, newStep: Step, onEnd = false): T => {
+    const newStepIndex = draft.state.steps
+      .map(({ stepType }) => stepType)
+      .lastIndexOf(newStep.stepType);
 
     newStepIndex >= 0
       ? draft.state.steps.splice(newStepIndex + 1, 0, newStep)

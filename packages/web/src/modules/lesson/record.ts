@@ -1,5 +1,5 @@
 import { records, requests } from '@application';
-import { LessonActivity, TYPE_ACTIVITY, TYPE_LESSON } from '@chess-tent/models';
+import { LessonActivity, TYPE_LESSON } from '@chess-tent/models';
 import {
   ActiveUserLessonsRecord,
   LessonRecord,
@@ -24,14 +24,7 @@ const newTraining: MF<(activity: LessonActivity) => Promise<void>> =
 const userTrainings = records.createRecord<UserTrainingsRecord>({
   ...records.collectionRecipe,
   ...records.createApiRecipe(requests.trainings),
-  ...records.createDenormalizedCollectionRecipe(TYPE_ACTIVITY),
   new: newTraining,
-});
-
-const lessons = records.createRecord<LessonsRecord>({
-  ...records.collectionRecipe,
-  ...records.createApiRecipe(requests.lessons),
-  ...records.createDenormalizedCollectionRecipe(TYPE_LESSON),
 });
 
 const createLesson: MF<() => Promise<StatusResponse>, LessonRecord> =
@@ -63,10 +56,16 @@ const lesson = records.createRecord<LessonRecord>({
   create: createLesson,
 });
 
+// Do not normalize because those lessons have partial state
 const myLessons = records.createRecord<ActiveUserLessonsRecord>({
   ...records.collectionRecipe,
-  ...records.createDenormalizedCollectionRecipe(TYPE_LESSON),
   ...records.createApiRecipe(requests.myLessons),
+});
+
+// Do not normalize because those lessons have partial state
+const lessons = records.createRecord<LessonsRecord>({
+  ...records.collectionRecipe,
+  ...records.createApiRecipe(requests.lessons),
 });
 
 export { userTrainings, lessons, myLessons, lesson };

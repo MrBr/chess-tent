@@ -99,8 +99,7 @@ export type ActiveUserNotificationsRecord = RecordBase<Notification[]> &
   RecipeCollection<Notification>;
 export type ActiveUserLessonsRecord = RecipeCollection<Lesson> &
   RecipeApiLoad<Requests['myLessons']> &
-  RecipeDenormalizedCollection<Lesson> &
-  Omit<RecordBase<Lesson[]>, 'get'>;
+  RecordBase<Lesson[]>;
 export type ActiveUserRecord = RecordBase<User> &
   RecipeDenormalized<User> &
   RecipeMethod<'save', () => Promise<void>, User> &
@@ -111,9 +110,8 @@ export type UserTrainingsRecord = RecipeMethod<
   LessonActivity[]
 > &
   RecipeApiLoad<Requests['trainings']> &
-  RecipeDenormalizedCollection<LessonActivity> &
   RecipeCollection<LessonActivity> &
-  Omit<RecordBase<LessonActivity[]>, 'get'>;
+  RecordBase<LessonActivity[]>;
 export type UserScheduledTrainingsRecord = RecipeMethod<
   'new',
   CreateNewUserTraining,
@@ -142,8 +140,7 @@ export type LessonRecord = RecipeMethod<
   RecipeDenormalized<Lesson>;
 export type LessonsRecord = RecipeApiLoad<Requests['lessons']> &
   RecordBase<Lesson[]> &
-  RecipeCollection<Lesson> &
-  RecipeDenormalizedCollection<Lesson>;
+  RecipeCollection<Lesson>;
 
 export type Records<T extends Activity = Activity> = {
   activeUser: RecordWith<ActiveUserRecord>;

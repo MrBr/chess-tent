@@ -1,6 +1,11 @@
 import React, { useCallback } from 'react';
 import { DrawShape } from '@chess-tent/chessground/dist/draw';
-import { addStep, updateStepState, getLastStep } from '@chess-tent/models';
+import {
+  addStep,
+  updateStepState,
+  getLastStep,
+  addStepRightToSame,
+} from '@chess-tent/models';
 import {
   AppStep,
   FEN,
@@ -65,14 +70,11 @@ const boardChange = (
     // New piece dropped or removed
     const newVariationStep = createStep('variation', {
       position: newPosition,
-      editing: true,
       orientation,
     });
     const updatedStep = updateStepState(
       addStepNextToTheComments(step, newVariationStep) as VariationStep,
-      {
-        editing: false,
-      },
+      {},
     );
     updateStep(updatedStep);
     setActiveStep(newVariationStep);
@@ -108,7 +110,7 @@ const boardChange = (
       move: notableMove,
       orientation,
     });
-    updateStep(addStepNextToTheComments(step, newMoveStep));
+    updateStep(addStepRightToSame(step, newMoveStep));
     setActiveStep(newMoveStep);
     return;
   }

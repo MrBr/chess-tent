@@ -8,6 +8,7 @@ export type MoveStepState = {
   description?: string;
   move: NotableMove;
   steps: AppStep[];
+  editing?: boolean;
 };
 export type MoveStep = AppStep<MoveStepState, 'move'>;
 export type MoveModule = StepModule<MoveStep, 'move', { move: NotableMove }>;
@@ -17,7 +18,7 @@ export type VariationStepState = {
   shapes: Shape[];
   position: FEN;
   description?: string;
-  steps: (VariationStep | DescriptionStep | ExerciseSteps | MoveStep)[];
+  steps: AppStep[];
   editing?: boolean;
   moveIndex?: number;
   // Used for variations derived from previous line.

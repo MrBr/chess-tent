@@ -6,6 +6,7 @@ import {
   getRightStep,
   getParentStep,
   StepRoot,
+  replaceStep,
 } from '@chess-tent/models';
 import {
   FEN,
@@ -40,24 +41,26 @@ const boardChange = (
   promoted?: PieceRole,
 ) => {
   const {
-    state: { move, orientation },
+    state: { move, orientation, editing },
   } = step;
 
-  const moveIndex = services.getNextMoveIndex(move);
-
-  if (movedPiece.color === move.piece.color) {
-    // New example
-    const newVariationStep = services.createStep('variation', {
-      editing: true,
-      moveIndex,
-      position: newPosition,
-      orientation,
-    });
-
-    updateStep(addStep(step, newVariationStep));
-    setActiveStep(newVariationStep);
+  if (editing) {
+    updateStep(
+      updateStepState(step, {
+        move: {
+          ...move,
+          position: newPosition,
+          move: newMove,
+          promoted,
+          captured,
+          piece: movedPiece,
+        },
+      }),
+    );
     return;
   }
+
+  const moveIndex = services.getNextMoveIndex(move);
 
   const notableMove = createNotableMove(
     newPosition,
@@ -67,6 +70,19 @@ const boardChange = (
     captured,
     promoted,
   );
+
+  if (movedPiece.color === move.piece.color) {
+    // New example
+    const newVariationStep = services.createStep('variation', {
+      moveIndex,
+      position: newPosition,
+      orientation,
+    });
+
+    updateStep(addStep(step, newVariationStep));
+    setActiveStep(newVariationStep);
+    return;
+  }
 
   const variationStep = getParentStep(stepRoot, step) as VariationStep;
   const rightStep = getRightStep(variationStep, step) as VariationStep;
@@ -111,8 +127,14 @@ const EditorBoard: MoveModule['EditorBoard'] = ({
       shapes,
       move: { position },
       orientation,
+      editing,
     },
   } = step;
+
+  const updateEditing = useCallback(
+    (editing: boolean) => updateStep(updateStepState(step, { editing })),
+    [updateStep, step],
+  );
 
   const updateShapes = useCallback(
     (shapes: DrawShape[]) => {
@@ -129,7 +151,17 @@ const EditorBoard: MoveModule['EditorBoard'] = ({
         orientation: step.state.orientation,
         editing: true,
       });
-      updateStep(addStep(step, newVariation));
+      if (editing) {
+        const parentStep = getParentStep(stepRoot, step) as VariationStep;
+        // Keeping all the child steps, just replacing the current step type
+        newVariation.state.steps = step.state.steps;
+        if (parentStep.stepType === 'variation') {
+          // This should always be the case
+          updateStep(replaceStep(parentStep, step, newVariation));
+        }
+      } else {
+        updateStep(addStep(step, newVariation));
+      }
       setActiveStep(newVariation);
     },
     [setActiveStep, step, updateStep],
@@ -143,23 +175,19 @@ const EditorBoard: MoveModule['EditorBoard'] = ({
       captured: boolean,
       promoted?: PieceRolePromotable,
     ) => {
-      if (services.isLegalMove(step.state.move.position, newMove, promoted)) {
-        boardChange(
-          stepRoot,
-          step,
-          updateStep,
-          setActiveStep,
-          newPosition,
-          newMove,
-          movedPiece,
-          captured,
-          promoted,
-        );
-        return;
-      }
-      onFENChange(newPosition);
+      boardChange(
+        stepRoot,
+        step,
+        updateStep,
+        setActiveStep,
+        newPosition,
+        newMove,
+        movedPiece,
+        captured,
+        promoted,
+      );
     },
-    [stepRoot, step, updateStep, setActiveStep, onFENChange],
+    [stepRoot, step, updateStep, setActiveStep],
   );
 
   const resetHandle = useCallback(() => {
@@ -208,6 +236,8 @@ const EditorBoard: MoveModule['EditorBoard'] = ({
       allowAllMoves
       sparePieces
       fen={position}
+      editing={editing}
+      onUpdateEditing={updateEditing}
       onMove={onChangeHandle}
       onPieceRemove={onFENChange}
       onPieceDrop={onFENChange}

@@ -31,6 +31,7 @@ const SegmentBoard = <T extends ExerciseSteps>({
     <Chessboard
       allowAllMoves
       sparePieces
+      editing
       viewOnly={viewOnly}
       orientation={orientation}
       fen={fen}

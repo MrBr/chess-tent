@@ -139,12 +139,31 @@ const EditorSidebar: ExerciseModule['EditorSidebar'] = ({
     }
     setActiveStep(exerciseStep);
   }, [stepRoot, setActiveStep, step, updateStep, updateChapter]);
+  const addVariationStep = useCallback(() => {
+    const {
+      state: {
+        task: { position },
+        orientation,
+      },
+    } = step;
+    const parent = getParent(stepRoot, step);
+    const variationStep = services.createStep('variation', {
+      position,
+      orientation,
+    });
+    if (isStep(parent)) {
+      updateStep(addStepToRightOf(parent, step, variationStep));
+    } else {
+      updateChapter(addStepToRightOf(parent, step, variationStep));
+    }
+    setActiveStep(variationStep);
+  }, [stepRoot, setActiveStep, step, updateStep, updateChapter]);
 
   return (
     <>
       <Row>
         <StepToolbox
-          add={false}
+          add={addVariationStep}
           active={activeStep === step}
           step={step}
           exercise={addExerciseStep}
@@ -163,9 +182,7 @@ const EditorSidebar: ExerciseModule['EditorSidebar'] = ({
               if (!exerciseType) {
                 return;
               }
-              updateStep(
-                changeExercise(step, stepRoot, exerciseType as ExerciseTypes),
-              );
+              updateStep(changeExercise(step, exerciseType as ExerciseTypes));
             }}
           >
             <Dropdown.Toggle id="exercises" className="mb-2">

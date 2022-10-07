@@ -77,7 +77,7 @@ const getActivePosition = (step: ExerciseVariationStep) => {
 const TaskBoard: FunctionComponent<
   SegmentBoardProps<ExerciseVariationStep, 'task'>
 > = ({ step, Chessboard, updateSegment }) => {
-  const { task } = step.state;
+  const { task, orientation } = step.state;
   const { editing, moves, activeMoveIndex, position } = task;
   const activeMove = getActiveMove(step);
 
@@ -161,6 +161,7 @@ const TaskBoard: FunctionComponent<
       editing={!!editing}
       movableColor={color}
       sparePieces
+      orientation={orientation}
       fen={activePosition}
       onMove={handleChange}
       onPieceDrop={position => handleChange(position)}

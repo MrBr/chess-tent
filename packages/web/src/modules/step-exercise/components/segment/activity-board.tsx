@@ -19,6 +19,7 @@ const Playground: FunctionComponent<
   return (
     <Chessboard
       fen={step.state.task.position}
+      orientation={step.state.orientation}
       autoShapes={activeShapes}
       animation
       {...props}

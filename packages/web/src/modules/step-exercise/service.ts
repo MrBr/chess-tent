@@ -83,9 +83,7 @@ function createStep(id: any, initialState: any): any {
     return coreCreateStep<ExerciseVariationStep>(
       id,
       stepType,
-      createExerciseStepState<ExerciseVariationStep>('variation', {
-        position: initialState.position,
-      }),
+      createExerciseStepState<ExerciseVariationStep>('variation', initialState),
     );
   }
   return coreCreateStep<ExerciseSteps>(
@@ -125,29 +123,12 @@ export const getPositionAndOrientation = (
   }
 };
 
-export const getInitialExerciseStepState = (
-  stepRoot: StepRoot,
-  step: ExerciseSteps,
-  exerciseType: ExerciseTypes,
-) => {
-  const { position } = getPositionAndOrientation(stepRoot, step);
-  return createExerciseStepState(exerciseType, {
-    position,
-    ...step.state,
-  });
-};
-
 export const changeExercise = createService(
-  <T extends ExerciseSteps>(
-    step: T,
-    stepRoot: StepRoot,
-    exerciseType: ExerciseTypes,
-  ): T => {
-    step.state = getInitialExerciseStepState(
-      stepRoot,
-      step,
-      exerciseType as ExerciseTypes,
-    );
+  <T extends ExerciseSteps>(step: T, exerciseType: ExerciseTypes): T => {
+    step.state = createExerciseStepState(exerciseType, {
+      position: step.state.task.position,
+      ...step.state,
+    });
     return step;
   },
 );

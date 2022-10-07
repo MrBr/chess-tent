@@ -31,7 +31,7 @@ const Message = styled<ComponentProps<typeof Text>>(
     color: inherit;
   }
   
-  &:not(.owner) {
+  &.owner {
     background: var(--black-color);
     color: var(--light-color);
   }

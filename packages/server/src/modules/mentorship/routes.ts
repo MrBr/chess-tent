@@ -1,6 +1,6 @@
 import application, { middleware } from '@application';
-import { Mentorship, TYPE_MENTORSHIP } from '@chess-tent/models';
-import { PUSH_RECORD, RecordPushAction } from '@chess-tent/redux-record/types';
+import { TYPE_MENTORSHIP } from '@chess-tent/models';
+import { PUSH_RECORD } from '@chess-tent/redux-record';
 import {
   getCoaches,
   getStudents,

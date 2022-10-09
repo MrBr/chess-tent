@@ -192,11 +192,6 @@ export type StepToolbox = FunctionComponent<
 export type EditorSidebarStepContainer = FunctionComponent<
   {
     active?: boolean;
-    comment?: boolean | (() => void);
-    exercise?: boolean | (() => void);
-    remove?: boolean | (() => void);
-    add?: boolean | (() => void);
-    paste?: boolean | (() => void);
     textChangeHandler?: (text: string) => void;
     text?: string;
     showInput?: boolean;
@@ -204,6 +199,7 @@ export type EditorSidebarStepContainer = FunctionComponent<
     className?: string;
     actionsClassName?: string;
     stepRoot: StepRoot;
+    onDeleteComment?: () => void;
   } & EditorProps
 >;
 
@@ -234,6 +230,7 @@ export type LessonToolboxText = FunctionComponent<{
   text?: string;
   placeholder?: string;
   className?: string;
+  onKeyDown?: (e: KeyboardEvent) => void;
 }>;
 
 // Move written in chess notation

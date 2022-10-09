@@ -285,6 +285,13 @@ const EditorSidebar: MoveModule['EditorSidebar'] = props => {
             }),
           )
         }
+        onDeleteComment={() =>
+          updateStep(
+            updateStepState(step, {
+              description: undefined,
+            }),
+          )
+        }
       >
         {stepToolbox}
         <StepTag

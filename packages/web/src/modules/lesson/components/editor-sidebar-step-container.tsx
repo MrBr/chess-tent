@@ -1,6 +1,7 @@
-import React, { ReactEventHandler } from 'react';
+import React, { ReactEventHandler, useCallback } from 'react';
 import { Components } from '@types';
 import { components, ui, utils } from '@application';
+import debounce from 'lodash/debounce';
 
 const { Row, Col, Container } = ui;
 const { stopPropagation } = utils;
@@ -16,7 +17,26 @@ const EditorSidebarStepContainer: Components['EditorSidebarStepContainer'] =
       step,
       textChangeHandler,
       text,
+      onDeleteComment,
     } = props;
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const debouncedUpdate = useCallback(
+      debounce((newValue: string) => {
+        textChangeHandler && textChangeHandler(newValue);
+      }, 350),
+      [textChangeHandler],
+    );
+
+    const deleteListener = useCallback(
+      (e: KeyboardEvent) => {
+        console.log('TEST', !text, e.code);
+        if (!text && e.code === 'Backspace' && onDeleteComment) {
+          onDeleteComment();
+        }
+      },
+      [text, onDeleteComment],
+    );
 
     const handleClick: ReactEventHandler = event => {
       stopPropagation(event);
@@ -34,9 +54,10 @@ const EditorSidebarStepContainer: Components['EditorSidebarStepContainer'] =
             >
               {(text || active) && showInput && (
                 <LessonToolboxText
-                  onChange={textChangeHandler}
+                  onChange={debouncedUpdate}
                   text={text}
                   placeholder="Add comment"
+                  onKeyDown={deleteListener}
                 />
               )}
             </Container>

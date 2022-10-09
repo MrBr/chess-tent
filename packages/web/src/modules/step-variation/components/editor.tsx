@@ -247,6 +247,13 @@ const EditorSidebar: VariationModule['EditorSidebar'] = props => {
         textChangeHandler={description =>
           updateStep(updateStepState(step, { description }))
         }
+        onDeleteComment={() =>
+          updateStep(
+            updateStepState(step, {
+              description: undefined,
+            }),
+          )
+        }
       >
         <StepTag active={activeStep === step}>
           {step.state.move ? (

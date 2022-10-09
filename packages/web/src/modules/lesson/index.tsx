@@ -146,6 +146,12 @@ application.register(
   },
 );
 application.register(
+  () => import('./components/editor-sidebar-step-container'),
+  module => {
+    application.components.EditorSidebarStepContainer = module.default;
+  },
+);
+application.register(
   () => import('./components/step-toolbox-text'),
   module => {
     application.components.LessonToolboxText = module.default;

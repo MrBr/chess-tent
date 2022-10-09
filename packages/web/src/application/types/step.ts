@@ -46,15 +46,7 @@ export type EditorSidebarProps = {
   renderToolbox: (
     props: Pick<
       ComponentProps<StepToolbox>,
-      | 'comment'
-      | 'remove'
-      | 'exercise'
-      | 'step'
-      | 'active'
-      | 'text'
-      | 'textChangeHandler'
-      | 'add'
-      | 'showInput'
+      'comment' | 'remove' | 'exercise' | 'step' | 'active' | 'add'
     >,
   ) => ReactElement;
 } & EditorProps;

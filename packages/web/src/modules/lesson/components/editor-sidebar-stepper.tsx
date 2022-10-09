@@ -24,6 +24,7 @@ const Stepper = ({
           <StepRenderer
             component="EditorSidebar"
             activeStep={activeStep}
+            key={`step-${child.id}`}
             {...systemProps}
             // Override current step
             step={child as Steps}
@@ -32,7 +33,6 @@ const Stepper = ({
         return child.stepType === 'variation' && !root ? (
           <StepperVariation key={`variation-${child.id}`}>
             <RootStepContainer
-              setActiveStep={systemProps.setActiveStep}
               step={child}
               className={root && index > 0 ? 'mt-4' : ''}
             >
@@ -40,14 +40,7 @@ const Stepper = ({
             </RootStepContainer>
           </StepperVariation>
         ) : (
-          <RootStepContainer
-            setActiveStep={systemProps.setActiveStep}
-            step={child}
-            className={root && index > 0 ? 'mt-4' : ''}
-            key={`step-${child.id}`}
-          >
-            {stepper}
-          </RootStepContainer>
+          stepper
         );
       })}
     </>

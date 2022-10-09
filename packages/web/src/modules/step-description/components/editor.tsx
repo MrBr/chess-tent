@@ -10,7 +10,7 @@ import { components, ui, stepModules, services } from '@application';
 import Comment from './comment';
 
 const { Col, Row } = ui;
-const { StepTag } = components;
+const { StepTag, EditorSidebarStepContainer } = components;
 
 export const EditorBoard: DescriptionModule['EditorBoard'] = ({
   Chessboard,
@@ -60,15 +60,16 @@ export const EditorBoard: DescriptionModule['EditorBoard'] = ({
   );
 };
 
-export const EditorSidebar: DescriptionModule['EditorSidebar'] = ({
-  step,
-  setActiveStep,
-  activeStep,
-  updateStep,
-  stepRoot,
-  renderToolbox: StepToolbox,
-  removeStep,
-}) => {
+export const EditorSidebar: DescriptionModule['EditorSidebar'] = props => {
+  const {
+    step,
+    setActiveStep,
+    activeStep,
+    updateStep,
+    stepRoot,
+    renderToolbox: StepToolbox,
+    removeStep,
+  } = props;
   const addDescriptionStep = useCallback(() => {
     const parentStep = getParentStep(stepRoot, step) as DescriptionStep;
     const newDescriptionStep = services.createStep('description', {
@@ -101,7 +102,13 @@ export const EditorSidebar: DescriptionModule['EditorSidebar'] = ({
   }, [removeStep, step]);
 
   return (
-    <>
+    <EditorSidebarStepContainer
+      {...props}
+      text={step.state.description}
+      textChangeHandler={description =>
+        updateStep(updateStepState(step, { description }))
+      }
+    >
       <Row className="g-0">
         <Col className="col-auto me-2">
           <StepTag active={activeStep === step}>
@@ -110,11 +117,7 @@ export const EditorSidebar: DescriptionModule['EditorSidebar'] = ({
         </Col>
         <Col>
           <StepToolbox
-            text={step.state.description}
             active={activeStep === step}
-            textChangeHandler={description =>
-              updateStep(updateStepState(step, { description }))
-            }
             step={step}
             add={addVariationStep}
             comment={addDescriptionStep}
@@ -123,6 +126,6 @@ export const EditorSidebar: DescriptionModule['EditorSidebar'] = ({
           />
         </Col>
       </Row>
-    </>
+    </EditorSidebarStepContainer>
   );
 };

@@ -22,11 +22,10 @@ import {
   Steps,
   VariationStep,
 } from '@types';
-import { services, components, ui, constants } from '@application';
+import { services, components, constants } from '@application';
 
-const { Col, Row } = ui;
 const { createNotableMove, createStepsFromNotableMoves } = services;
-const { StepTag, Stepper, StepMove } = components;
+const { StepTag, Stepper, StepMove, EditorSidebarStepContainer } = components;
 const { START_FEN, KINGS_FEN } = constants;
 
 const boardChange = (
@@ -164,7 +163,7 @@ const EditorBoard: MoveModule['EditorBoard'] = ({
       }
       setActiveStep(newVariation);
     },
-    [setActiveStep, step, updateStep],
+    [editing, setActiveStep, step, stepRoot, updateStep],
   );
 
   const onChangeHandle = useCallback(
@@ -252,27 +251,49 @@ const EditorBoard: MoveModule['EditorBoard'] = ({
 };
 
 const EditorSidebar: MoveModule['EditorSidebar'] = props => {
-  const { step, activeStep, updateStep, renderToolbox: StepToolbox } = props;
+  const {
+    step,
+    activeStep,
+    updateStep,
+    renderToolbox: StepToolbox,
+    setActiveStep,
+  } = props;
 
+  const { description } = step.state;
+  const handleComment =
+    description === undefined
+      ? () => updateStep(updateStepState(step, { description: '' }))
+      : undefined;
+  const stepToolbox = (
+    <StepToolbox
+      active={activeStep === step}
+      step={step}
+      comment={handleComment}
+    />
+  );
   return (
     <>
-      <Row className="g-0">
-        <Col className="col-auto me-2">
-          <StepTag active={activeStep === step}>
-            <StepMove move={step.state.move} />
-          </StepTag>
-        </Col>
-        <Col>
-          <StepToolbox
-            text={step.state.description}
-            active={activeStep === step}
-            textChangeHandler={description =>
-              updateStep(updateStepState(step, { description }))
-            }
-            step={step}
-          />
-        </Col>
-      </Row>
+      <EditorSidebarStepContainer
+        {...props}
+        active={activeStep === step}
+        showInput={description !== undefined}
+        text={step.state.description}
+        textChangeHandler={description =>
+          updateStep(
+            updateStepState(step, {
+              description,
+            }),
+          )
+        }
+      >
+        {stepToolbox}
+        <StepTag
+          active={activeStep === step}
+          onClick={() => setActiveStep(step)}
+        >
+          <StepMove move={step.state.move} />
+        </StepTag>
+      </EditorSidebarStepContainer>
       <Stepper {...props} stepRoot={step} />
     </>
   );

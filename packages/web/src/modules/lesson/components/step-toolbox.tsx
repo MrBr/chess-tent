@@ -5,7 +5,7 @@ import React, {
   useState,
 } from 'react';
 import { Components, Steps } from '@types';
-import { components, hooks, services, ui, utils } from '@application';
+import { hooks, services, ui, utils } from '@application';
 import styled, { css } from '@chess-tent/styled-props';
 import {
   addStepToLeft,
@@ -19,7 +19,6 @@ import {
 import { over } from 'lodash';
 
 const {
-  Container,
   Button,
   Icon,
   Modal,
@@ -29,7 +28,6 @@ const {
   OverlayTrigger,
   Overlay,
 } = ui;
-const { LessonToolboxText } = components;
 const { useCopyStep, usePrompt, useShowOnActive } = hooks;
 const { stopPropagation } = utils;
 const { getStepPosition, getStepBoardOrientation } = services;
@@ -67,10 +65,7 @@ const ToolboxActions = styled.div.css`
 `;
 
 const StepToolbox: Components['StepToolbox'] = ({
-  textChangeHandler,
   active,
-  text,
-  showInput = true,
   updateStep,
   removeStep,
   step,
@@ -79,7 +74,6 @@ const StepToolbox: Components['StepToolbox'] = ({
   remove,
   add,
   exercise,
-  className,
   actionsClassName,
   paste,
   stepRoot,
@@ -197,11 +191,6 @@ const StepToolbox: Components['StepToolbox'] = ({
     removeStep(step);
   }, [removeStep, step]);
 
-  const handleClick: ReactEventHandler = event => {
-    stopPropagation(event);
-    !active && setActiveStep(step);
-  };
-
   // Used to prevent scrollbar flickering
   // TODO - make it configurable
   /** @see Editor */
@@ -313,18 +302,6 @@ const StepToolbox: Components['StepToolbox'] = ({
       )}
       {pasteModal}
       <div ref={toolboxRef} className={toolboxContainerClassName} />
-      <Container
-        className={`d-flex align-items-center h-100 pr-0 ${className}`}
-        onClick={handleClick}
-      >
-        {(text || active) && showInput && (
-          <LessonToolboxText
-            onChange={textChangeHandler}
-            text={text}
-            placeholder="Add comment"
-          />
-        )}
-      </Container>
     </>
   );
 };

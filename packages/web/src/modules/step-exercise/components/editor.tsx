@@ -161,7 +161,7 @@ const EditorSidebar: ExerciseModule['EditorSidebar'] = ({
 
   return (
     <>
-      <Row>
+      <Row onClick={() => setActiveStep(step)}>
         <StepToolbox
           add={addVariationStep}
           active={activeStep === step}
@@ -169,7 +169,6 @@ const EditorSidebar: ExerciseModule['EditorSidebar'] = ({
           exercise={addExerciseStep}
           comment={false}
           remove={removeExerciseStep}
-          showInput={false}
         />
         <Col className="col-auto">
           <StepTag active={activeStep === step}>

@@ -94,14 +94,12 @@ export default class AnalysisBase<T extends AnalysisSystemProps>
 
     return (
       <StepToolbox
-        showInput
         setActiveStep={this.setActiveStep}
         updateStep={this.updateStep}
         removeStep={this.removeStep}
         stepRoot={analysis}
         updateChapter={() => {}}
         {...props}
-        comment={false}
         add={this.addNewAnalysisVariation}
         exercise={false}
         paste={false}

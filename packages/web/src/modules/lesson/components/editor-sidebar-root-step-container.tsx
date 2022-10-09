@@ -5,7 +5,7 @@ import { Step } from '@chess-tent/models';
 const { Container } = ui;
 
 export interface RootStepContainerProps {
-  setActiveStep: (step: Step) => void;
+  setActiveStep?: (step: Step) => void;
   step: Step;
   children: ReactElement;
   className?: string;
@@ -20,7 +20,7 @@ const RootStepContainer = ({
   const handleStepClick = useCallback(
     event => {
       event.stopPropagation();
-      setActiveStep(step);
+      setActiveStep && setActiveStep(step);
     },
     [setActiveStep, step],
   );

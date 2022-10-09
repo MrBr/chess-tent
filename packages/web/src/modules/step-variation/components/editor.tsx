@@ -21,8 +21,8 @@ import {
 import { components, constants, services, ui } from '@application';
 import BoardSrc from '../images/board.svg';
 
-const { Col, Row, Img } = ui;
-const { Stepper, StepTag, StepMove } = components;
+const { Img } = ui;
+const { Stepper, StepTag, StepMove, EditorSidebarStepContainer } = components;
 const {
   createStep,
   getSameMoveStep,
@@ -231,30 +231,36 @@ const EditorBoard: VariationModule['EditorBoard'] = ({
 
 const EditorSidebar: VariationModule['EditorSidebar'] = props => {
   const { step, activeStep, updateStep, renderToolbox: StepToolbox } = props;
-
+  const { description } = step.state;
+  const handleComment =
+    description === undefined
+      ? () => updateStep(updateStepState(step, { description: '' }))
+      : undefined;
   return (
     <>
-      <Row className="no-gutters g-0">
-        <Col className="col-auto me-2">
-          <StepTag active={activeStep === step}>
-            {step.state.move ? (
-              <StepMove move={step.state.move} />
-            ) : (
-              <Img src={BoardSrc} style={{ background: '#ffffff' }} />
-            )}
-          </StepTag>
-        </Col>
-        <Col>
-          <StepToolbox
-            text={step.state.description}
-            active={activeStep === step}
-            textChangeHandler={description =>
-              updateStep(updateStepState(step, { description }))
-            }
-            step={step}
-          />
-        </Col>
-      </Row>
+      <EditorSidebarStepContainer
+        className="no-gutters g-0"
+        {...props}
+        active={activeStep === step}
+        showInput={description !== undefined}
+        text={step.state.description}
+        textChangeHandler={description =>
+          updateStep(updateStepState(step, { description }))
+        }
+      >
+        <StepTag active={activeStep === step}>
+          {step.state.move ? (
+            <StepMove move={step.state.move} />
+          ) : (
+            <Img src={BoardSrc} style={{ background: '#ffffff' }} />
+          )}
+        </StepTag>
+        <StepToolbox
+          active={activeStep === step}
+          step={step}
+          comment={handleComment}
+        />
+      </EditorSidebarStepContainer>
       <Stepper {...props} stepRoot={step} />
     </>
   );

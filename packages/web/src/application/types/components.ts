@@ -183,6 +183,20 @@ export type StepToolbox = FunctionComponent<
     remove?: boolean | (() => void);
     add?: boolean | (() => void);
     paste?: boolean | (() => void);
+    step: AppStep;
+    className?: string;
+    actionsClassName?: string;
+    stepRoot: StepRoot;
+  } & EditorProps
+>;
+export type EditorSidebarStepContainer = FunctionComponent<
+  {
+    active?: boolean;
+    comment?: boolean | (() => void);
+    exercise?: boolean | (() => void);
+    remove?: boolean | (() => void);
+    add?: boolean | (() => void);
+    paste?: boolean | (() => void);
     textChangeHandler?: (text: string) => void;
     text?: string;
     showInput?: boolean;
@@ -409,6 +423,7 @@ export type Components = {
   ChessboardFooter: ComponentType<ChessboardFooterProps>;
   Stepper: FunctionComponent<StepperProps>;
   StepToolbox: StepToolbox;
+  EditorSidebarStepContainer: EditorSidebarStepContainer;
   DifficultyLabel: ComponentType<{ difficulty: RecordValue<Difficulty> }>;
   Tags: ComponentType<
     { tags: RecordValue<Tag[]>; inline?: boolean } & ClassNameProps

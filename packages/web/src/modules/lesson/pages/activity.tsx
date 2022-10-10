@@ -99,6 +99,10 @@ const PageActivity = () => {
 
   const canComplete = isCoach(activity, user) || isOwner(activity, user);
 
+  const title = activity.subject.published
+    ? activity.subject.state.title
+    : activity.title;
+
   const pageHeader = (
     <Header className="border-bottom">
       <Col>
@@ -106,7 +110,7 @@ const PageActivity = () => {
           {isMobile ? (
             <Breadcrumbs.Item href="/">Back</Breadcrumbs.Item>
           ) : (
-            <Breadcrumbs.Item>{activity.title || 'Untitled'}</Breadcrumbs.Item>
+            <Breadcrumbs.Item>{title || 'Untitled'}</Breadcrumbs.Item>
           )}
         </Breadcrumbs>
       </Col>

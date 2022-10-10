@@ -10,7 +10,7 @@ const { className } = css`
   .playground-board {
     grid-area: board;
     border-right: 1px solid var(--grey-400-color);
-    padding: 25px calc(5vw) 0 calc(7vw); // left padding is a bit large for spare pieces
+    padding: 25px calc(3.5vw) 0 calc(5.5vw); // left padding is a bit large for spare pieces
   }
 
   .playground-actions {
@@ -47,7 +47,7 @@ const { className } = css`
 
   display: grid;
   grid-template-rows: min-content 1fr min-content;
-  grid-template-columns: 6fr 3.5fr 1.5fr;
+  grid-template-columns: 5.5fr 5fr 2fr;
   grid-template-areas:
     'board actions stepper'
     'board sidebar stepper'

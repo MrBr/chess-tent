@@ -87,8 +87,9 @@ const sizes = styled.props.size.stretch.css<BaseButtonProps>`
 `;
 
 export const Button = styled.button.css<ButtonProps>`
-  font-weight: 700;
+  font-weight: 500;
   font-size: 16px;
+  line-height: 16px;
 
   a & {
     display: inline-block;

@@ -189,7 +189,7 @@ export class ActivityRenderer<
               onChapterImport={importChapters}
               onChapterRemove={importChapters && this.removeChapterHandler}
               onChapterMove={importChapters && this.chapterMoveHandler}
-              onChapterChange={importChapters && this.chapterChangeHandler}
+              onChapterChange={this.chapterChangeHandler}
             />
           </LessonPlayground.Stepper>
         </LessonPlayground>

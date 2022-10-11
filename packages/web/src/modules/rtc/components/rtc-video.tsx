@@ -1,19 +1,16 @@
 import React, { useEffect, useRef, RefCallback } from 'react';
 import styled from '@chess-tent/styled-props';
-import useDraggable from '../hooks/useDraggable';
 
 export interface RTCVideoProps {
   mediaStream?: MediaStream;
   muted?: boolean;
   className?: string;
   containerRef?: RefCallback<HTMLDivElement>;
-  draggable?: boolean;
 }
 
 const RTCVideo = styled<RTCVideoProps>(props => {
-  const { mediaStream, muted, className, draggable } = props;
+  const { mediaStream, muted, className } = props;
   const videoRef = useRef<HTMLVideoElement>(null);
-  const containerRef = useDraggable(!!draggable);
 
   useEffect(() => {
     if (!videoRef.current) {
@@ -31,7 +28,7 @@ const RTCVideo = styled<RTCVideoProps>(props => {
   }
 
   return (
-    <div className={className} ref={containerRef}>
+    <div className={className}>
       <video autoPlay muted={muted} ref={videoRef} playsInline />
     </div>
   );
@@ -41,7 +38,7 @@ const RTCVideo = styled<RTCVideoProps>(props => {
   max-width: 115px;
   border-radius: 10px;
   overflow: hidden;
-  position: absolute;
+  position: relative;
 
   video {
     width: 200px;
@@ -54,9 +51,5 @@ const RTCVideo = styled<RTCVideoProps>(props => {
     zoom: 1.3;
   }
 `;
-
-RTCVideo.defaultProps = {
-  draggable: true,
-};
 
 export default RTCVideo;

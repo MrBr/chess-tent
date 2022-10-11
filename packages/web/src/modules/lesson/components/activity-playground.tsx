@@ -17,8 +17,8 @@ const { className } = css`
     grid-area: actions;
   }
 
-  .playground-sidebar {
-    grid-area: sidebar;
+  .playground-cardbar {
+    grid-area: cardbar;
     padding-top: 24px;
     overflow-y: scroll;
     ${PlaygroundCard} {
@@ -33,8 +33,8 @@ const { className } = css`
     border-top: 1px solid var(--grey-400-color);
   }
 
-  .playground-stepper {
-    grid-area: stepper;
+  .playground-sidebar {
+    grid-area: sidebar;
 
     :empty {
       display: none;
@@ -42,26 +42,27 @@ const { className } = css`
 
     border-left: 1px solid var(--grey-400-color);
     padding: 0;
-    overflow: hidden;
+    display: flex;
+    flex-direction: column;
   }
 
   display: grid;
   grid-template-rows: min-content 1fr min-content;
   grid-template-columns: 5.5fr 5fr 2fr;
   grid-template-areas:
-    'board actions stepper'
-    'board sidebar stepper'
-    'board navigation stepper';
+    'board actions sidebar'
+    'board cardbar sidebar'
+    'board navigation sidebar';
   width: 100%;
   height: 100%;
 
   ${mobileCss`
     .playground-board {
-      padding: 25px 0px;
+      padding: 25px 0;
       min-height: 100vw;
     }
     
-    .playground-sidebar {
+    .playground-cardbar {
       overflow-y: unset;
     }
     
@@ -71,12 +72,16 @@ const { className } = css`
       bottom: 0;
     }
 
+    .playground-sidebar {
+      flex-direction: row;
+    }
+
     grid-template-rows: 10px min-content auto min-content auto;
     grid-template-columns: 1fr;
     grid-template-areas:
-    'stepper'
-    'board'
     'sidebar'
+    'board'
+    'cardbar'
     'actions'
     'navigation';
   `}
@@ -92,8 +97,8 @@ ActivityPlayground.Board = (({ children }) => (
   <div className="playground-board">{children}</div>
 )) as Components['LessonPlayground']['Board'];
 
-ActivityPlayground.Sidebar = (({ children }) => (
-  <div className="playground-sidebar">{children}</div>
+ActivityPlayground.Cardbar = (({ children }) => (
+  <div className="playground-cardbar">{children}</div>
 )) as Components['LessonPlayground']['Sidebar'];
 
 ActivityPlayground.Actions = (({ children }) => (
@@ -104,8 +109,8 @@ ActivityPlayground.Navigation = (({ children }) => (
   <div className="playground-navigation">{children}</div>
 )) as Components['LessonPlayground']['Navigation'];
 
-ActivityPlayground.Stepper = (({ children }) => (
-  <div className="playground-stepper">{children}</div>
-)) as Components['LessonPlayground']['Stepper'];
+ActivityPlayground.Sidebar = (({ children }) => (
+  <div className="playground-sidebar">{children}</div>
+)) as Components['LessonPlayground']['Sidebar'];
 
 export default ActivityPlayground;

@@ -299,6 +299,7 @@ export interface ActivityBaseProps<T extends Steps | undefined> {
   cards: ActivityRendererModuleCard<T>[];
   actions: ActivityRendererModuleCard<T>[];
   navigation: ActivityRendererModuleCard<T>[];
+  sidebar: ActivityRendererModuleCard<T>[];
 }
 
 export interface ActivityDataProps<
@@ -430,8 +431,8 @@ export type Components = {
     Board: ComponentType;
     Actions: ComponentType;
     Navigation: ComponentType;
+    Cardbar: ComponentType;
     Sidebar: ComponentType;
-    Stepper: ComponentType;
   };
   LessonPlaygroundCard: LessonPlaygroundCard;
   StepTag: StepTag;

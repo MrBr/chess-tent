@@ -9,7 +9,7 @@ import ConferencingPeer from './conferencing-peer';
 import RTCVideo from './rtc-video';
 import { ConferencingContextType, ConferencingContext } from '../context';
 
-const { Icon, Dropdown, Button, Row, Col, Absolute } = ui;
+const { Icon, Dropdown, Button, Row, Col, Container, Text } = ui;
 const { useActiveUserRecord, useSocketRoomUsers } = hooks;
 const { noop } = utils;
 
@@ -114,49 +114,86 @@ const ConferencingProvider: Components['ConferencingProvider'] = ({ room }) => {
     localMediaStream,
   ]);
 
+  const multimediaSettings = (
+    <>
+      <Col className="text-center">
+        <Icon
+          type={mutedAudio ? 'micOff' : 'microphone'}
+          onClick={handleMuteUnmute}
+        />
+      </Col>
+      <Col className="text-center">
+        {!isMobile && (
+          <Icon
+            type={mutedVideo ? 'hide' : 'videoCamera'}
+            onClick={handleToggleCamera}
+          />
+        )}
+      </Col>
+    </>
+  );
+
   return (
     <ConferencingContext.Provider value={state}>
-      <Row className="justify-content-between">
-        <Col className="col-auto">
+      <Container fluid className="g-0">
+        {connectionStarted && (
+          <Row className="flex-column d-flex g-0 align-items-center">
+            {!mutedVideo && (
+              <Col className="col-auto">
+                <RTCVideo mediaStream={localMediaStream} muted />
+              </Col>
+            )}
+            {localMediaStream &&
+              liveUsers.map(
+                ({ id }, index) =>
+                  id !== user.id && (
+                    <Col className="col-auto">
+                      <ConferencingPeer
+                        room={room}
+                        fromUserId={id}
+                        toUserId={user.id as string}
+                        polite={index > currentUserIndex}
+                      />
+                    </Col>
+                  ),
+              )}
+          </Row>
+        )}
+        <Row className="justify-content-between mw-100 g-0">
           <Dropdown show={showConfMenu} onToggle={toggleShowConfMenu}>
             <Dropdown.Toggle collapse onClick={noop}>
               {!connectionStarted && (
-                <Icon type="headphone" onClick={toggleShowConfMenu} />
+                <div className="d-flex justify-content-center w-100">
+                  <Button
+                    variant="tertiary"
+                    size="extra-small"
+                    onClick={toggleShowConfMenu}
+                  >
+                    <Icon textual type="headphone" className="me-2" /> Join
+                  </Button>
+                </div>
               )}
               {connectionStarted && (
-                <>
-                  <Icon type="close" onClick={handleStopConferencing} />
-                  <Icon
-                    type={mutedAudio ? 'micOff' : 'microphone'}
-                    onClick={handleMuteUnmute}
-                  />
-                  {!isMobile && (
-                    <Icon
-                      type={mutedVideo ? 'hide' : 'videoCamera'}
-                      onClick={handleToggleCamera}
-                    />
-                  )}
-                </>
+                <Row className="mw-100 g-0 justify-content-between w-100 mt-2">
+                  <Col className="text-center">
+                    <Icon type="close" onClick={handleStopConferencing} />
+                  </Col>
+                  {multimediaSettings}
+                </Row>
               )}
             </Dropdown.Toggle>
             <Dropdown.Menu className="p-3">
               {!connectionStarted && (
                 <>
+                  <Row>
+                    <Col>
+                      <Text fontSize="extra-small" className="mb-3">
+                        Conference for live training
+                      </Text>
+                    </Col>
+                  </Row>
                   <Row className="flex-no-wrap">
-                    <Col className="col-auto">
-                      <Icon
-                        type={mutedAudio ? 'micOff' : 'microphone'}
-                        onClick={handleMuteUnmute}
-                      />
-                    </Col>
-                    <Col className="col-auto">
-                      {!isMobile && (
-                        <Icon
-                          type={mutedVideo ? 'hide' : 'videoCamera'}
-                          onClick={handleToggleCamera}
-                        />
-                      )}
-                    </Col>
+                    {multimediaSettings}
                     <Col onClick={toggleShowConfMenu}>
                       <Button
                         size="extra-small"
@@ -170,53 +207,13 @@ const ConferencingProvider: Components['ConferencingProvider'] = ({ room }) => {
                     mediaStream={localMediaStream}
                     muted
                     className="position-relative mt-3"
-                    draggable={false}
                   />
                 </>
               )}
-              {connectionStarted && (
-                <Row>
-                  <Col>
-                    <Button
-                      onClick={handleStopConferencing}
-                      size="extra-small"
-                      variant="tertiary"
-                    >
-                      Leave
-                    </Button>
-                  </Col>
-                </Row>
-              )}
             </Dropdown.Menu>
           </Dropdown>
-        </Col>
-        {connectionStarted && (
-          <Col>
-            <div style={{ position: 'relative' }}>
-              <Absolute left={0}>
-                {!mutedVideo && (
-                  <RTCVideo mediaStream={localMediaStream} muted />
-                )}
-              </Absolute>
-
-              {localMediaStream &&
-                liveUsers.map(
-                  ({ id }, index) =>
-                    id !== user.id && (
-                      <Absolute left={60 * (index + 1)} key={id}>
-                        <ConferencingPeer
-                          room={room}
-                          fromUserId={id}
-                          toUserId={user.id as string}
-                          polite={index > currentUserIndex}
-                        />
-                      </Absolute>
-                    ),
-                )}
-            </div>
-          </Col>
-        )}
-      </Row>
+        </Row>
+      </Container>
     </ConferencingContext.Provider>
   );
 };

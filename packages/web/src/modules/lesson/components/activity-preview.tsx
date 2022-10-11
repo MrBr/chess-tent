@@ -20,6 +20,7 @@ import {
 } from './activity-renderer-step';
 import { ActivityRendererAnalysisEngineCard } from './activity-renderer-engine';
 import { ActivityRendererNavigationCard } from './activity-renderer-navigation';
+import { ActivityRendererStepper } from './activity-renderer-stepper';
 
 interface PreviewProps {
   lesson: Lesson;
@@ -110,6 +111,7 @@ const Preview = ({ lesson, chapter, step }: PreviewProps) => {
       navigation={[ActivityRendererNavigationCard]}
       actions={[ActivityRendererAnalysisEngineCard]}
       boards={[ActivityRendererStepBoard]}
+      sidebar={[ActivityRendererStepper]}
     />
   );
 };

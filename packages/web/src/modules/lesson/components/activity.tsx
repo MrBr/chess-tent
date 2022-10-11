@@ -21,6 +21,8 @@ import { importLessonActivityChapters, isLessonActivity } from '../service';
 import { ActivityRendererAnalysisEngineCard } from './activity-renderer-engine';
 import { ActivityRendererNavigationCard } from './activity-renderer-navigation';
 import { ActivityRendererCommentsCard } from './activity-renderer-comments';
+import { ActivityRendererStepper } from './activity-renderer-stepper';
+import { ActivityRendererConference } from './activity-renderer-conference';
 
 const { useDispatchService, useActiveUserRecord } = hooks;
 
@@ -33,6 +35,7 @@ const LESSON_MODULES = {
     ActivityRendererAnalysisCard,
     ActivityRendererCommentsCard,
   ],
+  sidebar: [ActivityRendererStepper, ActivityRendererConference],
 };
 
 const EMPTY_LESSON_MODULES = {
@@ -40,6 +43,7 @@ const EMPTY_LESSON_MODULES = {
   navigation: [ActivityRendererNavigationCard],
   actions: [ActivityRendererAnalysisEngineCard],
   cards: [ActivityRendererAnalysisCard, ActivityRendererCommentsCard],
+  sidebar: [ActivityRendererStepper, ActivityRendererConference],
 };
 
 const Activity: ActivityComponent<LessonActivity> = props => {
@@ -88,6 +92,7 @@ const Activity: ActivityComponent<LessonActivity> = props => {
         cards={EMPTY_LESSON_MODULES.cards}
         actions={EMPTY_LESSON_MODULES.actions}
         navigation={EMPTY_LESSON_MODULES.navigation}
+        sidebar={EMPTY_LESSON_MODULES.sidebar}
         importChapters={importChapters}
       />
     );
@@ -107,6 +112,7 @@ const Activity: ActivityComponent<LessonActivity> = props => {
       cards={LESSON_MODULES.cards}
       actions={LESSON_MODULES.actions}
       navigation={LESSON_MODULES.navigation}
+      sidebar={LESSON_MODULES.sidebar}
       importChapters={isLessonActivity(activity) ? undefined : importChapters}
     />
   );

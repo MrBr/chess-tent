@@ -21,7 +21,7 @@ const {
 } = hooks;
 
 const { Breadcrumbs, Col, Button, Stack } = ui;
-const { Page, Header, ConferencingProvider, UserAvatar } = components;
+const { Page, Header, UserAvatar } = components;
 
 const PageActivity = () => {
   const { value: user } = useActiveUserRecord();
@@ -113,9 +113,6 @@ const PageActivity = () => {
             <Breadcrumbs.Item>{title || 'Untitled'}</Breadcrumbs.Item>
           )}
         </Breadcrumbs>
-      </Col>
-      <Col>
-        <ConferencingProvider room={room} />
       </Col>
       {!isMobile && (
         <Col className="col-auto position-relative">

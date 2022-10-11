@@ -4,21 +4,15 @@ import {
   ActivityRendererModuleCard,
   ActivityRendererProps,
   ActivityRendererState,
-  AppStep,
   ChessboardProps,
   Steps,
 } from '@types';
 import { components, services, ui } from '@application';
 import {
-  applyUpdates,
-  Chapter,
   getNextStep,
   getPreviousStep,
-  moveLessonChapter,
   updateActivityStepState,
 } from '@chess-tent/models';
-import Stepper from './activity-stepper';
-import { removeActivityChapter, updateActivityActiveChapter } from '../service';
 
 const { LessonPlayground, ChessboardContextProvider, Chessboard } = components;
 const { Container } = ui;
@@ -52,34 +46,6 @@ export class ActivityRenderer<
     updateActivity(updateActivityStepState)(activity, boardState, {
       completed: true,
     });
-  };
-
-  chapterChangeHandler = (chapter: Chapter) => {
-    const { updateActivity, activity, boardState } = this.props;
-    updateActivity(updateActivityActiveChapter)(activity, boardState, chapter);
-  };
-
-  chapterMoveHandler = (up?: boolean) => {
-    const { updateActivity, activity, chapter } = this.props;
-    updateActivity(
-      applyUpdates(activity)(draft => {
-        moveLessonChapter(draft.subject, chapter as Chapter, up);
-      }),
-    )();
-  };
-
-  removeChapterHandler = (chapter: Chapter) => {
-    const { updateActivity, activity, boardState } = this.props;
-    updateActivity(removeActivityChapter)(activity, boardState, chapter);
-  };
-
-  updateActiveStep = (step: AppStep) => {
-    const { updateActivity, activity, boardState } = this.props;
-    updateActivity(updateLessonActivityActiveStep)(
-      activity,
-      boardState,
-      step as Steps,
-    );
   };
 
   nextActivityStep = () => {
@@ -157,15 +123,7 @@ export class ActivityRenderer<
   }
 
   render() {
-    const {
-      chapter,
-      lesson,
-      importChapters,
-      boardState,
-      cards,
-      actions,
-      navigation,
-    } = this.props;
+    const { cards, actions, navigation, sidebar } = this.props;
 
     return (
       <ChessboardContextProvider>
@@ -174,24 +132,15 @@ export class ActivityRenderer<
           <LessonPlayground.Actions>
             {this.renderCardModules(actions)}
           </LessonPlayground.Actions>
-          <LessonPlayground.Sidebar>
+          <LessonPlayground.Cardbar>
             {this.renderCardModules(cards)}
-          </LessonPlayground.Sidebar>
+          </LessonPlayground.Cardbar>
           <LessonPlayground.Navigation>
             {this.renderCardModules(navigation)}
           </LessonPlayground.Navigation>
-          <LessonPlayground.Stepper>
-            <Stepper
-              boardState={boardState}
-              onStepClick={this.updateActiveStep}
-              activeChapter={chapter}
-              chapters={lesson.state.chapters}
-              onChapterImport={importChapters}
-              onChapterRemove={importChapters && this.removeChapterHandler}
-              onChapterMove={importChapters && this.chapterMoveHandler}
-              onChapterChange={this.chapterChangeHandler}
-            />
-          </LessonPlayground.Stepper>
+          <LessonPlayground.Sidebar>
+            {this.renderCardModules(sidebar)}
+          </LessonPlayground.Sidebar>
         </LessonPlayground>
       </ChessboardContextProvider>
     );

@@ -147,7 +147,7 @@ const ConferencingProvider: Components['ConferencingProvider'] = ({ room }) => {
               liveUsers.map(
                 ({ id }, index) =>
                   id !== user.id && (
-                    <Col className="col-auto">
+                    <Col className="col-auto mt-2">
                       <ConferencingPeer
                         room={room}
                         fromUserId={id}

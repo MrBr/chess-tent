@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { components, hooks, requests, state, ui } from '@application';
 import { Components } from '@types';
 
-const { Dropdown, Text } = ui;
+const { Dropdown } = ui;
 const { useHistory, useActiveUserRecord, useApi, useDispatch } = hooks;
 const { UserAvatar } = components;
 const {
@@ -32,28 +32,18 @@ const UserSettings: Components['UserSettings'] = ({ label }) => {
         {label}
       </Dropdown.Toggle>
       <Dropdown.Menu>
-        <Dropdown.Item>
-          <Text className="mb-0" onClick={() => history.push('/me')}>
-            Profile
-          </Text>
+        <Dropdown.Item onClick={() => history.push('/me')}>
+          Profile
         </Dropdown.Item>
         {user.coach && (
-          <Dropdown.Item>
-            <Text className="mb-0" onClick={() => history.push('/me/students')}>
-              Students
-            </Text>
+          <Dropdown.Item onClick={() => history.push('/me/students')}>
+            Students
           </Dropdown.Item>
         )}
-        <Dropdown.Item>
-          <Text className="mb-0" onClick={() => history.push('/me/coaches')}>
-            Coaches
-          </Text>
+        <Dropdown.Item onClick={() => history.push('/me/coaches')}>
+          Coaches
         </Dropdown.Item>
-        <Dropdown.Item>
-          <Text className="mb-0" onClick={() => logout()}>
-            Logout
-          </Text>
-        </Dropdown.Item>
+        <Dropdown.Item onClick={() => logout()}>Logout</Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>
   );

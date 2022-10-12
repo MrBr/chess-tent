@@ -546,7 +546,11 @@ export type Components = {
   AnalysisBoard: ComponentType<AnalysisBoardProps>;
   AnalysisSidebar: ComponentType<AnalysisSystemProps>;
   NotificationStand: ComponentType;
-  NotificationStandItem: ComponentType<{ onClick: () => void }>;
+  NotificationStandItem: ComponentType<{
+    onClick: () => void;
+    title: string;
+    subtitle: string;
+  }>;
   DifficultyDropdown: ComponentType<
     Omit<OptionsDropdownProps<Difficulty>, 'values' | 'label'> & {
       includeNullOption: boolean;

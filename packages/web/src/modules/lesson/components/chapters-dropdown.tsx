@@ -118,35 +118,23 @@ class ChaptersDropdown extends React.Component<
                   {onEdit && (
                     <Dropdown.Item
                       onClick={() => this.setState({ editing: !editing })}
+                      className="me-3"
                     >
-                      <Text
-                        inline
-                        fontSize="extra-small"
-                        className="me-3"
-                        weight={400}
-                      >
-                        Edit
-                      </Text>
+                      Edit
                     </Dropdown.Item>
                   )}
                   {onRemove && (
                     <Dropdown.Item onClick={() => onRemove(activeChapter)}>
-                      <Text inline fontSize="extra-small" weight={400}>
-                        Remove
-                      </Text>
+                      Remove
                     </Dropdown.Item>
                   )}
                   {onMove && (
                     <>
                       <Dropdown.Item onClick={() => onMove()}>
-                        <Text inline fontSize="extra-small" weight={400}>
-                          Move down
-                        </Text>
+                        Move down
                       </Dropdown.Item>
                       <Dropdown.Item onClick={() => onMove(true)}>
-                        <Text inline fontSize="extra-small" weight={400}>
-                          Move up
-                        </Text>
+                        Move up
                       </Dropdown.Item>
                     </>
                   )}

@@ -44,11 +44,10 @@ export const DropdownItem: NotificationComponent<
   const history = useHistory();
   const { text } = notification.state;
   return (
-    <NotificationStandItem onClick={() => history.push('/me/students')}>
-      <Text weight={500} fontSize="small">
-        Mentorship request
-      </Text>
-      <Text fontSize="extra-small">{text}</Text>
-    </NotificationStandItem>
+    <NotificationStandItem
+      onClick={() => history.push('/me/students')}
+      title="Mentorship request"
+      subtitle={text}
+    />
   );
 };

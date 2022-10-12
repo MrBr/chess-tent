@@ -5,12 +5,14 @@ import { Components } from '@types';
 const { Dropdown } = ui;
 
 const StandItem: Components['NotificationStandItem'] = ({
-  children,
   onClick,
+  title,
+  subtitle,
 }) => {
   return (
     <Dropdown.Item onClick={onClick} className="text-wrap">
-      {children}
+      <div>{title}</div>
+      <small>{subtitle}</small>
     </Dropdown.Item>
   );
 };

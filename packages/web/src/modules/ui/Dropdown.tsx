@@ -62,6 +62,7 @@ width: max-content;
 Dropdown.Item = styled(BDropdown.Item).css`
   :active {
     background: var(--grey-800-color);
+    color: var(--light-color);
   }
 `;
 

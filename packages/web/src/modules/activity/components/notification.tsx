@@ -49,12 +49,9 @@ export const DropdownItem: NotificationComponent<
   const { activityId, activityTitle } = notification.state;
   return (
     <NotificationStandItem
+      title="New Activity"
+      subtitle={getNotificationText(activityTitle)}
       onClick={() => history.push(`/activity/${activityId}`)}
-    >
-      <Text weight={700} fontSize="small">
-        New Activity
-      </Text>
-      <Text fontSize="extra-small">{getNotificationText(activityTitle)}</Text>
-    </NotificationStandItem>
+    />
   );
 };

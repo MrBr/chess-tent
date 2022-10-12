@@ -99,7 +99,8 @@ export type ActiveUserNotificationsRecord = RecordBase<Notification[]> &
   RecipeCollection<Notification>;
 export type ActiveUserLessonsRecord = RecipeCollection<Lesson> &
   RecipeApiLoad<Requests['myLessons']> &
-  RecordBase<Lesson[]>;
+  RecordBase<Lesson[]> &
+  RecipeDenormalizedCollection<Lesson>;
 export type ActiveUserRecord = RecordBase<User> &
   RecipeDenormalized<User> &
   RecipeMethod<'save', () => Promise<void>, User> &
@@ -140,7 +141,8 @@ export type LessonRecord = RecipeMethod<
   RecipeDenormalized<Lesson>;
 export type LessonsRecord = RecipeApiLoad<Requests['lessons']> &
   RecordBase<Lesson[]> &
-  RecipeCollection<Lesson>;
+  RecipeCollection<Lesson> &
+  RecipeDenormalizedCollection<Lesson>;
 
 export type Records<T extends Activity = Activity> = {
   activeUser: RecordWith<ActiveUserRecord>;

@@ -60,12 +60,14 @@ const lesson = records.createRecord<LessonRecord>({
 const myLessons = records.createRecord<ActiveUserLessonsRecord>({
   ...records.collectionRecipe,
   ...records.createApiRecipe(requests.myLessons),
+  ...records.createDenormalizedCollectionRecipe(TYPE_LESSON),
 });
 
 // Do not normalize because those lessons have partial state
 const lessons = records.createRecord<LessonsRecord>({
   ...records.collectionRecipe,
   ...records.createApiRecipe(requests.lessons),
+  ...records.createDenormalizedCollectionRecipe(TYPE_LESSON),
 });
 
 export { userTrainings, lessons, myLessons, lesson };

@@ -6,7 +6,7 @@ import EditableUserAvatar from '../components/editable-user-avatar';
 import SelectStudentElo from '../components/select-student-elo';
 import SelectFideTitle from '../components/select-fide-title';
 import SelectLanguages from '../components/select-languages';
-import AlertPublicProfile from '../components/AlertPublicProfile';
+import AlertPublicProfile from '../components/alert-public-profile';
 
 const { useActiveUserRecord, useHistory } = hooks;
 const { Page, Header } = components;

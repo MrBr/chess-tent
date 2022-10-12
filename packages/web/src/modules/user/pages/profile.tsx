@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 import { components, hooks, ui, utils } from '@application';
 import { User } from '@chess-tent/models';
 import { Icons } from '@types';
-import AlertPublicProfile from '../components/AlertPublicProfile';
+import AlertPublicProfile from '../components/alert-public-profile';
 
 const { UserAvatar, Page, MentorshipButton, Header } = components;
 const { useHistory, useOpenConversations } = hooks;

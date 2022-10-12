@@ -115,8 +115,13 @@ export const findCoaches = (
   });
 };
 
-export const validateUser = async (user: Partial<User>) => {
-  const invalidUserDataError = new UserModel(user).validateSync();
+export const validateUser = async (
+  user: Partial<User>,
+  skipPaths?: (keyof User)[],
+) => {
+  const invalidUserDataError = new UserModel(user).validateSync({
+    pathsToSkip: skipPaths,
+  });
   if (invalidUserDataError) {
     throw invalidUserDataError;
   }

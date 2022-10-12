@@ -64,14 +64,15 @@ export const findCoaches: MiddlewareFunction = (req, res, next) => {
     .catch(next);
 };
 
-export const validateUser: MiddlewareFunction = async (req, res, next) => {
-  try {
-    await service.validateUser(res.locals.user);
-  } catch (e) {
-    next(e);
-  }
-  next();
-};
+export const validateUser: (skipPaths?: (keyof User)[]) => MiddlewareFunction =
+  skipPaths => async (req, res, next) => {
+    try {
+      await service.validateUser(res.locals.user, skipPaths);
+    } catch (e) {
+      next(e);
+    }
+    next();
+  };
 
 export const updateUserActivity: MiddlewareFunction = (req, res, next) => {
   service

@@ -32,7 +32,7 @@ const {
 application.service.registerPostRoute(
   '/register',
   toLocals('user', req => req.body.user),
-  validateUser,
+  validateUser(),
   hashPassword,
   addUser,
   // mentorship flow
@@ -120,7 +120,15 @@ application.service.registerGetRoute(
 application.service.registerPutRoute(
   '/me',
   identify,
-  toLocals('user', (req, res) => ({ ...req.body, ...res.locals.me })),
+  toLocals('user', (req, res) => {
+    const userUpdates = { ...req.body, ...res.locals.me };
+    delete userUpdates.password;
+    delete userUpdates.nickname;
+    delete userUpdates.email;
+    delete userUpdates.state?.lastActivity;
+    return userUpdates;
+  }),
+  validateUser(['password', 'email', 'nickname']),
   updateUser,
   sendStatusOk,
 );
@@ -128,6 +136,6 @@ application.service.registerPutRoute(
 application.service.registerPostRoute(
   '/user/validate',
   toLocals('user', req => req.body),
-  validateUser,
+  validateUser(),
   sendStatusOk,
 );

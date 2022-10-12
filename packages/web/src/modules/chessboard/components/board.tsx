@@ -18,7 +18,7 @@ import {
 
 import React, { Component, RefObject } from 'react';
 import { Chessground } from '@chess-tent/chessground';
-import _ from 'lodash';
+import _set from 'lodash/set';
 import { Api } from '@chess-tent/chessground/dist/api';
 import { MouchEvent } from '@chess-tent/chessground/dist/types';
 import { State as CGState } from '@chess-tent/chessground/dist/state';
@@ -214,7 +214,7 @@ class Chessboard
           const updateConfig =
             typeof mapper === 'function'
               ? mapper
-              : () => _.set(update, mapper, this.props[propName]);
+              : () => _set(update, mapper, this.props[propName]);
           updateConfig(this, update);
         }
         return update;
@@ -376,7 +376,7 @@ class Chessboard
 
   onShapeRemove = (shape: DrawShape) => {};
 
-  onShapesChange: ChessboardProps['onShapesChange'] = _.debounce(shapes => {
+  onShapesChange: ChessboardProps['onShapesChange'] = shapes => {
     if (!this.props.onShapesChange) {
       return;
     }
@@ -387,7 +387,7 @@ class Chessboard
     // The issue is caused because chessground isn't behaving in immutable way.
     const newShapes = [...shapes];
     return this.props.onShapesChange(newShapes);
-  }, 500);
+  };
 
   onPromotionCancel = () => {
     this.setConfig({ fen: this.chess.fen() });

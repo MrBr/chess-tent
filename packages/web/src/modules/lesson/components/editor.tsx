@@ -9,7 +9,6 @@ import {
   updateLessonChapter,
   updateLessonStep,
   addChapterToLesson,
-  Lesson,
   getNextStep,
   getRightStep,
   moveLessonChapter,
@@ -28,7 +27,6 @@ import {
   UPDATE_ENTITY,
 } from '@types';
 import * as H from 'history';
-import { debounce } from 'lodash';
 import { components, hooks, services, state, ui, utils } from '@application';
 import { css } from '@chess-tent/styled-props';
 import ChaptersDropdown from './chapters-dropdown';
@@ -83,8 +81,8 @@ const { className } = css`
       position: absolute;
       width: 100%;
       height: 100%;
-      left: 0px;
-      top: 0px;
+      left: 0;
+      top: 0;
     }
 
     > div > * {
@@ -112,7 +110,7 @@ const { className } = css`
     overflow: unset;
 
     .editor-board {
-      padding: 0px;
+      padding: 0;
     }
 
     .editor-sidebar {
@@ -313,15 +311,10 @@ class EditorRenderer extends React.Component<
     });
   };
 
-  updateLessonStateDebounced = debounce((state: Partial<Lesson['state']>) => {
-    const { lesson } = this.props;
-    const action = serviceAction(updateSubjectState)(lesson, state);
-    this.addLessonUpdate(action);
-  }, 500);
-
   updateStep = (step: Step) => {
     const { lesson, activeChapter } = this.props;
 
+    // TODO - in future accept step patch instead of step to have even smaller updates
     const action = serviceAction(updateLessonStep)(lesson, activeChapter, step);
 
     // Only tracking history for the current chapter

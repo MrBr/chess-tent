@@ -6,9 +6,13 @@ export const TYPE_USER = 'users';
 
 export enum FideTitles {
   GM = 'GM',
+  WGM = 'WGM',
   IM = 'IM',
+  WIM = 'WIM',
   FM = 'FM',
+  WFM = 'WFM',
   NM = 'NM',
+  WCM = 'WCM',
   CM = 'CM',
   I = 'I',
   II = 'II',

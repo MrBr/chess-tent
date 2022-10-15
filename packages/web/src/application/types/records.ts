@@ -48,7 +48,7 @@ export interface RecipeDenormalizedCollection<T>
 export interface RecipeApiLoad<R extends RequestFetch<any, any>>
   extends RecordEntryType<
     GetRequestFetchResponse<R> extends DataResponse<infer D> ? D : never,
-    { loaded?: boolean; loading?: boolean }
+    { loaded?: boolean; loading?: boolean; error?: string }
   > {
   load: MF<
     (...args: GenericArguments<GetRequestFetchArgs<R>>) => void,

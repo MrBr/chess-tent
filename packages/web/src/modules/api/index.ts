@@ -12,6 +12,13 @@ hooks.useApiStatus = useApiStatus;
 hof.withRequestHandler = withRequestHandler;
 
 application.register(
+  () => import('./recipes'),
+  module => {
+    application.records.createApiRecipe = module.createApiRecipe;
+  },
+);
+
+application.register(
   () => import('./components/status'),
   module => {
     application.components.ApiStatusLabel = module.default;

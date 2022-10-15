@@ -10,7 +10,6 @@ import {
   useRecordSafe,
 } from '@chess-tent/redux-record';
 import {
-  createApiRecipe,
   createDenormalizedRecipe,
   createDenormalizedCollectionRecipe,
 } from './recipes';
@@ -25,7 +24,6 @@ application.state.actions.concatRecord = concatRecordAction;
 application.records.createRecord = createRecord;
 application.records.isInitialized = isInitialized;
 application.records.collectionRecipe = collectionRecipe;
-application.records.createApiRecipe = createApiRecipe;
 application.records.createDenormalizedRecipe = createDenormalizedRecipe;
 application.records.createDenormalizedCollectionRecipe =
   createDenormalizedCollectionRecipe;

@@ -22,12 +22,16 @@ const PageLesson = () => {
     return requests.lessonUpdates(...args);
   });
 
-  if (!lesson) {
-    return <Spinner animation="border" />;
+  if (
+    (lesson && isLessonPublicDocument(lesson)) ||
+    (lesson && !canEditLesson(lesson, user.id)) ||
+    meta.error
+  ) {
+    return <Redirect to="/" />;
   }
 
-  if (isLessonPublicDocument(lesson) || !canEditLesson(lesson, user.id)) {
-    return <Redirect to="/" />;
+  if (!lesson) {
+    return <Spinner animation="border" />;
   }
 
   return (

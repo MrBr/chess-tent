@@ -29,19 +29,20 @@ const PageRegister = () => {
   const { update } = useActiveUserRecord<null>();
   const history = useHistory();
   const query = useQuery<RegisterOptions>();
-  const { flow } = query;
+  const { flow, redirect } = query;
+  const loggedInPath = redirect ? decodeURI(redirect) : '/';
 
   useEffect(() => {
     if (response && !error) {
       update(response.data);
-      history.replace('/', {
+      history.replace(loggedInPath, {
         from: `/${history.location.pathname}?flow=${resolveFlow(
           flow,
           response.data.coach,
         )}`,
       });
     }
-  }, [response, error, history, update, flow]);
+  }, [response, error, history, update, flow, loggedInPath]);
 
   const handleSubmit = ({ ...user }) => {
     fetch({

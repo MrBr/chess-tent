@@ -182,6 +182,7 @@ export type LessonUpdates = { path: SubjectPath; value: any }[];
 export type RegisterOptions = {
   referrer?: User['id'];
   flow?: 'teach' | 'practice' | 'student';
+  redirect?: string;
 };
 
 export type RegisterRequestParams = {

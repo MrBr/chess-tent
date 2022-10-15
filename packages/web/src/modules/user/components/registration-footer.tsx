@@ -1,15 +1,25 @@
 import React, { FunctionComponent } from 'react';
-import { components, ui } from '@application';
+import { components, hooks, ui } from '@application';
 
 const { Text, Col, Row } = ui;
 const { Link } = components;
+const { useLocation } = hooks;
 
 const RegistrationFooter: FunctionComponent = () => {
+  const { search } = useLocation();
   return (
     <Row>
       <Col>
         <Text fontSize="extra-small" className="mt-4" align="center">
-          Already a member? <Link to="/login">Sign in</Link>
+          Already a member?{' '}
+          <Link
+            to={() => ({
+              pathname: '/login',
+              search,
+            })}
+          >
+            Sign in
+          </Link>
         </Text>
         <Text
           className="mt-5"

@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
 import { ui, hooks, requests, components } from '@application';
 import * as yup from 'yup';
+import { RegisterOptions } from '@chess-tent/types';
 
 import AuthPage from '../components/auth-page';
 import RegistrationHero from '../components/registration-hero';
 
-const { useApi } = hooks;
+const { useApi, useQuery, useLocation } = hooks;
 const { Redirect, Link } = components;
 const { Form, Button, FormGroup, Headline4, Text, Col, Row } = ui;
 
@@ -18,6 +19,8 @@ const PageLogin = () => {
   const { fetch, loading, response, error } = useApi(requests.login);
   const record = hooks.useActiveUserRecord(null);
   const { value: user, update: updateUser } = record;
+  const { redirect } = useQuery<RegisterOptions>();
+  const { search } = useLocation();
 
   useEffect(() => {
     if (response?.data) {
@@ -26,7 +29,7 @@ const PageLogin = () => {
   }, [response, updateUser]);
 
   if (user) {
-    return <Redirect to="/" />;
+    return <Redirect to={redirect || '/'} />;
   }
 
   return (
@@ -35,7 +38,15 @@ const PageLogin = () => {
         <Col>
           <Headline4 className="mt-4">Sign in</Headline4>
           <Text fontSize="extra-small">
-            Don’t have an account? <Link to="/register">Sign Up</Link>
+            Don’t have an account?{' '}
+            <Link
+              to={() => ({
+                pathname: '/register',
+                search,
+              })}
+            >
+              Sign Up
+            </Link>
           </Text>
         </Col>
       </Row>

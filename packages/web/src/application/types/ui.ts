@@ -117,7 +117,7 @@ export interface ConfirmProps {
   autoClose?: () => void;
 }
 
-type FontSize = 'base' | 'small' | 'extra-small' | 'large';
+type FontSize = 'base' | 'small' | 'extra-small' | 'large' | 'smallest';
 
 export type TextProps = {
   children?: ReactNode | ReactElement[];

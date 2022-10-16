@@ -30,6 +30,10 @@ const size = styled.props.fontSize.css`
   &.extra-small {
     font-size: 16px;
   }
+  
+  &.smallest {
+    font-size: 13px;
+  }
 
  ${mobileCss`
    font-size: 18px;
@@ -44,6 +48,10 @@ const size = styled.props.fontSize.css`
 
    &.extra-small {
      font-size: 14px;
+   }
+
+   &.smallest {
+     font-size: 13px;
    }
  `}
 `;

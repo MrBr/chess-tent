@@ -17,14 +17,14 @@ import {
   NotableMove,
   PGNHeaders,
   Piece,
-  PieceRole,
   PieceRolePromotable,
   Steps,
   VariationStep,
 } from '@types';
 import { services, components, constants } from '@application';
 
-const { createNotableMove, createStepsFromNotableMoves } = services;
+const { createNotableMove, createStepsFromNotableMoves, isLegalMove } =
+  services;
 const { StepTag, Stepper, StepMove, EditorSidebarStepContainer } = components;
 const { START_FEN, KINGS_FEN } = constants;
 
@@ -37,7 +37,7 @@ const boardChange = (
   newMove: Move,
   movedPiece: Piece,
   captured?: boolean,
-  promoted?: PieceRole,
+  promoted?: PieceRolePromotable,
 ) => {
   const {
     state: { move, orientation, editing },
@@ -70,7 +70,10 @@ const boardChange = (
     promoted,
   );
 
-  if (movedPiece.color === move.piece.color) {
+  if (
+    movedPiece.color === move.piece.color ||
+    !isLegalMove(move.position, newMove, promoted, false)
+  ) {
     // New example
     const newVariationStep = services.createStep('variation', {
       moveIndex,

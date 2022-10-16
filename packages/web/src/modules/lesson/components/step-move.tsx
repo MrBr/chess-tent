@@ -40,6 +40,8 @@ const StepMoveComponent: StepMove = ({
     {move.file && getSquareRank(move.move[0])}
     {move.captured && 'x'}
     {getMoveAnnotation(move)}
+    {move.checkmate && '#'}
+    {move.stalemate && '1/2'}
     {suffix}
   </span>
 );

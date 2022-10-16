@@ -20,6 +20,7 @@ export const identify: Middleware['identify'] = (req, res, next) => {
 export const webLogin: Middleware['webLogin'] = (req, res, next) => {
   const token = application.service.generateApiToken(res.locals.user);
   res.cookie(COOKIE_TOKEN_KEY, token, { httpOnly: true });
+  res.locals.me = res.locals.user;
   next();
 };
 

@@ -1,4 +1,4 @@
-import { MiddlewareFunction } from '@types';
+import { Middleware, MiddlewareFunction } from '@types';
 import { User } from '@chess-tent/models';
 import { errors, middleware, db } from '@application';
 import * as service from './service';
@@ -41,11 +41,11 @@ export const updateUser: MiddlewareFunction = (req, res, next) => {
     .catch(next);
 };
 
-export const getUser: MiddlewareFunction = (req, res, next) => {
+export const getUser: Middleware['getUser'] = localKey => (req, res, next) => {
   service
-    .getUser(res.locals.user)
+    .getUser(res.locals[localKey])
     .then(user => {
-      res.locals.user = user;
+      res.locals[localKey] = user;
       next();
     })
     .catch(next);
@@ -76,7 +76,7 @@ export const validateUser: (skipPaths?: (keyof User)[]) => MiddlewareFunction =
 
 export const updateUserActivity: MiddlewareFunction = (req, res, next) => {
   service
-    .updateUser(res.locals.user.id, {
+    .updateUser(res.locals.me.id, {
       state: { lastActivity: new Date() },
     })
     .then(next)

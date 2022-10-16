@@ -55,7 +55,7 @@ application.service.registerPostRoute(
   '/invite-user',
   identify,
   toLocals('user.email', req => req.body.email),
-  getUser,
+  getUser('user'),
   validate((req, res) => {
     if (res.locals?.user?.email) {
       throw new UserAlreadyExists();
@@ -103,17 +103,16 @@ application.service.registerGetRoute('/logout', webLogout, sendStatusOk);
 application.service.registerGetRoute(
   '/me',
   identify,
-  toLocals('user', (req, res) => res.locals.me),
   updateUserActivity,
-  getUser,
-  sendData('user'),
+  getUser('me'),
+  sendData('me'),
 );
 
 application.service.registerGetRoute(
   '/user/:userId',
   identify,
   toLocals('user.id', req => req.params.userId),
-  getUser,
+  getUser('user'),
   sendData('user'),
 );
 

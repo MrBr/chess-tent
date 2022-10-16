@@ -37,6 +37,11 @@ export type NotableMove = {
   piece: Piece;
   index: number;
   position: FEN;
+  checkmate?: boolean;
+  stalemate?: boolean;
+  // File and Rank indicate ambiguous move and have to be used for correct notation
+  file?: boolean;
+  rank?: boolean;
 };
 export type UciMove = string;
 export type MoveShort = ShortMove;

@@ -3,6 +3,9 @@ import {
   Key,
   Move,
   MoveShort,
+  NotableMove,
+  Piece,
+  PieceColor,
   PieceRole,
   PieceRolePromotable,
   PieceRoleShort,
@@ -14,6 +17,15 @@ import { transformColorKey, transformPieceTypeToRole } from './helpers';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 export const Chess = require('chess.js');
+
+const shortRoleMap: Record<PieceRole, PieceRoleShort> = {
+  knight: 'n',
+  king: 'k',
+  rook: 'r',
+  queen: 'q',
+  pawn: 'p',
+  bishop: 'b',
+};
 
 export const createFenForward = (position: FEN, moves: Move[]) => {
   const chess = new Chess(position);
@@ -69,23 +81,6 @@ export const switchTurnColor: Services['switchTurnColor'] = position => {
   return fenChunks.join(' ');
 };
 
-const shortRoleMap: Record<PieceRole, PieceRoleShort> = {
-  knight: 'n',
-  king: 'k',
-  rook: 'r',
-  queen: 'q',
-  pawn: 'p',
-  bishop: 'b',
-};
-
-export const extendRole: Services['extendRole'] = (role: PieceRoleShort) =>
-  Object.entries<PieceRoleShort>(shortRoleMap).find(
-    ([, shortRole]) => shortRole === role,
-  )?.[0] as PieceRole;
-
-export const shortenRole: Services['shortenRole'] = (role: PieceRole) =>
-  shortRoleMap[role];
-
 export const createPiece: Services['createPiece'] = (
   role,
   color,
@@ -110,7 +105,40 @@ export const createNotableMove: Services['createNotableMove'] = (
   piece,
   captured = false,
   promoted = undefined,
-) => ({ position, move, index, piece, promoted, captured });
+) => {
+  const notableMove: NotableMove = {
+    position,
+    move,
+    index,
+    piece,
+    promoted,
+    captured,
+  };
+
+  const game = new Chess(position);
+
+  const checkmate = game.in_checkmate();
+  if (checkmate) {
+    notableMove.checkmate = checkmate;
+  }
+
+  const stalemate = game.in_stalemate();
+  if (stalemate) {
+    notableMove.stalemate = stalemate;
+  }
+
+  const ambiguities = getMoveAmbiguities(position, move, piece, captured);
+
+  if (ambiguities.file) {
+    notableMove.file = ambiguities.file;
+  }
+
+  if (ambiguities.rank) {
+    notableMove.rank = ambiguities.rank;
+  }
+
+  return notableMove;
+};
 
 export const isLegalMove: Services['isLegalMove'] = (
   position,
@@ -193,3 +221,119 @@ export const getFenPosition: Services['getFenPosition'] = fen =>
 
 export const getFenEnPassant: Services['getFenEnPassant'] = fen =>
   fen.split(' ')[3];
+
+export const extendRole: Services['extendRole'] = (role: PieceRoleShort) =>
+  Object.entries<PieceRoleShort>(shortRoleMap).find(
+    ([, shortRole]) => shortRole === role,
+  )?.[0] as PieceRole;
+
+export function getRank(square: Key) {
+  return square.charAt(1);
+}
+
+export function getFile(square: Key) {
+  return square.charAt(0);
+}
+
+export const shortenRole: Services['shortenRole'] = (role: PieceRole) =>
+  shortRoleMap[role];
+
+export const shortenColor: Services['shortenColor'] = (color: PieceColor) =>
+  color === 'white' ? 'w' : 'b';
+
+/*
+ * The following code bellow is copied from chess.js library and modified.
+ *
+ * Copyright (c) 2022, Jeff Hlywa (jhlywa@gmail.com)
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ *----------------------------------------------------------------------------*/
+/**
+ * Function returns ambiguous axis
+ */
+export function getMoveAmbiguities(
+  newPosition: FEN,
+  move: Move,
+  piece: Piece,
+  captured: boolean,
+) {
+  const game = new Chess(switchTurnColor(newPosition));
+  // Undo move to check if the move is ambiguous
+  game.remove(move[1]);
+  const shortPiece = shortenRole(piece.role);
+  const shortColor = shortenColor(piece.color);
+  game.put(
+    {
+      type: shortPiece,
+      color: shortColor,
+    },
+    move[0],
+  );
+
+  if (captured) {
+    // HACK
+    // If piece is captured place something on captured square.
+    // 1. placing always pawn, piece can't be retrieved
+    // 2. en passant should work but the pawn isn't actually on right square
+    game.put(
+      {
+        type: 'p',
+        color: shortColor === 'w' ? 'b' : 'w',
+      },
+      move[1],
+    );
+  }
+
+  const moves = game.moves({
+    legal: true,
+    piece: shortPiece,
+    verbose: true,
+  });
+  const from = move[0];
+  const to = move[1];
+
+  let same_rank = 0;
+  let same_file = 0;
+
+  for (let i = 0, len = moves.length; i < len; i++) {
+    const ambig_from = moves[i].from;
+    const ambig_to = moves[i].to;
+    const ambig_piece = moves[i].piece;
+
+    /* if a move of the same piece type ends on the same to square, we'll
+     * need to add a disambiguator to the algebraic notation
+     */
+    if (shortPiece === ambig_piece && from !== ambig_from && to === ambig_to) {
+      if (getFile(from) === getFile(ambig_from)) {
+        same_file++;
+      }
+
+      if (getRank(from) === getRank(ambig_from) || same_file === 0) {
+        same_rank++;
+      }
+    }
+  }
+
+  return { file: same_file > 0, rank: same_rank > 0 };
+}

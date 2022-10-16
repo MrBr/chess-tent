@@ -1,8 +1,9 @@
 import React from 'react';
-import { components } from '@application';
+import { components, services } from '@application';
 import { NotableMove, StepMove } from '@types';
 
 const { PieceIcon } = components;
+const { getSquareFile, getSquareRank } = services;
 
 const isKingSideCastling = (move: NotableMove) =>
   move.piece.role === 'king' &&
@@ -35,6 +36,8 @@ const StepMoveComponent: StepMove = ({
     {move.index &&
       (move.piece?.color === 'black' ? blackIndexSign : `${move.index}.`)}
     {move.piece && <PieceIcon piece={move.piece} />}
+    {move.rank && getSquareFile(move.move[0])}
+    {move.file && getSquareRank(move.move[0])}
     {move.captured && 'x'}
     {getMoveAnnotation(move)}
     {suffix}

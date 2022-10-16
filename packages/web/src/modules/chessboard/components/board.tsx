@@ -87,6 +87,7 @@ class Chessboard
     shapes: [],
     allowAllMoves: true,
     allowEvaluation: true,
+    movableColor: 'both',
   };
 
   constructor(props: ChessboardProps) {
@@ -289,12 +290,12 @@ class Chessboard
     move?: Move,
     options?: { piece?: Piece; promoted?: PieceRolePromotable },
   ) => {
-    const { editing, movableColor } = this.props;
+    const { allowAllMoves, movableColor } = this.props;
 
     const oldFen = this.chess.fen();
     const chess = new Chess(oldFen);
 
-    if (move && editing && options?.promoted) {
+    if (move && allowAllMoves && options?.promoted) {
       // This only handles if promotion is actually an "illegal" move
       // in case board is edited
       const { promotion } = createMoveShortObject(move, options?.promoted);
@@ -309,7 +310,12 @@ class Chessboard
           move[1],
         );
       }
-    } else if (editing) {
+    } else if (allowAllMoves) {
+      if (move && chess.move(createMoveShortObject(move, options?.promoted))) {
+        // If move is valid, use auto generated fen
+        // This is useful for en passant and potentially some other moves
+        return chess.fen();
+      }
       const fenPieces = this.api.getFen();
       const newFen = replaceFENPosition(chess.fen(), fenPieces, options?.piece);
       const didLoadFen = chess.load(
@@ -333,6 +339,7 @@ class Chessboard
         validMove = chess.move(chessMove);
       }
       if (!validMove) {
+        this.syncChessgroundState({}); // redraw the board
         throw new Error(`Invalid move ${move}.`);
       }
     }

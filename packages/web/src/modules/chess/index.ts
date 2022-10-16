@@ -18,7 +18,10 @@ import {
   uciToSan,
   getNextMoveIndex,
   getFenPosition,
+  shortenColor,
   getFenEnPassant,
+  getRank,
+  getFile,
 } from './service';
 
 services.Chess = Chess;
@@ -31,6 +34,7 @@ services.createNotableMove = createNotableMove;
 services.switchTurnColor = switchTurnColor;
 services.extendRole = extendRole;
 services.shortenRole = shortenRole;
+services.shortenColor = shortenColor;
 services.uciToSan = uciToSan;
 services.createMoveShortObject = createMoveShortObject;
 services.createPiece = createPiece;
@@ -40,3 +44,6 @@ services.getComment = getComment;
 services.getNextMoveIndex = getNextMoveIndex;
 services.getFenPosition = getFenPosition;
 services.getFenEnPassant = getFenEnPassant;
+services.getFenEnPassant = getFenEnPassant;
+services.getSquareRank = getRank;
+services.getSquareFile = getFile;

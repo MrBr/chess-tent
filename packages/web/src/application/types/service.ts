@@ -23,6 +23,7 @@ import {
 } from '@chess-tent/models';
 import {
   FEN,
+  Key,
   Move,
   MoveComment,
   MoveShort,
@@ -30,6 +31,7 @@ import {
   Orientation,
   Piece,
   PieceColor,
+  PieceColorShort,
   PieceRole,
   PieceRolePromotable,
   PieceRoleShort,
@@ -65,6 +67,7 @@ export type Services = {
     promoted?: PieceRolePromotable,
   ) => MoveShort;
   shortenRole: (role: PieceRole) => PieceRoleShort;
+  shortenColor: (color: PieceColor) => PieceColorShort;
   extendRole: (role: PieceRoleShort) => PieceRole;
   createPiece: (
     role: PieceRole,
@@ -90,6 +93,8 @@ export type Services = {
   getNextMoveIndex: (prevMove?: NotableMove | null) => number;
   getFenPosition: (fen: string) => string;
   getFenEnPassant: (fen: string) => string;
+  getSquareFile: (square: Key) => string;
+  getSquareRank: (square: Key) => string;
   isSameStepMove: (
     step: VariationStep | MoveStep,
     move: NotableMove,

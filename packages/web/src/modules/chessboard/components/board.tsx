@@ -49,6 +49,7 @@ const {
   getPiece,
   getTurnColor,
   switchTurnColor,
+  getFenEnPassant,
 } = services;
 
 export type State = CGState;
@@ -288,12 +289,12 @@ class Chessboard
     move?: Move,
     options?: { piece?: Piece; promoted?: PieceRolePromotable },
   ) => {
-    const { allowAllMoves, movableColor } = this.props;
+    const { editing, movableColor } = this.props;
 
     const oldFen = this.chess.fen();
     const chess = new Chess(oldFen);
 
-    if (move && allowAllMoves && options?.promoted) {
+    if (move && editing && options?.promoted) {
       // This only handles if promotion is actually an "illegal" move
       // in case board is edited
       const { promotion } = createMoveShortObject(move, options?.promoted);
@@ -308,7 +309,7 @@ class Chessboard
           move[1],
         );
       }
-    } else if (allowAllMoves) {
+    } else if (editing) {
       const fenPieces = this.api.getFen();
       const newFen = replaceFENPosition(chess.fen(), fenPieces, options?.piece);
       const didLoadFen = chess.load(
@@ -440,10 +441,16 @@ class Chessboard
   };
 
   onMove = (orig: ExtendedKey, dest: ExtendedKey, metadata: MoveMetadata) => {
-    const { onMove } = this.props;
+    const { onMove, editing } = this.props;
     const lastMove = this.api.state.lastMove as Move;
     const piece = this.api.state.pieces[lastMove[1]] as Piece;
     const rank = parseInt(dest.charAt(1));
+    const captured =
+      !!metadata.captured ||
+      (piece.role === 'pawn' &&
+        getFenEnPassant(this.chess.fen()) === dest &&
+        !editing);
+
     if (piece.role === 'pawn' && (rank === 1 || rank === 8)) {
       this.context.update({
         promotion: {
@@ -462,7 +469,7 @@ class Chessboard
       this.unhandledFenChange(fen);
       return;
     }
-    onMove(fen, lastMove, piece, !!metadata.captured);
+    onMove(fen, lastMove, piece, captured);
   };
 
   onPromotion = ({ from, to, piece }: Promotion, role: PieceRolePromotable) => {

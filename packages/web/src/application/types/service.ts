@@ -89,6 +89,7 @@ export type Services = {
   getComment: (comments: MoveComment[], position: FEN) => string | undefined;
   getNextMoveIndex: (prevMove?: NotableMove | null) => number;
   getFenPosition: (fen: string) => string;
+  getFenEnPassant: (fen: string) => string;
   isSameStepMove: (
     step: VariationStep | MoveStep,
     move: NotableMove,

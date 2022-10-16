@@ -18,6 +18,7 @@ import {
   uciToSan,
   getNextMoveIndex,
   getFenPosition,
+  getFenEnPassant,
 } from './service';
 
 services.Chess = Chess;
@@ -38,3 +39,4 @@ services.createNotableMovesFromGame = createNotableMovesFromGame;
 services.getComment = getComment;
 services.getNextMoveIndex = getNextMoveIndex;
 services.getFenPosition = getFenPosition;
+services.getFenEnPassant = getFenEnPassant;

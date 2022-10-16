@@ -190,3 +190,6 @@ export const getNextMoveIndex: Services['getNextMoveIndex'] = prevMove => {
 
 export const getFenPosition: Services['getFenPosition'] = fen =>
   fen.split(' ')[0];
+
+export const getFenEnPassant: Services['getFenEnPassant'] = fen =>
+  fen.split(' ')[3];

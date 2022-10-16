@@ -6,7 +6,7 @@ import EvaluationBar from './evaluation-bar';
 import EvaluationLines from './evaluation-lines';
 
 const { useChessboardContext } = hooks;
-const { Container, Row, Col, Text, Check } = ui;
+const { Row, Col, Text, Check } = ui;
 const { START_FEN } = constants;
 
 const EvaluationComponent: Components['Evaluation'] = ({ onMoveClick }) => {
@@ -34,7 +34,7 @@ const EvaluationComponent: Components['Evaluation'] = ({ onMoveClick }) => {
   );
 
   return (
-    <Container>
+    <>
       <Row>
         <Col>
           <Text weight={500} className="m-0">
@@ -70,7 +70,7 @@ const EvaluationComponent: Components['Evaluation'] = ({ onMoveClick }) => {
           </Row>
         </>
       )}
-    </Container>
+    </>
   );
 };
 

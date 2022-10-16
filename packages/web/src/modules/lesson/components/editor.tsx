@@ -33,8 +33,17 @@ import ChaptersDropdown from './chapters-dropdown';
 import RootStepButton from './editor-sidebar-root-step-button';
 import { useLessonParams } from '../hooks/lesson';
 
-const { Row, Col, Icon, Button, OverlayTrigger, Tooltip, ToggleButton, Text } =
-  ui;
+const {
+  Row,
+  Col,
+  Icon,
+  Button,
+  OverlayTrigger,
+  Tooltip,
+  ToggleButton,
+  Text,
+  Container,
+} = ui;
 const { createChapter, updateStepRotation, logException } = services;
 const {
   Stepper,
@@ -504,9 +513,9 @@ class EditorRenderer extends React.Component<
           </div>
           <div className="editor-sidebar">
             <div>
-              <div className="ps-3">
+              <Container fluid className="ps-3">
                 <Evaluation />
-              </div>
+              </Container>
               <div className="h-100 overflow-y-auto position-relative ps-4 pe-3">
                 <Stepper
                   activeStep={activeStep}

@@ -1,4 +1,4 @@
-import application, { middleware } from '@application';
+import application, { middleware, utils } from '@application';
 import { TYPE_MENTORSHIP } from '@chess-tent/models';
 import { PUSH_RECORD } from '@chess-tent/redux-record';
 import {
@@ -6,6 +6,7 @@ import {
   getStudents,
   resolveMentorshipRequest,
   requestMentorship,
+  validateMentorshipUpdate,
 } from './middleware';
 
 const {
@@ -17,7 +18,11 @@ const {
   createNotifications,
   conditional,
   sendAction,
+  sendMail,
+  getUser,
 } = middleware;
+
+const { formatAppLink } = utils;
 
 application.service.registerPostRoute(
   '/mentorship',
@@ -36,6 +41,23 @@ application.service.registerPostRoute(
   })),
   createNotifications,
   sendNotifications,
+
+  // Email the coach
+  toLocals('coach', req => ({ id: req.body.coachId })),
+  getUser('coach'),
+  getUser('me'),
+  sendMail((req, res) => ({
+    from: 'Chess Tent <noreply@chesstent.com>',
+    to: res.locals.coach.email,
+    subject: 'Mentorship request',
+    html: `<p>Hey,</p> 
+      <p>You have a new mentorship request from ${
+        res.locals.me.name
+      }. Respond to request at <a href=${formatAppLink('/me/students')}> ${
+      process.env.APP_DOMAIN
+    }/me/students<a></p>
+      <p>Best Regards, <br/>Chess Tent Team</p>`,
+  })),
 
   toLocals(
     'action.channel',
@@ -61,10 +83,26 @@ application.service.registerPutRoute(
   toLocals('studentId', req => req.body.studentId),
   toLocals('coachId', req => req.body.coachId),
   toLocals('approved', req => req.body.approved),
-  conditional((req, { locals: { coachId, me, studentId } }) =>
-    // Every party can manipulate mentorship once requested
-    [coachId, studentId].includes(me.id),
-  )(resolveMentorshipRequest),
+  validateMentorshipUpdate,
+  resolveMentorshipRequest,
+  toLocals('coach', req => ({ id: req.body.coachId })),
+  getUser('coach'),
+  toLocals('student', req => ({ id: req.body.studentId })),
+  getUser('student'),
+  conditional(req => req.body.approved)(
+    sendMail((req, res) => ({
+      from: 'Chess Tent <noreply@chesstent.com>',
+      to: res.locals.student.email,
+      subject: 'You got a coach!',
+      html: `<p>Hey,</p> 
+      <p>${
+        res.locals.coach.name
+      } accepted your mentorship request. Message your coach and schedule a training at <a href=${formatAppLink(
+        '/',
+      )}> ${process.env.APP_DOMAIN}<a></p>
+      <p>Best Regards, <br/>Chess Tent Team</p>`,
+    })),
+  ),
   sendStatusOk,
 );
 

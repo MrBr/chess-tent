@@ -1,5 +1,6 @@
 import { MiddlewareFunction } from '@types';
 import * as service from './service';
+import { UnauthorisedMentorshipAction } from './error';
 
 export const addMentor: MiddlewareFunction = async (req, res, next) => {
   try {
@@ -62,4 +63,16 @@ export const getCoaches: MiddlewareFunction = (req, res, next) => {
       next();
     })
     .catch(next);
+};
+
+export const validateMentorshipUpdate: MiddlewareFunction = (
+  req,
+  res,
+  next,
+) => {
+  // Every party can manipulate mentorship once requested
+  if (![req.body.studentId, req.body.coachId].includes(res.locals.me.id)) {
+    throw new UnauthorisedMentorshipAction();
+  }
+  next();
 };

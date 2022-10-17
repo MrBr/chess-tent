@@ -417,6 +417,7 @@ export type Components = {
     menu?: ReactElement | null;
   }>;
   Chessboard: ClassComponent<ChessboardInterface>;
+  ChessboardPreview: FunctionComponent<{ fen: FEN }>;
   ChessboardContextProvider: ComponentType;
   ChessboardFooter: ComponentType<ChessboardFooterProps>;
   Stepper: FunctionComponent<StepperProps>;

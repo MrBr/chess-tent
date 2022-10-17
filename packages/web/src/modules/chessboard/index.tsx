@@ -10,6 +10,12 @@ application.register(
   },
 );
 application.register(
+  () => import('./components/board-preview'),
+  module => {
+    application.components.ChessboardPreview = module.default;
+  },
+);
+application.register(
   () => import('./components/footer'),
   module => {
     application.components.ChessboardFooter = module.default;

@@ -4,7 +4,7 @@ import { StepRoot } from '@chess-tent/models';
 import { Steps } from '@types';
 import { css } from '@chess-tent/styled-props';
 
-const { Chessboard, ChessboardContextProvider } = components;
+const { ChessboardPreview } = components;
 const { Container } = ui;
 const { getStepPosition } = services;
 const { START_FEN } = constants;
@@ -31,15 +31,7 @@ const Thumbnail = ({ stepRoot }: { stepRoot: StepRoot }) => {
   return (
     <Container className={className}>
       <div>
-        <ChessboardContextProvider>
-          <Chessboard
-            fen={initialPosition}
-            footer={null}
-            header={null}
-            viewOnly={true}
-            size="100%"
-          />
-        </ChessboardContextProvider>
+        <ChessboardPreview fen={initialPosition} />
       </div>
     </Container>
   );

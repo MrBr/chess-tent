@@ -30,6 +30,7 @@ const Playground: FunctionComponent<
         position,
         move,
         moveToPlayIndex,
+        piece,
         captured,
         promoted,
       );

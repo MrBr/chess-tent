@@ -22,10 +22,10 @@ import {
   LessonActivityBoardState,
 } from '@chess-tent/models';
 import {
+  ChessMove,
   FEN,
   Key,
   Move,
-  MoveComment,
   MoveShort,
   NotableMove,
   Orientation,
@@ -57,7 +57,7 @@ export type Services = {
   createFenBackward: (fen: FEN, moves: Move[]) => FEN;
   createMoveShape: (move: Move, opponent: boolean, lineWidth?: number) => Shape;
   createPonderMoveShape: (evaluation: Evaluation) => Shape;
-  getPiece: (position: FEN, square: string) => Piece | null;
+  getPiece: (position: FEN, square: Key) => Piece | null;
   getTurnColor: (position: FEN) => PieceColor;
   setTurnColor: (position: FEN, color: PieceColor) => FEN;
   switchTurnColor: (position: FEN) => FEN;
@@ -88,9 +88,20 @@ export type Services = {
     promoted?: PieceRolePromotable,
     bothColors?: boolean,
   ) => boolean;
-  createNotableMovesFromGame: (game: ChessInstance) => NotableMove[];
-  getComment: (comments: MoveComment[], position: FEN) => string | undefined;
-  getNextMoveIndex: (prevMove?: NotableMove | null) => number;
+  parsePgn: (
+    pgn: string,
+    options: { orientation: Orientation | undefined },
+  ) => Steps[];
+  createNotableMoveFromChessMove: (
+    position: FEN,
+    move: ChessMove,
+    index: number,
+  ) => NotableMove;
+  getNextMoveIndex: (
+    prevMove: NotableMove | undefined | null,
+    color: PieceColor,
+    allowNull?: boolean,
+  ) => number;
   getFenPosition: (fen: string) => string;
   getFenEnPassant: (fen: string) => string;
   getSquareFile: (square: Key) => string;
@@ -99,10 +110,6 @@ export type Services = {
     step: VariationStep | MoveStep,
     move: NotableMove,
   ) => boolean;
-  createStepsFromNotableMoves: (
-    moves: NotableMove[],
-    options?: { comments?: MoveComment[]; orientation?: Orientation },
-  ) => MoveStep[];
   getSameMoveStep: (
     step: VariationStep | MoveStep,
     move: NotableMove,

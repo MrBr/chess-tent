@@ -7,15 +7,13 @@ import {
   getParentStep,
   StepRoot,
   replaceStep,
+  Chapter,
 } from '@chess-tent/models';
 import {
   FEN,
   Move,
-  MoveComment,
   MoveModule,
   MoveStep,
-  NotableMove,
-  PGNHeaders,
   Piece,
   PieceRolePromotable,
   Steps,
@@ -23,8 +21,7 @@ import {
 } from '@types';
 import { services, components, constants } from '@application';
 
-const { createNotableMove, createStepsFromNotableMoves, isLegalMove } =
-  services;
+const { createNotableMove, isLegalMove, parsePgn } = services;
 const { StepTag, Stepper, StepMove, EditorSidebarStepContainer } = components;
 const { START_FEN, KINGS_FEN } = constants;
 
@@ -119,6 +116,7 @@ const EditorBoard: MoveModule['EditorBoard'] = ({
   stepRoot,
   updateStep,
   setActiveStep,
+  updateChapter,
 }) => {
   const {
     state: {
@@ -209,24 +207,15 @@ const EditorBoard: MoveModule['EditorBoard'] = ({
   }, [updateStep, step, orientation, setActiveStep]);
 
   const onPGN = useCallback(
-    (moves: NotableMove[], headers: PGNHeaders, comments: MoveComment[]) => {
-      const steps = createStepsFromNotableMoves(moves, {
-        comments,
-        orientation,
+    (pgn: string) => {
+      const steps = parsePgn(pgn, { orientation });
+      let updatedStepRoot = stepRoot;
+      steps.forEach(variation => {
+        updatedStepRoot = addStep(updatedStepRoot, variation);
       });
-      const move = position === headers.FEN ? moves[0] : undefined;
-      const variationSteps = move ? steps.splice(1) : steps;
-      const newVariation = services.createStep('variation', {
-        steps: variationSteps,
-        position: headers.FEN,
-        move,
-        orientation,
-      });
-      const updatedStep = addStep(step, newVariation);
-      updateStep(updatedStep);
-      setActiveStep(newVariation);
+      updateChapter(updatedStepRoot as Chapter);
     },
-    [step, updateStep, setActiveStep, orientation, position],
+    [orientation, stepRoot, updateChapter],
   );
 
   return (

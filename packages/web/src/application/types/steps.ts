@@ -20,6 +20,8 @@ export type VariationStepState = {
   description?: string;
   steps: AppStep[];
   editing?: boolean;
+  // What is the initial variation move index
+  // Useful when there is no initial move
   moveIndex?: number;
   // Used for variations derived from previous line.
   // Editing position for specific variation from unrelated position (line) will clear move.

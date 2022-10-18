@@ -13,10 +13,10 @@ import {
   Services,
 } from '@types';
 import { forEachRight } from 'lodash';
+import { Chess } from 'chess.js';
 import { transformColorKey, transformPieceTypeToRole } from './helpers';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-export const Chess = require('chess.js');
 
 const shortRoleMap: Record<PieceRole, PieceRoleShort> = {
   knight: 'n',
@@ -32,7 +32,7 @@ export const createFenForward = (position: FEN, moves: Move[]) => {
   moves.forEach(([from, to]) => {
     const piece = chess.get(from);
     chess.remove(from);
-    if (!chess.put(piece, to)) {
+    if (!piece || !chess.put(piece, to)) {
       throw Error(`Can't move ${piece} to square ${to}.`);
     }
   });
@@ -44,7 +44,7 @@ export const createFenBackward = (position: FEN, moves: Move[]) => {
   forEachRight(moves, ([to, from]) => {
     const piece = chess.get(from);
     chess.remove(from);
-    if (!chess.put(piece, to)) {
+    if (!piece || !chess.put(piece, to)) {
       throw Error(`Can't move ${piece} to square ${to}.`);
     }
   });
@@ -158,47 +158,21 @@ export const isLegalMove: Services['isLegalMove'] = (
   return !!reversedColorGame.move(shortMove);
 };
 
-export const createNotableMovesFromGame: Services['createNotableMovesFromGame'] =
-  game => {
-    const history = game.history({ verbose: true });
-    const headers = game.header();
-    const gameReplay = new Chess(headers.FEN);
-
-    const moves = history.map((chessMove, moveIndex) => {
-      const { from, to, promotion } = chessMove;
-      if (!gameReplay.move(chessMove)) {
-        throw new Error('Invalid move');
-      }
-
-      const position = gameReplay.fen();
-      const promoted = promotion
-        ? transformPieceTypeToRole(promotion)
-        : undefined;
-      const captured = !!chessMove.captured;
-      const color = transformColorKey(chessMove.color);
-      const role = transformPieceTypeToRole(chessMove.piece);
-      const piece = createPiece(role, color, !!promotion);
-      const move: Move = [from, to];
-      const index = Math.floor(moveIndex / 2) + 1;
-
-      return createNotableMove(
-        position,
-        move,
-        index,
-        piece,
-        captured,
-        promoted,
-      );
-    });
-
-    return moves;
+export const createNotableMoveFromChessMove: Services['createNotableMoveFromChessMove'] =
+  (position, move, index) => {
+    const role = transformPieceTypeToRole(move.piece);
+    const color = transformColorKey(move.color);
+    const promoted = move.promotion && transformPieceTypeToRole(move.promotion);
+    const piece = createPiece(role, color, !!move.promotion);
+    return createNotableMove(
+      position,
+      [move.from, move.to],
+      index,
+      piece,
+      !!move.captured,
+      promoted,
+    );
   };
-
-export const getComment: Services['getComment'] = (comments, fen) =>
-  comments
-    .find(comment => comment.fen === fen)
-    ?.comment.replace(/ *\[[^\]]*]/g, '')
-    .trim() || undefined;
 
 export const uciToSan = (engineMove: string): MoveShort => {
   const from = (engineMove[0] + engineMove[1]) as Key;
@@ -209,11 +183,18 @@ export const uciToSan = (engineMove: string): MoveShort => {
   return createMoveShortObject([from, to], promoted);
 };
 
-export const getNextMoveIndex: Services['getNextMoveIndex'] = prevMove => {
+export const getNextMoveIndex: Services['getNextMoveIndex'] = (
+  prevMove,
+  newMoveColor,
+  allowNull,
+) => {
   if (!prevMove) {
     return 1;
   }
-  return prevMove.piece.color === 'black' ? prevMove.index + 1 : prevMove.index;
+  return (allowNull && prevMove.piece.color === newMoveColor) ||
+    prevMove.piece.color === 'black'
+    ? prevMove.index + 1
+    : prevMove.index;
 };
 
 export const getFenPosition: Services['getFenPosition'] = fen =>

@@ -5,14 +5,12 @@ import {
   updateStepState,
   getLastStep,
   addVariationStep,
+  Chapter,
 } from '@chess-tent/models';
 import {
   AppStep,
   FEN,
   Move,
-  MoveComment,
-  NotableMove,
-  PGNHeaders,
   Piece,
   PieceRolePromotable,
   VariationModule,
@@ -28,7 +26,7 @@ const {
   getSameMoveStep,
   createNotableMove,
   isLegalMove,
-  createStepsFromNotableMoves,
+  parsePgn,
   getNextMoveIndex,
 } = services;
 const { START_FEN, KINGS_FEN } = constants;
@@ -127,6 +125,8 @@ const EditorBoard: VariationModule['EditorBoard'] = ({
   step,
   updateStep,
   setActiveStep,
+  updateChapter,
+  stepRoot,
 }) => {
   const {
     state: { shapes, editing, move, orientation },
@@ -180,33 +180,15 @@ const EditorBoard: VariationModule['EditorBoard'] = ({
   );
 
   const onPGN = useCallback(
-    (moves: NotableMove[], headers: PGNHeaders, comments: MoveComment[]) => {
-      const steps = createStepsFromNotableMoves(moves, {
-        comments,
-        orientation,
+    (pgn: string) => {
+      const steps = parsePgn(pgn, { orientation });
+      let updatedStepRoot = stepRoot;
+      steps.forEach(variation => {
+        updatedStepRoot = addStep(updatedStepRoot, variation);
       });
-      const pgnInitialPosition = headers.FEN;
-      if (step.state.steps.length === 0) {
-        const updatedStep = updateStepState(step, {
-          steps,
-          position: pgnInitialPosition,
-        });
-        updateStep(updatedStep);
-      } else {
-        const move = position === pgnInitialPosition ? moves[0] : undefined;
-        const variationSteps = move ? steps.splice(1) : steps;
-        const newVariation = createStep('variation', {
-          steps: variationSteps,
-          position: pgnInitialPosition,
-          orientation,
-          move,
-        });
-        const updatedStep = addStep(step, newVariation);
-        setActiveStep(newVariation);
-        updateStep(updatedStep);
-      }
+      updateChapter(updatedStepRoot as Chapter);
     },
-    [step, updateStep, setActiveStep, orientation, position],
+    [orientation, stepRoot, updateChapter],
   );
 
   return (

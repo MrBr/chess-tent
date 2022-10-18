@@ -1,5 +1,5 @@
 import { FEN, Key, Piece } from '@types';
-import { ChessInstance } from 'chess.js';
+import { ChessInstance, SQUARES } from 'chess.js';
 import { services } from '@application';
 import isNil from 'lodash/isNil';
 import _set from 'lodash/set';
@@ -33,7 +33,7 @@ export function toDests(
 } {
   const chess = new Chess(position) as ChessInstance;
   const dests: { [key: string]: Key[] } = {};
-  chess.SQUARES.forEach((s: string) => {
+  SQUARES.forEach((s: string) => {
     const ms = chess.moves({ square: s, verbose: true });
     if (ms.length) dests[s] = ms.map(m => m.to);
   });

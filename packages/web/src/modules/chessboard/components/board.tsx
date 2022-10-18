@@ -10,7 +10,6 @@ import {
   ExtendedKey,
   PieceRolePromotable,
   NotableMove,
-  MoveComment,
   FEN,
   Promotion,
   ChessInstance,
@@ -266,7 +265,7 @@ class Chessboard
     } else if (this.props.onPGN) {
       // This is useful trick for the moment
       // evaluation variation can be considered as a variation
-      this.props.onPGN(moves, { FEN: fen }, []);
+      // this.props.onPGN(moves, { FEN: fen }, []);
     } else {
       console.warn('Nothing handling evaluation move.');
     }
@@ -375,9 +374,9 @@ class Chessboard
     onUpdateEditing && onUpdateEditing(editing);
   };
 
-  onPGN = (moves: NotableMove[], headers: {}, comments: MoveComment[]) => {
+  onPGN = (pgn: string) => {
     const { onPGN } = this.props;
-    onPGN && onPGN(moves, headers, comments);
+    onPGN && onPGN(pgn);
   };
 
   onShapeAdd = (shape: DrawShape) => {};

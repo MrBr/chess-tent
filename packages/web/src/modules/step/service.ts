@@ -1,9 +1,7 @@
 import { FEN, Orientation, PieceColor, Services, Steps } from '@types';
-import { services } from '@application';
 import { updateStepState } from '@chess-tent/models';
-import { createStepModuleStep } from './model';
-
-const { getComment } = services;
+import { parse, ParseTree } from '@mliebelt/pgn-parser';
+import { transformNullMoves, transformPgnVariation } from './_helpers';
 
 export const getStepPosition = (step: Steps): FEN => {
   if (step.stepType === 'variation') {
@@ -29,16 +27,14 @@ export const updateStepRotation = (
   return updateStepState(step, { orientation });
 };
 
-export const createStepsFromNotableMoves: Services['createStepsFromNotableMoves'] =
-  (moves, options) => {
-    const comments = options?.comments || [];
-    const orientation = options?.orientation;
-
-    return moves.map(move =>
-      createStepModuleStep('move', {
-        description: getComment(comments, move.position),
-        move,
-        orientation,
-      }),
-    );
-  };
+export const parsePgn: Services['parsePgn'] = (pgn, { orientation }) => {
+  const processedPgn = transformNullMoves(pgn);
+  const games = parse(processedPgn, { startRule: 'games' }) as ParseTree[];
+  return games.map(game =>
+    transformPgnVariation(game.moves, {
+      fen: game.tags?.FEN,
+      orientation,
+      comment: game.gameComment?.comment,
+    }),
+  );
+};

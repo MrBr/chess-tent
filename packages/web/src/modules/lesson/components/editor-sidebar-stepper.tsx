@@ -30,8 +30,11 @@ const Stepper = ({
             step={child as Steps}
           />
         );
+        if (root) {
+          return <StepperVariation key={child.id}>{stepper}</StepperVariation>;
+        }
         return child.stepType === 'variation' && !root ? (
-          <StepperVariation key={`variation-${child.id}`}>
+          <StepperVariation key={child.id}>
             <RootStepContainer
               step={child}
               className={root && index > 0 ? 'mt-4' : ''}

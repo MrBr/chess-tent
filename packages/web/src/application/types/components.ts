@@ -46,8 +46,6 @@ import {
   ExtendedKey,
   PieceRolePromotable,
   Orientation,
-  MoveComment,
-  PGNHeaders,
   MovableColor,
   UciMove,
   ChessInstance,
@@ -84,11 +82,7 @@ export interface ChessboardFooterProps {
   onClear: () => void;
   onRotate: () => void;
   onFENSet: (FEN: FEN) => void;
-  onPGN?: (
-    moves: NotableMove[],
-    headers: PGNHeaders,
-    comments: MoveComment[],
-  ) => void;
+  onPGN?: (pgn: string) => void;
 }
 
 export interface ChessboardProps {
@@ -136,11 +130,7 @@ export interface ChessboardProps {
   onReset?: (FEN: string) => void;
   onClear?: (FEN: string) => void;
   onFENSet?: (FEN: string) => void;
-  onPGN?: (
-    moves: NotableMove[],
-    header: PGNHeaders,
-    comments: MoveComment[],
-  ) => void;
+  onPGN?: (pgn: string) => void;
   onOrientationChange?: (orientation: ChessboardProps['orientation']) => void;
 }
 

@@ -1,6 +1,5 @@
 import { ChessboardInterface, ChessboardProps } from '@types';
 import { Config } from '@chess-tent/chessground/dist/config';
-import { Api } from '@chess-tent/chessground/dist/api';
 
 export type ChessgroundMapper =
   | string

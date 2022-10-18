@@ -1,6 +1,6 @@
 import { services } from '@application';
+import { Chess } from 'chess.js';
 import {
-  Chess,
   getPiece,
   createFenForward,
   createFenBackward,
@@ -10,9 +10,8 @@ import {
   shortenRole,
   createMoveShortObject,
   createPiece,
-  createNotableMovesFromGame,
+  createNotableMoveFromChessMove,
   isLegalMove,
-  getComment,
   switchTurnColor,
   extendRole,
   uciToSan,
@@ -39,8 +38,7 @@ services.uciToSan = uciToSan;
 services.createMoveShortObject = createMoveShortObject;
 services.createPiece = createPiece;
 services.isLegalMove = isLegalMove;
-services.createNotableMovesFromGame = createNotableMovesFromGame;
-services.getComment = getComment;
+services.createNotableMoveFromChessMove = createNotableMoveFromChessMove;
 services.getNextMoveIndex = getNextMoveIndex;
 services.getFenPosition = getFenPosition;
 services.getFenEnPassant = getFenEnPassant;

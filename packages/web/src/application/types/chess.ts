@@ -9,7 +9,7 @@ import { DrawShape } from '@chess-tent/chessground/dist/draw';
 import {
   PieceType,
   ShortMove,
-  Comment,
+  Move as ChessJSMove,
   ChessInstance as ChessInstanceType,
 } from 'chess.js';
 
@@ -45,6 +45,7 @@ export type NotableMove = {
 };
 export type UciMove = string;
 export type MoveShort = ShortMove;
+export type ChessMove = ChessJSMove;
 export type MoveMetadata = CG_MOVEMETADATA;
 export type PieceColor = CG_COLOR;
 export type MovableColor = PieceColor | 'both';
@@ -55,16 +56,9 @@ export type PieceRolePromotable = 'knight' | 'rook' | 'bishop' | 'queen';
 export type PieceRoleShort = PieceType;
 export type PieceRoleShortPromotable = 'n' | 'r' | 'b' | 'q';
 export type Shape = DrawShape;
-export type MoveComment = Comment;
 export type Promotion = {
   from: Key;
   to: Key;
   piece: Piece;
   captured?: boolean;
 };
-export type PGNHeaders = Partial<
-  Record<
-    'FEN' | 'Event' | 'White' | 'Black' | 'Result' | 'Site' | 'Date' | 'Round',
-    string
-  >
->;

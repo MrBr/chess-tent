@@ -9,8 +9,6 @@ import {
   Key,
   ExtendedKey,
   PieceRolePromotable,
-  NotableMove,
-  MoveComment,
   FEN,
   Promotion,
   ChessInstance,
@@ -250,33 +248,6 @@ class Chessboard
     return this.api.state;
   }
 
-  onEvaluationMove = (moves: NotableMove[]) => {
-    const { fen } = this.props;
-    if (this.props.onMove && moves.length === 1) {
-      // Next engine move shouldn't be looked at as a variation
-      // Single move in evaluation line is for sure next.
-      const { position, move, piece, captured, promoted } = moves[0];
-      this.props.onMove(
-        position,
-        move,
-        piece,
-        !!captured,
-        promoted as PieceRolePromotable,
-      );
-    } else if (this.props.onPGN) {
-      // This is useful trick for the moment
-      // evaluation variation can be considered as a variation
-      this.props.onPGN(moves, { FEN: fen }, []);
-    } else {
-      console.warn('Nothing handling evaluation move.');
-    }
-  };
-
-  toggleEvaluation = () => {
-    const { update, evaluate, evaluations } = this.context;
-    update({ evaluate: !evaluate, evaluations });
-  };
-
   removeShape(shape: DrawShape) {
     this.api.state.drawable.shapes = this.api.state.drawable.shapes.filter(
       item => item !== shape,
@@ -375,9 +346,9 @@ class Chessboard
     onUpdateEditing && onUpdateEditing(editing);
   };
 
-  onPGN = (moves: NotableMove[], headers: {}, comments: MoveComment[]) => {
+  onPGN = (pgn: string) => {
     const { onPGN } = this.props;
-    onPGN && onPGN(moves, headers, comments);
+    onPGN && onPGN(pgn);
   };
 
   onShapeAdd = (shape: DrawShape) => {};

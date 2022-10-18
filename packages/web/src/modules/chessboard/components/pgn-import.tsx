@@ -45,7 +45,11 @@ const PGNModal = withFiles(
               <Label>Copy PGN text or from file</Label>
             </Col>
             <Col className="col-auto">
-              <Button size="extra-small" variant="ghost">
+              <Button
+                size="extra-small"
+                variant="ghost"
+                onClick={openFileDialog}
+              >
                 Select file
               </Button>
             </Col>

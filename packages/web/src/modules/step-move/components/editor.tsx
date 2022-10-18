@@ -59,7 +59,7 @@ const boardChange = (
     return;
   }
 
-  const moveIndex = services.getNextMoveIndex(move);
+  const moveIndex = services.getNextMoveIndex(move, movedPiece.color, true);
 
   const notableMove = createNotableMove(
     newPosition,
@@ -70,14 +70,10 @@ const boardChange = (
     promoted,
   );
 
-  if (
-    movedPiece.color === move.piece.color ||
-    !isLegalMove(move.position, newMove, promoted, false)
-  ) {
+  if (!isLegalMove(move.position, newMove, promoted, true)) {
     // New example
-    const newVariationStep = services.createStep('variation', {
-      moveIndex,
-      position: newPosition,
+    const newVariationStep = services.createStep('move', {
+      move: notableMove,
       orientation,
     });
 

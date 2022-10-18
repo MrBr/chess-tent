@@ -48,11 +48,10 @@ const boardChange = (
   } = step;
   const position = move?.position || step.state.position;
 
-  if (editing) {
+  if (editing || (step.state.steps.length === 0 && !newMove)) {
     updateStep(
       updateStepState(step, {
         position: newPosition,
-        editing: true,
         move: null,
       }),
     );
@@ -67,6 +66,7 @@ const boardChange = (
     !isLegalMove(position, newMove, promoted, bothColorsCanPlay)
   ) {
     // New piece dropped or removed
+    // New position setup while there are no steps
     const newVariationStep = createStep('variation', {
       position: newPosition,
       orientation,
@@ -80,7 +80,7 @@ const boardChange = (
     return;
   }
 
-  const nextMoveIndex = getNextMoveIndex(move);
+  const nextMoveIndex = getNextMoveIndex(move, movedPiece.color);
   const notableMove = createNotableMove(
     newPosition,
     newMove,

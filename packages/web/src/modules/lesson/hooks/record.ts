@@ -26,6 +26,10 @@ export const useLesson: Hooks['useLesson'] = (lessonId: Lesson['id']) => {
   const record = useRecordInit(lesson, 'lesson' + lessonId);
 
   useEffect(() => {
+    if (record.meta.local) {
+      // New lesson just created, not necessary in the db yet
+      return;
+    }
     // Can't be really cached as some normalized data is partial
     // Maybe with data chunks
     record.load(lessonId);

@@ -9,9 +9,10 @@ import {
   updateLessonChapter,
   updateLessonStep,
   addChapterToLesson,
-  getNextStep,
   getRightStep,
   moveLessonChapter,
+  getLeftStep,
+  getParentStep,
 } from '@chess-tent/models';
 import {
   Actions,
@@ -295,13 +296,16 @@ class EditorRenderer extends React.Component<
 
   nextStepHandler = () => {
     const { activeChapter, activeStep } = this.props;
-    const nextStep = getNextStep(activeChapter, activeStep);
+    const variationStep = getParentStep(activeChapter, activeStep);
+    const nextStep = getRightStep(variationStep as Steps, activeStep, [
+      'variation',
+    ]);
     nextStep && this.setActiveStepHandler(nextStep);
   };
 
   prevStepHandler = () => {
     const { activeChapter, activeStep } = this.props;
-    const prevStep = getPreviousStep(activeChapter, activeStep);
+    const prevStep = getLeftStep(activeChapter, activeStep, ['variation']);
     prevStep && this.setActiveStepHandler(prevStep);
   };
 

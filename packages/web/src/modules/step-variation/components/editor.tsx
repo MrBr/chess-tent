@@ -47,6 +47,7 @@ const boardChange = (
   const position = move?.position || step.state.position;
 
   if (editing || (step.state.steps.length === 0 && !newMove)) {
+    // New position setup while there are no steps
     updateStep(
       updateStepState(step, {
         position: newPosition,
@@ -56,24 +57,17 @@ const boardChange = (
     return;
   }
 
-  const bothColorsCanPlay = !move;
-
   if (
     !newMove ||
     !movedPiece ||
-    !isLegalMove(position, newMove, promoted, bothColorsCanPlay)
+    !isLegalMove(position, newMove, promoted, true)
   ) {
-    // New piece dropped or removed
-    // New position setup while there are no steps
+    // New piece dropped or removed or illegal move
     const newVariationStep = createStep('variation', {
       position: newPosition,
       orientation,
     });
-    const updatedStep = updateStepState(
-      addVariationStep(step, newVariationStep) as VariationStep,
-      {},
-    );
-    updateStep(updatedStep);
+    updateStep(addVariationStep(step, newVariationStep));
     setActiveStep(newVariationStep);
     return;
   }
@@ -89,7 +83,6 @@ const boardChange = (
   );
 
   const hasMoveStep = getLastStep(step, false).stepType === 'move';
-  const isMoveVariation = !!move;
 
   // Move that possibly already exists in the chapter
   const sameMoveStep = getSameMoveStep(step, notableMove);
@@ -99,10 +92,7 @@ const boardChange = (
     return;
   }
 
-  if (
-    hasMoveStep ||
-    (isMoveVariation && move?.piece.color === notableMove.piece.color)
-  ) {
+  if (hasMoveStep) {
     const newMoveStep = createStep('variation', {
       move: notableMove,
       orientation,

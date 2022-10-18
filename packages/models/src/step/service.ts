@@ -45,6 +45,9 @@ const getLastStep = (parentStep: Step, recursive = true): Step => {
     : lastStep;
 };
 
+/**
+ * The next prev horizontally or vertically.
+ */
 const getPreviousStep = (
   parent: Step | StepRoot,
   cursorStep: Step,
@@ -111,18 +114,70 @@ const getNextStep = (
 const getRightStep = (
   parent: Step | StepRoot,
   cursorStep: Step,
+  skip?: StepType[],
 ): Step | null => {
-  if (isStep(parent) && isSameStep(parent, cursorStep)) {
+  if (!isStep(parent)) {
+    return cursorStep.state.steps[0] || null;
+  }
+  if (isSameStep(parent, cursorStep)) {
     return null;
   }
   let index = 0;
+  const cursorStepIndex = parent.state.steps.indexOf(cursorStep);
   while (index < parent.state.steps.length) {
-    const step = parent.state.steps[index];
-    if (isSameStep(cursorStep, step)) {
-      return parent.state.steps[index + 1] || null;
+    const rightStep = parent.state.steps[index + 1];
+
+    if (index === parent.state.steps.length - 1) {
+      // Didn't match any step, or cursor step is the last step
+      // Diving in to prevent freeze
+      return cursorStep.state.steps[0] || null;
+    }
+
+    if (
+      index >= cursorStepIndex &&
+      rightStep &&
+      !skip?.includes(rightStep.stepType)
+    ) {
+      return rightStep;
     }
 
     index += 1;
+  }
+  return null;
+};
+
+const getLeftStep = (
+  rootStep: Step | StepRoot,
+  cursorStep: Step,
+  skip?: StepType[],
+): Step | null => {
+  if (isStep(rootStep) && isSameStep(rootStep, cursorStep)) {
+    return null;
+  }
+
+  const parentStep = getParentStep(rootStep, cursorStep);
+  if (!parentStep || !isStep(parentStep)) {
+    return null;
+  }
+
+  let index = parentStep.state.steps.length - 1;
+  while (index >= 0) {
+    const step = parentStep.state.steps[index];
+    const leftStep = parentStep.state.steps[index - 1];
+
+    if (index === 0) {
+      return parentStep;
+    }
+
+    if (
+      isSameStep(cursorStep, step) &&
+      leftStep &&
+      !skip?.includes(leftStep.stepType)
+    ) {
+      return leftStep;
+    }
+
+    index -= 1;
   }
   return null;
 };
@@ -321,8 +376,9 @@ export {
   getStepsCount,
   getStepIndex,
   getLastStep,
-  getNextStep,
   getRightStep,
+  getNextStep,
+  getLeftStep,
   getPreviousStep,
   getParentStep,
   isLastStep,

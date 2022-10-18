@@ -25,7 +25,7 @@ const { createNotableMove, isLegalMove, parsePgn } = services;
 const { StepTag, Stepper, StepMove, EditorSidebarStepContainer } = components;
 const { START_FEN, KINGS_FEN } = constants;
 
-const boardChange = (
+const resolveNewMove = (
   stepRoot: StepRoot,
   step: MoveStep,
   updateStep: (step: Steps) => void,
@@ -66,21 +66,9 @@ const boardChange = (
     captured,
     promoted,
   );
-
-  if (!isLegalMove(move.position, newMove, promoted, true)) {
-    // New example
-    const newVariationStep = services.createStep('move', {
-      move: notableMove,
-      orientation,
-    });
-
-    updateStep(addStep(step, newVariationStep));
-    setActiveStep(newVariationStep);
-    return;
-  }
-
   const variationStep = getParentStep(stepRoot, step) as VariationStep;
   const rightStep = getRightStep(variationStep, step) as VariationStep;
+
   // Move that possibly already exists in the chapter
   const sameMoveStep =
     services.getSameMoveStep(variationStep, notableMove) ||
@@ -91,21 +79,22 @@ const boardChange = (
     return;
   }
 
-  if (rightStep) {
+  if (!isLegalMove(move.position, newMove, promoted, true) || rightStep) {
     const newMoveStep = services.createStep('variation', {
       move: notableMove,
       orientation,
     });
+
     updateStep(addStep(step, newMoveStep));
     setActiveStep(newMoveStep);
     return;
   }
 
+  // Legal move, no right step, continuing the current variation
   const newMoveStep = services.createStep('move', {
     move: notableMove,
     orientation,
   });
-  // Continuing the current variation
   updateStep(addStep(variationStep, newMoveStep));
   setActiveStep(newMoveStep);
 };
@@ -163,7 +152,7 @@ const EditorBoard: MoveModule['EditorBoard'] = ({
     [editing, setActiveStep, step, stepRoot, updateStep],
   );
 
-  const onChangeHandle = useCallback(
+  const onMoveHandle = useCallback(
     (
       newPosition: FEN,
       newMove: Move,
@@ -171,7 +160,7 @@ const EditorBoard: MoveModule['EditorBoard'] = ({
       captured: boolean,
       promoted?: PieceRolePromotable,
     ) => {
-      boardChange(
+      resolveNewMove(
         stepRoot,
         step,
         updateStep,
@@ -225,7 +214,7 @@ const EditorBoard: MoveModule['EditorBoard'] = ({
       fen={position}
       editing={editing}
       onUpdateEditing={updateEditing}
-      onMove={onChangeHandle}
+      onMove={onMoveHandle}
       onPieceRemove={onFENChange}
       onPieceDrop={onFENChange}
       onFENSet={onFENChange}

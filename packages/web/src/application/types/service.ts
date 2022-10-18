@@ -140,7 +140,7 @@ export type Services = {
   createStep: <T extends StepType>(
     stepType: T,
     initialState: Parameters<StepModules[T]['createStep']>[1],
-  ) => StepModules[T] extends StepModule<infer S, any> ? S : never;
+  ) => StepModules[T] extends StepModule<infer S, any, any, any> ? S : never;
   createActivityComment: (user: User, text: string) => ActivityComment;
   createLessonActivityStepState: (initialState?: {}) => ActivityStepStateBase;
   updateLessonActivityActiveStep: (

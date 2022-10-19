@@ -42,8 +42,7 @@ export const removeStepRecursive = <T extends Step | StepRoot>(
       return false;
     }
     // If current step isn't the one to remove, try with his children
-    // If step is removed from current step that means the step has been found
-    // and there is no need to remove any other.
+    // If step is removed don't search further
     if (!stepRemoved) {
       stepRemoved = removeStepRecursive(childStep, step, adjacent);
     }

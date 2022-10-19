@@ -70,6 +70,7 @@ export const EditorSidebar: DescriptionModule['EditorSidebar'] = props => {
     renderToolbox: StepToolbox,
     removeStep,
   } = props;
+  const active = step === activeStep;
   const addDescriptionStep = useCallback(() => {
     const parentStep = getParentStep(stepRoot, step) as DescriptionStep;
     const newDescriptionStep = services.createStep('description', {
@@ -108,16 +109,18 @@ export const EditorSidebar: DescriptionModule['EditorSidebar'] = props => {
       textChangeHandler={description =>
         updateStep(updateStepState(step, { description }))
       }
+      showInput
+      active={active}
     >
       <Row className="g-0">
         <Col className="col-auto me-2">
-          <StepTag active={activeStep === step}>
-            <Comment active={step === activeStep} />
+          <StepTag active={active}>
+            <Comment active={active} />
           </StepTag>
         </Col>
         <Col>
           <StepToolbox
-            active={activeStep === step}
+            active={active}
             step={step}
             add={addVariationStep}
             comment={addDescriptionStep}

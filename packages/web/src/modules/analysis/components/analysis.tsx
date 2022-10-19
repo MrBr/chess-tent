@@ -10,7 +10,6 @@ import {
 } from '@types';
 import {
   addStep,
-  getAnalysisActiveStep,
   getPreviousStep,
   removeStep,
   Step,
@@ -19,7 +18,6 @@ import {
   updateSubjectState,
 } from '@chess-tent/models';
 import { components, services } from '@application';
-import { getStepPosition } from '../../step/service';
 
 const { StepToolbox } = components;
 
@@ -34,11 +32,13 @@ export default class AnalysisBase<T extends AnalysisSystemProps>
     });
   };
   removeStep = (step: Step) => {
-    const { updateAnalysis } = this.props;
-    const prevStep = getPreviousStep(this.props.analysis, step);
+    const { updateAnalysis, analysis } = this.props;
+    const prevStep = getPreviousStep(analysis, step);
+    // If step is root variations don't delete other variations
+    const deleteChildSteps = step.stepType !== 'variation';
 
     updateAnalysis(analysis => {
-      removeStep(analysis, step, true);
+      removeStep(analysis, step, deleteChildSteps);
       updateSubjectState(analysis, {
         activeStepId: prevStep?.id,
       });
@@ -49,13 +49,6 @@ export default class AnalysisBase<T extends AnalysisSystemProps>
     updateAnalysis(analysis => {
       updateAnalysisActiveStepId(analysis, step.id);
     });
-  };
-
-  addNewAnalysisVariation = () => {
-    const { analysis } = this.props;
-    const step = getAnalysisActiveStep(analysis);
-    const position = getStepPosition(step);
-    this.startAnalysis(position);
   };
 
   startAnalysis = (
@@ -100,7 +93,6 @@ export default class AnalysisBase<T extends AnalysisSystemProps>
         stepRoot={analysis}
         updateChapter={() => {}}
         {...props}
-        add={this.addNewAnalysisVariation}
         exercise={false}
         paste={false}
       />

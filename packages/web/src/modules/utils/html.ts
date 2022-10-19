@@ -1,4 +1,4 @@
-import { ReactEventHandler } from 'react';
+import { ReactEventHandler, RefCallback } from 'react';
 
 export const rightMouse = (f: Function) => (e: MouseEvent) =>
   e.button === 2 && f(e);
@@ -72,4 +72,19 @@ export const getFileImageDimensions = (
       };
     };
   });
+};
+
+export const autosizeTextarea: RefCallback<HTMLInputElement> = inputRef => {
+  if (!inputRef) {
+    return;
+  }
+  inputRef.addEventListener('keydown', function () {
+    debugger;
+    inputRef.style.height = 'auto';
+    inputRef.style.height = inputRef.scrollHeight + 'px';
+  });
+  inputRef.setAttribute(
+    'style',
+    'height:' + inputRef.scrollHeight + 'px;overflow-y:hidden;',
+  );
 };

@@ -1,5 +1,5 @@
 import React, { ComponentProps, FunctionComponent, useCallback } from 'react';
-import { ui } from '@application';
+import { components, ui } from '@application';
 import {
   ExerciseModule,
   ExerciseQuestionnaireActivityState,
@@ -7,7 +7,8 @@ import {
 } from '@types';
 import { SegmentActivitySidebar } from '../segment';
 
-const { Headline5, Row, Col, Check, Container, Text } = ui;
+const { Headline5, Row, Col, Check, Container } = ui;
+const { LessonToolboxText } = components;
 
 const Playground: FunctionComponent<
   ComponentProps<ExerciseModule<ExerciseQuestionnaireStep>['ActivitySidebar']>
@@ -63,7 +64,7 @@ const Playground: FunctionComponent<
                 isValid={!!(correct && completed)}
                 checked={!!selectedOptions?.[index]}
                 onChange={() => handleAnswerChange(index)}
-                label={<Text className="m-0" color="inherit" html={text} />}
+                label={<LessonToolboxText className="m-0" text={text} />}
               />
             </Col>
           </Row>

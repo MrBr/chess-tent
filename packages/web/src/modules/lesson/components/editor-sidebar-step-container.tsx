@@ -1,4 +1,8 @@
-import React, { ReactEventHandler, useCallback } from 'react';
+import React, {
+  ReactEventHandler,
+  useCallback,
+  KeyboardEventHandler,
+} from 'react';
 import { Components } from '@types';
 import { components, ui, utils } from '@application';
 import debounce from 'lodash/debounce';
@@ -28,15 +32,15 @@ const EditorSidebarStepContainer: Components['EditorSidebarStepContainer'] =
       [textChangeHandler],
     );
 
-    const deleteListener = useCallback(
-      (e: KeyboardEvent) => {
-        console.log('TEST', !text, e.code);
-        if (!text && e.code === 'Backspace' && onDeleteComment) {
-          onDeleteComment();
-        }
-      },
-      [text, onDeleteComment],
-    );
+    const deleteListener: KeyboardEventHandler<HTMLTextAreaElement> =
+      useCallback(
+        e => {
+          if (!text && e.code === 'Backspace' && onDeleteComment) {
+            onDeleteComment();
+          }
+        },
+        [text, onDeleteComment],
+      );
 
     const handleClick: ReactEventHandler = event => {
       stopPropagation(event);
@@ -58,6 +62,7 @@ const EditorSidebarStepContainer: Components['EditorSidebarStepContainer'] =
                   text={text}
                   placeholder="Add comment"
                   onKeyDown={deleteListener}
+                  active={active}
                 />
               )}
             </Container>

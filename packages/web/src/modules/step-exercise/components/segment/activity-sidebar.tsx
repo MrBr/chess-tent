@@ -7,7 +7,8 @@ import { hasExplanation } from '../../service';
 import { isActivityStepSolving } from '../../../lesson/service';
 
 const { Button, Text, Row, Col, Icon } = ui;
-const { LessonPlaygroundCard, LessonPlaygroundStepTag } = components;
+const { LessonPlaygroundCard, LessonPlaygroundStepTag, LessonToolboxText } =
+  components;
 
 const Playground: FunctionComponent<
   SegmentActivityProps<ExerciseSteps> & {
@@ -50,7 +51,7 @@ const Playground: FunctionComponent<
         </Row>
         <Row className="mt-2">
           <Col>
-            <Text className="m-0" fontSize="extra-small" html={task.text} />
+            <LessonToolboxText className="m-0" text={task?.text} />
           </Col>
         </Row>
         {children}
@@ -105,7 +106,7 @@ const Playground: FunctionComponent<
           </Row>
           <Row className="mt-2">
             <Col>
-              <Text className="m-0" fontSize="extra-small" html={hint?.text} />
+              <LessonToolboxText className="m-0" text={hint?.text} />
             </Col>
           </Row>
         </LessonPlaygroundCard>
@@ -126,11 +127,7 @@ const Playground: FunctionComponent<
           </Row>
           <Row className="mt-2">
             <Col>
-              <Text
-                className="m-0"
-                fontSize="extra-small"
-                html={explanation?.text}
-              />
+              <LessonToolboxText className="m-0" text={explanation?.text} />
             </Col>
           </Row>
         </LessonPlaygroundCard>

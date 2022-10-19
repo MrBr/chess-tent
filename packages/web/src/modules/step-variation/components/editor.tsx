@@ -208,6 +208,7 @@ const EditorSidebar: VariationModule['EditorSidebar'] = props => {
     description === undefined
       ? () => updateStep(updateStepState(step, { description: '' }))
       : undefined;
+
   return (
     <>
       <EditorSidebarStepContainer

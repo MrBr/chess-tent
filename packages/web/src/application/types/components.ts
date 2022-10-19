@@ -8,6 +8,7 @@ import {
   ReactNode,
   RefObject,
   ImgHTMLAttributes,
+  KeyboardEventHandler,
 } from 'react';
 import { DrawCurrent, DrawShape } from '@chess-tent/chessground/dist/draw';
 import { Api } from '@chess-tent/chessground/dist/api';
@@ -220,7 +221,8 @@ export type LessonToolboxText = FunctionComponent<{
   text?: string;
   placeholder?: string;
   className?: string;
-  onKeyDown?: (e: KeyboardEvent) => void;
+  onKeyDown?: KeyboardEventHandler<HTMLTextAreaElement>;
+  active?: boolean;
 }>;
 
 // Move written in chess notation

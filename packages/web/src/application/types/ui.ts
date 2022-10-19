@@ -59,7 +59,6 @@ import type { AsyncProps as AsyncSelectProps } from 'react-select/async';
 import { SliderProps } from 'rc-slider';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { ClassNameProps, ClickProps } from './_helpers';
-import { HtmlProps } from './hoc';
 
 export type { MultiValue, SingleValue } from 'react-select';
 
@@ -139,7 +138,7 @@ export type TextProps = {
   onClick?: ReactEventHandler;
   onPaste?: ReactEventHandler;
   as?: ElementType;
-} & HtmlProps;
+};
 
 export type SearchBoxValueOption = {
   value: number;

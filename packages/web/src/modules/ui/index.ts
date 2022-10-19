@@ -42,7 +42,7 @@ import LoadMore from './LoadMore';
 import Spinner from './Spinner';
 import { Slider } from './Slider';
 import ProgressBar from './ProgressBar';
-import { withFiles, withHtml } from './hoc';
+import { withFiles } from './hoc';
 import { mobileCss } from './enhancers';
 import Stack from './Stack';
 import Line from './Line';
@@ -50,7 +50,6 @@ import Breadcrumbs from './Breadcrumbs';
 import Alert from './Alert';
 
 application.hoc.withFiles = withFiles;
-application.hoc.withHtml = withHtml;
 
 application.register(() => import('./Modal'));
 application.register(() => import('./Wizard'));

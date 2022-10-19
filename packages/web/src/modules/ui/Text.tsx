@@ -1,7 +1,6 @@
 import React, { ComponentType } from 'react';
 import styled, { css } from '@chess-tent/styled-props';
 import { TextProps } from '@types';
-import { withHtml } from './hoc';
 import { mobileCss } from './enhancers';
 
 const inherit = styled.props.inherit.css`
@@ -90,13 +89,15 @@ const dynamicStyle = (props: TextProps) =>
     text-align: ${props.align || 'left'};
   `;
 
-const BaseText: ComponentType<TextProps> = withHtml<TextProps>(
-  ({ inline, inherit, html, as, ...textProps }) => {
-    const Component = as || (inherit || inline ? 'span' : 'p');
-    return <Component {...textProps} />;
-  },
-);
-
+const BaseText: ComponentType<TextProps> = ({
+  inline,
+  inherit,
+  as,
+  ...textProps
+}) => {
+  const Component = as || (inherit || inline ? 'span' : 'p');
+  return <Component {...textProps} />;
+};
 const Text = styled(BaseText).css<TextProps>`
   ${dynamicStyle}
   ${inherit}

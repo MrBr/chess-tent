@@ -1,39 +1,28 @@
-import React, { useCallback, UIEvent } from 'react';
+import React from 'react';
 import { Components } from '@types';
 import styled, { css } from '@chess-tent/styled-props';
-import { ui } from '@application';
+import { ui, utils } from '@application';
 
-const { Text } = ui;
-
-const formatToolboxText = (e: UIEvent<HTMLDivElement>) => {
-  if (e.currentTarget.innerText.trim() === '') {
-    // Don't allow new line without any text it breaks the placeholder
-    // Placeholder is shown when there is no text and whitespace breaks it
-    e.currentTarget.innerHTML = '';
-  }
-};
+const { Input } = ui;
+const { autosizeTextarea } = utils;
 
 export const ToolboxText = styled<Components['LessonToolboxText']>(
-  ({ text, onChange, ...props }) => {
-    const onPaste = useCallback(event => {
-      event.preventDefault();
-
-      const text = (
-        event.clipboardData ||
-        (window as unknown as { clipboardData: Clipboard }).clipboardData
-      ).getData('text');
-
-      document.execCommand('insertHTML', false, text);
-    }, []);
-
+  ({ text, onChange, onKeyDown, className, active, ...props }) => {
+    // This trick re-renders component when it becomes active and thus trigger autofous
+    const key = active ? 'active' : 'inactive';
     return (
-      <Text
-        contentEditable={!!onChange}
+      <Input
         {...props}
-        onPaste={onPaste}
-        html={text}
-        onInput={onChange}
-        formatInput={formatToolboxText}
+        as="textarea"
+        key={key}
+        className={className}
+        disabled={!active}
+        rows={1}
+        ref={autosizeTextarea}
+        onKeyDown={onKeyDown}
+        defaultValue={text}
+        autoFocus
+        onChange={e => onChange && onChange(e.currentTarget.value)}
       />
     );
   },
@@ -41,10 +30,17 @@ export const ToolboxText = styled<Components['LessonToolboxText']>(
   &:focus {
     outline: 0;
   }
+  
+  &:disabled {
+    border: none !important;
+    background-color: transparent;
+    cursor: pointer;
+  }
 
   color: #2F3849;
   font-size: 1rem;
   font-weight: 400;
+  background-color: transparent;
   cursor: pointer;
   margin: 0;
   ${({ placeholder }) => css`

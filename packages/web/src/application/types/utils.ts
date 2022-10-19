@@ -1,6 +1,6 @@
 import { CSSObject } from '@emotion/styled';
 import { Entity, NormalizedEntity } from '@chess-tent/models';
-import { ReactEventHandler } from 'react';
+import { ReactEventHandler, RefCallback } from 'react';
 import { saveAs } from 'file-saver';
 import { Schema } from './model';
 
@@ -13,6 +13,7 @@ export type Utils = {
   stopPropagation: ReactEventHandler;
   isElementInViewport: (el: HTMLElement) => boolean;
   isInputTypeElement: (el: Element) => boolean;
+  autosizeTextarea: RefCallback<HTMLInputElement>;
   getFileImageDimensions: (
     file: File,
   ) => Promise<{ width: number; height: number }>;

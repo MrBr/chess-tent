@@ -96,10 +96,9 @@ export const useDiffUpdates = (
     if (!subject?.id || !subject?.type) {
       return;
     }
-    // Save initial normalized subject version
-    subjectRef.current = store.getState().entities[subject.type][
-      subject.id
-    ] as Subject;
+    subjectRef.current = subject;
+    // Only initial value
+    // eslint-disable-next-line
   }, [store, subject?.id, subject?.type]);
 
   // Instant save

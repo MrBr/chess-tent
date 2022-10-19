@@ -155,9 +155,11 @@ const TaskBoard: FunctionComponent<
     ? 'both'
     : getTurnColor(activePosition);
 
+  // Either editing or on the first move
+  const allowAllMoves = !!editing || !activeMove;
   return (
     <Chessboard
-      allowAllMoves={!!editing}
+      allowAllMoves={allowAllMoves}
       editing={!!editing}
       movableColor={color}
       sparePieces

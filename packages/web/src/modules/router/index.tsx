@@ -11,6 +11,7 @@ import {
   useLocation,
   Router as BaseRouter,
   Prompt,
+  withRouter,
 } from 'react-router-dom';
 import { createBrowserHistory, LocationDescriptor } from 'history';
 import styled from '@chess-tent/styled-props';
@@ -121,4 +122,5 @@ application.hooks.useHistory = useHistory;
 application.hooks.useLocation = useLocation;
 application.hooks.useParams = useParams;
 application.hooks.useQuery = useQuery;
+application.hoc.withRouter = withRouter;
 application.utils.isLocalReferrer = isLocalReferrer;

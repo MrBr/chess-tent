@@ -24,3 +24,10 @@ application.register(
     application.components.ApiStatusLabel = module.default;
   },
 );
+
+application.register(
+  () => import('./components/redirect-prompt'),
+  module => {
+    application.components.ApiRedirectPrompt = module.default;
+  },
+);

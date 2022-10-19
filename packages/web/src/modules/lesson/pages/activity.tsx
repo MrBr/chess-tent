@@ -21,7 +21,7 @@ const {
 } = hooks;
 
 const { Breadcrumbs, Col, Button, Stack } = ui;
-const { Page, Header, UserAvatar } = components;
+const { Page, Header, UserAvatar, ApiRedirectPrompt } = components;
 
 const PageActivity = () => {
   const { value: user } = useActiveUserRecord();
@@ -150,6 +150,7 @@ const PageActivity = () => {
       {activityCompleteModal}
       {activitySettingsModal}
       <Activity activity={activity} />
+      <ApiRedirectPrompt status={activityStatus} />
     </Page>
   );
 };

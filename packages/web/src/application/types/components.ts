@@ -397,6 +397,7 @@ export type Components = {
     }>;
   };
   ApiStatusLabel: ComponentType<{ status: ApiStatus }>;
+  ApiRedirectPrompt: ComponentType<{ status: ApiStatus }>;
   LoadMore: ComponentType;
   // Page with common layout setup
   Page: ComponentType<{ header?: ReactElement; tabbar?: ReactElement }> & {

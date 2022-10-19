@@ -27,7 +27,6 @@ import {
   Orientation,
   UPDATE_ENTITY,
 } from '@types';
-import * as H from 'history';
 import { components, hooks, services, state, ui, utils } from '@application';
 import { css } from '@chess-tent/styled-props';
 import ChaptersDropdown from './chapters-dropdown';
@@ -53,7 +52,7 @@ const {
   StepToolbox,
   ChessboardContextProvider,
   Evaluation,
-  RedirectPrompt,
+  ApiRedirectPrompt,
 } = components;
 const {
   actions: { serviceAction },
@@ -193,31 +192,12 @@ class EditorRenderer extends React.Component<
   }
 
   componentDidMount() {
-    window.addEventListener('beforeunload', this.handleBeforeUnload);
     document.addEventListener('keyup', this.handleKeypress);
   }
 
   componentWillUnmount() {
-    window.removeEventListener('beforeunload', this.handleBeforeUnload);
     document.removeEventListener('keyup', this.handleKeypress);
   }
-
-  handleSilentBeforeUnload = (location: H.Location) => {
-    const { history, lessonStatus } = this.props;
-    if (history.location.pathname === location.pathname) {
-      return true;
-    } else if (lessonStatus !== ApiStatus.DIRTY) {
-      return true;
-    }
-    return 'Please wait until all changes are saved.';
-  };
-
-  handleBeforeUnload = (e: Event) => {
-    const { lessonStatus } = this.props;
-    if (lessonStatus === ApiStatus.DIRTY) {
-      e.returnValue = false;
-    }
-  };
 
   recordHistoryChange(undoAction: LessonUpdatableAction) {
     const { activeStep, activeChapter } = this.props;
@@ -580,7 +560,7 @@ class EditorRenderer extends React.Component<
               </Col>
             </Row>
           </div>
-          <RedirectPrompt message={this.handleSilentBeforeUnload} />
+          <ApiRedirectPrompt status={lessonStatus} />
         </div>
       </ChessboardContextProvider>
     );

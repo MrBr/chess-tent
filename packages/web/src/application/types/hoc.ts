@@ -1,4 +1,5 @@
 import { ComponentType, FunctionComponent } from 'react';
+import { withRouter } from 'react-router-dom';
 
 export interface FileUploaderProps {
   openFileDialog: () => void;
@@ -13,4 +14,5 @@ export interface HOC {
     DesktopComponent: ComponentType<P>,
     MobileComponent: ComponentType<P>,
   ) => ComponentType<P>;
+  withRouter: typeof withRouter;
 }

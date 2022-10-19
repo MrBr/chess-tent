@@ -6,8 +6,6 @@ import Analysis from './analysis';
 
 const { StepRenderer } = components;
 
-const updateChapter = () => {}; // NOOP
-
 class AnalysisBoard extends Analysis<AnalysisBoardProps> {
   render() {
     const { Chessboard, analysis, initialPosition, initialOrientation } =
@@ -36,7 +34,7 @@ class AnalysisBoard extends Analysis<AnalysisBoardProps> {
         setActiveStep={this.setActiveStep}
         updateStep={this.updateStep}
         removeStep={this.removeStep}
-        updateChapter={updateChapter}
+        updateChapter={this.updateStepRoot as () => {}}
       />
     );
   }

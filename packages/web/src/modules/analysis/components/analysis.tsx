@@ -10,11 +10,13 @@ import {
 } from '@types';
 import {
   addStep,
+  Analysis,
   getPreviousStep,
   removeStep,
   Step,
   updateAnalysisActiveStepId,
   updateAnalysisStep,
+  updateSubject,
   updateSubjectState,
 } from '@chess-tent/models';
 import { components, services } from '@application';
@@ -29,6 +31,12 @@ export default class AnalysisBase<T extends AnalysisSystemProps>
     const { updateAnalysis } = this.props;
     updateAnalysis(analysis => {
       updateAnalysisStep(analysis, step);
+    });
+  };
+  updateStepRoot = (updatedAnalysis: Analysis<any>) => {
+    const { updateAnalysis } = this.props;
+    updateAnalysis(analysis => {
+      updateSubject(analysis, updatedAnalysis);
     });
   };
   removeStep = (step: Step) => {

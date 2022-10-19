@@ -5,7 +5,7 @@ import {
   ExerciseToolboxProps,
 } from '@types';
 
-import { SegmentBoardProps, SegmentProps } from './types';
+import { SegmentBoardProps, SegmentSidebarProps } from './types';
 import { useUpdateSegment } from './hooks';
 
 // TODO - make more restrictive type, task should expect 'task' segment component
@@ -16,9 +16,9 @@ interface BoardSegments<T extends ExerciseStep<any, any>> {
 }
 
 interface SidebarSegments<T extends ExerciseStep<any, any>> {
-  task: ComponentType<SegmentProps<T, 'task'>>;
-  explanation: ComponentType<SegmentProps<T, 'explanation'>>;
-  hint: ComponentType<SegmentProps<T, 'hint'>>;
+  task: ComponentType<SegmentSidebarProps<T, 'task'>>;
+  explanation: ComponentType<SegmentSidebarProps<T, 'explanation'>>;
+  hint: ComponentType<SegmentSidebarProps<T, 'hint'>>;
 }
 
 export const withSegmentBoards =
@@ -61,6 +61,7 @@ export const withSegmentSidebars =
         updateStep: props.updateStep,
         segment,
         updateSegment,
+        active: props.active,
       } as ComponentProps<typeof Segment>;
 
       return <Segment {...segmentProps} key={segmentKey} />;

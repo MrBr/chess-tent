@@ -11,7 +11,7 @@ const { LessonToolboxText } = components;
 const TaskSidebar = (
   props: SegmentToolboxProps<ExerciseQuestionnaireStep, 'task'>,
 ) => {
-  const { step, updateSegment } = props;
+  const { step, updateSegment, active } = props;
 
   const state = step.state.task;
   const addOption: ReactEventHandler = useCallback(
@@ -60,6 +60,7 @@ const TaskSidebar = (
                 text={text}
                 placeholder="Type option..."
                 onChange={text => updateOption(id, { text })}
+                active={active}
               />
               {index !== state?.options?.length && (
                 <Icon

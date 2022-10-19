@@ -118,6 +118,7 @@ const EditorSidebar: ExerciseModule['EditorSidebar'] = ({
   removeStep,
   renderToolbox: StepToolbox,
 }) => {
+  const active = activeStep === step;
   const selectedTypeDescriptor = useMemo(
     () => exerciseTypes.find(({ type }) => type === step.state.exerciseType),
     [step.state.exerciseType],
@@ -164,14 +165,14 @@ const EditorSidebar: ExerciseModule['EditorSidebar'] = ({
       <Row onClick={() => setActiveStep(step)}>
         <StepToolbox
           add={addVariationStep}
-          active={activeStep === step}
+          active={active}
           step={step}
           exercise={addExerciseStep}
           comment={false}
           remove={removeExerciseStep}
         />
         <Col className="col-auto">
-          <StepTag active={activeStep === step}>
+          <StepTag active={active}>
             <Icon type="exercise" textual />
           </StepTag>
         </Col>
@@ -199,7 +200,11 @@ const EditorSidebar: ExerciseModule['EditorSidebar'] = ({
               ))}
             </Dropdown.Menu>
           </Dropdown>
-          <ExerciseToolbox step={step} updateStep={updateStep} />
+          <ExerciseToolbox
+            step={step}
+            updateStep={updateStep}
+            active={active}
+          />
         </Col>
       </Row>
     </>

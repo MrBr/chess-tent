@@ -45,6 +45,7 @@ const EditorSidebar = <T extends ExerciseSteps, K extends ExerciseSegmentKeys>({
   placeholder,
   children,
   updateStep,
+  active,
   ...props
 }: SegmentToolboxProps<T, K>) => {
   const { activeSegment } = step.state;
@@ -72,6 +73,7 @@ const EditorSidebar = <T extends ExerciseSteps, K extends ExerciseSegmentKeys>({
             text={text}
             placeholder={placeholder || Placeholders[currentSegmentKey]}
             onChange={updateText}
+            active={active}
           />
         </Col>
       </Row>

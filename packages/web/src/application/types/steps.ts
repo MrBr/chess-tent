@@ -165,6 +165,7 @@ export type ExerciseSteps =
 export type ExerciseToolboxProps<T extends ExerciseSteps = ExerciseSteps> = {
   step: T;
   updateStep: (step: AppStep) => void;
+  active: boolean;
 };
 
 export type ExerciseModule<T extends ExerciseSteps = ExerciseSteps> =

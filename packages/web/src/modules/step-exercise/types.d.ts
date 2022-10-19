@@ -25,6 +25,13 @@ export type SegmentProps<
   updateStep: (step: AppStep) => void;
 };
 
+export type SegmentSidebarProps<
+  T extends ExerciseStep,
+  S extends ExerciseSegmentKeys = ExerciseSegmentKeys,
+> = SegmentProps<T, S> & {
+  active: boolean;
+};
+
 export type SegmentBoardProps<
   T extends ExerciseStep,
   S extends ExerciseSegmentKeys = ExerciseSegmentKeys,
@@ -34,7 +41,10 @@ export type SegmentToolboxProps<
   T extends ExerciseStep,
   S extends keyof ExerciseSegments,
 > = SegmentProps<T, S> &
-  ExerciseToolboxProps & { children?: ReactNode; placeholder?: string };
+  ExerciseToolboxProps & {
+    children?: ReactNode;
+    placeholder?: string;
+  };
 
 export type SegmentActivityProps<T extends ExerciseStep> = {
   step: ExerciseStep;

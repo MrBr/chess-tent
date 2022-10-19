@@ -1,9 +1,10 @@
 import React from 'react';
 import { Components } from '@types';
-import { services } from '@application';
+import { constants, services } from '@application';
 import { css } from '@chess-tent/styled-props';
 
 const { getFenPosition } = services;
+const { START_FEN } = constants;
 
 const { className } = css`
   padding-top: 100%;
@@ -30,7 +31,7 @@ const PieceClassMap = {
 };
 
 const BoardPreview: Components['ChessboardPreview'] = ({ fen }) => {
-  const position = getFenPosition(fen);
+  const position = getFenPosition(fen || START_FEN);
   const ranks = position.split('/');
 
   return (

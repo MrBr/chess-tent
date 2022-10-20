@@ -1,4 +1,5 @@
-import application, { middleware } from '@application';
+import application, { middleware, service, utils } from '@application';
+import { Auth } from '@types';
 import { UsersFilters } from '@chess-tent/types';
 import {
   addUser,
@@ -14,6 +15,9 @@ import {
 import { getUser as getUserService } from './service';
 import { UserAlreadyExists } from './errors';
 import { introMessagesCoach, introMessagesStudent } from './constants';
+
+const { generateToken, verifyToken } = service;
+const { formatAppLink } = utils;
 
 const {
   sendData,
@@ -139,5 +143,65 @@ application.service.registerPostRoute(
   '/user/validate',
   toLocals('user', req => req.body),
   validateUser(),
+  sendStatusOk,
+);
+
+application.service.registerPostRoute(
+  '/user/forgot-password',
+  toLocals('user', req => ({ email: req.body.email })),
+  getUser('user'),
+  // This gives some information about existing user email even if somebody is faking.
+  // Response could always be positive to hide that information.
+  // However, if email is taken can still be validated on registration.
+  validate((req, res) => {
+    if (!res.locals.user) {
+      throw new Error("User doesn't exists.");
+    }
+  }),
+  toLocals('resetToken', (req, res) =>
+    generateToken(
+      { user: { id: res.locals.user.id } },
+      process.env.TOKEN_RESET_SECRET as string,
+      { expiresIn: 60 * 60 * 6 }, // 6h
+    ),
+  ),
+  sendMail((req, res) => ({
+    from: 'Chess Tent <noreply@chesstent.com>',
+    to: req.body.email,
+    subject: 'Reset password',
+    html: `<p>Hey,</p>
+      <p>We've received password reset request. You can reset your password at <a href=${formatAppLink(
+        `/reset-password?resetToken=${res.locals.resetToken}`,
+      )}> ${formatAppLink('/reset-password')}<a></p>
+      <p>If you haven't requested password reset please notify us at info@chesstent.com</p>
+      <p>Best Regards, <br/>Chess Tent Team</p>`,
+  })),
+  sendStatusOk,
+);
+
+application.service.registerPostRoute(
+  '/user/reset-password',
+  toLocals(
+    'user',
+    (req, res) =>
+      verifyToken<Auth['apiTokenPayload']>(
+        req.body.token,
+        process.env.TOKEN_RESET_SECRET as string,
+      ).user,
+  ),
+  getUser('user'),
+  // Additional layer of security, if somebody randomly gets token still has to know email
+  validate((req, res) => {
+    if (res.locals.user?.email !== req.body.email) {
+      throw new Error("Provided information don't match.");
+    }
+  }),
+  // Override user data - update only password
+  toLocals('user', (req, res) => ({
+    id: res.locals.user.id,
+    password: req.body.password,
+  })),
+  hashPassword,
+  updateUser,
   sendStatusOk,
 );

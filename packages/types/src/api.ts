@@ -190,6 +190,16 @@ export type RegisterRequestParams = {
   options: RegisterOptions;
 };
 
+export type ForgotPasswordRequestParams = {
+  email: string;
+};
+
+export type ResetPasswordRequestParams = {
+  email: string;
+  password: string;
+  token: string;
+};
+
 export type InviteUserParams = {
   email: User['email'];
   link: string;
@@ -208,6 +218,14 @@ export interface Endpoints {
   register: Endpoint<
     RequestPost<'/register', RegisterRequestParams>,
     UserResponse
+  >;
+  forgotPassword: Endpoint<
+    RequestPost<'/user/forgot-password', ForgotPasswordRequestParams>,
+    StatusResponse
+  >;
+  resetPassword: Endpoint<
+    RequestPost<'/user/reset-password', ResetPasswordRequestParams>,
+    StatusResponse
   >;
   inviteUser: Endpoint<
     RequestPost<'/invite-user', InviteUserParams>,

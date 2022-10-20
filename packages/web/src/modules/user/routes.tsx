@@ -1,6 +1,8 @@
 import React from 'react';
 import application, { components } from '@application';
 import Register from './pages/register';
+import ForgotPassword from './pages/forgot-password';
+import ResetPassword from './pages/reset-password';
 import Login from './pages/login';
 import Me from './pages/me';
 import User from './pages/user';
@@ -11,6 +13,18 @@ const { Route, AuthorizedRoute } = components;
 application.services.addRoute(() => (
   <Route exact path="/register">
     <Register />
+  </Route>
+));
+
+application.services.addRoute(() => (
+  <Route exact path="/forgot-password">
+    <ForgotPassword />
+  </Route>
+));
+
+application.services.addRoute(() => (
+  <Route exact path="/reset-password">
+    <ResetPassword />
   </Route>
 ));
 

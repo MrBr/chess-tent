@@ -6,6 +6,16 @@ const register = services.createRequest<Requests['register']>(
   '/register',
 );
 
+const forgotPassword = services.createRequest<Requests['forgotPassword']>(
+  'POST',
+  '/user/forgot-password',
+);
+
+const resetPassword = services.createRequest<Requests['resetPassword']>(
+  'POST',
+  '/user/reset-password',
+);
+
 const inviteUser = services.createRequest<Requests['inviteUser']>(
   'POST',
   '/invite-user',
@@ -36,6 +46,8 @@ const userValidate = services.createRequest<Requests['userValidate']>(
 );
 
 requests.register = register;
+requests.forgotPassword = forgotPassword;
+requests.resetPassword = resetPassword;
 requests.inviteUser = inviteUser;
 requests.login = login;
 requests.logout = logout;

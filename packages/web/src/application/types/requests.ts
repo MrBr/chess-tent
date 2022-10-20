@@ -21,6 +21,8 @@ import {
 // Client implementation interfaces
 export interface Requests {
   register: RequestFetch<Endpoints['register'], RegisterRequestParams>;
+  forgotPassword: RequestFetch<Endpoints['forgotPassword']>;
+  resetPassword: RequestFetch<Endpoints['resetPassword']>;
   inviteUser: RequestFetch<Endpoints['inviteUser'], InviteUserParams>;
   login: RequestFetch<Endpoints['login'], Pick<User, 'email' | 'password'>>;
   logout: RequestFetch<Endpoints['logout']>;

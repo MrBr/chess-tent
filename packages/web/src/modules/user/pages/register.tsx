@@ -156,7 +156,7 @@ const PageRegister = () => {
                 </>
               </Col>
             </Row>
-            <RegistrationFooter />
+            <RegistrationFooter terms />
           </AuthPage>
         );
       }}

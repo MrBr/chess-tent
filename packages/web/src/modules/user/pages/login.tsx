@@ -86,6 +86,7 @@ const PageLogin = () => {
                 Sign in
               </Button>
             </FormGroup>
+            <Link to="/forgot-password">Forgot password?</Link>
           </Form>
         </Col>
       </Row>

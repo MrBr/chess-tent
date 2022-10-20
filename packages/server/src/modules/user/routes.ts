@@ -61,12 +61,15 @@ application.service.registerPostRoute(
       throw new UserAlreadyExists();
     }
   }),
-  sendMail(req => ({
+  getUser('me'),
+  sendMail((req, res) => ({
     from: 'Chess Tent <noreply@chesstent.com>',
     to: req.body.email,
-    subject: 'Invitation link',
+    // It's important to track who sends email to prevent abuse
+    cc: res.locals.me.email,
+    subject: 'Invitation to Chess Tent',
     html: `<p>Hey,</p> 
-      <p>You've been invited to join Chess Tent. You can register at <a href=${req.body.link}> ${process.env.APP_DOMAIN}/register<a></p>
+      <p>${res.locals.me.name} invited you to join Chess Tent. You can register at <a href=${req.body.link}> ${process.env.APP_DOMAIN}/register<a></p>
       <p>Best Regards, <br/>Chess Tent Team</p>`,
   })),
   sendStatusOk,

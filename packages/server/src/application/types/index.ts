@@ -125,7 +125,10 @@ export type DB = {
 
 export type Auth = {
   apiTokenPayload: {
-    user: NormalizedUser;
+    user: Pick<NormalizedUser, 'id'>;
+  };
+  resetTokenPayload: {
+    user: Pick<NormalizedUser, 'id'>;
   };
 };
 
@@ -155,8 +158,14 @@ export type Service = {
     ...cb: ((...args: Parameters<RequestHandler>) => void)[]
   ) => void;
 
+  generateToken: (
+    payload: {},
+    secret: string,
+    options?: { expiresIn?: number },
+  ) => string;
+  verifyToken: <T extends {}>(token: string, secret: string) => T;
   generateApiToken: (user: User) => string;
-  verifyToken: (token?: string) => Auth['apiTokenPayload'] | null;
+  verifyApiToken: (token?: string) => Auth['apiTokenPayload'] | null;
 
   generateImgUrl: () => string;
   fileStorage: AWS.S3;

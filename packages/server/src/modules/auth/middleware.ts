@@ -1,13 +1,13 @@
 import { Middleware } from '@types';
 import application from '@application';
-import { verifyToken } from './service';
+import { verifyApiToken } from './service';
 import { UnauthorizedError } from './errors';
 
 const COOKIE_TOKEN_KEY = 'token';
 
 export const identify: Middleware['identify'] = (req, res, next) => {
   const token = req.cookies[COOKIE_TOKEN_KEY];
-  const tokenPayload = token ? verifyToken(token) : undefined;
+  const tokenPayload = token ? verifyApiToken(token) : undefined;
 
   if (!tokenPayload) {
     throw new UnauthorizedError();

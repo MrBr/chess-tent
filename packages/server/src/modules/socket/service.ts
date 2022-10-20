@@ -37,7 +37,7 @@ const identify: SocketService['identify'] = stream => {
     return null;
   }
   const token = getTokenFromCookie(stream.client.request.headers.cookie);
-  return service.verifyToken(token);
+  return service.verifyApiToken(token);
 };
 
 const registerMiddleware: SocketService['registerMiddleware'] =

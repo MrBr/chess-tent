@@ -79,7 +79,6 @@ export const autosizeTextarea: RefCallback<HTMLInputElement> = inputRef => {
     return;
   }
   inputRef.addEventListener('keydown', function () {
-    debugger;
     inputRef.style.height = 'auto';
     inputRef.style.height = inputRef.scrollHeight + 'px';
   });

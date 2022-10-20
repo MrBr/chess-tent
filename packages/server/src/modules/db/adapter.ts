@@ -29,7 +29,6 @@ export const applyAdapter = <T extends EntityDocument>(
     const formattedDocs = Array.isArray(docs) ? docs : [docs];
     formattedDocs.forEach(doc => {
       if (!doc.isSelected('v')) {
-        console.log(doc);
         // Version is a must because of migration
         throw new Error(
           'Document missing version. This usually means some properties are selected but not version.',

@@ -13,6 +13,7 @@ import {
   moveLessonChapter,
   getLeftStep,
   getParentStep,
+  getFirstStep,
 } from '@chess-tent/models';
 import {
   Actions,
@@ -277,15 +278,24 @@ class EditorRenderer extends React.Component<
   nextStepHandler = () => {
     const { activeChapter, activeStep } = this.props;
     const variationStep = getParentStep(activeChapter, activeStep);
-    const nextStep = getRightStep(variationStep as Steps, activeStep, [
-      'variation',
-    ]);
+
+    const nextStep =
+      getFirstStep(activeStep, false, ({ stepType }) => stepType !== 'move') ||
+      getRightStep(
+        variationStep as Steps,
+        activeStep,
+        step => step.stepType === 'variation',
+      );
     nextStep && this.setActiveStepHandler(nextStep);
   };
 
   prevStepHandler = () => {
     const { activeChapter, activeStep } = this.props;
-    const prevStep = getLeftStep(activeChapter, activeStep, ['variation']);
+    const prevStep = getLeftStep(
+      activeChapter,
+      activeStep,
+      (step, index) => index > -1 && step.stepType === 'variation',
+    );
     prevStep && this.setActiveStepHandler(prevStep);
   };
 

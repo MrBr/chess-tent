@@ -20,6 +20,7 @@ import {
   Step,
   updateActivityStepState,
   getParentStep,
+  getFirstStep,
 } from '@chess-tent/models';
 import ActivityStep from './activity-step';
 import { isActivityStepAnalysing } from '../service';
@@ -62,14 +63,24 @@ abstract class ActivityRendererAnalysis<
     const { analysis } = this.props;
     const activeStep = getAnalysisActiveStep(analysis);
     const variationStep = getParentStep(analysis, activeStep);
-    const nextStep = getRightStep(variationStep as Steps, activeStep);
+    const nextStep =
+      getFirstStep(activeStep, false, ({ stepType }) => stepType !== 'move') ||
+      getRightStep(
+        variationStep as Steps,
+        activeStep,
+        step => step.stepType === 'variation',
+      );
     nextStep && this.setActiveStep(nextStep);
   };
 
   prevStep = () => {
     const { analysis } = this.props;
     const activeStep = getAnalysisActiveStep(analysis);
-    const prevStep = getLeftStep(analysis, activeStep);
+    const prevStep = getLeftStep(
+      analysis,
+      activeStep,
+      (step, index) => index > -1 && step.stepType === 'variation',
+    );
     prevStep && this.setActiveStep(prevStep);
   };
 

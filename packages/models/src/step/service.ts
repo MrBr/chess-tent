@@ -35,14 +35,58 @@ const getChildStep = (
   return null;
 };
 
-const getLastStep = (parentStep: Step, recursive = true): Step => {
-  const lastStep =
-    parentStep.state.steps[parentStep.state.steps.length - 1] || parentStep;
-  return isSameStep(lastStep, parentStep)
-    ? lastStep
-    : recursive
-    ? getLastStep(lastStep)
-    : lastStep;
+function getLastStep(parentStep: Step, recursive: boolean): Step;
+function getLastStep(
+  parentStep: Step,
+  recursive: boolean,
+  skip?: (step: Step) => boolean | undefined,
+): Step | null;
+function getLastStep(
+  parentStep: Step,
+  recursive = true,
+  skip?: (step: Step) => boolean | undefined,
+) {
+  let index = parentStep.state.steps.length - 1;
+  while (index >= 0) {
+    const step = parentStep.state.steps[index];
+
+    const lastStep = recursive ? getLastStep(step, recursive, skip) : step;
+
+    if (lastStep) {
+      return lastStep;
+    }
+
+    index -= 1;
+  }
+  return (((!skip || !skip(parentStep)) && parentStep) || null) as ReturnType<
+    typeof getLastStep
+  >;
+}
+
+const getFirstStep = (
+  parentStep: Step,
+  recursive = true,
+  skip?: (step: Step) => boolean,
+): Step | null => {
+  let index = 0;
+  while (index < parentStep.state.steps.length) {
+    const firstStep = parentStep.state.steps[index];
+
+    const childFirstStep = recursive
+      ? getFirstStep(firstStep, recursive, skip)
+      : firstStep;
+
+    if (!isSameStep(childFirstStep, firstStep)) {
+      return firstStep;
+    }
+
+    if (firstStep && (!skip || !skip(firstStep))) {
+      return firstStep;
+    }
+
+    index += 1;
+  }
+  return null;
 };
 
 /**
@@ -51,28 +95,48 @@ const getLastStep = (parentStep: Step, recursive = true): Step => {
 const getPreviousStep = (
   parent: Step | StepRoot,
   cursorStep: Step,
-): Step | null => {
+  skip?: (step: Step) => boolean,
+): Step | null | undefined => {
+  // Optimisation?
   if (isStep(parent) && isSameStep(parent, cursorStep)) {
     return null;
   }
+
   let index = 0;
+  let didFound;
   while (index < parent.state.steps.length) {
-    const childStep = parent.state.steps[index];
-    if (isSameStep(childStep, cursorStep)) {
-      // Found searched step, returning previous.
-      // If the first or the only returning null otherwise returning previous step.
-      const prevStep = parent.state.steps[index - 1];
-      // Returning null if parent is StepRoot
-      return prevStep ? getLastStep(prevStep) : isStep(parent) ? parent : null;
-    }
-    const prevStep = getPreviousStep(childStep, cursorStep);
+    const currentStep = parent.state.steps[index];
+    const prevStep = getPreviousStep(currentStep, cursorStep, skip);
+
     if (prevStep) {
-      // Searched step has previous step in its section.
       return prevStep;
     }
+
+    // Step found, try with first prev which is the current
+    if (prevStep === undefined && (!skip || !skip(currentStep))) {
+      return currentStep;
+    }
+
+    // Step found
+    if (isSameStep(currentStep, cursorStep) || prevStep === undefined) {
+      didFound = true;
+      break;
+    }
+
     index += 1;
   }
-  return null;
+
+  // Exclude matched step
+  index -= 1;
+  while (didFound && index >= 0) {
+    const prevStep = getLastStep(parent.state.steps[index], true, skip);
+    if (prevStep) {
+      return prevStep;
+    }
+    index -= 1;
+  }
+
+  return didFound ? undefined : null;
 };
 
 /**
@@ -81,31 +145,43 @@ const getPreviousStep = (
 const getNextStep = (
   parent: Step | StepRoot,
   cursorStep: Step,
-): Step | null => {
-  if (isStep(parent) && isSameStep(parent, cursorStep)) {
-    return parent.state.steps[0];
-  }
+  skip?: (step: Step) => boolean,
+): Step | null | undefined => {
   let index = 0;
+  let didFound;
   while (index < parent.state.steps.length) {
     const step = parent.state.steps[index];
-    if (isSameStep(cursorStep, step)) {
-      return (
-        // Variation, dive in
-        step.state.steps[0] ||
-        // Next in a variation, continue
-        parent.state.steps[index + 1]
-      );
-    }
 
-    const nextStep = getNextStep(step, cursorStep);
+    const nextStep = isSameStep(cursorStep, step)
+      ? getFirstStep(step, true, skip)
+      : getNextStep(step, cursorStep, skip);
     if (nextStep) {
       return nextStep;
-    } else if (nextStep === undefined) {
-      return parent.state.steps[index + 1];
+    }
+
+    // Cursor step is inside the current steps but nothing match the search
+    // Skip the current step and search further
+    if (isSameStep(cursorStep, step) || nextStep === undefined) {
+      didFound = true;
+      break;
     }
     index += 1;
   }
-  return null;
+
+  // Exclude matched step
+  index += 1;
+  while (index < parent.state.steps.length) {
+    const step = parent.state.steps[index];
+    const nextStep =
+      ((!skip || !skip(step)) && step) || getFirstStep(step, true, skip);
+    // Don't include cursor step
+    if (nextStep) {
+      return nextStep;
+    }
+    index += 1;
+  }
+
+  return didFound ? undefined : null;
 };
 
 /**
@@ -114,30 +190,17 @@ const getNextStep = (
 const getRightStep = (
   parent: Step | StepRoot,
   cursorStep: Step,
-  skip?: StepType[],
+  skip?: (step: Step) => boolean,
 ): Step | null => {
   if (!isStep(parent)) {
-    return cursorStep.state.steps[0] || null;
+    return getFirstStep(cursorStep, false, skip);
   }
-  if (isSameStep(parent, cursorStep)) {
-    return null;
-  }
-  let index = 0;
-  const cursorStepIndex = parent.state.steps.indexOf(cursorStep);
+
+  let index = parent.state.steps.indexOf(cursorStep) + 1;
   while (index < parent.state.steps.length) {
-    const rightStep = parent.state.steps[index + 1];
+    const rightStep = parent.state.steps[index];
 
-    if (index === parent.state.steps.length - 1) {
-      // Didn't match any step, or cursor step is the last step
-      // Diving in to prevent freeze
-      return cursorStep.state.steps[0] || null;
-    }
-
-    if (
-      index >= cursorStepIndex &&
-      rightStep &&
-      !skip?.includes(rightStep.stepType)
-    ) {
+    if (rightStep && (!skip || !skip(rightStep))) {
       return rightStep;
     }
 
@@ -149,36 +212,31 @@ const getRightStep = (
 const getLeftStep = (
   rootStep: Step | StepRoot,
   cursorStep: Step,
-  skip?: StepType[],
+  skip?: (step: Step, index: number) => boolean,
 ): Step | null => {
-  if (isStep(rootStep) && isSameStep(rootStep, cursorStep)) {
-    return null;
-  }
-
   const parentStep = getParentStep(rootStep, cursorStep);
+
+  // Not traversing stepRoots atm?
   if (!parentStep || !isStep(parentStep)) {
     return null;
   }
 
-  let index = parentStep.state.steps.length - 1;
+  let index = parentStep.state.steps.indexOf(cursorStep) - 1;
   while (index >= 0) {
-    const step = parentStep.state.steps[index];
-    const leftStep = parentStep.state.steps[index - 1];
+    let leftStep = parentStep.state.steps[index];
 
-    if (index === 0) {
-      return parentStep;
-    }
-
-    if (
-      isSameStep(cursorStep, step) &&
-      leftStep &&
-      !skip?.includes(leftStep.stepType)
-    ) {
+    if (leftStep && (!skip || !skip(leftStep, index))) {
       return leftStep;
     }
 
     index -= 1;
   }
+
+  // Move down the main line
+  if (!skip || !skip(parentStep, index)) {
+    return parentStep;
+  }
+
   return null;
 };
 
@@ -376,6 +434,7 @@ export {
   getStepsCount,
   getStepIndex,
   getLastStep,
+  getFirstStep,
   getRightStep,
   getNextStep,
   getLeftStep,

@@ -67,7 +67,11 @@ const resolveNewMove = (
     promoted,
   );
   const variationStep = getParentStep(stepRoot, step) as VariationStep;
-  const rightStep = getRightStep(variationStep, step) as VariationStep;
+  const rightStep = getRightStep(
+    variationStep,
+    step,
+    ({ stepType }) => stepType !== 'move',
+  ) as VariationStep;
 
   // Move that possibly already exists in the chapter
   const sameMoveStep =

@@ -9,7 +9,7 @@ import {
   UPDATE_ENTITIES,
   UPDATE_ENTITY,
 } from '@chess-tent/types';
-import { applyPatches } from '@chess-tent/models';
+import { applyPatches, validatePatches } from '@chess-tent/models';
 import { utils } from '@application';
 
 const appReducer: {
@@ -78,6 +78,9 @@ const createEntityReducer =
           ...(entities[reducerEntityType] || {}),
         };
         if (type === reducerEntityType && entity) {
+          if (!validatePatches(entity, patch)) {
+            throw new Error('Corrupted state!');
+          }
           // Patch action is NORMALIZED
           const updatedEntity = applyPatches(entity, patch);
           updatedEntities[id] = updatedEntity;

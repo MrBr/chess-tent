@@ -8,6 +8,7 @@ import {
   applyPatches,
   Draft,
 } from 'immer';
+import _get from 'lodash.get';
 import { Objectish } from 'immer/dist/types/types-internal';
 
 enablePatches();
@@ -117,6 +118,28 @@ const applyUpdates =
     return finishDraft(draft, patchListener) as T;
   };
 
+/**
+ * If the next to last path doesn't exist it means that the nested object doesn't exist.
+ * This may be problematic in some cases because Immer creates objects on the path, but objects
+ * doesn't have any shape.
+ * This doesn't happen in single user mode but rather when multiple users edit the same object.
+ * @param entity
+ * @param patches
+ */
+const validatePatches = <T extends Objectish>(
+  entity: T,
+  patches: Patch[],
+): boolean => {
+  for (let i = 0; i < patches.length; i++) {
+    const path = [...patches[i].path];
+    path.pop();
+    if (!_get(entity, path)) {
+      return false;
+    }
+  }
+  return true;
+};
+
 export {
   createService,
   PatchListener,
@@ -125,4 +148,5 @@ export {
   applyPatches,
   applyNestedPatches,
   applyUpdates,
+  validatePatches,
 };

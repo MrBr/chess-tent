@@ -1,13 +1,13 @@
 import {
   ActivityRecord,
   Middleware,
-  Records,
+  SEND_PATCH,
   State,
   SYNC_ACTION,
 } from '@types';
-import { socket, utils, records } from '@application';
+import { socket, utils, records, services } from '@application';
 import { LessonActivity, TYPE_ACTIVITY } from '@chess-tent/models';
-import { InferRecord, InitedRecord } from '@chess-tent/redux-record/types';
+import { InitedRecord } from '@chess-tent/redux-record/types';
 
 export const middleware: State['middleware'] = [];
 
@@ -39,6 +39,16 @@ export const syncMiddleware: Middleware = store => next => action => {
       }
     }
     return;
+  }
+  if (action.type === SEND_PATCH) {
+    try {
+      return next(action);
+    } catch (e: unknown) {
+      services.logException(e as Error);
+      // This should fix problem for now.
+      // TODO - In future trigger new sync action between the users.
+      window.location.reload();
+    }
   }
   next(action);
 };

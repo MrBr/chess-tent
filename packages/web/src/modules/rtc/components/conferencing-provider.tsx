@@ -15,6 +15,9 @@ const { noop } = utils;
 
 const ConferencingProvider: Components['ConferencingProvider'] = ({ room }) => {
   const [showConfMenu, setShowConfMenu] = useState(false);
+  // Prevents warning flickering because getMedia is async
+  // Show if user doesn't respond in some time
+  const [showMediaAccessWarning, setMediaAccessWarning] = useState(false);
   const [state, setState] = useState<ConferencingContextType>({
     mutedVideo: isMobile,
     mutedAudio: false,
@@ -51,9 +54,12 @@ const ConferencingProvider: Components['ConferencingProvider'] = ({ room }) => {
 
   const openCamera = useCallback(async () => {
     try {
-      const mediaStream = await navigator.mediaDevices.getUserMedia(
-        mediaConstraints,
-      );
+      let mediaStream: MediaStream;
+      setTimeout(() => {
+        setMediaAccessWarning(!mediaStream);
+      }, 500);
+
+      mediaStream = await navigator.mediaDevices.getUserMedia(mediaConstraints);
 
       setState(pevState => ({
         ...pevState,
@@ -136,15 +142,18 @@ const ConferencingProvider: Components['ConferencingProvider'] = ({ room }) => {
           />
         )}
       </Col>
+    </>
+  );
+
+  const alerts = (
+    <>
       {error && (
         <Alert variant="danger" className="mt-3">
           {error}
         </Alert>
       )}
-      {!error && !localMediaStream && (
-        <Alert variant="warning" className="mt-3">
-          Allow access to camera/microphone.
-        </Alert>
+      {!error && !localMediaStream && showMediaAccessWarning && (
+        <Alert variant="warning"> Allow access to camera/microphone.</Alert>
       )}
     </>
   );
@@ -163,7 +172,7 @@ const ConferencingProvider: Components['ConferencingProvider'] = ({ room }) => {
               liveUsers.map(
                 ({ id }, index) =>
                   id !== user.id && (
-                    <Col className="col-auto mt-2">
+                    <Col className="col-auto mt-2" key={id}>
                       <ConferencingPeer
                         room={room}
                         fromUserId={id}
@@ -190,12 +199,15 @@ const ConferencingProvider: Components['ConferencingProvider'] = ({ room }) => {
                 </div>
               )}
               {connectionStarted && (
-                <Row className="mw-100 g-0 justify-content-between w-100 mt-2">
-                  <Col className="text-center">
-                    <Icon type="close" onClick={handleStopConferencing} />
-                  </Col>
-                  {multimediaSettings}
-                </Row>
+                <>
+                  <Row className="mw-100 g-0 justify-content-between w-100 mt-2">
+                    <Col className="text-center">
+                      <Icon type="close" onClick={handleStopConferencing} />
+                    </Col>
+                    {multimediaSettings}
+                  </Row>
+                  {alerts}
+                </>
               )}
             </Dropdown.Toggle>
             <Dropdown.Menu className="p-3">
@@ -219,6 +231,7 @@ const ConferencingProvider: Components['ConferencingProvider'] = ({ room }) => {
                       </Button>
                     </Col>
                   </Row>
+                  {alerts}
                   <RTCVideo
                     mediaStream={localMediaStream}
                     muted

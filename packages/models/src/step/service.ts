@@ -75,16 +75,16 @@ const getFirstStep = (
   while (index < parentStep.state.steps.length) {
     const firstStep = parentStep.state.steps[index];
 
-    const childFirstStep = recursive
-      ? getFirstStep(firstStep, recursive, skip)
-      : firstStep;
-
-    if (!isSameStep(childFirstStep, firstStep)) {
+    if (firstStep && (!skip || !skip(firstStep))) {
       return firstStep;
     }
 
-    if (firstStep && (!skip || !skip(firstStep))) {
-      return firstStep;
+    const childFirstStep = recursive
+      ? getFirstStep(firstStep, recursive, skip)
+      : null;
+
+    if (childFirstStep && (!skip || !skip(childFirstStep))) {
+      return childFirstStep;
     }
 
     index += 1;

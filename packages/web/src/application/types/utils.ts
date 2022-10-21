@@ -20,6 +20,8 @@ export type Utils = {
   createKeyboardNavigationHandler: (
     prev: () => void,
     next: () => void,
+    down?: () => void,
+    up?: () => void,
   ) => (e: KeyboardEvent) => void;
   generateIndex: () => string;
   denormalize: <T>(id: string, type: string, entities: {}) => T;

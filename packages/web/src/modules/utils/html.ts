@@ -7,7 +7,8 @@ export const isInputTypeElement = (elem: Element) =>
   !!elem.getAttribute('contenteditable') || elem.tagName === 'input';
 
 export const createKeyboardNavigationHandler =
-  (prev: Function, next: Function) => (e: KeyboardEvent) => {
+  (prev: Function, next: Function, down?: Function, up?: Function) =>
+  (e: KeyboardEvent) => {
     if (document.activeElement && isInputTypeElement(document.activeElement)) {
       return;
     }
@@ -18,6 +19,12 @@ export const createKeyboardNavigationHandler =
         return;
       case 'ArrowRight':
         next();
+        return;
+      case 'ArrowUp':
+        up && up();
+        return;
+      case 'ArrowDown':
+        down && down();
         return;
     }
   };

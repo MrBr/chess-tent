@@ -21,6 +21,8 @@ import {
   updateActivityStepState,
   getParentStep,
   getFirstStep,
+  getNextStep,
+  getPreviousStep,
 } from '@chess-tent/models';
 import ActivityStep from './activity-step';
 import { isActivityStepAnalysing } from '../service';
@@ -58,6 +60,29 @@ abstract class ActivityRendererAnalysis<
       analysis.state.activeStepId = step.id;
     });
   }
+
+  nextVariation = () => {
+    const { analysis } = this.props;
+    const activeStep = getAnalysisActiveStep(analysis);
+    const nextStep = getNextStep(
+      analysis,
+      activeStep,
+      ({ stepType }) => stepType !== 'variation',
+    );
+    nextStep && this.setActiveStep(nextStep);
+  };
+
+  prevVariation = () => {
+    const { analysis } = this.props;
+    const activeStep = getAnalysisActiveStep(analysis);
+    const prevStep = getPreviousStep(
+      analysis,
+      activeStep,
+      ({ stepType }) => stepType !== 'variation',
+    );
+
+    prevStep && this.setActiveStep(prevStep);
+  };
 
   nextStep = () => {
     const { analysis } = this.props;
@@ -169,7 +194,12 @@ export class ActivityRendererAnalysisBoard<
 
   handleKeypress = (e: KeyboardEvent) => {
     console.warn('TODO - add tooltip when analysis end is reached');
-    createKeyboardNavigationHandler(this.prevStep, this.nextStep)(e);
+    createKeyboardNavigationHandler(
+      this.prevStep,
+      this.nextStep,
+      this.nextVariation,
+      this.prevVariation,
+    )(e);
   };
 
   updateStepRotation = (orientation?: Orientation) => {

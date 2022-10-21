@@ -14,6 +14,7 @@ import {
   getLeftStep,
   getParentStep,
   getFirstStep,
+  getNextStep,
 } from '@chess-tent/models';
 import {
   Actions,
@@ -181,7 +182,7 @@ class EditorRenderer extends React.Component<
     history: [],
   };
 
-  static getDerivedStateFromError(error: Error) {
+  static getDerivedStateFromError() {
     return { error: true };
   }
 
@@ -273,6 +274,27 @@ class EditorRenderer extends React.Component<
     this.setActiveChapterHandler(activeChapter, step?.id);
   };
 
+  nextVariation = () => {
+    const { activeChapter, activeStep } = this.props;
+    const nextStep = getNextStep(
+      activeChapter,
+      activeStep,
+      ({ stepType }) => stepType !== 'variation',
+    );
+    nextStep && this.setActiveStepHandler(nextStep);
+  };
+
+  prevVariation = () => {
+    const { activeChapter, activeStep } = this.props;
+    const prevStep = getPreviousStep(
+      activeChapter,
+      activeStep,
+      ({ stepType }) => stepType !== 'variation',
+    );
+
+    prevStep && this.setActiveStepHandler(prevStep);
+  };
+
   nextStepHandler = () => {
     const { activeChapter, activeStep } = this.props;
     const variationStep = getParentStep(activeChapter, activeStep);
@@ -300,6 +322,8 @@ class EditorRenderer extends React.Component<
   handleKeypress = createKeyboardNavigationHandler(
     this.prevStepHandler,
     this.nextStepHandler,
+    this.nextVariation,
+    this.prevVariation,
   );
 
   setActiveChapterHandler = (chapter: Chapter, activeStepId?: Step['id']) => {

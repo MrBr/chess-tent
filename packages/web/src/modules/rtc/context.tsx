@@ -7,6 +7,7 @@ export interface ConferencingContextType {
   connectionStarted?: boolean;
   mutedAudio?: boolean;
   mutedVideo?: boolean;
+  error?: string | null;
 }
 
 export const ConferencingContext = createContext({} as ConferencingContextType);

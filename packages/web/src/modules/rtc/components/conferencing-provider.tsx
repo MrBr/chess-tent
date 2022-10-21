@@ -9,7 +9,7 @@ import ConferencingPeer from './conferencing-peer';
 import RTCVideo from './rtc-video';
 import { ConferencingContextType, ConferencingContext } from '../context';
 
-const { Icon, Dropdown, Button, Row, Col, Container, Text } = ui;
+const { Icon, Dropdown, Button, Row, Col, Container, Text, Alert } = ui;
 const { useActiveUserRecord, useSocketRoomUsers } = hooks;
 const { noop } = utils;
 
@@ -29,6 +29,7 @@ const ConferencingProvider: Components['ConferencingProvider'] = ({ room }) => {
     mutedVideo,
     localMediaStream,
     connectionStarted,
+    error,
   } = state;
   const liveUsers = useSocketRoomUsers(room);
   const currentUserIndex = liveUsers.findIndex(({ id }) => id === user.id);
@@ -57,8 +58,13 @@ const ConferencingProvider: Components['ConferencingProvider'] = ({ room }) => {
       setState(pevState => ({
         ...pevState,
         localMediaStream: mediaStream,
+        error: null,
       }));
     } catch (error) {
+      setState(pevState => ({
+        ...pevState,
+        error: (error as Error)?.message || "Couldn't get user media.",
+      }));
       console.error('getUserMedia Error: ', error);
     }
   }, [mediaConstraints]);
@@ -130,6 +136,16 @@ const ConferencingProvider: Components['ConferencingProvider'] = ({ room }) => {
           />
         )}
       </Col>
+      {error && (
+        <Alert variant="danger" className="mt-3">
+          {error}
+        </Alert>
+      )}
+      {!error && !localMediaStream && (
+        <Alert variant="warning" className="mt-3">
+          Allow access to camera/microphone.
+        </Alert>
+      )}
     </>
   );
 

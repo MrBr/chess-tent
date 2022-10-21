@@ -15,8 +15,8 @@ import {
 } from '@chess-tent/models';
 
 const { LessonPlayground, ChessboardContextProvider, Chessboard } = components;
-const { Container } = ui;
-const { updateLessonActivityActiveStep } = services;
+const { Container, Alert } = ui;
+const { updateLessonActivityActiveStep, logException } = services;
 
 function isStepBoard<T extends Steps | undefined>(
   rendererProps: ActivityRendererModuleBoard<any>[],
@@ -35,11 +35,22 @@ function isStepCard<T extends Steps | undefined>(
 export class ActivityRenderer<
   T extends Steps | undefined,
 > extends React.Component<ActivityRendererProps<T>, ActivityRendererState> {
+  state: ActivityRendererState = {};
+
   setStepActivityState = (state: {}) => {
     const { activity, updateActivity, boardState } = this.props;
 
     updateActivity(updateActivityStepState)(activity, boardState, state);
   };
+
+  static getDerivedStateFromError(error: Error) {
+    return { error: true };
+  }
+
+  componentDidCatch(error: Error) {
+    // You can also log the error to an error reporting service
+    logException(error);
+  }
 
   completeStep = () => {
     const { activity, updateActivity, boardState } = this.props;
@@ -124,7 +135,14 @@ export class ActivityRenderer<
 
   render() {
     const { cards, actions, navigation, sidebar } = this.props;
-
+    const { error } = this.state;
+    if (error) {
+      return (
+        <Alert variant="danger">
+          Something went wrong. Please let us know about the error.
+        </Alert>
+      );
+    }
     return (
       <ChessboardContextProvider>
         <LessonPlayground>

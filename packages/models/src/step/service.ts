@@ -5,7 +5,10 @@ import { replaceStepRecursive, removeStepRecursive } from './_helpers';
 
 // Step
 const isStep = (entity: unknown): entity is Step =>
-  Object.getOwnPropertyDescriptor(entity, 'type')?.value === TYPE_STEP;
+  !!entity &&
+  Object.getOwnPropertyDescriptor(entity, 'type')?.value === TYPE_STEP &&
+  !!Object.getOwnPropertyDescriptor(entity, 'stepType')?.value &&
+  !!Object.getOwnPropertyDescriptor(entity, 'id')?.value;
 
 /**
  * Unfortunately there is no guaranteed that single step will

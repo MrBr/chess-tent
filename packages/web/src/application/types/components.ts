@@ -348,7 +348,9 @@ export type ActivityRendererModuleCard<
   U extends Chapter | undefined = Chapter | undefined,
 > = ComponentType<ActivityRendererModuleProps<T, U>>;
 
-export interface ActivityRendererState {}
+export interface ActivityRendererState {
+  error?: boolean;
+}
 
 export interface TagsSelectProps {
   className?: string;

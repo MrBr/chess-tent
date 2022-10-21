@@ -44,6 +44,7 @@ const {
   ToggleButton,
   Text,
   Container,
+  Alert,
 } = ui;
 const { createChapter, updateStepRotation, logException } = services;
 const {
@@ -165,6 +166,7 @@ type EditorRendererState = {
     activeStepId: Step['id'];
     activeChapterId: Chapter['id'];
   }[];
+  error?: string;
 };
 
 /**
@@ -179,17 +181,13 @@ class EditorRenderer extends React.Component<
     history: [],
   };
 
-  static getDerivedStateFromError() {
-    // TODO - handle error on UI?
-    // So that React doesn't complain
-    return {};
+  static getDerivedStateFromError(error: Error) {
+    return { error: true };
   }
 
   componentDidCatch(error: Error) {
     // You can also log the error to an error reporting service
-    // logErrorToMyService(error, errorInfo);
     logException(error);
-    this.setActiveStepHandler();
   }
 
   componentDidMount() {
@@ -469,6 +467,15 @@ class EditorRenderer extends React.Component<
 
   render() {
     const { activeStep, lesson, activeChapter, lessonStatus } = this.props;
+    const { error } = this.state;
+
+    if (error) {
+      return (
+        <Alert variant="danger">
+          Something went wrong. Please let us know about the error.
+        </Alert>
+      );
+    }
 
     return (
       <ChessboardContextProvider>

@@ -1,4 +1,4 @@
-import { socket } from '@application';
+import { socket, services } from '@application';
 import {
   Actions,
   CONFERENCING_ANSWER,
@@ -13,6 +13,8 @@ export const isConferencingAction = (
   [CONFERENCING_OFFER, CONFERENCING_ANSWER, CONFERENCING_ICECANDIDATE].some(
     actionType => actionType === action.type,
   );
+
+const { logException } = services;
 
 /**
  * RTCController is an abstraction above the RTCPeerConnection.
@@ -38,6 +40,8 @@ export class RTCController {
   private toUserId: string;
   private polite: boolean;
   private rtcConfig: RTCConfiguration;
+  private makingOffer: boolean;
+  private ignoreOffer: boolean;
   // @ts-ignore - will be created in the constructor
   private rtcPeerConnection: RTCPeerConnection;
   private mediaStream: MediaStream | null | undefined;
@@ -51,6 +55,8 @@ export class RTCController {
     handleTrack: (track?: RTCTrackEvent) => void,
     polite: boolean,
   ) {
+    this.makingOffer = false;
+    this.ignoreOffer = false;
     this.room = room;
     this.fromUserId = fromUserId;
     this.toUserId = toUserId;
@@ -105,36 +111,12 @@ export class RTCController {
       'connectionstatechange',
       this.handleConnectionStatusChange,
     );
+    this.rtcPeerConnection.addEventListener(
+      'iceconnectionstatechange',
+      this.handleConnectionStatusChange,
+    );
 
     this.syncRTCPeerConnectionTracks();
-  }
-
-  async initiateOffer() {
-    try {
-      const offer = await this.rtcPeerConnection.createOffer({
-        offerToReceiveAudio: true,
-        offerToReceiveVideo: true,
-      });
-      // Because createOffer is async this check is done after it's resolved to prevent
-      // condition race
-      if (this.rtcPeerConnection.signalingState !== 'stable') {
-        return;
-      }
-      await this.rtcPeerConnection.setLocalDescription(offer);
-
-      if (!this.rtcPeerConnection.localDescription) {
-        throw new Error('Failed to set local description');
-      }
-
-      this.emmitOffer(this.rtcPeerConnection.localDescription);
-    } catch (error) {
-      if (this.rtcPeerConnection.signalingState === 'have-remote-offer') {
-        const answer = await this.rtcPeerConnection.createAnswer();
-        await this.rtcPeerConnection.setLocalDescription(answer);
-      } else {
-        console.log(error);
-      }
-    }
   }
 
   // Signaling server Actions
@@ -179,31 +161,29 @@ export class RTCController {
 
   // Signaling server listeners
   handleOffer = async (message: RTCSessionDescriptionInit) => {
-    if (this.rtcPeerConnection.signalingState !== 'stable' && !this.polite) {
-      if (
-        this.rtcPeerConnection.signalingState === 'have-local-offer' &&
-        this.rtcPeerConnection.localDescription
-      ) {
-        this.emmitOffer(this.rtcPeerConnection.localDescription);
-      }
+    const offerCollision =
+      this.makingOffer || this.rtcPeerConnection.signalingState !== 'stable';
+
+    this.ignoreOffer = offerCollision && !this.polite;
+    if (this.ignoreOffer) {
       return;
     }
+
     try {
-      if (this.rtcPeerConnection.signalingState !== 'stable') {
-        await this.rtcPeerConnection.setLocalDescription({ type: 'rollback' });
-      }
       await this.rtcPeerConnection.setRemoteDescription(message);
+    } catch (err) {
+      logException(err as Error);
+      return;
+    }
 
-      const answer = await this.rtcPeerConnection.createAnswer();
-
-      await this.rtcPeerConnection.setLocalDescription(answer);
+    try {
+      await this.rtcPeerConnection.setLocalDescription();
+      this.emmitAnswer(
+        this.rtcPeerConnection.localDescription as RTCSessionDescription,
+      );
     } catch (e) {
-      console.log(e);
+      logException(e as Error);
     }
-    if (!this.rtcPeerConnection.localDescription) {
-      throw new Error('Failed to set local description');
-    }
-    this.emmitAnswer(this.rtcPeerConnection.localDescription);
   };
 
   handleAnswer = async (message: RTCSessionDescriptionInit) => {
@@ -213,7 +193,13 @@ export class RTCController {
   handleICECandidate = async (message: string) => {
     const candidate = JSON.parse(message);
 
-    await this.rtcPeerConnection.addIceCandidate(candidate);
+    try {
+      await this.rtcPeerConnection.addIceCandidate(candidate);
+    } catch (e) {
+      if (!this.ignoreOffer) {
+        logException(e as Error);
+      }
+    }
   };
 
   // RTC listeners
@@ -224,8 +210,18 @@ export class RTCController {
     this.emmitICECandidate(JSON.stringify(rtcPeerConnectionIceEvent.candidate));
   };
 
-  handleOnNegotiationNeeded = () => {
-    this.initiateOffer();
+  handleOnNegotiationNeeded = async () => {
+    try {
+      this.makingOffer = true;
+      await this.rtcPeerConnection.setLocalDescription();
+      this.emmitOffer(
+        this.rtcPeerConnection.localDescription as RTCSessionDescription,
+      );
+    } catch (err) {
+      logException(err as Error);
+    } finally {
+      this.makingOffer = false;
+    }
   };
 
   handleConnectionStatusChange = (e: Event) => {
@@ -233,6 +229,12 @@ export class RTCController {
       (e.currentTarget as RTCPeerConnection).connectionState === 'disconnected'
     ) {
       this.createRTCPeerConnection();
+    }
+  };
+
+  handleIceConectionStateChange = (e: Event) => {
+    if (this.rtcPeerConnection.iceConnectionState === 'failed') {
+      this.rtcPeerConnection.restartIce();
     }
   };
 

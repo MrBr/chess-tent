@@ -4,7 +4,6 @@ import { service, db, utils } from '@application';
 import { Activity, SubjectPathUpdate, User } from '@chess-tent/models';
 import { ActivityFilters } from '@chess-tent/types';
 import { ActivityModel, depopulate, DepupulatedActivity } from './model';
-import { Role, TYPE_ACTIVITY } from '@chess-tent/models/src';
 
 export const saveActivity = (activity: Activity) =>
   new Promise<void>(resolve => {

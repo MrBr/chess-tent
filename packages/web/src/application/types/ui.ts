@@ -424,7 +424,10 @@ export type UI = {
     left?: number;
     zIndex?: number;
   }>;
-  Dot: UIComponent<{ variant?: 'neutral'; size?: 'small' }>;
+  Dot: UIComponent<{
+    variant?: 'neutral' | 'success' | 'error' | 'secondary';
+    size?: 'small';
+  }>;
   Line: UIComponent;
   LoadMore: UIComponent<LoadMoreProps>;
   Spinner: UIComponent<SpinnerProps>;

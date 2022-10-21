@@ -118,6 +118,9 @@ export type Hooks = {
   useDispatch: typeof useDispatch;
   useSelector: typeof useSelector;
   useStore: () => Store<AppState, Actions>;
+  useSocketMonitor: (
+    container?: () => HTMLElement,
+  ) => [ReactElement, ReactElement];
   useSocketSubscribe: (channel: string) => void;
   useSocketRoomUsers: (room: string) => User[];
   useDiffUpdates: (

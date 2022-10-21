@@ -3,9 +3,9 @@ import { hooks, socket as socketNamespace } from '@application';
 import { Hooks } from '@types';
 import { ACTION_EVENT } from '@chess-tent/types';
 
-import { socket } from './service';
+import { socket } from '../service';
 
-import { roomUsers } from './record';
+import { roomUsers } from '../record';
 
 const { useMeta, useRecordInit } = hooks;
 

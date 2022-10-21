@@ -7,7 +7,7 @@ import {
 } from '@chess-tent/types';
 import { hooks } from '@application';
 import { socket } from './service';
-import { useSocketConnected } from './hook';
+import { useSocketConnected } from './hooks';
 
 const { useDispatchBatched, useActiveUserRecord } = hooks;
 

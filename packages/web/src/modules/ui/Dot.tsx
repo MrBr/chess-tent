@@ -3,7 +3,6 @@ import { UI } from '@types';
 
 const Dot = styled.span.props.variant.size.css`
   border-radius: 50%;
-  background: var(--secondary-color);
   display: inline-block;
   width: 8px;
   height: 8px;
@@ -14,10 +13,26 @@ const Dot = styled.span.props.variant.size.css`
     height: 5px;
   }
 
+  &.secondary {
+    background: var(--secondary-color);
+  }
+
+  &.success {
+    background: var(--success-color);
+  }
+
+  &.error {
+    background: var(--error-color);
+  }
+
   &.neutral {
     background: var(--grey-400-color);
     border-color: var(--grey-400-color);
   }
 ` as UI['Dot'];
+
+Dot.defaultProps = {
+  variant: 'secondary',
+};
 
 export default Dot;

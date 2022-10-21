@@ -18,9 +18,10 @@ const {
   useActiveUserRecord,
   useApiStatus,
   useSocketRoomUsers,
+  useSocketMonitor,
 } = hooks;
 
-const { Breadcrumbs, Col, Button, Stack } = ui;
+const { Breadcrumbs, Col, Button, Stack, Modal, Text } = ui;
 const { Page, Header, UserAvatar, ApiRedirectPrompt } = components;
 
 const PageActivity = () => {
@@ -33,6 +34,9 @@ const PageActivity = () => {
     applyPatch,
   } = useActivity<LessonActivity>(activityId);
   const liveUsers = useSocketRoomUsers(room);
+  const [socketStatus, socketAlert] = useSocketMonitor(
+    () => document.querySelector('.layout-content') as HTMLElement,
+  );
   const activityUpdateApiState = useApi(requests.activityUpdate);
   const [activityStatus, setActivityStatus] = useApiStatus(
     activity,
@@ -105,6 +109,7 @@ const PageActivity = () => {
 
   const pageHeader = (
     <Header className="border-bottom">
+      <Col className="col-auto m-0 p-0 pb-1">{socketStatus}</Col>
       <Col>
         <Breadcrumbs>
           {isMobile ? (
@@ -149,6 +154,7 @@ const PageActivity = () => {
     <Page header={pageHeader} tabbar={<></>}>
       {activityCompleteModal}
       {activitySettingsModal}
+      {socketAlert}
       <Activity activity={activity} />
       <ApiRedirectPrompt status={activityStatus} />
     </Page>

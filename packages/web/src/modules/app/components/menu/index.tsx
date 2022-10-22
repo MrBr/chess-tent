@@ -36,7 +36,13 @@ const Menu: Components['Menu'] = () => {
   return (
     <Container className={className}>
       <div>
-        <Item icon="logo" label="ChessTent" break />
+        <Item
+          icon="logo"
+          path="/"
+          label="ChessTent"
+          break
+          className="bg-transparent"
+        />
         <Item icon="dashboard" path="/" label="Dashboard" />
         <Item icon="lightbulb" path="/lessons" label="Lessons" />
         <Item icon="board" path="/studies" label="Studies" />

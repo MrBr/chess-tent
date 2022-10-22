@@ -21,7 +21,7 @@ const {
   useSocketMonitor,
 } = hooks;
 
-const { Breadcrumbs, Col, Button, Stack, Modal, Text } = ui;
+const { Breadcrumbs, Col, Button, Stack } = ui;
 const { Page, Header, UserAvatar, ApiRedirectPrompt } = components;
 
 const PageActivity = () => {

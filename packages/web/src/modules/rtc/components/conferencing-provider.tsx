@@ -57,7 +57,7 @@ const ConferencingProvider: Components['ConferencingProvider'] = ({ room }) => {
       let mediaStream: MediaStream;
       setTimeout(() => {
         setMediaAccessWarning(!mediaStream);
-      }, 500);
+      }, 750);
 
       mediaStream = await navigator.mediaDevices.getUserMedia(mediaConstraints);
 
@@ -226,6 +226,7 @@ const ConferencingProvider: Components['ConferencingProvider'] = ({ room }) => {
                       <Button
                         size="extra-small"
                         onClick={handleStartConferencing}
+                        disabled={!localMediaStream}
                       >
                         Join
                       </Button>

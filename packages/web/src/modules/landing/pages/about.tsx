@@ -99,17 +99,16 @@ export const LandingPage = () => {
           <Row>
             <Col md={{ offset: 2, span: 8 }}>
               <Hero align="center">
-                Chess Tent is a{' '}
+                Chess Tent <br />
+                Built for{' '}
                 <Text inherit className="position-relative d-inline-block">
                   <Underline />
                   community
                 </Text>
-                driven platform
               </Hero>
               <Text align="center" fontSize="large">
-                Fair and transparent product built for people. We live in times
-                where everything is about the money and this is attempt to make
-                a change.
+                Fair and transparent product built for people. Our goal is to
+                build self-sustainable online coaching platform.
               </Text>
             </Col>
           </Row>
@@ -205,7 +204,7 @@ export const LandingPage = () => {
               </Row>
             </Col>
             <Col md={{ offset: 1, span: 6 }} sm={12}>
-              <Headline2>Community driven</Headline2>
+              <Headline2>Community</Headline2>
               <Text fontSize="small">
                 The primary goal of Chess tent is to provide first class chess
                 learning experience. This can only be achieved together with our
@@ -240,7 +239,7 @@ export const LandingPage = () => {
                 <Icon type="board" background variant="secondary" />
                 <Headline5 className="mt-4 mb-4">Zero purchase fees</Headline5>
                 <Text fontSize="small">
-                  The best place for online chess practice
+                  Users can provide services without commission
                 </Text>
               </div>
             </Col>
@@ -248,28 +247,24 @@ export const LandingPage = () => {
               <div className="card">
                 <Icon type="video" background variant="secondary" />
                 <Headline5 className="mt-4 mb-4">Adless service</Headline5>
-                <Text fontSize="small">
-                  Interactive chess board and video conference all in one{' '}
-                </Text>
+                <Text fontSize="small">No distraction, just chess</Text>
               </div>
             </Col>
             <Col xs={6} md={4} className="mt-4 mb-4">
               <div className="card">
                 <Icon type="message" background variant="secondary" />
-                <Headline5 className="mt-4 mb-4">
-                  Participation in the decision making
-                </Headline5>
-                <Text fontSize="small">In app chat for brief discussions</Text>
+                <Headline5 className="mt-4 mb-4">Open platform</Headline5>
+                <Text fontSize="small">
+                  Free to use any segment without obligations
+                </Text>
               </div>
             </Col>
             <Col xs={6} md={4} className="mt-4 mb-4">
               <div className="card">
                 <Icon type="support" background variant="secondary" />
-                <Headline5 className="mt-4 mb-4">
-                  Free for those in need
-                </Headline5>
+                <Headline5 className="mt-4 mb-4">Free subscriptions</Headline5>
                 <Text fontSize="small">
-                  Group trainings beyond over the board experience
+                  Subscriptions are defined by users, zero is an option
                 </Text>
               </div>
             </Col>

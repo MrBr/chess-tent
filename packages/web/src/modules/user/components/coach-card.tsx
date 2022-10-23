@@ -145,7 +145,7 @@ const CoachCard: Components['CoachCard'] = ({ coach }) => {
           <Row className="justify-content-between mt-2 pt-1">
             <Col className="col-auto">
               <Text className="m-0" fontSize="extra-small" inline>
-                FIDE {coach.state.elo}
+                ELO {coach.state.elo}
               </Text>
             </Col>
             <Col className="col-auto">

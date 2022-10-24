@@ -83,7 +83,7 @@ export interface ChessboardFooterProps {
   onClear: () => void;
   onRotate: () => void;
   onFENSet: (FEN: FEN) => void;
-  onPGN?: (pgn: string) => void;
+  onPGN?: (pgn: string, asChapters: boolean) => void;
 }
 
 export interface ChessboardProps {
@@ -131,7 +131,7 @@ export interface ChessboardProps {
   onReset?: (FEN: string) => void;
   onClear?: (FEN: string) => void;
   onFENSet?: (FEN: string) => void;
-  onPGN?: (pgn: string) => void;
+  onPGN?: (pgn: string, asChapters: boolean) => void;
   onOrientationChange?: (orientation: ChessboardProps['orientation']) => void;
 }
 

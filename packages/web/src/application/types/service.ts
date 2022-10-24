@@ -91,7 +91,7 @@ export type Services = {
   parsePgn: (
     pgn: string,
     options: { orientation: Orientation | undefined },
-  ) => Steps[];
+  ) => PgnGame[];
   createNotableMoveFromChessMove: (
     position: FEN,
     move: ChessMove,

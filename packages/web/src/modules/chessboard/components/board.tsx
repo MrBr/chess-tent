@@ -346,9 +346,9 @@ class Chessboard
     onUpdateEditing && onUpdateEditing(editing);
   };
 
-  onPGN = (pgn: string) => {
+  onPGN = (pgn: string, asChapters: boolean) => {
     const { onPGN } = this.props;
-    onPGN && onPGN(pgn);
+    onPGN && onPGN(pgn, asChapters);
   };
 
   onShapeAdd = (shape: DrawShape) => {};

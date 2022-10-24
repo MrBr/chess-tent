@@ -14,14 +14,14 @@ const PGNModal = withFiles(
     files,
     openFileDialog,
   }: FileUploaderProps & {
-    onImport: (pgn: string) => void;
+    onImport: (pgn: string, asChapters: boolean) => void;
     close: () => void;
   }) => {
     const [charsCount, setCharsCount] = useState(0);
     const inputRef = useRef<HTMLInputElement>(null);
     const isValidPgn = charsCount <= CharsLimit;
 
-    const handleImport = () => {
+    const handleImport = (asChapters = false) => {
       if (!inputRef.current) {
         return;
       }
@@ -29,7 +29,7 @@ const PGNModal = withFiles(
         alert('PGN file too big!');
         return;
       }
-      onImport(inputRef.current.value);
+      onImport(inputRef.current.value, asChapters);
       close();
     };
 
@@ -78,7 +78,7 @@ const PGNModal = withFiles(
         <Modal.Footer>
           <Col>
             <Text className="mb-0" fontSize="small">
-              PGN size limit:
+              Size limit:
             </Text>
             <Text
               color={isValidPgn ? 'black' : 'error'}
@@ -88,7 +88,15 @@ const PGNModal = withFiles(
               {charsCount}/{CharsLimit}
             </Text>
           </Col>
-          <Button onClick={handleImport} size="small">
+          <Button
+            onClick={() => handleImport(true)}
+            size="extra-small"
+            variant="text"
+            className="p-0 me-3"
+          >
+            Import as chapters
+          </Button>
+          <Button onClick={() => handleImport(false)} size="small">
             Import
           </Button>
         </Modal.Footer>

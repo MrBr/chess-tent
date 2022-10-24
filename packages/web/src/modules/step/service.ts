@@ -30,11 +30,12 @@ export const updateStepRotation = (
 export const parsePgn: Services['parsePgn'] = (pgn, { orientation }) => {
   const processedPgn = transformNullMoves(pgn);
   const games = parse(processedPgn, { startRule: 'games' }) as ParseTree[];
-  return games.map(game =>
-    transformPgnVariation(game.moves, {
+  return games.map(game => ({
+    tags: game.tags,
+    variation: transformPgnVariation(game.moves, {
       fen: game.tags?.FEN,
       orientation,
       comment: game.gameComment?.comment,
     }),
-  );
+  }));
 };

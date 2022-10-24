@@ -5,6 +5,7 @@ import {
   ReactElement,
 } from 'react';
 import { Chapter, Step, StepRoot, StepType, User } from '@chess-tent/models';
+import { Tags } from '@mliebelt/pgn-parser';
 import {
   ActivityStepProps,
   ChessboardInterface,
@@ -15,11 +16,17 @@ import { ClassComponent } from './_helpers';
 import { Orientation, Shape } from './chess';
 import { AppAnalysis } from './analysis';
 import { ApiStatus } from './hooks';
+import { Steps } from './steps';
 
 export type AppStep<S extends {} = {}, T extends StepType = StepType> = Step<
   S & { orientation?: Orientation },
   T
 >;
+
+export type PgnGame = {
+  tags?: Tags;
+  variation: Steps;
+};
 
 export type StepSystemProps = {
   setActiveStep: (step: AppStep) => void;

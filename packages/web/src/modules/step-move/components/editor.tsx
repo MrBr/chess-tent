@@ -201,9 +201,9 @@ const EditorBoard: MoveModule['EditorBoard'] = ({
 
   const onPGN = useCallback(
     (pgn: string) => {
-      const steps = parsePgn(pgn, { orientation });
+      const games = parsePgn(pgn, { orientation });
       let updatedStepRoot = stepRoot;
-      steps.forEach(variation => {
+      games.forEach(({ variation }) => {
         updatedStepRoot = addStep(updatedStepRoot, variation);
       });
       updateChapter(updatedStepRoot as Chapter);

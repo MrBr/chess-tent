@@ -26,8 +26,8 @@ const Footer: FunctionComponent<ChessboardFooterProps> = ({
   position,
   onPGN,
 }) => {
-  const handlePGN = (pgn: string) => {
-    onPGN && onPGN(pgn);
+  const handlePGN = (pgn: string, asChapters: boolean) => {
+    onPGN && onPGN(pgn, asChapters);
   };
 
   const [pgnModalElem, promptModal] = usePrompt(close => (

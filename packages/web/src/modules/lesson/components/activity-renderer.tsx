@@ -13,10 +13,11 @@ import {
   getPreviousStep,
   updateActivityStepState,
 } from '@chess-tent/models';
+import { importLessonActivityChapters } from '../service';
 
 const { LessonPlayground, ChessboardContextProvider, Chessboard } = components;
 const { Container, Alert } = ui;
-const { updateLessonActivityActiveStep, logException } = services;
+const { updateLessonActivityActiveStep, logException, parsePgn } = services;
 
 function isStepBoard<T extends Steps | undefined>(
   rendererProps: ActivityRendererModuleBoard<any>[],
@@ -36,6 +37,17 @@ export class ActivityRenderer<
   T extends Steps | undefined,
 > extends React.Component<ActivityRendererProps<T>, ActivityRendererState> {
   state: ActivityRendererState = {};
+
+  importChaptersFromPgn = (pgn: string) => {
+    const { updateActivity, activity } = this.props;
+    const variations = parsePgn(pgn, { orientation: 'white' });
+
+    const chapters = variations.map(({ tags, variation }, index) =>
+      services.createChapter(tags?.Event || `Chapter ${index}`, [variation]),
+    );
+
+    updateActivity(importLessonActivityChapters)(activity, chapters);
+  };
 
   setStepActivityState = (state: {}) => {
     const { activity, updateActivity, boardState } = this.props;
@@ -88,7 +100,17 @@ export class ActivityRenderer<
   };
 
   renderChessboard = (props: ChessboardProps) => {
-    return <Chessboard {...props} header={<Container />} />;
+    return (
+      <Chessboard
+        {...props}
+        header={<Container />}
+        onPGN={(pgn, asChapters) => {
+          asChapters
+            ? this.importChaptersFromPgn(pgn)
+            : props.onPGN && props.onPGN(pgn, asChapters);
+        }}
+      />
+    );
   };
 
   renderCardModules(modules: ActivityRendererModuleCard<T>[]) {

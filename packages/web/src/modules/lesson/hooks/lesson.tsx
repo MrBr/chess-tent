@@ -35,7 +35,7 @@ export const useLessonParams = (lesson: Lesson) => {
   ) as Chapter;
   const activeStepId =
     new URLSearchParams(location.search).get('activeStep') ||
-    activeChapter.state.steps[0].id;
+    activeChapter.state.steps[0]?.id;
   const activeStep = useMemo(
     () => getChildStep(activeChapter, activeStepId),
     [activeChapter, activeStepId],

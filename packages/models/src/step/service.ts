@@ -195,10 +195,6 @@ const getRightStep = (
   cursorStep: Step,
   skip?: (step: Step) => boolean,
 ): Step | null => {
-  if (!isStep(parent)) {
-    return getFirstStep(cursorStep, false, skip);
-  }
-
   let index = parent.state.steps.indexOf(cursorStep) + 1;
   while (index < parent.state.steps.length) {
     const rightStep = parent.state.steps[index];

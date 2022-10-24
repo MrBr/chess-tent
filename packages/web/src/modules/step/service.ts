@@ -1,7 +1,30 @@
-import { FEN, Orientation, PieceColor, Services, Steps } from '@types';
-import { updateStepState } from '@chess-tent/models';
+import { constants } from '@application';
+import {
+  FEN,
+  Orientation,
+  PieceColor,
+  Services,
+  Steps,
+  VariationStep,
+} from '@types';
+import { Chapter, updateStepState } from '@chess-tent/models';
 import { parse, ParseTree } from '@mliebelt/pgn-parser';
 import { transformNullMoves, transformPgnVariation } from './_helpers';
+
+const { START_FEN } = constants;
+
+export const isEmptyChapter = (chapter: Chapter) => {
+  const firstStep = chapter.state.steps[0];
+  return (
+    chapter.state.steps.length === 1 &&
+    firstStep.stepType === 'variation' &&
+    isEmptyVariation(firstStep as VariationStep)
+  );
+};
+
+export const isEmptyVariation = (step: VariationStep) => {
+  return step.state.steps.length === 0 && step.state.position === START_FEN;
+};
 
 export const getStepPosition = (step: Steps): FEN => {
   if (step.stepType === 'variation') {

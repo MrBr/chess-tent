@@ -34,6 +34,7 @@ import { css } from '@chess-tent/styled-props';
 import ChaptersDropdown from './chapters-dropdown';
 import RootStepButton from './editor-sidebar-root-step-button';
 import { useLessonParams } from '../hooks/lesson';
+import { removeEmptyChapters } from '../service';
 
 const {
   Row,
@@ -47,7 +48,7 @@ const {
   Container,
   Alert,
 } = ui;
-const { createChapter, updateStepRotation, logException } = services;
+const { createChapter, updateStepRotation, logException, parsePgn } = services;
 const {
   Stepper,
   StepRenderer,
@@ -414,6 +415,26 @@ class EditorRenderer extends React.Component<
     history.replace(location.pathname);
   };
 
+  importChaptersFromPgn = (pgn: string) => {
+    const { addLessonUpdate, lesson } = this.props;
+    const variations = parsePgn(pgn, { orientation: 'white' });
+
+    const chapters = variations.map(({ tags, variation }, index) =>
+      services.createChapter(tags?.Event || `Chapter ${index}`, [variation]),
+    );
+
+    if (chapters.length === 0) {
+      return;
+    }
+
+    let updatedLesson = removeEmptyChapters(lesson);
+    const action = serviceAction(updateSubjectState)(updatedLesson, {
+      chapters: [...updatedLesson.state.chapters, ...chapters],
+    });
+    addLessonUpdate(action);
+    this.setActiveChapterHandler(chapters[0]);
+  };
+
   // TODO - instead of passing methods through the props use context
   resolveEditorContext = (): EditorContext => ({
     lesson: this.props.lesson,
@@ -448,6 +469,11 @@ class EditorRenderer extends React.Component<
         orientation={activeStep.state.orientation}
         onOrientationChange={this.updateStepRotation}
         {...props}
+        onPGN={(pgn, asChapters) => {
+          asChapters
+            ? this.importChaptersFromPgn(pgn)
+            : props.onPGN && props.onPGN(pgn, asChapters);
+        }}
         header={
           <Row className="align-items-center">
             <Col xs={8}>

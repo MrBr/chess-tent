@@ -13,6 +13,7 @@ import {
   updateStepRotation,
   getStepPosition,
   parsePgn,
+  isEmptyChapter,
 } from './service';
 
 application.model.stepSchema = stepSchema;
@@ -24,6 +25,8 @@ application.services.getSameMoveStep = getSameMoveStep;
 application.services.getStepPosition = getStepPosition;
 application.services.getStepBoardOrientation = getStepBoardOrientation;
 application.services.updateStepRotation = updateStepRotation;
+application.services.updateStepRotation = updateStepRotation;
+application.services.isEmptyChapter = isEmptyChapter;
 application.components.StepRenderer = StepComponentRenderer;
 
 application.register(

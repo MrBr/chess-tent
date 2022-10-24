@@ -33,7 +33,7 @@ import {
 
 import { LESSON_ACTIVITY_ANALYSIS_STEP_ID } from './constants';
 
-const { createStep } = services;
+const { createStep, isEmptyChapter } = services;
 const { generateIndex } = utils;
 const { START_FEN } = constants;
 
@@ -253,3 +253,10 @@ export const isActivityStepAnalysing = <T extends ActivityStepStateBase>(
 export const isActivityStepSolving = <T extends ActivityStepStateBase>(
   state: T,
 ) => state.mode === ActivityStepMode.SOLVING;
+
+export const removeEmptyChapters = createService((draft: Lesson): Lesson => {
+  draft.state.chapters = draft.state.chapters.filter(
+    chapter => !isEmptyChapter(chapter),
+  );
+  return draft;
+});

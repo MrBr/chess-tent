@@ -40,7 +40,12 @@ import {
 import { MoveStep, Steps, VariationStep } from './steps';
 import { History } from './router';
 import { GenericArguments } from './_helpers';
-import { ActivityComment, ActivityStepStateBase, StepModule } from './step';
+import {
+  ActivityComment,
+  ActivityStepStateBase,
+  PgnGame,
+  StepModule,
+} from './step';
 import {
   AppAnalysis,
   Evaluation,
@@ -110,6 +115,7 @@ export type Services = {
     step: VariationStep | MoveStep,
     move: NotableMove,
   ) => boolean;
+  isEmptyChapter: (chapter: Chapter) => boolean;
   getSameMoveStep: (
     step: VariationStep | MoveStep,
     move: NotableMove,

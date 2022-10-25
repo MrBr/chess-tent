@@ -3,7 +3,7 @@ import { components, hooks, ui } from '@application';
 import { User } from '@chess-tent/models';
 import Welcome from './welcome';
 
-const { Page, Trainings, ScheduledTrainings } = components;
+const { Page, Trainings, ScheduledTrainings, Coaches } = components;
 const {
   useUserTrainings,
   useOpenTraining,
@@ -28,16 +28,9 @@ const DashboardStudent = ({ user }: { user: User }) => {
     <Page>
       {offcanvas}
       <Page.Body>
-        <Welcome name={user.name} />
-        {coaches.value && coaches.value.length === 0 && (
-          <CardEmpty
-            title="It's more fun with coach"
-            subtitle="Learn faster with experienced coaches"
-            cta="Find a coach"
-            onClick={() => history.push('/coaches')}
-            icon="profile"
-          />
-        )}
+        <Welcome name={user.name} className="mb-4" />
+        {coaches.value && coaches.value.length === 0 && <Coaches preview />}
+
         {!!scheduledTrainings.value?.length && (
           <>
             <Headline5 className="mt-5 mb-3">Upcoming trainings</Headline5>

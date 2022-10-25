@@ -274,8 +274,12 @@ const getStepIndex = (
   return indexSearch.index;
 };
 
-const isLastStep = (parentStep: Step, step: Step, recursive = true) => {
-  return isSameStep(getLastStep(parentStep, recursive), step);
+const isLastStep = (
+  parentStep: Step | StepRoot,
+  step: Step,
+  recursive = true,
+) => {
+  return isSameStep(getLastStep(parentStep as Step, recursive), step);
 };
 
 const getParentStep = <T extends Step | StepRoot>(

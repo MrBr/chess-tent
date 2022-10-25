@@ -81,14 +81,9 @@ export type ActivityComment = {
   id: string;
 };
 
-export enum ActivityStepMode {
-  ANALYSING = 'ANALYSING',
-  SOLVING = 'SOLVING',
-}
 export type ActivityStepStateBase = {
   analysis: AppAnalysis;
   comments?: ActivityComment[];
-  mode: ActivityStepMode;
   shapes?: Shape[];
   visited?: boolean;
   completed?: boolean;

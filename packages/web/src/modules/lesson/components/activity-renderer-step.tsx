@@ -7,7 +7,6 @@ import {
   Piece,
   PieceRole,
   Shape,
-  ActivityStepMode,
   ActivityRendererModuleBoardProps,
   Steps,
 } from '@types';
@@ -19,31 +18,14 @@ import {
   Chapter,
 } from '@chess-tent/models';
 
-import { components, services, utils } from '@application';
-import { isActivityStepSolving } from '../service';
+import { components, services } from '@application';
 
 const { StepRenderer } = components;
-const { createKeyboardNavigationHandler } = utils;
 
 export class ActivityRendererStepBoard<
   T extends Steps,
   K extends Chapter,
 > extends React.Component<ActivityRendererModuleBoardProps<T, K>> {
-  static mode = ActivityStepMode.SOLVING;
-
-  componentDidMount() {
-    document.addEventListener('keyup', this.handleKeypress);
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener('keyup', this.handleKeypress);
-  }
-
-  handleKeypress = (e: KeyboardEvent) => {
-    const { nextStep, prevStep } = this.props;
-    createKeyboardNavigationHandler(prevStep, nextStep)(e);
-  };
-
   updateStepShapes = (shapes: Shape[]) => {
     this.props.setStepActivityState({ shapes });
   };
@@ -73,14 +55,15 @@ export class ActivityRendererStepBoard<
 
     updateActivity(
       applyUpdates(activity)(draft => {
-        const activityStepStateDraft = getLessonActivityBoardState(
+        const boardStateDraft = getLessonActivityBoardState(
           draft,
           boardState.id,
-        )[boardState.activeStepId];
+        );
+        const activityStepStateDraft = boardStateDraft[boardState.activeStepId];
         const analysisDraft = activityStepStateDraft.analysis;
-        activityStepStateDraft.mode = ActivityStepMode.ANALYSING;
-        addStep(analysisDraft, newStep);
+        boardState.analysing = true;
 
+        addStep(analysisDraft, newStep);
         updateAnalysisActiveStepId(analysisDraft, newStep.id);
       }),
     )();
@@ -122,18 +105,17 @@ export class ActivityRendererStepCard<
   K extends Chapter,
 > extends React.Component<ActivityRendererModuleProps<T, K>> {
   setSolvingMode = () => {
-    const { activityStepState, updateActivity, activity, boardState } =
-      this.props;
-    if (isActivityStepSolving(activityStepState)) {
+    const { updateActivity, activity, boardState } = this.props;
+    if (boardState.analysing) {
       return;
     }
     updateActivity(
       applyUpdates(activity)(draft => {
-        const activityStepStateDraft = getLessonActivityBoardState(
+        const boardStateDraft = getLessonActivityBoardState(
           draft,
           boardState.id,
-        )[boardState.activeStepId];
-        activityStepStateDraft.mode = ActivityStepMode.SOLVING;
+        );
+        boardStateDraft.analysing = true;
       }),
     )();
   };

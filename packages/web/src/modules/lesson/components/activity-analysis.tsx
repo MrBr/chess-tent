@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   ActivityRendererModuleProps,
-  ActivityStepMode,
   AnalysisBaseInterface,
   AnalysisSystemProps,
   Steps,
@@ -14,7 +13,6 @@ import {
   getRightStep,
   getLeftStep,
   Step,
-  updateActivityStepState,
   getParentStep,
   getFirstStep,
   getNextStep,
@@ -30,6 +28,8 @@ export interface ActivityAnalysisProps<T extends Steps | undefined> {
   updateActivity: ActivityRendererModuleProps<T>['updateActivity'];
   activity: ActivityRendererModuleProps<T>['activity'];
   boardState: ActivityRendererModuleProps<T>['boardState'];
+  nextStep: () => void;
+  prevStep: () => void;
 }
 
 export abstract class ActivityAnalysis<
@@ -41,12 +41,9 @@ export abstract class ActivityAnalysis<
     this.analysisRef = React.createRef<AnalysisBaseInterface>();
   }
 
-  isAnalysing() {
-    const { activityStepState, boardState, step } = this.props;
-    return (
-      activityStepState.mode === ActivityStepMode.ANALYSING &&
-      boardState.activeStepId === step?.id
-    );
+  isAnalysing(props = this.props) {
+    const { boardState, step } = props;
+    return boardState.analyising && boardState.activeStepId === step?.id;
   }
 
   getInitialPosition() {
@@ -66,58 +63,83 @@ export abstract class ActivityAnalysis<
   }
 
   nextVariation = () => {
-    const { analysis } = this.props;
+    const { analysis, nextStep } = this.props;
     const activeStep = getAnalysisActiveStep(analysis);
-    const nextStep = getNextStep(
+    const step = getNextStep(
       analysis,
       activeStep,
       ({ stepType }) => stepType !== 'variation',
     );
-    nextStep && this.setActiveStep(nextStep);
+
+    if (!step) {
+      nextStep();
+      return;
+    }
+    this.setActiveStep(step);
   };
 
   prevVariation = () => {
-    const { analysis } = this.props;
+    const { analysis, prevStep } = this.props;
     const activeStep = getAnalysisActiveStep(analysis);
-    const prevStep = getPreviousStep(
+    const step = getPreviousStep(
       analysis,
       activeStep,
       ({ stepType }) => stepType !== 'variation',
     );
 
-    prevStep && this.setActiveStep(prevStep);
+    if (!step) {
+      prevStep();
+      return;
+    }
+    step && this.setActiveStep(step);
   };
 
   nextStep = () => {
-    const { analysis } = this.props;
+    const { analysis, nextStep } = this.props;
     const activeStep = getAnalysisActiveStep(analysis);
     const variationStep = getParentStep(analysis, activeStep);
-    const nextStep =
+    const step =
       getFirstStep(activeStep, false, ({ stepType }) => stepType !== 'move') ||
       getRightStep(
         variationStep as Steps,
         activeStep,
         step => step.stepType === 'variation',
       );
-    nextStep && this.setActiveStep(nextStep);
+
+    if (!step) {
+      nextStep();
+      return;
+    }
+    this.setActiveStep(step);
   };
 
   prevStep = () => {
-    const { analysis } = this.props;
+    const { analysis, prevStep } = this.props;
     const activeStep = getAnalysisActiveStep(analysis);
-    const prevStep = getLeftStep(
+    const step = getLeftStep(
       analysis,
       activeStep,
       (step, index) => index > -1 && step.stepType === 'variation',
     );
-    prevStep && this.setActiveStep(prevStep);
+
+    if (!step) {
+      prevStep();
+      return;
+    }
+    this.setActiveStep(step);
   };
 
   closeAnalysis = () => {
     const { updateActivity, activity, boardState } = this.props;
-    updateActivity(updateActivityStepState)(activity, boardState, {
-      mode: ActivityStepMode.SOLVING,
-    });
+    updateActivity(
+      applyUpdates(activity)(draft => {
+        const activityStepStateDraft = getLessonActivityBoardState(
+          draft,
+          boardState.id,
+        );
+        activityStepStateDraft.analysing = true;
+      }),
+    )();
   };
 
   updateStepActivityAnalysis: AnalysisSystemProps['updateAnalysis'] =
@@ -128,8 +150,8 @@ export abstract class ActivityAnalysis<
           const activityStepStateDraft = getLessonActivityBoardState(
             draft,
             boardState.id,
-          )[boardState.activeStepId];
-          activityStepStateDraft.mode = ActivityStepMode.ANALYSING;
+          );
+          activityStepStateDraft.analysing = true;
           service(activityStepStateDraft.analysis);
         }),
       )();

@@ -14,10 +14,7 @@ import {
 import { Steps } from '@types';
 import ActivityRenderer from './activity-renderer';
 import { createLessonActivity } from '../service';
-import {
-  ActivityRendererStepBoard,
-  ActivityRendererStepCard,
-} from './activity-renderer-step';
+import { ActivityRendererStepCard } from './activity-renderer-step';
 import { ActivityRendererAnalysisEngineCard } from './activity-renderer-engine';
 import { ActivityRendererNavigationCard } from './activity-renderer-navigation';
 import { ActivityRendererStepper } from './activity-renderer-stepper';
@@ -110,7 +107,6 @@ const Preview = ({ lesson, chapter, step }: PreviewProps) => {
       cards={[ActivityRendererStepCard]}
       navigation={[ActivityRendererNavigationCard]}
       actions={[ActivityRendererAnalysisEngineCard]}
-      boards={[ActivityRendererStepBoard]}
       sidebar={[ActivityRendererStepper]}
     />
   );

@@ -4,7 +4,6 @@ import { ExerciseSteps } from '@types';
 
 import { SegmentActivityProps } from '../../types';
 import { hasExplanation } from '../../service';
-import { isActivityStepSolving } from '../../../lesson/service';
 
 const { Button, Text, Row, Col, Icon } = ui;
 const { LessonPlaygroundCard, LessonPlaygroundStepTag, LessonToolboxText } =
@@ -29,17 +28,16 @@ const Playground: FunctionComponent<
 }) => {
   const { showHint, completed } = stepActivityState;
   const { task, explanation, hint } = step.state;
-  const isActive = isActivityStepSolving(stepActivityState);
   const handleShowHint = useCallback(() => {
     setStepActivityState({ showHint: true });
   }, [setStepActivityState]);
 
   return (
     <>
-      <LessonPlaygroundCard active={isActive}>
+      <LessonPlaygroundCard>
         <Row>
           <Col className="col-auto">
-            <LessonPlaygroundStepTag active={isActive}>
+            <LessonPlaygroundStepTag active>
               <Icon type="exercise" size="extra-small" />
             </LessonPlaygroundStepTag>
           </Col>

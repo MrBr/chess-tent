@@ -160,6 +160,7 @@ export type Services = {
     activity: LessonActivity,
     board: LessonActivityBoardState,
     step: Steps,
+    analysing?: boolean,
     patchListener?: PatchListener,
   ) => LessonActivity;
   getStepPosition: (step: Steps) => FEN;

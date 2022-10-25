@@ -1,7 +1,6 @@
 import React from 'react';
 import { MoveModule } from '@types';
 import { components, ui } from '@application';
-import { isActivityStepSolving } from '../../lesson/service';
 
 const {
   StepMove,
@@ -25,13 +24,11 @@ const ActivitySidebar: MoveModule['ActivitySidebar'] = ({
   step,
   stepActivityState,
 }) => {
-  const isActive = isActivityStepSolving(stepActivityState);
-
   return (
-    <LessonPlaygroundCard active={isActive}>
+    <LessonPlaygroundCard>
       <Row>
         <Col className="col-auto">
-          <LessonPlaygroundStepTag active={isActive}>
+          <LessonPlaygroundStepTag>
             <StepMove move={step.state.move} className="ps-1 pe-1" />
           </LessonPlaygroundStepTag>
         </Col>

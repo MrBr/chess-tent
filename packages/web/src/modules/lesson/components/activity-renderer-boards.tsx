@@ -8,12 +8,7 @@ import {
   LessonActivityRole,
   TYPE_ACTIVITY,
 } from '@chess-tent/models';
-import {
-  ActivityRendererModuleProps,
-  ActivityStepMode,
-  ChessboardProps,
-  Steps,
-} from '@types';
+import { ActivityRendererModuleProps, ChessboardProps, Steps } from '@types';
 
 const { noopNoop, noop } = utils;
 const { useActiveUserRecord, useSocketRoomUsers } = hooks;
@@ -79,7 +74,7 @@ const ActivityRendererBoards = (props: ActivityRendererModuleProps<any>) => {
 
           const activityStepState = userBoardState[userBoardState.activeStepId];
 
-          if (activityStepState.mode === ActivityStepMode.ANALYSING) {
+          if (userBoardState.analysing) {
             return (
               <AnalysisBoard
                 active

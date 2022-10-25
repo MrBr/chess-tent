@@ -7,24 +7,20 @@ import {
   ChessboardProps,
   Steps,
 } from '@types';
-import { components, services, ui } from '@application';
+import { components, services, ui, utils } from '@application';
 import {
   getNextStep,
   getPreviousStep,
   updateActivityStepState,
 } from '@chess-tent/models';
 import { importLessonActivityChapters } from '../service';
+import { ActivityRendererStepBoard } from './activity-renderer-step';
+import { ActivityRendererAnalysisBoard } from './activity-renderer-analysis-board';
 
 const { LessonPlayground, ChessboardContextProvider, Chessboard } = components;
 const { Container, Alert } = ui;
 const { updateLessonActivityActiveStep, logException, parsePgn } = services;
-
-function isStepBoard<T extends Steps | undefined>(
-  rendererProps: ActivityRendererModuleBoard<any>[],
-  step: T,
-): rendererProps is ActivityRendererModuleBoard<T>[] {
-  return true;
-}
+const { createKeyboardNavigationHandler } = utils;
 
 function isStepCard<T extends Steps | undefined>(
   rendererProps: ActivityRendererModuleCard<any>[],
@@ -37,6 +33,29 @@ export class ActivityRenderer<
   T extends Steps | undefined,
 > extends React.Component<ActivityRendererProps<T>, ActivityRendererState> {
   state: ActivityRendererState = {};
+
+  componentDidMount() {
+    document.addEventListener('keyup', this.handleKeypress);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keyup', this.handleKeypress);
+  }
+
+  nextKeypress = () => {};
+
+  prevKeypress = () => {};
+
+  upKeypress = () => {};
+
+  downKeypress = () => {};
+
+  handleKeypress = createKeyboardNavigationHandler(
+    this.prevKeypress,
+    this.nextKeypress,
+    this.downKeypress,
+    this.upKeypress,
+  );
 
   importChaptersFromPgn = (pgn: string) => {
     const { updateActivity, activity } = this.props;
@@ -132,27 +151,29 @@ export class ActivityRenderer<
   }
 
   renderBoard() {
-    const { activityStepState, boards, step, chapter } = this.props;
+    const { activityStepState, step, chapter, boardState } = this.props;
 
-    if (isStepBoard(boards, step)) {
-      const Board = boards.find(board => board.mode === activityStepState.mode);
-      if (!Board) {
-        return 'Unknown mode';
-      }
-      return (
-        <Board
-          {...this.props}
-          step={step}
-          chapter={chapter}
-          setStepActivityState={this.setStepActivityState}
-          stepActivityState={activityStepState}
-          nextStep={this.nextActivityStep}
-          prevStep={this.prevActivityStep}
-          completeStep={this.completeStep}
-          Chessboard={this.renderChessboard}
-        />
-      );
+    const Board: ActivityRendererModuleBoard<T> = boardState.analysing
+      ? ActivityRendererAnalysisBoard
+      : ActivityRendererStepBoard;
+
+    if (!Board) {
+      return 'Unknown mode';
     }
+
+    return (
+      <Board
+        {...this.props}
+        step={step}
+        chapter={chapter}
+        setStepActivityState={this.setStepActivityState}
+        stepActivityState={activityStepState}
+        nextStep={this.nextActivityStep}
+        prevStep={this.prevActivityStep}
+        completeStep={this.completeStep}
+        Chessboard={this.renderChessboard}
+      />
+    );
   }
 
   render() {

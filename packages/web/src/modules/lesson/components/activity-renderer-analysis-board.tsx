@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   ActivityRendererModuleBoardProps,
-  ActivityStepMode,
   ChessboardProps,
   Orientation,
   Steps,
@@ -16,9 +15,20 @@ const { createKeyboardNavigationHandler } = utils;
 export class ActivityRendererAnalysisBoard<
   T extends Steps | undefined,
 > extends ActivityAnalysis<ActivityRendererModuleBoardProps<T>> {
-  static mode = ActivityStepMode.ANALYSING;
+  static analysis = true;
+
+  componentDidUpdate(prevProps: ActivityRendererModuleBoardProps<T>) {
+    if (!this.isAnalysing()) {
+      document.removeEventListener('keyup', this.handleKeypress);
+    } else if (this.isAnalysing() && !this.isAnalysing(prevProps)) {
+      document.addEventListener('keyup', this.handleKeypress);
+    }
+  }
 
   componentDidMount() {
+    if (!this.isAnalysing()) {
+      return;
+    }
     document.addEventListener('keyup', this.handleKeypress);
   }
 
@@ -27,7 +37,9 @@ export class ActivityRendererAnalysisBoard<
   }
 
   handleKeypress = (e: KeyboardEvent) => {
-    console.warn('TODO - add tooltip when analysis end is reached');
+    if (!this.isAnalysing()) {
+      return;
+    }
     createKeyboardNavigationHandler(
       this.prevStep,
       this.nextStep,
@@ -45,11 +57,11 @@ export class ActivityRendererAnalysisBoard<
   };
 
   renderAnalysisBoard = (props: ChessboardProps) => {
-    const { analysis, Chessboard, activityStepState } = this.props;
+    const { analysis, Chessboard, boardState } = this.props;
     const step = getAnalysisActiveStep(analysis);
 
     // Only applicable to the step ActivityBoard components
-    if (props.shapes && activityStepState.mode === ActivityStepMode.SOLVING) {
+    if (props.shapes && boardState.analysing) {
       console.warn('Prop autoShapes should be used in activity.');
     }
 

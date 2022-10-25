@@ -1,7 +1,6 @@
 import React from 'react';
 import { FEN, VariationModule } from '@types';
 import { components, ui } from '@application';
-import { isActivityStepSolving } from '../../lesson/service';
 
 const {
   StepMove,
@@ -22,16 +21,12 @@ const ActivityBoard: VariationModule['ActivityBoard'] = ({
   return <Chessboard fen={position} autoShapes={shapes} />;
 };
 
-const ActivitySidebar: VariationModule['ActivitySidebar'] = ({
-  step,
-  stepActivityState,
-}) => {
-  const isActive = isActivityStepSolving(stepActivityState);
+const ActivitySidebar: VariationModule['ActivitySidebar'] = ({ step }) => {
   return (
-    <LessonPlaygroundCard active={isActive}>
+    <LessonPlaygroundCard>
       <Row>
         <Col className="col-auto">
-          <LessonPlaygroundStepTag active={isActive}>
+          <LessonPlaygroundStepTag>
             {step.state.move ? (
               <StepMove move={step.state.move} className="ps-1 pe-1" />
             ) : (

@@ -136,6 +136,8 @@ export const ActivityRendererStepper = <
                     step={stepperStep as Steps}
                     boardState={boardState}
                     activityStepState={activityStepState}
+                    nextStep={props.nextStep}
+                    prevStep={props.prevStep}
                   />
                 </div>
               );

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { LessonActivityBoardState, Step } from '@chess-tent/models';
 import { AppStep, Icons } from '@types';
 import styled from '@chess-tent/styled-props';
@@ -13,6 +13,7 @@ interface ActivityStepperStepsProps {
   steps: Step[];
   activeStepId?: string;
   boardState: LessonActivityBoardState;
+  children?: (step: AppStep) => ReactNode;
 }
 
 const { Icon } = ui;
@@ -33,14 +34,21 @@ function getStepIcon(step: AppStep): Icons {
 }
 
 const ActivityStepperSteps = styled((props: ActivityStepperStepsProps) => {
-  const { step, className, onStepClick, steps, activeStepId, boardState } =
-    props;
+  const {
+    step,
+    className,
+    onStepClick,
+    steps,
+    activeStepId,
+    boardState,
+    children,
+  } = props;
 
   const activityStepState = step ? boardState[step.id] : null;
   return (
     <>
-      <div className={className}>
-        {step && (
+      {step && (
+        <>
           <ActivityStep
             onClick={() => onStepClick(step)}
             active={activeStepId === step.id}
@@ -48,25 +56,32 @@ const ActivityStepperSteps = styled((props: ActivityStepperStepsProps) => {
             completed={activityStepState?.completed}
           >
             <Icon type={getStepIcon(step)} size="extra-small" />
-            {activityStepState?.analysis?.state.steps.length > 0 && (
-              <Icon type="analysis" size="extra-small" />
-            )}
           </ActivityStep>
-        )}
-        {steps.map(child => {
-          return (
-            <div key={child.id} className={className}>
-              <ActivityStepperSteps
-                {...props}
-                // Override current step
-                steps={child.state.steps}
-                step={child as AppStep}
-                onStepClick={onStepClick}
-              />
-            </div>
-          );
-        })}
-      </div>
+          {children && children(step)}
+        </>
+      )}
+      {steps.map(child => {
+        const childSteps = (
+          <ActivityStepperSteps
+            {...props}
+            // Override current step
+            steps={child.state.steps}
+            step={child as AppStep}
+            onStepClick={onStepClick}
+            key={child.id}
+          />
+        );
+
+        if (child.stepType !== 'variation') {
+          return childSteps;
+        }
+
+        return (
+          <div key={child.id} className={className}>
+            {childSteps}
+          </div>
+        );
+      })}
     </>
   );
 }).css`

@@ -22,7 +22,7 @@ import {
 import { services, components, constants } from '@application';
 
 const { createNotableMove, isLegalMove, parsePgn } = services;
-const { StepTag, Stepper, StepMove, EditorSidebarStepContainer } = components;
+const { Stepper, StepMove, EditorSidebarStepContainer } = components;
 const { START_FEN, KINGS_FEN } = constants;
 
 const resolveNewMove = (
@@ -237,6 +237,7 @@ const EditorSidebar: MoveModule['EditorSidebar'] = props => {
     activeStep,
     updateStep,
     renderToolbox: StepToolbox,
+    renderStepTag: StepTag,
     setActiveStep,
   } = props;
 

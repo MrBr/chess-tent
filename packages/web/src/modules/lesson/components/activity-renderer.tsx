@@ -169,17 +169,9 @@ export class ActivityRenderer<
       <ChessboardContextProvider>
         <LessonPlayground>
           <LessonPlayground.Board>{this.renderBoard()}</LessonPlayground.Board>
-          <LessonPlayground.Actions>
-            {this.renderCardModules(actions)}
-          </LessonPlayground.Actions>
-          <LessonPlayground.Cardbar>
-            {this.renderCardModules(cards)}
-          </LessonPlayground.Cardbar>
-          <LessonPlayground.Navigation>
-            {this.renderCardModules(navigation)}
-          </LessonPlayground.Navigation>
           <LessonPlayground.Sidebar>
             {this.renderCardModules(sidebar)}
+            {this.renderCardModules(navigation)}
           </LessonPlayground.Sidebar>
         </LessonPlayground>
       </ChessboardContextProvider>

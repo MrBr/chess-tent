@@ -1,16 +1,11 @@
 import React from 'react';
 import styled from '@chess-tent/styled-props';
 import { Components } from '@types';
-import { hooks } from '@application';
-
-const { useShowOnActive } = hooks;
 
 const Step = styled<Components['LessonPlaygroundStepTag']>(
-  ({ children, className, onClick, active }) => {
-    const ref = useShowOnActive<HTMLDivElement>(active);
-
+  ({ children, className, onClick }) => {
     return (
-      <div className={`${className} $`} onClick={onClick} ref={ref}>
+      <div className={className} onClick={onClick}>
         {children}
       </div>
     );
@@ -38,7 +33,7 @@ const Step = styled<Components['LessonPlaygroundStepTag']>(
     border: 1px solid var(--light-color);
   }
 
-  & > & {
+  & + & {
     margin-left: 15px;
   }
   margin-bottom: 8px;

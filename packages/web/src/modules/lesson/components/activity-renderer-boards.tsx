@@ -82,6 +82,7 @@ const ActivityRendererBoards = (props: ActivityRendererModuleProps<any>) => {
           if (activityStepState.mode === ActivityStepMode.ANALYSING) {
             return (
               <AnalysisBoard
+                active
                 analysis={activityStepState.analysis}
                 updateAnalysis={noopNoop}
                 initialPosition={services.getStepPosition(step)}

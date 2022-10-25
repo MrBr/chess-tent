@@ -35,6 +35,7 @@ const { className } = css`
 
   .playground-sidebar {
     grid-area: sidebar;
+    position: relative;
 
     :empty {
       display: none;
@@ -48,11 +49,11 @@ const { className } = css`
 
   display: grid;
   grid-template-rows: min-content 1fr min-content;
-  grid-template-columns: 5.5fr 5fr 2fr;
+  grid-template-columns: 6fr 5fr;
   grid-template-areas:
-    'board actions sidebar'
-    'board cardbar sidebar'
-    'board navigation sidebar';
+    'board sidebar'
+    'board sidebar'
+    'board sidebar';
   width: 100%;
   height: 100%;
 

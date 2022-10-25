@@ -17,78 +17,19 @@ import {
   updateAnalysisActiveStepId,
   applyUpdates,
   Chapter,
-  getLessonChapterIndex,
 } from '@chess-tent/models';
 
-import { components, services, ui, utils } from '@application';
-import { isActivityStepSolving, updateActivityActiveChapter } from '../service';
+import { components, services, utils } from '@application';
+import { isActivityStepSolving } from '../service';
 
 const { StepRenderer } = components;
-const { Button, Icon, Row, Col } = ui;
 const { createKeyboardNavigationHandler } = utils;
 
-class ActivityRendererStepNavigation<
-  T extends Steps,
-  K extends Chapter,
-> extends React.Component<ActivityRendererModuleProps<T, K>> {
-  nextChapter = () => {
-    const { chapter, activity, updateActivity, boardState } = this.props;
-
-    if (!chapter) {
-      return;
-    }
-
-    const nextChapterIndex =
-      getLessonChapterIndex(activity.subject, chapter.id) + 1;
-    const nextChapter = activity.subject.state.chapters[nextChapterIndex];
-
-    if (!nextChapter) {
-      return;
-    }
-
-    updateActivity(updateActivityActiveChapter)(
-      activity,
-      boardState,
-      nextChapter,
-    );
-  };
-
-  render() {
-    const { nextStep, prevStep } = this.props;
-    return (
-      <>
-        <Row>
-          <Col>
-            <Button variant="ghost" stretch size="small" onClick={prevStep}>
-              <Icon type="left" />
-            </Button>
-          </Col>
-          <Col>
-            <Button variant="ghost" stretch size="small" onClick={nextStep}>
-              <Icon type="right" />
-            </Button>
-          </Col>
-          <Col>
-            <Button
-              variant="ghost"
-              stretch
-              size="small"
-              onClick={this.nextChapter}
-            >
-              Chapter <Icon type="right" size="small" />
-            </Button>
-          </Col>
-        </Row>
-      </>
-    );
-  }
-}
 export class ActivityRendererStepBoard<
   T extends Steps,
   K extends Chapter,
 > extends React.Component<ActivityRendererModuleBoardProps<T, K>> {
   static mode = ActivityStepMode.SOLVING;
-  static Navigation = ActivityRendererStepNavigation;
 
   componentDidMount() {
     document.addEventListener('keyup', this.handleKeypress);

@@ -1,188 +1,22 @@
 import React from 'react';
 import {
   ActivityRendererModuleBoardProps,
-  ActivityRendererModuleProps,
   ActivityStepMode,
-  AnalysisBaseInterface,
-  AnalysisSystemProps,
   ChessboardProps,
   Orientation,
   Steps,
 } from '@types';
-import { components, constants, services, ui, utils } from '@application';
-import {
-  getAnalysisActiveStep,
-  getLessonActivityBoardState,
-  updateAnalysisStep,
-  applyUpdates,
-  getRightStep,
-  getLeftStep,
-  Step,
-  updateActivityStepState,
-  getParentStep,
-  getFirstStep,
-  getNextStep,
-  getPreviousStep,
-} from '@chess-tent/models';
-import ActivityStep from './activity-step';
-import { isActivityStepAnalysing } from '../service';
+import { components, services, utils } from '@application';
+import { getAnalysisActiveStep, updateAnalysisStep } from '@chess-tent/models';
+import { ActivityAnalysis } from './activity-analysis';
 
-const { AnalysisBoard, AnalysisSidebar, LessonPlaygroundCard } = components;
-const { Row, Col, Icon, Text, Button } = ui;
+const { AnalysisBoard } = components;
 const { createKeyboardNavigationHandler } = utils;
-const { START_FEN } = constants;
-
-abstract class ActivityRendererAnalysis<
-  T extends ActivityRendererModuleProps<any>,
-> extends React.Component<T> {
-  protected analysisRef: React.RefObject<AnalysisBaseInterface>;
-  constructor(props: T) {
-    super(props);
-    this.analysisRef = React.createRef<AnalysisBaseInterface>();
-  }
-  isAnalysing() {
-    const { activityStepState } = this.props;
-    return activityStepState.mode === ActivityStepMode.ANALYSING;
-  }
-
-  getInitialPosition() {
-    const { step } = this.props;
-    return step ? services.getStepPosition(step) : START_FEN;
-  }
-
-  getInitialOrientation() {
-    const { step } = this.props;
-    return step ? services.getStepBoardOrientation(step) : undefined;
-  }
-
-  setActiveStep(step: Step) {
-    this.updateStepActivityAnalysis(analysis => {
-      analysis.state.activeStepId = step.id;
-    });
-  }
-
-  nextVariation = () => {
-    const { analysis } = this.props;
-    const activeStep = getAnalysisActiveStep(analysis);
-    const nextStep = getNextStep(
-      analysis,
-      activeStep,
-      ({ stepType }) => stepType !== 'variation',
-    );
-    nextStep && this.setActiveStep(nextStep);
-  };
-
-  prevVariation = () => {
-    const { analysis } = this.props;
-    const activeStep = getAnalysisActiveStep(analysis);
-    const prevStep = getPreviousStep(
-      analysis,
-      activeStep,
-      ({ stepType }) => stepType !== 'variation',
-    );
-
-    prevStep && this.setActiveStep(prevStep);
-  };
-
-  nextStep = () => {
-    const { analysis } = this.props;
-    const activeStep = getAnalysisActiveStep(analysis);
-    const variationStep = getParentStep(analysis, activeStep);
-    const nextStep =
-      getFirstStep(activeStep, false, ({ stepType }) => stepType !== 'move') ||
-      getRightStep(
-        variationStep as Steps,
-        activeStep,
-        step => step.stepType === 'variation',
-      );
-    nextStep && this.setActiveStep(nextStep);
-  };
-
-  prevStep = () => {
-    const { analysis } = this.props;
-    const activeStep = getAnalysisActiveStep(analysis);
-    const prevStep = getLeftStep(
-      analysis,
-      activeStep,
-      (step, index) => index > -1 && step.stepType === 'variation',
-    );
-    prevStep && this.setActiveStep(prevStep);
-  };
-
-  closeAnalysis = () => {
-    const { updateActivity, activity, boardState } = this.props;
-    updateActivity(updateActivityStepState)(activity, boardState, {
-      mode: ActivityStepMode.SOLVING,
-    });
-  };
-
-  updateStepActivityAnalysis: AnalysisSystemProps['updateAnalysis'] =
-    service => {
-      const { updateActivity, activity, boardState } = this.props;
-      updateActivity(
-        applyUpdates(activity)(draft => {
-          const activityStepStateDraft = getLessonActivityBoardState(
-            draft,
-            boardState.id,
-          )[boardState.activeStepId];
-          activityStepStateDraft.mode = ActivityStepMode.ANALYSING;
-          service(activityStepStateDraft.analysis);
-        }),
-      )();
-    };
-}
-
-class ActivityRendererAnalysisNavigation<
-  T extends Steps | undefined,
-> extends ActivityRendererAnalysis<ActivityRendererModuleProps<T>> {
-  render() {
-    const { chapter } = this.props;
-    return (
-      <>
-        <Row>
-          <Col>
-            <Button
-              variant="ghost"
-              stretch
-              size="small"
-              onClick={this.prevStep}
-            >
-              <Icon type="left" />
-            </Button>
-          </Col>
-          <Col>
-            <Button
-              variant="ghost"
-              stretch
-              size="small"
-              onClick={this.nextStep}
-            >
-              <Icon type="right" />
-            </Button>
-          </Col>
-          {chapter && (
-            <Col>
-              <Button
-                variant="ghost"
-                stretch
-                size="small"
-                onClick={this.closeAnalysis}
-              >
-                Stop analysing
-              </Button>
-            </Col>
-          )}
-        </Row>
-      </>
-    );
-  }
-}
 
 export class ActivityRendererAnalysisBoard<
   T extends Steps | undefined,
-> extends ActivityRendererAnalysis<ActivityRendererModuleBoardProps<T>> {
+> extends ActivityAnalysis<ActivityRendererModuleBoardProps<T>> {
   static mode = ActivityStepMode.ANALYSING;
-  static Navigation = ActivityRendererAnalysisNavigation;
 
   componentDidMount() {
     document.addEventListener('keyup', this.handleKeypress);
@@ -234,71 +68,13 @@ export class ActivityRendererAnalysisBoard<
 
     return (
       <AnalysisBoard
+        active
         analysis={activityStepState.analysis}
         updateAnalysis={this.updateStepActivityAnalysis}
         initialPosition={this.getInitialPosition()}
         initialOrientation={this.getInitialOrientation()}
         Chessboard={this.renderAnalysisBoard}
       />
-    );
-  }
-}
-
-export class ActivityRendererAnalysisCard<
-  T extends Steps | undefined,
-> extends ActivityRendererAnalysis<ActivityRendererModuleProps<T>> {
-  componentDidMount() {
-    const { analysis, activityStepState } = this.props;
-    const isActive = isActivityStepAnalysing(activityStepState);
-
-    isActive &&
-      !getAnalysisActiveStep(analysis) &&
-      this.analysisRef.current?.startAnalysis();
-  }
-
-  setAnalysingMode = () => {
-    const { updateActivity, activity, boardState } = this.props;
-    updateActivity(
-      applyUpdates(activity)(draft => {
-        const activityStepStateDraft = getLessonActivityBoardState(
-          draft,
-          boardState.id,
-        )[boardState.activeStepId];
-        activityStepStateDraft.mode = ActivityStepMode.ANALYSING;
-      }),
-    )();
-  };
-
-  render() {
-    const { analysis, activityStepState } = this.props;
-    const isActive = isActivityStepAnalysing(activityStepState);
-
-    return (
-      <LessonPlaygroundCard
-        active={isActive}
-        onClick={this.setAnalysingMode}
-        className="overflow-visible"
-      >
-        <Row className="align-items-center mb-3">
-          <Col className="col-auto">
-            <ActivityStep active={isActive}>
-              <Icon type="analysis" size="extra-small" />
-            </ActivityStep>
-          </Col>
-          <Col>
-            <Text fontSize="small" weight={500} className="mb-2">
-              Analysis
-            </Text>
-          </Col>
-        </Row>
-        <AnalysisSidebar
-          ref={this.analysisRef}
-          analysis={analysis}
-          updateAnalysis={this.updateStepActivityAnalysis}
-          initialPosition={this.getInitialPosition()}
-          initialOrientation={this.getInitialOrientation()}
-        />
-      </LessonPlaygroundCard>
     );
   }
 }

@@ -268,7 +268,6 @@ export interface AnalysisBaseInterface {
     captured?: boolean,
     promoted?: PieceRole,
   ): void;
-  renderToolbox: EditorSidebarProps['renderToolbox'];
 }
 export interface AnalysisSystemProps {
   analysis: Analysis<any>;
@@ -276,6 +275,7 @@ export interface AnalysisSystemProps {
   initialPosition?: FEN;
   initialOrientation?: Color;
   ref?: RefObject<AnalysisBaseInterface>;
+  active: boolean;
 }
 
 export interface AnalysisBoardProps
@@ -341,7 +341,6 @@ export type ActivityRendererModuleBoard<
   U extends Chapter | undefined = Chapter | undefined,
 > = ComponentType<ActivityRendererModuleBoardProps<T, U>> & {
   mode: ActivityStepMode;
-  Navigation: ComponentType<ActivityRendererModuleProps<T>>;
 };
 export type ActivityRendererModuleCard<
   T extends Steps | undefined,
@@ -434,7 +433,7 @@ export type Components = {
   StepTag: StepTag;
   LessonPlaygroundStepTag: ComponentType<
     {
-      children: ReactNode;
+      children?: ReactNode;
       active?: boolean;
       visited?: boolean;
       completed?: boolean;

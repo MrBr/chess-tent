@@ -13,10 +13,7 @@ import {
   ActivityRendererStepCard,
   ActivityRendererStepBoard,
 } from './activity-renderer-step';
-import {
-  ActivityRendererAnalysisBoard,
-  ActivityRendererAnalysisCard,
-} from './activity-renderer-analysis';
+import { ActivityRendererAnalysisBoard } from './activity-renderer-analysis';
 import { importLessonActivityChapters, isLessonActivity } from '../service';
 import { ActivityRendererAnalysisEngineCard } from './activity-renderer-engine';
 import { ActivityRendererNavigationCard } from './activity-renderer-navigation';
@@ -30,11 +27,7 @@ const LESSON_MODULES = {
   boards: [ActivityRendererStepBoard, ActivityRendererAnalysisBoard],
   navigation: [ActivityRendererNavigationCard],
   actions: [ActivityRendererAnalysisEngineCard],
-  cards: [
-    ActivityRendererStepCard,
-    ActivityRendererAnalysisCard,
-    ActivityRendererCommentsCard,
-  ],
+  cards: [ActivityRendererStepCard, ActivityRendererCommentsCard],
   sidebar: [ActivityRendererStepper, ActivityRendererConference],
 };
 
@@ -42,7 +35,7 @@ const EMPTY_LESSON_MODULES = {
   boards: [ActivityRendererAnalysisBoard],
   navigation: [ActivityRendererNavigationCard],
   actions: [ActivityRendererAnalysisEngineCard],
-  cards: [ActivityRendererAnalysisCard, ActivityRendererCommentsCard],
+  cards: [ActivityRendererCommentsCard],
   sidebar: [ActivityRendererStepper, ActivityRendererConference],
 };
 

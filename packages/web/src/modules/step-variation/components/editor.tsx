@@ -20,7 +20,7 @@ import { components, constants, services, ui } from '@application';
 import BoardSrc from '../images/board.svg';
 
 const { Img } = ui;
-const { Stepper, StepTag, StepMove, EditorSidebarStepContainer } = components;
+const { Stepper, StepMove, EditorSidebarStepContainer } = components;
 const {
   createStep,
   getSameMoveStep,
@@ -202,7 +202,13 @@ const EditorBoard: VariationModule['EditorBoard'] = ({
 };
 
 const EditorSidebar: VariationModule['EditorSidebar'] = props => {
-  const { step, activeStep, updateStep, renderToolbox: StepToolbox } = props;
+  const {
+    step,
+    activeStep,
+    updateStep,
+    renderToolbox: StepToolbox,
+    renderStepTag: StepTag,
+  } = props;
   const { description } = step.state;
   const handleComment =
     description === undefined

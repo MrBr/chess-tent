@@ -9,6 +9,7 @@ import ActivityStepperEmpty from './activity-stepper-empty';
 import ActivityStepperSteps from './activity-stepper-steps';
 import ChaptersImport from './chapters-import';
 import { removeActivityChapter, updateActivityActiveChapter } from '../service';
+import ActivityStepperAnalysis from './activity-stepper-analysis';
 
 const { LessonChapters, MobilePortal, Layout, Header } = components;
 const { Button, Col } = ui;
@@ -112,13 +113,34 @@ export const ActivityRendererStepper = <
             onMove={areChaptersEditable && chapterMoveHandler}
           />
         </div>
-        <div className="h-100 border-bottom pt-3 overflow-y-auto">
+        <div className="h-100 border-bottom pt-3 overflow-y-auto px-4">
           <ActivityStepperSteps
             boardState={boardState}
             activeStepId={activeStepId}
             steps={steps}
             onStepClick={stepClickHandler}
-          />
+          >
+            {stepperStep => {
+              const activityStepState = boardState[stepperStep.id];
+              const analysis = activityStepState?.analysis;
+
+              if (!activityStepState || !analysis?.state.steps.length) {
+                return null;
+              }
+              return (
+                <div className="p-2">
+                  <ActivityStepperAnalysis
+                    analysis={analysis}
+                    activity={activity}
+                    updateActivity={updateActivity}
+                    step={stepperStep as Steps}
+                    boardState={boardState}
+                    activityStepState={activityStepState}
+                  />
+                </div>
+              );
+            }}
+          </ActivityStepperSteps>
         </div>
       </div>
     </>

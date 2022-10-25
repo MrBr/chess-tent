@@ -1,20 +1,23 @@
 import React, { useState, PropsWithChildren, ReactElement } from 'react';
 import { applyUpdates, Chapter, moveLessonChapter } from '@chess-tent/models';
 import { ActivityRendererModuleProps, AppStep, Steps } from '@types';
-import { components, hooks, services, ui } from '@application';
+import { components, hooks, ui } from '@application';
 import { css } from '@chess-tent/styled-props';
 import { isMobile } from 'react-device-detect';
 
 import ActivityStepperEmpty from './activity-stepper-empty';
 import ActivityStepperSteps from './activity-stepper-steps';
 import ChaptersImport from './chapters-import';
-import { removeActivityChapter, updateActivityActiveChapter } from '../service';
+import {
+  removeActivityChapter,
+  updateActivityActiveChapter,
+  updateActivityActiveStep,
+} from '../service';
 import ActivityStepperAnalysis from './activity-stepper-analysis';
 
 const { LessonChapters, MobilePortal, Layout, Header } = components;
 const { Button, Col } = ui;
 const { usePrompt } = hooks;
-const { updateLessonActivityActiveStep } = services;
 
 const { className } = css`
   display: flex;
@@ -50,7 +53,7 @@ export const ActivityRendererStepper = <
     <ChaptersImport close={close} onImport={importChapters as () => void} />
   ));
   const updateActiveStep = (step: AppStep) => {
-    updateActivity(updateLessonActivityActiveStep)(
+    updateActivity(updateActivityActiveStep)(
       activity,
       boardState,
       step as Steps,

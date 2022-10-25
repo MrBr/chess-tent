@@ -20,7 +20,7 @@ export class ActivityRendererAnalysisBoard<
   componentDidUpdate(prevProps: ActivityRendererModuleBoardProps<T>) {
     if (!this.isAnalysing()) {
       document.removeEventListener('keyup', this.handleKeypress);
-    } else if (this.isAnalysing() && !this.isAnalysing(prevProps)) {
+    } else if (!this.isAnalysing(prevProps)) {
       document.addEventListener('keyup', this.handleKeypress);
     }
   }
@@ -37,6 +37,7 @@ export class ActivityRendererAnalysisBoard<
   }
 
   handleKeypress = (e: KeyboardEvent) => {
+    console.log('ANALYSIS');
     if (!this.isAnalysing()) {
       return;
     }

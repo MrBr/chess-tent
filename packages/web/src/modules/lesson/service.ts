@@ -78,7 +78,7 @@ export const updateActivityActiveStep = (
   activity: LessonActivity,
   board: LessonActivityBoardState,
   step: Step,
-  analysing = false,
+  analysisStepId?: string,
   patchListener?: PatchListener,
 ): LessonActivity =>
   modelUpdateActivityActiveStep(
@@ -86,6 +86,7 @@ export const updateActivityActiveStep = (
     board,
     step,
     createActivityStepState({ visited: true }),
+    analysisStepId,
     patchListener,
   );
 

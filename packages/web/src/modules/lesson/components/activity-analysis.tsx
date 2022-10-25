@@ -43,7 +43,7 @@ export abstract class ActivityAnalysis<
 
   isAnalysing(props = this.props) {
     const { boardState, step } = props;
-    return boardState.analyising && boardState.activeStepId === step?.id;
+    return boardState.analysing && boardState.activeStepId === step?.id;
   }
 
   getInitialPosition() {
@@ -95,7 +95,7 @@ export abstract class ActivityAnalysis<
   };
 
   nextStep = () => {
-    const { analysis, nextStep } = this.props;
+    const { analysis } = this.props;
     const activeStep = getAnalysisActiveStep(analysis);
     const variationStep = getParentStep(analysis, activeStep);
     const step =
@@ -107,14 +107,13 @@ export abstract class ActivityAnalysis<
       );
 
     if (!step) {
-      nextStep();
       return;
     }
     this.setActiveStep(step);
   };
 
   prevStep = () => {
-    const { analysis, prevStep } = this.props;
+    const { analysis } = this.props;
     const activeStep = getAnalysisActiveStep(analysis);
     const step = getLeftStep(
       analysis,
@@ -123,7 +122,6 @@ export abstract class ActivityAnalysis<
     );
 
     if (!step) {
-      prevStep();
       return;
     }
     this.setActiveStep(step);
@@ -144,15 +142,17 @@ export abstract class ActivityAnalysis<
 
   updateStepActivityAnalysis: AnalysisSystemProps['updateAnalysis'] =
     service => {
-      const { updateActivity, activity, boardState } = this.props;
+      const { updateActivity, activity, boardState, step } = this.props;
       updateActivity(
         applyUpdates(activity)(draft => {
-          const activityStepStateDraft = getLessonActivityBoardState(
+          const boardStateDraft = getLessonActivityBoardState(
             draft,
             boardState.id,
           );
-          activityStepStateDraft.analysing = true;
-          service(activityStepStateDraft.analysis);
+          boardStateDraft.activeStepId =
+            step?.id || boardStateDraft.activeStepId;
+          boardStateDraft.analysing = true;
+          service(boardStateDraft[boardStateDraft.activeStepId].analysis);
         }),
       )();
     };

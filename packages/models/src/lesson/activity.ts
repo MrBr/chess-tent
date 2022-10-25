@@ -46,11 +46,14 @@ export const updateActivityActiveStep = createService(
     board: LessonActivityBoardState,
     step: Step,
     initialState: {},
+    analysisStepId: string | undefined,
   ): LessonActivity => {
     const state = getLessonActivityBoardState(draft, board.id);
+    state.analysing = !!analysisStepId;
     if (!state[step.id]) {
       state[step.id] = initialState;
     }
+    state[step.id].analysis.state.activeStepId = analysisStepId;
     state.activeStepId = step.id;
     return draft;
   },
@@ -65,7 +68,13 @@ export const updateActivityActiveChapter = createService(
   ): LessonActivity => {
     const state = getLessonActivityBoardState(draft, board.id);
     state.activeChapterId = chapter.id;
-    updateActivityActiveStep(draft, board, chapter.state.steps[0], initialSate);
+    updateActivityActiveStep(
+      draft,
+      board,
+      chapter.state.steps[0],
+      initialSate,
+      undefined,
+    );
     return draft;
   },
 );

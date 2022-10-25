@@ -38,7 +38,10 @@ const getChildStep = (
   return null;
 };
 
-function getLastStep(parentStep: Step | StepRoot, recursive: boolean): Step;
+function getLastStep(
+  parentStep: Step | StepRoot,
+  recursive: boolean,
+): Step | null;
 function getLastStep(
   parentStep: Step | StepRoot,
   recursive: boolean,
@@ -283,7 +286,8 @@ const isLastStep = (
   recursive = true,
 ) => {
   return isSameStep(
-    getLastStep(parentStep as Step, recursive) || parentStep,
+    getLastStep(parentStep as Step, recursive) ||
+      (isStep(parentStep) ? parentStep : null),
     step,
   );
 };

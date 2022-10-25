@@ -82,7 +82,7 @@ const boardChange = (
     promoted,
   );
 
-  const hasMoveStep = getLastStep(step, false).stepType === 'move';
+  const hasMoveStep = getLastStep(step, false)?.stepType === 'move';
 
   // Move that possibly already exists in the chapter
   const sameMoveStep = getSameMoveStep(step, notableMove);
@@ -208,6 +208,7 @@ const EditorSidebar: VariationModule['EditorSidebar'] = props => {
     updateStep,
     renderToolbox: StepToolbox,
     renderStepTag: StepTag,
+    setActiveStep,
   } = props;
   const { description } = step.state;
   const handleComment =
@@ -234,7 +235,10 @@ const EditorSidebar: VariationModule['EditorSidebar'] = props => {
           )
         }
       >
-        <StepTag active={activeStep === step}>
+        <StepTag
+          active={activeStep === step}
+          onClick={() => setActiveStep(step)}
+        >
           {step.state.move ? (
             <StepMove move={step.state.move} />
           ) : (

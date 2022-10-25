@@ -51,7 +51,7 @@ const ActivityStepperSteps = styled((props: ActivityStepperStepsProps) => {
         <>
           <ActivityStep
             onClick={() => onStepClick(step)}
-            active={activeStepId === step.id}
+            active={activeStepId === step.id && !boardState.analysing}
             visited={activityStepState?.visited}
             completed={activityStepState?.completed}
           >

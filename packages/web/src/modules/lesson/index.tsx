@@ -74,15 +74,6 @@ application.register(
   },
 );
 application.register(
-  () => import('./service'),
-  module => {
-    application.services.updateLessonActivityActiveStep =
-      module.updateActivityActiveStep;
-    application.services.createLessonActivityStepState =
-      module.createActivityStepState;
-  },
-);
-application.register(
   () => import('./components/trainings'),
   module => {
     application.components.Trainings = module.default;

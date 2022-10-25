@@ -12,14 +12,20 @@ import {
   getNextStep,
   getPreviousStep,
   updateActivityStepState,
+  isEmptyAnalysis,
+  getFirstStep,
+  getLastStep,
 } from '@chess-tent/models';
-import { importLessonActivityChapters } from '../service';
+import {
+  importLessonActivityChapters,
+  updateActivityActiveStep,
+} from '../service';
 import { ActivityRendererStepBoard } from './activity-renderer-step';
 import { ActivityRendererAnalysisBoard } from './activity-renderer-analysis-board';
 
 const { LessonPlayground, ChessboardContextProvider, Chessboard } = components;
 const { Container, Alert } = ui;
-const { updateLessonActivityActiveStep, logException, parsePgn } = services;
+const { logException, parsePgn } = services;
 const { createKeyboardNavigationHandler } = utils;
 
 function isStepCard<T extends Steps | undefined>(
@@ -42,20 +48,11 @@ export class ActivityRenderer<
     document.removeEventListener('keyup', this.handleKeypress);
   }
 
-  nextKeypress = () => {};
-
   prevKeypress = () => {};
 
   upKeypress = () => {};
 
   downKeypress = () => {};
-
-  handleKeypress = createKeyboardNavigationHandler(
-    this.prevKeypress,
-    this.nextKeypress,
-    this.downKeypress,
-    this.upKeypress,
-  );
 
   importChaptersFromPgn = (pgn: string) => {
     const { updateActivity, activity } = this.props;
@@ -90,6 +87,52 @@ export class ActivityRenderer<
     });
   };
 
+  nextActivityVariation = () => {
+    const {
+      updateActivity,
+      chapter,
+      step,
+      activity,
+      boardState,
+      activityStepState,
+    } = this.props;
+    if (!chapter || !step) {
+      return;
+    }
+    // Called from analysis when last move hit
+    if (!boardState.analysing && !isEmptyAnalysis(activityStepState.analysis)) {
+      const analysisStepId = getFirstStep(activityStepState.analysis)?.id;
+      updateActivity(updateActivityActiveStep)(
+        activity,
+        boardState,
+        step,
+        analysisStepId,
+      );
+      return;
+    }
+    this.nextActivityStep();
+  };
+
+  prevActivityVariation = () => {
+    const { updateActivity, chapter, step, activity, boardState } = this.props;
+    if (!chapter || !step) {
+      return;
+    }
+    let prevStep = getPreviousStep(chapter, step) as Steps;
+    const prevStepAnalysis = boardState[prevStep.id]?.analysis;
+    if (prevStepAnalysis && !isEmptyAnalysis(prevStepAnalysis)) {
+      const lastAnalysisStep = getLastStep(prevStepAnalysis, true);
+      updateActivity(updateActivityActiveStep)(
+        activity,
+        boardState,
+        prevStep,
+        lastAnalysisStep?.id,
+      );
+      return;
+    }
+    this.prevActivityStep();
+  };
+
   nextActivityStep = () => {
     const { updateActivity, chapter, step, activity, boardState } = this.props;
     if (!chapter || !step) {
@@ -97,11 +140,7 @@ export class ActivityRenderer<
     }
     const nextStep = getNextStep(chapter, step) as Steps;
     nextStep &&
-      updateActivity(updateLessonActivityActiveStep)(
-        activity,
-        boardState,
-        nextStep,
-      );
+      updateActivity(updateActivityActiveStep)(activity, boardState, nextStep);
   };
 
   prevActivityStep = () => {
@@ -109,14 +148,24 @@ export class ActivityRenderer<
     if (!chapter || !step) {
       return;
     }
+    // Called from analysis when last move hit
+    if (boardState.analysing) {
+      updateActivity(updateActivityActiveStep)(activity, boardState, step);
+      return;
+    }
     const prevStep = getPreviousStep(chapter, step) as Steps;
     prevStep &&
-      updateActivity(updateLessonActivityActiveStep)(
-        activity,
-        boardState,
-        prevStep,
-      );
+      updateActivity(updateActivityActiveStep)(activity, boardState, prevStep);
   };
+
+  handleKeypress = (e: KeyboardEvent) =>
+    !this.props.boardState.analysing &&
+    createKeyboardNavigationHandler(
+      this.prevActivityStep,
+      this.nextActivityStep,
+      this.nextActivityVariation,
+      this.prevActivityVariation,
+    )(e);
 
   renderChessboard = (props: ChessboardProps) => {
     return (

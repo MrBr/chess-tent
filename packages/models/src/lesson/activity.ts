@@ -136,6 +136,7 @@ export const removeActivityChapter = createService(
 
       boardState.activeChapterId = activeChapterId;
       boardState.activeStepId = activeStepId;
+      boardState.analysing = !!draft.subject.state.chapters.length;
       boardState[activeStepId] = { ...stepState };
     });
   },

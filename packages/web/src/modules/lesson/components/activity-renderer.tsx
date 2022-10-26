@@ -202,9 +202,10 @@ export class ActivityRenderer<
   renderBoard() {
     const { activityStepState, step, chapter, boardState } = this.props;
 
-    const Board: ActivityRendererModuleBoard<T> = boardState.analysing
-      ? ActivityRendererAnalysisBoard
-      : ActivityRendererStepBoard;
+    const Board: ActivityRendererModuleBoard<T> =
+      boardState.analysing || !chapter
+        ? ActivityRendererAnalysisBoard
+        : ActivityRendererStepBoard;
 
     if (!Board) {
       return 'Unknown mode';

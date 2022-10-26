@@ -43,7 +43,9 @@ export abstract class ActivityAnalysis<
 
   isAnalysing(props = this.props) {
     const { boardState, step } = props;
-    return boardState.analysing && boardState.activeStepId === step?.id;
+    return (
+      boardState.analysing && (boardState.activeStepId === step?.id || !step)
+    );
   }
 
   getInitialPosition() {

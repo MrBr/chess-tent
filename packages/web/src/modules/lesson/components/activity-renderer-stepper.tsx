@@ -5,7 +5,7 @@ import { components, hooks, ui } from '@application';
 import { css } from '@chess-tent/styled-props';
 import { isDesktop } from 'react-device-detect';
 
-import ActivityStepperEmpty from './activity-stepper-empty';
+import ActivityStepperChaptersPlaceholder from './activity-stepper-chapters-placeholder';
 import ActivityStepperSteps from './activity-stepper-steps';
 import ChaptersImport from './chapters-import';
 import {
@@ -89,14 +89,25 @@ export const ActivityRendererStepper = <
 
   let content;
   if (!chapter) {
+    const activityStepState = boardState[activeStepId];
     content = (
-      <ActivityStepperEmpty
-        onChapterImport={
-          importChapters as Required<
-            ActivityRendererModuleProps<T>
-          >['importChapters']
-        }
-      />
+      <>
+        {chapterImportModal}
+        <ActivityStepperChaptersPlaceholder
+          onChapterImport={promptChapterImport}
+        />
+        <div className="h-100 border-bottom border-top pt-4 overflow-y-auto px-3">
+          <ActivityStepperAnalysis
+            analysis={activityStepState.analysis}
+            activity={activity}
+            updateActivity={updateActivity}
+            boardState={boardState}
+            activityStepState={activityStepState}
+            nextStep={props.nextStep}
+            prevStep={props.prevStep}
+          />
+        </div>
+      </>
     );
   } else {
     const steps = chapter.state.steps;

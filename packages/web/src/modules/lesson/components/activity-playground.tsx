@@ -2,28 +2,24 @@ import React, { ComponentProps } from 'react';
 import { Components } from '@types';
 import { utils } from '@application';
 import { css } from '@chess-tent/styled-props';
-import PlaygroundCard from './activity-playground-card';
 
 const { mobileCss } = utils;
 
 const { className } = css`
   .playground-board {
     grid-area: board;
-    border-right: 1px solid var(--grey-400-color);
     padding: 0 calc(3.5vw) 0 calc(5.5vw); // left padding is a bit large for spare pieces
   }
 
   .playground-actions {
     grid-area: actions;
+    border-left: 1px solid var(--grey-400-color);
   }
 
   .playground-cardbar {
     grid-area: cardbar;
-    padding-top: 24px;
-    overflow-y: scroll;
-    ${PlaygroundCard} {
-      margin-bottom: 24px;
-    }
+    width: calc(100% - 9vw);
+    margin: 15px calc(3.5vw) 15px calc(5.5vw); // left padding is a bit large for spare pieces
   }
 
   .playground-navigation {
@@ -31,6 +27,7 @@ const { className } = css`
     background: var(--light-color);
     position: sticky;
     border-top: 1px solid var(--grey-400-color);
+    border-left: 1px solid var(--grey-400-color);
   }
 
   .playground-sidebar {
@@ -48,23 +45,21 @@ const { className } = css`
   }
 
   display: grid;
-  grid-template-rows: min-content 1fr min-content;
+  grid-template-rows: auto auto 1fr min-content;
   grid-template-columns: 6fr 4fr;
   grid-template-areas:
+    'cardbar actions'
+    'cardbar sidebar'
     'board sidebar'
     'board sidebar'
-    'board sidebar';
+    'board navigation';
   width: 100%;
   height: 100%;
 
   ${mobileCss`
     .playground-board {
-      padding: 25px 0;
-      min-height: 100vw;
-    }
-    
-    .playground-cardbar {
-      overflow-y: unset;
+      padding: 25px 0 0 0;
+      min-height: calc(100vw + 80px);
     }
     
     .playground-navigation {
@@ -77,14 +72,13 @@ const { className } = css`
       flex-direction: row;
     }
 
-    grid-template-rows: 10px min-content auto min-content auto;
-    grid-template-columns: 1fr;
+    grid-template-rows: 40px 1fr min-content min-content;
+    grid-template-columns: auto auto;
     grid-template-areas:
-    'sidebar'
-    'board'
-    'cardbar'
-    'actions'
-    'navigation';
+    'sidebar cardbar'
+    'board board'
+    'actions actions'
+    'navigation navigation';
   `}
 `;
 

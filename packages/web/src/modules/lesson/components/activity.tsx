@@ -22,14 +22,14 @@ const { useDispatchService, useActiveUserRecord } = hooks;
 const LESSON_MODULES = {
   navigation: [ActivityRendererNavigationCard],
   actions: [ActivityRendererAnalysisEngineCard],
-  cards: [ActivityRendererStepCard, ActivityRendererCommentsCard],
+  cards: [ActivityRendererStepCard],
   sidebar: [ActivityRendererStepper, ActivityRendererConference],
 };
 
 const EMPTY_LESSON_MODULES = {
   navigation: [ActivityRendererNavigationCard],
   actions: [ActivityRendererAnalysisEngineCard],
-  cards: [ActivityRendererCommentsCard],
+  cards: [],
   sidebar: [ActivityRendererStepper, ActivityRendererConference],
 };
 

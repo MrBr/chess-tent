@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { ui } from '@application';
+import { ui, utils } from '@application';
 import styled, { useCss } from '@chess-tent/styled-props';
 import { Components } from '@types';
+import { isMobile } from 'react-device-detect';
 
 const { Card } = ui;
+const { mobileCss } = utils;
 
 const style = styled.props.collapsed.css`
   height: 80px;
@@ -40,6 +42,17 @@ const style = styled.props.collapsed.css`
     box-sizing: content-box;
     text-align: center;
   }
+  ${mobileCss`
+    height: 30px;
+    
+    .card {
+      right: 0;
+      width: 90vw;
+    }
+    &.collapsed .card-body{
+      display: none;
+    }
+  `}
 `;
 
 const LessonPlaygroundContent: Components['LessonPlaygroundContent'] = ({
@@ -48,19 +61,24 @@ const LessonPlaygroundContent: Components['LessonPlaygroundContent'] = ({
   const [collapsed, setCollapsed] = useState(false);
   const className = useCss(style)({ collapsed });
 
-  return (
-    <div className={className}>
-      <Card>
-        <Card.Body>{children}</Card.Body>
-        <span
-          className="collapse-button"
-          onClick={() => setCollapsed(!collapsed)}
-        >
-          {collapsed ? 'Expand' : 'Collapse'}
-        </span>
-      </Card>
-    </div>
+  const collapseButton = (
+    <span className="collapse-button" onClick={() => setCollapsed(!collapsed)}>
+      {collapsed ? 'Expand' : 'Collapse'}
+    </span>
   );
+
+  let content = (
+    <Card>
+      <Card.Body>{children}</Card.Body>
+      {collapseButton}
+    </Card>
+  );
+
+  if (isMobile && collapsed) {
+    content = collapseButton;
+  }
+
+  return <div className={className}> {content}</div>;
 };
 
 export default LessonPlaygroundContent;

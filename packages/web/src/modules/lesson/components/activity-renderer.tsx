@@ -22,7 +22,6 @@ import {
 } from '../service';
 import { ActivityRendererStepBoard } from './activity-renderer-step';
 import { ActivityRendererAnalysisBoard } from './activity-renderer-analysis-board';
-import LessonPlaygroundContent from './activity-playground-content';
 
 const { LessonPlayground, ChessboardContextProvider, Chessboard } = components;
 const { Alert } = ui;
@@ -171,8 +170,8 @@ export class ActivityRenderer<
   renderChessboard = (props: ChessboardProps) => {
     return (
       <Chessboard
+        header={null}
         {...props}
-        header={props.header || <LessonPlaygroundContent />}
         onPGN={(pgn, asChapters) => {
           asChapters
             ? this.importChaptersFromPgn(pgn)
@@ -239,10 +238,18 @@ export class ActivityRenderer<
     return (
       <ChessboardContextProvider>
         <LessonPlayground>
+          <LessonPlayground.Cardbar>
+            {this.renderCardModules(cards)}
+          </LessonPlayground.Cardbar>
           <LessonPlayground.Board>{this.renderBoard()}</LessonPlayground.Board>
+          <LessonPlayground.Navigation>
+            {this.renderCardModules(navigation)}
+          </LessonPlayground.Navigation>
+          <LessonPlayground.Actions>
+            {this.renderCardModules(actions)}
+          </LessonPlayground.Actions>
           <LessonPlayground.Sidebar>
             {this.renderCardModules(sidebar)}
-            {this.renderCardModules(navigation)}
           </LessonPlayground.Sidebar>
         </LessonPlayground>
       </ChessboardContextProvider>

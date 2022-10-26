@@ -83,7 +83,6 @@ export class ActivityRendererStepBoard<
         orientation={step.state.orientation}
         onShapesChange={this.updateStepShapes}
         shapes={stepActivityState.shapes}
-        header={<ActivityRendererStepCard {...this.props} />}
         {...props}
       />
     );

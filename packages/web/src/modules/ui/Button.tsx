@@ -79,6 +79,13 @@ const sizes = styled.props.size.stretch.css<BaseButtonProps>`
     padding: 0 12px;
   }
 
+  &.smallest {
+    height: 24px;
+    border-radius: 4px;
+    padding: 0 8px;
+    font-size: 14px;
+  }
+
   &.stretch {
     width: 100%;
     padding-right: 0;

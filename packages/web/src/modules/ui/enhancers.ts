@@ -3,13 +3,20 @@ import { UI, Utils } from '@types';
 import styled, { css } from '@chess-tent/styled-props';
 
 export const inputSizePropStyle = styled.props.size.css`
+  &.extra-small {
+    font-size: 14px;
+    border-radius: 4px;
+    padding: 5px 6px;
+    line-height: 20px;
+  }
+
   &.small {
     font-size: 16px;
     border-radius: 6px;
     padding: 8px 12px;
     line-height: 24px;
   }
-  
+
   &.medium {
     border-radius: 6px;
     font-size: 18px;

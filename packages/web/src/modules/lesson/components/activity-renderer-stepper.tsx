@@ -105,7 +105,7 @@ export const ActivityRendererStepper = <
     <>
       {chapterImportModal}
       <div className={className}>
-        <div className="border-bottom p-3">
+        <div className="border-bottom p-3 pb-1">
           <LessonChapters
             editable={false}
             chapters={lesson.state.chapters}

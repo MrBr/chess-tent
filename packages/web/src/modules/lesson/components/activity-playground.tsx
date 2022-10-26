@@ -49,7 +49,7 @@ const { className } = css`
 
   display: grid;
   grid-template-rows: min-content 1fr min-content;
-  grid-template-columns: 6fr 5fr;
+  grid-template-columns: 6fr 4fr;
   grid-template-areas:
     'board sidebar'
     'board sidebar'

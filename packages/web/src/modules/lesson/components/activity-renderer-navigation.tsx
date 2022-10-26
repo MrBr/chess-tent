@@ -38,12 +38,22 @@ export class ActivityRendererNavigationCard<
       <LessonPlaygroundCard stretch>
         <Row>
           <Col>
-            <Button variant="ghost" stretch size="small" onClick={prevStep}>
+            <Button
+              variant="ghost"
+              stretch
+              size="extra-small"
+              onClick={prevStep}
+            >
               <Icon type="left" />
             </Button>
           </Col>
           <Col>
-            <Button variant="ghost" stretch size="small" onClick={nextStep}>
+            <Button
+              variant="ghost"
+              stretch
+              size="extra-small"
+              onClick={nextStep}
+            >
               <Icon type="right" />
             </Button>
           </Col>
@@ -51,7 +61,7 @@ export class ActivityRendererNavigationCard<
             <Button
               variant="ghost"
               stretch
-              size="small"
+              size="extra-small"
               onClick={this.nextChapter}
             >
               Chapter <Icon type="right" size="small" />

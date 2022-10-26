@@ -131,7 +131,7 @@ export const ActivityRendererStepper = <
                 return null;
               }
               return (
-                <div className="p-2">
+                <div className="p-2 w-100">
                   <ActivityStepperAnalysis
                     analysis={analysis}
                     activity={activity}

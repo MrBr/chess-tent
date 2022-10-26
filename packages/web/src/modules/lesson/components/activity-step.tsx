@@ -33,11 +33,10 @@ const Step = styled<Components['LessonPlaygroundStepTag']>(
     border: 1px solid var(--light-color);
   }
 
-  & + & {
-    margin-left: 15px;
-  }
-  margin-bottom: 8px;
-
+  height: 30px;
+  padding: 0 0.5rem;
+  margin-right: 15px;
+  margin-bottom: 10px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;

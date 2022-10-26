@@ -32,20 +32,23 @@ export class ActivityRendererStepBoard<
 
   startAnalysingPosition = (
     position: FEN,
-    move: Move,
-    piece: Piece,
+    move?: Move,
+    piece?: Piece,
     captured?: boolean,
     promoted?: PieceRole,
   ) => {
     const { step, updateActivity, activity, boardState } = this.props;
-    const notableMove = services.createNotableMove(
-      position,
-      move,
-      1,
-      piece,
-      captured,
-      promoted,
-    );
+    const notableMove =
+      move && piece
+        ? services.createNotableMove(
+            position,
+            move,
+            1,
+            piece,
+            captured,
+            promoted,
+          )
+        : undefined;
 
     const newStep = services.createStep('variation', {
       position: position,
@@ -73,10 +76,11 @@ export class ActivityRendererStepBoard<
     const { step, stepActivityState, Chessboard } = this.props;
     return (
       <Chessboard
-        onMove={this.startAnalysingPosition}
         allowAllMoves
+        sparePieces
+        onMove={this.startAnalysingPosition}
+        onChange={this.startAnalysingPosition}
         orientation={step.state.orientation}
-        footer={null}
         onShapesChange={this.updateStepShapes}
         shapes={stepActivityState.shapes}
         {...props}

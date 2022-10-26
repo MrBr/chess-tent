@@ -171,7 +171,7 @@ export class ActivityRenderer<
     return (
       <Chessboard
         {...props}
-        header={<Container />}
+        header={props.header || <Container />}
         onPGN={(pgn, asChapters) => {
           asChapters
             ? this.importChaptersFromPgn(pgn)

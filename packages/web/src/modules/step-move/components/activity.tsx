@@ -16,7 +16,7 @@ const ActivityBoard: MoveModule['ActivityBoard'] = ({ Chessboard, step }) => {
 
 const ActivitySidebar: MoveModule['ActivitySidebar'] = ({ step }) => {
   return (
-    <LessonPlaygroundContent>
+    <LessonPlaygroundContent empty={!step.state.description}>
       <LessonToolboxText text={step.state.description} />
     </LessonPlaygroundContent>
   );

@@ -22,7 +22,7 @@ export const ActivitySidebar: DescriptionModule['ActivitySidebar'] = ({
   } = step;
 
   return (
-    <LessonPlaygroundContent>
+    <LessonPlaygroundContent empty={!description}>
       <LessonToolboxText
         text={description}
         placeholder="Comment should be here :o"

@@ -17,7 +17,7 @@ const ActivityBoard: VariationModule['ActivityBoard'] = ({
 
 const ActivitySidebar: VariationModule['ActivitySidebar'] = ({ step }) => {
   return (
-    <LessonPlaygroundContent>
+    <LessonPlaygroundContent empty={!step.state.description}>
       <LessonToolboxText text={step.state.description} />
     </LessonPlaygroundContent>
   );

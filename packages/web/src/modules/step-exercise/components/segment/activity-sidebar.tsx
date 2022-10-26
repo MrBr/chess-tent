@@ -39,7 +39,7 @@ const Playground: FunctionComponent<
   }
 
   return (
-    <LessonPlaygroundContent>
+    <LessonPlaygroundContent empty={false}>
       <Row className="align-items-center">
         <Col className="col-auto">
           <Text fontSize="smallest" weight={500} className="m-0">

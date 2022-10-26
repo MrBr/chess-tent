@@ -7,10 +7,11 @@ import { isMobile } from 'react-device-detect';
 const { Card } = ui;
 const { mobileCss } = utils;
 
-const style = styled.props.collapsed.css`
+const style = styled.props.collapsed.empty.css`
   height: 80px;
   position: relative;
   width: 100%;
+
   .card {
     position: absolute;
     border-radius: 8px;
@@ -42,6 +43,11 @@ const style = styled.props.collapsed.css`
     box-sizing: content-box;
     text-align: center;
   }
+
+  &.empty .collapse-button {
+    display: none;
+  }
+
   ${mobileCss`
     height: 30px;
     
@@ -57,9 +63,10 @@ const style = styled.props.collapsed.css`
 
 const LessonPlaygroundContent: Components['LessonPlaygroundContent'] = ({
   children,
+  empty,
 }) => {
-  const [collapsed, setCollapsed] = useState(false);
-  const className = useCss(style)({ collapsed });
+  const [collapsed, setCollapsed] = useState(empty);
+  const className = useCss(style)({ collapsed, empty });
 
   const collapseButton = (
     <span className="collapse-button" onClick={() => setCollapsed(!collapsed)}>

@@ -420,7 +420,7 @@ export type Components = {
     Sidebar: ComponentType;
   };
   LessonPlaygroundCard: LessonPlaygroundCard;
-  LessonPlaygroundContent: ComponentType;
+  LessonPlaygroundContent: ComponentType<{ empty: boolean }>;
   StepTag: StepTag;
   StepMove: StepMove;
   PieceIcon: PieceIcon;

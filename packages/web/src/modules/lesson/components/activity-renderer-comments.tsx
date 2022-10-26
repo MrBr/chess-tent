@@ -33,7 +33,7 @@ export class ActivityRendererCommentsCard extends React.Component<
   { showComments: boolean }
 > {
   state = {
-    showComments: true,
+    showComments: false,
   };
 
   toggleComments = () => {

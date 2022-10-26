@@ -57,13 +57,8 @@ export class ActivityRendererAnalysisBoard<
   };
 
   renderAnalysisBoard = (props: ChessboardProps) => {
-    const { analysis, Chessboard, boardState } = this.props;
+    const { analysis, Chessboard } = this.props;
     const step = getAnalysisActiveStep(analysis);
-
-    // Only applicable to the step ActivityBoard components
-    if (props.shapes && boardState.analysing) {
-      console.warn('Prop autoShapes should be used in activity.');
-    }
 
     return (
       <Chessboard

@@ -119,7 +119,7 @@ export class ActivityRenderer<
       return;
     }
     let prevStep = getPreviousStep(chapter, step) as Steps;
-    const prevStepAnalysis = boardState[prevStep.id]?.analysis;
+    const prevStepAnalysis = boardState[prevStep?.id]?.analysis;
     if (prevStepAnalysis && !isEmptyAnalysis(prevStepAnalysis)) {
       const lastAnalysisStep = getLastStep(prevStepAnalysis, true);
       updateActivity(updateActivityActiveStep)(

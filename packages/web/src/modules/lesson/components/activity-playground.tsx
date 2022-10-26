@@ -42,6 +42,10 @@ const { className } = css`
     padding: 0;
     display: flex;
     flex-direction: column;
+
+    > *:not(:last-child) {
+      border-bottom: 1px solid var(--grey-400-color);
+    }
   }
 
   display: grid;

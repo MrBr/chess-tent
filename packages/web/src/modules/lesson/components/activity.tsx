@@ -23,7 +23,11 @@ const LESSON_MODULES = {
   navigation: [ActivityRendererNavigationCard],
   actions: [ActivityRendererAnalysisEngineCard],
   cards: [ActivityRendererStepCard],
-  sidebar: [ActivityRendererStepper, ActivityRendererConference],
+  sidebar: [
+    ActivityRendererStepper,
+    ActivityRendererCommentsCard,
+    ActivityRendererConference,
+  ],
 };
 
 const EMPTY_LESSON_MODULES = {

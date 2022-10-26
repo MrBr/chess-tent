@@ -96,7 +96,7 @@ export const ActivityRendererStepper = <
         <ActivityStepperChaptersPlaceholder
           onChapterImport={promptChapterImport}
         />
-        <div className="h-100 border-bottom border-top pt-4 overflow-y-auto px-3">
+        <div className="h-100 pt-4 overflow-y-auto px-3">
           <ActivityStepperAnalysis
             analysis={activityStepState.analysis}
             activity={activity}
@@ -127,7 +127,7 @@ export const ActivityRendererStepper = <
               onMove={areChaptersEditable && chapterMoveHandler}
             />
           </div>
-          <div className="h-100 border-bottom pt-3 overflow-y-auto px-4">
+          <div className="h-100 pt-3 overflow-y-auto px-4">
             <ActivityStepperSteps
               boardState={boardState}
               activeStepId={activeStepId}

@@ -54,7 +54,6 @@ import {
 } from './chess';
 import {
   ActivityStepStateBase,
-  ActivityStepMode,
   AppStep,
   EditorProps,
   EditorSidebarProps,
@@ -63,7 +62,7 @@ import {
   StepModuleComponentKey,
   StepSystemProps,
 } from './step';
-import { ClassComponent, ClassNameProps, ClickProps } from './_helpers';
+import { ClassComponent, ClassNameProps } from './_helpers';
 import { OptionsDropdownProps, ButtonProps, UI, UIComponent } from './ui';
 import {
   ApiStatus,
@@ -194,13 +193,6 @@ export type EditorSidebarStepContainer = FunctionComponent<
   } & EditorProps
 >;
 
-export type LessonPlaygroundTab = {
-  board: ReactElement;
-  sidebar: ReactElement;
-  title: string;
-  mode: ActivityStepMode;
-};
-
 export type LessonPlayground = FunctionComponent<{
   board: ReactNode;
   sidebar: ReactNode;
@@ -268,7 +260,6 @@ export interface AnalysisBaseInterface {
     captured?: boolean,
     promoted?: PieceRole,
   ): void;
-  renderToolbox: EditorSidebarProps['renderToolbox'];
 }
 export interface AnalysisSystemProps {
   analysis: Analysis<any>;
@@ -276,6 +267,7 @@ export interface AnalysisSystemProps {
   initialPosition?: FEN;
   initialOrientation?: Color;
   ref?: RefObject<AnalysisBaseInterface>;
+  active: boolean;
 }
 
 export interface AnalysisBoardProps
@@ -287,7 +279,6 @@ export interface ActivityBaseProps<T extends Steps | undefined> {
   updateActivity: ReturnType<Hooks['useDispatchService']>;
   // If chapters can't be imported then they can't be edited at all
   importChapters?: (chapters: Chapter[]) => void;
-  boards: ActivityRendererModuleBoard<T>[];
   cards: ActivityRendererModuleCard<T>[];
   actions: ActivityRendererModuleCard<T>[];
   navigation: ActivityRendererModuleCard<T>[];
@@ -339,10 +330,8 @@ export interface ActivityRendererModuleBoardProps<
 export type ActivityRendererModuleBoard<
   T extends Steps | undefined,
   U extends Chapter | undefined = Chapter | undefined,
-> = ComponentType<ActivityRendererModuleBoardProps<T, U>> & {
-  mode: ActivityStepMode;
-  Navigation: ComponentType<ActivityRendererModuleProps<T>>;
-};
+> = ComponentType<ActivityRendererModuleBoardProps<T, U>>;
+
 export type ActivityRendererModuleCard<
   T extends Steps | undefined,
   U extends Chapter | undefined = Chapter | undefined,
@@ -431,16 +420,8 @@ export type Components = {
     Sidebar: ComponentType;
   };
   LessonPlaygroundCard: LessonPlaygroundCard;
+  LessonPlaygroundContent: ComponentType<{ empty: boolean }>;
   StepTag: StepTag;
-  LessonPlaygroundStepTag: ComponentType<
-    {
-      children: ReactNode;
-      active?: boolean;
-      visited?: boolean;
-      completed?: boolean;
-    } & ClickProps &
-      ClassNameProps
-  >;
   StepMove: StepMove;
   PieceIcon: PieceIcon;
   Router: RenderPropComponentType;

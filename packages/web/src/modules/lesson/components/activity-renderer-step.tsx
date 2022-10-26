@@ -7,7 +7,6 @@ import {
   Piece,
   PieceRole,
   Shape,
-  ActivityStepMode,
   ActivityRendererModuleBoardProps,
   Steps,
 } from '@types';
@@ -17,112 +16,39 @@ import {
   updateAnalysisActiveStepId,
   applyUpdates,
   Chapter,
-  getLessonChapterIndex,
 } from '@chess-tent/models';
 
-import { components, services, ui, utils } from '@application';
-import { isActivityStepSolving, updateActivityActiveChapter } from '../service';
+import { components, services } from '@application';
 
 const { StepRenderer } = components;
-const { Button, Icon, Row, Col } = ui;
-const { createKeyboardNavigationHandler } = utils;
 
-class ActivityRendererStepNavigation<
-  T extends Steps,
-  K extends Chapter,
-> extends React.Component<ActivityRendererModuleProps<T, K>> {
-  nextChapter = () => {
-    const { chapter, activity, updateActivity, boardState } = this.props;
-
-    if (!chapter) {
-      return;
-    }
-
-    const nextChapterIndex =
-      getLessonChapterIndex(activity.subject, chapter.id) + 1;
-    const nextChapter = activity.subject.state.chapters[nextChapterIndex];
-
-    if (!nextChapter) {
-      return;
-    }
-
-    updateActivity(updateActivityActiveChapter)(
-      activity,
-      boardState,
-      nextChapter,
-    );
-  };
-
-  render() {
-    const { nextStep, prevStep } = this.props;
-    return (
-      <>
-        <Row>
-          <Col>
-            <Button variant="ghost" stretch size="small" onClick={prevStep}>
-              <Icon type="left" />
-            </Button>
-          </Col>
-          <Col>
-            <Button variant="ghost" stretch size="small" onClick={nextStep}>
-              <Icon type="right" />
-            </Button>
-          </Col>
-          <Col>
-            <Button
-              variant="ghost"
-              stretch
-              size="small"
-              onClick={this.nextChapter}
-            >
-              Chapter <Icon type="right" size="small" />
-            </Button>
-          </Col>
-        </Row>
-      </>
-    );
-  }
-}
 export class ActivityRendererStepBoard<
   T extends Steps,
   K extends Chapter,
 > extends React.Component<ActivityRendererModuleBoardProps<T, K>> {
-  static mode = ActivityStepMode.SOLVING;
-  static Navigation = ActivityRendererStepNavigation;
-
-  componentDidMount() {
-    document.addEventListener('keyup', this.handleKeypress);
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener('keyup', this.handleKeypress);
-  }
-
-  handleKeypress = (e: KeyboardEvent) => {
-    const { nextStep, prevStep } = this.props;
-    createKeyboardNavigationHandler(prevStep, nextStep)(e);
-  };
-
   updateStepShapes = (shapes: Shape[]) => {
     this.props.setStepActivityState({ shapes });
   };
 
   startAnalysingPosition = (
     position: FEN,
-    move: Move,
-    piece: Piece,
+    move?: Move,
+    piece?: Piece,
     captured?: boolean,
     promoted?: PieceRole,
   ) => {
     const { step, updateActivity, activity, boardState } = this.props;
-    const notableMove = services.createNotableMove(
-      position,
-      move,
-      1,
-      piece,
-      captured,
-      promoted,
-    );
+    const notableMove =
+      move && piece
+        ? services.createNotableMove(
+            position,
+            move,
+            1,
+            piece,
+            captured,
+            promoted,
+          )
+        : undefined;
 
     const newStep = services.createStep('variation', {
       position: position,
@@ -132,14 +58,15 @@ export class ActivityRendererStepBoard<
 
     updateActivity(
       applyUpdates(activity)(draft => {
-        const activityStepStateDraft = getLessonActivityBoardState(
+        const boardStateDraft = getLessonActivityBoardState(
           draft,
           boardState.id,
-        )[boardState.activeStepId];
+        );
+        const activityStepStateDraft = boardStateDraft[boardState.activeStepId];
         const analysisDraft = activityStepStateDraft.analysis;
-        activityStepStateDraft.mode = ActivityStepMode.ANALYSING;
-        addStep(analysisDraft, newStep);
+        boardStateDraft.analysing = true;
 
+        addStep(analysisDraft, newStep);
         updateAnalysisActiveStepId(analysisDraft, newStep.id);
       }),
     )();
@@ -149,10 +76,11 @@ export class ActivityRendererStepBoard<
     const { step, stepActivityState, Chessboard } = this.props;
     return (
       <Chessboard
-        onMove={this.startAnalysingPosition}
         allowAllMoves
+        sparePieces
+        onMove={this.startAnalysingPosition}
+        onChange={this.startAnalysingPosition}
         orientation={step.state.orientation}
-        footer={null}
         onShapesChange={this.updateStepShapes}
         shapes={stepActivityState.shapes}
         {...props}
@@ -180,29 +108,12 @@ export class ActivityRendererStepCard<
   T extends Steps,
   K extends Chapter,
 > extends React.Component<ActivityRendererModuleProps<T, K>> {
-  setSolvingMode = () => {
-    const { activityStepState, updateActivity, activity, boardState } =
-      this.props;
-    if (isActivityStepSolving(activityStepState)) {
-      return;
-    }
-    updateActivity(
-      applyUpdates(activity)(draft => {
-        const activityStepStateDraft = getLessonActivityBoardState(
-          draft,
-          boardState.id,
-        )[boardState.activeStepId];
-        activityStepStateDraft.mode = ActivityStepMode.SOLVING;
-      }),
-    )();
-  };
-
   render() {
     const { chapter, step } = this.props;
 
     // key is needed in order to force render once the step changes
     return (
-      <section onClick={this.setSolvingMode} key={step.id}>
+      <section key={step.id}>
         <StepRenderer
           {...this.props}
           component="ActivitySidebar"

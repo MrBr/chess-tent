@@ -1,19 +1,23 @@
 import React, { useState, PropsWithChildren, ReactElement } from 'react';
 import { applyUpdates, Chapter, moveLessonChapter } from '@chess-tent/models';
 import { ActivityRendererModuleProps, AppStep, Steps } from '@types';
-import { components, hooks, services, ui } from '@application';
+import { components, hooks, ui } from '@application';
 import { css } from '@chess-tent/styled-props';
-import { isMobile } from 'react-device-detect';
+import { isDesktop } from 'react-device-detect';
 
-import ActivityStepperEmpty from './activity-stepper-empty';
+import ActivityStepperChaptersPlaceholder from './activity-stepper-chapters-placeholder';
 import ActivityStepperSteps from './activity-stepper-steps';
 import ChaptersImport from './chapters-import';
-import { removeActivityChapter, updateActivityActiveChapter } from '../service';
+import {
+  removeActivityChapter,
+  updateActivityActiveChapter,
+  updateActivityActiveStep,
+} from '../service';
+import ActivityStepperAnalysis from './activity-stepper-analysis';
 
 const { LessonChapters, MobilePortal, Layout, Header } = components;
 const { Button, Col } = ui;
 const { usePrompt } = hooks;
-const { updateLessonActivityActiveStep } = services;
 
 const { className } = css`
   display: flex;
@@ -44,12 +48,12 @@ export const ActivityRendererStepper = <
   } = props;
   const areChaptersEditable = importChapters;
   const { activeStepId } = boardState;
-  const [showStepper, setShowStepper] = useState<boolean>(!isMobile);
+  const [showStepper, setShowStepper] = useState<boolean>(false);
   const [chapterImportModal, promptChapterImport] = usePrompt(close => (
     <ChaptersImport close={close} onImport={importChapters as () => void} />
   ));
   const updateActiveStep = (step: AppStep) => {
-    updateActivity(updateLessonActivityActiveStep)(
+    updateActivity(updateActivityActiveStep)(
       activity,
       boardState,
       step as Steps,
@@ -73,7 +77,7 @@ export const ActivityRendererStepper = <
   };
   const stepClickHandler = (step: AppStep) => {
     updateActiveStep(step);
-    isMobile && showStepper && setShowStepper(false);
+    isDesktop && showStepper && setShowStepper(false);
   };
 
   if (!areChaptersEditable && !chapter) {
@@ -83,48 +87,83 @@ export const ActivityRendererStepper = <
     return null;
   }
 
+  let content;
   if (!chapter) {
-    return (
-      <ActivityStepperEmpty
-        onChapterImport={
-          importChapters as Required<
-            ActivityRendererModuleProps<T>
-          >['importChapters']
-        }
-      />
+    const activityStepState = boardState[activeStepId];
+    content = (
+      <>
+        {chapterImportModal}
+        <ActivityStepperChaptersPlaceholder
+          onChapterImport={promptChapterImport}
+        />
+        <div className="h-100 pt-4 overflow-y-auto px-3">
+          <ActivityStepperAnalysis
+            analysis={activityStepState.analysis}
+            activity={activity}
+            updateActivity={updateActivity}
+            boardState={boardState}
+            activityStepState={activityStepState}
+            nextStep={props.nextStep}
+            prevStep={props.prevStep}
+          />
+        </div>
+      </>
+    );
+  } else {
+    const steps = chapter.state.steps;
+
+    content = (
+      <>
+        {chapterImportModal}
+        <div className={className}>
+          <div className="border-bottom p-3 pb-1">
+            <LessonChapters
+              editable={false}
+              chapters={lesson.state.chapters}
+              activeChapter={chapter}
+              onImport={areChaptersEditable && promptChapterImport}
+              onChange={chapterChangeHandler}
+              onRemove={areChaptersEditable && removeChapterHandler}
+              onMove={areChaptersEditable && chapterMoveHandler}
+            />
+          </div>
+          <div className="h-100 pt-3 overflow-y-auto px-4">
+            <ActivityStepperSteps
+              boardState={boardState}
+              activeStepId={activeStepId}
+              steps={steps}
+              onStepClick={stepClickHandler}
+            >
+              {stepperStep => {
+                const activityStepState = boardState[stepperStep.id];
+                const analysis = activityStepState?.analysis;
+
+                if (!activityStepState || !analysis?.state.steps.length) {
+                  return null;
+                }
+                return (
+                  <div className="p-2 w-100">
+                    <ActivityStepperAnalysis
+                      analysis={analysis}
+                      activity={activity}
+                      updateActivity={updateActivity}
+                      step={stepperStep as Steps}
+                      boardState={boardState}
+                      activityStepState={activityStepState}
+                      nextStep={props.nextStep}
+                      prevStep={props.prevStep}
+                    />
+                  </div>
+                );
+              }}
+            </ActivityStepperSteps>
+          </div>
+        </div>
+      </>
     );
   }
 
-  const steps = chapter.state.steps;
-
-  const content = (
-    <>
-      {chapterImportModal}
-      <div className={className}>
-        <div className="border-bottom p-3">
-          <LessonChapters
-            editable={false}
-            chapters={lesson.state.chapters}
-            activeChapter={chapter}
-            onImport={areChaptersEditable && promptChapterImport}
-            onChange={chapterChangeHandler}
-            onRemove={areChaptersEditable && removeChapterHandler}
-            onMove={areChaptersEditable && chapterMoveHandler}
-          />
-        </div>
-        <div className="h-100 border-bottom pt-3 overflow-y-auto">
-          <ActivityStepperSteps
-            boardState={boardState}
-            activeStepId={activeStepId}
-            steps={steps}
-            onStepClick={stepClickHandler}
-          />
-        </div>
-      </div>
-    </>
-  );
-
-  if (isMobile) {
+  if (!isDesktop) {
     return showStepper ? (
       <MobilePortal>
         <Layout

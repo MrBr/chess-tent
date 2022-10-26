@@ -91,6 +91,7 @@ const Footer: FunctionComponent<ChessboardFooterProps> = ({
               value={fen}
               onKeyPress={handleFenEnterKeypress}
               onChange={handleFenChange}
+              size="extra-small"
             />
           </Col>
         </OverlayTrigger>

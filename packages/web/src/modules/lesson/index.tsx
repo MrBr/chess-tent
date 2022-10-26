@@ -68,21 +68,6 @@ application.register(
   },
 );
 application.register(
-  () => import('./components/activity-step'),
-  module => {
-    application.components.LessonPlaygroundStepTag = module.default;
-  },
-);
-application.register(
-  () => import('./service'),
-  module => {
-    application.services.updateLessonActivityActiveStep =
-      module.updateActivityActiveStep;
-    application.services.createLessonActivityStepState =
-      module.createActivityStepState;
-  },
-);
-application.register(
   () => import('./components/trainings'),
   module => {
     application.components.Trainings = module.default;
@@ -173,6 +158,12 @@ application.register(
   () => import('./components/activity-playground-card'),
   module => {
     application.components.LessonPlaygroundCard = module.default;
+  },
+);
+application.register(
+  () => import('./components/activity-playground-content'),
+  module => {
+    application.components.LessonPlaygroundContent = module.default;
   },
 );
 application.register(

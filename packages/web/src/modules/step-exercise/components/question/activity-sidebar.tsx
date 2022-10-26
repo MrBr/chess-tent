@@ -1,5 +1,10 @@
-import React, { ComponentProps, FunctionComponent, useCallback } from 'react';
-import { components, ui } from '@application';
+import React, {
+  ComponentProps,
+  FunctionComponent,
+  useCallback,
+  ChangeEvent,
+} from 'react';
+import { ui } from '@application';
 import {
   ExerciseModule,
   ExerciseQuestionActivityState,
@@ -7,8 +12,7 @@ import {
 } from '@types';
 import { SegmentActivitySidebar } from '../segment';
 
-const { LessonToolboxText } = components;
-const { Row, Col } = ui;
+const { Input } = ui;
 
 const Playground: FunctionComponent<
   ComponentProps<ExerciseModule<ExerciseQuestionStep>['ActivitySidebar']>
@@ -16,9 +20,9 @@ const Playground: FunctionComponent<
   const { stepActivityState, setStepActivityState, completeStep, step } = props;
   const { answer } = stepActivityState as ExerciseQuestionActivityState;
   const handleAnswerChange = useCallback(
-    (text: string) => {
+    (e: ChangeEvent<HTMLInputElement>) => {
       setStepActivityState({
-        answer: text,
+        answer: e.target?.value,
       });
     },
     [setStepActivityState],
@@ -29,15 +33,12 @@ const Playground: FunctionComponent<
 
   return (
     <SegmentActivitySidebar title="Question" {...props} onSubmit={handleSubmit}>
-      <Row className="mt-2">
-        <Col>
-          <LessonToolboxText
-            text={answer}
-            placeholder="Type here..."
-            onChange={handleAnswerChange}
-          />
-        </Col>
-      </Row>
+      <Input
+        size="extra-small"
+        value={answer}
+        placeholder="Type here..."
+        onChange={handleAnswerChange}
+      />
     </SegmentActivitySidebar>
   );
 };

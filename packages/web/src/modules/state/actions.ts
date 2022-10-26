@@ -80,10 +80,21 @@ export const serviceAction =
   <T extends (...args: any) => any>(
     service: T extends ServiceType ? T : never,
   ) =>
-  (...payload: T extends (...args: infer U) => any ? U : never) => {
+  (...args: T extends (...args: infer U) => any ? U : never) => {
     const meta: { patch?: ReversiblePatch } = {};
+    let argsWithOptionalParams = args;
+    // Patch listener is injected as the last argument
+    // If there are optional params before Patch listener they'll be overridden by it
+    // This function sets optional params to undefined
+    // -1 makes room for Patch listener
+    if (args.length < service.length - 1) {
+      argsWithOptionalParams = args.concat(
+        Array.from({ length: service.length - 1 - args.length }),
+      );
+    }
+
     const updatedEntity = service(
-      ...payload,
+      ...argsWithOptionalParams,
       (next: Patch[], prev: Patch[]) => {
         meta.patch = createReversiblePatch(next, prev);
       },

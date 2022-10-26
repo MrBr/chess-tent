@@ -5,9 +5,9 @@ import { createService } from '../_helpers';
 const getAnalysisActiveStep = <T extends Analysis<any>>(
   analysis: T,
 ): InferAnalysisStep<T> => {
-  const activeStep =
-    analysis.state.activeStepId &&
-    getChildStep(analysis, analysis.state.activeStepId);
+  const activeStepId = analysis.state.activeStepId;
+  const activeStep = activeStepId && getChildStep(analysis, activeStepId);
+
   return (activeStep || analysis.state.steps[0]) as InferAnalysisStep<T>;
 };
 
@@ -19,6 +19,9 @@ const updateAnalysisActiveStepId = createService(
 );
 
 const updateAnalysisStep = updateNestedStep;
+
+const isEmptyAnalysis = <T extends Analysis<any>>(analysis: T) =>
+  analysis.state.steps.length === 0;
 
 const createAnalysis = <T extends Step>(
   id: string,
@@ -34,4 +37,5 @@ export {
   getAnalysisActiveStep,
   createAnalysis,
   updateAnalysisActiveStepId,
+  isEmptyAnalysis,
 };

@@ -1,5 +1,5 @@
 import React, { ComponentProps, FunctionComponent, useCallback } from 'react';
-import { components, ui } from '@application';
+import { ui } from '@application';
 import {
   ExerciseModule,
   ExerciseQuestionnaireActivityState,
@@ -7,8 +7,7 @@ import {
 } from '@types';
 import { SegmentActivitySidebar } from '../segment';
 
-const { Headline5, Row, Col, Check, Container } = ui;
-const { LessonToolboxText } = components;
+const { Text, Row, Col, Check, Container } = ui;
 
 const Playground: FunctionComponent<
   ComponentProps<ExerciseModule<ExerciseQuestionnaireStep>['ActivitySidebar']>
@@ -36,23 +35,13 @@ const Playground: FunctionComponent<
   const handleSubmit = useCallback(() => {
     completeStep(step);
   }, [completeStep, step]);
-  const correctSubmission = options?.every(
-    ({ correct }, index) => !!selectedOptions?.[index] === correct,
-  );
 
   return (
     <SegmentActivitySidebar
-      title="Select the correct options"
+      title="Select options"
       onSubmit={handleSubmit}
       {...props}
     >
-      <Headline5 className="mt-2 mb-2">
-        {completed
-          ? correctSubmission
-            ? 'The options are correct'
-            : 'The options are not correct'
-          : ''}
-      </Headline5>
       <Container className="mt-2">
         {options?.map(({ text, correct }, index) => (
           <Row key={index} className="align-items-center">
@@ -64,7 +53,11 @@ const Playground: FunctionComponent<
                 isValid={!!(correct && completed)}
                 checked={!!selectedOptions?.[index]}
                 onChange={() => handleAnswerChange(index)}
-                label={<LessonToolboxText className="m-0" text={text} />}
+                label={
+                  <Text className="m-0" fontSize="smallest">
+                    {text}
+                  </Text>
+                }
               />
             </Col>
           </Row>

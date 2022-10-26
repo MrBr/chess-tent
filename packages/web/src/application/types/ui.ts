@@ -82,7 +82,7 @@ export type BaseButtonProps = {
     | 'ghost'
     | 'dark'
     | 'text';
-  size?: 'large' | 'regular' | 'small' | 'extra-small';
+  size?: 'large' | 'regular' | 'small' | 'extra-small' | 'smallest';
   disabled?: boolean;
   stretch?: boolean;
 };
@@ -158,7 +158,7 @@ export interface SelectOption<T> {
   toString?: (value: T) => string;
 }
 
-export type FormElementsSize = 'medium' | 'small';
+export type FormElementsSize = 'medium' | 'small' | 'extra-small';
 
 export interface OptionsDropdownProps<T> {
   id: string;

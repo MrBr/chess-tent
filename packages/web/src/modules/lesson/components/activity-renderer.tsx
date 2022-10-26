@@ -7,24 +7,26 @@ import {
   ChessboardProps,
   Steps,
 } from '@types';
-import { components, services, ui } from '@application';
+import { components, services, ui, utils } from '@application';
 import {
   getNextStep,
   getPreviousStep,
   updateActivityStepState,
+  isEmptyAnalysis,
+  getFirstStep,
+  getLastStep,
 } from '@chess-tent/models';
-import { importLessonActivityChapters } from '../service';
+import {
+  importLessonActivityChapters,
+  updateActivityActiveStep,
+} from '../service';
+import { ActivityRendererStepBoard } from './activity-renderer-step';
+import { ActivityRendererAnalysisBoard } from './activity-renderer-analysis-board';
 
 const { LessonPlayground, ChessboardContextProvider, Chessboard } = components;
-const { Container, Alert } = ui;
-const { updateLessonActivityActiveStep, logException, parsePgn } = services;
-
-function isStepBoard<T extends Steps | undefined>(
-  rendererProps: ActivityRendererModuleBoard<any>[],
-  step: T,
-): rendererProps is ActivityRendererModuleBoard<T>[] {
-  return true;
-}
+const { Alert } = ui;
+const { logException, parsePgn } = services;
+const { createKeyboardNavigationHandler } = utils;
 
 function isStepCard<T extends Steps | undefined>(
   rendererProps: ActivityRendererModuleCard<any>[],
@@ -37,6 +39,20 @@ export class ActivityRenderer<
   T extends Steps | undefined,
 > extends React.Component<ActivityRendererProps<T>, ActivityRendererState> {
   state: ActivityRendererState = {};
+
+  componentDidMount() {
+    document.addEventListener('keyup', this.handleKeypress);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keyup', this.handleKeypress);
+  }
+
+  prevKeypress = () => {};
+
+  upKeypress = () => {};
+
+  downKeypress = () => {};
 
   importChaptersFromPgn = (pgn: string) => {
     const { updateActivity, activity } = this.props;
@@ -71,6 +87,52 @@ export class ActivityRenderer<
     });
   };
 
+  nextActivityVariation = () => {
+    const {
+      updateActivity,
+      chapter,
+      step,
+      activity,
+      boardState,
+      activityStepState,
+    } = this.props;
+    if (!chapter || !step) {
+      return;
+    }
+    // Called from analysis when last move hit
+    if (!boardState.analysing && !isEmptyAnalysis(activityStepState.analysis)) {
+      const analysisStepId = getFirstStep(activityStepState.analysis)?.id;
+      updateActivity(updateActivityActiveStep)(
+        activity,
+        boardState,
+        step,
+        analysisStepId,
+      );
+      return;
+    }
+    this.nextActivityStep();
+  };
+
+  prevActivityVariation = () => {
+    const { updateActivity, chapter, step, activity, boardState } = this.props;
+    if (!chapter || !step) {
+      return;
+    }
+    let prevStep = getPreviousStep(chapter, step) as Steps;
+    const prevStepAnalysis = boardState[prevStep?.id]?.analysis;
+    if (prevStepAnalysis && !isEmptyAnalysis(prevStepAnalysis)) {
+      const lastAnalysisStep = getLastStep(prevStepAnalysis, true);
+      updateActivity(updateActivityActiveStep)(
+        activity,
+        boardState,
+        prevStep,
+        lastAnalysisStep?.id,
+      );
+      return;
+    }
+    this.prevActivityStep();
+  };
+
   nextActivityStep = () => {
     const { updateActivity, chapter, step, activity, boardState } = this.props;
     if (!chapter || !step) {
@@ -78,11 +140,7 @@ export class ActivityRenderer<
     }
     const nextStep = getNextStep(chapter, step) as Steps;
     nextStep &&
-      updateActivity(updateLessonActivityActiveStep)(
-        activity,
-        boardState,
-        nextStep,
-      );
+      updateActivity(updateActivityActiveStep)(activity, boardState, nextStep);
   };
 
   prevActivityStep = () => {
@@ -90,20 +148,30 @@ export class ActivityRenderer<
     if (!chapter || !step) {
       return;
     }
+    // Called from analysis when last move hit
+    if (boardState.analysing) {
+      updateActivity(updateActivityActiveStep)(activity, boardState, step);
+      return;
+    }
     const prevStep = getPreviousStep(chapter, step) as Steps;
     prevStep &&
-      updateActivity(updateLessonActivityActiveStep)(
-        activity,
-        boardState,
-        prevStep,
-      );
+      updateActivity(updateActivityActiveStep)(activity, boardState, prevStep);
   };
+
+  handleKeypress = (e: KeyboardEvent) =>
+    !this.props.boardState.analysing &&
+    createKeyboardNavigationHandler(
+      this.prevActivityStep,
+      this.nextActivityStep,
+      this.nextActivityVariation,
+      this.prevActivityVariation,
+    )(e);
 
   renderChessboard = (props: ChessboardProps) => {
     return (
       <Chessboard
+        header={null}
         {...props}
-        header={<Container />}
         onPGN={(pgn, asChapters) => {
           asChapters
             ? this.importChaptersFromPgn(pgn)
@@ -132,27 +200,30 @@ export class ActivityRenderer<
   }
 
   renderBoard() {
-    const { activityStepState, boards, step, chapter } = this.props;
+    const { activityStepState, step, chapter, boardState } = this.props;
 
-    if (isStepBoard(boards, step)) {
-      const Board = boards.find(board => board.mode === activityStepState.mode);
-      if (!Board) {
-        return 'Unknown mode';
-      }
-      return (
-        <Board
-          {...this.props}
-          step={step}
-          chapter={chapter}
-          setStepActivityState={this.setStepActivityState}
-          stepActivityState={activityStepState}
-          nextStep={this.nextActivityStep}
-          prevStep={this.prevActivityStep}
-          completeStep={this.completeStep}
-          Chessboard={this.renderChessboard}
-        />
-      );
+    const Board: ActivityRendererModuleBoard<T> =
+      boardState.analysing || !chapter
+        ? ActivityRendererAnalysisBoard
+        : ActivityRendererStepBoard;
+
+    if (!Board) {
+      return 'Unknown mode';
     }
+
+    return (
+      <Board
+        {...this.props}
+        step={step}
+        chapter={chapter}
+        setStepActivityState={this.setStepActivityState}
+        stepActivityState={activityStepState}
+        nextStep={this.nextActivityStep}
+        prevStep={this.prevActivityStep}
+        completeStep={this.completeStep}
+        Chessboard={this.renderChessboard}
+      />
+    );
   }
 
   render() {
@@ -168,16 +239,16 @@ export class ActivityRenderer<
     return (
       <ChessboardContextProvider>
         <LessonPlayground>
-          <LessonPlayground.Board>{this.renderBoard()}</LessonPlayground.Board>
-          <LessonPlayground.Actions>
-            {this.renderCardModules(actions)}
-          </LessonPlayground.Actions>
           <LessonPlayground.Cardbar>
             {this.renderCardModules(cards)}
           </LessonPlayground.Cardbar>
+          <LessonPlayground.Board>{this.renderBoard()}</LessonPlayground.Board>
           <LessonPlayground.Navigation>
             {this.renderCardModules(navigation)}
           </LessonPlayground.Navigation>
+          <LessonPlayground.Actions>
+            {this.renderCardModules(actions)}
+          </LessonPlayground.Actions>
           <LessonPlayground.Sidebar>
             {this.renderCardModules(sidebar)}
           </LessonPlayground.Sidebar>

@@ -30,11 +30,6 @@ const ActivityComments = ({
 
   return (
     <>
-      <Col className="overflow-anchor-none">
-        {comments?.map(comment => (
-          <Comment comment={comment} key={comment.id} />
-        ))}
-      </Col>
       <Row className="mt-3">
         <Col className="col-auto">
           <UserAvatar user={activeUser} size="small" className="mt-1" />
@@ -48,6 +43,11 @@ const ActivityComments = ({
           />
         </Col>
       </Row>
+      <Col className="overflow-anchor-none">
+        {comments?.map(comment => (
+          <Comment comment={comment} key={comment.id} />
+        ))}
+      </Col>
     </>
   );
 };

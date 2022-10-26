@@ -162,7 +162,7 @@ const ConferencingProvider: Components['ConferencingProvider'] = ({ room }) => {
     <ConferencingContext.Provider value={state}>
       <Container fluid className="g-0">
         {connectionStarted && (
-          <Row className="flex-column d-flex g-0 align-items-center">
+          <Row className="d-flex g-0 align-items-center">
             {!mutedVideo && (
               <Col className="col-auto">
                 <RTCVideo mediaStream={localMediaStream} muted />
@@ -182,12 +182,25 @@ const ConferencingProvider: Components['ConferencingProvider'] = ({ room }) => {
                     </Col>
                   ),
               )}
+            <Col className="col-auto ms-auto">
+              {connectionStarted && (
+                <>
+                  <Row className="mw-100 g-2 flex-column justify-content-between">
+                    <Col className="text-center">
+                      <Icon type="close" onClick={handleStopConferencing} />
+                    </Col>
+                    {multimediaSettings}
+                  </Row>
+                  {alerts}
+                </>
+              )}
+            </Col>
           </Row>
         )}
-        <Row className="justify-content-between mw-100 g-0">
-          <Dropdown show={showConfMenu} onToggle={toggleShowConfMenu}>
-            <Dropdown.Toggle collapse onClick={noop}>
-              {!connectionStarted && (
+        {!connectionStarted && (
+          <Row className="justify-content-between mw-100 g-0">
+            <Dropdown show={showConfMenu} onToggle={toggleShowConfMenu}>
+              <Dropdown.Toggle collapse onClick={noop}>
                 <div className="d-flex justify-content-center w-100">
                   <Button
                     variant="tertiary"
@@ -197,52 +210,41 @@ const ConferencingProvider: Components['ConferencingProvider'] = ({ room }) => {
                     <Icon textual type="headphone" className="me-2" /> Join
                   </Button>
                 </div>
-              )}
-              {connectionStarted && (
-                <>
-                  <Row className="mw-100 g-0 justify-content-between w-100 mt-2">
-                    <Col className="text-center">
-                      <Icon type="close" onClick={handleStopConferencing} />
-                    </Col>
-                    {multimediaSettings}
-                  </Row>
-                  {alerts}
-                </>
-              )}
-            </Dropdown.Toggle>
-            <Dropdown.Menu className="p-3">
-              {!connectionStarted && (
-                <>
-                  <Row>
-                    <Col>
-                      <Text fontSize="extra-small" className="mb-3">
-                        Conference for live training
-                      </Text>
-                    </Col>
-                  </Row>
-                  <Row className="flex-no-wrap">
-                    {multimediaSettings}
-                    <Col onClick={toggleShowConfMenu}>
-                      <Button
-                        size="extra-small"
-                        onClick={handleStartConferencing}
-                        disabled={!localMediaStream}
-                      >
-                        Join
-                      </Button>
-                    </Col>
-                  </Row>
-                  {alerts}
-                  <RTCVideo
-                    mediaStream={localMediaStream}
-                    muted
-                    className="position-relative mt-3"
-                  />
-                </>
-              )}
-            </Dropdown.Menu>
-          </Dropdown>
-        </Row>
+              </Dropdown.Toggle>
+              <Dropdown.Menu className="p-3">
+                {!connectionStarted && (
+                  <>
+                    <Row>
+                      <Col>
+                        <Text fontSize="extra-small" className="mb-3">
+                          Conference for live training
+                        </Text>
+                      </Col>
+                    </Row>
+                    <Row className="flex-no-wrap">
+                      {multimediaSettings}
+                      <Col onClick={toggleShowConfMenu}>
+                        <Button
+                          size="extra-small"
+                          onClick={handleStartConferencing}
+                          disabled={!localMediaStream}
+                        >
+                          Join
+                        </Button>
+                      </Col>
+                    </Row>
+                    {alerts}
+                    <RTCVideo
+                      mediaStream={localMediaStream}
+                      muted
+                      className="position-relative mt-3"
+                    />
+                  </>
+                )}
+              </Dropdown.Menu>
+            </Dropdown>
+          </Row>
+        )}
       </Container>
     </ConferencingContext.Provider>
   );

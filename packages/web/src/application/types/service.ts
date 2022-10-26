@@ -17,9 +17,6 @@ import {
   Notification,
   User,
   Mentorship,
-  LessonActivity,
-  PatchListener,
-  LessonActivityBoardState,
 } from '@chess-tent/models';
 import {
   ChessMove,
@@ -40,12 +37,7 @@ import {
 import { MoveStep, Steps, VariationStep } from './steps';
 import { History } from './router';
 import { GenericArguments } from './_helpers';
-import {
-  ActivityComment,
-  ActivityStepStateBase,
-  PgnGame,
-  StepModule,
-} from './step';
+import { ActivityComment, PgnGame, StepModule } from './step';
 import {
   AppAnalysis,
   Evaluation,
@@ -155,13 +147,6 @@ export type Services = {
     initialState: Parameters<StepModules[T]['createStep']>[1],
   ) => StepModules[T] extends StepModule<infer S, any, any, any> ? S : never;
   createActivityComment: (user: User, text: string) => ActivityComment;
-  createLessonActivityStepState: (initialState?: {}) => ActivityStepStateBase;
-  updateLessonActivityActiveStep: (
-    activity: LessonActivity,
-    board: LessonActivityBoardState,
-    step: Steps,
-    patchListener?: PatchListener,
-  ) => LessonActivity;
   getStepPosition: (step: Steps) => FEN;
   getStepBoardOrientation: (step: Steps) => PieceColor;
   updateStepRotation: (step: Steps, orientation?: Orientation) => Steps;

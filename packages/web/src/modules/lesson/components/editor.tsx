@@ -57,6 +57,7 @@ const {
   ChessboardContextProvider,
   Evaluation,
   ApiRedirectPrompt,
+  StepTag,
 } = components;
 const {
   actions: { serviceAction },
@@ -575,6 +576,7 @@ class EditorRenderer extends React.Component<
                   updateChapter={this.updateChapter}
                   updateStep={this.updateStep}
                   removeStep={this.deleteStep}
+                  renderStepTag={StepTag}
                   root
                   renderToolbox={this.renderToolbox}
                 />

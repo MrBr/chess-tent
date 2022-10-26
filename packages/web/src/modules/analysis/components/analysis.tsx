@@ -2,7 +2,6 @@ import React from 'react';
 import {
   AnalysisBaseInterface,
   AnalysisSystemProps,
-  EditorSidebarProps,
   FEN,
   Move,
   Piece,
@@ -19,9 +18,7 @@ import {
   updateSubject,
   updateSubjectState,
 } from '@chess-tent/models';
-import { components, services } from '@application';
-
-const { StepToolbox } = components;
+import { services } from '@application';
 
 export default class AnalysisBase<T extends AnalysisSystemProps>
   extends React.Component<T>
@@ -88,22 +85,5 @@ export default class AnalysisBase<T extends AnalysisSystemProps>
       addStep(analysis, newStep);
     });
     this.setActiveStep(newStep);
-  };
-
-  renderToolbox: EditorSidebarProps['renderToolbox'] = props => {
-    const { analysis } = this.props;
-
-    return (
-      <StepToolbox
-        setActiveStep={this.setActiveStep}
-        updateStep={this.updateStep}
-        removeStep={this.removeStep}
-        stepRoot={analysis}
-        updateChapter={() => {}}
-        {...props}
-        exercise={false}
-        paste={false}
-      />
-    );
   };
 }

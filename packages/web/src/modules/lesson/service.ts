@@ -1,7 +1,6 @@
 import { isEqual } from 'lodash';
 import { constants, services, utils } from '@application';
 import {
-  ActivityStepMode,
   ActivityStepStateBase,
   MoveStep,
   MoveStepState,
@@ -40,7 +39,6 @@ const { START_FEN } = constants;
 export const createActivityStepState =
   (initialState?: {}): ActivityStepStateBase => ({
     analysis: services.createAnalysis(),
-    mode: ActivityStepMode.SOLVING,
     ...(initialState || {}),
   });
 
@@ -54,19 +52,20 @@ export const createLessonActivityBoard = (
     visited: true,
     ...initialStepState,
   });
-  const newBoardState = {
+  const newBoardState: LessonActivityBoardState = {
     id: utils.generateIndex(),
     ...boardState,
     activeStepId,
     activeChapterId,
     [activeStepId]: stepActivityState,
+    analysing: false,
   };
 
   if (!activeChapterId) {
     // Handle empty training lesson without chapters
     const { analysis } = stepActivityState;
     const newStep = services.createStep('variation', {});
-    stepActivityState.mode = ActivityStepMode.ANALYSING;
+    newBoardState.analysing = true;
 
     addStep(analysis, newStep);
     updateAnalysisActiveStepId(analysis, newStep.id);
@@ -79,6 +78,7 @@ export const updateActivityActiveStep = (
   activity: LessonActivity,
   board: LessonActivityBoardState,
   step: Step,
+  analysisStepId?: string,
   patchListener?: PatchListener,
 ): LessonActivity =>
   modelUpdateActivityActiveStep(
@@ -86,6 +86,7 @@ export const updateActivityActiveStep = (
     board,
     step,
     createActivityStepState({ visited: true }),
+    analysisStepId,
     patchListener,
   );
 
@@ -114,18 +115,13 @@ export const removeActivityChapter = createService(
     );
     const activeStepId =
       activeChapter?.state.steps[0]?.id || LESSON_ACTIVITY_ANALYSIS_STEP_ID;
-    const tepState = createActivityStepState({
-      // If there are no chapters left, use dummy step for analysing
-      mode: activeChapter
-        ? ActivityStepMode.SOLVING
-        : ActivityStepMode.ANALYSING,
-    });
+    const stepState = createActivityStepState({});
     modelRemoveActivityChapter(
       draft,
       chapter,
       activeChapter?.id,
       activeStepId,
-      tepState,
+      stepState,
     );
   },
 );
@@ -246,13 +242,6 @@ export const importLessonActivityChapters = createService(
     return draft;
   },
 );
-
-export const isActivityStepAnalysing = <T extends ActivityStepStateBase>(
-  state: T,
-) => state.mode === ActivityStepMode.ANALYSING;
-export const isActivityStepSolving = <T extends ActivityStepStateBase>(
-  state: T,
-) => state.mode === ActivityStepMode.SOLVING;
 
 export const removeEmptyChapters = createService((draft: Lesson): Lesson => {
   draft.state.chapters = draft.state.chapters.filter(

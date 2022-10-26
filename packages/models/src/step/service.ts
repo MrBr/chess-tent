@@ -38,14 +38,17 @@ const getChildStep = (
   return null;
 };
 
-function getLastStep(parentStep: Step, recursive: boolean): Step;
 function getLastStep(
-  parentStep: Step,
+  parentStep: Step | StepRoot,
+  recursive: boolean,
+): Step | null;
+function getLastStep(
+  parentStep: Step | StepRoot,
   recursive: boolean,
   skip?: (step: Step) => boolean | undefined,
 ): Step | null;
 function getLastStep(
-  parentStep: Step,
+  parentStep: Step | StepRoot,
   recursive = true,
   skip?: (step: Step) => boolean | undefined,
 ) {
@@ -53,7 +56,10 @@ function getLastStep(
   while (index >= 0) {
     const step = parentStep.state.steps[index];
 
-    const lastStep = recursive ? getLastStep(step, recursive, skip) : step;
+    let lastStep: Step | boolean | null = recursive
+      ? getLastStep(step, recursive, skip)
+      : step;
+    lastStep = lastStep || ((!skip || !skip(step)) && step);
 
     if (lastStep) {
       return lastStep;
@@ -61,13 +67,11 @@ function getLastStep(
 
     index -= 1;
   }
-  return (((!skip || !skip(parentStep)) && parentStep) || null) as ReturnType<
-    typeof getLastStep
-  >;
+  return null;
 }
 
 const getFirstStep = (
-  parentStep: Step,
+  parentStep: Step | StepRoot,
   recursive = true,
   skip?: (step: Step) => boolean,
 ): Step | null => {
@@ -132,7 +136,9 @@ const getPreviousStep = (
   // Exclude matched step
   index -= 1;
   while (didFound && index >= 0) {
-    const prevStep = getLastStep(parent.state.steps[index], true, skip);
+    const step = parent.state.steps[index];
+    const prevStep =
+      getLastStep(step, true, skip) || ((!skip || !skip(step)) && step);
     if (prevStep) {
       return prevStep;
     }
@@ -274,8 +280,16 @@ const getStepIndex = (
   return indexSearch.index;
 };
 
-const isLastStep = (parentStep: Step, step: Step, recursive = true) => {
-  return isSameStep(getLastStep(parentStep, recursive), step);
+const isLastStep = (
+  parentStep: Step | StepRoot,
+  step: Step,
+  recursive = true,
+) => {
+  return isSameStep(
+    getLastStep(parentStep as Step, recursive) ||
+      (isStep(parentStep) ? parentStep : null),
+    step,
+  );
 };
 
 const getParentStep = <T extends Step | StepRoot>(

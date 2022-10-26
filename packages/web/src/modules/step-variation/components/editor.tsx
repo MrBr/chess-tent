@@ -20,7 +20,7 @@ import { components, constants, services, ui } from '@application';
 import BoardSrc from '../images/board.svg';
 
 const { Img } = ui;
-const { Stepper, StepTag, StepMove, EditorSidebarStepContainer } = components;
+const { Stepper, StepMove, EditorSidebarStepContainer } = components;
 const {
   createStep,
   getSameMoveStep,
@@ -82,7 +82,7 @@ const boardChange = (
     promoted,
   );
 
-  const hasMoveStep = getLastStep(step, false).stepType === 'move';
+  const hasMoveStep = getLastStep(step, false)?.stepType === 'move';
 
   // Move that possibly already exists in the chapter
   const sameMoveStep = getSameMoveStep(step, notableMove);
@@ -202,7 +202,14 @@ const EditorBoard: VariationModule['EditorBoard'] = ({
 };
 
 const EditorSidebar: VariationModule['EditorSidebar'] = props => {
-  const { step, activeStep, updateStep, renderToolbox: StepToolbox } = props;
+  const {
+    step,
+    activeStep,
+    updateStep,
+    renderToolbox: StepToolbox,
+    renderStepTag: StepTag,
+    setActiveStep,
+  } = props;
   const { description } = step.state;
   const handleComment =
     description === undefined
@@ -228,7 +235,10 @@ const EditorSidebar: VariationModule['EditorSidebar'] = props => {
           )
         }
       >
-        <StepTag active={activeStep === step}>
+        <StepTag
+          active={activeStep === step}
+          onClick={() => setActiveStep(step)}
+        >
           {step.state.move ? (
             <StepMove move={step.state.move} />
           ) : (

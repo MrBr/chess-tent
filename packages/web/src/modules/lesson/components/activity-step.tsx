@@ -1,16 +1,19 @@
-import React from 'react';
+import React, { ReactNode, ComponentType } from 'react';
 import styled from '@chess-tent/styled-props';
-import { Components } from '@types';
-import { hooks } from '@application';
+import { ClassNameProps, ClickProps } from '@types';
 
-const { useShowOnActive } = hooks;
+type ActivityStepProps = {
+  children?: ReactNode;
+  active?: boolean;
+  visited?: boolean;
+  completed?: boolean;
+} & ClickProps &
+  ClassNameProps;
 
-const Step = styled<Components['LessonPlaygroundStepTag']>(
-  ({ children, className, onClick, active }) => {
-    const ref = useShowOnActive<HTMLDivElement>(active);
-
+const Step = styled<ComponentType<ActivityStepProps>>(
+  ({ children, className, onClick }) => {
     return (
-      <div className={`${className} $`} onClick={onClick} ref={ref}>
+      <div className={className} onClick={onClick}>
         {children}
       </div>
     );
@@ -38,11 +41,10 @@ const Step = styled<Components['LessonPlaygroundStepTag']>(
     border: 1px solid var(--light-color);
   }
 
-  & > & {
-    margin-left: 15px;
-  }
-  margin-bottom: 8px;
-
+  height: 30px;
+  padding: 0 0.5rem;
+  margin-right: 15px;
+  margin-bottom: 10px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;

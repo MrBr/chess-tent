@@ -60,6 +60,7 @@ export type LessonActivityBoardState = {
   completed?: boolean;
   activeChapterId?: Chapter['id'];
   activeStepId: Step['id'];
+  analysing: boolean;
   [key: string]: any;
 };
 

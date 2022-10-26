@@ -4,11 +4,9 @@ import { ExerciseSteps } from '@types';
 
 import { SegmentActivityProps } from '../../types';
 import { hasExplanation } from '../../service';
-import { isActivityStepSolving } from '../../../lesson/service';
 
-const { Button, Text, Row, Col, Icon } = ui;
-const { LessonPlaygroundCard, LessonPlaygroundStepTag, LessonToolboxText } =
-  components;
+const { ToggleButton, Text, Row, Col, ButtonGroup } = ui;
+const { LessonPlaygroundContent } = components;
 
 const Playground: FunctionComponent<
   SegmentActivityProps<ExerciseSteps> & {
@@ -29,110 +27,63 @@ const Playground: FunctionComponent<
 }) => {
   const { showHint, completed } = stepActivityState;
   const { task, explanation, hint } = step.state;
-  const isActive = isActivityStepSolving(stepActivityState);
   const handleShowHint = useCallback(() => {
     setStepActivityState({ showHint: true });
   }, [setStepActivityState]);
 
+  let segmentContent = task?.text;
+  if (completed && hasExplanation(step)) {
+    segmentContent = explanation?.text;
+  } else if (showHint) {
+    segmentContent = hint?.text;
+  }
+
   return (
-    <>
-      <LessonPlaygroundCard active={isActive}>
-        <Row>
-          <Col className="col-auto">
-            <LessonPlaygroundStepTag active={isActive}>
-              <Icon type="exercise" size="extra-small" />
-            </LessonPlaygroundStepTag>
-          </Col>
-          <Col>
-            <Text className="mb-0 mt-1" fontSize="extra-small" weight={500}>
-              {title}
-            </Text>
-          </Col>
-        </Row>
-        <Row className="mt-2">
-          <Col>
-            <LessonToolboxText className="m-0" text={task?.text} />
-          </Col>
-        </Row>
-        {children}
-        <Row className="mt-4">
-          <Col>
+    <LessonPlaygroundContent empty={false}>
+      <Row className="align-items-center">
+        <Col className="col-auto">
+          <Text fontSize="smallest" weight={500} className="m-0">
+            {title}
+          </Text>
+        </Col>
+        <Col className="ms-auto col-auto">
+          <ButtonGroup>
             {onSubmit && (
-              <Button
-                size="extra-small"
+              <ToggleButton
+                size="smallest"
                 variant="tertiary"
                 onClick={onSubmit}
-                disabled={!onSubmit}
               >
-                Submit
-              </Button>
+                <u>Submit</u>
+              </ToggleButton>
             )}
-          </Col>
-          <Col className="col-auto">
-            <Button
-              size="extra-small"
-              variant="ghost"
-              onClick={onReset}
-              disabled={!onReset}
-            >
-              Reset
-            </Button>
-          </Col>
-          <Col className="col-auto">
-            <Button
-              size="extra-small"
-              variant="ghost"
-              onClick={onHint || handleShowHint}
-              disabled={!onHint && !hint}
-            >
-              Hint
-            </Button>
-          </Col>
-        </Row>
-      </LessonPlaygroundCard>
-      {showHint && (
-        <LessonPlaygroundCard>
-          <Row>
-            <Col className="col-auto">
-              <LessonPlaygroundStepTag>
-                <Icon type="lightbulb" size="extra-small" />
-              </LessonPlaygroundStepTag>
-            </Col>
-            <Col>
-              <Text className="mb-0 mt-1" fontSize="extra-small" weight={500}>
+            {onReset && (
+              <ToggleButton
+                size="smallest"
+                variant="tertiary"
+                onClick={onReset}
+              >
+                Reset
+              </ToggleButton>
+            )}
+            {(onHint || handleShowHint) && (
+              <ToggleButton
+                size="smallest"
+                variant="tertiary"
+                onClick={onHint || handleShowHint}
+                disabled={!onHint && !hint}
+              >
                 Hint
-              </Text>
-            </Col>
-          </Row>
-          <Row className="mt-2">
-            <Col>
-              <LessonToolboxText className="m-0" text={hint?.text} />
-            </Col>
-          </Row>
-        </LessonPlaygroundCard>
-      )}
-      {completed && hasExplanation(step) && (
-        <LessonPlaygroundCard>
-          <Row>
-            <Col className="col-auto">
-              <LessonPlaygroundStepTag>
-                <Icon type="check" size="extra-small" />
-              </LessonPlaygroundStepTag>
-            </Col>
-            <Col>
-              <Text className="mb-0 mt-1" fontSize="extra-small" weight={500}>
-                Explanation
-              </Text>
-            </Col>
-          </Row>
-          <Row className="mt-2">
-            <Col>
-              <LessonToolboxText className="m-0" text={explanation?.text} />
-            </Col>
-          </Row>
-        </LessonPlaygroundCard>
-      )}
-    </>
+              </ToggleButton>
+            )}
+          </ButtonGroup>
+        </Col>
+      </Row>
+      <Text className="m-0 mb-1" fontSize="smallest">
+        {segmentContent}
+      </Text>
+      {children}
+    </LessonPlaygroundContent>
   );
 };
 

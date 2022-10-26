@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect } from 'react';
-import { components, hooks, services, state, ui } from '@application';
+import { components, hooks, state, ui } from '@application';
 import {
   Chapter,
   getChildStep,
@@ -13,11 +13,8 @@ import {
 } from '@chess-tent/models';
 import { Steps } from '@types';
 import ActivityRenderer from './activity-renderer';
-import { createLessonActivity } from '../service';
-import {
-  ActivityRendererStepBoard,
-  ActivityRendererStepCard,
-} from './activity-renderer-step';
+import { createActivityStepState, createLessonActivity } from '../service';
+import { ActivityRendererStepCard } from './activity-renderer-step';
 import { ActivityRendererAnalysisEngineCard } from './activity-renderer-engine';
 import { ActivityRendererNavigationCard } from './activity-renderer-navigation';
 import { ActivityRendererStepper } from './activity-renderer-stepper';
@@ -45,7 +42,7 @@ const Preview = ({ lesson, chapter, step }: PreviewProps) => {
       {
         activeStepId: step.id,
         activeChapterId: chapter.id,
-        [step.id]: services.createLessonActivityStepState(),
+        [step.id]: createActivityStepState(),
       },
     ),
   );
@@ -69,7 +66,7 @@ const Preview = ({ lesson, chapter, step }: PreviewProps) => {
       const updatedActivity = updateActivityStepState(
         activity,
         activityBoardState,
-        services.createLessonActivityStepState(),
+        createActivityStepState(),
       );
       updatePreviewActivity(updatedActivity);
     }
@@ -110,7 +107,6 @@ const Preview = ({ lesson, chapter, step }: PreviewProps) => {
       cards={[ActivityRendererStepCard]}
       navigation={[ActivityRendererNavigationCard]}
       actions={[ActivityRendererAnalysisEngineCard]}
-      boards={[ActivityRendererStepBoard]}
       sidebar={[ActivityRendererStepper]}
     />
   );

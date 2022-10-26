@@ -10,6 +10,7 @@ import {
   ActivityStepProps,
   ChessboardInterface,
   ChessboardProps,
+  StepTag,
   StepToolbox,
 } from './components';
 import { ClassComponent } from './_helpers';
@@ -55,7 +56,8 @@ export type EditorSidebarProps = {
       ComponentProps<StepToolbox>,
       'comment' | 'remove' | 'exercise' | 'step' | 'active' | 'add'
     >,
-  ) => ReactElement;
+  ) => ReactElement | null;
+  renderStepTag: StepTag;
 } & EditorProps;
 
 export type StepComponent<S extends AppStep, P extends {} = {}> = ComponentType<
@@ -79,14 +81,9 @@ export type ActivityComment = {
   id: string;
 };
 
-export enum ActivityStepMode {
-  ANALYSING = 'ANALYSING',
-  SOLVING = 'SOLVING',
-}
 export type ActivityStepStateBase = {
   analysis: AppAnalysis;
   comments?: ActivityComment[];
-  mode: ActivityStepMode;
   shapes?: Shape[];
   visited?: boolean;
   completed?: boolean;

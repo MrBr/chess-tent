@@ -37,7 +37,6 @@ export class ActivityRendererAnalysisBoard<
   }
 
   handleKeypress = (e: KeyboardEvent) => {
-    console.log('ANALYSIS');
     if (!this.isAnalysing()) {
       return;
     }

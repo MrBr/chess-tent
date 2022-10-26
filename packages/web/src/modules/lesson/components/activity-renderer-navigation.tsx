@@ -32,8 +32,14 @@ export class ActivityRendererNavigationCard<
     );
   };
 
+  onNext = () => {
+    document.dispatchEvent(new KeyboardEvent('keyup', { code: 'ArrowRight' }));
+  };
+  onPrev = () => {
+    document.dispatchEvent(new KeyboardEvent('keyup', { code: 'ArrowLeft' }));
+  };
+
   render() {
-    const { nextStep, prevStep } = this.props;
     return (
       <LessonPlaygroundCard stretch>
         <Row>
@@ -42,7 +48,7 @@ export class ActivityRendererNavigationCard<
               variant="ghost"
               stretch
               size="extra-small"
-              onClick={prevStep}
+              onClick={this.onPrev}
             >
               <Icon type="left" />
             </Button>
@@ -52,7 +58,7 @@ export class ActivityRendererNavigationCard<
               variant="ghost"
               stretch
               size="extra-small"
-              onClick={nextStep}
+              onClick={this.onNext}
             >
               <Icon type="right" />
             </Button>

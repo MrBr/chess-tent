@@ -10,7 +10,7 @@ const { className } = css`
   .playground-board {
     grid-area: board;
     border-right: 1px solid var(--grey-400-color);
-    padding: 25px calc(3.5vw) 0 calc(5.5vw); // left padding is a bit large for spare pieces
+    padding: 0 calc(3.5vw) 0 calc(5.5vw); // left padding is a bit large for spare pieces
   }
 
   .playground-actions {

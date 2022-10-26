@@ -5,10 +5,10 @@ import {
   ExerciseModule,
   ExerciseSelectSquaresAndPiecesStep,
 } from '@types';
-import { getCorrectSelectionsCount, isLastSelectionCorrect } from './utils';
+import { getCorrectSelectionsCount } from './utils';
 import { SegmentActivitySidebar } from '../segment';
 
-const { Text } = ui;
+const { Text, Row, Col } = ui;
 
 const Playground: FunctionComponent<
   ComponentProps<
@@ -20,27 +20,23 @@ const Playground: FunctionComponent<
   const { selectedShapes, completed } =
     stepActivityState as ExerciseActivitySelectSquaresAndPiecesState;
   const shapes = task.shapes || [];
-  const correctAction = isLastSelectionCorrect(shapes, selectedShapes);
   const correctSelectionsCount = getCorrectSelectionsCount(
     shapes,
     selectedShapes,
   );
   return (
-    <SegmentActivitySidebar title="Select the squares and pieces" {...props}>
-      {!completed && (
-        <Text fontSize="extra-small" weight={400}>
-          {`You have ${
-            shapes.length - correctSelectionsCount
-          } selections more to go.`}
-        </Text>
-      )}
-      <Text fontSize="extra-small" weight={400}>
-        {!correctAction
-          ? 'Wrong selection'
-          : !!correctAction
-          ? 'Correct selection!'
-          : ''}
-      </Text>
+    <SegmentActivitySidebar title="Select targets" {...props}>
+      <Row>
+        <Col className="col-auto">
+          <Text fontSize="smallest" className="m-0">
+            {!completed
+              ? `You have ${
+                  shapes.length - correctSelectionsCount
+                } selections more to go.`
+              : 'Correct!'}
+          </Text>
+        </Col>
+      </Row>
     </SegmentActivitySidebar>
   );
 };

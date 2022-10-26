@@ -62,7 +62,7 @@ import {
   StepModuleComponentKey,
   StepSystemProps,
 } from './step';
-import { ClassComponent, ClassNameProps, ClickProps } from './_helpers';
+import { ClassComponent, ClassNameProps } from './_helpers';
 import { OptionsDropdownProps, ButtonProps, UI, UIComponent } from './ui';
 import {
   ApiStatus,
@@ -420,16 +420,8 @@ export type Components = {
     Sidebar: ComponentType;
   };
   LessonPlaygroundCard: LessonPlaygroundCard;
+  LessonPlaygroundContent: ComponentType;
   StepTag: StepTag;
-  LessonPlaygroundStepTag: ComponentType<
-    {
-      children?: ReactNode;
-      active?: boolean;
-      visited?: boolean;
-      completed?: boolean;
-    } & ClickProps &
-      ClassNameProps
-  >;
   StepMove: StepMove;
   PieceIcon: PieceIcon;
   Router: RenderPropComponentType;

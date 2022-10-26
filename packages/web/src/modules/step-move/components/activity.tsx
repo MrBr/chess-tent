@@ -1,14 +1,8 @@
 import React from 'react';
 import { MoveModule } from '@types';
-import { components, ui } from '@application';
+import { components } from '@application';
 
-const {
-  StepMove,
-  LessonToolboxText,
-  LessonPlaygroundCard,
-  LessonPlaygroundStepTag,
-} = components;
-const { Row, Col } = ui;
+const { LessonToolboxText, LessonPlaygroundContent } = components;
 
 const ActivityBoard: MoveModule['ActivityBoard'] = ({ Chessboard, step }) => {
   const {
@@ -20,23 +14,11 @@ const ActivityBoard: MoveModule['ActivityBoard'] = ({ Chessboard, step }) => {
   return <Chessboard fen={position} autoShapes={shapes} />;
 };
 
-const ActivitySidebar: MoveModule['ActivitySidebar'] = ({
-  step,
-  stepActivityState,
-}) => {
+const ActivitySidebar: MoveModule['ActivitySidebar'] = ({ step }) => {
   return (
-    <LessonPlaygroundCard>
-      <Row>
-        <Col className="col-auto">
-          <LessonPlaygroundStepTag>
-            <StepMove move={step.state.move} className="ps-1 pe-1" />
-          </LessonPlaygroundStepTag>
-        </Col>
-        <Col>
-          <LessonToolboxText text={step.state.description} />
-        </Col>
-      </Row>
-    </LessonPlaygroundCard>
+    <LessonPlaygroundContent>
+      <LessonToolboxText text={step.state.description} />
+    </LessonPlaygroundContent>
   );
 };
 

@@ -22,9 +22,10 @@ import {
 } from '../service';
 import { ActivityRendererStepBoard } from './activity-renderer-step';
 import { ActivityRendererAnalysisBoard } from './activity-renderer-analysis-board';
+import LessonPlaygroundContent from './activity-playground-content';
 
 const { LessonPlayground, ChessboardContextProvider, Chessboard } = components;
-const { Container, Alert } = ui;
+const { Alert } = ui;
 const { logException, parsePgn } = services;
 const { createKeyboardNavigationHandler } = utils;
 
@@ -171,7 +172,7 @@ export class ActivityRenderer<
     return (
       <Chessboard
         {...props}
-        header={props.header || <Container />}
+        header={props.header || <LessonPlaygroundContent />}
         onPGN={(pgn, asChapters) => {
           asChapters
             ? this.importChaptersFromPgn(pgn)

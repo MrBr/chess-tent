@@ -8,7 +8,7 @@ import {
 } from '@types';
 import { SegmentActivitySidebar } from '../segment';
 
-const { Text } = ui;
+const { Text, Row, Col } = ui;
 const { PieceIcon } = components;
 
 const getPieceStatus = (
@@ -17,9 +17,9 @@ const getPieceStatus = (
 ) => {
   const move = activityMoves?.find(({ move }) => move?.[0] === destMove?.[0]);
   if (!move) {
-    return 'Not moved';
+    return 'Move';
   }
-  return move.move?.[1] === destMove?.[1] ? 'Correct' : 'Wrong square';
+  return move.move?.[1] === destMove?.[1] ? 'Correct' : 'Wrong';
 };
 
 const Playground: FunctionComponent<
@@ -41,20 +41,16 @@ const Playground: FunctionComponent<
 
   return (
     <SegmentActivitySidebar title="Arrange the pieces" {...props}>
-      <div className="mt-3">
+      <Row>
         {exerciseMoves?.map(({ move, piece }) => (
-          <div className="mb-1">
+          <Col className="col-auto" key={move.toString()}>
             <PieceIcon piece={piece} />
-            <Text
-              className="d-inline-block mb-0"
-              key={move[0]}
-              fontSize="extra-small"
-            >
+            <Text className="d-inline-block mb-0" fontSize="smallest">
               {move[0]} - {getPieceStatus(activityMoves, move)}
             </Text>
-          </div>
+          </Col>
         ))}
-      </div>
+      </Row>
     </SegmentActivitySidebar>
   );
 };

@@ -1,8 +1,16 @@
-import React from 'react';
+import React, { ReactNode, ComponentType } from 'react';
 import styled from '@chess-tent/styled-props';
-import { Components } from '@types';
+import { ClassNameProps, ClickProps } from '@types';
 
-const Step = styled<Components['LessonPlaygroundStepTag']>(
+type ActivityStepProps = {
+  children?: ReactNode;
+  active?: boolean;
+  visited?: boolean;
+  completed?: boolean;
+} & ClickProps &
+  ClassNameProps;
+
+const Step = styled<ComponentType<ActivityStepProps>>(
   ({ children, className, onClick }) => {
     return (
       <div className={className} onClick={onClick}>

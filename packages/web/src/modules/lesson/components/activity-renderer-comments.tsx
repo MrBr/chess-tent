@@ -3,8 +3,9 @@ import { ActivityComment, ActivityRendererModuleProps } from '@types';
 import { components, ui } from '@application';
 import { updateActivityStepState } from '@chess-tent/models';
 import Comments from './activity-comments';
+import ActivityStep from './activity-step';
 
-const { LessonPlaygroundCard, LessonPlaygroundStepTag } = components;
+const { LessonPlaygroundCard } = components;
 const { Row, Col, Icon, Text } = ui;
 
 export class ActivityRendererCommentsCard extends React.Component<
@@ -25,9 +26,9 @@ export class ActivityRendererCommentsCard extends React.Component<
       <LessonPlaygroundCard>
         <Row className="align-items-center mb-3">
           <Col className="col-auto">
-            <LessonPlaygroundStepTag>
+            <ActivityStep>
               <Icon type="conversation" size="extra-small" />
-            </LessonPlaygroundStepTag>
+            </ActivityStep>
           </Col>
           <Col>
             <Text weight={500} fontSize="extra-small" className="mb-1">

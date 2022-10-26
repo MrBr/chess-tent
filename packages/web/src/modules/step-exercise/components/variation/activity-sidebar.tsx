@@ -24,11 +24,11 @@ const Playground: FunctionComponent<
 
   return (
     <SegmentActivitySidebar
-      title="Task"
+      title="Play variation"
       {...props}
       onReset={moveToPlayIndex > 0 ? reset : undefined}
     >
-      <Text fontSize="extra-small" className="text-capitalize" weight={400}>
+      <Text fontSize="smallest" className="text-capitalize m-0">
         {correct && !completed
           ? 'Excellent, continue..'
           : correct === false

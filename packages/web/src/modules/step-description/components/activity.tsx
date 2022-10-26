@@ -1,9 +1,8 @@
 import React from 'react';
 import { DescriptionModule } from '@types';
-import { components, ui } from '@application';
+import { components } from '@application';
 
-const { Icon, Row, Col } = ui;
-const { LessonToolboxText, LessonPlaygroundStepTag } = components;
+const { LessonToolboxText, LessonPlaygroundContent } = components;
 
 export const ActivityBoard: DescriptionModule['ActivityBoard'] = ({
   Chessboard,
@@ -23,18 +22,11 @@ export const ActivitySidebar: DescriptionModule['ActivitySidebar'] = ({
   } = step;
 
   return (
-    <Row>
-      <Col className="col-auto">
-        <LessonPlaygroundStepTag active>
-          <Icon type="comment" size="extra-small" />
-        </LessonPlaygroundStepTag>
-      </Col>
-      <Col>
-        <LessonToolboxText
-          text={description}
-          placeholder="Comment should be here :o"
-        />
-      </Col>
-    </Row>
+    <LessonPlaygroundContent>
+      <LessonToolboxText
+        text={description}
+        placeholder="Comment should be here :o"
+      />
+    </LessonPlaygroundContent>
   );
 };

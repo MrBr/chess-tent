@@ -83,6 +83,7 @@ export class ActivityRendererStepBoard<
         orientation={step.state.orientation}
         onShapesChange={this.updateStepShapes}
         shapes={stepActivityState.shapes}
+        header={<ActivityRendererStepCard {...this.props} />}
         {...props}
       />
     );
@@ -108,28 +109,12 @@ export class ActivityRendererStepCard<
   T extends Steps,
   K extends Chapter,
 > extends React.Component<ActivityRendererModuleProps<T, K>> {
-  setSolvingMode = () => {
-    const { updateActivity, activity, boardState } = this.props;
-    if (boardState.analysing) {
-      return;
-    }
-    updateActivity(
-      applyUpdates(activity)(draft => {
-        const boardStateDraft = getLessonActivityBoardState(
-          draft,
-          boardState.id,
-        );
-        boardStateDraft.analysing = true;
-      }),
-    )();
-  };
-
   render() {
     const { chapter, step } = this.props;
 
     // key is needed in order to force render once the step changes
     return (
-      <section onClick={this.setSolvingMode} key={step.id}>
+      <section key={step.id}>
         <StepRenderer
           {...this.props}
           component="ActivitySidebar"

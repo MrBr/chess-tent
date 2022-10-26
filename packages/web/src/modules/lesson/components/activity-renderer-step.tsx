@@ -61,7 +61,7 @@ export class ActivityRendererStepBoard<
         );
         const activityStepStateDraft = boardStateDraft[boardState.activeStepId];
         const analysisDraft = activityStepStateDraft.analysis;
-        boardState.analysing = true;
+        boardStateDraft.analysing = true;
 
         addStep(analysisDraft, newStep);
         updateAnalysisActiveStepId(analysisDraft, newStep.id);

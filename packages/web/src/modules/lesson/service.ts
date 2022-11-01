@@ -192,7 +192,7 @@ export const isRole = (
   user: User,
   role: LessonActivityRole,
 ) =>
-  activity.roles.find(
+  !!activity.roles.find(
     ({ user: { id }, role: userRole }) => id === user.id && userRole === role,
   );
 

@@ -9,6 +9,7 @@ import ActivityStepperChaptersPlaceholder from './activity-stepper-chapters-plac
 import ActivityStepperSteps from './activity-stepper-steps';
 import ChaptersImport from './chapters-import';
 import {
+  isStudent,
   removeActivityChapter,
   updateActivityActiveChapter,
   updateActivityActiveStep,
@@ -16,8 +17,8 @@ import {
 import ActivityStepperAnalysis from './activity-stepper-analysis';
 
 const { LessonChapters, MobilePortal, Layout, Header } = components;
-const { Button, Col } = ui;
-const { usePrompt } = hooks;
+const { Button, Col, Text } = ui;
+const { usePrompt, useActiveUserRecord } = hooks;
 
 const { className } = css`
   display: flex;
@@ -48,10 +49,14 @@ export const ActivityRendererStepper = <
   } = props;
   const areChaptersEditable = importChapters;
   const { activeStepId } = boardState;
+  const { value: user } = useActiveUserRecord();
   const [showStepper, setShowStepper] = useState<boolean>(false);
   const [chapterImportModal, promptChapterImport] = usePrompt(close => (
     <ChaptersImport close={close} onImport={importChapters as () => void} />
   ));
+
+  const hideMoves = activity.state.hideMoves && isStudent(activity, user);
+
   const updateActiveStep = (step: AppStep) => {
     updateActivity(updateActivityActiveStep)(
       activity,
@@ -128,12 +133,17 @@ export const ActivityRendererStepper = <
             />
           </div>
           <div className="h-100 pt-3 overflow-y-auto px-4">
+            {activity.state.hideMoves && !hideMoves && (
+              <Text fontSize="smallest">
+                Students can't see moves until visited
+              </Text>
+            )}
             <ActivityStepperSteps
               boardState={boardState}
               activeStepId={activeStepId}
               steps={steps}
               onStepClick={stepClickHandler}
-              hideMoves={activity.state.hideMoves}
+              hideMoves={hideMoves}
             >
               {stepperStep => {
                 const activityStepState = boardState[stepperStep.id];

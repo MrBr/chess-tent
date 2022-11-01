@@ -3,7 +3,7 @@ import { ActivityRendererModuleProps, Steps } from '@types';
 import { components, hooks, ui } from '@application';
 import { Chapter } from '@chess-tent/models';
 
-import { isCoach, isOwner } from '../service';
+import { isStudent } from '../service';
 
 const { Evaluation, LessonPlaygroundCard } = components;
 const { Text, Row, Col } = ui;
@@ -18,11 +18,7 @@ export const ActivityRendererAnalysisEngineCard = <
   const { activity } = props;
   const { value: user } = useActiveUserRecord();
 
-  if (
-    activity.state.disableEngine &&
-    !isCoach(activity, user) &&
-    !isOwner(activity, user)
-  ) {
+  if (activity.state.disableEngine && isStudent(activity, user)) {
     return null;
   }
 

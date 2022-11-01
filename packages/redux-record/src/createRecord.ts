@@ -9,6 +9,7 @@ import {
 import {
   deleteRecordAction,
   initRecordAction,
+  removeRecordAction,
   selectRecord,
   uninitializedRecord,
   updateRecordAction,
@@ -28,6 +29,10 @@ const amend: MF<(meta: {}) => void> = recordKey => store => () => meta => {
 const reset: MF<() => void> = recordKey => store => () => () => {
   store.dispatch(deleteRecordAction(recordKey));
 };
+const remove: MF<(item: any, meta: {}) => void> =
+  recordKey => store => () => (item, meta) => {
+    store.dispatch(removeRecordAction(recordKey, item, meta));
+  };
 const init: MF<() => void, RecordBase> = recordKey => store => record => () => {
   const recordEntry = selectRecord(recordKey)(store.getState());
   if (recordEntry === uninitializedRecord) {
@@ -46,6 +51,7 @@ const recordBase = {
   amend,
   reset,
   init,
+  remove,
   initialMeta: {},
 };
 
@@ -61,22 +67,5 @@ const createRecord: CreateRecord = descriptor => recordKey => store => {
     >,
   );
 };
-
-interface Test {
-  $meta: {
-    a: 1;
-  };
-  get(): string;
-}
-
-interface Test2 {
-  $meta: {
-    b: 1;
-  };
-  get(): string;
-}
-
-type Both = Test & Test2;
-type Meta = Both['get'];
 
 export default createRecord;

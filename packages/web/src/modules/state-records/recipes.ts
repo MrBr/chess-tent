@@ -2,7 +2,14 @@ import { utils } from '@application';
 import { Records } from '@types';
 import { MF, RecordBase, RecordEntry } from '@chess-tent/redux-record/types';
 import { Entity } from '@chess-tent/models';
-import { selectRecord } from '@chess-tent/redux-record';
+import { selectRecord, removeRecordAction } from '@chess-tent/redux-record';
+
+const remove: MF<(entity: Entity, meta?: {}) => void> =
+  recordKey => store => () => (entity, meta) => {
+    store.dispatch(
+      removeRecordAction(recordKey, utils.getEntityId(entity), meta),
+    );
+  };
 
 const createDenormalizedRecipe: Records['createDenormalizedRecipe'] = <
   T extends Entity,
@@ -27,6 +34,7 @@ const createDenormalizedRecipe: Records['createDenormalizedRecipe'] = <
   return {
     get,
     initialMeta,
+    remove,
   };
 };
 
@@ -52,6 +60,7 @@ const createDenormalizedCollectionRecipe: Records['createDenormalizedCollectionR
     return {
       get,
       initialMeta,
+      remove,
     };
   };
 

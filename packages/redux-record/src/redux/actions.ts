@@ -11,6 +11,8 @@ import {
   INIT_RECORD,
   UPDATE_RECORD_META,
   RecordInitAction,
+  REMOVE_RECORD,
+  RecordRemoveAction,
 } from '../../types';
 
 export const updateRecordMetaAction = <M extends {}>(
@@ -45,6 +47,21 @@ export const initRecordAction = <T, M extends {}>(
   meta: Partial<M> = {},
 ): RecordInitAction<T, M> => ({
   type: INIT_RECORD,
+  payload: {
+    value,
+    meta,
+  },
+  meta: {
+    key,
+  },
+});
+
+export const removeRecordAction = <T, M extends {}>(
+  key: string,
+  value: T,
+  meta: Partial<M> = {},
+): RecordRemoveAction<T, M> => ({
+  type: REMOVE_RECORD,
   payload: {
     value,
     meta,

@@ -35,6 +35,7 @@ import { Requests } from './requests';
 export interface RecipeDenormalized<T>
   extends RecordEntryType<T, { normalized: true }> {
   get: MF<() => RecordEntry<T, this['$meta']>, RecordBase<T>>;
+  remove: MF<(value: T, meta?: this['$meta']) => void, RecordBase<T>>;
 }
 
 export interface RecipeDenormalizedCollection<T>
@@ -43,6 +44,7 @@ export interface RecipeDenormalizedCollection<T>
     () => RecordEntry<T[], this['$meta']>,
     RecordBase<T[]> & RecipeCollection<T>
   >;
+  remove: MF<(value: T, meta?: this['$meta']) => void, RecordBase<T>>;
 }
 
 export interface RecipeApiLoad<R extends RequestFetch<any, any>>
@@ -111,8 +113,8 @@ export type UserTrainingsRecord = RecipeMethod<
   LessonActivity[]
 > &
   RecipeApiLoad<Requests['trainings']> &
-  RecipeCollection<LessonActivity> &
-  RecordBase<LessonActivity[]>;
+  RecordBase<LessonActivity[]> &
+  RecipeCollection<LessonActivity>;
 export type UserScheduledTrainingsRecord = RecipeMethod<
   'new',
   CreateNewUserTraining,
@@ -120,7 +122,7 @@ export type UserScheduledTrainingsRecord = RecipeMethod<
 > &
   RecipeApiLoad<Requests['scheduledTrainings']> &
   RecordBase<LessonActivity[]> &
-  RecipeDenormalizedCollection<LessonActivity>;
+  RecipeCollection<LessonActivity>;
 export type CreateNewUserTraining = (activity: LessonActivity) => Promise<void>;
 export type RequestMentorship = (coach: User, student: User) => Promise<void>;
 export type CoachesRecord = RecordBase<Mentorship[]> &

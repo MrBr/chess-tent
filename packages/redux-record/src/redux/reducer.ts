@@ -8,6 +8,7 @@ import {
   UPDATE_RECORD_META,
   CONCAT_RECORD,
   INIT_RECORD,
+  REMOVE_RECORD,
 } from '../../types';
 
 export const records: Reducer<RecordState, RecordAction> = (
@@ -47,6 +48,23 @@ export const records: Reducer<RecordState, RecordAction> = (
         ...state,
         [action.meta.key]: {
           value: [...previousValue, value],
+          meta: {
+            ...state[action.meta.key]?.meta,
+            ...meta,
+          },
+        },
+      };
+    }
+    case REMOVE_RECORD: {
+      const { value, meta } = action.payload;
+      const previousValue = state[action.meta.key]?.value;
+      const newValue = Array.isArray(state[action.meta.key]?.value)
+        ? previousValue.filter((item: unknown) => item !== value)
+        : undefined;
+      return {
+        ...state,
+        [action.meta.key]: {
+          value: newValue,
           meta: {
             ...state[action.meta.key]?.meta,
             ...meta,

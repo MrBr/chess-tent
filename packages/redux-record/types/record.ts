@@ -103,6 +103,7 @@ export interface RecordBase<V = any, M extends {} = {}>
   extends RecordEntryType<V, M & { recordKey: string }> {
   get: MF<() => RecordEntry<V, this['$meta']>>;
   update: MF<(value: RecordValue<V>, meta?: this['$meta']) => void>;
+  remove: MF<(value: V, meta?: this['$meta']) => void>;
   amend: MF<(meta: this['$meta']) => void>;
   reset: MF<() => void>;
   init: MF<() => void, RecordBase>;

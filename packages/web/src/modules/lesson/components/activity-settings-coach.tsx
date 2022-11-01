@@ -11,7 +11,15 @@ import ActivityForm, { ActivityData } from './activity-form';
 
 const { Offcanvas, Container, Button, Headline5, Row, Col, Confirm, Modal } =
   ui;
-const { useApi, useDispatch, useHistory, usePrompt } = hooks;
+const {
+  useApi,
+  useDispatch,
+  useHistory,
+  usePrompt,
+  useUserScheduledTrainings,
+  useUserTrainings,
+  useActiveUserRecord,
+} = hooks;
 const {
   actions: { deleteEntity },
 } = state;
@@ -26,6 +34,9 @@ const ActivitySettingsCoach: ComponentType<{
   const dispatch = useDispatch();
   const history = useHistory();
   const activityFormRef = useRef<FormikProps<ActivityData>>(null);
+  const { value: user } = useActiveUserRecord();
+  const userTrainings = useUserTrainings(user);
+  const userScheduledTrainings = useUserScheduledTrainings(user);
   const { fetch: activityDelete, response: activityDeleted } = useApi(
     requests.activityDelete,
   );
@@ -49,9 +60,25 @@ const ActivitySettingsCoach: ComponentType<{
     if (!activityDeleted || activityDeleted.error || !activity) {
       return;
     }
+    const userTraining = userTrainings.value?.find(
+      ({ id }) => id === activity.id,
+    );
+    const userScheduledTraining = userScheduledTrainings.value?.find(
+      ({ id }) => id === activity.id,
+    );
+    userTraining && userTrainings.remove(userTraining);
+    userScheduledTraining &&
+      userScheduledTrainings.remove(userScheduledTraining);
     dispatch(deleteEntity(activity));
     history.replace('/');
-  }, [activity, activityDeleted, dispatch, history]);
+  }, [
+    activity,
+    activityDeleted,
+    dispatch,
+    history,
+    userScheduledTrainings,
+    userTrainings,
+  ]);
 
   useEffect(() => {
     if (!activity) {

@@ -89,6 +89,7 @@ export type Services = {
     pgn: string,
     options: { orientation: Orientation | undefined },
   ) => PgnGame[];
+  getPgnGameTitle: (game: PgnGame, index: number) => string;
   createNotableMoveFromChessMove: (
     position: FEN,
     move: ChessMove,

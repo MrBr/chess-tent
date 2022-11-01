@@ -2,6 +2,7 @@ import { constants } from '@application';
 import {
   FEN,
   Orientation,
+  PgnGame,
   PieceColor,
   Services,
   Steps,
@@ -50,15 +51,32 @@ export const updateStepRotation = (
   return updateStepState(step, { orientation });
 };
 
+const getGameTitle = (
+  tags: PgnGame['tags'],
+  isTournament: boolean,
+  index: number,
+) => {
+  if (isTournament) {
+    const white = tags?.White;
+    const black = tags?.Black;
+    return white && black ? `${white} - ${black}` : `Game ${index}`;
+  }
+  return tags?.Event || `Chapter ${index}`;
+};
+
 export const parsePgn: Services['parsePgn'] = (pgn, { orientation }) => {
   const processedPgn = transformNullMoves(pgn);
   const games = parse(processedPgn, { startRule: 'games' }) as ParseTree[];
-  return games.map(game => ({
+  const eventName = games[0]?.tags?.Event;
+  // Studies use Event for titles, real events use the same event name
+  const isTournament = games.every(({ tags }) => tags?.Event === eventName);
+  return games.map((game, index) => ({
     tags: game.tags,
     variation: transformPgnVariation(game.moves, {
       fen: game.tags?.FEN,
       orientation,
       comment: game.gameComment?.comment,
     }),
+    title: getGameTitle(game.tags, isTournament, index),
   }));
 };

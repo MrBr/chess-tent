@@ -420,8 +420,8 @@ class EditorRenderer extends React.Component<
     const { addLessonUpdate, lesson } = this.props;
     const variations = parsePgn(pgn, { orientation: 'white' });
 
-    const chapters = variations.map(({ tags, variation }, index) =>
-      services.createChapter(tags?.Event || `Chapter ${index}`, [variation]),
+    const chapters = variations.map(({ title, variation }) =>
+      services.createChapter(title, [variation]),
     );
 
     if (chapters.length === 0) {

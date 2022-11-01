@@ -27,6 +27,7 @@ export type AppStep<S extends {} = {}, T extends StepType = StepType> = Step<
 export type PgnGame = {
   tags?: Tags;
   variation: Steps;
+  title: string;
 };
 
 export type StepSystemProps = {

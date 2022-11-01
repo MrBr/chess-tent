@@ -30,18 +30,21 @@ const StepMoveComponent: StepMove = ({
   suffix,
   blackIndexSign,
   onClick,
+  hideMoves,
 }) => (
   <span className={className} onClick={() => onClick && onClick(move)}>
     {prefix}
     {move.index &&
       (move.piece?.color === 'black' ? blackIndexSign : `${move.index}.`)}
-    {move.piece && <PieceIcon piece={move.piece} />}
-    {move.rank && getSquareFile(move.move[0])}
-    {move.file && getSquareRank(move.move[0])}
-    {move.captured && 'x'}
-    {getMoveAnnotation(move)}
-    {move.checkmate && '#'}
-    {move.stalemate && '1/2'}
+    <span className={`${hideMoves ? 'invisible' : ''}`}>
+      {move.piece && <PieceIcon piece={move.piece} />}
+      {move.rank && getSquareFile(move.move[0])}
+      {move.file && getSquareRank(move.move[0])}
+      {move.captured && 'x'}
+      {getMoveAnnotation(move)}
+      {move.checkmate && '#'}
+      {move.stalemate && '1/2'}
+    </span>
     {suffix}
   </span>
 );

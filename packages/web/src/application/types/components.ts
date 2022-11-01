@@ -226,6 +226,7 @@ export type StepMove = FunctionComponent<{
   suffix?: string | ReactElement;
   blackIndexSign?: string | ReactElement;
   move: NotableMove;
+  hideMoves?: boolean;
 }>;
 
 export type PieceIcon = FunctionComponent<{

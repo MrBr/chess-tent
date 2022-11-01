@@ -88,6 +88,7 @@ export type LessonActivity = Activity<
     boards: { [key: string]: LessonActivityBoardState }; // Used in group mode
     userSettings: { [key: string]: LessonActivityUserSettings }; // Specific user settings - use for information that should potentially be visible to others
     disableEngine?: boolean;
+    hideMoves?: boolean;
   }
 >;
 

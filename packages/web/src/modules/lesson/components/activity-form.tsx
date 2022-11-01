@@ -53,7 +53,10 @@ const ActivityForm = ({ activity, formRef }: ActivityFormProps) => {
       title: activity?.title || '',
       date: activity?.date ? (activity.date as unknown as Date) : undefined,
       weekly: activity?.weekly || false,
-      state: { disableEngine: !!activity?.state.disableEngine },
+      state: {
+        disableEngine: !!activity?.state.disableEngine,
+        hideMoves: !!activity?.state.hideMoves,
+      },
     }),
     [activity],
   );
@@ -88,12 +91,16 @@ const ActivityForm = ({ activity, formRef }: ActivityFormProps) => {
           getOptionValue={userOption => userOption.id}
         />
       </FormGroup>
-      <FormGroup className="mt-3">
+      <Row className="mt-3">
         <Col>
           <Label>Disable engine</Label>
           <Form.Check type="switch" name="state.disableEngine" />
         </Col>
-      </FormGroup>
+        <Col>
+          <Label>Hide moves</Label>
+          <Form.Check type="switch" name="state.hideMoves" />
+        </Col>
+      </Row>
       <hr className="mt-3" />
       <Text className="mt-4 mb-1" weight={400}>
         Schedule

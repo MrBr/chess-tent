@@ -14,6 +14,7 @@ interface ActivityStepperStepsProps {
   activeStepId?: string;
   boardState: LessonActivityBoardState;
   children?: (step: AppStep) => ReactNode;
+  hideMoves?: boolean;
 }
 
 const { Icon } = ui;
@@ -54,6 +55,7 @@ const ActivityStepperSteps = styled((props: ActivityStepperStepsProps) => {
     activeStepId,
     boardState,
     children,
+    hideMoves,
   } = props;
 
   const activityStepState = step ? boardState[step.id] : null;
@@ -69,7 +71,10 @@ const ActivityStepperSteps = styled((props: ActivityStepperStepsProps) => {
             completed={activityStepState?.completed}
           >
             {stepMove ? (
-              <StepMove move={stepMove} />
+              <StepMove
+                move={stepMove}
+                hideMoves={!activityStepState?.visited && hideMoves}
+              />
             ) : (
               <Icon type={getStepIcon(step)} size="extra-small" />
             )}

@@ -133,6 +133,7 @@ export const ActivityRendererStepper = <
               activeStepId={activeStepId}
               steps={steps}
               onStepClick={stepClickHandler}
+              hideMoves={activity.state.hideMoves}
             >
               {stepperStep => {
                 const activityStepState = boardState[stepperStep.id];

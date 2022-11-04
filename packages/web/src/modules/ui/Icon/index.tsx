@@ -27,6 +27,7 @@ const Icon = styled<IconProps>(
     vertical-align: top;
     width: 100%;
     height: 100%;
+    pointer-events: none;
   }
   
   &.background {

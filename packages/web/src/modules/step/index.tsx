@@ -14,11 +14,13 @@ import {
   getStepPosition,
   parsePgn,
   isEmptyChapter,
+  promoteVariation,
 } from './service';
 
 application.model.stepSchema = stepSchema;
 application.services.createStep = createStepModuleStep;
 application.services.isStepType = isStepType;
+application.services.promoteVariation = promoteVariation;
 application.services.isSameStepMove = isSameStepMove;
 application.services.parsePgn = parsePgn;
 application.services.getSameMoveStep = getSameMoveStep;

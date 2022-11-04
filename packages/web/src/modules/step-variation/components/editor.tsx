@@ -238,6 +238,7 @@ const EditorSidebar: VariationModule['EditorSidebar'] = props => {
         <StepTag
           active={activeStep === step}
           onClick={() => setActiveStep(step)}
+          step={step}
         >
           {step.state.move ? (
             <StepMove move={step.state.move} />

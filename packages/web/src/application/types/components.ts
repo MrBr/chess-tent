@@ -239,7 +239,9 @@ export type StepTag = FunctionComponent<{
   active: boolean;
   className?: string;
   collapse?: boolean;
+  step?: Steps;
   onClick?: ReactEventHandler;
+  onContextMenu?: ReactEventHandler;
 }>;
 
 export interface AuthorizedProps {

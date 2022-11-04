@@ -279,6 +279,7 @@ const EditorSidebar: MoveModule['EditorSidebar'] = props => {
         <StepTag
           active={activeStep === step}
           onClick={() => setActiveStep(step)}
+          step={step}
         >
           <StepMove move={step.state.move} />
         </StepTag>

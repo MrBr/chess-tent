@@ -20,8 +20,11 @@ import {
 } from '@chess-tent/models';
 import { services } from '@application';
 
-export default class AnalysisBase<T extends AnalysisSystemProps>
-  extends React.Component<T>
+export default class AnalysisBase<
+    T extends AnalysisSystemProps,
+    S extends {} = {},
+  >
+  extends React.Component<T, S>
   implements AnalysisBaseInterface
 {
   updateStep = (step: Step) => {

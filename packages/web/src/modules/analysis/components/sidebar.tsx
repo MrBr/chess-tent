@@ -1,15 +1,27 @@
-import React, { ComponentProps } from 'react';
+import React, { ReactNode, ComponentProps, ReactEventHandler } from 'react';
 import { components, utils } from '@application';
-import { Components, EditorSidebarProps } from '@types';
-import { getAnalysisActiveStep } from '@chess-tent/models';
+import { Components, EditorSidebarProps, Steps } from '@types';
+import {
+  getAnalysisActiveStep,
+  updateAnalysisActiveStepId,
+} from '@chess-tent/models';
 import Analysis from './analysis';
+import EditorSidebarStepContextMenu from '../../lesson/components/editor-sidebar-step-context-menu';
+import { promoteVariation } from '../../step/service';
 
 const { Stepper, StepTag, StepToolbox } = components;
 const { noop } = utils;
 
+interface AnalysisSidebarState {
+  contextMenu?: ReactNode;
+}
+
 class AnalysisSidebar extends Analysis<
-  ComponentProps<Components['AnalysisSidebar']>
+  ComponentProps<Components['AnalysisSidebar']>,
+  AnalysisSidebarState
 > {
+  state = {} as AnalysisSidebarState;
+
   renderToolbox: EditorSidebarProps['renderToolbox'] = props => {
     const { analysis, active } = this.props;
 
@@ -32,11 +44,44 @@ class AnalysisSidebar extends Analysis<
   };
 
   renderStepTag: Components['StepTag'] = props => {
-    return <StepTag {...props} active={this.props.active && props.active} />;
+    const { updateAnalysis } = this.props;
+    const handleStepContextMenu: ReactEventHandler = e => {
+      if (!props.step) {
+        return;
+      }
+
+      e.preventDefault();
+      const contextMenu = (
+        <EditorSidebarStepContextMenu
+          container={e.currentTarget as HTMLElement}
+          onClose={() => this.setState({ contextMenu: undefined })}
+          onPromoteVariation={() => {
+            updateAnalysis(draft => {
+              promoteVariation(draft, props.step as Steps);
+              props.step && updateAnalysisActiveStepId(draft, props.step.id);
+            });
+            this.setState({ contextMenu: undefined });
+          }}
+        />
+      );
+
+      this.setState({
+        contextMenu,
+      });
+    };
+
+    return (
+      <StepTag
+        {...props}
+        active={this.props.active && props.active}
+        onContextMenu={handleStepContextMenu}
+      />
+    );
   };
 
   render() {
     const { analysis } = this.props;
+    const { contextMenu } = this.state;
     const step = getAnalysisActiveStep(analysis);
 
     if (!step) {
@@ -45,6 +90,7 @@ class AnalysisSidebar extends Analysis<
 
     return (
       <section className="editor">
+        {contextMenu}
         <Stepper
           stepRoot={analysis}
           setActiveStep={this.setActiveStep}

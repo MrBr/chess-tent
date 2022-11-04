@@ -2,8 +2,8 @@ import styled from '@chess-tent/styled-props';
 import React from 'react';
 import { StepTag } from '@types';
 
-export default styled<StepTag>(({ children, className, onClick }) => (
-  <span className={className} onClick={onClick}>
+export default styled<StepTag>(({ children, step, ...props }) => (
+  <span {...props}>
     <span>{children}</span>
   </span>
 )).props.active.css`
@@ -21,7 +21,6 @@ export default styled<StepTag>(({ children, className, onClick }) => (
 
   color: #2F3849;
   display: inline-block;
-  overflow: hidden;
   font-weight: 700;
   font-size: 12px;
 `;

@@ -17,6 +17,7 @@ import {
   Notification,
   User,
   Mentorship,
+  StepRoot,
 } from '@chess-tent/models';
 import {
   ChessMove,
@@ -104,6 +105,7 @@ export type Services = {
   getFenEnPassant: (fen: string) => string;
   getSquareFile: (square: Key) => string;
   getSquareRank: (square: Key) => string;
+  promoteVariation: <T extends StepRoot>(stepRoot: T, step: Steps) => T;
   isSameStepMove: (
     step: VariationStep | MoveStep,
     move: NotableMove,

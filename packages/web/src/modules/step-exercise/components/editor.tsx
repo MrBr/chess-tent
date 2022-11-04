@@ -12,7 +12,7 @@ import {
   ExerciseToolboxProps,
   ExerciseTypes,
 } from '@types';
-import { components, services, ui } from '@application';
+import { services, ui } from '@application';
 
 import QuestionnaireEditorBoard from './questionnaire/editor-board';
 import QuestionEditorBoard from './question/editor-board';
@@ -38,7 +38,6 @@ import {
 import EditorBoards from './editor-boards';
 
 const { Col, Row, Dropdown, Icon } = ui;
-const { StepTag } = components;
 
 class EditorBoard extends React.Component<
   ComponentProps<ExerciseModule['EditorBoard']>
@@ -117,6 +116,7 @@ const EditorSidebar: ExerciseModule['EditorSidebar'] = ({
   updateChapter,
   removeStep,
   renderToolbox: StepToolbox,
+  renderStepTag: StepTag,
 }) => {
   const active = activeStep === step;
   const selectedTypeDescriptor = useMemo(
@@ -172,7 +172,7 @@ const EditorSidebar: ExerciseModule['EditorSidebar'] = ({
           remove={removeExerciseStep}
         />
         <Col className="col-auto">
-          <StepTag active={active}>
+          <StepTag active={active} step={step}>
             <Icon type="exercise" textual />
           </StepTag>
         </Col>

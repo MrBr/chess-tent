@@ -1,4 +1,4 @@
-import React, { ComponentProps } from 'react';
+import React, { ComponentProps, ReactEventHandler } from 'react';
 import {
   Chapter,
   getPreviousStep,
@@ -35,6 +35,7 @@ import ChaptersDropdown from './chapters-dropdown';
 import RootStepButton from './editor-sidebar-root-step-button';
 import { useLessonParams } from '../hooks/lesson';
 import { removeEmptyChapters } from '../service';
+import EditorSidebarStepContextMenu from './editor-sidebar-step-context-menu';
 
 const {
   Row,
@@ -48,7 +49,13 @@ const {
   Container,
   Alert,
 } = ui;
-const { createChapter, updateStepRotation, logException, parsePgn } = services;
+const {
+  createChapter,
+  updateStepRotation,
+  logException,
+  parsePgn,
+  promoteVariation,
+} = services;
 const {
   Stepper,
   StepRenderer,
@@ -169,6 +176,7 @@ type EditorRendererState = {
     activeStepId: Step['id'];
     activeChapterId: Chapter['id'];
   }[];
+  contextMenu?: React.ReactNode;
   error?: string;
 };
 
@@ -501,6 +509,36 @@ class EditorRenderer extends React.Component<
     );
   };
 
+  renderStepTag: EditorSidebarProps['renderStepTag'] = props => {
+    const { activeChapter } = this.props;
+
+    const handleStepContextMenu: ReactEventHandler = e => {
+      if (!props.step) {
+        return;
+      }
+
+      e.preventDefault();
+      const contextMenu = (
+        <EditorSidebarStepContextMenu
+          container={e.currentTarget as HTMLElement}
+          onClose={() => this.setState({ contextMenu: undefined })}
+          onPromoteVariation={() => {
+            this.updateChapter(
+              promoteVariation(activeChapter, props.step as Steps),
+            );
+            this.setActiveStepHandler(props.step);
+          }}
+        />
+      );
+
+      this.setState({
+        contextMenu,
+      });
+    };
+
+    return <StepTag {...props} onContextMenu={handleStepContextMenu} />;
+  };
+
   renderToolbox: EditorSidebarProps['renderToolbox'] = props => {
     const { activeChapter } = this.props;
     return (
@@ -531,6 +569,7 @@ class EditorRenderer extends React.Component<
     return (
       <ChessboardContextProvider>
         <div className={`${className} editor`}>
+          {this.state.contextMenu}
           <div className="editor-board">
             {/*
                Maybe it can be optimised by making a function call like stepRenderer().
@@ -576,7 +615,7 @@ class EditorRenderer extends React.Component<
                   updateChapter={this.updateChapter}
                   updateStep={this.updateStep}
                   removeStep={this.deleteStep}
-                  renderStepTag={StepTag}
+                  renderStepTag={this.renderStepTag}
                   root
                   renderToolbox={this.renderToolbox}
                 />

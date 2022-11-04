@@ -257,13 +257,11 @@ const getStepsCount = (parent: Step | StepRoot) => {
   return count;
 };
 
-/**
- * Index starts with 1
- */
 const getStepIndex = (
   parent: Step | StepRoot,
   step: Step,
-  indexSearch = { index: 0, end: false },
+  recursive = true,
+  indexSearch = { index: -1, end: false },
 ) => {
   for (let i = 0; i < parent.state.steps.length; i++) {
     const childStep = parent.state.steps[i];
@@ -272,7 +270,9 @@ const getStepIndex = (
       indexSearch.end = true;
       return indexSearch.index;
     }
-    getStepIndex(childStep, step, indexSearch);
+    if (recursive) {
+      getStepIndex(childStep, step, recursive, indexSearch);
+    }
     if (indexSearch.end) {
       return indexSearch.index;
     }

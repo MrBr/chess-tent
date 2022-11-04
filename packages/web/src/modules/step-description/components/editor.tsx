@@ -10,7 +10,7 @@ import { components, ui, stepModules, services } from '@application';
 import Comment from './comment';
 
 const { Col, Row } = ui;
-const { StepTag, EditorSidebarStepContainer } = components;
+const { EditorSidebarStepContainer } = components;
 
 export const EditorBoard: DescriptionModule['EditorBoard'] = ({
   Chessboard,
@@ -68,6 +68,7 @@ export const EditorSidebar: DescriptionModule['EditorSidebar'] = props => {
     updateStep,
     stepRoot,
     renderToolbox: StepToolbox,
+    renderStepTag: StepTag,
     removeStep,
   } = props;
   const active = step === activeStep;
@@ -114,7 +115,7 @@ export const EditorSidebar: DescriptionModule['EditorSidebar'] = props => {
     >
       <Row className="g-0">
         <Col className="col-auto me-2">
-          <StepTag active={active}>
+          <StepTag active={active} step={step}>
             <Comment active={active} />
           </StepTag>
         </Col>

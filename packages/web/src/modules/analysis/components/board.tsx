@@ -18,7 +18,6 @@ class AnalysisBoard extends Analysis<AnalysisBoardProps> {
           allowAllMoves
           orientation={initialOrientation}
           fen={initialPosition || ''}
-          footer={<></>}
           onMove={this.startAnalysis}
         />
       );

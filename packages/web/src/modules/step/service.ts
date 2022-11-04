@@ -1,6 +1,7 @@
 import { constants } from '@application';
 import {
   FEN,
+  MoveStep,
   Orientation,
   PgnGame,
   PieceColor,
@@ -8,11 +9,49 @@ import {
   Steps,
   VariationStep,
 } from '@types';
-import { Chapter, updateStepState } from '@chess-tent/models';
+import {
+  Chapter,
+  createService,
+  getParentStep,
+  getRightStep,
+  getStepIndex,
+  isStep,
+  replaceStep,
+  StepRoot,
+  updateStepState,
+  createStep,
+} from '@chess-tent/models';
 import { parse, ParseTree } from '@mliebelt/pgn-parser';
 import { transformNullMoves, transformPgnVariation } from './_helpers';
 
 const { START_FEN } = constants;
+
+export const transformVariationToMove = (
+  variationStep: VariationStep,
+  initialState?: Partial<MoveStep['state']>,
+) => {
+  if (!variationStep.state.move) {
+    throw new Error('Cannot transform variation, missing move.');
+  }
+  // It's important to preserve ID because the step may be selected
+  return createStep<MoveStep>(variationStep.id, 'move', {
+    move: variationStep.state.move,
+    shapes: variationStep.state.shapes,
+    steps: variationStep.state.steps,
+    ...initialState,
+  });
+};
+
+export const transformMoveToVariation = (moveStep: MoveStep) => {
+  // It's important to preserve ID because the step may be selected
+  return createStep<VariationStep>(moveStep.id, 'variation', {
+    shapes: moveStep.state.shapes,
+    steps: moveStep.state.steps,
+    position: moveStep.state.move.position,
+    moveIndex: moveStep.state.move.index,
+    move: moveStep.state.move,
+  });
+};
 
 export const isEmptyChapter = (chapter: Chapter) => {
   const firstStep = chapter.state.steps[0];
@@ -22,6 +61,64 @@ export const isEmptyChapter = (chapter: Chapter) => {
     isEmptyVariation(firstStep as VariationStep)
   );
 };
+
+export const promoteVariation = createService(
+  <T extends StepRoot>(draft: StepRoot, step: Steps): T => {
+    if (step.stepType !== 'variation') {
+      const variationStep = getParentStep(draft, step) as Steps;
+      if (!variationStep) {
+        throw new Error('Cannot promote root variation.');
+      }
+      return promoteVariation(draft, variationStep);
+    }
+
+    // Where line diverged
+    const parentMoveStep = getParentStep(draft, step);
+
+    if (!isStep(parentMoveStep)) {
+      throw new Error('Cannot promote main variation');
+    }
+
+    if (!parentMoveStep) {
+      throw new Error('Missing parent move variation!');
+    }
+    const parentVariationStep = getParentStep(draft, parentMoveStep as Steps);
+
+    if (!parentVariationStep) {
+      throw new Error('Missing variation!');
+    }
+
+    const mainLineStep = getRightStep(parentVariationStep, parentMoveStep);
+    if (!mainLineStep) {
+      throw new Error('Missing main line step!');
+    }
+
+    const mainLineStepIndex = getStepIndex(
+      parentVariationStep,
+      mainLineStep,
+      false,
+    );
+
+    // Demote variation
+    const mainLineSteps = parentVariationStep?.state.steps.slice(
+      // Skip mainLineStep as it's going to become variation
+      mainLineStepIndex + 1,
+    );
+    const demotedVariation = transformMoveToVariation(mainLineStep as MoveStep);
+    // Append previously main variation steps to demoted variation
+    demotedVariation.state.steps.splice(Infinity, 0, ...mainLineSteps);
+    replaceStep(parentMoveStep, step, demotedVariation);
+
+    // Promote variation
+    parentVariationStep?.state.steps.splice(
+      mainLineStepIndex,
+      Infinity,
+      transformVariationToMove(step, { steps: [] }),
+      ...step.state.steps,
+    );
+    return draft as T;
+  },
+);
 
 export const isEmptyVariation = (step: VariationStep) => {
   return step.state.steps.length === 0 && step.state.position === START_FEN;

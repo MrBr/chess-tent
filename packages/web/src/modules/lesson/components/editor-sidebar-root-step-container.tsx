@@ -17,13 +17,9 @@ const RootStepContainer = ({
   step,
   className,
 }: RootStepContainerProps) => {
-  const handleStepClick = useCallback(
-    event => {
-      event.stopPropagation();
-      setActiveStep && setActiveStep(step);
-    },
-    [setActiveStep, step],
-  );
+  const handleStepClick = useCallback(() => {
+    setActiveStep && setActiveStep(step);
+  }, [setActiveStep, step]);
   return (
     <Container onClick={handleStepClick} fluid className={`${className} p-0`}>
       {children}

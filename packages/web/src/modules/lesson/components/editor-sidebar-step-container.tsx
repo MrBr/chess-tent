@@ -4,11 +4,10 @@ import React, {
   KeyboardEventHandler,
 } from 'react';
 import { Components } from '@types';
-import { components, ui, utils } from '@application';
+import { components, ui } from '@application';
 import debounce from 'lodash/debounce';
 
 const { Row, Col, Container } = ui;
-const { stopPropagation } = utils;
 const { LessonToolboxText } = components;
 
 const EditorSidebarStepContainer: Components['EditorSidebarStepContainer'] =
@@ -42,8 +41,7 @@ const EditorSidebarStepContainer: Components['EditorSidebarStepContainer'] =
         [text, onDeleteComment],
       );
 
-    const handleClick: ReactEventHandler = event => {
-      stopPropagation(event);
+    const handleClick: ReactEventHandler = () => {
       !active && setActiveStep(step);
     };
 
@@ -52,10 +50,7 @@ const EditorSidebarStepContainer: Components['EditorSidebarStepContainer'] =
         <Row onClick={handleClick} className="g-0">
           <Col className="col-auto me-2">{children}</Col>
           <Col>
-            <Container
-              className="d-flex align-items-center h-100 pr-0"
-              onClick={handleClick}
-            >
+            <Container className="d-flex align-items-center h-100 pr-0">
               {(text || active) && showInput && (
                 <LessonToolboxText
                   onChange={debouncedUpdate}

@@ -19,6 +19,7 @@ class AnalysisBoard extends Analysis<AnalysisBoardProps> {
           orientation={initialOrientation}
           fen={initialPosition || ''}
           onMove={this.startAnalysis}
+          onChange={this.startAnalysis}
         />
       );
     }

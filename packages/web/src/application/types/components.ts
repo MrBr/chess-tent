@@ -165,7 +165,7 @@ export type StepperProps = {
 } & StepSystemProps &
   EditorSidebarProps;
 
-export type StepToolbox = FunctionComponent<
+export type EditorStepToolbox = FunctionComponent<
   {
     active?: boolean;
     comment?: boolean | (() => void);
@@ -408,7 +408,7 @@ export type Components = {
   ChessboardContextProvider: ComponentType;
   ChessboardFooter: ComponentType<ChessboardFooterProps>;
   Stepper: FunctionComponent<StepperProps>;
-  StepToolbox: StepToolbox;
+  EditorStepToolbox: EditorStepToolbox;
   EditorSidebarStepContainer: EditorSidebarStepContainer;
   DifficultyLabel: ComponentType<{ difficulty: RecordValue<Difficulty> }>;
   Tags: ComponentType<

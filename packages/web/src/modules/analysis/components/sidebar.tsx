@@ -9,7 +9,7 @@ import Analysis from './analysis';
 import EditorSidebarStepContextMenu from '../../lesson/components/editor-sidebar-step-context-menu';
 import { promoteVariation } from '../../step/service';
 
-const { Stepper, StepTag, StepToolbox } = components;
+const { Stepper, StepTag, EditorStepToolbox } = components;
 const { noop } = utils;
 
 interface AnalysisSidebarState {
@@ -30,7 +30,7 @@ class AnalysisSidebar extends Analysis<
     }
 
     return (
-      <StepToolbox
+      <EditorStepToolbox
         setActiveStep={this.setActiveStep}
         updateStep={this.updateStep}
         removeStep={this.removeStep}

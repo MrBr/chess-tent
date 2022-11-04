@@ -64,7 +64,7 @@ const ToolboxActions = styled.div.css`
   border-radius: 10px;
 `;
 
-const StepToolbox: Components['StepToolbox'] = ({
+const StepToolbox: Components['EditorStepToolbox'] = ({
   active,
   updateStep,
   removeStep,

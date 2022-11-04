@@ -125,9 +125,9 @@ application.register(
   },
 );
 application.register(
-  () => import('./components/step-toolbox'),
+  () => import('./components/editor-sidebar-step-toolbox'),
   module => {
-    application.components.StepToolbox = module.default;
+    application.components.EditorStepToolbox = module.default;
   },
 );
 application.register(

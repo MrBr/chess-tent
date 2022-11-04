@@ -11,7 +11,7 @@ import {
   ChessboardInterface,
   ChessboardProps,
   StepTag,
-  StepToolbox,
+  EditorStepToolbox,
 } from './components';
 import { ClassComponent } from './_helpers';
 import { Orientation, Shape } from './chess';
@@ -54,7 +54,7 @@ export interface EditorProps {
 export type EditorSidebarProps = {
   renderToolbox: (
     props: Pick<
-      ComponentProps<StepToolbox>,
+      ComponentProps<EditorStepToolbox>,
       'comment' | 'remove' | 'exercise' | 'step' | 'active' | 'add'
     >,
   ) => ReactElement | null;

@@ -60,7 +60,7 @@ const {
   Stepper,
   StepRenderer,
   Chessboard,
-  StepToolbox,
+  EditorStepToolbox,
   ChessboardContextProvider,
   Evaluation,
   ApiRedirectPrompt,
@@ -542,7 +542,7 @@ class EditorRenderer extends React.Component<
   renderToolbox: EditorSidebarProps['renderToolbox'] = props => {
     const { activeChapter } = this.props;
     return (
-      <StepToolbox
+      <EditorStepToolbox
         actionsClassName="me-5"
         setActiveStep={this.setActiveStepHandler}
         updateStep={this.updateStep}

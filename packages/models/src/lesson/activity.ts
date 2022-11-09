@@ -1,6 +1,6 @@
-import { flattenSteps, Step } from '../step';
+import { addStep, flattenSteps, Step } from '../step';
 import { Chapter } from '../chapter';
-import { Analysis } from '../analysis';
+import { Analysis, updateAnalysisActiveStepId } from '../analysis';
 import { createService } from '../_helpers';
 import {
   LessonActivity,
@@ -113,6 +113,19 @@ export const removeActivityBoardStepSate = createService(
   (draft: LessonActivity, board: LessonActivityBoardState, stepId: string) => {
     const state = getLessonActivityBoardState(draft, board.id);
     delete state[stepId];
+  },
+);
+
+export const startAnalysingStep = createService(
+  (draft: LessonActivity, boardId: string, analysisStep: Step) => {
+    const boardStateDraft = getLessonActivityBoardState(draft, boardId);
+    const activityStepStateDraft =
+      boardStateDraft[boardStateDraft.activeStepId];
+    const analysisDraft = activityStepStateDraft.analysis;
+    boardStateDraft.analysing = true;
+
+    addStep(analysisDraft, analysisStep);
+    updateAnalysisActiveStepId(analysisDraft, analysisStep.id);
   },
 );
 

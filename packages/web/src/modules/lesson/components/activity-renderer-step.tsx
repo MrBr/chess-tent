@@ -10,13 +10,7 @@ import {
   ActivityRendererModuleBoardProps,
   Steps,
 } from '@types';
-import {
-  addStep,
-  getLessonActivityBoardState,
-  updateAnalysisActiveStepId,
-  applyUpdates,
-  Chapter,
-} from '@chess-tent/models';
+import { startAnalysingStep, Chapter } from '@chess-tent/models';
 
 import { components, services } from '@application';
 
@@ -56,20 +50,7 @@ export class ActivityRendererStepBoard<
       move: notableMove,
     });
 
-    updateActivity(
-      applyUpdates(activity)(draft => {
-        const boardStateDraft = getLessonActivityBoardState(
-          draft,
-          boardState.id,
-        );
-        const activityStepStateDraft = boardStateDraft[boardState.activeStepId];
-        const analysisDraft = activityStepStateDraft.analysis;
-        boardStateDraft.analysing = true;
-
-        addStep(analysisDraft, newStep);
-        updateAnalysisActiveStepId(analysisDraft, newStep.id);
-      }),
-    )();
+    updateActivity(startAnalysingStep)(activity, boardState.id, newStep);
   };
 
   renderActivityBoard = (props: ChessboardProps) => {

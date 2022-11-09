@@ -15,12 +15,13 @@ interface ActivityStepperStepsProps {
   boardState: LessonActivityBoardState;
   children?: (step: AppStep) => ReactNode;
   hideMoves?: boolean;
+  onStartAnalysing: (step: Steps) => void;
 }
 
-const { Icon } = ui;
-const { StepMove } = components;
+const { Icon, OverlayTrigger, Tooltip } = ui;
+const { StepMove, StepToolbox } = components;
 
-function getStepIcon(step: AppStep): Icons {
+function getStepIconType(step: AppStep): Icons {
   switch (step.stepType) {
     case 'variation':
       return 'board';
@@ -56,27 +57,44 @@ const ActivityStepperSteps = styled((props: ActivityStepperStepsProps) => {
     boardState,
     children,
     hideMoves,
+    onStartAnalysing,
   } = props;
 
   const activityStepState = step ? boardState[step.id] : null;
   const stepMove = step && getStepMove(step as Steps);
+  const active = activeStepId === step?.id && !boardState.analysing;
+
   return (
     <>
       {step && (
         <>
           <ActivityStep
             onClick={() => onStepClick(step)}
-            active={activeStepId === step.id && !boardState.analysing}
+            active={active}
             visited={activityStepState?.visited}
             completed={activityStepState?.completed}
           >
+            <StepToolbox active={active} containerSelector=".layout-content">
+              <OverlayTrigger
+                placement="left"
+                overlay={
+                  <Tooltip id="copy-tooltip">Start analysing position</Tooltip>
+                }
+              >
+                <Icon
+                  size="extra-small"
+                  type="analysis"
+                  onClick={() => onStartAnalysing(step as Steps)}
+                />
+              </OverlayTrigger>
+            </StepToolbox>
             {stepMove ? (
               <StepMove
                 move={stepMove}
                 hideMoves={!activityStepState?.visited && hideMoves}
               />
             ) : (
-              <Icon type={getStepIcon(step)} size="extra-small" />
+              <Icon type={getStepIconType(step)} size="extra-small" />
             )}
           </ActivityStep>
           {children && children(step)}

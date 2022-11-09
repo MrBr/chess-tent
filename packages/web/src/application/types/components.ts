@@ -165,19 +165,24 @@ export type StepperProps = {
 } & StepSystemProps &
   EditorSidebarProps;
 
+export type StepToolboxProps = {
+  active?: boolean;
+  className?: string;
+  actionsClassName?: string;
+  children?: ReactNode;
+  containerSelector: string;
+};
 export type EditorStepToolbox = FunctionComponent<
   {
-    active?: boolean;
     comment?: boolean | (() => void);
     exercise?: boolean | (() => void);
     remove?: boolean | (() => void);
     add?: boolean | (() => void);
     paste?: boolean | (() => void);
     step: AppStep;
-    className?: string;
-    actionsClassName?: string;
     stepRoot: StepRoot;
-  } & EditorProps
+  } & Omit<StepToolboxProps, 'containerSelector'> &
+    EditorProps
 >;
 export type EditorSidebarStepContainer = FunctionComponent<
   {
@@ -407,6 +412,7 @@ export type Components = {
   ChessboardPreview: FunctionComponent<{ fen: FEN }>;
   ChessboardContextProvider: ComponentType;
   ChessboardFooter: ComponentType<ChessboardFooterProps>;
+  StepToolbox: FunctionComponent<StepToolboxProps>;
   Stepper: FunctionComponent<StepperProps>;
   EditorStepToolbox: EditorStepToolbox;
   EditorSidebarStepContainer: EditorSidebarStepContainer;

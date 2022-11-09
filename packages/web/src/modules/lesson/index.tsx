@@ -137,6 +137,12 @@ application.register(
   },
 );
 application.register(
+  () => import('./components/step-toolbox'),
+  module => {
+    application.components.StepToolbox = module.default;
+  },
+);
+application.register(
   () => import('./components/step-toolbox-text'),
   module => {
     application.components.LessonToolboxText = module.default;

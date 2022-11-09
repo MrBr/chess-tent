@@ -1,7 +1,12 @@
 import React, { useState, PropsWithChildren, ReactElement } from 'react';
-import { applyUpdates, Chapter, moveLessonChapter } from '@chess-tent/models';
+import {
+  applyUpdates,
+  Chapter,
+  moveLessonChapter,
+  startAnalysingStep,
+} from '@chess-tent/models';
 import { ActivityRendererModuleProps, AppStep, Steps } from '@types';
-import { components, hooks, ui } from '@application';
+import { components, hooks, services, ui } from '@application';
 import { css } from '@chess-tent/styled-props';
 import { isDesktop } from 'react-device-detect';
 
@@ -19,6 +24,7 @@ import ActivityStepperAnalysis from './activity-stepper-analysis';
 const { LessonChapters, MobilePortal, Layout, Header } = components;
 const { Button, Col, Text } = ui;
 const { usePrompt, useActiveUserRecord } = hooks;
+const { createStep, getStepPosition } = services;
 
 const { className } = css`
   display: flex;
@@ -84,6 +90,14 @@ export const ActivityRendererStepper = <
     updateActiveStep(step);
     isDesktop && showStepper && setShowStepper(false);
   };
+  const startAnalysing = (step: Steps) => {
+    const position = getStepPosition(step);
+    const analysisStep = createStep('variation', {
+      position,
+      orientation: step.state.orientation,
+    });
+    updateActivity(startAnalysingStep)(activity, boardState.id, analysisStep);
+  };
 
   if (!areChaptersEditable && !chapter) {
     // This is the case of an initial activity without chapters.
@@ -132,7 +146,7 @@ export const ActivityRendererStepper = <
               onMove={areChaptersEditable && chapterMoveHandler}
             />
           </div>
-          <div className="h-100 pt-3 overflow-y-auto px-4">
+          <div className="h-100 pt-3 overflow-y-auto px-4 position-relative">
             {activity.state.hideMoves && !hideMoves && (
               <Text fontSize="smallest">
                 Students can't see moves until visited
@@ -144,6 +158,7 @@ export const ActivityRendererStepper = <
               steps={steps}
               onStepClick={stepClickHandler}
               hideMoves={hideMoves}
+              onStartAnalysing={startAnalysing}
             >
               {stepperStep => {
                 const activityStepState = boardState[stepperStep.id];

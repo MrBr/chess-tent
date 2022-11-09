@@ -49,7 +49,6 @@ const Step = styled<ComponentType<ActivityStepProps>>(
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  position: relative;
   border-radius: 4px;
   border: 1px solid var(--grey-500-color);
 `;

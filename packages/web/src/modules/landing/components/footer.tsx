@@ -23,14 +23,36 @@ const Header = styled<{ className?: string }>(({ className }) => (
               </Link>
             </li>
             <li>
+              <Link to="/contact" ghost>
+                Contact
+              </Link>
+            </li>
+            <li>
               <Link to="/terms-of-services.txt" target="_blank" ghost>
                 Terms of Services
               </Link>
             </li>
-            <li>Contact</li>
             <li>
               <Link to="/privacy-policy.txt" target="_blank" ghost>
                 Privacy Policy
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="https://www.facebook.com/chesstent"
+                target="_blank"
+                ghost
+              >
+                Facebook
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="https://www.instagram.com/chess.tent/"
+                target="_blank"
+                ghost
+              >
+                Instagram
               </Link>
             </li>
           </ul>

@@ -37,3 +37,9 @@ export class AccountNotActivatedError extends Error {
     super('Account not activated.');
   }
 }
+export class MissingContactDetailsError extends Error {
+  status = 400;
+  constructor() {
+    super('Missing contact details.');
+  }
+}

@@ -2,7 +2,7 @@ import React from 'react';
 import application, { components, pages } from '@application';
 
 const { Route } = components;
-const { Home, About } = pages;
+const { Home, About, Contact } = pages;
 
 application.services.addRoute(() => (
   <Route exact path="/">
@@ -12,5 +12,10 @@ application.services.addRoute(() => (
 application.services.addRoute(() => (
   <Route exact path="/about">
     <About />
+  </Route>
+));
+application.services.addRoute(() => (
+  <Route exact path="/contact">
+    <Contact />
   </Route>
 ));

@@ -185,6 +185,12 @@ export type RegisterOptions = {
   redirect?: string;
 };
 
+export type ContactParams = {
+  name: string;
+  email: string;
+  message: string;
+};
+
 export type RegisterRequestParams = {
   user: Partial<User>;
   options: RegisterOptions;
@@ -215,6 +221,7 @@ export type UsersFilters = {
 
 export interface Endpoints {
   // User endpoints
+  contact: Endpoint<RequestPost<'/contact', ContactParams>, StatusResponse>;
   register: Endpoint<
     RequestPost<'/register', RegisterRequestParams>,
     UserResponse

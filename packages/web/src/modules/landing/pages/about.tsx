@@ -90,7 +90,7 @@ const { className } = css`
   }
 `;
 
-export const LandingPage = () => {
+export const AboutPage = () => {
   return (
     <Container fluid className={className}>
       <Topbar />
@@ -539,4 +539,4 @@ export const LandingPage = () => {
   );
 };
 
-export default LandingPage;
+export default AboutPage;

@@ -20,6 +20,7 @@ import {
 
 // Client implementation interfaces
 export interface Requests {
+  contact: RequestFetch<Endpoints['contact']>;
   register: RequestFetch<Endpoints['register'], RegisterRequestParams>;
   forgotPassword: RequestFetch<Endpoints['forgotPassword']>;
   resetPassword: RequestFetch<Endpoints['resetPassword']>;

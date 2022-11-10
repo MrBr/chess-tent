@@ -1,6 +1,8 @@
 import { services, requests } from '@application';
 import { Requests } from '@types';
 
+const contact = services.createRequest<Requests['contact']>('POST', '/contact');
+
 const register = services.createRequest<Requests['register']>(
   'POST',
   '/register',
@@ -45,6 +47,7 @@ const userValidate = services.createRequest<Requests['userValidate']>(
   '/user/validate',
 );
 
+requests.contact = contact;
 requests.register = register;
 requests.forgotPassword = forgotPassword;
 requests.resetPassword = resetPassword;

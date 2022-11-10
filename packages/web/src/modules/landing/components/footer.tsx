@@ -22,9 +22,17 @@ const Header = styled<{ className?: string }>(({ className }) => (
                 About
               </Link>
             </li>
-            <li>Terms of Use</li>
+            <li>
+              <Link to="/terms-of-services.txt" target="_blank" ghost>
+                Terms of Services
+              </Link>
+            </li>
             <li>Contact</li>
-            <li>Privacy Policy</li>
+            <li>
+              <Link to="/privacy-policy.txt" target="_blank" ghost>
+                Privacy Policy
+              </Link>
+            </li>
           </ul>
         </Col>
       </Row>

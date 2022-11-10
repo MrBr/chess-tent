@@ -491,10 +491,11 @@ export const LandingPage = () => {
               <div className="card">
                 <Text fontSize="small">
                   I want to thank my coach. Many hours spent over the board
-                  working with prof. Gazarek inspired the Chess Tent. Endless
-                  enthusiasm and affection towards chess with longing for change
-                  pushed me forward to be the change.
+                  working with prof. Gazarek inspired Chess Tent. Endless
+                  enthusiasm and affection towards chess motivated me to make a
+                  change.
                 </Text>
+                <br />
                 <Text fontSize="base" weight={700}>
                   prof. Danko Gazarek
                 </Text>
@@ -506,8 +507,8 @@ export const LandingPage = () => {
                 <Text fontSize="small">
                   Special thanks go to the online platform which changed the
                   world of chess unimaginably. Making a free top notch product
-                  inspired me to create community driven platform. <br /> P.S.
-                  thanks for the chessground.
+                  inspired me to create open source platform. <br /> P.S. thanks
+                  for the chessground.
                 </Text>
                 <Text fontSize="base" weight={700}>
                   <a href="https://lichess.org">Lichess</a>

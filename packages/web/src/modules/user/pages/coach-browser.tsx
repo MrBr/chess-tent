@@ -11,7 +11,7 @@ const PageCoachBrowser = () => {
       <Page.Body>
         <Headline4 className="m-0 mt-4">Coaches 🎓</Headline4>
         <Text className="mb-5">
-          Find the right coach for yourself and start learning.
+          Find the right coach for you to start learning.
         </Text>
         <Coaches />
       </Page.Body>

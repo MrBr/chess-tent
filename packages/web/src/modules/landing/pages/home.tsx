@@ -97,7 +97,7 @@ export const LandingPage = () => {
                 </Text>
               </Hero>
               <Text align="center" fontSize="large">
-                Let's get you started. Pick the best option for yourself!
+                Let's get you started. Pick the best option for you.
               </Text>
             </Col>
             <Row className="justify-content-center">
@@ -130,8 +130,8 @@ export const LandingPage = () => {
             >
               <Headline2>Connect with a coach</Headline2>
               <Text fontSize="small" className="my-4">
-                Want to improve your chess skills? Having a coach is fun and
-                exciting way to get better. Experienced chess coach can guide
+                Want to improve your chess skills? Having a coach is a fun and
+                exciting way to get better. An experienced chess coach can guide
                 you in the process, create custom tailored lessons and teach in
                 real-time or on-demand.
               </Text>
@@ -166,7 +166,7 @@ export const LandingPage = () => {
               <Text>
                 Training plan created just for you, based on your level and
                 style of play. Learn at your own pace and communicate with a
-                coach through the comments.
+                coach via step discussion or messages.
               </Text>
             </Col>
           </Row>

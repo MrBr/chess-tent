@@ -7,6 +7,7 @@ import {
 } from '@chess-tent/models';
 import { hooks } from '@application';
 import { RecordValue } from '@chess-tent/redux-record/types';
+import { EntitiesState } from '@chess-tent/types';
 import { throttle } from 'lodash';
 import { getDiff } from '../utils/utils';
 
@@ -35,12 +36,12 @@ const removeWeakerPaths = (updates: SubjectPath[]) => {
   });
 };
 
-export const useDiffUpdates = (
-  subject: RecordValue<Subject>,
+export const useDiffUpdates = <T extends Subject>(
+  subject: RecordValue<T>,
   save: (updates: SubjectPathUpdate[]) => void,
   delay = 5000,
 ) => {
-  const subjectRef = useRef<Subject | null>(null);
+  const subjectRef = useRef<T | null>(null);
   // saveRef is needed so that update function get the last save
   // otherwise the save may be obsolete
   const saveRef = useRef<typeof save>(save);
@@ -55,7 +56,9 @@ export const useDiffUpdates = (
     }
 
     const { type, id } = subjectRef.current;
-    const normalizedEntity = store.getState().entities[type][id];
+    const normalizedEntity = store.getState().entities[
+      type as keyof EntitiesState
+    ][id] as unknown as T;
     if (!normalizedEntity) {
       // Entity most likely deleted
       return;

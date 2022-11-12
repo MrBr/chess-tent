@@ -61,11 +61,6 @@ export type TagState = EntityState<NormalizedTag>;
 export type MentorshipState = EntityState<NormalizedMentorship>;
 export type MessagesState = EntityState<NormalizedMessage>;
 
-export interface AppState {
-  entities: EntitiesState;
-  meta: MetaState;
-}
-
 export type ResetStateAction = Action<typeof RESET_STATE, void>;
 
 export type UpdateEntitiesAction = Action<

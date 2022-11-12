@@ -31,7 +31,6 @@ import { BatchAction } from 'redux-batched-actions';
 import { useParams } from 'react-router-dom';
 import type * as H from 'history';
 import {
-  AppState,
   RecordBase,
   RecordHookReturn,
   RecordHookSafe,
@@ -45,6 +44,7 @@ import { History, LocationState } from './router';
 import { GenericArguments } from './_helpers';
 import { ChessboardContext } from './context';
 import { Wizard, WizardStep } from './ui';
+import { AppState } from './state';
 
 type UseMetaReturn<T> = [T, (meta: T) => void, () => void];
 

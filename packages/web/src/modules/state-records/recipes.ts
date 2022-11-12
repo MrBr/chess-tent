@@ -1,5 +1,5 @@
 import { utils } from '@application';
-import { Records } from '@types';
+import { AppState, Records } from '@types';
 import { MF, RecordBase, RecordEntry } from '@chess-tent/redux-record/types';
 import { Entity } from '@chess-tent/models';
 import { selectRecord, removeRecordAction } from '@chess-tent/redux-record';
@@ -18,8 +18,9 @@ const createDenormalizedRecipe: Records['createDenormalizedRecipe'] = <
 ) => {
   const get: MF<() => RecordEntry<T, any>> = recordKey => store => () => () => {
     const appState = store.getState();
-    const recordEntry =
-      selectRecord<RecordBase<string, any>>(recordKey)(appState);
+    const recordEntry = selectRecord<RecordBase<string, any>, AppState>(
+      recordKey,
+    )(appState);
     const entities = appState.entities;
     const value = recordEntry?.value
       ? utils.denormalize(recordEntry.value, type, entities)
@@ -43,8 +44,9 @@ const createDenormalizedCollectionRecipe: Records['createDenormalizedCollectionR
     const get: MF<() => RecordEntry<T[], any>> =
       recordKey => store => () => () => {
         const appState = store.getState();
-        const recordEntry =
-          selectRecord<RecordBase<string[], any>>(recordKey)(appState);
+        const recordEntry = selectRecord<RecordBase<string[], any>, AppState>(
+          recordKey,
+        )(appState);
         const entities = appState.entities;
         const value = recordEntry?.value
           ?.map(id => utils.denormalize(id, type, entities))

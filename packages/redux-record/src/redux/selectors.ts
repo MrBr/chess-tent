@@ -1,5 +1,5 @@
 import {
-  AppState,
+  RecordAppState,
   RecordBase,
   InferRecordEntry,
   UninitializedRecord,
@@ -10,6 +10,8 @@ export const uninitializedRecord: UninitializedRecord = {
   meta: {},
 };
 export const selectRecord =
-  <T extends RecordBase<any, any>>(recordKey: string) =>
-  (state: AppState): InferRecordEntry<T> =>
+  <T extends RecordBase<any, any>, S extends RecordAppState>(
+    recordKey: string,
+  ) =>
+  (state: RecordAppState): InferRecordEntry<T> =>
     (state.records[recordKey] || uninitializedRecord) as InferRecordEntry<T>;

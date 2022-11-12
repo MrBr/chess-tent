@@ -1,7 +1,6 @@
 import { Action as ReduxAction, combineReducers, Reducer } from 'redux';
 import {
   Actions,
-  AppState,
   DELETE_ENTITY,
   EntitiesState,
   RESET_STATE,
@@ -11,6 +10,7 @@ import {
 } from '@chess-tent/types';
 import { applyPatches, validatePatches } from '@chess-tent/models';
 import { utils } from '@application';
+import { AppState } from '@types';
 
 const appReducer: {
   [key: string]: Reducer;

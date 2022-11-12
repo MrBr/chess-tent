@@ -1,5 +1,5 @@
-import { AppState, EntitiesState } from '@chess-tent/types';
-import { State } from '@types';
+import { EntitiesState } from '@chess-tent/types';
+import { AppState, State } from '@types';
 
 export const selectNormalizedEntities: State['selectors']['selectNormalizedEntities'] =
 

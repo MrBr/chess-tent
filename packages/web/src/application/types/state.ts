@@ -17,7 +17,6 @@ import {
 } from '@chess-tent/models';
 import {
   Actions,
-  AppState,
   DeleteEntityAction,
   EntitiesState,
   EntityState,
@@ -26,16 +25,22 @@ import {
   SendPatchAction,
   UpdateEntitiesAction,
   UpdateEntityAction,
+  MetaState,
 } from '@chess-tent/types';
 import {
   RecordConcatAction,
   RecordPushAction,
   RecordUpdateAction,
+  RecordAppState,
 } from '@chess-tent/redux-record/types';
 
 export type Middleware = ReduxMiddleware;
 
 export type Store = ReduxStore;
+
+export type AppState = { entities: EntitiesState } & RecordAppState & {
+    meta: MetaState;
+  };
 
 export type State = {
   store: Store;

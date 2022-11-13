@@ -5,8 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "preinstall": "node ./scripts/preinstall.js",
-    "start": "node -r ts-node/register/transpile-only -r tsconfig-paths/register ./src/index.ts",
-    "start:nodemon": "nodemon",
+    "start": "nodemon",
     "build:dev": "echo no build",
     "build": "yarn run clean && yarn run compile",
     "clean": "rimraf -rf ./dist",
@@ -28,8 +27,8 @@
     "@types/ws": "^7.2.6"
   },
   "dependencies": {
-    "@chess-tent/redux-record": "1.0.0",
     "@chess-tent/models": "1.0.0",
+    "@chess-tent/redux-record": "1.0.0",
     "@chess-tent/types": "1.0.0",
     "aws-sdk": "^2.742.0",
     "bcrypt": "^5.0.0",

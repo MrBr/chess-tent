@@ -1,6 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "rootDir": "./src",
     "baseUrl": "./src",
     "outDir": "./dist",
     "declaration": false,
@@ -9,5 +10,15 @@
       "@types": ["application/types"]
     }
   },
-  "include": ["./src"]
+  "ts-node": {
+    "scope": true,
+    "scopeDir": "./src"
+  },
+  "include": [
+    "./src"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }

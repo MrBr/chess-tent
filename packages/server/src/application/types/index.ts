@@ -222,7 +222,9 @@ export type Middleware = {
     ...args: Parameters<RequestHandler>
   ) => void;
   addMentor: (...args: Parameters<RequestHandler>) => void;
-  getUser: (localKey: string) => (...args: Parameters<RequestHandler>) => void;
+  getUser: (
+    projection?: string,
+  ) => (localKey: string) => (...args: Parameters<RequestHandler>) => void;
   adapter<T extends EntityDocument>(
     entityKey: string,
     ...updaters: Updater<T>[]

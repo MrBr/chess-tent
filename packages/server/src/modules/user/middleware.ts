@@ -41,15 +41,16 @@ export const updateUser: MiddlewareFunction = (req, res, next) => {
     .catch(next);
 };
 
-export const getUser: Middleware['getUser'] = localKey => (req, res, next) => {
-  service
-    .getUser(res.locals[localKey])
-    .then(user => {
-      res.locals[localKey] = user;
-      next();
-    })
-    .catch(next);
-};
+export const getUser: Middleware['getUser'] =
+  projection => localKey => (req, res, next) => {
+    service
+      .getUser(res.locals[localKey], projection)
+      .then(user => {
+        res.locals[localKey] = user;
+        next();
+      })
+      .catch(next);
+  };
 
 export const findCoaches: MiddlewareFunction = (req, res, next) => {
   if (!res.locals.filters || Object.keys(res.locals.filters).length < 0) {

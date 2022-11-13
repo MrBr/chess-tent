@@ -44,8 +44,8 @@ application.service.registerPostRoute(
 
   // Email the coach
   toLocals('coach', req => ({ id: req.body.coachId })),
-  getUser('coach'),
-  getUser('me'),
+  getUser('+email')('coach'),
+  getUser('+email')('me'),
   sendMail((req, res) => ({
     from: 'Chess Tent <noreply@chesstent.com>',
     to: res.locals.coach.email,
@@ -86,9 +86,9 @@ application.service.registerPutRoute(
   validateMentorshipUpdate,
   resolveMentorshipRequest,
   toLocals('coach', req => ({ id: req.body.coachId })),
-  getUser('coach'),
+  getUser('+email')('coach'),
   toLocals('student', req => ({ id: req.body.studentId })),
-  getUser('student'),
+  getUser('+email')('student'),
   conditional(req => req.body.approved)(
     sendMail((req, res) => ({
       from: 'Chess Tent <noreply@chesstent.com>',

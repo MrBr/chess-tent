@@ -81,13 +81,13 @@ application.service.registerPostRoute(
   '/invite-user',
   identify,
   toLocals('user.email', req => req.body.email),
-  getUser('user'),
+  getUser('+email')('user'),
   validate((req, res) => {
     if (res.locals?.user?.email) {
       throw new UserAlreadyExists();
     }
   }),
-  getUser('me'),
+  getUser('+email')('me'),
   sendMail((req, res) => ({
     from: 'Chess Tent <noreply@chesstent.com>',
     to: req.body.email,
@@ -133,7 +133,7 @@ application.service.registerGetRoute(
   '/me',
   identify,
   updateUserActivity,
-  getUser('me'),
+  getUser()('me'),
   sendData('me'),
 );
 
@@ -141,7 +141,7 @@ application.service.registerGetRoute(
   '/user/:userId',
   identify,
   toLocals('user.id', req => req.params.userId),
-  getUser('user'),
+  getUser()('user'),
   sendData('user'),
 );
 
@@ -171,7 +171,7 @@ application.service.registerPostRoute(
 application.service.registerPostRoute(
   '/user/forgot-password',
   toLocals('user', req => ({ email: req.body.email })),
-  getUser('user'),
+  getUser('+email')('user'),
   // This gives some information about existing user email even if somebody is faking.
   // Response could always be positive to hide that information.
   // However, if email is taken can still be validated on registration.
@@ -211,7 +211,7 @@ application.service.registerPostRoute(
         process.env.TOKEN_RESET_SECRET as string,
       ).user,
   ),
-  getUser('user'),
+  getUser('+email')('user'),
   // Additional layer of security, if somebody randomly gets token still has to know email
   validate((req, res) => {
     if (res.locals.user?.email !== req.body.email) {

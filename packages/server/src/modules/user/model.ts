@@ -15,6 +15,7 @@ const userSchema = db.createSchema<NormalizedUser>(
       type: String,
       required: true,
       unique: true,
+      select: false,
     } as unknown as string,
     password: {
       type: String,

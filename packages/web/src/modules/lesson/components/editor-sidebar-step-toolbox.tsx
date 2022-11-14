@@ -12,8 +12,7 @@ import {
 } from '@chess-tent/models';
 import { over } from 'lodash';
 
-const { Button, Icon, Modal, ModalBody, Headline4, Tooltip, OverlayTrigger } =
-  ui;
+const { Button, Icon, Modal, Headline4, Tooltip, OverlayTrigger } = ui;
 const { useCopyStep, usePrompt } = hooks;
 const { StepToolbox } = components;
 const { getStepPosition, getStepBoardOrientation } = services;
@@ -63,7 +62,7 @@ const EditorStepToolbox: Components['EditorStepToolbox'] = ({
 
   const [pasteModal, promptPasteModal] = usePrompt(close => (
     <Modal close={close} show>
-      <ModalBody>
+      <Modal.Body>
         <Headline4>
           Replace current step with copied step or add as child?
         </Headline4>
@@ -77,7 +76,7 @@ const EditorStepToolbox: Components['EditorStepToolbox'] = ({
         <Button size="extra-small" onClick={over(pasteAdd, close)}>
           Add
         </Button>
-      </ModalBody>
+      </Modal.Body>
     </Modal>
   ));
 

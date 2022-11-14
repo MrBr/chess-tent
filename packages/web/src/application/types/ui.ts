@@ -19,7 +19,6 @@ import {
   FormLabelProps,
   FormCheckProps,
   InputGroup,
-  ModalBody,
   ModalProps as BModalProps,
   Modal as BModal,
   RowProps,
@@ -462,7 +461,6 @@ export type UI = {
     Footer: typeof BModal['Footer'];
     Dialog: typeof BModal['Dialog'];
   };
-  ModalBody: typeof ModalBody;
   Confirm: UIComponent<ConfirmProps>;
   Toast: ComponentType<ToastProps>;
   ToastBody: ComponentType<ComponentProps<typeof ToastBody>>;

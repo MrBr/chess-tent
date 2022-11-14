@@ -1,10 +1,8 @@
 import React, { FunctionComponent } from 'react';
 import application from '@application';
 import { default as BModal } from 'react-bootstrap/Modal';
-import ModalBody from 'react-bootstrap/ModalBody';
-import styled from '@emotion/styled';
 import { ConfirmProps } from '@types';
-import { css } from '@chess-tent/styled-props';
+import styled, { css } from '@chess-tent/styled-props';
 
 import { Button } from './Button';
 import Absolute from './Absolute';
@@ -13,6 +11,7 @@ import Icon from './Icon';
 const { className: contentClassName } = css`
   border: 0;
   border-radius: 16px;
+  max-height: calc(100vh - 50px);
 `;
 
 const { className: backdropClassName } = css`
@@ -26,6 +25,7 @@ const { className: fullScreenDialogClassName } = css`
   height: 100%;
   margin: 0;
   transition: none !important;
+
   .modal-content {
     width: 100%;
     height: 100%;
@@ -65,41 +65,49 @@ Modal.defaultProps = {
   show: true,
 };
 Modal.Header = BModal.Header;
-Modal.Body = BModal.Body;
+Modal.Body = styled(BModal.Body).css`
+  height: 100%;
+  overflow: auto;
+`;
 Modal.Footer = BModal.Footer;
 Modal.Dialog = BModal.Dialog;
 
-const Confirm = styled<FunctionComponent<ConfirmProps>>(
-  ({ title, message, okText, cancelText, onOk, onCancel, autoClose }) => (
-    <>
-      <Modal.Header>{title}</Modal.Header>
-      <Modal.Body>{message}</Modal.Body>
-      <Modal.Footer>
-        <Button
-          onClick={() => {
-            onOk();
-            autoClose && autoClose();
-          }}
-          size="extra-small"
-          variant="secondary"
-        >
-          {okText}
-        </Button>
-        <Button
-          onClick={() => {
-            onCancel();
-            autoClose && autoClose();
-          }}
-          size="extra-small"
-          variant="tertiary"
-        >
-          {cancelText}
-        </Button>
-      </Modal.Footer>
-    </>
-  ),
-)({});
+const Confirm: FunctionComponent<ConfirmProps> = ({
+  title,
+  message,
+  okText,
+  cancelText,
+  onOk,
+  onCancel,
+  autoClose,
+}) => (
+  <>
+    <Modal.Header>{title}</Modal.Header>
+    <Modal.Body>{message}</Modal.Body>
+    <Modal.Footer>
+      <Button
+        onClick={() => {
+          onOk();
+          autoClose && autoClose();
+        }}
+        size="extra-small"
+        variant="secondary"
+      >
+        {okText}
+      </Button>
+      <Button
+        onClick={() => {
+          onCancel();
+          autoClose && autoClose();
+        }}
+        size="extra-small"
+        variant="tertiary"
+      >
+        {cancelText}
+      </Button>
+    </Modal.Footer>
+  </>
+);
 
 application.ui.Modal = Modal;
-application.ui.ModalBody = ModalBody;
 application.ui.Confirm = Confirm;

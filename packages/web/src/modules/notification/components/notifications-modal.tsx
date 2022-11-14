@@ -3,7 +3,7 @@ import reverse from 'lodash/reverse';
 import { ui, components, hooks } from '@application';
 import { useLoadMoreNotifications } from '../hooks';
 
-const { Headline3, ModalBody, Modal, Dropdown, LoadMore } = ui;
+const { Headline3, Modal, Dropdown, LoadMore } = ui;
 const { NotificationRender } = components;
 const { useActiveUserNotifications } = hooks;
 
@@ -18,7 +18,7 @@ const NotificationModal = ({ close }: { close: () => void }) => {
 
   return (
     <Modal show scrollable close={close}>
-      <ModalBody>
+      <Modal.Body>
         <Headline3 className="mt-0">Notifications</Headline3>
         {reversedNotifications?.map(notification => (
           <div key={notification.id} onClick={close}>
@@ -34,7 +34,7 @@ const NotificationModal = ({ close }: { close: () => void }) => {
           loading={loading}
           noMore={noMore}
         />
-      </ModalBody>
+      </Modal.Body>
     </Modal>
   );
 };

@@ -197,6 +197,7 @@ const EditorBoard: VariationModule['EditorBoard'] = ({
       onReset={resetHandle}
       onClear={clearHandle}
       onPGN={onPGN}
+      lastMove={move?.move}
     />
   );
 };

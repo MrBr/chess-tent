@@ -124,6 +124,8 @@ export interface ChessboardProps {
   editing?: boolean;
   allowAllMoves?: boolean;
   movableColor?: MovableColor;
+  lastMove?: Move;
+  showLastMove?: boolean;
 
   // Footer props
   onUpdateEditing?: (editing: boolean) => void;

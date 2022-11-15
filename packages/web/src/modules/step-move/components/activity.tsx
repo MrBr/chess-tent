@@ -7,11 +7,11 @@ const { LessonToolboxText, LessonPlaygroundContent } = components;
 const ActivityBoard: MoveModule['ActivityBoard'] = ({ Chessboard, step }) => {
   const {
     state: {
-      move: { position },
+      move: { position, move },
       shapes,
     },
   } = step;
-  return <Chessboard fen={position} autoShapes={shapes} />;
+  return <Chessboard fen={position} autoShapes={shapes} lastMove={move} />;
 };
 
 const ActivitySidebar: MoveModule['ActivitySidebar'] = ({ step }) => {

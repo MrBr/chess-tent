@@ -12,7 +12,9 @@ const ActivityBoard: VariationModule['ActivityBoard'] = ({
     state: { move, shapes },
   } = step;
   const position = move ? move.position : (step.state.position as FEN);
-  return <Chessboard fen={position} autoShapes={shapes} />;
+  return (
+    <Chessboard fen={position} autoShapes={shapes} lastMove={move?.move} />
+  );
 };
 
 const ActivitySidebar: VariationModule['ActivitySidebar'] = ({ step }) => {

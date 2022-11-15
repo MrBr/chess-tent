@@ -117,6 +117,7 @@ const EditorBoard: MoveModule['EditorBoard'] = ({
       move: { position },
       orientation,
       editing,
+      move,
     },
   } = step;
 
@@ -227,6 +228,7 @@ const EditorBoard: MoveModule['EditorBoard'] = ({
       onShapesChange={updateShapes}
       shapes={shapes}
       onPGN={onPGN}
+      lastMove={move.move}
     />
   );
 };

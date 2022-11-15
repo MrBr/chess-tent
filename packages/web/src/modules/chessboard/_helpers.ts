@@ -65,6 +65,8 @@ export function unfreeze<T>(value: T): T {
 
 export const ChessgroundMappedProps: ChessgroundMappedPropsType = {
   viewOnly: 'viewOnly',
+  lastMove: 'lastMove',
+  showLastMove: 'highlight.lastMove',
   fen: (board, update) => {
     // Chessground needs legal moves list in "strict mode";
     // Legal moves are resolved bellow

@@ -64,34 +64,49 @@ export const findCoaches = (
   }>,
   options?: WithPagination,
 ): Promise<User[]> => {
-  const query: FilterQuery<AppDocument<NormalizedUser>> =
+  const infoQuery: FilterQuery<AppDocument<NormalizedUser>> =
     utils.notNullOrUndefined({
       coach: true,
       name: filters.name,
     });
+  const query: { $and: FilterQuery<AppDocument<NormalizedUser>>[] } = {
+    $and: [infoQuery],
+  };
 
   if (filters.studentElo) {
+    const rangeQuery: FilterQuery<AppDocument<NormalizedUser>>[] = [];
+    query.$and.push({ $or: rangeQuery });
     if (filters.studentElo.from) {
-      query['state.studentEloMin'] = { $lte: filters.studentElo.from };
+      rangeQuery.push({
+        'state.studentEloMin': {
+          $gte: filters.studentElo.from,
+          $lte: filters.studentElo.to,
+        },
+      });
     }
 
     if (filters.studentElo.to) {
-      query['state.studentEloMax'] = { $gte: filters.studentElo.to };
+      rangeQuery.push({
+        'state.studentEloMax': {
+          $gte: filters.studentElo.from,
+          $lte: filters.studentElo.to,
+        },
+      });
     }
   }
 
   // TODO: connect tags to users
   if (filters.speciality) {
-    query['state.speciality'] = { $eq: filters.speciality };
+    infoQuery['state.speciality'] = { $eq: filters.speciality };
   }
 
   if (filters.search) {
-    query['$text'] = { $search: filters.search, $caseSensitive: false };
+    infoQuery['$text'] = { $search: filters.search, $caseSensitive: false };
   }
 
   // Check all required public info
   COACH_REQUIRED_STATE.forEach(key => {
-    query[`state.${key}`] = query[`state.${key}`] || {
+    infoQuery[`state.${key}`] = infoQuery[`state.${key}`] || {
       $exists: true,
       $ne: '',
     };

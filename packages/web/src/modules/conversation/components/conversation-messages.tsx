@@ -8,6 +8,7 @@ import {
   User,
 } from '@chess-tent/models';
 import last from 'lodash/last';
+
 import useLoadMoreMessages from '../hooks/useLoadMoreMessages';
 import ConversationMessage from './conversation-message';
 
@@ -77,21 +78,18 @@ const ConversationMessages = ({
             noMore={noMore}
           />
           {messages?.reduce<ReactElement[]>((result, message, index) => {
+            const prevMessage = messages[index - 1];
             const messageOwner = getParticipant(
               conversation,
               message.owner,
             ) as User;
-            const lastMessageOwner = getParticipant(
-              conversation,
-              messages[index - 1]?.owner,
-            );
 
             result.push(
               <ConversationMessage
                 message={message.message}
                 activeUser={activeUser}
                 messageOwner={messageOwner}
-                lastMessageOwner={lastMessageOwner}
+                prevMessage={prevMessage}
                 timestamp={message.timestamp}
                 key={message.id}
               />,

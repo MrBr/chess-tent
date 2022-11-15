@@ -24,6 +24,7 @@ const { useApi } = hooks;
 interface ChaptersImportProps {
   close: () => void;
   lessons: RecordValue<Lesson[]>;
+  importedChapters: Chapter[];
   onImport: (chapters: Chapter[]) => void;
 }
 
@@ -31,6 +32,7 @@ interface ChaptersOptionProps {
   label: string;
   onClick: () => void;
   checked: boolean;
+  imported?: boolean;
   className?: string;
 }
 
@@ -40,17 +42,40 @@ const { className: modalClassName } = css`
 `;
 
 const ChapterOption = styled(
-  ({ onClick, label, checked, className }: ChaptersOptionProps) => {
+  ({ onClick, label, checked, className, imported }: ChaptersOptionProps) => {
     return (
-      <Row className={className} onClick={onClick}>
+      <Row
+        className={`${className} align-items-center`}
+        onClick={imported ? undefined : onClick}
+      >
         <Col xs={1}>
-          <Check checked={checked} onChange={noop} />
+          <Check
+            checked={checked || imported}
+            onChange={noop}
+            disabled={imported}
+          />
         </Col>
         <Col>
-          <Text className="m-0" fontSize="small">
+          <Text
+            className="m-0"
+            fontSize="small"
+            color={imported ? 'grey' : 'black'}
+          >
             {label || 'Unnamed chapter'}
           </Text>
         </Col>
+        {imported && (
+          <Col className="col-auto">
+            <Text
+              fontSize="smallest"
+              inline
+              className="m-0 float-end"
+              color="grey"
+            >
+              imported
+            </Text>
+          </Col>
+        )}
       </Row>
     );
   },
@@ -66,6 +91,7 @@ export const ChaptersImport = ({
   close,
   lessons,
   onImport,
+  importedChapters,
 }: ChaptersImportProps) => {
   const [selectedLesson, setSelectedLesson] = useState<Lesson>();
   const [chapters, setChapters] = useState<Record<string, Chapter>>({});
@@ -184,6 +210,9 @@ export const ChaptersImport = ({
             />
             {selectedLesson.state.chapters.map(chapter => (
               <ChapterOption
+                imported={
+                  !!importedChapters.find(({ id }) => id === chapter.id)
+                }
                 key={chapter.id}
                 label={chapter.state.title}
                 onClick={() => toggleChapter(chapter)}

@@ -58,7 +58,11 @@ export const ActivityRendererStepper = <
   const { value: user } = useActiveUserRecord();
   const [showStepper, setShowStepper] = useState<boolean>(false);
   const [chapterImportModal, promptChapterImport] = usePrompt(close => (
-    <ChaptersImport close={close} onImport={importChapters as () => void} />
+    <ChaptersImport
+      close={close}
+      onImport={importChapters as () => void}
+      importedChapters={lesson.state.chapters}
+    />
   ));
 
   const hideMoves = activity.state.hideMoves && isStudent(activity, user);

@@ -228,17 +228,21 @@ export const isLessonActivity = (activity: LessonActivity) =>
 
 export const importLessonActivityChapters = createService(
   (draft: LessonActivity, chapters: Chapter[]) => {
-    if (chapters.length === 0) {
+    const uniqueChapters = chapters.filter(
+      chapter =>
+        !draft.subject.state.chapters.find(({ id }) => id === chapter.id),
+    );
+    if (uniqueChapters.length === 0) {
       return;
     }
-    chapters.forEach(chapter => {
+    uniqueChapters.forEach(chapter => {
       draft.subject.state.chapters.push(chapter);
     });
     const boardState = getLessonActivityBoardState(
       draft,
       draft.state.mainBoardId,
     );
-    updateActivityActiveChapter(draft, boardState, chapters[0]);
+    updateActivityActiveChapter(draft, boardState, uniqueChapters[0]);
     return draft;
   },
 );

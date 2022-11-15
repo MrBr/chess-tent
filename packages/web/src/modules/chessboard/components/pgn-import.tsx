@@ -2,7 +2,18 @@ import React, { useRef, useEffect, useState } from 'react';
 import { hoc, ui } from '@application';
 import { FileUploaderProps } from '@types';
 
-const { Modal, Button, Input, FormGroup, Label, Col, Row, Text } = ui;
+const {
+  Modal,
+  Button,
+  Input,
+  FormGroup,
+  Label,
+  Col,
+  Row,
+  Text,
+  OverlayTrigger,
+  Tooltip,
+} = ui;
 const { withFiles } = hoc;
 
 const CharsLimit = 50000;
@@ -77,28 +88,38 @@ const PGNModal = withFiles(
         </Modal.Body>
         <Modal.Footer>
           <Col>
-            <Text className="mb-0" fontSize="small">
+            <Text className="mb-0" fontSize="extra-small">
               Size limit:
             </Text>
             <Text
               color={isValidPgn ? 'black' : 'error'}
-              fontSize="extra-small"
+              fontSize="smallest"
               className="mb-0"
             >
               {charsCount}/{CharsLimit}
             </Text>
           </Col>
-          <Button
-            onClick={() => handleImport(true)}
-            size="extra-small"
-            variant="text"
-            className="p-0 me-3"
+          <OverlayTrigger overlay={<Tooltip>Create new chapter(s)</Tooltip>}>
+            <span>
+              <Button
+                onClick={() => handleImport(true)}
+                size="extra-small"
+                variant="tertiary"
+                className="me-3"
+              >
+                Add chapters
+              </Button>
+            </span>
+          </OverlayTrigger>
+          <OverlayTrigger
+            overlay={<Tooltip>Add variations to the current chapter</Tooltip>}
           >
-            Import as chapters
-          </Button>
-          <Button onClick={() => handleImport(false)} size="small">
-            Import
-          </Button>
+            <span>
+              <Button onClick={() => handleImport(false)} size="extra-small">
+                Add steps
+              </Button>
+            </span>
+          </OverlayTrigger>
         </Modal.Footer>
       </Modal>
     );

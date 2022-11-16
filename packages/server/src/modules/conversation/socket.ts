@@ -1,6 +1,6 @@
-import { socket } from '@application';
+import { socket, service } from '@application';
 import { ACTION_EVENT, SEND_MESSAGE, UPDATE_ENTITY } from '@chess-tent/types';
-import { Message, TYPE_MESSAGE } from '@chess-tent/models';
+import { Message, TYPE_MESSAGE, UserWithEmail } from '@chess-tent/models';
 import {
   addMessageToConversation,
   getConversation,
@@ -21,13 +21,17 @@ socket.registerMiddleware(async (stream, next) => {
       ({ id }) => id === action.payload.owner,
     );
     const shouldSendEmail = shouldEmailMessage(conversation, action.payload);
-    conversation.users.forEach(user => {
+    conversation.users.map(async user => {
       if (sender && user.id !== sender.id) {
+        const userWithEmail = (await service.getUser(
+          { id: user.id },
+          '+email',
+        )) as UserWithEmail;
         socket.sendAction(`user-${user.id}`, stream);
         shouldSendEmail &&
           sendMessageNotificationViaEmail(
             sender,
-            user,
+            userWithEmail,
             action.payload.message,
           ).catch(console.error);
       }

@@ -5,6 +5,7 @@ import {
   NormalizedMessage,
   User,
   updateMessage,
+  UserWithEmail,
 } from '@chess-tent/models';
 import { Pagination } from '@chess-tent/types';
 import { MessageModel, ConversationModel, depopulate } from './model';
@@ -187,7 +188,7 @@ export const shouldEmailMessage = (
 
 export const sendMessageNotificationViaEmail = async (
   sender: User,
-  user: User,
+  user: UserWithEmail,
   message: string,
 ) => {
   await sendMail({

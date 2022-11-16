@@ -25,7 +25,7 @@ export interface User extends Subject {
   id: string;
   nickname: string;
   name: string;
-  email: string;
+  email?: string;
   type: typeof TYPE_USER;
   password?: string;
   coach?: boolean;
@@ -68,8 +68,12 @@ export interface NormalizedUser {
   name: User['name'];
   active: User['active'];
   nickname: User['nickname'];
-  email: User['email'];
+  email?: User['email'];
   password?: User['password'];
   coach?: User['coach'];
   state: User['state'];
 }
+
+export type UserWithEmail = User & {
+  email: string;
+};

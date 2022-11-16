@@ -7,4 +7,6 @@ export type Constants = {
   MOBILE_ROOT_KEY: string;
   MAX_BOARD_SIZE: number;
   APP_DOMAIN: string;
+  ToS_PATH: string;
+  PP_PATH: string;
 };

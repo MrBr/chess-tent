@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { RegisterOptions } from '@chess-tent/types';
-import { ui, hooks, requests } from '@application';
+import { ui, hooks, requests, components, constants } from '@application';
 import * as yup from 'yup';
+import { User } from '@chess-tent/models';
 
 import AuthPage from '../components/auth-page';
 import RegistrationFooter from '../components/registration-footer';
@@ -11,6 +12,7 @@ import { registrationFlows } from '../constants';
 
 const { useApi, useHistory, useQuery, useActiveUserRecord } = hooks;
 const { Icon, Form, Button, FormGroup, Label, Col, Row, ToggleButton } = ui;
+const { Link } = components;
 
 const SignupSchema = yup.object().shape({
   name: yup.string().min(2, 'Too Short!').max(70, 'Too Long!').required(),
@@ -18,7 +20,17 @@ const SignupSchema = yup.object().shape({
   nickname: yup.string().min(4, 'Too Short!').max(16, 'Too Long!').required(),
   email: yup.string().email('Invalid email').required(),
   coach: yup.boolean(),
+  docsAccepted: yup.boolean().oneOf([true]).required(),
 });
+
+interface SignupData {
+  name: string;
+  password: string;
+  nickname: string;
+  email: string;
+  coach: boolean;
+  docsAccepted: boolean;
+}
 
 const resolveFlow = (flow: RegisterOptions['flow'], coach?: boolean) => {
   return flow || (coach ? 'teach' : 'student');
@@ -44,7 +56,13 @@ const PageRegister = () => {
     }
   }, [response, error, history, update, flow, loggedInPath]);
 
-  const handleSubmit = ({ ...user }) => {
+  const handleSubmit = ({ docsAccepted, ...basicUserData }: SignupData) => {
+    const user: Partial<User> = {
+      ...basicUserData,
+      state: {
+        acceptedDocsDate: new Date(),
+      },
+    };
     fetch({
       user,
       options: query,
@@ -59,6 +77,7 @@ const PageRegister = () => {
         nickname: '',
         name: '',
         coach: flow === 'teach',
+        docsAccepted: false,
       }}
       validationSchema={SignupSchema}
       onSubmit={handleSubmit}
@@ -143,6 +162,25 @@ const PageRegister = () => {
                       </Row>
                     </FormGroup>
                   )}
+                  <FormGroup className="mt-4">
+                    <Row>
+                      <Col className="col-auto">
+                        <Form.Check name="docsAccepted" required />
+                      </Col>
+                      <Col>
+                        <Label>
+                          By clicking on checkbox, you agree with Chess Tent{' '}
+                          <Link to={constants.ToS_PATH} target="_blank">
+                            Terms of Services
+                          </Link>{' '}
+                          &{' '}
+                          <Link to={constants.PP_PATH} target="_blank">
+                            Privacy Policy
+                          </Link>
+                        </Label>
+                      </Col>
+                    </Row>
+                  </FormGroup>
                   {error && (
                     <FormGroup>
                       <Label>{error}</Label>

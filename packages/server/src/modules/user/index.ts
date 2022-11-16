@@ -1,8 +1,10 @@
 import application from '@application';
-import { getUser } from './middleware';
+import { getUser as getUserMiddleware } from './middleware';
+import { getUser as getUserService } from './service';
 
 import './routes';
 
-application.middleware.getUser = getUser;
+application.middleware.getUser = getUserMiddleware;
+application.service.getUser = getUserService;
 
 application.register(() => import('./socket'));

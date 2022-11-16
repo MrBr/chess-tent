@@ -133,6 +133,11 @@ export type Auth = {
 };
 
 export type Service = {
+  getUser: (
+    userDescr: Partial<User>,
+    projection?: string,
+  ) => Promise<User | null>;
+
   generateIndex: () => string;
   sendMail: (data: MailData) => Promise<
     | {

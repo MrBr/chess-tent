@@ -1,5 +1,6 @@
 const CracoAlias = require('craco-alias');
 const webpack = require('webpack');
+const cracoDocsDatePlugin = require('./scripts/cracoDocsDatePlugin');
 
 // TODO - fix deprecation warnings
 module.exports = {
@@ -25,6 +26,7 @@ module.exports = {
         tsConfigPath: './tsconfig.paths.json',
       },
     },
+    cracoDocsDatePlugin,
     {
       plugin: {
         overrideWebpackConfig: ({ webpackConfig, context: { env } }) => {

@@ -16,7 +16,7 @@ const MentorshipActionButton = (({
   return (
     <Button
       size={size}
-      onClick={() => update(!mentorship.approved)}
+      onClick={() => update(!!approve)}
       disabled={loading || approve === mentorship.approved}
       variant={approve ? 'primary' : 'secondary'}
       className={className}

@@ -47,6 +47,7 @@ export interface User extends Subject {
     languages?: string[];
     country?: string;
     fideTitle?: FideTitles;
+    acceptedDocsDate?: Date;
     role?: {
       level?: Difficulty;
       tags?: Tag[];

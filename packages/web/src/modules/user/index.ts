@@ -17,6 +17,7 @@ application.register(
   },
 );
 application.register(() => import('./providers/active-user'));
+application.register(() => import('./providers/docs-validator'));
 application.register(() => import('./providers/post-registration-wizard'));
 application.register(() => import('./routes'));
 application.register(() => import('./requests'));

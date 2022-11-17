@@ -244,8 +244,14 @@ class Chessboard
     this.api.setAutoShapes([...propsAutoShapes, ...evaluationShapes]);
   }
 
-  getState() {
-    return this.api.state;
+  getStateProp<T extends keyof Api['state']>(key: T) {
+    // This is a MUST because immer later freezes the references,
+    // and CG under the hood tries to mutate it.
+    // JSON stringify/parse makes a deep copy of the object.
+    const value = this.api.state[key];
+    return typeof value === 'object'
+      ? JSON.parse(JSON.stringify(value))
+      : (value as Api['state'][T]);
   }
 
   removeShape(shape: DrawShape) {
@@ -338,7 +344,8 @@ class Chessboard
   onRotate = () => {
     const { onOrientationChange } = this.props;
     this.api.toggleOrientation();
-    onOrientationChange && onOrientationChange(this.api.state.orientation);
+    onOrientationChange &&
+      onOrientationChange(this.getStateProp('orientation'));
   };
 
   onUpdateEditing = (editing: boolean) => {
@@ -420,8 +427,8 @@ class Chessboard
 
   onMove = (orig: ExtendedKey, dest: ExtendedKey, metadata: MoveMetadata) => {
     const { onMove, editing } = this.props;
-    const lastMove = this.api.state.lastMove as Move;
-    const piece = this.api.state.pieces[lastMove[1]] as Piece;
+    const lastMove = this.getStateProp('lastMove') as Move;
+    const piece = this.getStateProp('pieces')[lastMove[1]] as Piece;
     const rank = parseInt(dest.charAt(1));
     const captured =
       !!metadata.captured ||

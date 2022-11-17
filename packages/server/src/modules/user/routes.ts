@@ -81,7 +81,7 @@ application.service.registerPostRoute(
   ),
   createInitialFounderConversation,
 
-  catchError(welcomeMailMiddleware),
+  catchError(welcomeMailMiddleware)(),
   webLogin,
   sendData('user'),
 );

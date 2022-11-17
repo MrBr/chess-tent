@@ -187,7 +187,7 @@ export type Service = {
 export type MailData = Parameters<Messages['send']>[0];
 export type Middleware = {
   conditional: (
-    controller: MiddlewareFunction<boolean>,
+    controller: MiddlewareFunction<boolean | Promise<boolean>>,
   ) => (...args: MiddlewareFunction[]) => MiddlewareFunction;
   identify: (...args: Parameters<RequestHandler>) => void;
   errorHandler: ErrorRequestHandler;
@@ -216,7 +216,9 @@ export type Middleware = {
   // Useful to intercept non-blocking errors.
   catchError: (
     middleware: MiddlewareFunction,
-  ) => (...args: Parameters<RequestHandler>) => void;
+  ) => (
+    catchMiddleware?: MiddlewareFunction,
+  ) => (...args: Parameters<RequestHandler>) => Promise<void>;
   webLogin: (...args: Parameters<RequestHandler>) => void;
   webLogout: (...args: Parameters<RequestHandler>) => void;
   sendStatusOk: (...args: Parameters<RequestHandler>) => void;

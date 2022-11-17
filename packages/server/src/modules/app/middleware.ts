@@ -25,6 +25,7 @@ export const sendData: Middleware['sendData'] =
 
 export const catchError: Middleware['catchError'] =
   middleware =>
+  catchMiddleware =>
   async (...args) => {
     const next = args[2];
     try {
@@ -38,6 +39,7 @@ export const catchError: Middleware['catchError'] =
        `,
         e,
       );
+      catchMiddleware && catchMiddleware(...args);
       next();
     }
   };
@@ -97,7 +99,13 @@ const execChainedMiddleware = async (
 export const conditional: Middleware['conditional'] =
   test =>
   (...chainedMiddleware) =>
-  async (...args) =>
-    test(...args)
-      ? execChainedMiddleware(chainedMiddleware, ...args)
-      : args[2]();
+  async (...args) => {
+    const next = args[2];
+    try {
+      (await test(...args))
+        ? execChainedMiddleware(chainedMiddleware, ...args)
+        : next();
+    } catch (e) {
+      next(e);
+    }
+  };

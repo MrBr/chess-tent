@@ -14,7 +14,11 @@ import {
 } from './middleware';
 import { getUser as getUserService } from './service';
 import { MissingContactDetailsError, UserAlreadyExists } from './errors';
-import { introMessagesCoach, introMessagesStudent } from './constants';
+import {
+  introMessagesCoach,
+  introMessagesInvitedStudent,
+  introMessagesStudent,
+} from './constants';
 
 const { generateToken, verifyToken } = service;
 const { formatAppLink } = utils;
@@ -31,6 +35,7 @@ const {
   addMentor,
   createInitialFounderConversation,
   catchError,
+  conditional,
 } = middleware;
 
 application.service.registerPostRoute(
@@ -64,11 +69,15 @@ application.service.registerPostRoute(
   // mentorship flow
   toLocals('studentId', (req, res) => res.locals.user.id),
   toLocals('coachId', req => req.body.options.referrer),
-  addMentor,
+  conditional((req, res) => !!res.locals.coachId)(addMentor),
   // Initial founder message flow
   toLocals('founder', () => getUserService({ id: process.env.FOUNDER_ID })),
   toLocals('rawMessages', (req, res) =>
-    res.locals.user.coach ? introMessagesCoach : introMessagesStudent,
+    res.locals.user.coach
+      ? introMessagesCoach
+      : res.locals.mentorship
+      ? introMessagesInvitedStudent
+      : introMessagesStudent,
   ),
   createInitialFounderConversation,
 

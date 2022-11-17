@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { components, hooks, ui } from '@application';
 import { User } from '@chess-tent/models';
 import Welcome from './welcome';
@@ -15,6 +15,7 @@ const {
   useOpenTemplate,
   useHistory,
   useInviteUser,
+  useQuery,
 } = hooks;
 
 const DashboardCoach = ({ user }: { user: User }) => {
@@ -24,6 +25,7 @@ const DashboardCoach = ({ user }: { user: User }) => {
   const [trainingModal, promptNewTrainingModal] = usePromptNewTrainingModal();
   const lessons = useMyLessons();
   const history = useHistory();
+  const { training } = useQuery<{ training?: 'true' }>();
   const [inviteUserOffcanvas, promptInvite] = useInviteUser();
 
   const handleTemplateClick = useOpenTemplate();
@@ -34,6 +36,15 @@ const DashboardCoach = ({ user }: { user: User }) => {
     trainings.meta.loaded &&
     scheduledTrainings.meta.loaded &&
     students.meta.loaded;
+
+  // This is a temp solution to open the training modal through a link
+  useEffect(() => {
+    if (training) {
+      promptNewTrainingModal();
+    }
+    // Only valid on mount
+    // eslint-disable-next-line
+  }, []);
 
   if (!didLoad) {
     return null;

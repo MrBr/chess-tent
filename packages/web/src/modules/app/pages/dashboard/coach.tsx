@@ -25,7 +25,8 @@ const DashboardCoach = ({ user }: { user: User }) => {
   const [trainingModal, promptNewTrainingModal] = usePromptNewTrainingModal();
   const lessons = useMyLessons();
   const history = useHistory();
-  const { training } = useQuery<{ training?: 'true' }>();
+  const { training, invite } =
+    useQuery<{ training?: 'true'; invite?: 'true' }>();
   const [inviteUserOffcanvas, promptInvite] = useInviteUser();
 
   const handleTemplateClick = useOpenTemplate();
@@ -41,6 +42,9 @@ const DashboardCoach = ({ user }: { user: User }) => {
   useEffect(() => {
     if (training) {
       promptNewTrainingModal();
+    }
+    if (invite) {
+      promptInvite();
     }
     // Only valid on mount
     // eslint-disable-next-line

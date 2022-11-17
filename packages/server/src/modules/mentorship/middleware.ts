@@ -4,16 +4,12 @@ import { UnauthorisedMentorshipAction } from './error';
 
 export const addMentor: MiddlewareFunction = async (req, res, next) => {
   try {
-    if (!res.locals.coachId || !res.locals.studentId) {
-      next();
-      return;
-    }
-    await service.requestMentorship(res.locals.studentId, res.locals.coachId);
-    await service.resolveMentorshipRequest(
+    const mentorship = await service.requestMentorship(
       res.locals.studentId,
       res.locals.coachId,
       true,
     );
+    res.locals.mentorship = mentorship;
     next();
   } catch (e) {
     next(e);

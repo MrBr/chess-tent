@@ -1,9 +1,13 @@
 import { Mentorship, User } from '@chess-tent/models';
 import { MentorshipModel } from './model';
 
-export const requestMentorship = (student: User['id'], coach: User['id']) =>
+export const requestMentorship = (
+  student: User['id'],
+  coach: User['id'],
+  approved?: boolean,
+) =>
   new Promise(resolve => {
-    MentorshipModel.create({ student, coach })
+    MentorshipModel.create({ student, coach, approved: approved })
       .then(result => {
         result
           .populate('student')

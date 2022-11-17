@@ -493,8 +493,7 @@ export const AboutPage = () => {
               </Headline3>
               <Text fontSize="small" align="center">
                 We are passionate about our business and strive to provide the
-                best service possible. We truly appreciate your support. Thank
-                you!
+                best service possible. We truly appreciate your support.
               </Text>
             </Col>
           </Row>

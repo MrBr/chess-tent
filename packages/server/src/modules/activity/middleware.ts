@@ -60,18 +60,18 @@ export const findActivities: MiddlewareFunction = (req, res, next) => {
     .catch(next);
 };
 
-export const canEditActivity: MiddlewareFunction = (req, res, next) => {
-  service
-    .canEditActivity(res.locals.activity.id, res.locals.me.id)
-    .then(canEdit => {
-      if (canEdit) {
-        next();
-        return;
-      }
+export const canEditActivities =
+  (key: string): MiddlewareFunction =>
+  (req, res, next) => {
+    const canEdit = service.canEditActivities(
+      res.locals[key],
+      res.locals.me.id,
+    );
+    if (!canEdit) {
       throw new UnauthorizedActivityEditError();
-    })
-    .catch(next);
-};
+    }
+    next();
+  };
 
 export const sendActivity: MiddlewareFunction = (req, res, next) => {
   const activity = res.locals.activity as Activity;

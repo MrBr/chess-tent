@@ -5,8 +5,8 @@ import {
   SUBSCRIBE_EVENT,
   UNSUBSCRIBED_EVENT,
 } from '@chess-tent/types';
-import { TYPE_ACTIVITY } from '@chess-tent/models';
-import { canEditActivity, getActivity } from './service';
+import { Activity, TYPE_ACTIVITY } from '@chess-tent/models';
+import { canEditActivities, getActivity } from './service';
 
 socket.registerMiddleware(async (stream, next) => {
   // Handle activity channel subscription
@@ -23,7 +23,8 @@ socket.registerMiddleware(async (stream, next) => {
     const activityId = roomId.substring(roomId.indexOf('-') + 1);
 
     const userId = tokenData.user.id;
-    const canJoin = await canEditActivity(activityId, userId);
+    const activity = (await getActivity(activityId)) as Activity;
+    const canJoin = await canEditActivities(activity, userId);
     if (canJoin) {
       console.log('Client joined to', roomId);
       // Joining a room implicitly requires sending a sync request
@@ -44,7 +45,6 @@ socket.registerMiddleware(async (stream, next) => {
         socket.sendServerAction(channel, sync, socket.getOwnerSocketId(roomId));
       } else {
         console.log('First user joined');
-        const activity = await getActivity(activityId);
         const sync = action.syncAction(
           activityId,
           TYPE_ACTIVITY,

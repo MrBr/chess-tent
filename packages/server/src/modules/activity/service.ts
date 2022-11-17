@@ -129,17 +129,12 @@ export const findActivities = (
       });
   });
 
-export const canEditActivity = (
-  activityId: Activity['id'],
+export const canEditActivities = (
+  activities: Activity[] | Activity,
   userId: User['id'],
 ) =>
-  new Promise(resolve => {
-    ActivityModel.findOne({
-      _id: activityId,
-    }).exec((err, result) => {
-      if (err) {
-        throw err;
-      }
-      resolve(!result || result?.roles.some(({ user }) => user === userId));
-    });
-  });
+  Array.isArray(activities)
+    ? activities
+    : [activities].every(activity =>
+        activity.roles.some(({ user }) => user.id === userId),
+      );

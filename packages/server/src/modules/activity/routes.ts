@@ -2,7 +2,7 @@ import application, { middleware } from '@application';
 import { ActivityFilters } from '@chess-tent/types';
 import { LessonActivityRole, Role, TYPE_ACTIVITY } from '@chess-tent/models';
 import {
-  canEditActivity,
+  canEditActivities,
   deleteActivity,
   findActivities,
   getActivity,
@@ -11,6 +11,8 @@ import {
   sendActivity,
   updateActivity,
 } from './middleware';
+import * as activityService from './service';
+import { UnauthorizedActivityEditError } from './errors';
 
 const {
   identify,
@@ -25,8 +27,16 @@ const {
 application.service.registerPostRoute(
   '/activity/save',
   identify,
-  toLocals('activity', req => req.body),
-  canEditActivity,
+  conditional(async (req, res) => {
+    const activity = await activityService.getActivity(req.body.id);
+    if (
+      activity &&
+      !activityService.canEditActivities(activity, res.locals.me.id)
+    ) {
+      throw new UnauthorizedActivityEditError();
+    }
+    return true;
+  })(toLocals('activity', async (req, res) => req.body)),
   saveActivity,
 
   // Notification flow
@@ -60,7 +70,8 @@ application.service.registerPostRoute(
   identify,
   toLocals('activity.id', req => req.params.activityId),
   toLocals('updates', req => req.body),
-  canEditActivity,
+  getActivity,
+  canEditActivities('activity'),
   updateActivity,
   sendStatusOk,
 );
@@ -70,7 +81,8 @@ application.service.registerPutRoute(
   identify,
   toLocals('activity.id', req => req.params.activityId),
   toLocals('patch', req => req.body),
-  canEditActivity,
+  getActivity,
+  canEditActivities('activity'),
   patchActivity,
   sendStatusOk,
 );
@@ -89,6 +101,7 @@ application.service.registerPostRoute(
     }),
   ),
   findActivities,
+  canEditActivities('activities'),
   sendData('activities'),
 );
 
@@ -96,8 +109,8 @@ application.service.registerGetRoute(
   '/activity/:activityId',
   identify,
   toLocals('activity.id', req => req.params.activityId),
-  canEditActivity,
   getActivity,
+  canEditActivities('activity'),
   sendData('activity'),
 );
 
@@ -105,7 +118,8 @@ application.service.registerDeleteRoute(
   '/activity/:activityId',
   identify,
   toLocals('activity.id', req => req.params.activityId),
-  canEditActivity,
+  getActivity,
+  canEditActivities('activity'),
   deleteActivity,
   sendData('activity'),
 );

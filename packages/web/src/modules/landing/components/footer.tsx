@@ -39,7 +39,7 @@ const Header = styled<{ className?: string }>(({ className }) => (
             </li>
             <li>
               <Link
-                to="https://www.facebook.com/chesstent"
+                to={{ pathname: 'https://www.facebook.com/chesstent' }}
                 target="_blank"
                 ghost
               >
@@ -48,7 +48,7 @@ const Header = styled<{ className?: string }>(({ className }) => (
             </li>
             <li>
               <Link
-                to="https://www.instagram.com/chess.tent/"
+                to={{ pathname: 'https://www.instagram.com/chess.tent/' }}
                 target="_blank"
                 ghost
               >

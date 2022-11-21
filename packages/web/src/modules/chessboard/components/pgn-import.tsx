@@ -40,8 +40,12 @@ const PGNModal = withFiles(
         alert('PGN file too big!');
         return;
       }
-      onImport(inputRef.current.value, asChapters);
-      close();
+      try {
+        onImport(inputRef.current.value, asChapters);
+        close();
+      } catch (e) {
+        alert(e);
+      }
     };
 
     useEffect(() => {

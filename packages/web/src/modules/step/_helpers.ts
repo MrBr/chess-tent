@@ -2,6 +2,7 @@ import { ChessInstance, FEN, Orientation, Steps } from '@types';
 import { services } from '@application';
 import { PgnMove } from '@mliebelt/pgn-parser';
 import { createStepModuleStep } from './model';
+import { IllegalMoveError } from './errors';
 
 const { Chess, switchTurnColor, createNotableMoveFromChessMove } = services;
 
@@ -25,7 +26,7 @@ const transformPgnMoveToStepMove = (
   const prevPosition = chessGame.fen();
   const chessMove = chessGame.move(move.notation.notation);
   if (!chessMove) {
-    throw new Error('Illegal move occur in PGN');
+    throw new IllegalMoveError(move.moveNumber);
   }
   const position = chessGame.fen();
   const notableMove = createNotableMoveFromChessMove(

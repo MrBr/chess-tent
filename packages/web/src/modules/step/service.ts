@@ -23,6 +23,7 @@ import {
 } from '@chess-tent/models';
 import { parse, ParseTree } from '@mliebelt/pgn-parser';
 import { transformNullMoves, transformPgnVariation } from './_helpers';
+import { IllegalGameError, isIllegalMoveError } from './errors';
 
 const { START_FEN } = constants;
 
@@ -167,13 +168,27 @@ export const parsePgn: Services['parsePgn'] = (pgn, { orientation }) => {
   const eventName = games[0]?.tags?.Event;
   // Studies use Event for titles, real events use the same event name
   const isTournament = games.every(({ tags }) => tags?.Event === eventName);
-  return games.map((game, index) => ({
-    tags: game.tags,
-    variation: transformPgnVariation(game.moves, {
-      fen: game.tags?.FEN,
-      orientation,
-      comment: game.gameComment?.comment,
-    }),
-    title: getGameTitle(game.tags, isTournament, index),
-  }));
+  return games.map((game, index) => {
+    try {
+      return {
+        tags: game.tags,
+        variation: transformPgnVariation(game.moves, {
+          fen: game.tags?.FEN,
+          orientation,
+          comment: game.gameComment?.comment,
+        }),
+        title: getGameTitle(game.tags, isTournament, index),
+      };
+    } catch (e) {
+      if (isIllegalMoveError(e)) {
+        throw new IllegalGameError(
+          `${game.tags?.Event} | ${game.tags?.Round || index} - ${
+            game.tags?.White
+          }:${game.tags?.Black}
+          Error on move: ${e.moveNumber}`,
+        );
+      }
+      throw e;
+    }
+  });
 };

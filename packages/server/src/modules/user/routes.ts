@@ -15,12 +15,13 @@ import {
 import { getUser as getUserService } from './service';
 import { MissingContactDetailsError, UserAlreadyExists } from './errors';
 import {
+  DEFAULT_SIGNED_PROFILE_URL_EXPIRATION_TIME,
   introMessagesCoach,
   introMessagesInvitedStudent,
   introMessagesStudent,
 } from './constants';
 
-const { generateToken, verifyToken } = service;
+const { generateToken, verifyToken, generatePutFileSignedUrl } = service;
 const { formatAppLink } = utils;
 
 const {
@@ -175,6 +176,28 @@ application.service.registerPostRoute(
   toLocals('user', req => req.body),
   validateUser(),
   sendStatusOk,
+);
+
+// This route exists to prevent a user from overriding other images
+// In some distant future permissions should be granted per a file key
+application.service.registerPostRoute(
+  '/sign-profile-image',
+  identify,
+  async (req, res, next) => {
+    try {
+      res.locals.url = await generatePutFileSignedUrl({
+        Key: res.locals.me.id,
+        Expires: DEFAULT_SIGNED_PROFILE_URL_EXPIRATION_TIME,
+        ContentType: req.body.contentType,
+        ACL: 'public-read',
+      });
+    } catch (e) {
+      next(e);
+      return;
+    }
+    next();
+  },
+  sendData('url'),
 );
 
 application.service.registerPostRoute(

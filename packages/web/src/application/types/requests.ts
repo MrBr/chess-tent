@@ -35,6 +35,7 @@ export interface Requests {
   user: RequestFetch<Endpoints['user'], User['id']>;
   userValidate: RequestFetch<Endpoints['userValidate'], Partial<User>>;
   updateMe: RequestFetch<Endpoints['updateMe']>;
+  signProfileImageUrl: RequestFetch<Endpoints['signProfileImageUrl']>;
 
   lesson: RequestFetch<Endpoints['lesson'], Lesson['id']>;
   lessonChapters: RequestFetch<
@@ -87,7 +88,6 @@ export interface Requests {
   >;
 
   uploadImage: RequestFetch<Endpoints['uploadImage'], [string, File]>;
-  signImageUrl: RequestFetch<Endpoints['signImageUrl']>;
 
   contacts: RequestFetch<Endpoints['contacts'], [Pagination]>;
   conversations: RequestFetch<

@@ -243,6 +243,10 @@ export interface Endpoints {
     UserResponse
   >;
   logout: Endpoint<RequestGet<'/logout'>, StatusResponse>;
+  signProfileImageUrl: Endpoint<
+    RequestPost<'/sign-profile-image', { contentType: string }>,
+    SignedImageResponse
+  >;
   me: Endpoint<RequestGet<'/me'>, UserResponse>;
   updateMe: Endpoint<RequestPut<'/me', Partial<User>>, UserResponse>;
   coaches: Endpoint<RequestPost<'/coaches', UsersFilters>, UsersResponse>;
@@ -312,10 +316,6 @@ export interface Endpoints {
   >;
   // AWS - File endpoints
   uploadImage: Endpoint<RequestPut<string, File>, any>;
-  signImageUrl: Endpoint<
-    RequestPost<'/sign-image-url', { contentType: string; key: string }>,
-    SignedImageResponse
-  >;
   // Conversations endpoints
   contacts: Endpoint<
     RequestGet<WithPaginationQueryParams<`/contacts`>>,

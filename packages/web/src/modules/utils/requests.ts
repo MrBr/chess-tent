@@ -1,10 +1,4 @@
-import { requests, services } from '@application';
-import { Requests } from '@types';
-
-requests.signImageUrl = services.createRequest<Requests['signImageUrl']>(
-  'POST',
-  '/sign-image-url',
-);
+import { requests } from '@application';
 
 requests.uploadImage = (signedImageUrl, file) =>
   fetch(signedImageUrl, {

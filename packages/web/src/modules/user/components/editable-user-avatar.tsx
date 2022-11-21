@@ -36,7 +36,7 @@ const EditableUserAvatar = withFiles<EditableUserAvatarProps>(
       response: signImageResponse,
       loading: signingImage,
       reset: resetSignedImage,
-    } = useApi(requests.signImageUrl);
+    } = useApi(requests.signProfileImageUrl);
     const {
       fetch: uploadImage,
       response: uploadImageResponse,
@@ -57,7 +57,6 @@ const EditableUserAvatar = withFiles<EditableUserAvatarProps>(
         }
         signImage({
           contentType: files[0].type,
-          key: user.id,
         });
       });
     }, [files, signImage, user.id]);

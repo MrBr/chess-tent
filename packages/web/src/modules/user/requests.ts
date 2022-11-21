@@ -47,6 +47,10 @@ const userValidate = services.createRequest<Requests['userValidate']>(
   '/user/validate',
 );
 
+requests.signProfileImageUrl = services.createRequest<
+  Requests['signProfileImageUrl']
+>('POST', '/sign-profile-image');
+
 requests.contact = contact;
 requests.register = register;
 requests.forgotPassword = forgotPassword;

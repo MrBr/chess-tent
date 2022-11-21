@@ -2,6 +2,8 @@ import { utils } from '@application';
 
 const { formatAppLink } = utils;
 
+export const DEFAULT_SIGNED_PROFILE_URL_EXPIRATION_TIME = 60 * 2; // 2 min
+
 export const introMessagesCoach = [
   `Hi! I am Luka, founder of Chess Tent. I'll use this opportunity and share with you a few useful tips to get you started.`,
   `As a coach you can set up public profile by filling in the details at ${formatAppLink(

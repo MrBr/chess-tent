@@ -172,7 +172,12 @@ export type Service = {
   generateApiToken: (user: User) => string;
   verifyApiToken: (token?: string) => Auth['apiTokenPayload'] | null;
 
-  generateImgUrl: () => string;
+  generatePutFileSignedUrl: (options: {
+    Key: string;
+    Expires: number;
+    ContentType: string;
+    ACL?: string;
+  }) => Promise<string>;
   fileStorage: AWS.S3;
 
   subjectPathUpdatesToMongoose: (

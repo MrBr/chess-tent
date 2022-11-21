@@ -1,11 +1,16 @@
 import { service } from '@application';
+import { Service } from '@types';
 
 import { transformS3UrlToS3ProxyUrl } from './utils';
 
-export const getSignedUrl = async (options: any) => {
-  const signedUrl = await service.fileStorage.getSignedUrlPromise(
-    'putObject',
-    options,
-  );
-  return transformS3UrlToS3ProxyUrl(signedUrl);
-};
+export const generatePutFileSignedUrl: Service['generatePutFileSignedUrl'] =
+  async options => {
+    const signedUrl = await service.fileStorage.getSignedUrlPromise(
+      'putObject',
+      {
+        Bucket: process.env.AWS_IMAGES_BUCKET,
+        ...options,
+      },
+    );
+    return transformS3UrlToS3ProxyUrl(signedUrl);
+  };

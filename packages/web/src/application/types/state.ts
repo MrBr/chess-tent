@@ -111,7 +111,7 @@ export type State = {
       K extends keyof EntitiesState,
     >(
       entityDescriptor: T,
-      type: keyof EntitiesState,
+      type: K,
     ) => (
       state: AppState,
     ) => K extends keyof EntitiesState

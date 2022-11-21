@@ -42,6 +42,7 @@ const {
 application.service.registerPostRoute(
   '/register',
   toLocals('user', req => req.body.user),
+  toLocals('user.state.lastActivity', new Date()),
   validateUser(),
   hashPassword,
   addUser,

@@ -220,8 +220,10 @@ export type UsersFilters = {
 };
 
 export interface Endpoints {
-  // User endpoints
+  // Contact form
   contact: Endpoint<RequestPost<'/contact', ContactParams>, StatusResponse>;
+
+  // User endpoints
   register: Endpoint<
     RequestPost<'/register', RegisterRequestParams>,
     UserResponse

@@ -1,6 +1,6 @@
 import application, { middleware, service, utils } from '@application';
 import { Auth } from '@types';
-import { ContactParams, UsersFilters } from '@chess-tent/types';
+import { UsersFilters } from '@chess-tent/types';
 import {
   addUser,
   validateUser,
@@ -13,7 +13,7 @@ import {
   welcomeMailMiddleware,
 } from './middleware';
 import { getUser as getUserService } from './service';
-import { MissingContactDetailsError, UserAlreadyExists } from './errors';
+import { UserAlreadyExists } from './errors';
 import {
   DEFAULT_SIGNED_PROFILE_URL_EXPIRATION_TIME,
   introMessagesCoach,
@@ -38,28 +38,6 @@ const {
   catchError,
   conditional,
 } = middleware;
-
-application.service.registerPostRoute(
-  '/contact',
-  validate(req => {
-    const { email, name, message } = req.body as ContactParams;
-    if (!email || !name || !message) {
-      throw new MissingContactDetailsError();
-    }
-    if (!process.env.CONTACT_EMAIL) {
-      throw new Error('Missing contact email.');
-    }
-    return true;
-  }),
-  sendMail((req, res) => ({
-    from: `${req.body.name} <${req.body.email}>`,
-    to: process.env.CONTACT_EMAIL as string,
-    subject: 'Contact form message',
-    html: `<p>${req.body.name} sent a message:</p> 
-      <p>${req.body.message}</p>`,
-  })),
-  sendStatusOk,
-);
 
 application.service.registerPostRoute(
   '/register',

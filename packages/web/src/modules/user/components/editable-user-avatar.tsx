@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { css } from '@chess-tent/styled-props';
 import { components, hoc, hooks, requests, ui, utils } from '@application';
-import { updateSubject } from '@chess-tent/models';
+import { updateSubjectState } from '@chess-tent/models';
 import { FileUploaderProps } from '@types';
 
 const { UserAvatar } = components;
@@ -74,7 +74,7 @@ const EditableUserAvatar = withFiles<EditableUserAvatarProps>(
         // TODO - find a better way for unique image url
         //  `t` is added to invalidate cache
         const imageUrl = uploadImageResponse + '?t=' + Date.now();
-        update(updateSubject(user, { state: { imageUrl } }));
+        update(updateSubjectState(user, { imageUrl }));
         save();
       }
     }, [

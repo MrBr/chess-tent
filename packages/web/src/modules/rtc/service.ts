@@ -113,7 +113,7 @@ export class RTCController {
     );
     this.rtcPeerConnection.addEventListener(
       'iceconnectionstatechange',
-      this.handleConnectionStatusChange,
+      this.handleIceConectionStateChange,
     );
 
     this.syncRTCPeerConnectionTracks();
@@ -166,6 +166,14 @@ export class RTCController {
 
     this.ignoreOffer = offerCollision && !this.polite;
     if (this.ignoreOffer) {
+      // Recover if local offer was sent while nobody was listening
+      // Not sure why this is needed
+      if (
+        this.rtcPeerConnection.localDescription &&
+        this.rtcPeerConnection.signalingState === 'have-local-offer'
+      ) {
+        this.emmitOffer(this.rtcPeerConnection.localDescription);
+      }
       return;
     }
 
@@ -204,7 +212,9 @@ export class RTCController {
 
   // RTC listeners
   handleOnIceEvent = (rtcPeerConnectionIceEvent: RTCPeerConnectionIceEvent) => {
-    if (!rtcPeerConnectionIceEvent.candidate) {
+    // https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/icecandidate_event
+    // can be empty string and that's fine
+    if (rtcPeerConnectionIceEvent.candidate === null) {
       return;
     }
     this.emmitICECandidate(JSON.stringify(rtcPeerConnectionIceEvent.candidate));

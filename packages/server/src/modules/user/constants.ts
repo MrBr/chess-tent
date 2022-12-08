@@ -5,7 +5,7 @@ const { formatAppLink } = utils;
 export const DEFAULT_SIGNED_PROFILE_URL_EXPIRATION_TIME = 60 * 2; // 2 min
 
 export const introMessagesCoach = [
-  `Hi there! I am Luka, founder of Chess Tent and I am really excited to welcome you on board.`,
+  `Welcome to Chess Tent, a virtual chess gym for everyone.`,
   `The best first step is to fill in your profile details at ${formatAppLink(
     '/me',
   )} page.`,
@@ -18,25 +18,25 @@ export const introMessagesCoach = [
   `You can easily invite your students at ${formatAppLink(
     '?invite=true',
   )} page.`,
-  `Would love to hear back from you.`,
+  `We'd love to hear back from you.`,
 ];
 
 export const introMessagesStudent = [
-  `Hi there! I am Luka, founder of Chess Tent and I am really excited to welcome you on board.`,
+  `Welcome to Chess Tent, a virtual chess gym for everyone.`,
   `Chess is more fun with a coach and we've got some of the best you at ${formatAppLink(
     '/coaches',
   )} page.`,
   `If you prefer learning on your own, find a lesson at ${formatAppLink(
     '/lessons',
   )} page.`,
-  `Would love to hear back from you.`,
+  `We'd love to hear back from you.`,
 ];
 
 export const introMessagesInvitedStudent = [
-  `Hi there! I am Luka, founder of Chess Tent and I am really excited to welcome you on board.`,
+  `Welcome to Chess Tent, a virtual chess gym for everyone.`,
   `You can reach out to your coach at ${formatAppLink('/me/coaches')} page.`,
   `If you're interested in chess lessons take a look at ${formatAppLink(
     '/lessons',
   )} page.`,
-  `Would love to hear back from you.`,
+  `We'd love to hear back from you.`,
 ];

@@ -42,8 +42,10 @@ export class RTCController {
   private rtcConfig: RTCConfiguration;
   private makingOffer: boolean;
   private ignoreOffer: boolean;
+  private settingRemoteDescription: boolean;
   // @ts-ignore - will be created in the constructor
   private rtcPeerConnection: RTCPeerConnection;
+  private rtcDataChannel?: RTCDataChannel;
   private mediaStream: MediaStream | null | undefined;
   private handleTrack: (track?: RTCTrackEvent) => void;
 
@@ -62,9 +64,9 @@ export class RTCController {
     this.toUserId = toUserId;
     this.polite = polite;
     this.rtcConfig = rtcConfig;
-    this.handleTrack = handleTrack;
-
     this.mediaStream = null;
+    this.settingRemoteDescription = false;
+    this.handleTrack = handleTrack;
     this.createRTCPeerConnection();
   }
 
@@ -79,7 +81,6 @@ export class RTCController {
       .forEach(sender => this.rtcPeerConnection.removeTrack(sender));
 
     if (!this.mediaStream) {
-      this.handleTrack();
       return;
     }
 
@@ -91,9 +92,13 @@ export class RTCController {
     });
   }
 
-  createRTCPeerConnection() {
+  createRTCPeerConnection = () => {
+    // cleanup previous listeners and connection state
     // @ts-ignore
     delete this.rtcPeerConnection;
+    delete this.rtcDataChannel;
+    // Clear any possible tracks used from this peer
+    this.handleTrack();
 
     this.rtcPeerConnection = new RTCPeerConnection(this.rtcConfig);
 
@@ -108,16 +113,18 @@ export class RTCController {
     );
     this.rtcPeerConnection.addEventListener('track', this.handleTrack);
     this.rtcPeerConnection.addEventListener(
-      'connectionstatechange',
-      this.handleConnectionStatusChange,
-    );
-    this.rtcPeerConnection.addEventListener(
       'iceconnectionstatechange',
-      this.handleIceConectionStateChange,
+      this.handleIceConnectionStateChange,
     );
 
+    this.rtcDataChannel = this.rtcPeerConnection.createDataChannel(this.room, {
+      negotiated: true,
+      id: 1,
+    });
+    this.rtcDataChannel.addEventListener('close', this.handleClose);
+
     this.syncRTCPeerConnectionTracks();
-  }
+  };
 
   // Signaling server Actions
   emmitOffer(description: RTCSessionDescriptionInit) {
@@ -161,19 +168,13 @@ export class RTCController {
 
   // Signaling server listeners
   handleOffer = async (message: RTCSessionDescriptionInit) => {
-    const offerCollision =
-      this.makingOffer || this.rtcPeerConnection.signalingState !== 'stable';
+    const readyForOffer =
+      !this.makingOffer &&
+      (this.rtcPeerConnection.signalingState === 'stable' ||
+        !this.settingRemoteDescription);
 
-    this.ignoreOffer = offerCollision && !this.polite;
+    this.ignoreOffer = !readyForOffer && !this.polite;
     if (this.ignoreOffer) {
-      // Recover if local offer was sent while nobody was listening
-      // Not sure why this is needed
-      if (
-        this.rtcPeerConnection.localDescription &&
-        this.rtcPeerConnection.signalingState === 'have-local-offer'
-      ) {
-        this.emmitOffer(this.rtcPeerConnection.localDescription);
-      }
       return;
     }
 
@@ -195,7 +196,9 @@ export class RTCController {
   };
 
   handleAnswer = async (message: RTCSessionDescriptionInit) => {
+    this.settingRemoteDescription = true;
     await this.rtcPeerConnection.setRemoteDescription(message);
+    this.settingRemoteDescription = false;
   };
 
   handleICECandidate = async (message: string) => {
@@ -234,21 +237,22 @@ export class RTCController {
     }
   };
 
-  handleConnectionStatusChange = (e: Event) => {
-    if (
-      (e.currentTarget as RTCPeerConnection).connectionState === 'disconnected'
-    ) {
-      this.createRTCPeerConnection();
-    }
-  };
-
-  handleIceConectionStateChange = (e: Event) => {
+  handleIceConnectionStateChange = (e: Event) => {
     if (this.rtcPeerConnection.iceConnectionState === 'failed') {
       this.rtcPeerConnection.restartIce();
     }
   };
 
-  close() {
+  handleClose = () => {
+    if (!this.rtcDataChannel) {
+      // Session destroyed by the user
+      return;
+    }
+    this.createRTCPeerConnection();
+  };
+
+  destroy() {
+    delete this.rtcDataChannel;
     this.rtcPeerConnection.close();
   }
 }

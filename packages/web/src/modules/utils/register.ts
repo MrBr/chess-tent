@@ -12,6 +12,7 @@ import {
 } from './hooks';
 import { getEntitySchema, getTypeSchema } from './model';
 import {
+  getAppUrl,
   getCountries,
   getCountryByCode,
   getDiff,
@@ -49,6 +50,8 @@ application.utils.getDiff = getDiff;
 
 application.utils.noop = noop;
 application.utils.noopNoop = noopNoop;
+
+application.utils.getAppUrl = getAppUrl;
 
 application.utils.getLanguages = getLanguages;
 application.utils.getCountries = getCountries;

@@ -60,3 +60,6 @@ export const getCountryByCode = (() => {
 
   return (cca2: string) => countryMap[cca2];
 })();
+
+export const getAppUrl = (path?: string) =>
+  `${process.env.REACT_APP_PROTOCOL}${process.env.REACT_APP_DOMAIN}${path}`;

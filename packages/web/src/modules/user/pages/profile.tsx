@@ -6,7 +6,7 @@ import AlertPublicProfile from '../components/alert-public-profile';
 
 const { UserAvatar, Page, MentorshipButton, Header } = components;
 const { useHistory, useOpenConversations } = hooks;
-const { getCountryByCode } = utils;
+const { getCountryByCode, getAppUrl } = utils;
 const {
   Col,
   Row,
@@ -18,6 +18,8 @@ const {
   Breadcrumbs,
   Badge,
   Icon,
+  OverlayTrigger,
+  Tooltip,
 } = ui;
 
 const Info = ({
@@ -58,6 +60,17 @@ const PageProfile = ({
   const country = user.state.country
     ? getCountryByCode(user.state.country)
     : null;
+
+  const copy = async () => {
+    const userUrl = getAppUrl(`/user/${user.id}`);
+
+    try {
+      await navigator.clipboard.writeText(userUrl);
+    } catch (err) {
+      console.error('Failed to copy profile url.');
+    }
+  };
+
   return (
     <Page
       header={
@@ -68,6 +81,20 @@ const PageProfile = ({
             </Breadcrumbs>
           </Col>
           <Col />
+          <Col className="col-auto">
+            <OverlayTrigger
+              overlay={<Tooltip>Profile url copied</Tooltip>}
+              trigger={['click', 'focus']}
+              placement="bottom"
+              delay={2000}
+            >
+              <span className="d-inline-block">
+                <Button size="extra-small" variant="ghost" onClick={copy}>
+                  Share
+                </Button>
+              </span>
+            </OverlayTrigger>
+          </Col>
           <Col className="col-auto">
             {editable ? (
               <Button

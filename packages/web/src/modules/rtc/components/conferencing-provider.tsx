@@ -162,7 +162,7 @@ const ConferencingProvider: Components['ConferencingProvider'] = ({ room }) => {
     <ConferencingContext.Provider value={state}>
       <Container fluid className="g-0">
         {connectionStarted && (
-          <Row className="d-flex g-0 align-items-center">
+          <Row className="d-flex g-1 align-items-center">
             {!mutedVideo && (
               <Col className="col-auto">
                 <RTCVideo mediaStream={localMediaStream} muted />
@@ -172,7 +172,7 @@ const ConferencingProvider: Components['ConferencingProvider'] = ({ room }) => {
               liveUsers.map(
                 ({ id }, index) =>
                   id !== user.id && (
-                    <Col className="col-auto mt-2" key={id}>
+                    <Col className="col-auto" key={id}>
                       <ConferencingPeer
                         room={room}
                         fromUserId={id}

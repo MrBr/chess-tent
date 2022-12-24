@@ -44,10 +44,10 @@ export class RTCController {
   private makingOffer: boolean;
   private ignoreOffer: boolean;
   private settingRemoteDescription: boolean;
-  // @ts-ignore - will be created in the constructor
+  // @ts-ignore
   private rtcPeerConnection: RTCPeerConnection;
   // Used to track RTCPeerConnection connection status because the
-  // event RTCPeerConnection connection event isn't implemented well in all browsers
+  // RTCPeerConnection connection event isn't implemented well in all browsers.
   private rtcDataChannel?: RTCDataChannel;
   private mediaStream: MediaStream | null | undefined;
   private handleTrack: (track?: RTCTrackEvent) => void;
@@ -197,18 +197,24 @@ export class RTCController {
       this.emmitAnswer(
         this.rtcPeerConnection.localDescription as RTCSessionDescription,
       );
-    } catch (e) {
-      logException(e as Error);
+    } catch (err) {
+      logException(err as Error);
     }
   };
 
   handleAnswer = async (message: RTCSessionDescriptionInit) => {
+    if (this.rtcPeerConnection.signalingState === 'stable') {
+      // Connection already established.
+      // Most likely a new answer arrived because of the race condition.
+      // This should be fixed in the future by creating connection only once
+      // a user joins the video conference inside a room.
+      return;
+    }
     try {
       this.settingRemoteDescription = true;
       await this.rtcPeerConnection.setRemoteDescription(message);
-    } catch (e) {
-      // Can happen during the negotiation.
-      // Should automagically recover.
+    } catch (err) {
+      logException(err as Error);
     } finally {
       this.settingRemoteDescription = false;
     }
@@ -219,9 +225,9 @@ export class RTCController {
 
     try {
       await this.rtcPeerConnection.addIceCandidate(candidate);
-    } catch (e) {
+    } catch (err) {
       if (!this.ignoreOffer) {
-        logException(e as Error);
+        logException(err as Error);
       }
     }
   };
@@ -250,7 +256,7 @@ export class RTCController {
     }
   };
 
-  handleIceConnectionStateChange = (e: Event) => {
+  handleIceConnectionStateChange = () => {
     if (this.rtcPeerConnection.iceConnectionState === 'failed') {
       this.rtcPeerConnection.restartIce();
     }
@@ -271,17 +277,17 @@ export class RTCController {
   };
 
   handleClose = () => {
-    if (!this.rtcDataChannel) {
-      // Session destroyed by the user
-      return;
-    }
-
-    // Session closed, prepare RTC for a new connection
+    // RTC connections shouldn't recover once closed, instead a new one should be initiated
     this.createRTCPeerConnection();
   };
 
-  destroy() {
+  destroyDataChannel() {
+    this.rtcDataChannel?.removeEventListener('close', this.handleClose);
     delete this.rtcDataChannel;
+  }
+
+  destroy() {
+    this.destroyDataChannel();
     this.rtcPeerConnection.close();
   }
 }

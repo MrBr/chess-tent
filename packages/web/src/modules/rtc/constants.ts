@@ -4,6 +4,9 @@ export const DEFAULT_CONSTRAINTS = {
   },
   audio: true,
 };
+
+export const CONNECTION_CHANNEL_ID = 1;
+
 export const DEFAULT_ICE_SERVERS = [
   {
     urls: `turn:${process.env.REACT_APP_TURN_SERVER_IP}:${process.env.REACT_APP_TURN_SERVER_PORT}`,

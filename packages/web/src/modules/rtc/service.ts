@@ -6,6 +6,7 @@ import {
   CONFERENCING_OFFER,
   ConferencingAction,
 } from '@chess-tent/types';
+import { CONNECTION_CHANNEL_ID } from './constants';
 
 export const isConferencingAction = (
   action: Actions,
@@ -45,6 +46,8 @@ export class RTCController {
   private settingRemoteDescription: boolean;
   // @ts-ignore - will be created in the constructor
   private rtcPeerConnection: RTCPeerConnection;
+  // Used to track RTCPeerConnection connection status because the
+  // event RTCPeerConnection connection event isn't implemented well in all browsers
   private rtcDataChannel?: RTCDataChannel;
   private mediaStream: MediaStream | null | undefined;
   private handleTrack: (track?: RTCTrackEvent) => void;
@@ -96,7 +99,6 @@ export class RTCController {
     // cleanup previous listeners and connection state
     // @ts-ignore
     delete this.rtcPeerConnection;
-    delete this.rtcDataChannel;
     // Clear any possible tracks used from this peer
     this.handleTrack();
 
@@ -117,13 +119,18 @@ export class RTCController {
       this.handleIceConnectionStateChange,
     );
 
+    this.syncRTCPeerConnectionTracks();
+  };
+
+  createDataChannel = () => {
+    delete this.rtcDataChannel;
+
     this.rtcDataChannel = this.rtcPeerConnection.createDataChannel(this.room, {
       negotiated: true,
-      id: 1,
+      id: CONNECTION_CHANNEL_ID,
     });
-    this.rtcDataChannel.addEventListener('close', this.handleClose);
 
-    this.syncRTCPeerConnectionTracks();
+    this.rtcDataChannel.addEventListener('close', this.handleClose);
   };
 
   // Signaling server Actions
@@ -196,9 +203,15 @@ export class RTCController {
   };
 
   handleAnswer = async (message: RTCSessionDescriptionInit) => {
-    this.settingRemoteDescription = true;
-    await this.rtcPeerConnection.setRemoteDescription(message);
-    this.settingRemoteDescription = false;
+    try {
+      this.settingRemoteDescription = true;
+      await this.rtcPeerConnection.setRemoteDescription(message);
+    } catch (e) {
+      // Can happen during the negotiation.
+      // Should automagically recover.
+    } finally {
+      this.settingRemoteDescription = false;
+    }
   };
 
   handleICECandidate = async (message: string) => {
@@ -241,6 +254,20 @@ export class RTCController {
     if (this.rtcPeerConnection.iceConnectionState === 'failed') {
       this.rtcPeerConnection.restartIce();
     }
+
+    // Creating data channel here because chrome sometimes closes exiting channel when a new connection is established.
+    // This is unexpected behaviour that seems to be working better if a data channel is created only after peer connection is established.
+    if (
+      this.rtcPeerConnection.iceConnectionState === 'connected' &&
+      (!this.rtcDataChannel ||
+        this.rtcDataChannel?.readyState === 'closed' ||
+        this.rtcDataChannel?.readyState === 'closing')
+    ) {
+      // Because the data channel can be in closing state, defer creating a new one.
+      // The data channel should be closed before creating a new one because of the unique ID.
+      // This still might not be enough. Better solution would be to change 'close' listener to reconnect.
+      setTimeout(() => this.createDataChannel());
+    }
   };
 
   handleClose = () => {
@@ -248,6 +275,8 @@ export class RTCController {
       // Session destroyed by the user
       return;
     }
+
+    // Session closed, prepare RTC for a new connection
     this.createRTCPeerConnection();
   };
 

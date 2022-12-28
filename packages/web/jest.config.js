@@ -1,9 +1,9 @@
 module.exports = {
-  roots: ['<rootDir>/src'],
   testMatch: ['**/__tests__/**/*.+(ts)', '**/?(*.)+(spec|test).+(ts)'],
   transform: {
     '^.+\\.(ts|tsx|js)$': 'ts-jest',
   },
+  projects: ['<rootDir>/src/modules', '<rootDir>/src/application'],
   testEnvironment: 'jsdom',
   moduleNameMapper: {
     '@application': '<rootDir>/src/application',
@@ -19,7 +19,6 @@ module.exports = {
     },
   },
   transformIgnorePatterns: ['/node_modules/(?!(chess.js|redux-record)/)'],
-  setupFilesAfterEnv: ['./src/setup.jest.ts'],
   // TODO - use once JEST is upgraded in react-scripts
   // Currently, JEST doesn't support a function export which is necessary to await module initialisation
   // Needed version 28.0.6. - https://github.com/facebook/jest/issues/11038#issuecomment-1055159681

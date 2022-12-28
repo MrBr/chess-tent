@@ -1,10 +1,10 @@
 import { MoveStep } from '@types';
+import application from '@application';
 
 describe('promoteVariation', () => {
-  test('diff between string and object', async () => {
-    const { promoteVariation } = await import('../service');
-    const { createStepModuleStep } = await import('../model');
-    const moveD5Variation = createStepModuleStep('variation', {
+  test('promotes a move to a variation', async () => {
+    const { createStep, promoteVariation } = application.services;
+    const moveD5Variation = createStep('variation', {
       move: {
         position: '',
         move: ['d7', 'd5'],
@@ -15,7 +15,7 @@ describe('promoteVariation', () => {
         index: 1,
       },
     });
-    const moveE4 = createStepModuleStep('move', {
+    const moveE4 = createStep('move', {
       move: {
         position: '',
         move: ['e2', 'e4'],
@@ -27,7 +27,7 @@ describe('promoteVariation', () => {
       },
       steps: [moveD5Variation],
     });
-    const moveE5 = createStepModuleStep('move', {
+    const moveE5 = createStep('move', {
       move: {
         position: '',
         move: ['e7', 'e5'],
@@ -38,7 +38,7 @@ describe('promoteVariation', () => {
         index: 1,
       },
     });
-    const mainLine = createStepModuleStep('variation', {
+    const mainLine = createStep('variation', {
       steps: [moveE4, moveE5],
     });
     const newMainLine = promoteVariation(mainLine, moveD5Variation);

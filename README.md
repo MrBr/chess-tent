@@ -56,16 +56,28 @@ List of packages:
 
 ### Applications architecture
 
-- **application** - used for global application types (types used by the application and the modules)
+- **application** - used for global application types (types used by the application and the modules). In a way it represents simple and more complex global functions/classes of the application.
 - **modules** - application type implementations (building blocks)
 
 ## .env file
 
 Use `.env` file for local configuration. `server` and `web` have `.env` file where default variables like api domain, db url, aws keys and mailgun endpoint are defined.
 
-## Unit tests
+## Testing
+How and what to test.
 
-TBD
+### Infrastructure tests
+An application infrastructure (interface) should be tested after defining types. The Infrastructure tests can be unit or integration depending on the tested part. The main difference between other tests is that these tests initialise whole application before testing.
+
+### Unit and (module) Integration tests
+Isolated inside a single module, test type depends on a tested part. Ideally should avoid initializing the application. Dependencies should be mocked, too many dependencies may be a sign that a system is too granular. 
+
+### E2E tests
+Doesn't exist yet but should be implemented with Cypress. TBD
+
+### Fixtures
+As an application can be initialized for a `production` or `development`, it makes sense to implement a `test` environment with data and features that can be initialized. TBD
+
 
 ## Build for production
 

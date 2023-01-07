@@ -6,43 +6,43 @@ import { withWebNamespace } from '../../utils';
 
 export default {
   title: 'UI/Grid',
-} as ComponentMeta<UI['Page']>;
+} as ComponentMeta<UI['Container']>;
 
-export const Default: ComponentStory<UI['Page']> = withWebNamespace(
+export const Default: ComponentStory<UI['Container']> = withWebNamespace(
   'ui',
-  (args, { Page, Row, Col, Headline4 }) => (
-    <Page>
+  (args, { Container, Row, Col, Headline4 }) => (
+    <Container>
       <Headline4>12 column bootstrap grid</Headline4>
       <Row>
         {[...Array(12)].map((v, index) => (
           <Col>{index + 1}</Col>
         ))}
       </Row>
-    </Page>
+    </Container>
   ),
 );
 
-export const Horizontal: ComponentStory<UI['Page']> = withWebNamespace(
+export const Horizontal: ComponentStory<UI['Container']> = withWebNamespace(
   'ui',
-  (args, { Page, Row, Col }) => (
-    <Page>
+  (args, { Container, Row, Col }) => (
+    <Container>
       <Row>
         <Col xs={2}>2</Col>
         <Col xs={6}>6</Col>
         <Col xs={4}>4</Col>
       </Row>
-    </Page>
+    </Container>
   ),
 );
 
-export const Vertical: ComponentStory<UI['Page']> = withWebNamespace(
+export const Vertical: ComponentStory<UI['Container']> = withWebNamespace(
   'ui',
-  (args, { Page, Row, Col }) => (
-    <Page className="h-100">
+  (args, { Container, Row, Col }) => (
+    <Container className="h-100">
       <Row className="flex-column h-100">
         <Col>Cell 1</Col>
         <Col>Cell 2</Col>
       </Row>
-    </Page>
+    </Container>
   ),
 );

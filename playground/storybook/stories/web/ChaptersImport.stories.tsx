@@ -23,6 +23,7 @@ export const Default: ComponentStory<Components['CoachCard']> =
           close={() => {}}
           lessons={[lesson]}
           onImport={() => {}}
+          importedChapters={[]}
         />
       </Suspense>
     );

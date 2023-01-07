@@ -17,7 +17,7 @@ const moduleAliases = (moduleIdentifier, aliases) =>
     },
   });
 
-const webModule = moduleAliases('chess-tent/packages/web', {
+const webModule = moduleAliases('packages/web', {
   '@types': path.resolve(
     __dirname,
     '../../../packages/web/src/application/types/index.ts',

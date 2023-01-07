@@ -14,9 +14,7 @@ const withWebNamespace =
   (args: T, { loaded }: any) =>
     render(args, loaded.application[namespace], loaded);
 
-const importWebModule = async <T extends Promise<any>>(
-  loadModule: () => T,
-): Promise<T extends Promise<infer K> ? K : never> => {
+const importWebModule = async <T>(loadModule: () => Promise<T>): Promise<T> => {
   await application.init();
   const module = await loadModule();
   return typeof module === 'object' ? { ...module } : module;

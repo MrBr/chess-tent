@@ -41,7 +41,7 @@ export const trainingLoader = async () => {
     training: lessonServices.createLessonActivity(
       lesson,
       user,
-      { date: new Date().toUTCString() },
+      { date: new Date() },
       {},
       students,
     ),

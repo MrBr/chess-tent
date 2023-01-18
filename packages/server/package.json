@@ -30,6 +30,7 @@
     "@chess-tent/redux-record": "1.0.0",
     "@chess-tent/types": "1.0.0",
     "aws-sdk": "^2.742.0",
+    "axios": "^1.2.2",
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.5",

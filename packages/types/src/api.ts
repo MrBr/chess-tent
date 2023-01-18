@@ -91,7 +91,11 @@ export interface ScheduledLessonActivityFilters extends LessonActivityFilters {
 export type ApiMethods = 'GET' | 'POST' | 'PUT' | 'DELETE';
 // a property is needed in order to prevent TS matching empty object with other types
 export type ApiEmptyData = { _plain?: true };
-export interface Request<METHOD extends ApiMethods, URL extends string, DATA> {
+export interface Request<
+  METHOD extends ApiMethods,
+  URL extends string,
+  DATA = void,
+> {
   url: URL;
   method: METHOD;
   data: DATA;
@@ -151,9 +155,17 @@ export type GetEndpointResponse<T extends Endpoint<any, any>> =
 
 export type RequestFetch<
   ENDPOINT extends Endpoint<any, any>,
-  DATA = GetEndpointData<ENDPOINT>,
-> = (...args: GenericArguments<DATA>) => Promise<GetEndpointResponse<ENDPOINT>>;
+  CUSTOM_ARGS extends any = void,
+> = (
+  ...args: GenericArguments<
+    CUSTOM_ARGS extends void ? GetEndpointData<ENDPOINT> : CUSTOM_ARGS
+  >
+) => Promise<GetEndpointResponse<ENDPOINT>>;
 
+export type RequestDefaultArgs<T extends RequestFetch<any, any>> =
+  GetRequestFetchArgs<T> extends GenericArguments<GetRequestFetchData<T>>
+    ? T
+    : unknown;
 export type GetRequestFetchEndpoint<T> = T extends RequestFetch<
   infer ENDPOINT,
   infer RESPONSE
@@ -161,7 +173,7 @@ export type GetRequestFetchEndpoint<T> = T extends RequestFetch<
   ? ENDPOINT
   : never;
 export type GetRequestFetchArgs<T extends RequestFetch<any, any>> =
-  T extends RequestFetch<infer E, infer ARGS> ? ARGS : never;
+  Parameters<T>;
 export type GetRequestFetchData<T extends RequestFetch<any, any>> =
   GetEndpointData<GetRequestFetchEndpoint<T>>;
 export type GetRequestFetchMethod<T extends RequestFetch<any, any>> =

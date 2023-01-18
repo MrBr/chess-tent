@@ -46,15 +46,16 @@ export const useUserScheduledTrainings: Hooks['useUserScheduledTrainings'] = (
     `scheduled-trainings-${user.id}`,
   );
 
-  const filters: GetRequestFetchArgs<Requests['scheduledTrainings']> = useMemo(
-    () => ({
-      users: [user.id],
-      date: { from: new Date() },
-      ...initialFilters,
-    }),
-    // eslint-disable-next-line
-    [user.id],
-  );
+  const filters: GetRequestFetchArgs<Requests['scheduledTrainings']>[0] =
+    useMemo(
+      () => ({
+        users: [user.id],
+        date: { from: new Date() },
+        ...initialFilters,
+      }),
+      // eslint-disable-next-line
+      [user.id],
+    );
 
   useEffect(() => {
     if (isInitialized(record)) {

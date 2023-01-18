@@ -2,12 +2,11 @@ import { ChessInstance } from 'chess.js';
 import { ComponentType, ReactElement } from 'react';
 import {
   API,
-  GetEndpointData,
   GetRequestFetchArgs,
   GetRequestFetchData,
-  GetRequestFetchEndpoint,
   GetRequestFetchMethod,
   GetRequestFetchUrl,
+  RequestDefaultArgs,
   RequestFetch,
 } from '@chess-tent/types';
 import {
@@ -130,19 +129,13 @@ export type Services = {
         ) => GetRequestFetchUrl<T>),
   ): GetRequestFetchMethod<T> extends 'GET' | 'DELETE' // GET request data is irrelevant
     ? T
-    : GetRequestFetchArgs<T> extends GetEndpointData<GetRequestFetchEndpoint<T>>
-    ? T
-    : unknown;
+    : RequestDefaultArgs<T>;
   createRequest<T extends RequestFetch<any, any>>(
     method: GetRequestFetchMethod<T>,
     urlOrCustomizer:
       | GetRequestFetchUrl<T>
-      | ((
-          ...args: GenericArguments<GetRequestFetchArgs<T>>
-        ) => GetRequestFetchUrl<T>),
-    data: (
-      ...args: GenericArguments<GetRequestFetchArgs<T>>
-    ) => GetRequestFetchData<T>,
+      | ((...args: GetRequestFetchArgs<T>) => GetRequestFetchUrl<T>),
+    data: (...args: GetRequestFetchArgs<T>) => GetRequestFetchData<T>,
   ): T;
   isStepType: <T extends Steps>(step: Step, stepType: StepType) => step is T;
   createStep: <T extends StepType>(

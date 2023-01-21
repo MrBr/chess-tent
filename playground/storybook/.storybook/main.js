@@ -1,5 +1,5 @@
 const path = require('path');
-var DynamicAliasResolvePlugin = require('dynamic-alias-resolve-plugin');
+const DynamicAliasResolvePlugin = require('dynamic-alias-resolve-plugin');
 
 // Helps properly resolve "relative" package alias
 const moduleAliases = (moduleIdentifier, aliases) =>

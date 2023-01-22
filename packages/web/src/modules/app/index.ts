@@ -41,6 +41,8 @@ application.register(
   },
 );
 
-application.constants.APP_URL = `${process.env.REACT_APP_PROTOCOL}${process.env.REACT_APP_DOMAIN}`;
+application.constants.APP_URL = process.env.REACT_APP_URL as string;
 application.constants.ToS_PATH = '/terms-of-services.txt';
 application.constants.PP_PATH = '/privacy-policy.txt';
+application.utils.getAppUrl = (path?: string) =>
+  `${application.constants.APP_URL}${path}`;

@@ -9,7 +9,7 @@ import { activeUser } from './records';
 
 const { usePrompt } = hooks;
 const { Share } = components;
-const { APP_DOMAIN } = constants;
+const { APP_URL } = constants;
 
 export const useUser = (userId: User['id']) => {
   return useSelector(userSelector(userId));
@@ -25,7 +25,7 @@ export const useActiveUserRecord = (fallback => {
 export const useInviteUser = () => {
   const { value: activeUser } = useActiveUserRecord();
 
-  const link = `${APP_DOMAIN}/register?referrer=${activeUser.id}`;
+  const link = `${APP_URL}/register?referrer=${activeUser.id}`;
   const title = activeUser.coach ? 'Invite student' : 'Invite friend';
   const description = activeUser.coach
     ? 'Copy the link and share it with your students. The students will have to create their own accounts and they will be added to your student list automatically.'

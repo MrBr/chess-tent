@@ -1,8 +1,3 @@
-import { Country } from '@types';
-
-import languages from './languages.json';
-import countries from './countries.json';
-
 export const getDiff = (
   oldSubject: {} | unknown[],
   newSubject: {} | unknown[],
@@ -44,22 +39,3 @@ export const getDiff = (
   });
   return result;
 };
-
-export const noop = () => {};
-export const noopNoop = () => noop;
-export const getLanguages = () => languages;
-export const getCountries = () => countries;
-export const getCountryByCode = (() => {
-  const countryMap = countries.reduce<Record<string, Country>>(
-    (result, country) => {
-      result[country.cca2] = country;
-      return result;
-    },
-    {},
-  );
-
-  return (cca2: string) => countryMap[cca2];
-})();
-
-export const getAppUrl = (path?: string) =>
-  `${process.env.REACT_APP_PROTOCOL}${process.env.REACT_APP_DOMAIN}${path}`;

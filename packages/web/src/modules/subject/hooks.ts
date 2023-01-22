@@ -5,13 +5,13 @@ import {
   SubjectPath,
   SubjectPathUpdate,
 } from '@chess-tent/models';
-import { hooks } from '@application';
+import { hooks, utils } from '@application';
 import { RecordValue } from '@chess-tent/redux-record/types';
 import { EntitiesState } from '@chess-tent/types';
 import { throttle } from 'lodash';
-import { getDiff } from '../utils/utils';
 
 const { useStore } = hooks;
+const { getDiff } = utils;
 
 const isSamePathBase = (path1: SubjectPath, path2: SubjectPath) => {
   const shorterPath = path1.length < path2.length ? path1 : path2;

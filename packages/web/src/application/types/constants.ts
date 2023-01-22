@@ -1,12 +1,11 @@
 import { FEN } from './chess';
 
 export type Constants = {
-  APP_URL: FEN;
+  APP_URL: string;
   START_FEN: FEN;
-  KINGS_FEN: string;
+  KINGS_FEN: FEN;
   MOBILE_ROOT_KEY: string;
   MAX_BOARD_SIZE: number;
-  APP_DOMAIN: string;
   ToS_PATH: string;
   PP_PATH: string;
 };

@@ -11,15 +11,13 @@ import {
   useValidation,
 } from './hooks';
 import { getEntitySchema, getTypeSchema } from './model';
+import { getDiff } from './utils/getDiff';
+import { noopNoop, noop } from './utils/generic';
 import {
-  getAppUrl,
-  getCountries,
-  getCountryByCode,
-  getDiff,
   getLanguages,
-  noop,
-  noopNoop,
-} from './utils';
+  getCountryByCode,
+  getCountries,
+} from './utils/localisation';
 import {
   rightMouse,
   stopPropagation,
@@ -50,8 +48,6 @@ application.utils.getDiff = getDiff;
 
 application.utils.noop = noop;
 application.utils.noopNoop = noopNoop;
-
-application.utils.getAppUrl = getAppUrl;
 
 application.utils.getLanguages = getLanguages;
 application.utils.getCountries = getCountries;

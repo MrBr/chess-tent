@@ -44,7 +44,8 @@ export type Utils = {
   getDiff: (
     oldSubject: {} | unknown[],
     newSubject: {} | unknown[],
-    result: { [key: string]: unknown },
+    result?: { [key: string]: unknown },
+    path?: string,
   ) => { [key: string]: unknown };
   downloadAs: typeof saveAs;
   isLocalReferrer: () => boolean;

@@ -3,8 +3,8 @@ export const CommentRegex = /^#.*|#.*[^"|']$/g;
 export const KeyValueRegex = /=(.*)/;
 
 export const splitKeyValue = (line: string) => {
-  const [key, value] = line.trim().split(KeyValueRegex);
-  return [key, value];
+  const [key = '', value = ''] = line.trim().split(KeyValueRegex);
+  return [key.trim(), value.trim()];
 };
 
 export const trimWrappingQuotes = (value: string) => {

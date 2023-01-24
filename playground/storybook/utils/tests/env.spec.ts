@@ -8,15 +8,15 @@ import {
 
 describe('splitKeyValue', () => {
   it('should match empty string', () => {
-    expect(splitKeyValue('')).toEqual(['', undefined]);
+    expect(splitKeyValue('')).toEqual(['', '']);
   });
 
   it('should match white spaces', () => {
-    expect(splitKeyValue('')).toEqual(['', undefined]);
+    expect(splitKeyValue('')).toEqual(['', '']);
   });
 
   it('should match string', () => {
-    expect(splitKeyValue('abc')).toEqual(['abc', undefined]);
+    expect(splitKeyValue('abc')).toEqual(['abc', '']);
   });
 
   it('should match =', () => {
@@ -33,6 +33,10 @@ describe('splitKeyValue', () => {
 
   it('should match multiple separated equals symbols', () => {
     expect(splitKeyValue('a="b = c"')).toEqual(['a', '"b = c"']);
+  });
+
+  it('should match key spaced value', () => {
+    expect(splitKeyValue('a = b')).toEqual(['a', 'b']);
   });
 
   it('should match key value', () => {
@@ -201,6 +205,7 @@ describe('parseEnv', () => {
     const envObject = parseEnv(`
     num=123
     str=abc
+    spaced = abc
     
     
     bottomStr=last
@@ -209,6 +214,7 @@ describe('parseEnv', () => {
       num: '123',
       str: 'abc',
       bottomStr: 'last',
+      spaced: 'abc',
     });
   });
 });

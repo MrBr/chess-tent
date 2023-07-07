@@ -3,6 +3,9 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import fs from 'fs';
+import https from 'https';
+
 import {
   catchError,
   conditional,
@@ -56,3 +59,21 @@ application.start = () => {
   );
   socket.init(server);
 };
+
+if (process.env.LOCALHOST_CERTIFICATE_BASE_PATH) {
+  https
+    .createServer(
+      {
+        key: fs.readFileSync(
+          process.env.LOCALHOST_CERTIFICATE_BASE_PATH + 'localhost.key',
+        ),
+        cert: fs.readFileSync(
+          process.env.LOCALHOST_CERTIFICATE_BASE_PATH + 'localhost.crt',
+        ),
+      },
+      app,
+    )
+    .listen(3008, () => {
+      console.log('HTTPS is running at port 3008');
+    });
+}

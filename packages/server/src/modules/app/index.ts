@@ -1,10 +1,8 @@
-import application, { db, socket } from '@application';
+import application, { db } from '@application';
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import fs from 'fs';
-import https from 'https';
 
 import {
   catchError,
@@ -16,9 +14,9 @@ import {
   toLocals,
   validate,
 } from './middleware';
-import { generateIndex } from './service';
+import { generateIndex, startHttpServer, startHttpsServer } from './service';
 import { BadRequest } from './errors';
-import { formatAppLink } from './utils';
+import { formatAppLink, shouldStartHttpsServer } from './utils';
 
 const { connect } = db;
 
@@ -54,26 +52,9 @@ application.start = () => {
   // Error handler must apply after all routes
   app.use(application.middleware.errorHandler);
 
-  const server = app.listen(process.env.PORT, () =>
-    console.log(`Application started at port: ${process.env.PORT}`),
-  );
-  socket.init(server);
+  if (shouldStartHttpsServer()) {
+    startHttpsServer(app);
+  } else {
+    startHttpServer(app);
+  }
 };
-
-if (process.env.LOCALHOST_CERTIFICATE_BASE_PATH) {
-  https
-    .createServer(
-      {
-        key: fs.readFileSync(
-          process.env.LOCALHOST_CERTIFICATE_BASE_PATH + 'localhost.key',
-        ),
-        cert: fs.readFileSync(
-          process.env.LOCALHOST_CERTIFICATE_BASE_PATH + 'localhost.crt',
-        ),
-      },
-      app,
-    )
-    .listen(3008, () => {
-      console.log('HTTPS is running at port 3008');
-    });
-}

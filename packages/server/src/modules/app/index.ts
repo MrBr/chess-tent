@@ -1,8 +1,9 @@
-import application, { db } from '@application';
+import application, { db, socket } from '@application';
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import { Server } from 'http';
 
 import {
   catchError,
@@ -52,9 +53,13 @@ application.start = () => {
   // Error handler must apply after all routes
   app.use(application.middleware.errorHandler);
 
+  let server: Server;
+
   if (shouldStartHttpsServer()) {
-    startHttpsServer(app);
+    server = startHttpsServer(app);
   } else {
-    startHttpServer(app);
+    server = startHttpServer(app);
   }
+
+  socket.init(server);
 };

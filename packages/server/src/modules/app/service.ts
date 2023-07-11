@@ -1,4 +1,3 @@
-import { socket } from '@application';
 import { Express } from 'express';
 import { v4 as uuid } from 'uuid';
 import fs from 'fs';
@@ -6,14 +5,12 @@ import https from 'https';
 
 export const generateIndex = () => uuid();
 
-export const startHttpServer = (app: Express) => {
-  const server = app.listen(process.env.PORT, () =>
+export const startHttpServer = (app: Express) =>
+  app.listen(process.env.PORT, () =>
     console.log(`Application started at port: ${process.env.PORT}`),
   );
-  socket.init(server);
-};
 
-export const startHttpsServer = (app: Express) => {
+export const startHttpsServer = (app: Express) =>
   https
     .createServer(
       {
@@ -25,4 +22,3 @@ export const startHttpsServer = (app: Express) => {
     .listen(process.env.PORT, () => {
       console.log(`HTTPS is running at port: ${process.env.PORT}`);
     });
-};

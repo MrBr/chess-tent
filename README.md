@@ -100,4 +100,4 @@ Letsencryp
 ### Nginx
 
 ### S3 proxy
-This is specific thing, add primarily so that headers S3 headers can be controlled. All in all it seems like useful thing for the future.
+Used primarily for controlling the S3 headers. All in all it seems like useful thing for the future.

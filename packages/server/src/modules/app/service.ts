@@ -5,10 +5,7 @@ import https from 'https';
 
 export const generateIndex = () => uuid();
 
-export const getCorsOrigin = () =>
-  !!process.env.STORYBOOK_URL
-    ? [`${process.env.APP_DOMAIN}`, `${process.env.STORYBOOK_URL}`]
-    : `${process.env.APP_DOMAIN}`;
+export const getCorsOrigin = () => process.env.APP_DOMAINS?.split(',');
 
 export const startHttpServer = (app: Express) =>
   app.listen(process.env.PORT, () =>

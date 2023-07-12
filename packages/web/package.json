@@ -43,7 +43,7 @@
   },
   "scripts": {
     "preinstall": "node ./scripts/preinstall.js",
-    "start": "HTTPS=true craco start --no-cache",
+    "start": "craco start --no-cache",
     "build:dev": "echo no build",
     "build": "craco build",
     "test": "craco test",

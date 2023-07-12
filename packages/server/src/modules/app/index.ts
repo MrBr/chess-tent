@@ -3,6 +3,8 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import { Server } from 'http';
+
 import {
   catchError,
   conditional,
@@ -13,9 +15,9 @@ import {
   toLocals,
   validate,
 } from './middleware';
-import { generateIndex } from './service';
+import { generateIndex, startHttpServer, startHttpsServer } from './service';
 import { BadRequest } from './errors';
-import { formatAppLink } from './utils';
+import { formatAppLink, shouldStartHttpsServer } from './utils';
 
 const { connect } = db;
 
@@ -51,8 +53,13 @@ application.start = () => {
   // Error handler must apply after all routes
   app.use(application.middleware.errorHandler);
 
-  const server = app.listen(process.env.PORT, () =>
-    console.log(`Application started at port: ${process.env.PORT}`),
-  );
+  let server: Server;
+
+  if (shouldStartHttpsServer()) {
+    server = startHttpsServer(app);
+  } else {
+    server = startHttpServer(app);
+  }
+
   socket.init(server);
 };

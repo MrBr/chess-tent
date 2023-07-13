@@ -8,7 +8,7 @@ import { authorizeZoom } from '../services';
 import ZoomActivityView from './zoom-activity-view';
 
 const { useApi, useQuery } = hooks;
-const { Button, Container, Input, Row, Col } = ui;
+const { Button, Container, Input, Row, Col, Spinner } = ui;
 
 const ZoomProvider: Components['ZoomProvider'] = ({ redirectUri }) => {
   const [zoomContextState, setZoomContextState] = useState<ZoomContextType>({
@@ -22,34 +22,28 @@ const ZoomProvider: Components['ZoomProvider'] = ({ redirectUri }) => {
 
   const { code } = useQuery<{ code?: string; path?: string }>();
   const zoomAuthorizeApi = useApi(zoomAuthorize);
-  const generateSignatureApi = useApi(generateSignature);
+  const zoomSignatureApi = useApi(generateSignature);
 
   useEffect(() => {
     if (
       code &&
       zoomContextState.role &&
-      !generateSignatureApi.response &&
-      !generateSignatureApi.loading &&
+      !zoomSignatureApi.response &&
+      !zoomSignatureApi.loading &&
       !zoomAuthorizeApi.response &&
       !zoomAuthorizeApi.loading
     ) {
       zoomAuthorizeApi.fetch({ code, redirectUri });
-      generateSignatureApi.fetch({
+      zoomSignatureApi.fetch({
         meetingNumber: zoomContextState.meetingNumber,
         role: zoomContextState.role as number,
       });
     }
-  }, [
-    code,
-    generateSignatureApi,
-    zoomAuthorizeApi,
-    redirectUri,
-    zoomContextState,
-  ]);
+  }, [code, zoomSignatureApi, zoomAuthorizeApi, redirectUri, zoomContextState]);
 
   useEffect(() => {
     if (
-      !generateSignatureApi.response?.data ||
+      !zoomSignatureApi.response?.data ||
       !code ||
       !zoomAuthorizeApi.response?.data
     ) {
@@ -62,11 +56,11 @@ const ZoomProvider: Components['ZoomProvider'] = ({ redirectUri }) => {
 
     setZoomContextState(prevState => ({
       ...prevState,
-      userSignature: generateSignatureApi.response.data,
+      userSignature: zoomSignatureApi.response.data,
       hostUserZakToken: zoomAuthorizeApi.response.data,
     }));
   }, [
-    generateSignatureApi,
+    zoomSignatureApi,
     code,
     zoomAuthorizeApi,
     zoomContextState.userSignature,
@@ -149,7 +143,8 @@ const ZoomProvider: Components['ZoomProvider'] = ({ redirectUri }) => {
             )
           )}
         </>
-
+        {zoomAuthorizeApi.loading ||
+          (zoomSignatureApi.loading && <Spinner animation="grow" />)}
         {zoomContextState.userSignature && <ZoomActivityView />}
       </Container>
     </ZoomContext.Provider>

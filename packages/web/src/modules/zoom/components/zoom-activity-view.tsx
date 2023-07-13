@@ -17,8 +17,6 @@ const ZoomActivityView: Components['ZoomActivityView'] = () => {
 
     const sdkKey = process.env.REACT_APP_ZOOM_CLIENT_ID;
 
-    console.log({ zoomContext });
-
     client
       .init({
         debug: true,
@@ -29,7 +27,7 @@ const ZoomActivityView: Components['ZoomActivityView'] = () => {
         client.join({
           sdkKey: sdkKey,
           signature: zoomContext.userSignature,
-          meetingNumber: zoomContext.meetingNumber,
+          meetingNumber: zoomContext.meetingNumber.replaceAll(' ', ''),
           userName: zoomContext.username,
           password: zoomContext.password,
           zak: zoomContext.hostUserZakToken || '',

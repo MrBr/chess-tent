@@ -34,3 +34,4 @@ application.register(() => import('./subject'));
 application.register(() => import('./mobile'));
 application.register(() => import('./sentry'));
 application.register(() => import('./contact'));
+application.register(() => import('./zoom'));

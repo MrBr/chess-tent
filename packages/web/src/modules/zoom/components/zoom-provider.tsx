@@ -27,13 +27,14 @@ const ZoomProvider: Components['ZoomProvider'] = ({ redirectUri }) => {
   useEffect(() => {
     if (
       code &&
-      zoomContextState.role &&
+      zoomContextState.role !== null &&
       !zoomSignatureApi.response &&
-      !zoomSignatureApi.loading &&
-      !zoomAuthorizeApi.response &&
-      !zoomAuthorizeApi.loading
+      !zoomSignatureApi.loading
     ) {
-      zoomAuthorizeApi.fetch({ code, redirectUri });
+      if (zoomContextState.role === Role.Host) {
+        zoomAuthorizeApi.fetch({ code, redirectUri });
+      }
+
       zoomSignatureApi.fetch({
         meetingNumber: zoomContextState.meetingNumber,
         role: zoomContextState.role as number,
@@ -45,32 +46,26 @@ const ZoomProvider: Components['ZoomProvider'] = ({ redirectUri }) => {
     if (
       !zoomSignatureApi.response?.data ||
       !code ||
-      !zoomAuthorizeApi.response?.data
+      zoomContextState.userSignature ||
+      (!zoomAuthorizeApi.response?.data && zoomContextState.role === Role.Host)
     ) {
       return;
     }
-
-    if (zoomContextState.userSignature) {
-      return;
-    }
-
     setZoomContextState(prevState => ({
       ...prevState,
       userSignature: zoomSignatureApi.response.data,
-      hostUserZakToken: zoomAuthorizeApi.response.data,
+      hostUserZakToken: zoomAuthorizeApi.response?.data,
     }));
-  }, [
-    zoomSignatureApi,
-    code,
-    zoomAuthorizeApi,
-    zoomContextState.userSignature,
-  ]);
+  }, [zoomSignatureApi, code, zoomAuthorizeApi, zoomContextState]);
 
   const handleInputChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       setZoomContextState(prevState => ({
         ...prevState,
-        [event.target.name]: event.target.value,
+        [event.target.name]:
+          event.target.name === 'meetingNumber'
+            ? event.target.value.replaceAll(' ', '')
+            : event.target.value,
       }));
     },
     [setZoomContextState],
@@ -125,7 +120,7 @@ const ZoomProvider: Components['ZoomProvider'] = ({ redirectUri }) => {
                   <Col>
                     <Button
                       size="small"
-                      onClick={() => handleJoinButtonClicked(1)}
+                      onClick={() => handleJoinButtonClicked(Role.Host)}
                     >
                       Join as host
                     </Button>
@@ -133,7 +128,7 @@ const ZoomProvider: Components['ZoomProvider'] = ({ redirectUri }) => {
                   <Col>
                     <Button
                       size="small"
-                      onClick={() => handleJoinButtonClicked(0)}
+                      onClick={() => handleJoinButtonClicked(Role.Guest)}
                     >
                       Join as guest
                     </Button>

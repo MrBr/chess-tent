@@ -1,6 +1,9 @@
 import { createContext, useContext } from 'react';
 
-export type Role = 0 | 1;
+export enum Role {
+  Guest = 0,
+  Host = 1,
+}
 
 export interface ZoomContextType {
   userSignature: string;

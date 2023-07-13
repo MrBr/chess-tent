@@ -27,7 +27,7 @@ const ZoomActivityView: Components['ZoomActivityView'] = () => {
         client.join({
           sdkKey: sdkKey,
           signature: zoomContext.userSignature,
-          meetingNumber: zoomContext.meetingNumber.replaceAll(' ', ''),
+          meetingNumber: zoomContext.meetingNumber,
           userName: zoomContext.username,
           password: zoomContext.password,
           zak: zoomContext.hostUserZakToken || '',

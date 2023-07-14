@@ -6,17 +6,15 @@ const { identify, toLocals, sendData } = middleware;
 service.registerPostRoute(
   '/zoom/authorize',
   identify,
-  toLocals('code', req => req.body.code),
-  toLocals('redirectUri', req => req.body.redirectUri),
+  toLocals('zoom', req => req.body),
   authorizeUserByCode,
-  sendData('data'),
+  sendData('zoomAuthorization'),
 );
 
 service.registerPostRoute(
   '/zoom/signature',
   identify,
-  toLocals('meetingNumber', req => req.body.meetingNumber),
-  toLocals('role', req => req.body.role),
+  toLocals('zoom', req => req.body),
   generateSignature,
-  sendData('data'),
+  sendData('zoomSignature'),
 );

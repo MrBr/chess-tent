@@ -3,19 +3,19 @@ import * as zoomService from './service';
 
 const authorizeUserByCode: MiddlewareFunction = async (req, res, next) => {
   const data = await zoomService.authorizeUserByCode(
-    res.locals.code,
-    res.locals.redirectUri,
+    res.locals.zoom.code,
+    res.locals.zoom.redirectUri,
   );
-  res.locals.data = data;
+  res.locals.zoomAuthorization = data;
   next();
 };
 
 const generateSignature: MiddlewareFunction = async (req, res, next) => {
   const data = await zoomService.generateSignature(
-    res.locals.meetingNumber,
-    res.locals.role,
+    res.locals.zoom.meetingNumber,
+    res.locals.zoom.role,
   );
-  res.locals.data = data;
+  res.locals.zoomSignature = data;
   next();
 };
 

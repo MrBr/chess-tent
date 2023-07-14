@@ -2,9 +2,7 @@ import axios from 'axios';
 
 import { service } from '@application';
 
-const Authorization = Buffer.from(
-  `${process.env.ZOOM_MEETING_SDK_KEY_OR_CLIENT_ID}:${process.env.ZOOM_MEETING_SDK_SECRET_OR_CLIENT_SECRET}`,
-).toString('base64');
+import { Authorization } from './constants';
 
 const authorizeUserByCode = async (code: string, redirectUri: string) => {
   const accessToken = await axios
@@ -23,8 +21,7 @@ const authorizeUserByCode = async (code: string, redirectUri: string) => {
         method: 'POST',
       },
     )
-    .then(data => data.data.access_token)
-    .catch(console.log);
+    .then(data => data.data.access_token);
 
   return axios
     .get('https://api.zoom.us/v2/users/me/token?type=zak', {
@@ -32,8 +29,7 @@ const authorizeUserByCode = async (code: string, redirectUri: string) => {
         Authorization: `Bearer ${accessToken}`,
       },
     })
-    .then(data => data.data.token)
-    .catch(console.log);
+    .then(data => data.data.token);
 };
 
 const generateSignature = async (meetingNumber: string, role: number) => {

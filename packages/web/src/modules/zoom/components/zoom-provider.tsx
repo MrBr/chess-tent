@@ -60,26 +60,22 @@ const ZoomProvider: Components['ZoomProvider'] = ({ redirectUri }) => {
 
   const handleInputChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
+      const { name: key, value } = event.target;
+
       setZoomContextState(prevState => ({
         ...prevState,
-        [event.target.name]:
-          event.target.name === 'meetingNumber'
-            ? event.target.value.replaceAll(' ', '')
-            : event.target.value,
+        [key]: key === 'meetingNumber' ? value.replaceAll(' ', '') : value,
       }));
     },
-    [setZoomContextState],
+    [],
   );
 
-  const handleJoinButtonClicked = useCallback(
-    (role: Role) => {
-      setZoomContextState(prevState => ({
-        ...prevState,
-        role,
-      }));
-    },
-    [setZoomContextState],
-  );
+  const handleJoinButtonClicked = useCallback((role: Role) => {
+    setZoomContextState(prevState => ({
+      ...prevState,
+      role,
+    }));
+  }, []);
 
   return (
     <ZoomContext.Provider value={zoomContextState}>

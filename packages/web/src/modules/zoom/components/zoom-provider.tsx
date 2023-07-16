@@ -1,23 +1,24 @@
-import React, { useEffect, useCallback, useState, ChangeEvent } from 'react';
+import React, { useEffect, useState } from 'react';
 import { hooks, ui } from '@application';
 import { Components } from '@types';
 
 import { zoomAuthorize, generateSignature } from '../requests';
 import { ZoomContext, ZoomContextType, Role } from '../context';
-import { authorizeZoom } from '../services';
 import ZoomActivityView from './zoom-activity-view';
+import HostControl from './controls/host-control';
+import GuestControl from './controls/guest-control';
 
 const { useApi, useQuery } = hooks;
-const { Button, Container, Input, Row, Col, Spinner } = ui;
+const { Container, Spinner } = ui;
 
-const ZoomProvider: Components['ZoomProvider'] = ({ redirectUri }) => {
+const ZoomProvider: Components['ZoomProvider'] = ({ redirectUri, user }) => {
   const [zoomContextState, setZoomContextState] = useState<ZoomContextType>({
     userSignature: '',
     hostUserZakToken: null,
     meetingNumber: '',
-    username: '',
+    username: user.nickname,
     password: '',
-    role: null,
+    role: user?.coach ? Role.Host : Role.Guest,
   });
 
   const { code } = useQuery<{ code?: string; path?: string }>();
@@ -26,26 +27,28 @@ const ZoomProvider: Components['ZoomProvider'] = ({ redirectUri }) => {
 
   useEffect(() => {
     if (
-      code &&
-      zoomContextState.role !== null &&
-      !zoomSignatureApi.response &&
-      !zoomSignatureApi.loading
+      zoomContextState.meetingNumber === '' ||
+      zoomSignatureApi.response ||
+      zoomSignatureApi.loading
     ) {
-      if (zoomContextState.role === Role.Host) {
-        zoomAuthorizeApi.fetch({ code, redirectUri });
-      }
-
-      zoomSignatureApi.fetch({
-        meetingNumber: zoomContextState.meetingNumber,
-        role: zoomContextState.role as number,
-      });
+      return;
     }
+
+    if (!code && zoomContextState.role === Role.Host) {
+      return;
+    } else if (code) {
+      zoomAuthorizeApi.fetch({ code, redirectUri });
+    }
+
+    zoomSignatureApi.fetch({
+      meetingNumber: zoomContextState.meetingNumber,
+      role: zoomContextState.role as number,
+    });
   }, [code, zoomSignatureApi, zoomAuthorizeApi, redirectUri, zoomContextState]);
 
   useEffect(() => {
     if (
       !zoomSignatureApi.response?.data ||
-      !code ||
       zoomContextState.userSignature ||
       (!zoomAuthorizeApi.response?.data && zoomContextState.role === Role.Host)
     ) {
@@ -58,81 +61,20 @@ const ZoomProvider: Components['ZoomProvider'] = ({ redirectUri }) => {
     }));
   }, [zoomSignatureApi, code, zoomAuthorizeApi, zoomContextState]);
 
-  const handleInputChange = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      const { name: key, value } = event.target;
-
-      setZoomContextState(prevState => ({
-        ...prevState,
-        [key]: key === 'meetingNumber' ? value.replaceAll(' ', '') : value,
-      }));
-    },
-    [],
-  );
-
-  const handleJoinButtonClicked = useCallback((role: Role) => {
-    setZoomContextState(prevState => ({
-      ...prevState,
-      role,
-    }));
-  }, []);
-
   return (
     <ZoomContext.Provider value={zoomContextState}>
       <Container className="text-center">
         <>
-          {!code ? (
-            <Button onClick={() => authorizeZoom(redirectUri)}>
-              Authorize Zoom
-            </Button>
-          ) : (
-            !zoomContextState.userSignature && (
-              <>
-                <Input
-                  size="small"
-                  type="text"
-                  name="meetingNumber"
-                  placeholder="Meeting number"
-                  onChange={handleInputChange}
-                  className="mb-3"
-                />
-                <Input
-                  size="small"
-                  type="text"
-                  name="username"
-                  placeholder="Meeting username"
-                  onChange={handleInputChange}
-                  className="mb-3"
-                />
-                <Input
-                  size="small"
-                  type="text"
-                  name="password"
-                  placeholder="Meeting password (if any)"
-                  onChange={handleInputChange}
-                  className="mb-3"
-                />
-                <Row className="text-center">
-                  <Col>
-                    <Button
-                      size="small"
-                      onClick={() => handleJoinButtonClicked(Role.Host)}
-                    >
-                      Join as host
-                    </Button>
-                  </Col>
-                  <Col>
-                    <Button
-                      size="small"
-                      onClick={() => handleJoinButtonClicked(Role.Guest)}
-                    >
-                      Join as guest
-                    </Button>
-                  </Col>
-                </Row>
-              </>
-            )
-          )}
+          {!zoomContextState.userSignature &&
+            (user?.coach ? (
+              <HostControl
+                isAuthorized={!!code}
+                redirectUri={redirectUri}
+                setZoomContextState={setZoomContextState}
+              />
+            ) : (
+              <GuestControl setZoomContextState={setZoomContextState} />
+            ))}
         </>
         {zoomAuthorizeApi.loading ||
           (zoomSignatureApi.loading && <Spinner animation="grow" />)}

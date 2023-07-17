@@ -1,28 +1,23 @@
 import React, { useCallback } from 'react';
 
 import { ui } from '@application';
+import { Components } from '@types';
 
 import { ZoomContextType } from '../../context';
 import { authorizeZoom } from '../../services';
 
 const { Button, Form } = ui;
 
-interface HostControlProps {
-  isAuthorized: boolean;
-  redirectUri: string;
-  onJoin: Function;
-}
-
 interface ZoomHostData {
   meetingNumber: string;
   password: string;
 }
 
-const HostControl = ({
+const ZoomHostControl: Components['ZoomHostControl'] = ({
   isAuthorized,
   redirectUri,
   onJoin,
-}: HostControlProps) => {
+}) => {
   const onSubmit = useCallback(
     ({ meetingNumber, password }: ZoomHostData) => {
       onJoin((prevState: ZoomContextType) => ({
@@ -68,4 +63,4 @@ const HostControl = ({
   );
 };
 
-export default HostControl;
+export default ZoomHostControl;

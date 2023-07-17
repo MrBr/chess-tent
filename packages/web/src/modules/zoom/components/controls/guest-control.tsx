@@ -1,21 +1,18 @@
 import React, { useCallback } from 'react';
 
 import { ui } from '@application';
+import { Components } from '@types';
 
 import { ZoomContextType } from '../../context';
 
 const { Button, Form } = ui;
-
-interface GuestControlProps {
-  onJoin: Function;
-}
 
 interface ZoomGuestData {
   meetingNumber: string;
   password: string;
 }
 
-const GuestControl = ({ onJoin }: GuestControlProps) => {
+const ZoomGuestControl: Components['ZoomGuestControl'] = ({ onJoin }) => {
   const onSubmit = useCallback(
     ({ meetingNumber, password }: ZoomGuestData) => {
       onJoin((prevState: ZoomContextType) => ({
@@ -53,4 +50,4 @@ const GuestControl = ({ onJoin }: GuestControlProps) => {
   );
 };
 
-export default GuestControl;
+export default ZoomGuestControl;

@@ -381,6 +381,12 @@ export type Components = {
     user: User;
   }>;
   ZoomActivityView: ComponentType<{}>;
+  ZoomHostControl: ComponentType<{
+    isAuthorized: boolean;
+    redirectUri: string;
+    onJoin: Function;
+  }>;
+  ZoomGuestControl: ComponentType<{ onJoin: Function }>;
   Search: ComponentType<ClassNameProps>;
   ConferencingPeer: ComponentType<{
     fromUserId: string;

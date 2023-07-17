@@ -7,30 +7,31 @@ import { authorizeZoom } from '../../services';
 
 const { Button, Form } = ui;
 
+interface HostControlProps {
+  isAuthorized: boolean;
+  redirectUri: string;
+  onJoin: Function;
+}
+
+interface ZoomHostData {
+  meetingNumber: string;
+  password: string;
+}
+
 const HostControl = ({
   isAuthorized,
   redirectUri,
-  setZoomContextState,
-}: {
-  isAuthorized: boolean;
-  redirectUri: string;
-  setZoomContextState: Function;
-}) => {
+  onJoin,
+}: HostControlProps) => {
   const onSubmit = useCallback(
-    ({
-      meetingNumber,
-      password,
-    }: {
-      meetingNumber: string;
-      password: string;
-    }) => {
-      setZoomContextState((prevState: ZoomContextType) => ({
+    ({ meetingNumber, password }: ZoomHostData) => {
+      onJoin((prevState: ZoomContextType) => ({
         ...prevState,
         meetingNumber: meetingNumber.replaceAll(' ', ''),
         password,
       }));
     },
-    [setZoomContextState],
+    [onJoin],
   );
 
   return (

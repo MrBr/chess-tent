@@ -6,26 +6,25 @@ import { ZoomContextType } from '../../context';
 
 const { Button, Form } = ui;
 
-const GuestControl = ({
-  setZoomContextState,
-}: {
-  setZoomContextState: Function;
-}) => {
+interface GuestControlProps {
+  onJoin: Function;
+}
+
+interface ZoomGuestData {
+  meetingNumber: string;
+  password: string;
+}
+
+const GuestControl = ({ onJoin }: GuestControlProps) => {
   const onSubmit = useCallback(
-    ({
-      meetingNumber,
-      password,
-    }: {
-      meetingNumber: string;
-      password: string;
-    }) => {
-      setZoomContextState((prevState: ZoomContextType) => ({
+    ({ meetingNumber, password }: ZoomGuestData) => {
+      onJoin((prevState: ZoomContextType) => ({
         ...prevState,
         meetingNumber: meetingNumber.replaceAll(' ', ''),
         password,
       }));
     },
-    [setZoomContextState],
+    [onJoin],
   );
 
   return (

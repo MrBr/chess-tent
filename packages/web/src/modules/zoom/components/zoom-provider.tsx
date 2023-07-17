@@ -70,15 +70,17 @@ const ZoomProvider: Components['ZoomProvider'] = ({ redirectUri, user }) => {
               <HostControl
                 isAuthorized={!!code}
                 redirectUri={redirectUri}
-                setZoomContextState={setZoomContextState}
+                onJoin={setZoomContextState}
               />
             ) : (
-              <GuestControl setZoomContextState={setZoomContextState} />
+              <GuestControl onJoin={setZoomContextState} />
             ))}
         </>
         {zoomAuthorizeApi.loading ||
           (zoomSignatureApi.loading && <Spinner animation="grow" />)}
-        {zoomContextState.userSignature && <ZoomActivityView />}
+        {zoomContextState.userSignature && (
+          <ZoomActivityView resetContext={resetContext} />
+        )}
       </Container>
     </ZoomContext.Provider>
   );

@@ -11,6 +11,10 @@ const ZoomActivityView: Components['ZoomActivityView'] = () => {
   const zoomContext: ZoomContextType = useZoomContext();
 
   useEffect(() => {
+    if (!zoomContext.userSignature) {
+      return;
+    }
+
     const client = ZoomMtgEmbedded.createClient();
     const meetingSDKElement =
       document.getElementById('meetingSDKElement') || undefined;
@@ -19,7 +23,6 @@ const ZoomActivityView: Components['ZoomActivityView'] = () => {
 
     client
       .init({
-        debug: true,
         zoomAppRoot: meetingSDKElement,
         language: 'en-US',
       })

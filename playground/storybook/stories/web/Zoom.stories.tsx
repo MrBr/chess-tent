@@ -22,14 +22,30 @@ const user: User = {
 };
 
 export const Default: ComponentStory<Components['ZoomProvider']> =
-  withWebNamespace('components', (args, { ZoomProvider, Route, Router }) => {
-    return (
-      <Router>
-        {() => (
-          <Route path="/">
-            <ZoomProvider redirectUri={redirectUri} user={user} />
-          </Route>
-        )}
-      </Router>
-    );
-  });
+  withWebNamespace(
+    'components',
+    (
+      args,
+      {
+        ZoomProvider,
+        Route,
+        Router,
+        ZoomActivityView,
+        ZoomHostControl,
+        ZoomGuestControl,
+      },
+    ) => {
+      return (
+        <Router>
+          {() => (
+            <Route path="/">
+              <ZoomProvider redirectUri={redirectUri} user={user}>
+                {user?.coach ? <ZoomHostControl /> : <ZoomGuestControl />}
+                <ZoomActivityView />
+              </ZoomProvider>
+            </Route>
+          )}
+        </Router>
+      );
+    },
+  );

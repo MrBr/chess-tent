@@ -379,14 +379,11 @@ export type Components = {
   ZoomProvider: ComponentType<{
     redirectUri: string;
     user: User;
+    children: ReactNode;
   }>;
   ZoomActivityView: ComponentType<{}>;
-  ZoomHostControl: ComponentType<{
-    isAuthorized: boolean;
-    redirectUri: string;
-    onJoin: Function;
-  }>;
-  ZoomGuestControl: ComponentType<{ onJoin: Function }>;
+  ZoomHostControl: ComponentType<{}>;
+  ZoomGuestControl: ComponentType<{}>;
   Search: ComponentType<ClassNameProps>;
   ConferencingPeer: ComponentType<{
     fromUserId: string;

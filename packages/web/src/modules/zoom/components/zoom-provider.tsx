@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { hooks, ui } from '@application';
+import { hooks } from '@application';
 import { Components } from '@types';
 
 import { zoomAuthorize, generateSignature } from '../requests';
 import { ZoomContext, ZoomContextType, Role } from '../context';
-import ZoomActivityView from './zoom-activity-view';
-import HostControl from './controls/host-control';
-import GuestControl from './controls/guest-control';
 
 const { useApi, useQuery } = hooks;
-const { Container, Spinner } = ui;
 
-const ZoomProvider: Components['ZoomProvider'] = ({ redirectUri, user }) => {
+const ZoomProvider: Components['ZoomProvider'] = ({
+  redirectUri,
+  user,
+  children,
+}) => {
   const [zoomContextState, setZoomContextState] = useState<ZoomContextType>({
     userSignature: '',
     hostUserZakToken: null,
@@ -19,9 +19,22 @@ const ZoomProvider: Components['ZoomProvider'] = ({ redirectUri, user }) => {
     username: user.nickname,
     password: '',
     role: user?.coach ? Role.Host : Role.Guest,
+    authCode: undefined,
+    redirectUri,
+    updateContext: () => {},
   });
 
   const { code } = useQuery<{ code?: string; path?: string }>();
+
+  useEffect(() => {
+    setZoomContextState(prevState => ({
+      ...prevState,
+      authCode: code,
+      redirectUri: redirectUri,
+      updateContext: setZoomContextState,
+    }));
+  }, [code, redirectUri]);
+
   const zoomAuthorizeApi = useApi(zoomAuthorize);
   const zoomSignatureApi = useApi(generateSignature);
 
@@ -63,25 +76,7 @@ const ZoomProvider: Components['ZoomProvider'] = ({ redirectUri, user }) => {
 
   return (
     <ZoomContext.Provider value={zoomContextState}>
-      <Container className="text-center">
-        <>
-          {!zoomContextState.userSignature &&
-            (user?.coach ? (
-              <HostControl
-                isAuthorized={!!code}
-                redirectUri={redirectUri}
-                onJoin={setZoomContextState}
-              />
-            ) : (
-              <GuestControl onJoin={setZoomContextState} />
-            ))}
-        </>
-        {zoomAuthorizeApi.loading ||
-          (zoomSignatureApi.loading && <Spinner animation="grow" />)}
-        {zoomContextState.userSignature && (
-          <ZoomActivityView resetContext={resetContext} />
-        )}
-      </Container>
+      {children}
     </ZoomContext.Provider>
   );
 };

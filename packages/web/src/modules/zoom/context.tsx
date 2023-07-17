@@ -12,6 +12,9 @@ export interface ZoomContextType {
   username: string;
   password: string;
   role: Role | null;
+  authCode: string | undefined;
+  redirectUri: string | '';
+  updateContext: Function;
 }
 
 export const ZoomContext = createContext({} as ZoomContextType);

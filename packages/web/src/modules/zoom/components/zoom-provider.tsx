@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { hooks } from '@application';
 import { Components } from '@types';
 
@@ -12,67 +12,93 @@ const ZoomProvider: Components['ZoomProvider'] = ({
   user,
   children,
 }) => {
-  const [zoomContextState, setZoomContextState] = useState<ZoomContextType>({
-    userSignature: '',
-    hostUserZakToken: null,
-    meetingNumber: '',
-    username: user.nickname,
-    password: '',
-    role: user?.coach ? Role.Host : Role.Guest,
-    authCode: undefined,
-    redirectUri,
-    updateContext: () => {},
-  });
+  const { fetch: authFetch, response: authResponse } = useApi(zoomAuthorize);
+  const {
+    fetch: signatureFetch,
+    response: signatureResponse,
+    loading: signatureLoading,
+  } = useApi(generateSignature);
 
-  const { code } = useQuery<{ code?: string; path?: string }>();
+  const { code } = useQuery<{ code?: string }>();
+
+  const initialState: ZoomContextType = useMemo(
+    () => ({
+      userSignature: '',
+      hostUserZakToken: null,
+      meetingNumber: '',
+      username: user.nickname,
+      password: '',
+      role: user?.coach ? Role.Host : Role.Guest,
+      authCode: code,
+      redirectUri,
+      updateContext: () => {},
+      resetContext: () => {},
+    }),
+    [user, redirectUri, code],
+  );
+
+  const [zoomContextState, setZoomContextState] =
+    useState<ZoomContextType>(initialState);
+
+  const resetContext = useCallback(() => {
+    if (zoomContextState.meetingNumber === '') {
+      return;
+    }
+
+    setZoomContextState(initialState);
+  }, [initialState, zoomContextState.meetingNumber]);
 
   useEffect(() => {
     setZoomContextState(prevState => ({
       ...prevState,
-      authCode: code,
-      redirectUri: redirectUri,
       updateContext: setZoomContextState,
+      resetContext,
     }));
-  }, [code, redirectUri]);
-
-  const zoomAuthorizeApi = useApi(zoomAuthorize);
-  const zoomSignatureApi = useApi(generateSignature);
+  }, [resetContext]);
 
   useEffect(() => {
     if (
       zoomContextState.meetingNumber === '' ||
-      zoomSignatureApi.response ||
-      zoomSignatureApi.loading
+      signatureResponse ||
+      signatureLoading
     ) {
       return;
     }
 
-    if (!code && zoomContextState.role === Role.Host) {
+    if (!zoomContextState.authCode && zoomContextState.role === Role.Host) {
       return;
-    } else if (code) {
-      zoomAuthorizeApi.fetch({ code, redirectUri });
+    } else if (zoomContextState.authCode) {
+      authFetch({ code: zoomContextState.authCode, redirectUri });
     }
 
-    zoomSignatureApi.fetch({
+    signatureFetch({
       meetingNumber: zoomContextState.meetingNumber,
       role: zoomContextState.role as number,
     });
-  }, [code, zoomSignatureApi, zoomAuthorizeApi, redirectUri, zoomContextState]);
+  }, [
+    signatureFetch,
+    signatureResponse,
+    signatureLoading,
+    authFetch,
+    redirectUri,
+    zoomContextState,
+  ]);
 
   useEffect(() => {
     if (
-      !zoomSignatureApi.response?.data ||
-      zoomContextState.userSignature ||
-      (!zoomAuthorizeApi.response?.data && zoomContextState.role === Role.Host)
+      !signatureResponse?.data ||
+      zoomContextState.userSignature !== '' ||
+      (!authResponse?.data && zoomContextState.role === Role.Host)
     ) {
       return;
     }
+
     setZoomContextState(prevState => ({
       ...prevState,
-      userSignature: zoomSignatureApi.response.data,
-      hostUserZakToken: zoomAuthorizeApi.response?.data,
+      userSignature: signatureResponse.data,
+      hostUserZakToken: authResponse?.data,
     }));
-  }, [zoomSignatureApi, code, zoomAuthorizeApi, zoomContextState]);
+  }, [signatureResponse, authResponse, zoomContextState]);
 
   return (
     <ZoomContext.Provider value={zoomContextState}>

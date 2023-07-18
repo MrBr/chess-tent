@@ -29,7 +29,7 @@ const ZoomHostControl: Components['ZoomHostControl'] = () => {
 
   return (
     <>
-      {!zoomContext.userSignature &&
+      {zoomContext.meetingNumber === '' &&
         (!zoomContext.authCode ? (
           <Button onClick={() => authorizeZoom(zoomContext.redirectUri)}>
             Authorize Zoom
@@ -49,7 +49,7 @@ const ZoomHostControl: Components['ZoomHostControl'] = () => {
             />
             <Form.Input
               size="small"
-              type="text"
+              type="password"
               name="password"
               placeholder="Meeting password (if any)"
               className="mb-3"

@@ -383,7 +383,7 @@ export type Components = {
   }>;
   ZoomActivityView: ComponentType<{}>;
   ZoomHostControl: ComponentType<{}>;
-  ZoomGuestControl: ComponentType<{}>;
+  ZoomGuestControl: ComponentType<{ meetingNumber: string }>;
   Search: ComponentType<ClassNameProps>;
   ConferencingPeer: ComponentType<{
     fromUserId: string;

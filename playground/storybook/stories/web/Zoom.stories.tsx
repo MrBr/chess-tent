@@ -21,6 +21,8 @@ const user: User = {
   state: {},
 };
 
+const guestMeetingNumber = '4785447829';
+
 export const Default: ComponentStory<Components['ZoomProvider']> =
   withWebNamespace(
     'components',
@@ -40,7 +42,11 @@ export const Default: ComponentStory<Components['ZoomProvider']> =
           {() => (
             <Route path="/">
               <ZoomProvider redirectUri={redirectUri} user={user}>
-                {user?.coach ? <ZoomHostControl /> : <ZoomGuestControl />}
+                {user?.coach ? (
+                  <ZoomHostControl />
+                ) : (
+                  <ZoomGuestControl meetingNumber={guestMeetingNumber} />
+                )}
                 <ZoomActivityView />
               </ZoomProvider>
             </Route>

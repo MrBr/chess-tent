@@ -7,7 +7,7 @@ export enum Role {
 
 export interface ZoomContextType {
   userSignature: string;
-  hostUserZakToken: string | null;
+  hostUserZakToken: string | undefined;
   meetingNumber: string;
   username: string;
   password: string;

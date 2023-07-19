@@ -24,7 +24,7 @@ const ZoomProvider: Components['ZoomProvider'] = ({
   const initialState: ZoomContextType = useMemo(
     () => ({
       userSignature: '',
-      hostUserZakToken: null,
+      hostUserZakToken: undefined,
       meetingNumber: '',
       username: user.nickname,
       password: '',

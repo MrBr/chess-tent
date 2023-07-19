@@ -119,4 +119,7 @@ export interface Requests {
 
   findTags: RequestFetch<Endpoints['findTags']>;
   tags: RequestFetch<Endpoints['tags']>;
+
+  zoomAuthorize: RequestFetch<Endpoints['zoomAuthorize']>;
+  zoomSignature: RequestFetch<Endpoints['zoomSignature']>;
 }

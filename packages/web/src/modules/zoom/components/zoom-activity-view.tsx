@@ -14,19 +14,26 @@ interface ZoomConnectionChange {
 }
 
 const ZoomActivityView: Components['ZoomActivityView'] = () => {
-  const zoomContext: ZoomContextType = useZoomContext();
+  const {
+    resetContext,
+    meetingNumber,
+    userSignature,
+    username,
+    password,
+    hostUserZakToken,
+  }: ZoomContextType = useZoomContext();
 
   const connectionChange = useCallback(
     (event: ZoomConnectionChange) => {
       if (event.state === 'Closed' || event.state === 'Fail') {
-        zoomContext.resetContext();
+        resetContext();
       }
     },
-    [zoomContext],
+    [resetContext],
   );
 
   useEffect(() => {
-    if (zoomContext.meetingNumber === '' || zoomContext.userSignature === '') {
+    if (meetingNumber === '' || userSignature === '') {
       return;
     }
 
@@ -45,16 +52,23 @@ const ZoomActivityView: Components['ZoomActivityView'] = () => {
       .then(() => {
         client.join({
           sdkKey: sdkKey,
-          signature: zoomContext.userSignature,
-          meetingNumber: zoomContext.meetingNumber,
-          userName: zoomContext.username,
-          password: zoomContext.password,
-          zak: zoomContext.hostUserZakToken || '',
+          signature: userSignature,
+          meetingNumber: meetingNumber,
+          userName: username,
+          password: password,
+          zak: hostUserZakToken || '',
         });
       });
 
     client.on('connection-change', connectionChange);
-  }, [zoomContext, connectionChange]);
+  }, [
+    userSignature,
+    meetingNumber,
+    username,
+    password,
+    hostUserZakToken,
+    connectionChange,
+  ]);
 
   return <Container id="meetingSDKElement"></Container>;
 };

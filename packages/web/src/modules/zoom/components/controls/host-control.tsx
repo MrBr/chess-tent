@@ -27,38 +27,43 @@ const ZoomHostControl: Components['ZoomHostControl'] = () => {
     [zoomContext],
   );
 
+  if (zoomContext.password) {
+    return <></>;
+  }
+
+  if (!zoomContext.password && !zoomContext.authCode) {
+    return (
+      <Button onClick={() => authorizeZoom(zoomContext.redirectUri)}>
+        Authorize Zoom
+      </Button>
+    );
+  }
+
   return (
     <>
-      {!zoomContext.password &&
-        (!zoomContext.authCode ? (
-          <Button onClick={() => authorizeZoom(zoomContext.redirectUri)}>
-            Authorize Zoom
-          </Button>
-        ) : (
-          <Form
-            initialValues={{ meetingNumber: '', password: '' }}
-            onSubmit={onSubmit}
-            className="text-center"
-          >
-            <Form.Input
-              size="small"
-              type="text"
-              name="meetingNumber"
-              placeholder="Meeting number"
-              className="mb-3"
-            />
-            <Form.Input
-              size="small"
-              type="password"
-              name="password"
-              placeholder="Meeting password (if any)"
-              className="mb-3"
-            />
-            <Button size="small" type="submit">
-              Join
-            </Button>
-          </Form>
-        ))}
+      <Form
+        initialValues={{ meetingNumber: '', password: '' }}
+        onSubmit={onSubmit}
+        className="text-center"
+      >
+        <Form.Input
+          size="small"
+          type="text"
+          name="meetingNumber"
+          placeholder="Meeting number"
+          className="mb-3"
+        />
+        <Form.Input
+          size="small"
+          type="password"
+          name="password"
+          placeholder="Meeting password (if any)"
+          className="mb-3"
+        />
+        <Button size="small" type="submit">
+          Join
+        </Button>
+      </Form>
     </>
   );
 };

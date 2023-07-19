@@ -40,16 +40,14 @@ export const Default: ComponentStory<Components['ZoomProvider']> =
       return (
         <Router>
           {() => (
-            <Route path="/">
-              <ZoomProvider redirectUri={redirectUri} user={user}>
-                {user?.coach ? (
-                  <ZoomHostControl />
-                ) : (
-                  <ZoomGuestControl meetingNumber={guestMeetingNumber} />
-                )}
-                <ZoomActivityView />
-              </ZoomProvider>
-            </Route>
+            <ZoomProvider redirectUri={redirectUri} user={user}>
+              {user?.coach ? (
+                <ZoomHostControl />
+              ) : (
+                <ZoomGuestControl meetingNumber={guestMeetingNumber} />
+              )}
+              <ZoomActivityView />
+            </ZoomProvider>
           )}
         </Router>
       );

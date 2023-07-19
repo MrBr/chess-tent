@@ -29,7 +29,7 @@ const ZoomHostControl: Components['ZoomHostControl'] = () => {
 
   return (
     <>
-      {zoomContext.meetingNumber === '' &&
+      {!zoomContext.password &&
         (!zoomContext.authCode ? (
           <Button onClick={() => authorizeZoom(zoomContext.redirectUri)}>
             Authorize Zoom

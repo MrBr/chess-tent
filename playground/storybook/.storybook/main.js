@@ -66,6 +66,7 @@ module.exports = {
     '@storybook/addon-essentials',
     '@storybook/addon-links',
     '@storybook/addon-interactions',
+    '@storybook/addon-controls',
   ],
   framework: '@storybook/react',
 };

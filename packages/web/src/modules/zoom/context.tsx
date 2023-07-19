@@ -10,7 +10,7 @@ export interface ZoomContextType {
   hostUserZakToken: string | undefined;
   meetingNumber: string;
   username: string;
-  password: string;
+  password: string | null;
   role: Role | null;
   authCode: string | undefined;
   redirectUri: string | '';

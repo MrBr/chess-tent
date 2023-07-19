@@ -10,6 +10,7 @@ const { useApi, useQuery } = hooks;
 const ZoomProvider: Components['ZoomProvider'] = ({
   redirectUri,
   user,
+  meetingNumber,
   children,
 }) => {
   const { fetch: authFetch, response: authResponse } = useApi(zoomAuthorize);
@@ -25,28 +26,28 @@ const ZoomProvider: Components['ZoomProvider'] = ({
     () => ({
       userSignature: '',
       hostUserZakToken: undefined,
-      meetingNumber: '',
+      meetingNumber: meetingNumber?.replaceAll(' ', '') || '',
       username: user.nickname,
-      password: '',
+      password: null,
       role: user?.coach ? Role.Host : Role.Guest,
       authCode: code,
       redirectUri,
       updateContext: () => {},
       resetContext: () => {},
     }),
-    [user, redirectUri, code],
+    [user, redirectUri, code, meetingNumber],
   );
 
   const [zoomContextState, setZoomContextState] =
     useState<ZoomContextType>(initialState);
 
   const resetContext = useCallback(() => {
-    if (zoomContextState.meetingNumber === '') {
+    if (zoomContextState.userSignature === initialState.userSignature) {
       return;
     }
 
     setZoomContextState(initialState);
-  }, [initialState, zoomContextState.meetingNumber]);
+  }, [initialState, zoomContextState.userSignature]);
 
   useEffect(() => {
     setZoomContextState(prevState => ({

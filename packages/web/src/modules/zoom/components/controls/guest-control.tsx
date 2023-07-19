@@ -11,25 +11,22 @@ interface ZoomGuestData {
   password: string;
 }
 
-const ZoomGuestControl: Components['ZoomGuestControl'] = ({
-  meetingNumber,
-}) => {
+const ZoomGuestControl: Components['ZoomGuestControl'] = () => {
   const zoomContext: ZoomContextType = useZoomContext();
 
   const onSubmit = useCallback(
     ({ password }: ZoomGuestData) => {
       zoomContext.updateContext((prevState: ZoomContextType) => ({
         ...prevState,
-        meetingNumber: meetingNumber.replaceAll(' ', ''),
         password,
       }));
     },
-    [meetingNumber, zoomContext],
+    [zoomContext],
   );
 
   return (
     <>
-      {zoomContext.meetingNumber === '' && (
+      {!zoomContext.password && (
         <Form
           initialValues={{ password: '' }}
           onSubmit={onSubmit}

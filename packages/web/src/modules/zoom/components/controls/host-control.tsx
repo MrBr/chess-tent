@@ -27,7 +27,7 @@ const ZoomHostControl: Components['ZoomHostControl'] = () => {
     [zoomContext],
   );
 
-  if (zoomContext.password) {
+  if (zoomContext.password && zoomContext.meetingNumber) {
     return <></>;
   }
 

@@ -28,7 +28,7 @@ export const Default: ComponentStory<Components['ZoomProvider']> =
             <ZoomProvider
               redirectUri={redirectUri}
               user={user}
-              meetingNumber={meetingNumber}
+              meetingNumber={!user?.coach ? meetingNumber : undefined}
             >
               {user?.coach ? <ZoomHostControl /> : <ZoomGuestControl />}
               <ZoomActivityView />
@@ -41,19 +41,21 @@ export const Default: ComponentStory<Components['ZoomProvider']> =
 
 Default.args = {
   redirectUri: 'https://localhost:6006/?path=/story/components-zoom--default',
+  meetingNumber: '4785447829',
   user: {
     id: '1',
-    coach: false,
+    coach: true,
     nickname: 'nickname',
     name: 'Nick Name',
     type: TYPE_USER,
     state: {},
   },
-  meetingNumber: '4785447829',
 };
 
 Default.argTypes = {
   redirectUri: { control: 'text' },
-  meetingNumber: { control: 'text' },
+  meetingNumber: {
+    control: 'text',
+  },
   user: { control: 'object' },
 };

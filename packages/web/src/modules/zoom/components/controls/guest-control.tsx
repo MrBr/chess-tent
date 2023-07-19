@@ -24,7 +24,7 @@ const ZoomGuestControl: Components['ZoomGuestControl'] = () => {
     [zoomContext],
   );
 
-  if (zoomContext.password) {
+  if (!!zoomContext.password) {
     return <></>;
   }
 

@@ -24,9 +24,9 @@ const ZoomProvider: Components['ZoomProvider'] = ({
 
   const initialState: ZoomContextType = useMemo(
     () => ({
-      userSignature: '',
+      userSignature: null,
       hostUserZakToken: undefined,
-      meetingNumber: meetingNumber?.replaceAll(' ', '') || '',
+      meetingNumber: meetingNumber?.replaceAll(' ', ''),
       username: user.nickname,
       password: null,
       role: user?.coach ? Role.Host : Role.Guest,
@@ -59,7 +59,7 @@ const ZoomProvider: Components['ZoomProvider'] = ({
 
   useEffect(() => {
     if (
-      zoomContextState.meetingNumber === '' ||
+      !zoomContextState.meetingNumber ||
       signatureResponse ||
       signatureLoading
     ) {
@@ -88,7 +88,7 @@ const ZoomProvider: Components['ZoomProvider'] = ({
   useEffect(() => {
     if (
       !signatureResponse?.data ||
-      zoomContextState.userSignature !== '' ||
+      zoomContextState.userSignature ||
       (!authResponse?.data && zoomContextState.role === Role.Host)
     ) {
       return;

@@ -33,7 +33,7 @@ const ZoomActivityView: Components['ZoomActivityView'] = () => {
   );
 
   useEffect(() => {
-    if (!password || password === '' || userSignature === '') {
+    if (!password || !userSignature || !meetingNumber) {
       return;
     }
 

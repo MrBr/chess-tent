@@ -1,4 +1,4 @@
-import { getDiff } from '../utils';
+import { getDiff } from '../utils/getDiff';
 
 describe('getDiff', () => {
   test('diff between string and object', () => {

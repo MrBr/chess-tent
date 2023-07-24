@@ -85,11 +85,16 @@ const ZoomProvider: Components['ZoomProvider'] = ({
   });
 
   useEffect(() => {
-    if (!zoomContextState.authCode && zoomContextState.role === ZoomRole.Host) {
+    if (
+      (!zoomContextState.authCode && zoomContextState.role === ZoomRole.Host) ||
+      !zoomContextState.authCode ||
+      authLoading ||
+      authResponse
+    ) {
       return;
-    } else if (zoomContextState.authCode && !authLoading && !authResponse) {
-      authFetch({ code: zoomContextState.authCode, redirectUri });
     }
+
+    authFetch({ code: zoomContextState.authCode, redirectUri });
   }, [authFetch, authLoading, authResponse, redirectUri, zoomContextState]);
 
   useEffect(() => {

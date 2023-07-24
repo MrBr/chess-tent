@@ -34,6 +34,7 @@ const ZoomProvider: Components['ZoomProvider'] = ({
       redirectUri,
       updateContext: () => {},
       resetContext: () => {},
+      isOnCall: false,
     }),
     [user, redirectUri, code, meetingNumber],
   );

@@ -21,15 +21,25 @@ const ZoomActivityView: Components['ZoomActivityView'] = () => {
     username,
     password,
     hostUserZakToken,
+    updateContext,
   }: ZoomContextType = useZoomContext();
 
   const connectionChange = useCallback(
     (event: ZoomConnectionChange) => {
-      if (event.state === 'Closed' || event.state === 'Fail') {
-        resetContext();
+      switch (event.state) {
+        case 'Connected':
+          updateContext((prevState: ZoomContextType) => ({
+            ...prevState,
+            isOnCall: true,
+          }));
+          break;
+        case 'Closed':
+        case 'Fail':
+          resetContext();
+          break;
       }
     },
-    [resetContext],
+    [resetContext, updateContext],
   );
 
   useEffect(() => {

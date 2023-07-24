@@ -1,21 +1,11 @@
-import '@chess-tent/web/src/modules/ui/style';
-import '@chess-tent/web/src/modules';
-import application from '@chess-tent/web/src/application';
+import './env';
+import { addDecorator } from '@storybook/react';
 
-export const parameters = {
-  actions: { argTypesRegex: '^on[A-Z].*' },
-  controls: {
-    matchers: {
-      color: /(background|color)$/i,
-      date: /Date$/,
-    },
-  },
-};
+import { loaders as webLoaders } from './web';
+
+addDecorator(story => {
+  return story();
+});
 
 // preview.js
-export const loaders = [
-  async () => {
-    await application.init();
-    return { application };
-  },
-];
+export const loaders = [...webLoaders];

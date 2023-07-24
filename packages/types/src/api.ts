@@ -15,6 +15,7 @@ import {
   Tag,
   TYPE_LESSON,
   User,
+  ZoomRole,
 } from '@chess-tent/models';
 import { GenericArguments } from './_helpers';
 import { LessonAction } from './actions';
@@ -72,6 +73,7 @@ export interface RequestMentorshipResponse
 export interface StudentsResponse extends DataResponse<Mentorship[]> {}
 export interface NotificationsResponse extends DataResponse<Notification[]> {}
 export interface TagsResponse extends DataResponse<Tag[]> {}
+export interface ZoomResponse extends DataResponse<string> {}
 
 export interface ActivityFilters {
   users?: User['id'][];
@@ -384,4 +386,13 @@ export interface Endpoints {
   // Tags endpoints
   findTags: Endpoint<RequestPost<'/tags', string>, TagsResponse>;
   tags: Endpoint<RequestGet<'/tags'>, TagsResponse>;
+  // Zoom endpoints
+  zoomAuthorize: Endpoint<
+    RequestPost<'/zoom/authorize', { code: string; redirectUri: string }>,
+    ZoomResponse
+  >;
+  zoomSignature: Endpoint<
+    RequestPost<'/zoom/signature', { meetingNumber: string; role: ZoomRole }>,
+    ZoomResponse
+  >;
 }

@@ -5,6 +5,8 @@ import https from 'https';
 
 export const generateIndex = () => uuid();
 
+export const getCorsOrigin = () => process.env.APP_DOMAINS?.split(',');
+
 export const startHttpServer = (app: Express) =>
   app.listen(process.env.PORT, () =>
     console.log(`Application started at port: ${process.env.PORT}`),

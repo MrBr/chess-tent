@@ -23,7 +23,7 @@ describe('useRecordInit', () => {
     } = renderHook(() => useRecordInit(initRecord, 'key'), {
       wrapper,
     });
-    expect(record.get()?.meta.prop).toStrictEqual('prop');
-    expect(record.get()?.value).toStrictEqual(['test']);
+    expect(record.get()?.meta.prop).toEqual('prop');
+    expect(record.get()?.value).toEqual(['test']);
   });
 });

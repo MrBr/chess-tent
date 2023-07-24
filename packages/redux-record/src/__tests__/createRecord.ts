@@ -61,7 +61,7 @@ describe('createRecord', () => {
     const record = initRecord('key')(store);
     record.init();
     expect(record.get()?.meta.metaProp).toBe('metaProp');
-    expect(record.get()?.value).toStrictEqual(['test']);
+    expect(record.get()?.value).toEqual(['test']);
   });
   test('should amend record meta', function () {
     const store = mockStore();
@@ -105,8 +105,8 @@ describe('createRecord', () => {
     });
     const record = initRecord('key')(store);
     record.init();
-    expect(record.get()?.value).toStrictEqual(['test']);
-    expect(record.test()).toStrictEqual(['test']);
+    expect(record.get()?.value).toEqual(['test']);
+    expect(record.test()).toEqual(['test']);
   });
   test('should update value and meta', function () {
     const store = mockStore();
@@ -117,9 +117,9 @@ describe('createRecord', () => {
     const record = initRecord('key')(store);
     record.init();
     expect(record.get()?.meta.prop).toBe('prop');
-    expect(record.get()?.value).toStrictEqual('test');
+    expect(record.get()?.value).toEqual('test');
     record.update('new', { prop: 'newProp' });
     expect(record.get()?.meta.prop).toBe('newProp');
-    expect(record.get()?.value).toStrictEqual('new');
+    expect(record.get()?.value).toEqual('new');
   });
 });

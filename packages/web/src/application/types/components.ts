@@ -376,6 +376,15 @@ export type RenderPropComponentType = ComponentType<{
 
 export type Components = {
   ConferencingProvider: ComponentType<{ room: string }>;
+  ZoomProvider: ComponentType<{
+    redirectUri: string;
+    user: User;
+    meetingNumber?: string;
+    children: ReactNode;
+  }>;
+  ZoomActivityView: ComponentType<{}>;
+  ZoomHostControl: ComponentType<{}>;
+  ZoomGuestControl: ComponentType<{}>;
   Search: ComponentType<ClassNameProps>;
   ConferencingPeer: ComponentType<{
     fromUserId: string;

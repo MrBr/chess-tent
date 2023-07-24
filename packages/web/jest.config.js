@@ -18,7 +18,10 @@ module.exports = {
       tsconfig: './tsconfig.json',
     },
   },
-  transformIgnorePatterns: ['/node_modules/(?!(chess.js|redux-record)/)'],
+  transformIgnorePatterns: [
+    '/node_modules/(?!(chess.js|redux-record)/)',
+    'node_modules',
+  ],
   // TODO - use once JEST is upgraded in react-scripts
   // Currently, JEST doesn't support a function export which is necessary to await module initialisation
   // Needed version 28.0.6. - https://github.com/facebook/jest/issues/11038#issuecomment-1055159681

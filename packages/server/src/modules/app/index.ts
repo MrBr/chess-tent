@@ -15,7 +15,12 @@ import {
   toLocals,
   validate,
 } from './middleware';
-import { generateIndex, startHttpServer, startHttpsServer } from './service';
+import {
+  generateIndex,
+  getCorsOrigin,
+  startHttpServer,
+  startHttpsServer,
+} from './service';
 import { BadRequest } from './errors';
 import { formatAppLink, shouldStartHttpsServer } from './utils';
 
@@ -25,7 +30,13 @@ const app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json({ limit: '2mb' }));
-app.use(cors({ origin: process.env.APP_DOMAIN, credentials: true }));
+app.use(
+  cors({
+    origin: getCorsOrigin(),
+    credentials: true,
+  }),
+);
+
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
 application.errors.BadRequest = BadRequest;

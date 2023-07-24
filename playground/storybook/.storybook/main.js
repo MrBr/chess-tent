@@ -1,5 +1,5 @@
 const path = require('path');
-var DynamicAliasResolvePlugin = require('dynamic-alias-resolve-plugin');
+const DynamicAliasResolvePlugin = require('dynamic-alias-resolve-plugin');
 
 // Helps properly resolve "relative" package alias
 const moduleAliases = (moduleIdentifier, aliases) =>
@@ -63,9 +63,10 @@ module.exports = {
     '../stories/**/*.stories.@(js|jsx|ts|tsx)',
   ],
   addons: [
-    '@storybook/addon-links',
     '@storybook/addon-essentials',
+    '@storybook/addon-links',
     '@storybook/addon-interactions',
+    '@storybook/addon-controls',
   ],
   framework: '@storybook/react',
 };

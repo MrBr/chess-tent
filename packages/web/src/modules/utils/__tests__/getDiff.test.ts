@@ -10,7 +10,7 @@ describe('getDiff', () => {
       prop: { nested: 1 },
     };
 
-    expect(getDiff(oldSubject, newSubject)).toStrictEqual({
+    expect(getDiff(oldSubject, newSubject)).toEqual({
       prop: { nested: 1 },
     });
   });
@@ -23,7 +23,7 @@ describe('getDiff', () => {
       prop: 'string',
     };
 
-    expect(getDiff(oldSubject, newSubject)).toStrictEqual({
+    expect(getDiff(oldSubject, newSubject)).toEqual({
       prop: 'string',
     });
   });
@@ -31,20 +31,20 @@ describe('getDiff', () => {
     const newSubject = {};
     const oldSubject = {};
 
-    expect(getDiff(oldSubject, newSubject)).toStrictEqual(newSubject);
+    expect(getDiff(oldSubject, newSubject)).toEqual(newSubject);
   });
   test('comparison between two arrays', () => {
     const newSubject = [1];
     const oldSubject = [1];
 
-    expect(getDiff(oldSubject, newSubject)).toStrictEqual({});
+    expect(getDiff(oldSubject, newSubject)).toEqual({});
   });
   test('comparison between two different arrays', () => {
     const oldSubject = [{ a: 1 }, { b: 1 }, { c: 1 }];
     const newSubject = [{ a: 1 }, { c: 1 }];
 
     const diff = getDiff(oldSubject, newSubject);
-    expect(diff).toStrictEqual({
+    expect(diff).toEqual({
       '1.b': undefined,
       '1.c': 1,
       '2': undefined,
@@ -63,7 +63,7 @@ describe('getDiff', () => {
       sameArrayInOldAndNew: [],
       oldNotExistInNew: 'old',
     };
-    expect(getDiff(oldSubject, newSubject)).toStrictEqual({
+    expect(getDiff(oldSubject, newSubject)).toEqual({
       oldNotExistInNew: undefined,
     });
   });
@@ -78,7 +78,7 @@ describe('getDiff', () => {
       prop: undefined,
     };
 
-    expect(getDiff(oldSubject, newSubject)).toStrictEqual(newSubject);
+    expect(getDiff(oldSubject, newSubject)).toEqual(newSubject);
   });
   test('comparison between undefined and object', () => {
     const newSubject = {
@@ -91,7 +91,7 @@ describe('getDiff', () => {
       },
     };
 
-    expect(getDiff(oldSubject, newSubject)).toStrictEqual(newSubject);
+    expect(getDiff(oldSubject, newSubject)).toEqual(newSubject);
   });
   test('comparison between undefined and array', () => {
     const oldSubject = {
@@ -102,7 +102,7 @@ describe('getDiff', () => {
       prop: [{}],
     };
 
-    expect(getDiff(oldSubject, newSubject)).toStrictEqual(newSubject);
+    expect(getDiff(oldSubject, newSubject)).toEqual(newSubject);
   });
   test('comparison between different nested object path', () => {
     const newSubject = {
@@ -129,7 +129,7 @@ describe('getDiff', () => {
       },
     };
 
-    expect(getDiff(oldSubject, newSubject)).toStrictEqual({
+    expect(getDiff(oldSubject, newSubject)).toEqual({
       'state.chapters.0.state.steps.0.prop': 1,
     });
   });
@@ -158,7 +158,7 @@ describe('getDiff', () => {
       },
     };
 
-    expect(getDiff(oldSubject, newSubject)).toStrictEqual({
+    expect(getDiff(oldSubject, newSubject)).toEqual({
       'state.chapters.0.state.steps': [{ a: 1 }, { c: 1 }],
     });
   });

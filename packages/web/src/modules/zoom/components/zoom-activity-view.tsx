@@ -1,9 +1,13 @@
-import React, { useEffect, useCallback, useRef } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { Components } from '@types';
 import { ui } from '@application';
 import ZoomMtgEmbedded from '@zoomus/websdk/embedded';
 
-import { ZoomContextType, useZoomContext } from '../context';
+import {
+  ZoomConnectionStatus,
+  ZoomContextType,
+  useZoomContext,
+} from '../context';
 
 const { Container } = ui;
 
@@ -12,6 +16,8 @@ interface ZoomConnectionChange {
   reason?: string;
   errorCode?: number;
 }
+
+const MEETING_NOT_STARTED_ERROR_CODE = 3008;
 
 const ZoomActivityView: Components['ZoomActivityView'] = () => {
   const {
@@ -28,11 +34,15 @@ const ZoomActivityView: Components['ZoomActivityView'] = () => {
     (event: ZoomConnectionChange) => {
       switch (event.state) {
         case 'Connected':
-          updateContext({ isOnCall: true });
+          updateContext({ connectionStatus: ZoomConnectionStatus.CONNECTED });
           break;
         case 'Closed':
-        case 'Fail':
           resetContext();
+          break;
+        case 'Fail':
+          if (event?.errorCode !== MEETING_NOT_STARTED_ERROR_CODE) {
+            resetContext();
+          }
           break;
       }
     },
@@ -58,6 +68,8 @@ const ZoomActivityView: Components['ZoomActivityView'] = () => {
         language: 'en-US',
       })
       .then(() => {
+        updateContext({ connectionStatus: ZoomConnectionStatus.CONNECTING });
+
         client.join({
           sdkKey: sdkKey,
           signature: userSignature,
@@ -76,6 +88,7 @@ const ZoomActivityView: Components['ZoomActivityView'] = () => {
     password,
     hostUserZakToken,
     zoomSDKElementRef,
+    updateContext,
     connectionChange,
   ]);
 

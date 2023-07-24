@@ -4,6 +4,7 @@ import { ui } from '@application';
 import { Components } from '@types';
 
 import { ZoomContextType, useZoomContext } from '../../context';
+import { isZoomConnectionInProgress } from '../../services';
 
 const { Button, Form } = ui;
 
@@ -21,7 +22,7 @@ const ZoomGuestControl: Components['ZoomGuestControl'] = () => {
     [zoomContext],
   );
 
-  if (zoomContext.isOnCall) {
+  if (isZoomConnectionInProgress(zoomContext.connectionStatus)) {
     return <></>;
   }
 

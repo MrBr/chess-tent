@@ -4,7 +4,7 @@ import { Components } from '@types';
 import { User, ZoomRole } from '@chess-tent/models';
 
 import { zoomAuthorize, generateSignature } from '../requests';
-import { ZoomContext, ZoomContextType } from '../context';
+import { ZoomConnectionStatus, ZoomContext, ZoomContextType } from '../context';
 
 const { useApi, useQuery } = hooks;
 
@@ -33,7 +33,7 @@ const createInitialContext = ({
   redirectUri,
   updateContext: () => {},
   resetContext: () => {},
-  isOnCall: false,
+  connectionStatus: ZoomConnectionStatus.NOT_CONNECTED,
   zoomSDKElementRef,
 });
 

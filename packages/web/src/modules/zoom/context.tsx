@@ -2,6 +2,12 @@ import { createContext, useContext, RefObject } from 'react';
 
 import { ZoomRole } from '@chess-tent/models';
 
+export enum ZoomConnectionStatus {
+  NOT_CONNECTED,
+  CONNECTING,
+  CONNECTED,
+}
+
 export interface ZoomContextType {
   userSignature: string | null;
   hostUserZakToken: string | undefined;
@@ -13,7 +19,7 @@ export interface ZoomContextType {
   redirectUri: string | '';
   updateContext: Function;
   resetContext: Function;
-  isOnCall: boolean;
+  connectionStatus: ZoomConnectionStatus;
   zoomSDKElementRef: RefObject<HTMLElement> | null;
 }
 

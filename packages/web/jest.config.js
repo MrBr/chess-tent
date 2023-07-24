@@ -20,7 +20,7 @@ module.exports = {
   },
   transformIgnorePatterns: [
     '/node_modules/(?!(chess.js|redux-record)/)',
-    'node_modules',
+    '<rootDir>/node_modules',
   ],
   // TODO - use once JEST is upgraded in react-scripts
   // Currently, JEST doesn't support a function export which is necessary to await module initialisation

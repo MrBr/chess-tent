@@ -29,24 +29,22 @@ const ZoomGuestControl: Components['ZoomGuestControl'] = () => {
   }
 
   return (
-    <>
-      <Form
-        initialValues={{ password: '' }}
-        onSubmit={onSubmit}
-        className="text-center"
-      >
-        <Form.Input
-          size="small"
-          type="password"
-          name="password"
-          placeholder="Meeting password (if any)"
-          className="mb-3"
-        />
-        <Button size="small" type="submit">
-          Join
-        </Button>
-      </Form>
-    </>
+    <Form
+      initialValues={{ password: '' }}
+      onSubmit={onSubmit}
+      className="text-center"
+    >
+      <Form.Input
+        size="small"
+        type="password"
+        name="password"
+        placeholder="Meeting password (if any)"
+        className="mb-3"
+      />
+      <Button size="small" type="submit">
+        Join
+      </Button>
+    </Form>
   );
 };
 

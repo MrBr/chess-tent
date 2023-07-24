@@ -86,7 +86,7 @@ const ZoomProvider: Components['ZoomProvider'] = ({
 
   useEffect(() => {
     if (
-      (!zoomContextState.authCode && zoomContextState.role === ZoomRole.Host) ||
+      zoomContextState.role !== ZoomRole.Host ||
       !zoomContextState.authCode ||
       authLoading ||
       authResponse

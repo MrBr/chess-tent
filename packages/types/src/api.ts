@@ -15,6 +15,7 @@ import {
   Tag,
   TYPE_LESSON,
   User,
+  ZoomRole,
 } from '@chess-tent/models';
 import { GenericArguments } from './_helpers';
 import { LessonAction } from './actions';
@@ -391,7 +392,7 @@ export interface Endpoints {
     ZoomResponse
   >;
   zoomSignature: Endpoint<
-    RequestPost<'/zoom/signature', { meetingNumber: string; role: number }>,
+    RequestPost<'/zoom/signature', { meetingNumber: string; role: ZoomRole }>,
     ZoomResponse
   >;
 }

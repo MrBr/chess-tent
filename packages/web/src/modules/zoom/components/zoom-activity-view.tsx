@@ -3,7 +3,11 @@ import { Components } from '@types';
 import { ui } from '@application';
 import ZoomMtgEmbedded from '@zoomus/websdk/embedded';
 
-import { ZoomContextType, useZoomContext } from '../context';
+import {
+  ZoomConnectionStatus,
+  ZoomContextType,
+  useZoomContext,
+} from '../context';
 
 const { Container } = ui;
 
@@ -13,6 +17,8 @@ interface ZoomConnectionChange {
   errorCode?: number;
 }
 
+const MEETING_NOT_STARTED_ERROR_CODE = 3008;
+
 const ZoomActivityView: Components['ZoomActivityView'] = () => {
   const {
     resetContext,
@@ -21,35 +27,49 @@ const ZoomActivityView: Components['ZoomActivityView'] = () => {
     username,
     password,
     hostUserZakToken,
+    updateContext,
+    zoomSDKElementRef,
   }: ZoomContextType = useZoomContext();
-
   const connectionChange = useCallback(
     (event: ZoomConnectionChange) => {
-      if (event.state === 'Closed' || event.state === 'Fail') {
-        resetContext();
+      switch (event.state) {
+        case 'Connected':
+          updateContext({ connectionStatus: ZoomConnectionStatus.CONNECTED });
+          break;
+        case 'Closed':
+          resetContext();
+          break;
+        case 'Fail':
+          if (event?.errorCode !== MEETING_NOT_STARTED_ERROR_CODE) {
+            resetContext();
+          }
+          break;
       }
     },
-    [resetContext],
+    [resetContext, updateContext],
   );
 
   useEffect(() => {
+    if (!zoomSDKElementRef) {
+      return;
+    }
+
     if (!password || !userSignature || !meetingNumber) {
       return;
     }
 
     const client = ZoomMtgEmbedded.createClient();
 
-    const meetingSDKElement =
-      document.getElementById('meetingSDKElement') || undefined;
-
     const sdkKey = process.env.REACT_APP_ZOOM_CLIENT_ID;
 
     client
       .init({
-        zoomAppRoot: meetingSDKElement,
+        zoomAppRoot: zoomSDKElementRef.current || undefined,
         language: 'en-US',
       })
       .then(() => {
+        updateContext({ connectionStatus: ZoomConnectionStatus.CONNECTING });
+
         client.join({
           sdkKey: sdkKey,
           signature: userSignature,
@@ -67,10 +87,12 @@ const ZoomActivityView: Components['ZoomActivityView'] = () => {
     username,
     password,
     hostUserZakToken,
+    zoomSDKElementRef,
+    updateContext,
     connectionChange,
   ]);
 
-  return <Container id="meetingSDKElement"></Container>;
+  return <Container ref={zoomSDKElementRef}></Container>;
 };
 
 export default ZoomActivityView;

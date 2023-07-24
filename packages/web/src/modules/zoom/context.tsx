@@ -1,8 +1,11 @@
-import { createContext, useContext } from 'react';
+import { createContext, useContext, RefObject } from 'react';
 
-export enum Role {
-  Guest = 0,
-  Host = 1,
+import { ZoomRole } from '@chess-tent/models';
+
+export enum ZoomConnectionStatus {
+  NOT_CONNECTED,
+  CONNECTING,
+  CONNECTED,
 }
 
 export interface ZoomContextType {
@@ -11,11 +14,13 @@ export interface ZoomContextType {
   meetingNumber: string | undefined;
   username: string;
   password: string | null;
-  role: Role | null;
+  role: ZoomRole;
   authCode: string | undefined;
   redirectUri: string | '';
   updateContext: Function;
   resetContext: Function;
+  connectionStatus: ZoomConnectionStatus;
+  zoomSDKElementRef: RefObject<HTMLElement> | null;
 }
 
 export const ZoomContext = createContext({} as ZoomContextType);

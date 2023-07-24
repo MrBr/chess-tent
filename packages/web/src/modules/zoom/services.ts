@@ -1,3 +1,5 @@
+import { ZoomConnectionStatus } from './context';
+
 export const authorizeZoom = (redirectUri: string) => {
   const url =
     'https://zoom.us/oauth/authorize?response_type=code&client_id=' +
@@ -6,3 +8,9 @@ export const authorizeZoom = (redirectUri: string) => {
     redirectUri;
   window.open(url, '_parent');
 };
+
+export const isZoomConnectionInProgress = (
+  connectionStatus: ZoomConnectionStatus,
+) =>
+  connectionStatus === ZoomConnectionStatus.CONNECTED ||
+  connectionStatus === ZoomConnectionStatus.CONNECTING;

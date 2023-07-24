@@ -4,6 +4,7 @@ import { ui } from '@application';
 import { Components } from '@types';
 
 import { ZoomContextType, useZoomContext } from '../../context';
+import { isZoomConnectionInProgress } from '../../services';
 
 const { Button, Form } = ui;
 
@@ -16,37 +17,32 @@ const ZoomGuestControl: Components['ZoomGuestControl'] = () => {
 
   const onSubmit = useCallback(
     ({ password }: ZoomGuestData) => {
-      zoomContext.updateContext((prevState: ZoomContextType) => ({
-        ...prevState,
-        password,
-      }));
+      zoomContext.updateContext({ password });
     },
     [zoomContext],
   );
 
-  if (!!zoomContext.password) {
+  if (isZoomConnectionInProgress(zoomContext.connectionStatus)) {
     return <></>;
   }
 
   return (
-    <>
-      <Form
-        initialValues={{ password: '' }}
-        onSubmit={onSubmit}
-        className="text-center"
-      >
-        <Form.Input
-          size="small"
-          type="password"
-          name="password"
-          placeholder="Meeting password (if any)"
-          className="mb-3"
-        />
-        <Button size="small" type="submit">
-          Join
-        </Button>
-      </Form>
-    </>
+    <Form
+      initialValues={{ password: '' }}
+      onSubmit={onSubmit}
+      className="text-center"
+    >
+      <Form.Input
+        size="small"
+        type="password"
+        name="password"
+        placeholder="Meeting password (if any)"
+        className="mb-3"
+      />
+      <Button size="small" type="submit">
+        Join
+      </Button>
+    </Form>
   );
 };
 

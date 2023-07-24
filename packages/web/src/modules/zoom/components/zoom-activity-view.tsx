@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useRef } from 'react';
 import { Components } from '@types';
 import { ui } from '@application';
 import ZoomMtgEmbedded from '@zoomus/websdk/embedded';
@@ -22,16 +22,13 @@ const ZoomActivityView: Components['ZoomActivityView'] = () => {
     password,
     hostUserZakToken,
     updateContext,
+    zoomSDKElementRef,
   }: ZoomContextType = useZoomContext();
-
   const connectionChange = useCallback(
     (event: ZoomConnectionChange) => {
       switch (event.state) {
         case 'Connected':
-          updateContext((prevState: ZoomContextType) => ({
-            ...prevState,
-            isOnCall: true,
-          }));
+          updateContext({ isOnCall: true });
           break;
         case 'Closed':
         case 'Fail':
@@ -43,20 +40,21 @@ const ZoomActivityView: Components['ZoomActivityView'] = () => {
   );
 
   useEffect(() => {
+    if (!zoomSDKElementRef) {
+      return;
+    }
+
     if (!password || !userSignature || !meetingNumber) {
       return;
     }
 
     const client = ZoomMtgEmbedded.createClient();
 
-    const meetingSDKElement =
-      document.getElementById('meetingSDKElement') || undefined;
-
     const sdkKey = process.env.REACT_APP_ZOOM_CLIENT_ID;
 
     client
       .init({
-        zoomAppRoot: meetingSDKElement,
+        zoomAppRoot: zoomSDKElementRef.current || undefined,
         language: 'en-US',
       })
       .then(() => {
@@ -77,10 +75,11 @@ const ZoomActivityView: Components['ZoomActivityView'] = () => {
     username,
     password,
     hostUserZakToken,
+    zoomSDKElementRef,
     connectionChange,
   ]);
 
-  return <Container id="meetingSDKElement"></Container>;
+  return <Container ref={zoomSDKElementRef}></Container>;
 };
 
 export default ZoomActivityView;

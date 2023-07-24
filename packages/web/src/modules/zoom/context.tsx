@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react';
+import { createContext, useContext, RefObject } from 'react';
 
 export enum Role {
   Guest = 0,
@@ -17,6 +17,7 @@ export interface ZoomContextType {
   updateContext: Function;
   resetContext: Function;
   isOnCall: boolean;
+  zoomSDKElementRef: RefObject<HTMLElement> | null;
 }
 
 export const ZoomContext = createContext({} as ZoomContextType);

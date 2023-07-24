@@ -1,11 +1,41 @@
-import React, { useEffect, useState, useMemo, useCallback } from 'react';
+import React, { useEffect, useState, useRef, RefObject } from 'react';
 import { hooks } from '@application';
 import { Components } from '@types';
+import { User } from '@chess-tent/models';
 
 import { zoomAuthorize, generateSignature } from '../requests';
 import { ZoomContext, ZoomContextType, Role } from '../context';
 
 const { useApi, useQuery } = hooks;
+
+interface InitialContextData {
+  meetingNumber: string | undefined;
+  user: User;
+  code: string | undefined;
+  redirectUri: string;
+  zoomSDKElementRef: RefObject<HTMLElement>;
+}
+
+const createInitialContext = ({
+  meetingNumber,
+  user,
+  code,
+  redirectUri,
+  zoomSDKElementRef,
+}: InitialContextData) => ({
+  userSignature: null,
+  hostUserZakToken: undefined,
+  meetingNumber: meetingNumber?.replaceAll(' ', ''),
+  username: user.nickname,
+  password: null,
+  role: user?.coach ? Role.Host : Role.Guest,
+  authCode: code,
+  redirectUri,
+  updateContext: () => {},
+  resetContext: () => {},
+  isOnCall: false,
+  zoomSDKElementRef,
+});
 
 const ZoomProvider: Components['ZoomProvider'] = ({
   redirectUri,
@@ -21,42 +51,34 @@ const ZoomProvider: Components['ZoomProvider'] = ({
   } = useApi(generateSignature);
 
   const { code } = useQuery<{ code?: string }>();
+  const zoomSDKElementRef = useRef<HTMLElement>(null);
 
-  const initialState: ZoomContextType = useMemo(
-    () => ({
-      userSignature: null,
-      hostUserZakToken: undefined,
-      meetingNumber: meetingNumber?.replaceAll(' ', ''),
-      username: user.nickname,
-      password: null,
-      role: user?.coach ? Role.Host : Role.Guest,
-      authCode: code,
+  const [zoomContextState, setZoomContextState] = useState<ZoomContextType>({
+    ...createInitialContext({
+      meetingNumber,
+      user,
+      code,
       redirectUri,
-      updateContext: () => {},
-      resetContext: () => {},
-      isOnCall: false,
+      zoomSDKElementRef,
     }),
-    [user, redirectUri, code, meetingNumber],
-  );
-
-  const [zoomContextState, setZoomContextState] =
-    useState<ZoomContextType>(initialState);
-
-  const resetContext = useCallback(() => {
-    if (zoomContextState.userSignature === initialState.userSignature) {
-      return;
-    }
-
-    setZoomContextState(initialState);
-  }, [initialState, zoomContextState.userSignature]);
-
-  useEffect(() => {
-    setZoomContextState(prevState => ({
-      ...prevState,
-      updateContext: setZoomContextState,
-      resetContext,
-    }));
-  }, [resetContext]);
+    resetContext: () =>
+      setZoomContextState(({ resetContext, updateContext }) => ({
+        ...createInitialContext({
+          meetingNumber,
+          user,
+          code,
+          redirectUri,
+          zoomSDKElementRef,
+        }),
+        resetContext,
+        updateContext,
+      })),
+    updateContext: (data: Partial<ZoomContextType>) =>
+      setZoomContextState(prevState => ({
+        ...prevState,
+        ...data,
+      })),
+  });
 
   useEffect(() => {
     if (

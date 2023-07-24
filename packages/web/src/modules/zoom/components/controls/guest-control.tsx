@@ -16,10 +16,7 @@ const ZoomGuestControl: Components['ZoomGuestControl'] = () => {
 
   const onSubmit = useCallback(
     ({ password }: ZoomGuestData) => {
-      zoomContext.updateContext((prevState: ZoomContextType) => ({
-        ...prevState,
-        password,
-      }));
+      zoomContext.updateContext({ password });
     },
     [zoomContext],
   );

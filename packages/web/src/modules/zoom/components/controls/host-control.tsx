@@ -18,11 +18,10 @@ const ZoomHostControl: Components['ZoomHostControl'] = () => {
 
   const onSubmit = useCallback(
     ({ meetingNumber, password }: ZoomHostData) => {
-      zoomContext.updateContext((prevState: ZoomContextType) => ({
-        ...prevState,
+      zoomContext.updateContext({
         meetingNumber: meetingNumber.replaceAll(' ', ''),
         password,
-      }));
+      });
     },
     [zoomContext],
   );

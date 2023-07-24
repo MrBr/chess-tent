@@ -1,9 +1,11 @@
 import application from '@application';
-import { Crypto } from '@peculiar/webcrypto';
+import crypto from 'crypto';
 
 import '../modules';
 
 // required for ZoomSdk
-global.crypto = new Crypto();
+Object.defineProperty(global.self, 'crypto', {
+  value: crypto.webcrypto,
+});
 
 beforeAll(() => application.init());

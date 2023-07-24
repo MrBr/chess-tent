@@ -43,7 +43,11 @@ const ZoomProvider: Components['ZoomProvider'] = ({
   meetingNumber,
   children,
 }) => {
-  const { fetch: authFetch, response: authResponse } = useApi(zoomAuthorize);
+  const {
+    fetch: authFetch,
+    response: authResponse,
+    loading: authLoading,
+  } = useApi(zoomAuthorize);
   const {
     fetch: signatureFetch,
     response: signatureResponse,
@@ -81,6 +85,14 @@ const ZoomProvider: Components['ZoomProvider'] = ({
   });
 
   useEffect(() => {
+    if (!zoomContextState.authCode && zoomContextState.role === ZoomRole.Host) {
+      return;
+    } else if (zoomContextState.authCode && !authLoading && !authResponse) {
+      authFetch({ code: zoomContextState.authCode, redirectUri });
+    }
+  }, [authFetch, authLoading, authResponse, redirectUri, zoomContextState]);
+
+  useEffect(() => {
     if (
       !zoomContextState.meetingNumber ||
       signatureResponse ||
@@ -89,24 +101,11 @@ const ZoomProvider: Components['ZoomProvider'] = ({
       return;
     }
 
-    if (!zoomContextState.authCode && zoomContextState.role === ZoomRole.Host) {
-      return;
-    } else if (zoomContextState.authCode) {
-      authFetch({ code: zoomContextState.authCode, redirectUri });
-    }
-
     signatureFetch({
       meetingNumber: zoomContextState.meetingNumber,
       role: zoomContextState.role,
     });
-  }, [
-    signatureFetch,
-    signatureResponse,
-    signatureLoading,
-    authFetch,
-    redirectUri,
-    zoomContextState,
-  ]);
+  }, [signatureFetch, signatureResponse, signatureLoading, zoomContextState]);
 
   useEffect(() => {
     if (

@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useRef, RefObject } from 'react';
 import { hooks } from '@application';
 import { Components } from '@types';
-import { User } from '@chess-tent/models';
+import { User, ZoomRole } from '@chess-tent/models';
 
 import { zoomAuthorize, generateSignature } from '../requests';
-import { ZoomContext, ZoomContextType, Role } from '../context';
+import { ZoomContext, ZoomContextType } from '../context';
 
 const { useApi, useQuery } = hooks;
 
@@ -28,7 +28,7 @@ const createInitialContext = ({
   meetingNumber: meetingNumber?.replaceAll(' ', ''),
   username: user.nickname,
   password: null,
-  role: user?.coach ? Role.Host : Role.Guest,
+  role: user?.coach ? ZoomRole.Host : ZoomRole.Guest,
   authCode: code,
   redirectUri,
   updateContext: () => {},
@@ -89,7 +89,7 @@ const ZoomProvider: Components['ZoomProvider'] = ({
       return;
     }
 
-    if (!zoomContextState.authCode && zoomContextState.role === Role.Host) {
+    if (!zoomContextState.authCode && zoomContextState.role === ZoomRole.Host) {
       return;
     } else if (zoomContextState.authCode) {
       authFetch({ code: zoomContextState.authCode, redirectUri });
@@ -97,7 +97,7 @@ const ZoomProvider: Components['ZoomProvider'] = ({
 
     signatureFetch({
       meetingNumber: zoomContextState.meetingNumber,
-      role: zoomContextState.role as number,
+      role: zoomContextState.role,
     });
   }, [
     signatureFetch,
@@ -112,7 +112,7 @@ const ZoomProvider: Components['ZoomProvider'] = ({
     if (
       !signatureResponse?.data ||
       zoomContextState.userSignature ||
-      (!authResponse?.data && zoomContextState.role === Role.Host)
+      (!authResponse?.data && zoomContextState.role === ZoomRole.Host)
     ) {
       return;
     }

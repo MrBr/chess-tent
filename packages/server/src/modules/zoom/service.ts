@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import { service } from '@application';
+import { ZoomRole } from '@chess-tent/models';
 
 import { Authorization } from './constants';
 
@@ -32,7 +33,7 @@ const authorizeUserByCode = async (code: string, redirectUri: string) => {
     .then(data => data.data.token);
 };
 
-const generateSignature = async (meetingNumber: string, role: number) => {
+const generateSignature = async (meetingNumber: string, role: ZoomRole) => {
   const currentTimestamp = Math.round(new Date().getTime() / 1000) - 30;
   const expirationTimestamp = currentTimestamp + 60 * 60 * 2;
 

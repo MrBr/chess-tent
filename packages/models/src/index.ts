@@ -23,6 +23,7 @@ export * from './chapter';
 export * from './mentorship';
 export * from './tag';
 export * from './role';
+export * from './zoom';
 
 export * from './_helpers';
 

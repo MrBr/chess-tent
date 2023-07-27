@@ -1,4 +1,5 @@
 import React, { ReactNode } from 'react';
+import { MemoryRouter } from 'react-router-dom';
 import { render, screen, waitFor } from '@testing-library/react';
 import { User } from '@chess-tent/models';
 import application from '@application';
@@ -6,28 +7,35 @@ import { users, zoom } from '../fixtures';
 
 const { components } = application;
 
-const renderInsideProvider = (
-  children: ReactNode,
-  user: User,
-  meetingNumber?: string,
-) => {
-  const { Router, ZoomProvider } = components;
+interface RenderOptions {
+  children: ReactNode;
+  user: User;
+  meetingNumber?: string;
+  queryCode?: boolean;
+}
+
+const renderInsideProvider = ({
+  children,
+  user,
+  meetingNumber,
+  queryCode,
+}: RenderOptions) => {
+  const { ZoomProvider } = components;
 
   render(
-    <Router>
-      {() => (
-        <>
-          <ZoomProvider
-            redirectUri={zoom.redirectUri}
-            user={user}
-            meetingNumber={meetingNumber}
-          >
-            {' '}
-          </ZoomProvider>
-          {children}
-        </>
-      )}
-    </Router>,
+    <MemoryRouter
+      initialEntries={[
+        { pathname: '/', search: queryCode ? '?code=testcode' : undefined },
+      ]}
+    >
+      <ZoomProvider
+        redirectUri={zoom.redirectUri}
+        user={user}
+        meetingNumber={meetingNumber}
+      >
+        {children}
+      </ZoomProvider>
+    </MemoryRouter>,
   );
 };
 
@@ -38,14 +46,51 @@ describe('Zoom Provider', () => {
   test('Student should have only password input', async () => {
     const { ZoomGuestControl } = components;
 
-    renderInsideProvider(<ZoomGuestControl />, student, zoom.meetingNumber);
+    renderInsideProvider({
+      children: <ZoomGuestControl />,
+      user: student,
+      meetingNumber: zoom.meetingNumber,
+    });
 
     const passwordInput = screen.queryByPlaceholderText(
       'Meeting password (if any)',
     );
     const meetingNumberInput = screen.queryByPlaceholderText('Meeting number');
 
-    await waitFor(() => expect(expect(passwordInput).toBeTruthy()));
-    await waitFor(() => expect(expect(meetingNumberInput).toBeFalsy()));
+    await waitFor(() => expect(passwordInput).toBeTruthy());
+    await waitFor(() => expect(meetingNumberInput).toBeFalsy());
+  });
+
+  test('Coach should have authorize button only when no authCode', async () => {
+    const { ZoomHostControl } = components;
+
+    renderInsideProvider({
+      children: <ZoomHostControl />,
+      user: coach,
+    });
+
+    const authButton = screen.getByRole('button', {
+      name: 'Authorize Zoom',
+    });
+
+    await waitFor(() => expect(authButton).toBeTruthy());
+  });
+
+  test('Coach should have password and meeting number input when authenticated', async () => {
+    const { ZoomHostControl } = components;
+
+    renderInsideProvider({
+      children: <ZoomHostControl />,
+      user: coach,
+      queryCode: true,
+    });
+
+    const passwordInput = screen.queryByPlaceholderText(
+      'Meeting password (if any)',
+    );
+    const meetingNumberInput = screen.queryByPlaceholderText('Meeting number');
+
+    await waitFor(() => expect(passwordInput).toBeTruthy());
+    await waitFor(() => expect(meetingNumberInput).toBeTruthy());
   });
 });

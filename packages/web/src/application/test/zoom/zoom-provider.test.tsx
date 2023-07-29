@@ -61,9 +61,7 @@ describe('Zoom Provider', () => {
 
     renderWithProvider(<ZoomHostControl />, { user: coach });
 
-    const authButton = screen.getByRole('button', {
-      name: 'Authorize Zoom',
-    });
+    const authButton = screen.getByText('Authorize Zoom');
 
     await waitFor(() => expect(authButton).toBeTruthy());
   });

@@ -8,30 +8,27 @@ import { users, zoom } from '../fixtures';
 const { components } = application;
 
 interface RenderOptions {
-  children: ReactNode;
   user: User;
   meetingNumber?: string;
   queryCode?: boolean;
 }
 
-const renderInsideProvider = ({
-  children,
-  user,
-  meetingNumber,
-  queryCode,
-}: RenderOptions) => {
+const renderWithProvider = (children: ReactNode, options: RenderOptions) => {
   const { ZoomProvider } = components;
 
   render(
     <MemoryRouter
       initialEntries={[
-        { pathname: '/', search: queryCode ? '?code=testcode' : undefined },
+        {
+          pathname: '/',
+          search: options?.queryCode ? '?code=testcode' : undefined,
+        },
       ]}
     >
       <ZoomProvider
         redirectUri={zoom.redirectUri}
-        user={user}
-        meetingNumber={meetingNumber}
+        user={options.user}
+        meetingNumber={options?.meetingNumber}
       >
         {children}
       </ZoomProvider>
@@ -46,8 +43,7 @@ describe('Zoom Provider', () => {
   test('Student should have only password input', async () => {
     const { ZoomGuestControl } = components;
 
-    renderInsideProvider({
-      children: <ZoomGuestControl />,
+    renderWithProvider(<ZoomGuestControl />, {
       user: student,
       meetingNumber: zoom.meetingNumber,
     });
@@ -64,10 +60,7 @@ describe('Zoom Provider', () => {
   test('Coach should have authorize button only when no authCode', async () => {
     const { ZoomHostControl } = components;
 
-    renderInsideProvider({
-      children: <ZoomHostControl />,
-      user: coach,
-    });
+    renderWithProvider(<ZoomHostControl />, { user: coach });
 
     const authButton = screen.getByRole('button', {
       name: 'Authorize Zoom',
@@ -79,11 +72,7 @@ describe('Zoom Provider', () => {
   test('Coach should have password and meeting number input when authenticated', async () => {
     const { ZoomHostControl } = components;
 
-    renderInsideProvider({
-      children: <ZoomHostControl />,
-      user: coach,
-      queryCode: true,
-    });
+    renderWithProvider(<ZoomHostControl />, { user: coach, queryCode: true });
 
     const passwordInput = screen.queryByPlaceholderText(
       'Meeting password (if any)',

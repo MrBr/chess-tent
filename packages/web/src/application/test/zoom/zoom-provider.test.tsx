@@ -41,7 +41,7 @@ describe('Zoom Provider', () => {
   const coach: User = users.find(user => user.coach)!;
   const student: User = users.find(user => !user.coach)!;
 
-  test('Student should have only password input', async () => {
+  it('Student should have only password input', async () => {
     const { ZoomGuestControl } = components;
 
     renderWithProvider(<ZoomGuestControl />, {
@@ -56,7 +56,7 @@ describe('Zoom Provider', () => {
     await waitFor(() => expect(meetingNumberInput).toBeFalsy());
   });
 
-  test('Coach should have authorize button only when no authCode', async () => {
+  it('Coach should have authorize button only when no authCode', async () => {
     const { ZoomHostControl } = components;
 
     renderWithProvider(<ZoomHostControl />, { user: coach });
@@ -68,7 +68,7 @@ describe('Zoom Provider', () => {
     await waitFor(() => expect(authButton).toBeTruthy());
   });
 
-  test('Coach should have password and meeting number input when authenticated', async () => {
+  it('Coach should have password and meeting number input when authenticated', async () => {
     const { ZoomHostControl } = components;
 
     renderWithProvider(<ZoomHostControl />, { user: coach, queryCode: true });

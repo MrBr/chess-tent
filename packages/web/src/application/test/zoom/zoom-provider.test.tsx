@@ -4,6 +4,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { User } from '@chess-tent/models';
 import application from '@application';
 import { users, zoom } from '../fixtures';
+import { getPasswordInput, getMeetingNumberInput } from './utils';
 
 const { components } = application;
 
@@ -48,10 +49,8 @@ describe('Zoom Provider', () => {
       meetingNumber: zoom.meetingNumber,
     });
 
-    const passwordInput = screen.queryByPlaceholderText(
-      'Meeting password (if any)',
-    );
-    const meetingNumberInput = screen.queryByPlaceholderText('Meeting number');
+    const passwordInput = getPasswordInput();
+    const meetingNumberInput = getMeetingNumberInput();
 
     await waitFor(() => expect(passwordInput).toBeTruthy());
     await waitFor(() => expect(meetingNumberInput).toBeFalsy());
@@ -74,10 +73,8 @@ describe('Zoom Provider', () => {
 
     renderWithProvider(<ZoomHostControl />, { user: coach, queryCode: true });
 
-    const passwordInput = screen.queryByPlaceholderText(
-      'Meeting password (if any)',
-    );
-    const meetingNumberInput = screen.queryByPlaceholderText('Meeting number');
+    const passwordInput = getPasswordInput();
+    const meetingNumberInput = getMeetingNumberInput();
 
     await waitFor(() => expect(passwordInput).toBeTruthy());
     await waitFor(() => expect(meetingNumberInput).toBeTruthy());

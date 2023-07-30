@@ -6,6 +6,10 @@ import { Step } from '../step';
 import { Activity } from '../activity';
 
 export const TYPE_LESSON = 'lessons';
+export enum TYPE_SUBJECT {
+  LESSON = 'lessons',
+  STEP = 'steps',
+}
 
 export enum Difficulty {
   BEGINNER = 'BEGINNER',

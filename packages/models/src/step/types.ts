@@ -10,7 +10,7 @@ export const TYPE_STEP = 'steps';
 export interface Step<T extends {} = {}, K extends StepType = StepType> {
   id: string;
   docId?: string;
-  owner: User;
+  owner?: User;
   type: typeof TYPE_STEP;
   stepType: K;
   difficulty?: Difficulty;

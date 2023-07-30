@@ -1,23 +1,25 @@
-import { Step, User} from '@chess-tent/models';
-import {DepopulatedStep, StepModel} from "./model";
-import {AppDocument} from "@types";
+import { Step, User } from '@chess-tent/models';
+import { DepopulatedStep, StepModel } from './model';
+import { AppDocument } from '@types';
+import { LessonModel } from '../lesson/model';
+import { service } from '@application';
 
 export const saveStep = (
-    step: Step,
-    depopulate = 'owner tags users'
+  step: Step,
+  depopulate = 'owner tags users',
 ) =>
   new Promise<void>(resolve => {
-      StepModel.updateOne({ _id: step.id }, () => {
-          let transformed = step as unknown as AppDocument<DepopulatedStep>
-          return transformed.depopulate(depopulate)
-      }, {
-          upsert: true,
-      }).exec(err => {
-          if (err) {
-              throw err;
-          }
-          resolve();
-      });
+    StepModel.updateOne({ _id: step.id }, () => {
+      let transformed = step as unknown as AppDocument<DepopulatedStep>;
+      return transformed.depopulate(depopulate);
+    }, {
+      upsert: true,
+    }).exec(err => {
+      if (err) {
+        throw err;
+      }
+      resolve();
+    });
   });
 
 export const getStep = (
@@ -25,18 +27,18 @@ export const getStep = (
   populate = 'owner tags users',
 ): Promise<Step | null> =>
   new Promise(resolve => {
-      StepModel.findById(stepId)
-          .populate(populate)
-          .exec((err, result) => {
-              if (err) {
-                  throw err;
-              }
-              resolve(result ? result.toObject<Step>() : null);
-          });
+    StepModel.findById(stepId)
+      .populate(populate)
+      .exec((err, result) => {
+        if (err) {
+          throw err;
+        }
+        resolve(result ? result.toObject<Step>() : null);
+      });
   });
 
 export const deleteStep = async (stepId: Step['id']) => {
-  await StepModel.deleteOne({_id: stepId});
+  await StepModel.deleteOne({ _id: stepId });
 };
 
 export const publishStep = (stepId: Step['id']) =>

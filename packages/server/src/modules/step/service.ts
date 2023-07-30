@@ -43,14 +43,79 @@ export const deleteStep = async (stepId: Step['id']) => {
 
 export const publishStep = (stepId: Step['id']) =>
   new Promise<void>(async resolve => {
-    // todo
-    throw new Error('not implemented');
+    const step = await getStep(stepId, '');
+    if (!step) {
+      throw new Error('Publishing non-existing step.');
+    }
+    StepModel.bulkWrite(
+      [
+        {
+          updateOne: {
+            filter: { docId: stepId },
+            update: {
+              $setOnInsert: { _id: service.generateIndex() },
+              $set: {
+                published: true,
+                docId: stepId,
+              },
+            },
+            upsert: true,
+          },
+        },
+        {
+          updateOne: {
+            filter: { _id: stepId },
+            update: {
+              $set: {
+                published: true,
+              },
+            },
+          },
+        },
+      ],
+      {},
+      err => {
+        if (err) {
+          throw err;
+        }
+        resolve();
+      },
+    );
   });
 
 export const unpublishStep = (stepId: Step['id']) =>
   new Promise<void>(resolve => {
-    // todo
-    throw new Error('not implemented');
+    StepModel.bulkWrite(
+      [
+        {
+          updateOne: {
+            filter: { docId: stepId },
+            update: {
+              $set: {
+                published: false,
+              },
+            },
+          },
+        },
+        {
+          updateOne: {
+            filter: { _id: stepId },
+            update: {
+              $set: {
+                published: false,
+              },
+            },
+          },
+        },
+      ],
+      {},
+      err => {
+        if (err) {
+          throw err;
+        }
+        resolve();
+      },
+    );
   });
 
 export const patchStep = (stepId: Step['id'], step: Partial<Step>) =>

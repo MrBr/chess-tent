@@ -139,8 +139,44 @@ export const patchStep = (stepId: Step['id'], step: Partial<Step>) =>
 
 export const findSteps = (filters: Partial<SubjectFilters>): Promise<Step[]> =>
   new Promise(resolve => {
-    // todo
-    throw new Error('not implemented');
+    const owner = utils.notNullOrUndefined({
+      owner: filters.owner,
+    });
+    const users = db.allQuery('users', filters.users);
+    const query: FilterQuery<AppDocument<DepopulatedStep>> =
+      utils.notNullOrUndefined({
+        published: filters.published,
+        ...db.orQueries(owner, users),
+      });
+
+    if (filters.difficulty) {
+      query['difficulty'] = { $eq: filters.difficulty };
+    }
+
+    if (!_.isEmpty(filters.tagIds)) {
+      query['tags'] = { $in: filters.tagIds };
+    }
+
+    if (filters.search) {
+      query['$text'] = { $search: filters.search, $caseSensitive: false };
+    }
+
+    if (filters.hasDocId === true) {
+      query['docId'] = { $exists: true, $ne: undefined };
+    }
+
+    if (filters.hasDocId === false) {
+      query['docId'] = { $not: { $exists: true, $ne: undefined } };
+    }
+    StepModel.find(query)
+      .populate('owner tags users')
+      .select('-state.chapters.state.steps.state.steps')
+      .exec((err, result) => {
+        if (err) {
+          throw err;
+        }
+        resolve(result.map(item => item.toObject<Step>()));
+      });
   });
 
 export const canEditStep = (stepId: Step['id'], userId: User['id']) =>

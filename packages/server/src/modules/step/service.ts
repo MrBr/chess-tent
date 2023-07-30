@@ -1,16 +1,23 @@
-import { Step, User } from '@chess-tent/models';
-import { SubjectFilters } from '@chess-tent/types';
+import { Step, User} from '@chess-tent/models';
+import {DepopulatedStep, StepModel} from "./model";
+import {AppDocument} from "@types";
 
-export const saveStep = (step: Step) =>
+export const saveStep = (
+    step: Step,
+    depopulate = 'owner tags users'
+) =>
   new Promise<void>(resolve => {
-    StepModel.updateOne({ _id: step.id }, depopulate(step), {
-      upsert: true,
-    }).exec(err => {
-      if (err) {
-        throw err;
-      }
-      resolve();
-    });
+      StepModel.updateOne({ _id: step.id }, () => {
+          let transformed = step as unknown as AppDocument<DepopulatedStep>
+          return transformed.depopulate(depopulate)
+      }, {
+          upsert: true,
+      }).exec(err => {
+          if (err) {
+              throw err;
+          }
+          resolve();
+      });
   });
 
 export const getStep = (
@@ -18,13 +25,18 @@ export const getStep = (
   populate = 'owner tags users',
 ): Promise<Step | null> =>
   new Promise(resolve => {
-    // todo
-    throw new Error('not implemented');
+      StepModel.findById(stepId)
+          .populate(populate)
+          .exec((err, result) => {
+              if (err) {
+                  throw err;
+              }
+              resolve(result ? result.toObject<Step>() : null);
+          });
   });
 
 export const deleteStep = async (stepId: Step['id']) => {
-  // todo
-  throw new Error('not implemented');
+  await StepModel.deleteOne({_id: stepId});
 };
 
 export const publishStep = (stepId: Step['id']) =>

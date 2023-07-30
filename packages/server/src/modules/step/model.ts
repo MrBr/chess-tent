@@ -10,9 +10,9 @@ export interface DepopulatedStep {
   owner: NormalizedStep['owner'];
   state: NormalizedStep['state'];
   difficulty?: NormalizedStep['difficulty'];
-  tags: NormalizedStep['tags'];
-  published: NormalizedStep['published'];
-  users: NormalizedStep['users'];
+  tags?: NormalizedStep['tags'];
+  published?: NormalizedStep['published'];
+  users?: NormalizedStep['users'];
   v?: number;
 }
 

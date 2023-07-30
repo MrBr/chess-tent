@@ -1,18 +1,25 @@
 import { Step, User } from '@chess-tent/models';
 import { DepopulatedStep, StepModel } from './model';
 import { AppDocument } from '@types';
-import { LessonModel } from '../lesson/model';
-import { service } from '@application';
+import { db, service, utils } from '@application';
+import { SubjectFilters } from '@chess-tent/types';
+import { FilterQuery } from 'mongoose';
+import _ from 'lodash';
+import { canAccessStepCheck, canEditStepCheck } from '@chess-tent/models/src';
+
+const depopulateStep = (
+  step: Partial<Step>,
+  depopulate = 'owner tags users'
+) => {
+  let transformed = step as unknown as AppDocument<DepopulatedStep>;
+  return transformed.depopulate(depopulate);
+}
 
 export const saveStep = (
   step: Step,
-  depopulate = 'owner tags users',
 ) =>
   new Promise<void>(resolve => {
-    StepModel.updateOne({ _id: step.id }, () => {
-      let transformed = step as unknown as AppDocument<DepopulatedStep>;
-      return transformed.depopulate(depopulate);
-    }, {
+    StepModel.updateOne({ _id: step.id }, depopulateStep(step), {
       upsert: true,
     }).exec(err => {
       if (err) {
@@ -120,8 +127,14 @@ export const unpublishStep = (stepId: Step['id']) =>
 
 export const patchStep = (stepId: Step['id'], step: Partial<Step>) =>
   new Promise<void>(resolve => {
-    // todo
-    throw new Error('not implemented');
+    StepModel.updateOne({ _id: stepId }, { $set: depopulateStep(step) }).exec(
+      err => {
+        if (err) {
+          throw err;
+        }
+        resolve();
+      },
+    );
   });
 
 export const findSteps = (filters: Partial<SubjectFilters>): Promise<Step[]> =>
@@ -132,12 +145,16 @@ export const findSteps = (filters: Partial<SubjectFilters>): Promise<Step[]> =>
 
 export const canEditStep = (stepId: Step['id'], userId: User['id']) =>
   new Promise((resolve, reject) => {
-    // todo
-    throw new Error('not implemented');
+    getStep(stepId)
+      .then(step => resolve(!step || canEditStepCheck(step, userId)))
+      .catch(reject);
   });
 
 export const canAccessStep = (stepId: Step['id'], userId: User['id']) =>
   new Promise((resolve, reject) => {
-    // todo
-    throw new Error('not implemented');
+    getStep(stepId)
+      .then(step =>
+        resolve(!!step && canAccessStepCheck(step, userId)),
+      )
+      .catch(reject);
   });

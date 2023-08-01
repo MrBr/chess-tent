@@ -56,4 +56,5 @@ export type Utils = {
   getCountryByCode: (cca2: string) => Country;
   stringToSelectValue: (value: string) => { value: string; label: string };
   getAppUrl: (path?: string) => string;
+  isTestEnvironment: () => boolean;
 };

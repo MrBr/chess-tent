@@ -15,6 +15,7 @@ import { Context } from './context';
 import { HOF } from './hof';
 import { Records } from './records';
 import { Requests } from './requests';
+import { Fixtures } from './fixtures';
 
 export * from '@chess-tent/types';
 export * from './activity';
@@ -40,6 +41,7 @@ export * from './notification';
 export * from './records';
 export * from './router';
 export * from './requests';
+export * from './fixtures';
 export * from './_helpers';
 
 export type Application = {
@@ -62,4 +64,5 @@ export type Application = {
   hof: HOF;
   records: Records;
   context: Context;
+  fixtures: Fixtures;
 };

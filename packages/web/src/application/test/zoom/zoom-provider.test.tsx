@@ -1,14 +1,12 @@
 import React, { ReactNode } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import '@testing-library/jest-dom';
+import application from '@application';
 import { render, screen } from '@testing-library/react';
 import { User } from '@chess-tent/models';
-import application from '@application';
-import { users } from '../fixtures';
 import { getPasswordInput, getMeetingNumberInput } from './utils';
 
-const { components } = application;
-const { coach, student } = users;
+const { components, fixtures } = application;
 
 interface RenderOptions {
   user: User;
@@ -45,6 +43,7 @@ const renderWithProvider = (children: ReactNode, options: RenderOptions) => {
 describe('Zoom Provider', () => {
   it('Student should have only password input', async () => {
     const { ZoomGuestControl } = components;
+    const { student } = fixtures.users;
 
     renderWithProvider(<ZoomGuestControl />, {
       user: student,
@@ -56,6 +55,7 @@ describe('Zoom Provider', () => {
 
   it('Coach should have authorize button only when no authCode', async () => {
     const { ZoomHostControl } = components;
+    const { coach } = fixtures.users;
 
     renderWithProvider(<ZoomHostControl />, { user: coach });
 
@@ -64,6 +64,7 @@ describe('Zoom Provider', () => {
 
   it('Coach should have password and meeting number input when authenticated', async () => {
     const { ZoomHostControl } = components;
+    const { coach } = fixtures.users;
 
     renderWithProvider(<ZoomHostControl />, { user: coach, queryCode: true });
 

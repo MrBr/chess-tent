@@ -27,7 +27,6 @@ import {
   getFileImageDimensions,
   autosizeTextarea,
 } from './html';
-import { isTestEnvironment } from './environment';
 
 application.utils.generateIndex = uuid;
 
@@ -53,8 +52,6 @@ application.utils.noopNoop = noopNoop;
 application.utils.getLanguages = getLanguages;
 application.utils.getCountries = getCountries;
 application.utils.getCountryByCode = getCountryByCode;
-
-application.utils.isTestEnvironment = isTestEnvironment;
 
 application.hooks.useShowOnActive = useShowOnActive;
 application.hooks.useComponentStateSilent = useComponentStateSilent;

@@ -49,6 +49,7 @@ export type Application = {
   register: typeof register;
   init: () => Promise<any>;
   start: () => void;
+  registerInTestEnvironment: typeof register;
   ui: UI;
   pages: Pages;
   components: Components;

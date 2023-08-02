@@ -1,7 +1,6 @@
 import application from '@application';
 
 import { userSchema } from './model';
-import { isTestEnvironment } from '../utils/environment';
 
 application.register(
   () => import('./records'),
@@ -55,6 +54,6 @@ application.register(
   },
 );
 
-isTestEnvironment() && application.register(() => import('./fixtures'));
+application.registerInTestEnvironment(() => import('./fixtures'));
 
 application.model.userSchema = userSchema;

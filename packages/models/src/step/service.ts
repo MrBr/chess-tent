@@ -2,9 +2,7 @@ import { Step, StepRoot, StepType, TYPE_STEP } from './types';
 import { updateSubject } from '../subject';
 import { createService } from '../_helpers';
 import { removeStepRecursive, replaceStepRecursive } from './_helpers';
-import { Difficulty } from '../lesson';
 import { User } from '../user';
-import { Tag } from '../tag';
 
 // Step
 const isStep = (entity: unknown): entity is Step =>
@@ -24,16 +22,11 @@ const isSameStep = <T extends {}>(
   return leftStep?.id === rightStep?.id;
 };
 
-/**
- * Public copy of the lesson, accessible by non collaborators.
- */
-const isStepPublicDocument = (step: Step) => !!step.docId;
-
 const canEditStepCheck = (step: Step, userId: User['id']) =>
   step.owner?.id === userId || step.users?.some(({ id }) => id === userId);
 
 const canAccessStepCheck = (step: Step, userId: User['id']) =>
-  canEditStepCheck(step, userId) || isStepPublicDocument(step);
+  canEditStepCheck(step, userId);
 
 const getChildStep = (
   parentStep: Step | StepRoot,
@@ -301,7 +294,7 @@ const isLastStep = (
 ) => {
   return isSameStep(
     getLastStep(parentStep as Step, recursive) ||
-    (isStep(parentStep) ? parentStep : null),
+      (isStep(parentStep) ? parentStep : null),
     step,
   );
 };
@@ -442,11 +435,7 @@ const createStep = <T>(
   id: string,
   stepType: T extends Step<infer U, infer K> ? K : never,
   state: T extends Step<infer U, infer K> ? U : never,
-  owner?: User,
-  users?: User[],
-  published?: boolean,
-  difficulty?: Difficulty,
-  tags: Tag[] = []
+  data = {},
 ): Step<typeof state, typeof stepType> => ({
   id,
   stepType,
@@ -455,11 +444,7 @@ const createStep = <T>(
     steps: [],
     ...state,
   },
-  owner: owner,
-  users: users,
-  published: published,
-  difficulty: difficulty,
-  tags: tags
+  ...data,
 });
 
 export {

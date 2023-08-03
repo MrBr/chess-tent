@@ -9,7 +9,6 @@ export const TYPE_STEP = 'steps';
 
 export interface Step<T extends {} = {}, K extends StepType = StepType> {
   id: string;
-  docId?: string;
   owner?: User;
   type: typeof TYPE_STEP;
   stepType: K;
@@ -22,14 +21,11 @@ export interface Step<T extends {} = {}, K extends StepType = StepType> {
 
 export interface NormalizedStep {
   id: Step['id'];
-  docId?: Step['docId'];
-  owner: User['id'];
   type: Step['type'];
   stepType: Step['stepType'];
   difficulty: Step['difficulty'];
   tags: Step['tags'][];
   published?: Step['published'];
-  users?: User['id'][];
   state: Step['state'] & {
     steps: Step['id'][];
   };

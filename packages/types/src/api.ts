@@ -41,8 +41,6 @@ export type SubjectFilters = {
   search?: string;
   tagIds?: Tag['id'][];
   difficulty?: Difficulty;
-  hasDocId?: boolean;
-  published?: boolean;
 };
 
 export type MyLessonsFilters = Omit<LessonsFilters, 'users' | 'owner'>;

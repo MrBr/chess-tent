@@ -5,7 +5,6 @@ import { db, utils } from '@application';
 import { SubjectFilters } from '@chess-tent/types';
 import { FilterQuery } from 'mongoose';
 import _ from 'lodash';
-import { canAccessStepCheck, canEditStepCheck } from '@chess-tent/models/src';
 
 const depopulateStep = (
   step: Partial<Step>,
@@ -91,18 +90,4 @@ export const findSteps = (filters: Partial<SubjectFilters>): Promise<Step[]> =>
         }
         resolve(result.map(item => item.toObject<Step>()));
       });
-  });
-
-export const canEditStep = (stepId: Step['id'], userId: User['id']) =>
-  new Promise((resolve, reject) => {
-    getStep(stepId)
-      .then(step => resolve(!step || canEditStepCheck(step, userId)))
-      .catch(reject);
-  });
-
-export const canAccessStep = (stepId: Step['id'], userId: User['id']) =>
-  new Promise((resolve, reject) => {
-    getStep(stepId)
-      .then(step => resolve(!!step && canAccessStepCheck(step, userId)))
-      .catch(reject);
   });

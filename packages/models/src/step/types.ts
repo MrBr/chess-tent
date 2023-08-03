@@ -14,8 +14,6 @@ export interface Step<T extends {} = {}, K extends StepType = StepType> {
   stepType: K;
   difficulty?: Difficulty;
   tags?: Tag[];
-  users?: User[];
-  published?: boolean;
   state: { steps: Step[] } & T;
 }
 

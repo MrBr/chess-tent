@@ -25,7 +25,6 @@ export interface NormalizedStep {
   stepType: Step['stepType'];
   difficulty: Step['difficulty'];
   tags: Step['tags'][];
-  published?: Step['published'];
   state: Step['state'] & {
     steps: Step['id'][];
   };

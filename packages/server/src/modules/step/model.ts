@@ -14,7 +14,6 @@ export interface DepopulatedStep {
   state: NormalizedStep['state'];
   difficulty?: NormalizedStep['difficulty'];
   tags?: NormalizedStep['tags'];
-  published?: NormalizedStep['published'];
   v?: number;
 }
 
@@ -40,9 +39,6 @@ const stepSchema = db.createSchema<DepopulatedStep>(
         ref: TYPE_TAG,
       } as unknown,
     ] as DepopulatedStep['tags'],
-    published: {
-      type: Boolean,
-    } as unknown as DepopulatedStep['published'],
     v: {
       type: Schema.Types.Number,
       default: 1,

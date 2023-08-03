@@ -36,8 +36,6 @@ export type LessonsFilters = {
 };
 
 export type SubjectFilters = {
-  owner?: User['id'];
-  users?: User['id'][];
   search?: string;
   tagIds?: Tag['id'][];
   difficulty?: Difficulty;

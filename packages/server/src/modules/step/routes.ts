@@ -1,13 +1,9 @@
 import application, { middleware } from '@application';
 import {
-  canEditStep,
   getStep,
   saveStep,
-  publishStep,
   findSteps,
   patchStep,
-  canAccessStep,
-  unpublishStep,
   deleteStep,
 } from './middleware';
 
@@ -17,7 +13,6 @@ application.service.registerPostRoute(
   '/step/save',
   identify,
   toLocals('step', req => req.body),
-  canEditStep,
   saveStep,
   sendStatusOk,
 );
@@ -26,26 +21,7 @@ application.service.registerDeleteRoute(
   '/step/:stepId',
   identify,
   toLocals('step.id', req => req.params.stepId),
-  canEditStep,
   deleteStep,
-  sendStatusOk,
-);
-
-application.service.registerPutRoute(
-  '/step/publish/:stepId',
-  identify,
-  toLocals('step.id', req => req.params.stepId),
-  canEditStep,
-  publishStep,
-  sendStatusOk,
-);
-
-application.service.registerPutRoute(
-  '/step/unpublish/:stepId',
-  identify,
-  toLocals('step.id', req => req.params.stepId),
-  canEditStep,
-  unpublishStep,
   sendStatusOk,
 );
 
@@ -54,7 +30,6 @@ application.service.registerPutRoute(
   identify,
   toLocals('step', req => req.body),
   toLocals('step.id', req => req.params.stepId),
-  canEditStep,
   patchStep,
   sendStatusOk,
 );
@@ -95,6 +70,5 @@ application.service.registerGetRoute(
   identify,
   toLocals('step.id', req => req.params.stepId),
   getStep,
-  canAccessStep,
   sendData('step'),
 );

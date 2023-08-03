@@ -1,6 +1,6 @@
 import { MiddlewareFunction } from '@types';
 import { Step } from '@chess-tent/models';
-import { StepNotFoundError, UnauthorizedStepEditError } from './errors';
+import { StepNotFoundError } from './errors';
 import * as service from './service';
 
 export const saveStep: MiddlewareFunction = (req, res, next) => {
@@ -8,14 +8,6 @@ export const saveStep: MiddlewareFunction = (req, res, next) => {
     .saveStep(res.locals.step as Step)
     .then(next)
     .catch(next);
-};
-
-export const publishStep: MiddlewareFunction = (req, res, next) => {
-  service.publishStep(res.locals.step.id).then(next).catch(next);
-};
-
-export const unpublishStep: MiddlewareFunction = (req, res, next) => {
-  service.unpublishStep(res.locals.step.id).then(next).catch(next);
 };
 
 export const patchStep: MiddlewareFunction = (req, res, next) => {
@@ -51,31 +43,6 @@ export const findSteps: MiddlewareFunction = (req, res, next) => {
       }
       res.locals.steps = steps;
       next();
-    })
-    .catch(next);
-};
-export const canEditStep: MiddlewareFunction = (req, res, next) => {
-  service
-    .canEditStep(res.locals.step.id, res.locals.me.id)
-    .then(canEdit => {
-      if (canEdit) {
-        next();
-        return;
-      }
-      throw new UnauthorizedStepEditError();
-    })
-    .catch(next);
-};
-
-export const canAccessStep: MiddlewareFunction = (req, res, next) => {
-  service
-    .canAccessStep(res.locals.step.id, res.locals.me.id)
-    .then(canEdit => {
-      if (canEdit) {
-        next();
-        return;
-      }
-      throw new UnauthorizedStepEditError();
     })
     .catch(next);
 };

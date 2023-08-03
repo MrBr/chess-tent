@@ -75,7 +75,7 @@ export const findSteps = (filters: Partial<SubjectFilters>): Promise<Step[]> =>
     }
 
     if (!_.isEmpty(filters.tagIds)) {
-      query['tags'] = { $in: filters.tagIds };
+      // query['tags'] = { $in: filters.tagIds }; // todo: compiler is barking about thisxx
     }
 
     if (filters.search) {

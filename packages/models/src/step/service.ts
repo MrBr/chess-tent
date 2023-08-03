@@ -22,12 +22,6 @@ const isSameStep = <T extends {}>(
   return leftStep?.id === rightStep?.id;
 };
 
-const canEditStepCheck = (step: Step, userId: User['id']) =>
-  step.owner?.id === userId || step.users?.some(({ id }) => id === userId);
-
-const canAccessStepCheck = (step: Step, userId: User['id']) =>
-  canEditStepCheck(step, userId);
-
 const getChildStep = (
   parentStep: Step | StepRoot,
   childId: Step['id'],
@@ -450,8 +444,6 @@ const createStep = <T>(
 export {
   isStep,
   isSameStep,
-  canEditStepCheck,
-  canAccessStepCheck,
   createStep,
   addStep,
   removeStep,

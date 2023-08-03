@@ -1,41 +1,12 @@
-import React, { useEffect, useState, useRef, RefObject } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { hooks } from '@application';
 import { Components } from '@types';
-import { User, ZoomRole } from '@chess-tent/models';
+import { ZoomRole } from '@chess-tent/models';
 
 import { zoomAuthorize, generateSignature } from '../requests';
-import { ZoomConnectionStatus, ZoomContext, ZoomContextType } from '../context';
+import { ZoomContext, ZoomContextType, createInitialContext } from '../context';
 
 const { useApi, useQuery } = hooks;
-
-interface InitialContextData {
-  meetingNumber: string | undefined;
-  user: User;
-  code: string | undefined;
-  redirectUri: string;
-  zoomSDKElementRef: RefObject<HTMLElement>;
-}
-
-const createInitialContext = ({
-  meetingNumber,
-  user,
-  code,
-  redirectUri,
-  zoomSDKElementRef,
-}: InitialContextData) => ({
-  userSignature: null,
-  hostUserZakToken: undefined,
-  meetingNumber: meetingNumber?.replaceAll(' ', ''),
-  username: user.nickname,
-  password: null,
-  role: user?.coach ? ZoomRole.Host : ZoomRole.Guest,
-  authCode: code,
-  redirectUri,
-  updateContext: () => {},
-  resetContext: () => {},
-  connectionStatus: ZoomConnectionStatus.NOT_CONNECTED,
-  zoomSDKElementRef,
-});
 
 const ZoomProvider: Components['ZoomProvider'] = ({
   redirectUri,

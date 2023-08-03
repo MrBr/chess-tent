@@ -1,16 +1,18 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, RefObject } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import '@testing-library/jest-dom';
 import application from '@application';
-import { render, screen } from '@testing-library/react';
+import { RenderResult, render, screen } from '@testing-library/react';
 import { User } from '@chess-tent/models';
 
 const { components } = application;
 
-interface RenderOptions {
+export interface RenderOptions {
   user: User;
   meetingNumber?: string;
-  queryCode?: boolean;
+  authCode?: string;
+  redirectUri?: string;
+  zoomSDKElementRef?: RefObject<HTMLElement>;
 }
 
 const redirectUri = 'https://localhost:3000/test';
@@ -18,22 +20,22 @@ const redirectUri = 'https://localhost:3000/test';
 export const renderWithProvider = (
   children: ReactNode,
   options: RenderOptions,
-) => {
+): RenderResult => {
   const { ZoomProvider } = components;
 
-  render(
+  return render(
     <MemoryRouter
       initialEntries={[
         {
           pathname: '/',
-          search: options?.queryCode ? '?code=testcode' : undefined,
+          search: options?.authCode ? `?code=${options.authCode}` : undefined,
         },
       ]}
     >
       <ZoomProvider
-        redirectUri={redirectUri}
+        redirectUri={options?.redirectUri || redirectUri}
         user={options.user}
-        meetingNumber={options?.meetingNumber}
+        meetingNumber={options.meetingNumber}
       >
         {children}
       </ZoomProvider>
@@ -46,3 +48,6 @@ export const getPasswordInput = async (): Promise<HTMLElement> =>
 
 export const getMeetingNumberInput = (): Promise<HTMLElement> =>
   screen.findByPlaceholderText('Meeting number');
+
+export const getElementByRegex = (matcher: RegExp) =>
+  screen.findByText(matcher).then(result => result.textContent);

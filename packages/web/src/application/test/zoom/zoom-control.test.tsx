@@ -38,7 +38,7 @@ describe('Zoom Controls', () => {
     const { ZoomHostControl } = components;
     const { coach } = fixtures.users;
 
-    renderWithProvider(<ZoomHostControl />, { user: coach, queryCode: true });
+    renderWithProvider(<ZoomHostControl />, { user: coach, authCode: 'code' });
 
     expect(await getPasswordInput()).toBeInTheDocument();
     expect(await getMeetingNumberInput()).toBeInTheDocument();

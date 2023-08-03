@@ -3,7 +3,6 @@ import {
   NormalizedStep,
   TYPE_STEP,
   TYPE_TAG,
-  TYPE_USER,
 } from '@chess-tent/models';
 import { db } from '@application';
 import { Schema } from 'mongoose';
@@ -16,7 +15,6 @@ export interface DepopulatedStep {
   difficulty?: NormalizedStep['difficulty'];
   tags?: NormalizedStep['tags'];
   published?: NormalizedStep['published'];
-  users?: NormalizedStep['users'];
   v?: number;
 }
 
@@ -45,12 +43,6 @@ const stepSchema = db.createSchema<DepopulatedStep>(
     published: {
       type: Boolean,
     } as unknown as DepopulatedStep['published'],
-    users: [
-      {
-        type: String,
-        ref: TYPE_USER,
-      } as unknown,
-    ] as DepopulatedStep['users'],
     v: {
       type: Schema.Types.Number,
       default: 1,

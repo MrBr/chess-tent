@@ -11,7 +11,7 @@ const depopulateStep = (
   step: Partial<Step>,
   depopulate = 'owner tags users',
 ) => {
-  let transformed = step as unknown as AppDocument<DepopulatedStep>;
+  let transformed = new StepModel(step);
   return transformed.depopulate(depopulate);
 };
 

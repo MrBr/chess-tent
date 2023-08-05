@@ -18,11 +18,13 @@ const ZoomProvider: Components['ZoomProvider'] = ({
     fetch: authFetch,
     response: authResponse,
     loading: authLoading,
+    error: authError,
   } = useApi(zoomAuthorize);
   const {
     fetch: signatureFetch,
     response: signatureResponse,
     loading: signatureLoading,
+    error: signatureError,
   } = useApi(generateSignature);
 
   const { code } = useQuery<{ code?: string }>();
@@ -60,19 +62,28 @@ const ZoomProvider: Components['ZoomProvider'] = ({
       zoomContextState.role !== ZoomRole.Host ||
       !zoomContextState.authCode ||
       authLoading ||
-      authResponse
+      authResponse ||
+      authError
     ) {
       return;
     }
 
     authFetch({ code: zoomContextState.authCode, redirectUri });
-  }, [authFetch, authLoading, authResponse, redirectUri, zoomContextState]);
+  }, [
+    authFetch,
+    authLoading,
+    authResponse,
+    authError,
+    redirectUri,
+    zoomContextState,
+  ]);
 
   useEffect(() => {
     if (
       !zoomContextState.meetingNumber ||
       signatureResponse ||
-      signatureLoading
+      signatureLoading ||
+      signatureError
     ) {
       return;
     }
@@ -81,7 +92,13 @@ const ZoomProvider: Components['ZoomProvider'] = ({
       meetingNumber: zoomContextState.meetingNumber,
       role: zoomContextState.role,
     });
-  }, [signatureFetch, signatureResponse, signatureLoading, zoomContextState]);
+  }, [
+    signatureFetch,
+    signatureResponse,
+    signatureLoading,
+    signatureError,
+    zoomContextState,
+  ]);
 
   useEffect(() => {
     if (

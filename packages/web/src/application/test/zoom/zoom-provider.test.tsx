@@ -1,51 +1,39 @@
 import React from 'react';
 import '@testing-library/jest-dom';
+import { screen } from '@testing-library/react';
 
 import application from '@application';
-import { renderWithProvider, RenderOptions } from './utils';
+
+import { renderWithProvider, getEmptyRequest } from './utils';
+import { ZoomContext, ZoomContextType } from '../../../modules/zoom/context';
+
 import {
-  ZoomContext,
-  createInitialContext,
-  ZoomContextType,
-  InitialContextData,
-} from '../../../modules/zoom/context';
+  getElementByRegex,
+  getContextInitialData,
+  getCustomRequest,
+} from './utils';
 
-import { getElementByRegex } from './utils';
+beforeAll(() => application.init());
 
-const { fixtures } = application;
+const { fixtures, requests } = application;
 
 describe('Zoom Provider', () => {
-  it('ZoomContext should have corrent initial values', async () => {
-    const { student } = fixtures.users;
+  it('ZoomContext should have correct initial values', async () => {
+    const { student: user } = fixtures.users;
 
-    const useRefMock = jest.spyOn(React, 'useRef').mockReturnValue({
-      current: null,
-    });
+    requests.zoomSignature = getEmptyRequest();
+    requests.zoomAuthorize = getEmptyRequest();
 
-    const initialData = {
-      meetingNumber: '4785447829',
-      user: student,
-      code: 'code',
-      redirectUri: 'https://localhost:3000/',
-      zoomSDKElementRef: useRefMock as any,
-    } as InitialContextData;
-    const initialContext = createInitialContext({ ...initialData });
-
-    const customRenderData = {
-      user: initialData.user,
-      meetingNumber: initialContext.meetingNumber,
-      authCode: initialContext.authCode,
-      redirectUri: initialContext.redirectUri,
-      zoomSDKElementRef: initialContext.zoomSDKElementRef,
-    } as RenderOptions;
+    const { initialContext, customRenderData } = getContextInitialData(user);
 
     renderWithProvider(
       <ZoomContext.Consumer>
         {(value: ZoomContextType) =>
           Object.keys(value).map(key => (
             <span key={key}>
-              {key.toString()}:{' '}
-              {value[key as keyof ZoomContextType]?.toString()}
+              {`${key.toString()}: ${value[
+                key as keyof ZoomContextType
+              ]?.toString()}`}
             </span>
           ))
         }
@@ -53,15 +41,75 @@ describe('Zoom Provider', () => {
       customRenderData,
     );
 
-    Object.keys(initialContext).forEach(async key => {
-      if (!initialContext[key as keyof ZoomContextType]) {
-        return;
-      }
+    expect(await getElementByRegex(/userSignature/)).toBe(
+      'userSignature: undefined',
+    );
+    expect(await getElementByRegex(/hostUserZakToken/)).toBe(
+      'hostUserZakToken: undefined',
+    );
+    expect(
+      await screen.findByText(
+        'meetingNumber: ' + initialContext?.meetingNumber,
+      ),
+    ).toBeInTheDocument();
+    expect(await getElementByRegex(/username/)).toBe(
+      'username: ' + user.nickname,
+    );
+    expect(await getElementByRegex(/password/)).toBe('password: undefined');
+    expect(await getElementByRegex(/role/)).toBe(
+      'role: ' + initialContext.role,
+    );
+    expect(await getElementByRegex(/authCode/)).toBe(
+      'authCode: ' + initialContext.authCode,
+    );
+    expect((await screen.findAllByText(/redirectUri/)).length).toBeGreaterThan(
+      0,
+    );
+    expect(await getElementByRegex(/connectionStatus/)).toBe(
+      'connectionStatus: ' + initialContext.connectionStatus,
+    );
+  });
 
-      const matcher = new RegExp(`^${key}:`);
-      expect(await getElementByRegex(matcher)).toBe(
-        `${key}: ${initialContext[key as keyof ZoomContextType]?.toString()}`,
-      );
+  it('ZoomContext should update correctly after API requests', async () => {
+    const { coach } = fixtures.users;
+    const { zoomAuthorize, zoomSignature } = requests;
+    const { customRenderData } = getContextInitialData(coach);
+
+    const signatureData = 'test signature';
+    requests.zoomSignature = getCustomRequest({
+      data: signatureData,
+      error: null,
     });
+
+    const authData = 'test auth';
+    requests.zoomAuthorize = getCustomRequest({
+      data: authData,
+      error: null,
+    });
+
+    renderWithProvider(
+      <ZoomContext.Consumer>
+        {(value: ZoomContextType) =>
+          Object.keys(value).map(key => (
+            <span key={key}>
+              {`${key.toString()}: ${value[
+                key as keyof ZoomContextType
+              ]?.toString()}`}
+            </span>
+          ))
+        }
+      </ZoomContext.Consumer>,
+      customRenderData,
+    );
+
+    expect(await getElementByRegex(/^userSignature:/)).toBe(
+      `userSignature: ${signatureData}`,
+    );
+    expect(await getElementByRegex(/^hostUserZakToken:/)).toBe(
+      `hostUserZakToken: ${authData}`,
+    );
+
+    requests.zoomAuthorize = zoomAuthorize;
+    requests.zoomSignature = zoomSignature;
   });
 });

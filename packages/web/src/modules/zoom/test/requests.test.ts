@@ -1,6 +1,7 @@
 import { renderHook, act } from '@testing-library/react';
 import application from '@application';
-import { ZoomResponse } from '@chess-tent/types';
+
+import { getCustomRequest } from '../../../application/test/zoom/utils';
 
 const { hooks, requests } = application;
 
@@ -9,9 +10,7 @@ describe('Zoom requests', () => {
     const { useApi } = hooks;
     let { zoomAuthorize } = requests;
 
-    zoomAuthorize = jest.fn(() =>
-      Promise.resolve<ZoomResponse>({ data: 'data', error: null }),
-    );
+    zoomAuthorize = getCustomRequest({ data: 'data', error: null });
 
     const { result } = renderHook(() => useApi(zoomAuthorize));
 
@@ -28,12 +27,10 @@ describe('Zoom requests', () => {
   });
 
   it('Zoom request should return error', async () => {
-    let { useApi } = hooks;
+    const { useApi } = hooks;
     let { zoomAuthorize } = requests;
 
-    zoomAuthorize = jest.fn(() =>
-      Promise.resolve<ZoomResponse>({ data: '', error: 'error' }),
-    );
+    zoomAuthorize = getCustomRequest({ data: '', error: 'error' });
 
     const { result } = renderHook(() => useApi(zoomAuthorize));
 
@@ -48,12 +45,10 @@ describe('Zoom requests', () => {
   });
 
   it('Zoom request should return the null after reset', async () => {
-    let { useApi } = hooks;
+    const { useApi } = hooks;
     let { zoomAuthorize } = requests;
 
-    zoomAuthorize = jest.fn(() =>
-      Promise.resolve<ZoomResponse>({ data: 'data', error: null }),
-    );
+    zoomAuthorize = getCustomRequest({ data: 'data', error: null });
 
     const { result } = renderHook(() => useApi(zoomAuthorize));
 

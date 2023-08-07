@@ -1,18 +1,27 @@
 import React from 'react';
 import '@testing-library/jest-dom';
+import fetch from 'node-fetch';
 import application from '@application';
 import { screen } from '@testing-library/react';
 import {
   renderWithProvider,
   getPasswordInput,
   getMeetingNumberInput,
+  getEmptyRequest,
 } from './utils';
 
-const { components, fixtures } = application;
+Object.defineProperty(global.self, 'fetch', { value: fetch });
+
+beforeAll(() => application.init());
+
+const { components, fixtures, requests } = application;
 
 const meetingNumber = '4785447829';
 
 describe('Zoom Controls', () => {
+  requests.zoomSignature = getEmptyRequest();
+  requests.zoomAuthorize = getEmptyRequest();
+
   it('Student should have only password input', async () => {
     const { ZoomGuestControl } = components;
     const { student } = fixtures.users;

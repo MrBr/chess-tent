@@ -1,9 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { hooks } from '@application';
+import { hooks, requests } from '@application';
 import { Components } from '@types';
 import { ZoomRole } from '@chess-tent/models';
 
-import { zoomAuthorize, generateSignature } from '../requests';
 import { ZoomContext, ZoomContextType, createInitialContext } from '../context';
 
 const { useApi, useQuery } = hooks;
@@ -19,13 +18,13 @@ const ZoomProvider: Components['ZoomProvider'] = ({
     response: authResponse,
     loading: authLoading,
     error: authError,
-  } = useApi(zoomAuthorize);
+  } = useApi(requests.zoomAuthorize);
   const {
     fetch: signatureFetch,
     response: signatureResponse,
     loading: signatureLoading,
     error: signatureError,
-  } = useApi(generateSignature);
+  } = useApi(requests.zoomSignature);
 
   const { code } = useQuery<{ code?: string }>();
   const zoomSDKElementRef = useRef<HTMLElement>(null);

@@ -1,4 +1,4 @@
-import { services } from '@application';
+import { services, requests } from '@application';
 import { Requests } from '@types';
 
 const zoomAuthorize = services.createRequest<Requests['zoomAuthorize']>(
@@ -10,5 +10,8 @@ const generateSignature = services.createRequest<Requests['zoomSignature']>(
   'POST',
   '/zoom/signature',
 );
+
+requests.zoomAuthorize = zoomAuthorize;
+requests.zoomSignature = generateSignature;
 
 export { zoomAuthorize, generateSignature };

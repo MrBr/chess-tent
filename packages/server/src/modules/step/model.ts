@@ -1,11 +1,13 @@
 import {
   Difficulty,
   NormalizedStep,
+  Step,
   TYPE_STEP,
   TYPE_TAG,
 } from '@chess-tent/models';
 import { db } from '@application';
 import { Schema } from 'mongoose';
+import { DepupulatedLesson } from '../lesson/model';
 
 // could be called StepEntity as entities are established concepts in the persistence context
 export interface DepopulatedStep {
@@ -49,6 +51,9 @@ const stepSchema = db.createSchema<DepopulatedStep>(
 
 stepSchema.index({ 'state.id': 'text' });
 
+const depopulate = (step: Partial<Step>): DepopulatedStep => {
+  return new StepModel(step).depopulate('tags');
+};
 const StepModel = db.createModel<DepopulatedStep>(TYPE_STEP, stepSchema);
 
-export { stepSchema, StepModel };
+export { stepSchema, StepModel, depopulate };

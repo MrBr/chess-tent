@@ -1,19 +1,13 @@
-import { Step, User } from '@chess-tent/models';
-import { DepopulatedStep, StepModel } from './model';
+import { Step } from '@chess-tent/models';
+import { depopulate, DepopulatedStep, StepModel } from './model';
 import { AppDocument } from '@types';
-import { db, utils } from '@application';
 import { SubjectFilters } from '@chess-tent/types';
 import { FilterQuery } from 'mongoose';
 import _ from 'lodash';
 
-const depopulateStep = (step: Partial<Step>, depopulate = 'tags') => {
-  let transformed = new StepModel(step);
-  return transformed.depopulate(depopulate);
-};
-
 export const saveStep = (step: Step) =>
   new Promise<void>(resolve => {
-    StepModel.updateOne({ _id: step.id }, depopulateStep(step), {
+    StepModel.updateOne({ _id: step.id }, depopulate(step), {
       upsert: true,
     }).exec(err => {
       if (err) {
@@ -44,7 +38,7 @@ export const deleteStep = async (stepId: Step['id']) => {
 
 export const patchStep = (stepId: Step['id'], step: Partial<Step>) =>
   new Promise<void>(resolve => {
-    StepModel.updateOne({ _id: stepId }, { $set: depopulateStep(step) }).exec(
+    StepModel.updateOne({ _id: stepId }, { $set: depopulate(step) }).exec(
       err => {
         if (err) {
           throw err;

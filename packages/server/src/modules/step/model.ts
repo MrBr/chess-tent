@@ -52,7 +52,7 @@ const stepSchema = db.createSchema<DepopulatedStep>(
 stepSchema.index({ 'state.id': 'text' });
 
 const depopulate = (step: Partial<Step>): DepopulatedStep => {
-  return new StepModel(step).depopulate('tags');
+  return new StepModel(step).depopulate('tags').toObject();
 };
 const StepModel = db.createModel<DepopulatedStep>(TYPE_STEP, stepSchema);
 

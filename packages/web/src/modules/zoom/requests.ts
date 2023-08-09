@@ -13,5 +13,3 @@ const generateSignature = services.createRequest<Requests['zoomSignature']>(
 
 requests.zoomAuthorize = zoomAuthorize;
 requests.zoomSignature = generateSignature;
-
-export { zoomAuthorize, generateSignature };

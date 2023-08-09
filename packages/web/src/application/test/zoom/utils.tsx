@@ -13,19 +13,11 @@ import {
 
 const { components } = application;
 
-export interface RenderOptions {
-  user: User;
-  meetingNumber?: string;
-  authCode?: string;
-  redirectUri?: string;
-  zoomSDKElementRef?: RefObject<HTMLElement>;
-}
-
 const redirectUri = 'https://localhost:3000/test';
 
 export const renderWithProvider = (
   children: ReactNode,
-  options: RenderOptions,
+  options: any,
 ): RenderResult => {
   const { ZoomProvider } = components;
 
@@ -50,28 +42,16 @@ export const renderWithProvider = (
 };
 
 export const getContextInitialData = (user: User) => {
-  const useRefMock = jest.spyOn(React, 'useRef').mockReturnValue({
-    current: null,
-  });
-
   const initialData = {
     meetingNumber: '4785447829',
     user,
     code: 'code',
     redirectUri: 'https://localhost:3000/',
-    zoomSDKElementRef: useRefMock as any,
+    zoomSDKElementRef: jest.fn() as any,
   } as InitialContextData;
   const initialContext = createInitialContext({ ...initialData });
 
-  const customRenderData = {
-    user: initialData.user,
-    meetingNumber: initialContext.meetingNumber,
-    authCode: initialContext.authCode,
-    redirectUri: initialContext.redirectUri,
-    zoomSDKElementRef: initialContext.zoomSDKElementRef,
-  } as RenderOptions;
-
-  return { initialContext, customRenderData };
+  return initialContext;
 };
 
 export const getPasswordInput = async (): Promise<HTMLElement> =>
@@ -83,9 +63,9 @@ export const getMeetingNumberInput = (): Promise<HTMLElement> =>
 export const getElementByRegex = (matcher: RegExp) =>
   screen.findByText(matcher).then(result => result.textContent);
 
-export const getCustomRequest = (data: {
+export const mockDataResponse = (data: {
   data: string;
   error: string | null;
 }) => jest.fn(() => Promise.resolve<ZoomResponse>(data));
 
-export const getEmptyRequest = () => jest.fn().mockResolvedValue({});
+export const mockEmptyDataResponse = () => jest.fn().mockResolvedValue({});

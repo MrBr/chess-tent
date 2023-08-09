@@ -1,30 +1,30 @@
 import React from 'react';
 import '@testing-library/jest-dom';
 import { screen } from '@testing-library/react';
-
 import application from '@application';
 
-import { renderWithProvider, getEmptyRequest } from './utils';
-import { ZoomContext, ZoomContextType } from '../../../modules/zoom/context';
-
 import {
+  renderWithProvider,
   getElementByRegex,
   getContextInitialData,
-  getCustomRequest,
+  mockDataResponse,
+  mockEmptyDataResponse,
 } from './utils';
+import { ZoomContext, ZoomContextType } from '../../../modules/zoom/context';
 
 beforeAll(() => application.init());
 
-const { fixtures, requests } = application;
+const { fixtures } = application;
 
 describe('Zoom Provider', () => {
   it('ZoomContext should have correct initial values', async () => {
     const { student: user } = fixtures.users;
+    const { requests } = application;
 
-    requests.zoomSignature = getEmptyRequest();
-    requests.zoomAuthorize = getEmptyRequest();
+    requests.zoomSignature = mockEmptyDataResponse();
+    requests.zoomAuthorize = mockEmptyDataResponse();
 
-    const { initialContext, customRenderData } = getContextInitialData(user);
+    const initialContext = getContextInitialData(user);
 
     renderWithProvider(
       <ZoomContext.Consumer>
@@ -38,7 +38,7 @@ describe('Zoom Provider', () => {
           ))
         }
       </ZoomContext.Consumer>,
-      customRenderData,
+      { ...initialContext, user },
     );
 
     expect(await getElementByRegex(/userSignature/)).toBe(
@@ -70,43 +70,94 @@ describe('Zoom Provider', () => {
     );
   });
 
-  it('ZoomContext should update correctly after API requests', async () => {
-    const { coach } = fixtures.users;
+  it('ZoomContext should update signature and auth data correctly after API requests when user is coach', async () => {
+    const { coach: user } = fixtures.users;
+    const { requests } = application;
+
     const { zoomAuthorize, zoomSignature } = requests;
-    const { customRenderData } = getContextInitialData(coach);
+
+    const initialContext = getContextInitialData(user);
 
     const signatureData = 'test signature';
-    requests.zoomSignature = getCustomRequest({
+    requests.zoomSignature = mockDataResponse({
       data: signatureData,
       error: null,
     });
 
     const authData = 'test auth';
-    requests.zoomAuthorize = getCustomRequest({
+    requests.zoomAuthorize = mockDataResponse({
       data: authData,
       error: null,
     });
 
     renderWithProvider(
-      <ZoomContext.Consumer>
-        {(value: ZoomContextType) =>
-          Object.keys(value).map(key => (
-            <span key={key}>
-              {`${key.toString()}: ${value[
-                key as keyof ZoomContextType
-              ]?.toString()}`}
-            </span>
-          ))
-        }
-      </ZoomContext.Consumer>,
-      customRenderData,
+      <>
+        <ZoomContext.Consumer>
+          {(value: ZoomContextType) =>
+            Object.keys(value).map(key => (
+              <span key={key}>
+                {`${key.toString()}: ${value[
+                  key as keyof ZoomContextType
+                ]?.toString()}`}
+              </span>
+            ))
+          }
+        </ZoomContext.Consumer>
+      </>,
+      { ...initialContext, user },
     );
-
     expect(await getElementByRegex(/^userSignature:/)).toBe(
       `userSignature: ${signatureData}`,
     );
     expect(await getElementByRegex(/^hostUserZakToken:/)).toBe(
       `hostUserZakToken: ${authData}`,
+    );
+
+    requests.zoomAuthorize = zoomAuthorize;
+    requests.zoomSignature = zoomSignature;
+  });
+
+  it('ZoomContext should update signature correctly after API requests when user is student', async () => {
+    const { student: user } = fixtures.users;
+    const { requests } = application;
+
+    const { zoomAuthorize, zoomSignature } = requests;
+
+    const initialContext = getContextInitialData(user);
+
+    const signatureData = 'test signature';
+    requests.zoomSignature = mockDataResponse({
+      data: signatureData,
+      error: null,
+    });
+
+    const authData = 'test auth';
+    requests.zoomAuthorize = mockDataResponse({
+      data: authData,
+      error: null,
+    });
+
+    renderWithProvider(
+      <>
+        <ZoomContext.Consumer>
+          {(value: ZoomContextType) =>
+            Object.keys(value).map(key => (
+              <span key={key}>
+                {`${key.toString()}: ${value[
+                  key as keyof ZoomContextType
+                ]?.toString()}`}
+              </span>
+            ))
+          }
+        </ZoomContext.Consumer>
+      </>,
+      { ...initialContext, user },
+    );
+    expect(await getElementByRegex(/^userSignature:/)).toBe(
+      `userSignature: ${signatureData}`,
+    );
+    expect(await getElementByRegex(/^hostUserZakToken:/)).toBe(
+      `hostUserZakToken: undefined`,
     );
 
     requests.zoomAuthorize = zoomAuthorize;

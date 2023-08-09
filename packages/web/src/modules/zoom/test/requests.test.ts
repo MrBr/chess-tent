@@ -1,7 +1,7 @@
 import { renderHook, act } from '@testing-library/react';
 import application from '@application';
 
-import { getCustomRequest } from '../../../application/test/zoom/utils';
+import { mockDataResponse } from '../../../application/test/zoom/utils';
 
 const { hooks, requests } = application;
 
@@ -10,7 +10,7 @@ describe('Zoom requests', () => {
     const { useApi } = hooks;
     let { zoomAuthorize } = requests;
 
-    zoomAuthorize = getCustomRequest({ data: 'data', error: null });
+    zoomAuthorize = mockDataResponse({ data: 'data', error: null });
 
     const { result } = renderHook(() => useApi(zoomAuthorize));
 
@@ -30,7 +30,7 @@ describe('Zoom requests', () => {
     const { useApi } = hooks;
     let { zoomAuthorize } = requests;
 
-    zoomAuthorize = getCustomRequest({ data: '', error: 'error' });
+    zoomAuthorize = mockDataResponse({ data: '', error: 'error' });
 
     const { result } = renderHook(() => useApi(zoomAuthorize));
 
@@ -48,7 +48,7 @@ describe('Zoom requests', () => {
     const { useApi } = hooks;
     let { zoomAuthorize } = requests;
 
-    zoomAuthorize = getCustomRequest({ data: 'data', error: null });
+    zoomAuthorize = mockDataResponse({ data: 'data', error: null });
 
     const { result } = renderHook(() => useApi(zoomAuthorize));
 

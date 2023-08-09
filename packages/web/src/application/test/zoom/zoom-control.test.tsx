@@ -7,7 +7,7 @@ import {
   renderWithProvider,
   getPasswordInput,
   getMeetingNumberInput,
-  getEmptyRequest,
+  mockEmptyDataResponse,
 } from './utils';
 
 Object.defineProperty(global.self, 'fetch', { value: fetch });
@@ -19,8 +19,8 @@ const { components, fixtures, requests } = application;
 const meetingNumber = '4785447829';
 
 describe('Zoom Controls', () => {
-  requests.zoomSignature = getEmptyRequest();
-  requests.zoomAuthorize = getEmptyRequest();
+  requests.zoomSignature = mockEmptyDataResponse();
+  requests.zoomAuthorize = mockEmptyDataResponse();
 
   it('Student should have only password input', async () => {
     const { ZoomGuestControl } = components;

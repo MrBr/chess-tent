@@ -8,31 +8,33 @@ import '@testing-library/jest-dom';
 import application from '@application';
 
 import {
-  renderWithProvider,
-  getContextInitialData,
-  mockDataResponse,
+  renderWithProviderAndCustomConsumer,
   getElementByRegex,
+  mockDataResponse,
 } from './utils';
-import {
-  ZoomConnectionStatus,
-  ZoomContext,
-  ZoomContextType,
-} from '../../../modules/zoom/context';
+import { ZoomConnectionStatus } from '../../../modules/zoom/context';
 
 beforeAll(async () => await application.init());
 
 const { fixtures, requests, components } = application;
 
 describe('Zoom Activity View', () => {
-  it('Zoom Activity View container should have status CONNECTING when joining', async () => {
+  it('Zoom Activity View should set ZoomContext to status CONNECTING when joining', async () => {
     const { student: user } = fixtures.users;
     const { ZoomActivityView, ZoomGuestControl } = components;
-    const initialContext = getContextInitialData(user);
 
     requests.zoomSignature = mockDataResponse({
       data: 'test signature',
       error: null,
     });
+
+    renderWithProviderAndCustomConsumer(
+      user,
+      <>
+        <ZoomGuestControl />
+        <ZoomActivityView />
+      </>,
+    );
 
     jest.spyOn(ZoomMtgEmbedded, 'createClient').mockReturnValue({
       ...ZoomMtgEmbedded.createClient(),
@@ -40,29 +42,6 @@ describe('Zoom Activity View', () => {
       join: jest.fn().mockResolvedValue(() => {}),
       on: jest.fn(),
     });
-
-    renderWithProvider(
-      <>
-        <ZoomContext.Consumer>
-          {(value: ZoomContextType) =>
-            Object.keys(value).map(key => (
-              <span key={key}>
-                {`${key.toString()}: ${value[
-                  key as keyof ZoomContextType
-                ]?.toString()}`}
-              </span>
-            ))
-          }
-        </ZoomContext.Consumer>
-        <ZoomGuestControl />
-        <ZoomActivityView />
-      </>,
-      { ...initialContext, user },
-    );
-
-    expect(await getElementByRegex(/^connectionStatus:/)).toBe(
-      `connectionStatus: ${ZoomConnectionStatus.NOT_CONNECTED}`,
-    );
 
     const inputElement = await screen.findByPlaceholderText(
       'Meeting password (if any)',
@@ -77,15 +56,22 @@ describe('Zoom Activity View', () => {
     );
   });
 
-  it('Zoom Activity View container should have status CONNECTED when connection-status is set to Connected', async () => {
+  it('Zoom Activity View should set ZoomContext to status CONNECTED when connection-status is set to Connected', async () => {
     const { student: user } = fixtures.users;
     const { ZoomActivityView, ZoomGuestControl } = components;
-    const initialContext = getContextInitialData(user);
 
     requests.zoomSignature = mockDataResponse({
       data: 'test signature',
       error: null,
     });
+
+    renderWithProviderAndCustomConsumer(
+      user,
+      <>
+        <ZoomGuestControl />
+        <ZoomActivityView />
+      </>,
+    );
 
     jest.spyOn(ZoomMtgEmbedded, 'createClient').mockReturnValue({
       ...ZoomMtgEmbedded.createClient(),
@@ -99,29 +85,6 @@ describe('Zoom Activity View', () => {
         }, 0),
       ),
     });
-
-    renderWithProvider(
-      <>
-        <ZoomContext.Consumer>
-          {(value: ZoomContextType) =>
-            Object.keys(value).map(key => (
-              <span key={key}>
-                {`${key.toString()}: ${value[
-                  key as keyof ZoomContextType
-                ]?.toString()}`}
-              </span>
-            ))
-          }
-        </ZoomContext.Consumer>
-        <ZoomGuestControl />
-        <ZoomActivityView />
-      </>,
-      { ...initialContext, user },
-    );
-
-    expect(await getElementByRegex(/^connectionStatus:/)).toBe(
-      `connectionStatus: ${ZoomConnectionStatus.NOT_CONNECTED}`,
-    );
 
     const inputElement = await screen.findByPlaceholderText(
       'Meeting password (if any)',

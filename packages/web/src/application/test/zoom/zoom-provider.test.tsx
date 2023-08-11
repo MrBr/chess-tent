@@ -5,6 +5,7 @@ import application from '@application';
 
 import {
   renderWithProvider,
+  renderWithProviderAndCustomConsumer,
   getElementByRegex,
   getContextInitialData,
   mockDataResponse,
@@ -76,8 +77,6 @@ describe('Zoom Provider', () => {
 
     const { zoomAuthorize, zoomSignature } = requests;
 
-    const initialContext = getContextInitialData(user);
-
     const signatureData = 'test signature';
     requests.zoomSignature = mockDataResponse({
       data: signatureData,
@@ -90,22 +89,8 @@ describe('Zoom Provider', () => {
       error: null,
     });
 
-    renderWithProvider(
-      <>
-        <ZoomContext.Consumer>
-          {(value: ZoomContextType) =>
-            Object.keys(value).map(key => (
-              <span key={key}>
-                {`${key.toString()}: ${value[
-                  key as keyof ZoomContextType
-                ]?.toString()}`}
-              </span>
-            ))
-          }
-        </ZoomContext.Consumer>
-      </>,
-      { ...initialContext, user },
-    );
+    renderWithProviderAndCustomConsumer(user);
+
     expect(await getElementByRegex(/^userSignature:/)).toBe(
       `userSignature: ${signatureData}`,
     );
@@ -123,8 +108,6 @@ describe('Zoom Provider', () => {
 
     const { zoomAuthorize, zoomSignature } = requests;
 
-    const initialContext = getContextInitialData(user);
-
     const signatureData = 'test signature';
     requests.zoomSignature = mockDataResponse({
       data: signatureData,
@@ -137,22 +120,8 @@ describe('Zoom Provider', () => {
       error: null,
     });
 
-    renderWithProvider(
-      <>
-        <ZoomContext.Consumer>
-          {(value: ZoomContextType) =>
-            Object.keys(value).map(key => (
-              <span key={key}>
-                {`${key.toString()}: ${value[
-                  key as keyof ZoomContextType
-                ]?.toString()}`}
-              </span>
-            ))
-          }
-        </ZoomContext.Consumer>
-      </>,
-      { ...initialContext, user },
-    );
+    renderWithProviderAndCustomConsumer(user);
+
     expect(await getElementByRegex(/^userSignature:/)).toBe(
       `userSignature: ${signatureData}`,
     );

@@ -9,6 +9,8 @@ import { ZoomResponse } from '@chess-tent/types';
 import {
   createInitialContext,
   InitialContextData,
+  ZoomContext,
+  ZoomContextType,
 } from '../../../modules/zoom/context';
 
 const { components } = application;
@@ -39,6 +41,33 @@ export const renderWithProvider = (
       </ZoomProvider>
     </MemoryRouter>,
   );
+};
+
+export const renderWithProviderAndCustomConsumer = (
+  user: User,
+  children?: ReactNode,
+) => {
+  const initialContext = getContextInitialData(user);
+
+  renderWithProvider(
+    <>
+      <ZoomContext.Consumer>
+        {(value: ZoomContextType) =>
+          Object.keys(value).map(key => (
+            <span key={key}>
+              {`${key.toString()}: ${value[
+                key as keyof ZoomContextType
+              ]?.toString()}`}
+            </span>
+          ))
+        }
+      </ZoomContext.Consumer>
+      {children}
+    </>,
+    { ...initialContext, user },
+  );
+
+  return initialContext;
 };
 
 export const getContextInitialData = (user: User) => {

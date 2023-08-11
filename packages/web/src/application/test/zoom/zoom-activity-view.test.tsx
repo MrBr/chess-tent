@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import { screen, act } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import ZoomMtgEmbedded from '@zoomus/websdk/embedded';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
@@ -83,8 +83,8 @@ describe('Zoom Activity View', () => {
     );
     const buttonElement = await screen.findByText('Join');
 
-    await act(async () => await userEvent.type(inputElement, 'test-password'));
-    await act(async () => await userEvent.click(buttonElement));
+    await userEvent.type(inputElement, 'test-password');
+    await userEvent.click(buttonElement);
 
     await Promise.resolve(async () =>
       expect(await getElementByRegex(/^connectionStatus:/)).toBe(

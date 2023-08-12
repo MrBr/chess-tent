@@ -1,5 +1,5 @@
 import { register } from 'core-module';
-import { ErrorRequestHandler, RequestHandler } from 'express';
+import { ErrorRequestHandler, RequestHandler, Router } from 'express';
 import {
   Schema,
   SchemaOptions,
@@ -133,6 +133,7 @@ export type Auth = {
 };
 
 export type Service = {
+  router: Router;
   getUser: (
     userDescr: Partial<User>,
     projection?: string,

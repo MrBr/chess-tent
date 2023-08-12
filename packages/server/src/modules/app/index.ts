@@ -39,6 +39,7 @@ app.use(
 
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
+application.service.router = app;
 application.errors.BadRequest = BadRequest;
 application.middleware.errorHandler = errorHandler;
 application.middleware.sendData = sendData;

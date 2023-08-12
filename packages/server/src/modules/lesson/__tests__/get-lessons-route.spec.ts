@@ -2,7 +2,7 @@ import request from 'supertest';
 
 import application from '@application';
 
-describe('GET /lessons/:lessonId', () => {
+describe('GET /lesson/:lessonId', () => {
   beforeAll(() => application.start());
   afterAll(() => application.stop());
   it('should return forbidden status', function (done) {

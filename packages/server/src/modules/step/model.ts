@@ -7,7 +7,6 @@ import {
 } from '@chess-tent/models';
 import { db } from '@application';
 import { Schema } from 'mongoose';
-import { DepupulatedLesson } from '../lesson/model';
 
 // could be called StepEntity as entities are established concepts in the persistence context
 export interface DepopulatedStep {

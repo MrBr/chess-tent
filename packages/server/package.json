@@ -23,7 +23,9 @@
     "@types/mailgun-js": "^0.22.11",
     "@types/mongodb": "^3.5.17",
     "@types/mongoose": "^5.10.5",
-    "@types/ws": "^7.2.6"
+    "@types/supertest": "^2.0.12",
+    "@types/ws": "^7.2.6",
+    "supertest": "^6.3.3"
   },
   "dependencies": {
     "@chess-tent/models": "1.0.0",

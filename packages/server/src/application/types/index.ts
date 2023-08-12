@@ -31,6 +31,7 @@ import {
   DateRange,
 } from '@chess-tent/types';
 import { RecordAction } from '@chess-tent/redux-record/types';
+import * as http from 'http';
 
 export type AppDocument<T> = T & Document & { v: number };
 export type EntityDocument<T = Entity> = AppDocument<T>;
@@ -271,6 +272,8 @@ export type Application = {
   register: typeof register;
   init: () => Promise<any>;
   start: () => void;
+  stop: () => void;
+  server: http.Server
   errors: Errors;
 };
 

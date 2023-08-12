@@ -22,7 +22,7 @@ export interface NormalizedStep {
   type: Step['type'];
   stepType: Step['stepType'];
   difficulty: Step['difficulty'];
-  tags: Step['tags'][];
+  tags: Tag['id'][];
   state: Step['state'] & {
     steps: Step['id'][];
   };

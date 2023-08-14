@@ -1,18 +1,19 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import { screen, waitFor } from '@testing-library/react';
-import ZoomMtgEmbedded from '@zoomus/websdk/embedded';
-import userEvent from '@testing-library/user-event';
+import { waitFor, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
 import application from '@application';
 
 import {
   renderWithProviderAndCustomConsumer,
-  getElementByRegex,
+  findElementByRegex,
   mockDataResponse,
   getContextInitialData,
   mockZoomCreateClient,
+  mockStudentInput,
+  mockCoachInput,
+  createDomElement,
 } from './utils';
 import { ZoomConnectionStatus } from '../../../modules/zoom/context';
 
@@ -51,7 +52,7 @@ describe('Zoom Activity View', () => {
     mockZoomCreateClient();
     await mockStudentInput();
 
-    expect(await getElementByRegex(/^connectionStatus:/)).toBe(
+    expect(await findElementByRegex(/^connectionStatus:/)).toBe(
       `connectionStatus: ${ZoomConnectionStatus.CONNECTING}`,
     );
   });
@@ -71,7 +72,7 @@ describe('Zoom Activity View', () => {
     mockZoomCreateClient();
     await mockCoachInput();
 
-    expect(await getElementByRegex(/^connectionStatus:/)).toBe(
+    expect(await findElementByRegex(/^connectionStatus:/)).toBe(
       `connectionStatus: ${ZoomConnectionStatus.CONNECTING}`,
     );
   });
@@ -100,7 +101,7 @@ describe('Zoom Activity View', () => {
 
     await mockStudentInput();
 
-    expect(await getElementByRegex(/^connectionStatus:/)).toBe(
+    expect(await findElementByRegex(/^connectionStatus:/)).toBe(
       `connectionStatus: ${ZoomConnectionStatus.CONNECTED}`,
     );
   });
@@ -133,7 +134,7 @@ describe('Zoom Activity View', () => {
 
     await mockStudentInput();
 
-    expect(await getElementByRegex(/connectionStatus/)).toBe(
+    expect(await findElementByRegex(/connectionStatus/)).toBe(
       'connectionStatus: ' + ZoomConnectionStatus.NOT_CONNECTED,
     );
   });
@@ -166,33 +167,147 @@ describe('Zoom Activity View', () => {
 
     await mockStudentInput();
 
-    expect(await getElementByRegex(/connectionStatus/)).toBe(
+    expect(await findElementByRegex(/connectionStatus/)).toBe(
       'connectionStatus: ' + ZoomConnectionStatus.CONNECTING,
     );
 
     await waitFor(async () =>
-      expect(await getElementByRegex(/connectionStatus/)).toBe(
+      expect(await findElementByRegex(/connectionStatus/)).toBe(
         'connectionStatus: ' + ZoomConnectionStatus.NOT_CONNECTED,
       ),
     );
   });
 
-    const inputElement = await screen.findByPlaceholderText(
-      'Meeting password (if any)',
+  it('Should spawn meet container with meeting not started yet message when MEETING_NOT_STARTED_ERROR_CODE error code is returned', async () => {
+    const { student: user } = fixtures.users;
+    const { ZoomActivityView, ZoomGuestControl } = components;
+    const initialContext = getContextInitialData(user);
+    initialContext.connectionStatus = ZoomConnectionStatus.CONNECTED;
+
+    renderWithProviderAndCustomConsumer(
+      user,
+      <>
+        <ZoomGuestControl />
+        <ZoomActivityView />
+      </>,
     );
-    const buttonElement = await screen.findByText('Join');
 
-    await userEvent.type(inputElement, 'test-password');
-    await userEvent.click(buttonElement);
+    const errorMessage = 'Meeting not started yet.';
 
-    expect(await getElementByRegex(/connectionStatus/)).toBe(
+    mockZoomCreateClient(
+      jest.fn().mockImplementation((event, callback) => {
+        setTimeout(() => {
+          if (event === 'connection-change') {
+            createDomElement(errorMessage);
+
+            return callback({
+              state: 'Fail',
+              errorCode: MEETING_NOT_STARTED_ERROR_CODE,
+            });
+          }
+        }, 100);
+      }),
+    );
+    await mockStudentInput();
+
+    expect(await findElementByRegex(/connectionStatus/)).toBe(
+      'connectionStatus: ' + ZoomConnectionStatus.CONNECTING,
+    );
+
+    expect(
+      await screen.findByText(new RegExp(errorMessage)),
+    ).toBeInTheDocument();
+  });
+
+  it('Should spawn error alert with wrong password message and closed connection when wrong password error is returned', async () => {
+    const { student: user } = fixtures.users;
+    const { ZoomActivityView, ZoomGuestControl } = components;
+    const initialContext = getContextInitialData(user);
+    initialContext.connectionStatus = ZoomConnectionStatus.CONNECTED;
+
+    renderWithProviderAndCustomConsumer(
+      user,
+      <>
+        <ZoomGuestControl />
+        <ZoomActivityView />
+      </>,
+    );
+
+    const errorMessage = 'Passcode Wrong.';
+
+    jest.spyOn(window, 'alert').mockImplementation(() => {});
+
+    mockZoomCreateClient(
+      jest.fn().mockImplementation((event, callback) => {
+        setTimeout(() => {
+          if (event === 'connection-change') {
+            alert(errorMessage);
+
+            return callback({
+              state: 'Fail',
+            });
+          }
+        }, 100);
+      }),
+    );
+    await mockStudentInput();
+
+    expect(await findElementByRegex(/connectionStatus/)).toBe(
       'connectionStatus: ' + ZoomConnectionStatus.CONNECTING,
     );
 
     await waitFor(async () =>
-      expect(await getElementByRegex(/connectionStatus/)).toBe(
+      expect(await findElementByRegex(/connectionStatus/)).toBe(
         'connectionStatus: ' + ZoomConnectionStatus.NOT_CONNECTED,
       ),
     );
+
+    expect(window.alert).toBeCalledWith(errorMessage);
+  });
+
+  it('Should spawn error alert with meeting number not found message and closed connection with meeting not found error', async () => {
+    const { student: user } = fixtures.users;
+    const { ZoomActivityView, ZoomGuestControl } = components;
+    const initialContext = getContextInitialData(user);
+    initialContext.connectionStatus = ZoomConnectionStatus.CONNECTED;
+
+    renderWithProviderAndCustomConsumer(
+      user,
+      <>
+        <ZoomGuestControl />
+        <ZoomActivityView />
+      </>,
+    );
+
+    const errorMessage = 'The Meeting Number is not found.';
+
+    jest.spyOn(window, 'alert').mockImplementation(() => {});
+
+    mockZoomCreateClient(
+      jest.fn().mockImplementation((event, callback) => {
+        setTimeout(() => {
+          if (event === 'connection-change') {
+            alert(errorMessage);
+
+            return callback({
+              state: 'Fail',
+            });
+          }
+        }, 100);
+      }),
+    );
+    await mockStudentInput();
+
+    expect(await findElementByRegex(/connectionStatus/)).toBe(
+      'connectionStatus: ' + ZoomConnectionStatus.CONNECTING,
+    );
+
+    await waitFor(async () =>
+      expect(await findElementByRegex(/connectionStatus/)).toBe(
+        'connectionStatus: ' + ZoomConnectionStatus.NOT_CONNECTED,
+      ),
+    );
+
+    expect(window.alert).toBeCalledWith(errorMessage);
   });
 });

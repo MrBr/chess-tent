@@ -124,11 +124,19 @@ export const getContextInitialData = (user: User) => {
   return initialContext;
 };
 
-export const getPasswordInput = async (): Promise<HTMLElement> =>
+export const createDomElement = (text: string) => {
+  const div = document.createElement('div');
+  const content = document.createTextNode(text);
+  div.appendChild(content);
+
+  document.body.appendChild(div);
+};
+
+export const findPasswordInput = async (): Promise<HTMLElement> =>
   screen.findByPlaceholderText('Meeting password (if any)');
 
-export const getMeetingNumberInput = (): Promise<HTMLElement> =>
+export const findMeetingNumberInput = (): Promise<HTMLElement> =>
   screen.findByPlaceholderText('Meeting number');
 
-export const getElementByRegex = (matcher: RegExp) =>
+export const findElementByRegex = (matcher: RegExp) =>
   screen.findByText(matcher).then(result => result.textContent);

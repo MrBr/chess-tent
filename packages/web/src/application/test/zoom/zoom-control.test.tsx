@@ -5,8 +5,8 @@ import application from '@application';
 import { screen } from '@testing-library/react';
 import {
   renderWithProvider,
-  getPasswordInput,
-  getMeetingNumberInput,
+  findPasswordInput,
+  findMeetingNumberInput,
   mockEmptyDataResponse,
   renderWithProviderAndCustomConsumer,
   mockZoomCreateClient,
@@ -36,7 +36,7 @@ describe('Zoom Guest Controls', () => {
       meetingNumber: meetingNumber,
     });
 
-    expect(await getPasswordInput()).toBeInTheDocument();
+    expect(await findPasswordInput()).toBeInTheDocument();
   });
 
   it('Should not render inputs if connection is in progress', async () => {
@@ -88,8 +88,8 @@ describe('Zoom Coach Controls', () => {
 
     renderWithProvider(<ZoomHostControl />, { user: coach, authCode: 'code' });
 
-    expect(await getPasswordInput()).toBeInTheDocument();
-    expect(await getMeetingNumberInput()).toBeInTheDocument();
+    expect(await findPasswordInput()).toBeInTheDocument();
+    expect(await findMeetingNumberInput()).toBeInTheDocument();
   });
 
   it('Should not render inputs if connection is in progress', async () => {

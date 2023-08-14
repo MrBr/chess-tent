@@ -6,7 +6,7 @@ import application from '@application';
 import {
   renderWithProvider,
   renderWithProviderAndCustomConsumer,
-  getElementByRegex,
+  findElementByRegex,
   getContextInitialData,
   mockDataResponse,
   mockEmptyDataResponse,
@@ -42,10 +42,10 @@ describe('Zoom Provider', () => {
       { ...initialContext, user },
     );
 
-    expect(await getElementByRegex(/userSignature/)).toBe(
+    expect(await findElementByRegex(/userSignature/)).toBe(
       'userSignature: undefined',
     );
-    expect(await getElementByRegex(/hostUserZakToken/)).toBe(
+    expect(await findElementByRegex(/hostUserZakToken/)).toBe(
       'hostUserZakToken: undefined',
     );
     expect(
@@ -53,20 +53,20 @@ describe('Zoom Provider', () => {
         'meetingNumber: ' + initialContext?.meetingNumber,
       ),
     ).toBeInTheDocument();
-    expect(await getElementByRegex(/username/)).toBe(
+    expect(await findElementByRegex(/username/)).toBe(
       'username: ' + user.nickname,
     );
-    expect(await getElementByRegex(/password/)).toBe('password: undefined');
-    expect(await getElementByRegex(/role/)).toBe(
+    expect(await findElementByRegex(/password/)).toBe('password: undefined');
+    expect(await findElementByRegex(/role/)).toBe(
       'role: ' + initialContext.role,
     );
-    expect(await getElementByRegex(/authCode/)).toBe(
+    expect(await findElementByRegex(/authCode/)).toBe(
       'authCode: ' + initialContext.authCode,
     );
     expect((await screen.findAllByText(/redirectUri/)).length).toBeGreaterThan(
       0,
     );
-    expect(await getElementByRegex(/connectionStatus/)).toBe(
+    expect(await findElementByRegex(/connectionStatus/)).toBe(
       'connectionStatus: ' + initialContext.connectionStatus,
     );
   });
@@ -91,10 +91,10 @@ describe('Zoom Provider', () => {
 
     renderWithProviderAndCustomConsumer(user);
 
-    expect(await getElementByRegex(/^userSignature:/)).toBe(
+    expect(await findElementByRegex(/^userSignature:/)).toBe(
       `userSignature: ${signatureData}`,
     );
-    expect(await getElementByRegex(/^hostUserZakToken:/)).toBe(
+    expect(await findElementByRegex(/^hostUserZakToken:/)).toBe(
       `hostUserZakToken: ${authData}`,
     );
 
@@ -122,10 +122,10 @@ describe('Zoom Provider', () => {
 
     renderWithProviderAndCustomConsumer(user);
 
-    expect(await getElementByRegex(/^userSignature:/)).toBe(
+    expect(await findElementByRegex(/^userSignature:/)).toBe(
       `userSignature: ${signatureData}`,
     );
-    expect(await getElementByRegex(/^hostUserZakToken:/)).toBe(
+    expect(await findElementByRegex(/^hostUserZakToken:/)).toBe(
       `hostUserZakToken: undefined`,
     );
 

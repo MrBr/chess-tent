@@ -18,7 +18,7 @@ const { components, fixtures, requests } = application;
 
 const meetingNumber = '4785447829';
 
-describe('Zoom Controls', () => {
+describe('Zoom Guest Controls', () => {
   requests.zoomSignature = mockEmptyDataResponse();
   requests.zoomAuthorize = mockEmptyDataResponse();
 
@@ -33,6 +33,11 @@ describe('Zoom Controls', () => {
 
     expect(await getPasswordInput()).toBeInTheDocument();
   });
+});
+
+describe('Zoom Coach Controls', () => {
+  requests.zoomSignature = mockEmptyDataResponse();
+  requests.zoomAuthorize = mockEmptyDataResponse();
 
   it('Coach should have authorize button only when no authCode', async () => {
     const { ZoomHostControl } = components;

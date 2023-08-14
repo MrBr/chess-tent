@@ -35,7 +35,7 @@ afterEach(() => jest.clearAllMocks());
 const { fixtures, requests, components } = application;
 
 describe('Zoom Activity View', () => {
-  it('Zoom Activity View should set ZoomContext to status CONNECTING when student joining', async () => {
+  it('Should set ZoomContext to status CONNECTING when student joining', async () => {
     const { student: user } = fixtures.users;
     const { ZoomActivityView, ZoomGuestControl } = components;
 
@@ -67,7 +67,7 @@ describe('Zoom Activity View', () => {
     );
   });
 
-  it('Zoom Activity View should set ZoomContext to status CONNECTING when coach joining', async () => {
+  it('Should set ZoomContext to status CONNECTING when coach joining', async () => {
     const { student: user } = fixtures.users;
     const { ZoomActivityView, ZoomHostControl } = components;
 
@@ -103,7 +103,7 @@ describe('Zoom Activity View', () => {
     );
   });
 
-  it('Zoom Activity View should set ZoomContext to status CONNECTED when connection-status is set to Connected', async () => {
+  it('Should set ZoomContext to status CONNECTED when connection-status is set to Connected', async () => {
     const { student: user } = fixtures.users;
     const { ZoomActivityView, ZoomGuestControl } = components;
 
@@ -141,7 +141,7 @@ describe('Zoom Activity View', () => {
     );
   });
 
-  it('Zoom Activity View should reset ZoomContext when zoom connection changes to Closed', async () => {
+  it('Should reset ZoomContext when zoom connection changes to Closed', async () => {
     const { student: user } = fixtures.users;
     const { ZoomActivityView, ZoomGuestControl } = components;
     const initialContext = getContextInitialData(user);
@@ -183,7 +183,7 @@ describe('Zoom Activity View', () => {
     );
   });
 
-  it('Zoom Activity View should reset ZoomContext when zoom connection fails with error code different than meeting not started (3008)', async () => {
+  it('Should reset ZoomContext when zoom connection fails with error code different than meeting not started (3008)', async () => {
     const { student: user } = fixtures.users;
     const { ZoomActivityView, ZoomGuestControl } = components;
     const initialContext = getContextInitialData(user);

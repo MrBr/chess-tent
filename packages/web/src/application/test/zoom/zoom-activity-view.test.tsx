@@ -12,6 +12,7 @@ import {
   getElementByRegex,
   mockDataResponse,
   getContextInitialData,
+  mockZoomCreateClient,
 } from './utils';
 import { ZoomConnectionStatus } from '../../../modules/zoom/context';
 
@@ -47,12 +48,7 @@ describe('Zoom Activity View', () => {
       </>,
     );
 
-    jest.spyOn(ZoomMtgEmbedded, 'createClient').mockReturnValue({
-      ...ZoomMtgEmbedded.createClient(),
-      init: jest.fn().mockResolvedValue(() => {}),
-      join: jest.fn().mockResolvedValue(() => {}),
-      on: jest.fn(),
-    });
+    mockZoomCreateClient();
 
     const inputElement = await screen.findByPlaceholderText(
       'Meeting password (if any)',
@@ -79,12 +75,7 @@ describe('Zoom Activity View', () => {
       </>,
     );
 
-    jest.spyOn(ZoomMtgEmbedded, 'createClient').mockReturnValue({
-      ...ZoomMtgEmbedded.createClient(),
-      init: jest.fn().mockResolvedValue(() => {}),
-      join: jest.fn().mockResolvedValue(() => {}),
-      on: jest.fn(),
-    });
+    mockZoomCreateClient();
 
     const passwordInputElement = await screen.findByPlaceholderText(
       'Meeting password (if any)',
@@ -115,18 +106,15 @@ describe('Zoom Activity View', () => {
       </>,
     );
 
-    jest.spyOn(ZoomMtgEmbedded, 'createClient').mockReturnValue({
-      ...ZoomMtgEmbedded.createClient(),
-      init: jest.fn().mockResolvedValue(() => {}),
-      join: jest.fn().mockResolvedValue(() => {}),
-      on: jest.fn().mockImplementation((event, callback) =>
+    mockZoomCreateClient(
+      jest.fn().mockImplementation((event, callback) =>
         setTimeout(() => {
           if (event === 'connection-change') {
             return callback({ state: 'Connected' });
           }
         }, 0),
       ),
-    });
+    );
 
     const inputElement = await screen.findByPlaceholderText(
       'Meeting password (if any)',
@@ -155,11 +143,8 @@ describe('Zoom Activity View', () => {
       </>,
     );
 
-    jest.spyOn(ZoomMtgEmbedded, 'createClient').mockReturnValue({
-      ...ZoomMtgEmbedded.createClient(),
-      init: jest.fn().mockResolvedValue(() => {}),
-      join: jest.fn().mockResolvedValue(() => {}),
-      on: jest.fn().mockImplementation((event, callback) => {
+    mockZoomCreateClient(
+      jest.fn().mockImplementation((event, callback) => {
         setTimeout(() => {
           if (event === 'connection-change') {
             return callback({
@@ -168,7 +153,7 @@ describe('Zoom Activity View', () => {
           }
         }, 0);
       }),
-    });
+    );
 
     const inputElement = await screen.findByPlaceholderText(
       'Meeting password (if any)',
@@ -197,11 +182,8 @@ describe('Zoom Activity View', () => {
       </>,
     );
 
-    jest.spyOn(ZoomMtgEmbedded, 'createClient').mockReturnValue({
-      ...ZoomMtgEmbedded.createClient(),
-      init: jest.fn().mockResolvedValue(() => {}),
-      join: jest.fn().mockResolvedValue(() => {}),
-      on: jest.fn().mockImplementation((event, callback) => {
+    mockZoomCreateClient(
+      jest.fn().mockImplementation((event, callback) => {
         setTimeout(() => {
           if (event === 'connection-change') {
             return callback({

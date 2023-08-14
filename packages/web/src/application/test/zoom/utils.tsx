@@ -2,6 +2,7 @@ import React, { ReactNode, RefObject } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import '@testing-library/jest-dom';
 import application from '@application';
+import ZoomMtgEmbedded from '@zoomus/websdk/embedded';
 import { RenderResult, render, screen } from '@testing-library/react';
 import { User } from '@chess-tent/models';
 import { ZoomResponse } from '@chess-tent/types';
@@ -69,6 +70,14 @@ export const renderWithProviderAndCustomConsumer = (
 
   return initialContext;
 };
+
+export const mockZoomCreateClient = (on = jest.fn()) =>
+  jest.spyOn(ZoomMtgEmbedded, 'createClient').mockReturnValue({
+    ...ZoomMtgEmbedded.createClient(),
+    init: jest.fn().mockResolvedValue(() => {}),
+    join: jest.fn().mockResolvedValue(() => {}),
+    on,
+  });
 
 export const getContextInitialData = (user: User) => {
   const initialData = {

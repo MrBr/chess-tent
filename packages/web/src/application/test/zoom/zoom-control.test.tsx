@@ -8,6 +8,11 @@ import {
   getPasswordInput,
   getMeetingNumberInput,
   mockEmptyDataResponse,
+  renderWithProviderAndCustomConsumer,
+  mockZoomCreateClient,
+  mockStudentInput,
+  mockDataResponse,
+  mockCoachInput,
 } from './utils';
 
 Object.defineProperty(global.self, 'fetch', { value: fetch });
@@ -22,7 +27,7 @@ describe('Zoom Guest Controls', () => {
   requests.zoomSignature = mockEmptyDataResponse();
   requests.zoomAuthorize = mockEmptyDataResponse();
 
-  it('Student should have only password input', async () => {
+  it('Should have only password input', async () => {
     const { ZoomGuestControl } = components;
     const { student } = fixtures.users;
 
@@ -32,6 +37,35 @@ describe('Zoom Guest Controls', () => {
     });
 
     expect(await getPasswordInput()).toBeInTheDocument();
+  });
+
+  it('Should not render inputs if connection is in progress', async () => {
+    const { student: user } = fixtures.users;
+    const { ZoomActivityView, ZoomGuestControl } = components;
+
+    requests.zoomSignature = mockDataResponse({
+      data: 'test signature',
+      error: null,
+    });
+    requests.zoomAuthorize = mockDataResponse({
+      data: 'test auth',
+      error: null,
+    });
+
+    renderWithProviderAndCustomConsumer(
+      user,
+      <>
+        <ZoomGuestControl />
+        <ZoomActivityView />
+      </>,
+    );
+
+    mockZoomCreateClient();
+    await mockStudentInput();
+
+    expect(
+      screen.queryByPlaceholderText('Meeting password (if any)'),
+    ).not.toBeInTheDocument();
   });
 });
 
@@ -56,5 +90,38 @@ describe('Zoom Coach Controls', () => {
 
     expect(await getPasswordInput()).toBeInTheDocument();
     expect(await getMeetingNumberInput()).toBeInTheDocument();
+  });
+
+  it('Should not render inputs if connection is in progress', async () => {
+    const { coach: user } = fixtures.users;
+    const { ZoomActivityView, ZoomHostControl } = components;
+
+    requests.zoomSignature = mockDataResponse({
+      data: 'test signature',
+      error: null,
+    });
+    requests.zoomAuthorize = mockDataResponse({
+      data: 'test auth',
+      error: null,
+    });
+
+    renderWithProviderAndCustomConsumer(
+      user,
+      <>
+        <ZoomHostControl />
+        <ZoomActivityView />
+      </>,
+    );
+
+    mockZoomCreateClient();
+    await mockCoachInput();
+
+    expect(
+      screen.queryByPlaceholderText('Meeting password (if any)'),
+    ).not.toBeInTheDocument();
+
+    expect(
+      screen.queryByPlaceholderText('Meeting number'),
+    ).not.toBeInTheDocument();
   });
 });

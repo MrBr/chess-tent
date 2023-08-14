@@ -1,9 +1,10 @@
-import React, { ReactNode, RefObject } from 'react';
+import React, { ReactNode } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import '@testing-library/jest-dom';
 import application from '@application';
 import ZoomMtgEmbedded from '@zoomus/websdk/embedded';
 import { RenderResult, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { User } from '@chess-tent/models';
 import { ZoomResponse } from '@chess-tent/types';
 
@@ -79,6 +80,37 @@ export const mockZoomCreateClient = (on = jest.fn()) =>
     on,
   });
 
+export const mockDataResponse = (data: {
+  data: string;
+  error: string | null;
+}) => jest.fn(() => Promise.resolve<ZoomResponse>(data));
+
+export const mockEmptyDataResponse = () => jest.fn().mockResolvedValue({});
+
+export const mockStudentInput = async () => {
+  const inputElement = await screen.findByPlaceholderText(
+    'Meeting password (if any)',
+  );
+  const buttonElement = await screen.findByText('Join');
+
+  await userEvent.type(inputElement, 'test-password');
+  await userEvent.click(buttonElement);
+};
+
+export const mockCoachInput = async () => {
+  const passwordInputElement = await screen.findByPlaceholderText(
+    'Meeting password (if any)',
+  );
+  const meetingNumberInputElement = await screen.findByPlaceholderText(
+    'Meeting number',
+  );
+  const buttonElement = await screen.findByText('Join');
+
+  await userEvent.type(passwordInputElement, 'test-password');
+  await userEvent.type(meetingNumberInputElement, 'test-meetingNumber');
+  await userEvent.click(buttonElement);
+};
+
 export const getContextInitialData = (user: User) => {
   const initialData = {
     meetingNumber: '4785447829',
@@ -100,10 +132,3 @@ export const getMeetingNumberInput = (): Promise<HTMLElement> =>
 
 export const getElementByRegex = (matcher: RegExp) =>
   screen.findByText(matcher).then(result => result.textContent);
-
-export const mockDataResponse = (data: {
-  data: string;
-  error: string | null;
-}) => jest.fn(() => Promise.resolve<ZoomResponse>(data));
-
-export const mockEmptyDataResponse = () => jest.fn().mockResolvedValue({});

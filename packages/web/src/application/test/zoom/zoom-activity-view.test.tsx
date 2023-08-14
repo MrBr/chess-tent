@@ -49,14 +49,7 @@ describe('Zoom Activity View', () => {
     );
 
     mockZoomCreateClient();
-
-    const inputElement = await screen.findByPlaceholderText(
-      'Meeting password (if any)',
-    );
-    const buttonElement = await screen.findByText('Join');
-
-    await userEvent.type(inputElement, 'test-password');
-    await userEvent.click(buttonElement);
+    await mockStudentInput();
 
     expect(await getElementByRegex(/^connectionStatus:/)).toBe(
       `connectionStatus: ${ZoomConnectionStatus.CONNECTING}`,
@@ -76,18 +69,7 @@ describe('Zoom Activity View', () => {
     );
 
     mockZoomCreateClient();
-
-    const passwordInputElement = await screen.findByPlaceholderText(
-      'Meeting password (if any)',
-    );
-    const meetingNumberInputElement = await screen.findByPlaceholderText(
-      'Meeting number',
-    );
-    const buttonElement = await screen.findByText('Join');
-
-    await userEvent.type(passwordInputElement, 'test-password');
-    await userEvent.type(meetingNumberInputElement, 'test-meetingNumber');
-    await userEvent.click(buttonElement);
+    await mockCoachInput();
 
     expect(await getElementByRegex(/^connectionStatus:/)).toBe(
       `connectionStatus: ${ZoomConnectionStatus.CONNECTING}`,
@@ -116,13 +98,7 @@ describe('Zoom Activity View', () => {
       ),
     );
 
-    const inputElement = await screen.findByPlaceholderText(
-      'Meeting password (if any)',
-    );
-    const buttonElement = await screen.findByText('Join');
-
-    await userEvent.type(inputElement, 'test-password');
-    await userEvent.click(buttonElement);
+    await mockStudentInput();
 
     expect(await getElementByRegex(/^connectionStatus:/)).toBe(
       `connectionStatus: ${ZoomConnectionStatus.CONNECTED}`,
@@ -155,13 +131,7 @@ describe('Zoom Activity View', () => {
       }),
     );
 
-    const inputElement = await screen.findByPlaceholderText(
-      'Meeting password (if any)',
-    );
-    const buttonElement = await screen.findByText('Join');
-
-    await userEvent.type(inputElement, 'test-password');
-    await userEvent.click(buttonElement);
+    await mockStudentInput();
 
     expect(await getElementByRegex(/connectionStatus/)).toBe(
       'connectionStatus: ' + ZoomConnectionStatus.NOT_CONNECTED,
@@ -192,7 +162,20 @@ describe('Zoom Activity View', () => {
           }
         }, 100);
       }),
-    });
+    );
+
+    await mockStudentInput();
+
+    expect(await getElementByRegex(/connectionStatus/)).toBe(
+      'connectionStatus: ' + ZoomConnectionStatus.CONNECTING,
+    );
+
+    await waitFor(async () =>
+      expect(await getElementByRegex(/connectionStatus/)).toBe(
+        'connectionStatus: ' + ZoomConnectionStatus.NOT_CONNECTED,
+      ),
+    );
+  });
 
     const inputElement = await screen.findByPlaceholderText(
       'Meeting password (if any)',

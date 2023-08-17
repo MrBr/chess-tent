@@ -75,3 +75,9 @@ application.start = () => {
 
   socket.init(server);
 };
+
+application.test.start = async () => {
+  connect();
+  // TODO - should be a part of the lifecycle hook/event
+  app.use(application.middleware.errorHandler);
+};

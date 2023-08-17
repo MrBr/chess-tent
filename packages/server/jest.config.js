@@ -19,6 +19,7 @@ module.exports = {
       tsconfig: './tsconfig.json',
     },
   },
+  maxConcurrency: 4,
   transformIgnorePatterns: ['dist', 'node_modules'],
   setupFilesAfterEnv: ['<rootDir>/src/application/setupTests.ts'],
   // TODO - use once JEST is upgraded in react-scripts

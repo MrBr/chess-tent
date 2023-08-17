@@ -27,7 +27,7 @@ describe('Zoom Guest Controls', () => {
   requests.zoomSignature = mockEmptyDataResponse();
   requests.zoomAuthorize = mockEmptyDataResponse();
 
-  it('Should have only password input', async () => {
+  it('should have only password input', async () => {
     const { ZoomGuestControl } = components;
     const { student } = fixtures.users;
 
@@ -39,7 +39,7 @@ describe('Zoom Guest Controls', () => {
     expect(await findPasswordInput()).toBeInTheDocument();
   });
 
-  it('Should not render inputs if connection is in progress', async () => {
+  it('should not render inputs if connection is in progress', async () => {
     const { student: user } = fixtures.users;
     const { ZoomActivityView, ZoomGuestControl } = components;
 
@@ -92,7 +92,7 @@ describe('Zoom Coach Controls', () => {
     expect(await findMeetingNumberInput()).toBeInTheDocument();
   });
 
-  it('Should not render inputs if connection is in progress', async () => {
+  it('should not render inputs if connection is in progress', async () => {
     const { coach: user } = fixtures.users;
     const { ZoomActivityView, ZoomHostControl } = components;
 

@@ -38,7 +38,7 @@ afterEach(() => jest.clearAllMocks());
 const { fixtures, requests, components } = application;
 
 describe('Zoom Activity View', () => {
-  it('Should set ZoomContext to status CONNECTING when student joining', async () => {
+  it('should set ZoomContext to status CONNECTING when student joining', async () => {
     const { student: user } = fixtures.users;
     const { ZoomActivityView, ZoomGuestControl } = components;
 
@@ -58,7 +58,7 @@ describe('Zoom Activity View', () => {
     );
   });
 
-  it('Should set ZoomContext to status CONNECTING when coach joining', async () => {
+  it('should set ZoomContext to status CONNECTING when coach joining', async () => {
     const { student: user } = fixtures.users;
     const { ZoomActivityView, ZoomHostControl } = components;
 
@@ -78,7 +78,7 @@ describe('Zoom Activity View', () => {
     );
   });
 
-  it('Should set ZoomContext to status CONNECTED when connection-status is set to Connected', async () => {
+  it('should set ZoomContext to status CONNECTED when connection-status is set to Connected', async () => {
     const { student: user } = fixtures.users;
     const { ZoomActivityView, ZoomGuestControl } = components;
 
@@ -107,7 +107,7 @@ describe('Zoom Activity View', () => {
     );
   });
 
-  it('Should reset ZoomContext when zoom connection changes to Closed', async () => {
+  it('should reset ZoomContext when zoom connection changes to Closed', async () => {
     const { student: user } = fixtures.users;
     const { ZoomActivityView, ZoomGuestControl } = components;
     const initialContext = getContextInitialData(user);
@@ -140,7 +140,7 @@ describe('Zoom Activity View', () => {
     );
   });
 
-  it('Should reset ZoomContext when zoom connection fails with error code different than meeting not started (3008)', async () => {
+  it('should reset ZoomContext when zoom connection fails with error code different than meeting not started (3008)', async () => {
     const { student: user } = fixtures.users;
     const { ZoomActivityView, ZoomGuestControl } = components;
     const initialContext = getContextInitialData(user);
@@ -179,7 +179,7 @@ describe('Zoom Activity View', () => {
     );
   });
 
-  it('Should spawn meet container with meeting not started yet message when MEETING_NOT_STARTED_ERROR_CODE error code is returned', async () => {
+  it('should spawn meet container with meeting not started yet message when MEETING_NOT_STARTED_ERROR_CODE error code is returned', async () => {
     const { student: user } = fixtures.users;
     const { ZoomActivityView, ZoomGuestControl } = components;
     const initialContext = getContextInitialData(user);
@@ -220,7 +220,7 @@ describe('Zoom Activity View', () => {
     ).toBeInTheDocument();
   });
 
-  it('Should spawn error alert with wrong password message and closed connection when wrong password error is returned', async () => {
+  it('should spawn error alert with wrong password message and closed connection when wrong password error is returned', async () => {
     const { student: user } = fixtures.users;
     const { ZoomActivityView, ZoomGuestControl } = components;
     const initialContext = getContextInitialData(user);
@@ -266,7 +266,7 @@ describe('Zoom Activity View', () => {
     expect(window.alert).toBeCalledWith(errorMessage);
   });
 
-  it('Should spawn error alert with meeting number not found message and closed connection with meeting not found error', async () => {
+  it('should spawn error alert with meeting number not found message and closed connection with meeting not found error', async () => {
     const { student: user } = fixtures.users;
     const { ZoomActivityView, ZoomGuestControl } = components;
     const initialContext = getContextInitialData(user);

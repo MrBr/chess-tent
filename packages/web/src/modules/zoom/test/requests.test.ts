@@ -6,7 +6,7 @@ import { mockDataResponse } from '../../../application/test/zoom/utils';
 const { hooks, requests } = application;
 
 describe('Zoom requests', () => {
-  it('Zoom request should return set values from request', async () => {
+  it('should return set values from request', async () => {
     const { useApi } = hooks;
     let { zoomAuthorize } = requests;
 
@@ -26,7 +26,7 @@ describe('Zoom requests', () => {
     expect(result.current.loading).toBe(false);
   });
 
-  it('Zoom request should return error', async () => {
+  it('should return error', async () => {
     const { useApi } = hooks;
     let { zoomAuthorize } = requests;
 
@@ -44,7 +44,7 @@ describe('Zoom requests', () => {
     expect(result.current.error).toBe('error');
   });
 
-  it('Zoom request should return the null after reset', async () => {
+  it('should return the null after reset', async () => {
     const { useApi } = hooks;
     let { zoomAuthorize } = requests;
 

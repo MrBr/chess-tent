@@ -1,5 +1,5 @@
+import { ZoomConnectionStatus } from '@chess-tent/models';
 import { isZoomConnectionInProgress, authorizeZoom } from '../services';
-import { ZoomConnectionStatus } from '../context';
 
 describe('Zoom services', () => {
   it('Should return appropriate connection status', () => {

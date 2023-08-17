@@ -1,9 +1,9 @@
 import React, { useCallback } from 'react';
 
 import { ui } from '@application';
-import { Components } from '@types';
+import { Components, ZoomContext as ZoomContextType } from '@types';
 
-import { ZoomContextType, useZoomContext } from '../../context';
+import { useZoomContext } from '../../context';
 import { authorizeZoom, isZoomConnectionInProgress } from '../../services';
 
 const { Button, Form } = ui;

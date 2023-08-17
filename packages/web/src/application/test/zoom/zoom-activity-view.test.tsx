@@ -5,6 +5,8 @@ import '@testing-library/jest-dom';
 
 import application from '@application';
 
+import { ZoomConnectionStatus } from '@chess-tent/models';
+
 import {
   renderWithProviderAndCustomConsumer,
   findElementByRegex,
@@ -15,7 +17,6 @@ import {
   mockCoachInput,
   createDomElement,
 } from './utils';
-import { ZoomConnectionStatus } from '../../../modules/zoom/context';
 
 const MEETING_NOT_STARTED_ERROR_CODE = 3008;
 

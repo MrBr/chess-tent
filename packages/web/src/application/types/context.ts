@@ -1,5 +1,11 @@
-import React, { ReactElement } from 'react';
-import { Chapter, Lesson, Step } from '@chess-tent/models';
+import React, { ReactElement, RefObject } from 'react';
+import {
+  Chapter,
+  Lesson,
+  Step,
+  ZoomConnectionStatus,
+  ZoomRole,
+} from '@chess-tent/models';
 import { Promotion } from './chess';
 import { ChessboardInterface, Evaluation } from './components';
 
@@ -28,6 +34,22 @@ export interface ChessboardContext {
   board?: ChessboardInterface;
 }
 
+export interface ZoomContext {
+  userSignature: string | null;
+  hostUserZakToken: string | undefined;
+  meetingNumber: string | undefined;
+  username: string;
+  password: string | null;
+  role: ZoomRole;
+  authCode: string | undefined;
+  redirectUri: string | '';
+  updateContext: Function;
+  resetContext: Function;
+  connectionStatus: ZoomConnectionStatus;
+  zoomSDKElementRef: RefObject<HTMLElement> | null;
+}
+
 export type Context = {
   editorContext: React.Context<EditorContext>;
+  zoomContext: React.Context<ZoomContext>;
 };

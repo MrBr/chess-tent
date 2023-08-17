@@ -25,3 +25,9 @@ application.register(
     application.components.ZoomProvider = module.default;
   },
 );
+application.register(
+  () => import('./context'),
+  module => {
+    application.context.zoomContext = module.ZoomContext;
+  },
+);

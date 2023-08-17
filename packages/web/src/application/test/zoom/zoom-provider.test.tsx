@@ -2,6 +2,7 @@ import React from 'react';
 import '@testing-library/jest-dom';
 import { screen } from '@testing-library/react';
 import application from '@application';
+import { ZoomContext as ZoomContextType } from '@types';
 
 import {
   renderWithProvider,
@@ -15,12 +16,13 @@ import { ZoomContext, ZoomContextType } from '../../../modules/zoom/context';
 
 beforeAll(() => application.init());
 
-const { fixtures } = application;
+const { fixtures, context } = application;
 
 describe('Zoom Provider', () => {
   it('ZoomContext should have correct initial values', async () => {
     const { student: user } = fixtures.users;
     const { requests } = application;
+    const { zoomContext: ZoomContext } = context;
 
     requests.zoomSignature = mockEmptyDataResponse();
     requests.zoomAuthorize = mockEmptyDataResponse();

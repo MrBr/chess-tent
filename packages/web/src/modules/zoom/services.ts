@@ -1,4 +1,4 @@
-import { ZoomConnectionStatus } from './context';
+import { ZoomConnectionStatus } from '@chess-tent/models';
 
 export const authorizeZoom = (redirectUri: string) => {
   const url =

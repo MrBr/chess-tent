@@ -7,15 +7,14 @@ import { RenderResult, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { User } from '@chess-tent/models';
 import { ZoomResponse } from '@chess-tent/types';
+import { ZoomContext as ZoomContextType } from '@types';
 
 import {
   createInitialContext,
   InitialContextData,
-  ZoomContext,
-  ZoomContextType,
 } from '../../../modules/zoom/context';
 
-const { components } = application;
+const { components, context } = application;
 
 const redirectUri = 'https://localhost:3000/test';
 
@@ -49,6 +48,7 @@ export const renderWithProviderAndCustomConsumer = (
   user: User,
   children?: ReactNode,
 ) => {
+  const { zoomContext: ZoomContext } = context;
   const initialContext = getContextInitialData(user);
 
   renderWithProvider(

@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { hooks, requests } from '@application';
-import { Components } from '@types';
+import { Components, ZoomContext as ZoomContextType } from '@types';
 import { ZoomRole } from '@chess-tent/models';
 
-import { ZoomContext, ZoomContextType, createInitialContext } from '../context';
+import { createInitialContext, ZoomContext } from '../context';
 
 const { useApi, useQuery } = hooks;
 

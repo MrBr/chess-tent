@@ -1,13 +1,10 @@
 import React, { useEffect, useCallback } from 'react';
-import { Components } from '@types';
+import { Components, ZoomContext as ZoomContextType } from '@types';
 import { ui } from '@application';
+import { ZoomConnectionStatus } from '@chess-tent/models';
 import ZoomMtgEmbedded from '@zoomus/websdk/embedded';
 
-import {
-  ZoomConnectionStatus,
-  ZoomContextType,
-  useZoomContext,
-} from '../context';
+import { useZoomContext } from '../context';
 
 const { Container } = ui;
 

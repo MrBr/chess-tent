@@ -10,7 +10,9 @@
     "build": "yarn run clean && yarn run compile",
     "clean": "rimraf -rf ./dist",
     "compile": "tsc -p tsconfig.json",
-    "test": "yarn jest --runInBand"
+    "test": "yarn test-db-up && yarn jest && yarn test-db-down",
+    "test-db-up": "docker-compose up -d",
+    "test-db-down": "docker-compose down --remove-orphans"
   },
   "author": "Luka Bracanovic",
   "devDependencies": {
@@ -25,8 +27,7 @@
     "@types/mongoose": "^5.10.5",
     "@types/supertest": "^2.0.12",
     "@types/ws": "^7.2.6",
-    "supertest": "^6.3.3",
-    "testcontainers": "^10.2.1"
+    "supertest": "^6.3.3"
   },
   "dependencies": {
     "@chess-tent/models": "1.0.0",

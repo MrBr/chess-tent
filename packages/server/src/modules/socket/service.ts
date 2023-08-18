@@ -128,7 +128,7 @@ const getOwnerSocketId = (roomId: string) => {
 };
 
 application.socket.init = init;
-application.socket.close = () => io.close();
+application.socket.close = () => io?.close();
 application.socket.sendAction = sendAction;
 application.socket.sendServerAction = sendServerAction;
 application.socket.shouldSyncData = shouldSyncData;

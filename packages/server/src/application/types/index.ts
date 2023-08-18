@@ -49,8 +49,8 @@ export type Action = {
 };
 
 export type DB = {
-  connect: () => void;
-  disconnect: () => void;
+  connect: () => Promise<void>;
+  disconnect: () => Promise<void>;
   connection: Connection;
   testUniqueFields: <T>(model: Model<T>, data: Partial<T>) => Promise<string[]>;
   createSchema: <T extends {}>(
@@ -272,8 +272,8 @@ export type Application = {
   utils: Utils;
   register: typeof register;
   init: () => Promise<any>;
-  start: () => void;
-  stop: () => void;
+  start: () => Promise<void>;
+  stop: () => Promise<void>;
   server: http.Server;
   errors: Errors;
 };

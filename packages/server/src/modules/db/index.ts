@@ -18,13 +18,13 @@ import {
 } from './utils';
 import { applyAdapter, createAdapter } from './adapter';
 
-application.db.connect = () => {
+application.db.connect = async () => {
   // Connection URL
   const url = process.env.DB_URL;
   // Database Name
   const dbName = process.env.DB_NAME;
 
-  mongoose.connect(`${url}/${dbName}`, {
+  await mongoose.connect(`${url}/${dbName}`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
@@ -43,7 +43,7 @@ application.db.connect = () => {
     console.log('DB connection open');
   });
 };
-application.db.disconnect = () => mongoose.disconnect();
+application.db.disconnect = async () => await mongoose.disconnect();
 application.db.createSchema = createSchema;
 application.db.createModel = createModel;
 application.db.orQueries = orQueries;

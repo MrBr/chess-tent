@@ -8,6 +8,7 @@ import {
   Service,
   SocketService,
   Utils,
+  Test,
 } from '@types';
 
 const db = createNamespace({}) as DB;
@@ -17,6 +18,7 @@ const errors = createNamespace({}) as Errors;
 const socket = createNamespace({}) as SocketService;
 const middleware = createNamespace({}) as Middleware;
 const utils = createNamespace({}) as Utils;
+const test = createNamespace({}) as Test;
 
 const application = createNamespace({
   register,
@@ -28,6 +30,7 @@ const application = createNamespace({
   socket,
   utils,
   errors,
+  test,
 }) as Application;
 
 export {

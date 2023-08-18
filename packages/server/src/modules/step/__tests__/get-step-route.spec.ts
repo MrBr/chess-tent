@@ -3,7 +3,7 @@ import request from 'supertest';
 import application from '@application';
 
 describe('GET /step/:stepId', () => {
-  beforeAll(() => application.start());
+  beforeAll(() => application.test.start());
   afterAll(() => application.stop());
   it('should return forbidden status', function (done) {
     request(application.service.router)

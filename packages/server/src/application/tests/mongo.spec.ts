@@ -35,7 +35,7 @@ describe('Sample Test', () => {
     const host = container.getHost();
     const port = container.getMappedPort(27017);
 
-    process.env.DB_URL = `mongodb://${host}:${port}/${dbName}`;
+    process.env.DB_URL = `mongodb://${host}:${port}`;
     await application.start();
   });
 

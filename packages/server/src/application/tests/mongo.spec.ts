@@ -2,7 +2,7 @@ import application from '@application';
 
 describe('Sample Test', () => {
   beforeAll(async () => {
-    await application.start();
+    await application.test.start();
   });
 
   afterAll(async () => {

@@ -23,6 +23,7 @@ import {
 } from './service';
 import { BadRequest } from './errors';
 import { formatAppLink, shouldStartHttpsServer } from './utils';
+import { v4 as uuid } from 'uuid';
 
 const { connect, disconnect } = db;
 
@@ -82,7 +83,11 @@ application.start = async () => {
 };
 
 application.test.start = async () => {
-  connect();
+  generateUniqueDbName();
+  await connect();
   // TODO - should be a part of the lifecycle hook/event
   app.use(application.middleware.errorHandler);
 };
+
+const generateUniqueDbName = () =>
+  (process.env.DB_NAME = `${process.env.DB_NAME}-${uuid()}`);

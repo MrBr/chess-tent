@@ -24,7 +24,7 @@ import {
 import { BadRequest } from './errors';
 import { formatAppLink, shouldStartHttpsServer } from './utils';
 
-const { connect } = db;
+const { connect, disconnect } = db;
 
 const app = express();
 
@@ -73,7 +73,10 @@ application.start = () => {
     server = startHttpServer(app);
   }
 
-  application.stop = () =>
-    server.close(() => console.log('closing http server'));
   socket.init(server);
+  application.stop = () => {
+    disconnect();
+    server.close(() => console.log('closing http server'));
+    socket.close();
+  };
 };

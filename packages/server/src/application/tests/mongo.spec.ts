@@ -7,6 +7,7 @@ import {
   Wait,
 } from 'testcontainers';
 import * as process from 'process';
+import application from '@application';
 
 describe('Sample Test', () => {
   let network: StartedNetwork;
@@ -34,14 +35,12 @@ describe('Sample Test', () => {
     const host = container.getHost();
     const port = container.getMappedPort(27017);
 
-    await mongoose.connect(`mongodb://${host}:${port}/${dbName}`, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    process.env.DB_URL = `mongodb://${host}:${port}/${dbName}`;
+    await application.start();
   });
 
   afterAll(async () => {
-    await mongoose.disconnect();
+    await application.stop();
     await container?.stop();
   });
 

@@ -50,6 +50,7 @@ export type Action = {
 
 export type DB = {
   connect: () => void;
+  disconnect: () => void;
   connection: Connection;
   testUniqueFields: <T>(model: Model<T>, data: Partial<T>) => Promise<string[]>;
   createSchema: <T extends {}>(
@@ -273,7 +274,7 @@ export type Application = {
   init: () => Promise<any>;
   start: () => void;
   stop: () => void;
-  server: http.Server
+  server: http.Server;
   errors: Errors;
 };
 
@@ -308,6 +309,7 @@ export type SocketStream =
 
 export type SocketService = {
   init: (server: HttpServer) => void;
+  close: () => void;
   middleware: (
     stream: SocketStream,
     next: (stream: SocketStream) => void,

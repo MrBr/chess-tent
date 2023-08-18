@@ -73,6 +73,7 @@ application.start = () => {
     server = startHttpServer(app);
   }
 
-  application.stop = () => server.close(() => console.log("closing http server"))
+  application.stop = () =>
+    server.close(() => console.log('closing http server'));
   socket.init(server);
 };

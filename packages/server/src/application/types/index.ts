@@ -272,6 +272,7 @@ export type Application = {
   init: () => Promise<any>;
   start: () => void;
   errors: Errors;
+  test: Test;
 };
 
 export type ClientSocketStream = {
@@ -327,6 +328,10 @@ export type SocketService = {
   getOwnerSocketId: (roomId: string) => string;
   identify: (stream: SocketStream | Socket) => Auth['apiTokenPayload'] | null;
 };
+
+export interface Test {
+  start: () => Promise<void>;
+}
 
 export class AppError extends Error {}
 export type Errors = {

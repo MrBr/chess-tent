@@ -12,10 +12,11 @@ let moduleCursor: {
 let initialised = false;
 let initializationPromise;
 
+const DEPENDENCY_ERROR_NAME = 'DependencyError';
 class DependencyError extends Error {
   constructor(message) {
     super(message);
-    this.name = 'DependencyError';
+    this.name = DEPENDENCY_ERROR_NAME;
   }
 }
 
@@ -42,41 +43,34 @@ export const createNamespace = (initialNamespace = {}) =>
     },
   });
 
-const resolveModule = (loadModule: () => Promise<any>, cb?: Function) => {
-  return new Promise((resolve, reject) => {
-    loadModule()
-      .then(module => {
-        cb && cb(module);
-        resolve(module);
-      })
-      .catch(e => {
-        if (e.name === 'DependencyError') {
-          Object.values(require.cache).forEach(cachedRequire => {
-            // For some reason, require.cache doesn't have the same shape in every browser?!
-            // Sometimes `id` is replaced with `i` and `loaded` with `l`
-            const loaded =
-              cachedRequire.loaded !== undefined
-                ? cachedRequire.loaded
-                : cachedRequire.l;
-            const id =
-              cachedRequire.id !== undefined
-                ? cachedRequire.id
-                : cachedRequire.i;
-            if (!loaded) {
-              delete require.cache[id];
-            }
-          });
-          reject(e);
-        } else {
-          throw e;
+const resolveModule = async (loadModule: () => Promise<any>, cb?: Function) => {
+  try {
+    const module = await loadModule();
+    cb && cb(module);
+    return module;
+  } catch (e) {
+    if (e.name === DEPENDENCY_ERROR_NAME) {
+      Object.values(require.cache).forEach(cachedRequire => {
+        // For some reason, require.cache doesn't have the same shape in every browser?!
+        // Sometimes `id` is replaced with `i` and `loaded` with `l`
+        const loaded =
+          cachedRequire.loaded !== undefined
+            ? cachedRequire.loaded
+            : cachedRequire.l;
+        const id =
+          cachedRequire.id !== undefined ? cachedRequire.id : cachedRequire.i;
+        if (!loaded) {
+          delete require.cache[id];
         }
       });
-  });
+    }
+    throw e;
+  }
 };
 
-const resolveDeferredModules = () => {
+const resolveDeferredModules = async () => {
   if (deferredModules.length === 0) {
-    return Promise.resolve();
+    return;
   }
 
   const registerParams = deferredModules.shift();
@@ -93,15 +87,18 @@ const resolveDeferredModules = () => {
     throw moduleCursor.error;
   }
 
-  return resolveModule(...(registerParams as Parameters<typeof register>))
-    .then(() => {
-      moduleCursor = null;
-    })
-    .catch(e => {
-      moduleCursor.error = e;
-      deferredModules.push(registerParams);
-    })
-    .finally(resolveDeferredModules);
+  try {
+    await resolveModule(...(registerParams as Parameters<typeof register>));
+    moduleCursor = null;
+  } catch (e) {
+    if (e.name !== DEPENDENCY_ERROR_NAME) {
+      throw e;
+    }
+    moduleCursor.error = e;
+    deferredModules.push(registerParams);
+  }
+
+  return resolveDeferredModules();
 };
 
 export const register = <T>(

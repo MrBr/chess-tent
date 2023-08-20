@@ -1,18 +1,17 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import { screen } from '@testing-library/react';
+
 import application from '@application';
 import { ZoomContext as ZoomContextType } from '@types';
 
 import {
   renderWithProvider,
   renderWithProviderAndCustomConsumer,
-  findElementByRegex,
   getContextInitialData,
   mockDataResponse,
   mockEmptyDataResponse,
+  findZoomContext,
 } from './utils';
-import { ZoomContext, ZoomContextType } from '../../../modules/zoom/context';
 
 beforeAll(() => application.init());
 
@@ -24,53 +23,21 @@ describe('Zoom Provider', () => {
     const { requests } = application;
     const { zoomContext: ZoomContext } = context;
 
+    const initialContext = getContextInitialData(user);
+
     requests.zoomSignature = mockEmptyDataResponse();
     requests.zoomAuthorize = mockEmptyDataResponse();
 
-    const initialContext = getContextInitialData(user);
-
     renderWithProvider(
       <ZoomContext.Consumer>
-        {(value: ZoomContextType) =>
-          Object.keys(value).map(key => (
-            <span key={key}>
-              {`${key.toString()}: ${value[
-                key as keyof ZoomContextType
-              ]?.toString()}`}
-            </span>
-          ))
-        }
+        {(value: ZoomContextType) => (
+          <div data-testid="zoom-context">{JSON.stringify(value)}</div>
+        )}
       </ZoomContext.Consumer>,
       { ...initialContext, user },
     );
 
-    expect(await findElementByRegex(/userSignature/)).toBe(
-      'userSignature: undefined',
-    );
-    expect(await findElementByRegex(/hostUserZakToken/)).toBe(
-      'hostUserZakToken: undefined',
-    );
-    expect(
-      await screen.findByText(
-        'meetingNumber: ' + initialContext?.meetingNumber,
-      ),
-    ).toBeInTheDocument();
-    expect(await findElementByRegex(/username/)).toBe(
-      'username: ' + user.nickname,
-    );
-    expect(await findElementByRegex(/password/)).toBe('password: undefined');
-    expect(await findElementByRegex(/role/)).toBe(
-      'role: ' + initialContext.role,
-    );
-    expect(await findElementByRegex(/authCode/)).toBe(
-      'authCode: ' + initialContext.authCode,
-    );
-    expect((await screen.findAllByText(/redirectUri/)).length).toBeGreaterThan(
-      0,
-    );
-    expect(await findElementByRegex(/connectionStatus/)).toBe(
-      'connectionStatus: ' + initialContext.connectionStatus,
-    );
+    expect(await findZoomContext()).toEqual(initialContext);
   });
 
   it('ZoomContext should update signature and auth data correctly after API requests when user is coach', async () => {
@@ -93,12 +60,10 @@ describe('Zoom Provider', () => {
 
     renderWithProviderAndCustomConsumer(user);
 
-    expect(await findElementByRegex(/^userSignature:/)).toBe(
-      `userSignature: ${signatureData}`,
-    );
-    expect(await findElementByRegex(/^hostUserZakToken:/)).toBe(
-      `hostUserZakToken: ${authData}`,
-    );
+    const renderedContext = await findZoomContext();
+
+    expect(renderedContext).toHaveProperty('userSignature', signatureData);
+    expect(renderedContext).toHaveProperty('hostUserZakToken', authData);
 
     requests.zoomAuthorize = zoomAuthorize;
     requests.zoomSignature = zoomSignature;
@@ -124,12 +89,10 @@ describe('Zoom Provider', () => {
 
     renderWithProviderAndCustomConsumer(user);
 
-    expect(await findElementByRegex(/^userSignature:/)).toBe(
-      `userSignature: ${signatureData}`,
-    );
-    expect(await findElementByRegex(/^hostUserZakToken:/)).toBe(
-      `hostUserZakToken: undefined`,
-    );
+    const renderedContext = await findZoomContext();
+
+    expect(renderedContext).toHaveProperty('userSignature', signatureData);
+    expect(renderedContext).not.toHaveProperty('hostUserZakToken');
 
     requests.zoomAuthorize = zoomAuthorize;
     requests.zoomSignature = zoomSignature;

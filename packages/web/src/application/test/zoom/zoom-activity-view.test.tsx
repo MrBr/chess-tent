@@ -9,13 +9,13 @@ import { ZoomConnectionStatus } from '@chess-tent/models';
 
 import {
   renderWithProviderAndCustomConsumer,
-  findElementByRegex,
   mockDataResponse,
   getContextInitialData,
   mockZoomCreateClient,
   mockStudentInput,
   mockCoachInput,
   createDomElement,
+  findZoomContext,
 } from './utils';
 
 const MEETING_NOT_STARTED_ERROR_CODE = 3008;
@@ -53,8 +53,11 @@ describe('Zoom Activity View', () => {
     mockZoomCreateClient();
     await mockStudentInput();
 
-    expect(await findElementByRegex(/^connectionStatus:/)).toBe(
-      `connectionStatus: ${ZoomConnectionStatus.CONNECTING}`,
+    const renderedContext = await findZoomContext();
+
+    expect(renderedContext).toHaveProperty(
+      'connectionStatus',
+      ZoomConnectionStatus.CONNECTING,
     );
   });
 
@@ -73,8 +76,11 @@ describe('Zoom Activity View', () => {
     mockZoomCreateClient();
     await mockCoachInput();
 
-    expect(await findElementByRegex(/^connectionStatus:/)).toBe(
-      `connectionStatus: ${ZoomConnectionStatus.CONNECTING}`,
+    const renderedContext = await findZoomContext();
+
+    expect(renderedContext).toHaveProperty(
+      'connectionStatus',
+      ZoomConnectionStatus.CONNECTING,
     );
   });
 
@@ -102,8 +108,11 @@ describe('Zoom Activity View', () => {
 
     await mockStudentInput();
 
-    expect(await findElementByRegex(/^connectionStatus:/)).toBe(
-      `connectionStatus: ${ZoomConnectionStatus.CONNECTED}`,
+    const renderedContext = await findZoomContext();
+
+    expect(renderedContext).toHaveProperty(
+      'connectionStatus',
+      ZoomConnectionStatus.CONNECTED,
     );
   });
 
@@ -135,8 +144,11 @@ describe('Zoom Activity View', () => {
 
     await mockStudentInput();
 
-    expect(await findElementByRegex(/connectionStatus/)).toBe(
-      'connectionStatus: ' + ZoomConnectionStatus.NOT_CONNECTED,
+    const renderedContext = await findZoomContext();
+
+    expect(renderedContext).toHaveProperty(
+      'connectionStatus',
+      ZoomConnectionStatus.NOT_CONNECTED,
     );
   });
 
@@ -168,13 +180,15 @@ describe('Zoom Activity View', () => {
 
     await mockStudentInput();
 
-    expect(await findElementByRegex(/connectionStatus/)).toBe(
-      'connectionStatus: ' + ZoomConnectionStatus.CONNECTING,
+    expect(await findZoomContext()).toHaveProperty(
+      'connectionStatus',
+      ZoomConnectionStatus.CONNECTING,
     );
 
     await waitFor(async () =>
-      expect(await findElementByRegex(/connectionStatus/)).toBe(
-        'connectionStatus: ' + ZoomConnectionStatus.NOT_CONNECTED,
+      expect(await findZoomContext()).toHaveProperty(
+        'connectionStatus',
+        ZoomConnectionStatus.NOT_CONNECTED,
       ),
     );
   });
@@ -211,8 +225,11 @@ describe('Zoom Activity View', () => {
     );
     await mockStudentInput();
 
-    expect(await findElementByRegex(/connectionStatus/)).toBe(
-      'connectionStatus: ' + ZoomConnectionStatus.CONNECTING,
+    const renderedContext = await findZoomContext();
+
+    expect(renderedContext).toHaveProperty(
+      'connectionStatus',
+      ZoomConnectionStatus.CONNECTING,
     );
 
     expect(
@@ -253,13 +270,15 @@ describe('Zoom Activity View', () => {
     );
     await mockStudentInput();
 
-    expect(await findElementByRegex(/connectionStatus/)).toBe(
-      'connectionStatus: ' + ZoomConnectionStatus.CONNECTING,
+    expect(await findZoomContext()).toHaveProperty(
+      'connectionStatus',
+      ZoomConnectionStatus.CONNECTING,
     );
 
     await waitFor(async () =>
-      expect(await findElementByRegex(/connectionStatus/)).toBe(
-        'connectionStatus: ' + ZoomConnectionStatus.NOT_CONNECTED,
+      expect(await findZoomContext()).toHaveProperty(
+        'connectionStatus',
+        ZoomConnectionStatus.NOT_CONNECTED,
       ),
     );
 
@@ -299,13 +318,15 @@ describe('Zoom Activity View', () => {
     );
     await mockStudentInput();
 
-    expect(await findElementByRegex(/connectionStatus/)).toBe(
-      'connectionStatus: ' + ZoomConnectionStatus.CONNECTING,
+    expect(await findZoomContext()).toHaveProperty(
+      'connectionStatus',
+      ZoomConnectionStatus.CONNECTING,
     );
 
     await waitFor(async () =>
-      expect(await findElementByRegex(/connectionStatus/)).toBe(
-        'connectionStatus: ' + ZoomConnectionStatus.NOT_CONNECTED,
+      expect(await findZoomContext()).toHaveProperty(
+        'connectionStatus',
+        ZoomConnectionStatus.NOT_CONNECTED,
       ),
     );
 

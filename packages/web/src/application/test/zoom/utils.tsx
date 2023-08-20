@@ -54,17 +54,12 @@ export const renderWithProviderAndCustomConsumer = (
   renderWithProvider(
     <>
       <ZoomContext.Consumer>
-        {(value: ZoomContextType) =>
-          Object.keys(value).map(key => (
-            <span key={key}>
-              {`${key.toString()}: ${value[
-                key as keyof ZoomContextType
-              ]?.toString()}`}
-            </span>
-          ))
-        }
+        {(value: ZoomContextType) => {
+          const { zoomSDKElementRef, ...values } = value;
+          return <div data-testid="zoom-context">{JSON.stringify(values)}</div>;
+        }}
       </ZoomContext.Consumer>
-      {children}
+      ,{children}
     </>,
     { ...initialContext, user },
   );
@@ -138,5 +133,13 @@ export const findPasswordInput = async (): Promise<HTMLElement> =>
 export const findMeetingNumberInput = (): Promise<HTMLElement> =>
   screen.findByPlaceholderText('Meeting number');
 
-export const findElementByRegex = (matcher: RegExp) =>
-  screen.findByText(matcher).then(result => result.textContent);
+export const findZoomContext = async () => {
+  const context = await screen
+    .findByTestId('zoom-context')
+    .then(data => JSON.parse(data.innerHTML));
+
+  context.zoomSDKElementRef = expect.any(Function);
+  context.resetContext = expect.any(Function);
+  context.updateContext = expect.any(Function);
+  return context;
+};

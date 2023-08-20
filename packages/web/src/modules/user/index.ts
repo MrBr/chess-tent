@@ -54,4 +54,6 @@ application.register(
   },
 );
 
+application.registerInTestEnvironment(() => import('./fixtures'));
+
 application.model.userSchema = userSchema;

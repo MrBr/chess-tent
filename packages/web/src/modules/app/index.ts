@@ -40,6 +40,12 @@ application.register(
     application.components.App = module.default;
   },
 );
+application.register(
+  () => import('./test-environment'),
+  module => {
+    application.registerInTestEnvironment = module.default;
+  },
+);
 
 application.constants.APP_URL = process.env.REACT_APP_URL as string;
 application.constants.ToS_PATH = '/terms-of-services.txt';

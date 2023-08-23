@@ -10,7 +10,7 @@ export const addUser = (user: User) =>
   new Promise((resolve, reject) => {
     new UserModel(user).save((err, result) => {
       if (err) {
-        reject('Failed to create user');
+        reject('Failed to create user. ' + err);
         return;
       }
       resolve(result.toObject() as typeof user);

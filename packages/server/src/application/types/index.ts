@@ -141,6 +141,8 @@ export type Service = {
     projection?: string,
   ) => Promise<User | null>;
 
+  addUser: (user: User) => void;
+
   generateIndex: () => string;
   sendMail: (data: MailData) => Promise<
     | {

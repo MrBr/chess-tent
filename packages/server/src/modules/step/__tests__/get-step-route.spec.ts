@@ -3,7 +3,7 @@ import request from 'supertest';
 import application from '@application';
 import { TYPE_USER, User } from '@chess-tent/models';
 import { v4 as uuid } from 'uuid';
-import { jsonHeaders, seedUser } from '../../../application/tests';
+import { seedUser } from '../../../application/tests';
 
 describe('POST /step/save', () => {
   beforeAll(() => application.test.start());

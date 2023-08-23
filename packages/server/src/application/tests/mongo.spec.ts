@@ -1,6 +1,7 @@
 import application from '@application';
+import { ConnectionStates } from 'mongoose';
 
-describe('Sample Test', () => {
+describe('Database test', () => {
   beforeAll(async () => {
     await application.test.start();
   });
@@ -9,7 +10,9 @@ describe('Sample Test', () => {
     await application.stop();
   });
 
-  it('should pass', () => {
-    expect(true).toBe(true);
+  it('should return ready state "connected"', () => {
+    expect(application.db.connection.readyState).toBe(
+      ConnectionStates.connected,
+    );
   });
 });

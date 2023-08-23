@@ -5,6 +5,8 @@ import { TYPE_USER, User } from '@chess-tent/models';
 import { v4 as uuid } from 'uuid';
 import { jsonHeaders, seedUser } from '../../../application/tests';
 
+beforeAll(() => application.test.start());
+afterAll(() => application.stop());
 describe('POST /step/save', () => {
   it('should create new step', function (done) {
     const user: User = {
@@ -29,9 +31,6 @@ describe('POST /step/save', () => {
 });
 
 describe('GET /step/:stepId', () => {
-  beforeAll(() => application.test.start());
-  afterAll(() => application.stop());
-
   it('should return forbidden status', function (done) {
     request(application.service.router)
       .get(process.env.API_BASE_PATH + '/step/812376819764')

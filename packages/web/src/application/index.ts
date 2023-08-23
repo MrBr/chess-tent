@@ -16,6 +16,7 @@ import {
   HOC,
   Context,
   Records,
+  Fixtures,
 } from '@types';
 import { HOF } from './types/hof';
 
@@ -37,6 +38,7 @@ const hoc = createNamespace({}) as HOC;
 const hof = createNamespace({}) as HOF;
 const records = createNamespace({}) as Records;
 const stepModules = createNamespace({}) as StepModules;
+const fixtures = createNamespace({}) as Fixtures;
 const constants = createNamespace({
   START_FEN: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
   KINGS_FEN: '4k3/8/8/8/8/8/8/4K3 w - - 0 1',
@@ -63,6 +65,7 @@ const application: Application = createNamespace({
   hoc,
   hof,
   records,
+  fixtures,
 }) as Application;
 
 export {
@@ -83,4 +86,5 @@ export {
   context,
   hof,
   records,
+  fixtures,
 };

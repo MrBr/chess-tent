@@ -1,6 +1,8 @@
 import { MoveStep } from '@types';
 import application from '@application';
 
+beforeAll(() => application.init());
+
 describe('promoteVariation', () => {
   test('promotes a move to a variation', async () => {
     const { createStep, promoteVariation } = application.services;

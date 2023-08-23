@@ -1,41 +1,11 @@
-import React, { useEffect, useState, useRef, RefObject } from 'react';
-import { hooks } from '@application';
-import { Components } from '@types';
-import { User, ZoomRole } from '@chess-tent/models';
+import React, { useEffect, useState, useRef } from 'react';
+import { hooks, requests } from '@application';
+import { Components, ZoomContext as ZoomContextType } from '@types';
+import { ZoomRole } from '@chess-tent/models';
 
-import { zoomAuthorize, generateSignature } from '../requests';
-import { ZoomConnectionStatus, ZoomContext, ZoomContextType } from '../context';
+import { createInitialContext, ZoomContext } from '../context';
 
 const { useApi, useQuery } = hooks;
-
-interface InitialContextData {
-  meetingNumber: string | undefined;
-  user: User;
-  code: string | undefined;
-  redirectUri: string;
-  zoomSDKElementRef: RefObject<HTMLElement>;
-}
-
-const createInitialContext = ({
-  meetingNumber,
-  user,
-  code,
-  redirectUri,
-  zoomSDKElementRef,
-}: InitialContextData) => ({
-  userSignature: null,
-  hostUserZakToken: undefined,
-  meetingNumber: meetingNumber?.replaceAll(' ', ''),
-  username: user.nickname,
-  password: null,
-  role: user?.coach ? ZoomRole.Host : ZoomRole.Guest,
-  authCode: code,
-  redirectUri,
-  updateContext: () => {},
-  resetContext: () => {},
-  connectionStatus: ZoomConnectionStatus.NOT_CONNECTED,
-  zoomSDKElementRef,
-});
 
 const ZoomProvider: Components['ZoomProvider'] = ({
   redirectUri,
@@ -47,12 +17,14 @@ const ZoomProvider: Components['ZoomProvider'] = ({
     fetch: authFetch,
     response: authResponse,
     loading: authLoading,
-  } = useApi(zoomAuthorize);
+    error: authError,
+  } = useApi(requests.zoomAuthorize);
   const {
     fetch: signatureFetch,
     response: signatureResponse,
     loading: signatureLoading,
-  } = useApi(generateSignature);
+    error: signatureError,
+  } = useApi(requests.zoomSignature);
 
   const { code } = useQuery<{ code?: string }>();
   const zoomSDKElementRef = useRef<HTMLElement>(null);
@@ -89,19 +61,28 @@ const ZoomProvider: Components['ZoomProvider'] = ({
       zoomContextState.role !== ZoomRole.Host ||
       !zoomContextState.authCode ||
       authLoading ||
-      authResponse
+      authResponse ||
+      authError
     ) {
       return;
     }
 
     authFetch({ code: zoomContextState.authCode, redirectUri });
-  }, [authFetch, authLoading, authResponse, redirectUri, zoomContextState]);
+  }, [
+    authFetch,
+    authLoading,
+    authResponse,
+    authError,
+    redirectUri,
+    zoomContextState,
+  ]);
 
   useEffect(() => {
     if (
       !zoomContextState.meetingNumber ||
       signatureResponse ||
-      signatureLoading
+      signatureLoading ||
+      signatureError
     ) {
       return;
     }
@@ -110,7 +91,13 @@ const ZoomProvider: Components['ZoomProvider'] = ({
       meetingNumber: zoomContextState.meetingNumber,
       role: zoomContextState.role,
     });
-  }, [signatureFetch, signatureResponse, signatureLoading, zoomContextState]);
+  }, [
+    signatureFetch,
+    signatureResponse,
+    signatureLoading,
+    signatureError,
+    zoomContextState,
+  ]);
 
   useEffect(() => {
     if (

@@ -1,5 +1,10 @@
 module.exports = {
-  testMatch: ['**/__tests__/**/*.+(ts)', '**/?(*.)+(spec|test).+(ts)'],
+  testMatch: [
+    '**/__tests__/**/*.+(ts)',
+    '**/__tests__/**/*.+(tsx)',
+    '**/?(*.)+(spec|test).+(ts)',
+    '**/?(*.)+(spec|test).+(tsx)',
+  ],
   transform: {
     '^.+\\.(ts|tsx|js)$': 'ts-jest',
   },
@@ -20,7 +25,7 @@ module.exports = {
   },
   transformIgnorePatterns: [
     '/node_modules/(?!(chess.js|redux-record)/)',
-    'node_modules',
+    '<rootDir>/node_modules',
   ],
   // TODO - use once JEST is upgraded in react-scripts
   // Currently, JEST doesn't support a function export which is necessary to await module initialisation

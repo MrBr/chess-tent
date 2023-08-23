@@ -17,7 +17,7 @@
     "@storybook/addon-controls": "^6.5.15",
     "@storybook/addon-links": "^6.5.15",
     "@storybook/react": "^6.5.15",
-    "@storybook/testing-library": "^0.0.13",
+    "@storybook/testing-library": "^0.2.0",
     "@types/js-cookie": "^3.0.2",
     "babel-loader": "^8.2.4",
     "dynamic-alias-resolve-plugin": "^1.2.1",

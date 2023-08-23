@@ -1,5 +1,4 @@
 import application from '@application';
-import { ConnectionStates } from 'mongoose';
 
 describe('Database test', () => {
   beforeAll(async () => {
@@ -11,8 +10,6 @@ describe('Database test', () => {
   });
 
   it('should return ready state "connected"', () => {
-    expect(application.db.connection.readyState).toBe(
-      ConnectionStates.connected,
-    );
+    expect(application.db.connection.readyState).toBe(1);
   });
 });

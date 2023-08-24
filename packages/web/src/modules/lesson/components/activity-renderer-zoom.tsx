@@ -27,9 +27,11 @@ export const ActivityRendererZoom = <
   const { activity, updateActivity } = props;
 
   const setZoomMeetingNumberState = (meetingNumber: string) => {
-    updateActivity(updateSubjectState)(activity, {
-      zoomMeetingNumber: meetingNumber,
-    });
+    if (user?.coach) {
+      updateActivity(updateSubjectState)(activity, {
+        zoomMeetingNumber: meetingNumber,
+      });
+    }
   };
 
   return (

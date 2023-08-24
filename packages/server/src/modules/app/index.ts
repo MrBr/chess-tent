@@ -90,5 +90,5 @@ application.test.start = async () => {
 
 const generateUniqueDbName = (): void => {
   const timestamp = new Date().toISOString().replace(/[^a-zA-Z0-9]/g, '');
-  process.env.DB_NAME = `${process.env.DB_NAME}_${timestamp}`;
+  process.env.DB_NAME = `chessTent_${timestamp}`;
 };

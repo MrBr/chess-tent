@@ -9,7 +9,7 @@ describe('Database test', () => {
     await application.stop();
   });
 
-  it('should return ready state "connected"', () => {
+  it('should have active DB connection after application startup', () => {
     expect(application.db.connection.readyState).toBe(1);
   });
 });

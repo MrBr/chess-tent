@@ -23,7 +23,6 @@ import {
 } from './service';
 import { BadRequest } from './errors';
 import { formatAppLink, shouldStartHttpsServer } from './utils';
-import { v4 as uuid } from 'uuid';
 
 const { connect, disconnect } = db;
 
@@ -89,5 +88,7 @@ application.test.start = async () => {
   app.use(application.middleware.errorHandler);
 };
 
-const generateUniqueDbName = () =>
-  (process.env.DB_NAME = `${process.env.DB_NAME}_${uuid().substring(0, 9)}`);
+const generateUniqueDbName = (): void => {
+  const timestamp = new Date().toISOString().replace(/[^a-zA-Z0-9]/g, '');
+  process.env.DB_NAME = `${process.env.DB_NAME}_${timestamp}`;
+};

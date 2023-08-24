@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { hooks, requests } from '@application';
 import { Components, ZoomContext as ZoomContextType } from '@types';
 import { ZoomRole } from '@chess-tent/models';
 
 import { createInitialContext, ZoomContext } from '../context';
 
-const { useApi, useQuery } = hooks;
+const { useApi, useQuery, useLocation, useHistory } = hooks;
 
 const ZoomProvider: Components['ZoomProvider'] = ({
   redirectUri,
@@ -25,6 +25,8 @@ const ZoomProvider: Components['ZoomProvider'] = ({
     loading: signatureLoading,
     error: signatureError,
   } = useApi(requests.zoomSignature);
+  const location = useLocation();
+  const history = useHistory();
 
   const { code } = useQuery<{ code?: string }>();
   const zoomSDKElementRef = useRef<HTMLElement>(null);
@@ -55,6 +57,17 @@ const ZoomProvider: Components['ZoomProvider'] = ({
         ...data,
       })),
   });
+
+  const removeQueryCode = useCallback(() => {
+    const queryParams = new URLSearchParams(location.search);
+
+    if (queryParams.has('code')) {
+      queryParams.delete('code');
+      history.replace({
+        search: queryParams.toString(),
+      });
+    }
+  }, [history, location.search]);
 
   useEffect(() => {
     if (
@@ -107,13 +120,14 @@ const ZoomProvider: Components['ZoomProvider'] = ({
     ) {
       return;
     }
-
     setZoomContextState(prevState => ({
       ...prevState,
       userSignature: signatureResponse.data,
       hostUserZakToken: authResponse?.data,
     }));
-  }, [signatureResponse, authResponse, zoomContextState]);
+
+    removeQueryCode();
+  }, [signatureResponse, authResponse, zoomContextState, removeQueryCode]);
 
   return (
     <ZoomContext.Provider value={zoomContextState}>

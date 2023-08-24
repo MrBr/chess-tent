@@ -9,6 +9,7 @@ import { NormalizedTag, Tag } from './tag';
 import { Analysis, NormalizedAnalysis } from './analysis';
 import { NormalizedNotification, Notification } from './notification';
 import { Mentorship, NormalizedMentorship } from './mentorship';
+import { ZoomUserToken, NormalizedZoomUserToken } from './zoom';
 
 export * from './analysis';
 export * from './notification';
@@ -38,7 +39,8 @@ export type Entity =
   | Tag
   | Analysis<any> // :o
   | Notification
-  | Mentorship;
+  | Mentorship
+  | ZoomUserToken;
 
 export type NormalizedEntity =
   | NormalizedUser
@@ -51,4 +53,5 @@ export type NormalizedEntity =
   | NormalizedTag
   | NormalizedAnalysis<any> // :o
   | NormalizedNotification
-  | NormalizedMentorship;
+  | NormalizedMentorship
+  | NormalizedZoomUserToken;

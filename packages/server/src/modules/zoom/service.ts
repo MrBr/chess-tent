@@ -1,12 +1,17 @@
 import axios from 'axios';
 
 import { service } from '@application';
-import { ZoomRole } from '@chess-tent/models';
+import { User, ZoomRole } from '@chess-tent/models';
 
 import { Authorization } from './constants';
+import { ZoomUserTokenModel } from './model';
 
-const authorizeUserByCode = async (code: string, redirectUri: string) => {
-  const accessToken = await axios
+const authorizeUserByCode = async (
+  code: string,
+  redirectUri: string,
+  user: User,
+) => {
+  const { refresh_token: refreshToken, access_token: accessToken } = await axios
     .postForm(
       'https://zoom.us/oauth/token',
       {
@@ -22,7 +27,16 @@ const authorizeUserByCode = async (code: string, redirectUri: string) => {
         method: 'POST',
       },
     )
-    .then(data => data.data.access_token);
+    .then(data => data.data);
+
+  ZoomUserTokenModel.findOneAndUpdate(
+    { user: user.id },
+    { user: user.id, refreshToken },
+    { upsert: true, useFindAndModify: false },
+    error => {
+      if (error) console.error(error);
+    },
+  );
 
   return axios
     .get('https://api.zoom.us/v2/users/me/token?type=zak', {

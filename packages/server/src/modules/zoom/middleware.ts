@@ -3,7 +3,11 @@ import * as zoomService from './service';
 
 const authorizeUserByCode: MiddlewareFunction = async (req, res, next) => {
   const data = await zoomService
-    .authorizeUserByCode(res.locals.zoom.code, res.locals.zoom.redirectUri)
+    .authorizeUserByCode(
+      res.locals.zoom.code,
+      res.locals.zoom.redirectUri,
+      res.locals.me,
+    )
     .catch(next);
 
   res.locals.zoomAuthorization = data;

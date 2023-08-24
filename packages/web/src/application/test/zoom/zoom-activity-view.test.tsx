@@ -46,7 +46,7 @@ describe('Zoom Activity View', () => {
       user,
       <>
         <ZoomGuestControl />
-        <ZoomActivityView />
+        <ZoomActivityView setZoomMeetingNumberState={jest.fn()} />
       </>,
     );
 
@@ -69,7 +69,7 @@ describe('Zoom Activity View', () => {
       user,
       <>
         <ZoomHostControl />
-        <ZoomActivityView />
+        <ZoomActivityView setZoomMeetingNumberState={jest.fn()} />
       </>,
     );
 
@@ -92,7 +92,7 @@ describe('Zoom Activity View', () => {
       user,
       <>
         <ZoomGuestControl />
-        <ZoomActivityView />
+        <ZoomActivityView setZoomMeetingNumberState={jest.fn()} />
       </>,
     );
 
@@ -126,7 +126,7 @@ describe('Zoom Activity View', () => {
       user,
       <>
         <ZoomGuestControl />
-        <ZoomActivityView />
+        <ZoomActivityView setZoomMeetingNumberState={jest.fn()} />
       </>,
     );
 
@@ -162,7 +162,7 @@ describe('Zoom Activity View', () => {
       user,
       <>
         <ZoomGuestControl />
-        <ZoomActivityView />
+        <ZoomActivityView setZoomMeetingNumberState={jest.fn()} />
       </>,
     );
 
@@ -203,7 +203,7 @@ describe('Zoom Activity View', () => {
       user,
       <>
         <ZoomGuestControl />
-        <ZoomActivityView />
+        <ZoomActivityView setZoomMeetingNumberState={jest.fn()} />
       </>,
     );
 
@@ -247,7 +247,7 @@ describe('Zoom Activity View', () => {
       user,
       <>
         <ZoomGuestControl />
-        <ZoomActivityView />
+        <ZoomActivityView setZoomMeetingNumberState={jest.fn()} />
       </>,
     );
 
@@ -295,7 +295,7 @@ describe('Zoom Activity View', () => {
       user,
       <>
         <ZoomGuestControl />
-        <ZoomActivityView />
+        <ZoomActivityView setZoomMeetingNumberState={jest.fn()} />
       </>,
     );
 

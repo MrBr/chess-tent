@@ -332,4 +332,48 @@ describe('Zoom Activity View', () => {
 
     expect(window.alert).toBeCalledWith(errorMessage);
   });
+
+  it('should set external meetingNumber state', async () => {
+    const { student: user } = fixtures.users;
+    const { ZoomActivityView, ZoomGuestControl } = components;
+    const initialContext = getContextInitialData(user);
+    initialContext.connectionStatus = ZoomConnectionStatus.CONNECTED;
+
+    let meetingNumber;
+
+    const setMeetingNumberMock = jest
+      .fn()
+      .mockImplementation((newMeetingNumber: string) => {
+        meetingNumber = newMeetingNumber;
+      });
+
+    renderWithProviderAndCustomConsumer(
+      user,
+      <>
+        <ZoomGuestControl />
+        <ZoomActivityView setZoomMeetingNumberState={setMeetingNumberMock} />
+      </>,
+    );
+
+    mockZoomCreateClient(
+      jest.fn().mockImplementation((event, callback) =>
+        setTimeout(() => {
+          if (event === 'connection-change') {
+            return callback({ state: 'Connected' });
+          }
+        }, 0),
+      ),
+    );
+
+    await mockStudentInput();
+
+    const renderedContext = await findZoomContext();
+
+    expect(renderedContext).toHaveProperty(
+      'connectionStatus',
+      ZoomConnectionStatus.CONNECTED,
+    );
+
+    expect(meetingNumber).toEqual(initialContext.meetingNumber);
+  });
 });

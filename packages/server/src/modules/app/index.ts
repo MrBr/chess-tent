@@ -90,4 +90,4 @@ application.test.start = async () => {
 };
 
 const generateUniqueDbName = () =>
-  (process.env.DB_NAME = `${process.env.DB_NAME}-${uuid()}`);
+  (process.env.DB_NAME = `${process.env.DB_NAME}_${uuid().substring(0, 9)}`);

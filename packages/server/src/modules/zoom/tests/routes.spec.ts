@@ -10,6 +10,8 @@ beforeAll(() => application.test.start());
 const tokenCookie =
   'token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiMTgwYmQxMDItMjNiNC00MzkxLThhOTUtMzhkYjliN2QxYWJhIn0sImlhdCI6MTY5MTUwMTU2Nn0.UmmBVVMY0Ruxox61CaINh3rtSF73s2V9TD-0nWf2hpw';
 
+// rijesit auth
+
 describe('GET /zoom/authorize', () => {
   it('should return unauthorized status', async () => {
     const result = await request(application.service.router).get(

@@ -19,7 +19,10 @@ const MEETING_NOT_STARTED_ERROR_CODE = 3008;
 
 const { className } = css`
   justify-content: center;
-  z-index: 10;
+
+  > * {
+    position: relative !important;
+  }
 `;
 
 const ZoomActivityView: Components['ZoomActivityView'] = ({
@@ -80,6 +83,14 @@ const ZoomActivityView: Components['ZoomActivityView'] = ({
       .init({
         zoomAppRoot: zoomSDKElementRef.current || undefined,
         language: 'en-US',
+        customize: {
+          video: {
+            popper: {
+              disableDraggable: true,
+            },
+            isResizable: true,
+          },
+        },
       })
       .then(() => {
         updateContext({ connectionStatus: ZoomConnectionStatus.CONNECTING });

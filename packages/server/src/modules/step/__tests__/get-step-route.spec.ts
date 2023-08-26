@@ -2,65 +2,134 @@ import request from 'supertest';
 
 import application from '@application';
 import { generateApiToken, generateCoach } from '../../../application/tests';
-import { Step, TYPE_STEP, User } from '@chess-tent/models';
+import { Step, Tag, TYPE_STEP, TYPE_TAG, User } from '@chess-tent/models';
 import { v4 as uuid } from 'uuid';
-
-describe('POST /step/save', () => {
-  beforeAll(() => application.test.start());
-  afterAll(() => application.stop());
-
-  it('should create new step', function (done) {
-    const coach: User = generateCoach();
-    const token: String = generateApiToken(coach);
-
-    request(application.service.router)
-      .post(process.env.API_BASE_PATH + '/step/save')
-      .set('Cookie', [`token=${token}`])
-      .expect(200, done);
-  });
-});
 
 describe('Coach should be able to manage created step', () => {
   beforeAll(() => application.test.start());
   afterAll(() => application.stop());
 
-  let stepId: String;
+  let stepId: string = uuid();
   let coach: User;
-  let token: String;
+  let token: string;
 
-  it('should create new step', function (done) {
-    coach = generateCoach();
-    token = generateApiToken(coach);
-    stepId = uuid();
+  const stepTemplate = {
+    id: stepId,
+    type: TYPE_STEP,
+    state: {},
+  } as Step;
 
-    request(application.service.router)
+  const createStep = async (): Promise<Step | null> => {
+    const { getStep } = await import('../service');
+
+    const newStep = { ...stepTemplate, id: uuid() };
+    await request(application.service.router)
       .post(process.env.API_BASE_PATH + '/step/save')
       .set('Cookie', [`token=${token}`])
       .set('Accept', 'application/json')
-      .set({
-        id: stepId,
-        type: TYPE_STEP,
-        state: {},
-      } as Step)
-      .expect(200)
-      .end((err, response) => {
-        if (err) {
-          console.error('Error:', err);
-          return done(err);
-        }
+      .send(newStep)
+      .expect(200);
 
-        console.log('Response Body:', response.body);
+    return await getStep(newStep.id);
+  };
 
-        done();
-      });
+  it('should create new step', async function () {
+    const { getStep } = await import('../service');
+    coach = await generateCoach();
+    token = generateApiToken(coach);
+
+    await request(application.service.router)
+      .post(process.env.API_BASE_PATH + '/step/save')
+      .set('Cookie', [`token=${token}`])
+      .set('Accept', 'application/json')
+      .send(stepTemplate)
+      .expect(200);
+
+    const step = await getStep(stepId);
+
+    expect(step).toEqual({ ...stepTemplate, tags: expect.any(Array), v: 1 });
   });
 
-  it('should be able to get step', function (done) {
-    request(application.service.router)
+  it('should be able to get step', async function () {
+    const response = await request(application.service.router)
       .get(process.env.API_BASE_PATH + `/step/${stepId}`)
       .set('Accept', 'application/json')
       .set('Cookie', [`token=${token}`])
-      .expect(200, done);
+      .expect(200);
+
+    expect(response.body.data.id).toEqual(stepId);
+    expect(response.body.data.tags).toEqual([]);
+    expect(response.body.data.type).toEqual(TYPE_STEP);
+    expect(response.body.data.state).toEqual({});
+  });
+
+  const beginnerTag: Tag = {
+    id: uuid(),
+    text: 'Beginner',
+    type: TYPE_TAG,
+  } as Tag;
+
+  it('should be able to update step tags', async function () {
+    const { getStep } = await import('../service');
+
+    await application.service.addTag(beginnerTag);
+
+    await request(application.service.router)
+      .put(process.env.API_BASE_PATH + `/step/${stepId}`)
+      .set('Accept', 'application/json')
+      .set('Cookie', [`token=${token}`])
+      .send({ tags: [beginnerTag] })
+      .expect(200);
+
+    const step = await getStep(stepId);
+    expect(step).toEqual({
+      ...stepTemplate,
+      tags: [{ ...beginnerTag, v: 0 }],
+      v: 1,
+    });
+  });
+
+  it('should be able to list all steps', async function () {
+    const { getStep } = await import('../service');
+
+    const step2 = await createStep();
+    const response = await request(application.service.router)
+      .post(process.env.API_BASE_PATH + `/steps`)
+      .set('Accept', 'application/json')
+      .set('Cookie', [`token=${token}`])
+      .expect(200);
+
+    expect(response.body.data.length).toBe(2);
+    const step = await getStep(stepId);
+    expect(response.body.data).toEqual([step, step2]);
+  });
+
+  it('should be able to filter steps by tag', async function () {
+    const { getStep } = await import('../service');
+
+    const response = await request(application.service.router)
+      .post(process.env.API_BASE_PATH + `/steps`)
+      .set('Accept', 'application/json')
+      .set('Cookie', [`token=${token}`])
+      .send({ tagIds: [beginnerTag.id] })
+      .expect(200);
+
+    expect(response.body.data.length).toBe(1);
+    const step = await getStep(stepId);
+    expect(response.body.data).toEqual([step]);
+  });
+
+  it('should be able to delete step', async function () {
+    const { getStep } = await import('../service');
+
+    await request(application.service.router)
+      .delete(process.env.API_BASE_PATH + `/step/${stepId}`)
+      .set('Accept', 'application/json')
+      .set('Cookie', [`token=${token}`])
+      .expect(200);
+
+    const step = await getStep(stepId);
+    expect(step).toBe(null);
   });
 });
 

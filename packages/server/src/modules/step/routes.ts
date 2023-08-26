@@ -38,12 +38,9 @@ application.service.registerPostRoute(
   '/steps',
   identify,
   toLocals('filters', req => ({
-    owner: req.body.owner,
     search: req.body.search,
     difficulty: req.body.difficulty,
     tagIds: req.body.tagIds,
-    hasDocId: true,
-    published: true,
   })),
   findSteps,
   sendData('steps'),

@@ -16,6 +16,7 @@ import {
   Entity,
   Role,
   NormalizedRole,
+  Tag,
 } from '@chess-tent/models';
 import { Socket } from 'socket.io';
 import { Server as HttpServer } from 'http';
@@ -141,8 +142,8 @@ export type Service = {
     projection?: string,
   ) => Promise<User | null>;
 
-  addUser: (user: User) => void;
-
+  addUser: (user: User) => Promise<void>;
+  addTag: (tag: Tag) => Promise<void>;
   generateIndex: () => string;
   sendMail: (data: MailData) => Promise<
     | {

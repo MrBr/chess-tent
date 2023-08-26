@@ -13,11 +13,9 @@ export const jsonHeaders = (token?: string) => {
   return headers;
 };
 
-export const seedUser = (user: User) => {
-  application.service.addUser(user);
-};
+export const seedUser = (user: User) => application.service.addUser(user);
 
-export const generateCoach = (): User => {
+export const generateCoach = async (): Promise<User> => {
   const id = uuid();
   const suffix = id.substring(0, 6);
   const user: User = {
@@ -31,9 +29,9 @@ export const generateCoach = (): User => {
     password: 'testpassword1',
   } as User;
 
-  seedUser(user);
+  await seedUser(user);
   return user;
 };
 
-export const generateApiToken = (user: User): String =>
+export const generateApiToken = (user: User): string =>
   application.service.generateApiToken(user);

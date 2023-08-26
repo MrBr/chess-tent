@@ -6,16 +6,13 @@ import { FilterQuery } from 'mongoose';
 import { utils, service, db } from '@application';
 import { UserModel } from './model';
 
-export const addUser = (user: User) =>
-  new Promise((resolve, reject) => {
-    new UserModel(user).save((err, result) => {
-      if (err) {
-        reject('Failed to create user. ' + err);
-        return;
-      }
-      resolve(result.toObject() as typeof user);
-    });
-  });
+export const addUser = async (user: User): Promise<void> => {
+  try {
+    await new UserModel(user).save();
+  } catch (e) {
+    throw new Error('Failed to create user. ' + e);
+  }
+};
 
 export const updateUser = (
   userId: User['id'],

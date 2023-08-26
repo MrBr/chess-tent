@@ -32,5 +32,6 @@ export const createInitialContext = ({
   updateContext: () => {},
   resetContext: () => {},
   connectionStatus: ZoomConnectionStatus.NOT_CONNECTED,
+  zakTokenRequested: false,
   zoomSDKElementRef,
 });

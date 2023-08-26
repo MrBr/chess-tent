@@ -89,6 +89,7 @@ export type LessonActivity = Activity<
     userSettings: { [key: string]: LessonActivityUserSettings }; // Specific user settings - use for information that should potentially be visible to others
     disableEngine?: boolean;
     hideMoves?: boolean;
+    zoomMeetingNumber?: string;
   }
 >;
 

@@ -1,9 +1,22 @@
 import { MiddlewareFunction } from '@types';
 import * as zoomService from './service';
 
+const getZakToken: MiddlewareFunction = async (req, res, next) => {
+  const data = await zoomService
+    .getZakToken({ user: res.locals.me })
+    .catch(next);
+
+  res.locals.zoomZakToken = data;
+  next();
+};
+
 const authorizeUserByCode: MiddlewareFunction = async (req, res, next) => {
   const data = await zoomService
-    .authorizeUserByCode(res.locals.zoom.code, res.locals.zoom.redirectUri)
+    .authorizeUserByCode(
+      res.locals.zoom.code,
+      res.locals.zoom.redirectUri,
+      res.locals.me,
+    )
     .catch(next);
 
   res.locals.zoomAuthorization = data;
@@ -19,4 +32,4 @@ const generateSignature: MiddlewareFunction = async (req, res, next) => {
   next();
 };
 
-export { authorizeUserByCode, generateSignature };
+export { authorizeUserByCode, generateSignature, getZakToken };

@@ -46,6 +46,7 @@ export interface ZoomContext {
   updateContext: Function;
   resetContext: Function;
   connectionStatus: ZoomConnectionStatus;
+  zakTokenRequested: boolean;
   zoomSDKElementRef: RefObject<HTMLElement> | null;
 }
 

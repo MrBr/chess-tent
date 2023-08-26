@@ -3,6 +3,7 @@ import { Components, ZoomContext as ZoomContextType } from '@types';
 import { ui } from '@application';
 import { ZoomConnectionStatus } from '@chess-tent/models';
 import ZoomMtgEmbedded from '@zoomus/websdk/embedded';
+import { css } from '@chess-tent/styled-props';
 
 import { useZoomContext } from '../context';
 
@@ -16,7 +17,17 @@ interface ZoomConnectionChange {
 
 const MEETING_NOT_STARTED_ERROR_CODE = 3008;
 
-const ZoomActivityView: Components['ZoomActivityView'] = () => {
+const { className } = css`
+  justify-content: center;
+
+  > * {
+    position: relative !important;
+  }
+`;
+
+const ZoomActivityView: Components['ZoomActivityView'] = ({
+  setZoomMeetingNumberState,
+}) => {
   const {
     resetContext,
     meetingNumber,
@@ -26,11 +37,13 @@ const ZoomActivityView: Components['ZoomActivityView'] = () => {
     hostUserZakToken,
     updateContext,
     zoomSDKElementRef,
+    connectionStatus,
   }: ZoomContextType = useZoomContext();
   const connectionChange = useCallback(
     (event: ZoomConnectionChange) => {
       switch (event.state) {
         case 'Connected':
+          setZoomMeetingNumberState(meetingNumber);
           updateContext({ connectionStatus: ZoomConnectionStatus.CONNECTED });
           break;
         case 'Closed':
@@ -43,7 +56,7 @@ const ZoomActivityView: Components['ZoomActivityView'] = () => {
           break;
       }
     },
-    [resetContext, updateContext],
+    [resetContext, updateContext, meetingNumber, setZoomMeetingNumberState],
   );
 
   useEffect(() => {
@@ -55,6 +68,13 @@ const ZoomActivityView: Components['ZoomActivityView'] = () => {
       return;
     }
 
+    if (
+      connectionStatus === ZoomConnectionStatus.CONNECTED ||
+      connectionStatus === ZoomConnectionStatus.CONNECTING
+    ) {
+      return;
+    }
+
     const client = ZoomMtgEmbedded.createClient();
 
     const sdkKey = process.env.REACT_APP_ZOOM_CLIENT_ID;
@@ -63,6 +83,14 @@ const ZoomActivityView: Components['ZoomActivityView'] = () => {
       .init({
         zoomAppRoot: zoomSDKElementRef.current || undefined,
         language: 'en-US',
+        customize: {
+          video: {
+            popper: {
+              disableDraggable: true,
+            },
+            isResizable: true,
+          },
+        },
       })
       .then(() => {
         updateContext({ connectionStatus: ZoomConnectionStatus.CONNECTING });
@@ -86,10 +114,11 @@ const ZoomActivityView: Components['ZoomActivityView'] = () => {
     hostUserZakToken,
     zoomSDKElementRef,
     updateContext,
+    connectionStatus,
     connectionChange,
   ]);
 
-  return <Container ref={zoomSDKElementRef}></Container>;
+  return <Container ref={zoomSDKElementRef} className={className}></Container>;
 };
 
 export default ZoomActivityView;

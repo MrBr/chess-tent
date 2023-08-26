@@ -6,7 +6,7 @@ import { Components, ZoomContext as ZoomContextType } from '@types';
 import { useZoomContext } from '../../context';
 import { authorizeZoom, isZoomConnectionInProgress } from '../../services';
 
-const { Button, Form } = ui;
+const { Button, Form, Spinner } = ui;
 
 interface ZoomHostData {
   meetingNumber: string;
@@ -30,11 +30,17 @@ const ZoomHostControl: Components['ZoomHostControl'] = () => {
     return <></>;
   }
 
-  if (!zoomContext.password && !zoomContext.authCode) {
-    return (
+  if (
+    !zoomContext.password &&
+    !zoomContext.authCode &&
+    !zoomContext.hostUserZakToken
+  ) {
+    return zoomContext.zakTokenRequested ? (
       <Button onClick={() => authorizeZoom(zoomContext.redirectUri)}>
         Authorize Zoom
       </Button>
+    ) : (
+      <Spinner animation="border" className="align-self-center" />
     );
   }
 

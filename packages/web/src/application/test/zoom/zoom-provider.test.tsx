@@ -58,6 +58,8 @@ describe('Zoom Provider', () => {
       error: null,
     });
 
+    requests.zoomZakToken = mockEmptyDataResponse();
+
     renderWithProviderAndCustomConsumer(user);
 
     const renderedContext = await findZoomContext();

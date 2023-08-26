@@ -56,7 +56,7 @@ describe('Zoom Guest Controls', () => {
       user,
       <>
         <ZoomGuestControl />
-        <ZoomActivityView />
+        <ZoomActivityView setZoomMeetingNumberState={jest.fn()} />
       </>,
     );
 
@@ -109,7 +109,7 @@ describe('Zoom Coach Controls', () => {
       user,
       <>
         <ZoomHostControl />
-        <ZoomActivityView />
+        <ZoomActivityView setZoomMeetingNumberState={jest.fn()} />
       </>,
     );
 

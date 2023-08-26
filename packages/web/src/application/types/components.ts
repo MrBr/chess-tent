@@ -382,7 +382,7 @@ export type Components = {
     meetingNumber?: string;
     children: ReactNode;
   }>;
-  ZoomActivityView: ComponentType<{}>;
+  ZoomActivityView: ComponentType<{ setZoomMeetingNumberState: Function }>;
   ZoomHostControl: ComponentType<{}>;
   ZoomGuestControl: ComponentType<{}>;
   Search: ComponentType<ClassNameProps>;

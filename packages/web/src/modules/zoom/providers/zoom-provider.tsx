@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { hooks, requests } from '@application';
 import { Components, ZoomContext as ZoomContextType } from '@types';
 import { ZoomRole } from '@chess-tent/models';
 
 import { createInitialContext, ZoomContext } from '../context';
 
-const { useApi, useQuery } = hooks;
+const { useApi, useQuery, useLocation, useHistory } = hooks;
 
 const ZoomProvider: Components['ZoomProvider'] = ({
   redirectUri,
@@ -20,11 +20,19 @@ const ZoomProvider: Components['ZoomProvider'] = ({
     error: authError,
   } = useApi(requests.zoomAuthorize);
   const {
+    fetch: zakTokenFetch,
+    response: zakTokenResponse,
+    loading: zakTokenLoading,
+    error: zakTokenError,
+  } = useApi(requests.zoomZakToken);
+  const {
     fetch: signatureFetch,
     response: signatureResponse,
     loading: signatureLoading,
     error: signatureError,
   } = useApi(requests.zoomSignature);
+  const location = useLocation();
+  const history = useHistory();
 
   const { code } = useQuery<{ code?: string }>();
   const zoomSDKElementRef = useRef<HTMLElement>(null);
@@ -55,6 +63,36 @@ const ZoomProvider: Components['ZoomProvider'] = ({
         ...data,
       })),
   });
+
+  const removeQueryCode = useCallback(() => {
+    const queryParams = new URLSearchParams(location.search);
+
+    if (queryParams.has('code')) {
+      queryParams.delete('code');
+      history.replace({
+        search: queryParams.toString(),
+      });
+    }
+  }, [history, location.search]);
+
+  useEffect(() => {
+    if (
+      zoomContextState.role !== ZoomRole.Host ||
+      zoomContextState.hostUserZakToken ||
+      zakTokenLoading ||
+      zakTokenResponse ||
+      zakTokenError
+    ) {
+      return;
+    }
+    zakTokenFetch();
+  }, [
+    zoomContextState,
+    zakTokenError,
+    zakTokenLoading,
+    zakTokenResponse,
+    zakTokenFetch,
+  ]);
 
   useEffect(() => {
     if (
@@ -100,20 +138,34 @@ const ZoomProvider: Components['ZoomProvider'] = ({
   ]);
 
   useEffect(() => {
-    if (
-      !signatureResponse?.data ||
-      zoomContextState.userSignature ||
-      (!authResponse?.data && zoomContextState.role === ZoomRole.Host)
-    ) {
+    if (zakTokenResponse || zakTokenError) {
+      setZoomContextState(prevState => ({
+        ...prevState,
+        hostUserZakToken: zakTokenResponse?.data,
+        zakTokenRequested: true,
+      }));
+    }
+  }, [zakTokenResponse, zakTokenError]);
+
+  useEffect(() => {
+    setZoomContextState(prevState => ({
+      ...prevState,
+      hostUserZakToken: authResponse?.data,
+    }));
+
+    removeQueryCode();
+  }, [authResponse, removeQueryCode]);
+
+  useEffect(() => {
+    if (!signatureResponse?.data || zoomContextState.userSignature) {
       return;
     }
 
     setZoomContextState(prevState => ({
       ...prevState,
       userSignature: signatureResponse.data,
-      hostUserZakToken: authResponse?.data,
     }));
-  }, [signatureResponse, authResponse, zoomContextState]);
+  }, [signatureResponse, authResponse, zoomContextState, zakTokenResponse]);
 
   return (
     <ZoomContext.Provider value={zoomContextState}>

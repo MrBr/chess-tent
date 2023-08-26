@@ -57,7 +57,6 @@ const userSchema = db.createSchema<NormalizedUser>(
 userSchema.index({
   name: 'text',
   nickname: 'text',
-  'state.languages': 1,
   'state.country': 1,
 });
 

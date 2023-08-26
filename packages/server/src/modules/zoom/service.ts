@@ -12,6 +12,11 @@ const updateZoomUserRefreshToken = (userId: string, refreshToken: string) =>
     { user: userId },
     { user: userId, refreshToken, updatedAt: new Date() },
     { upsert: true, useFindAndModify: false },
+    (err, result) => {
+      if (err) {
+        throw err;
+      }
+    },
   );
 
 const getNewAccessToken = async (userId: string, refreshToken: string) => {

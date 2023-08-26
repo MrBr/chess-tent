@@ -55,8 +55,6 @@ const depopulate = (step: Partial<Step>): Partial<DepopulatedStep> => {
   if (step.tags) {
     toDepopulate.tags = step.tags?.map(value => value.id);
   }
-  console.log(step);
-  console.log(toDepopulate);
   return toDepopulate;
 };
 const StepModel = db.createModel<DepopulatedStep>(TYPE_STEP, stepSchema);

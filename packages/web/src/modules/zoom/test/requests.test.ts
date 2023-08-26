@@ -63,4 +63,30 @@ describe('Zoom requests', () => {
 
     expect(result.current.response).toBe(null);
   });
+
+  it('should return zak token if user is already authorized', async () => {
+    const { useApi } = hooks;
+    let { zoomZakToken } = requests;
+
+    zoomZakToken = mockDataResponse({ data: 'zak-token', error: null });
+
+    const { result } = renderHook(() => useApi(zoomZakToken));
+
+    await act(async () => result.current.fetch());
+
+    expect(result.current.response?.data).toBe('zak-token');
+  });
+
+  it('should return zak token not found if user is not authorized', async () => {
+    const { useApi } = hooks;
+    let { zoomZakToken } = requests;
+
+    zoomZakToken = mockDataResponse({ data: '', error: 'Zak token not found' });
+
+    const { result } = renderHook(() => useApi(zoomZakToken));
+
+    await act(async () => result.current.fetch());
+
+    expect(result.current.error).toBe('Zak token not found');
+  });
 });

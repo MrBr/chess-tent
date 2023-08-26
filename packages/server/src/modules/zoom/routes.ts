@@ -1,7 +1,18 @@
 import { service, middleware } from '@application';
-import { authorizeUserByCode, generateSignature } from './middleware';
+import {
+  authorizeUserByCode,
+  generateSignature,
+  getZakToken,
+} from './middleware';
 
 const { identify, toLocals, sendData } = middleware;
+
+service.registerGetRoute(
+  '/zoom/authorize',
+  identify,
+  getZakToken,
+  sendData('zoomZakToken'),
+);
 
 service.registerPostRoute(
   '/zoom/authorize',

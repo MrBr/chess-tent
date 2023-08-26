@@ -20,6 +20,12 @@ const ZoomProvider: Components['ZoomProvider'] = ({
     error: authError,
   } = useApi(requests.zoomAuthorize);
   const {
+    fetch: zakTokenFetch,
+    response: zakTokenResponse,
+    loading: zakTokenLoading,
+    error: zakTokenError,
+  } = useApi(requests.zoomZakToken);
+  const {
     fetch: signatureFetch,
     response: signatureResponse,
     loading: signatureLoading,
@@ -72,6 +78,25 @@ const ZoomProvider: Components['ZoomProvider'] = ({
   useEffect(() => {
     if (
       zoomContextState.role !== ZoomRole.Host ||
+      zoomContextState.hostUserZakToken ||
+      zakTokenLoading ||
+      zakTokenResponse ||
+      zakTokenError
+    ) {
+      return;
+    }
+    zakTokenFetch();
+  }, [
+    zoomContextState,
+    zakTokenError,
+    zakTokenLoading,
+    zakTokenResponse,
+    zakTokenFetch,
+  ]);
+
+  useEffect(() => {
+    if (
+      zoomContextState.role !== ZoomRole.Host ||
       !zoomContextState.authCode ||
       authLoading ||
       authResponse ||
@@ -113,21 +138,34 @@ const ZoomProvider: Components['ZoomProvider'] = ({
   ]);
 
   useEffect(() => {
-    if (
-      !signatureResponse?.data ||
-      zoomContextState.userSignature ||
-      (!authResponse?.data && zoomContextState.role === ZoomRole.Host)
-    ) {
-      return;
+    if (zakTokenResponse || zakTokenError) {
+      setZoomContextState(prevState => ({
+        ...prevState,
+        hostUserZakToken: zakTokenResponse?.data,
+        zakTokenRequested: true,
+      }));
     }
+  }, [zakTokenResponse, zakTokenError]);
+
+  useEffect(() => {
     setZoomContextState(prevState => ({
       ...prevState,
-      userSignature: signatureResponse.data,
       hostUserZakToken: authResponse?.data,
     }));
 
     removeQueryCode();
-  }, [signatureResponse, authResponse, zoomContextState, removeQueryCode]);
+  }, [authResponse, removeQueryCode]);
+
+  useEffect(() => {
+    if (!signatureResponse?.data || zoomContextState.userSignature) {
+      return;
+    }
+
+    setZoomContextState(prevState => ({
+      ...prevState,
+      userSignature: signatureResponse.data,
+    }));
+  }, [signatureResponse, authResponse, zoomContextState, zakTokenResponse]);
 
   return (
     <ZoomContext.Provider value={zoomContextState}>

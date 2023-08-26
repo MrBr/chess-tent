@@ -16,11 +16,13 @@ export enum ZoomConnectionStatus {
 export interface ZoomUserToken {
   user: User;
   refreshToken: string;
+  updatedAt: Date;
   type: typeof TYPE_ZOOM_USER_TOKEN;
 }
 
 export interface NormalizedZoomUserToken {
   user: User['id'];
   refreshToken: ZoomUserToken['refreshToken'];
+  updatedAt: ZoomUserToken['updatedAt'];
   type: ZoomUserToken['type'];
 }

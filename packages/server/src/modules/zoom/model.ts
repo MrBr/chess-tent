@@ -18,6 +18,10 @@ const zoomUserTokenSchema = db.createSchema<NormalizedZoomUserToken>(
       required: true,
       unique: true,
     } as unknown as string,
+    updatedAt: {
+      type: Date,
+      required: true,
+    } as unknown as Date,
     type: {
       type: String,
       default: TYPE_ZOOM_USER_TOKEN,

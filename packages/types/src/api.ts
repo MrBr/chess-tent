@@ -387,6 +387,7 @@ export interface Endpoints {
   findTags: Endpoint<RequestPost<'/tags', string>, TagsResponse>;
   tags: Endpoint<RequestGet<'/tags'>, TagsResponse>;
   // Zoom endpoints
+  zoomZakToken: Endpoint<RequestGet<'/zoom/authorize'>, ZoomResponse>;
   zoomAuthorize: Endpoint<
     RequestPost<'/zoom/authorize', { code: string; redirectUri: string }>,
     ZoomResponse

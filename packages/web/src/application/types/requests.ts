@@ -121,5 +121,6 @@ export interface Requests {
   tags: RequestFetch<Endpoints['tags']>;
 
   zoomAuthorize: RequestFetch<Endpoints['zoomAuthorize']>;
+  zoomZakToken: RequestFetch<Endpoints['zoomZakToken']>;
   zoomSignature: RequestFetch<Endpoints['zoomSignature']>;
 }

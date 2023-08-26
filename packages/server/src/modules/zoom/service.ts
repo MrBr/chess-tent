@@ -5,6 +5,65 @@ import { User, ZoomRole } from '@chess-tent/models';
 
 import { Authorization } from './constants';
 import { ZoomUserTokenModel } from './model';
+import { ZoomTokenNotFoundError } from './errors';
+
+const updateZoomUserRefreshToken = (userId: string, refreshToken: string) =>
+  ZoomUserTokenModel.findOneAndUpdate(
+    { user: userId },
+    { user: userId, refreshToken, updatedAt: new Date() },
+    { upsert: true, useFindAndModify: false },
+  );
+
+const getNewAccessToken = async (userId: string, refreshToken: string) => {
+  const { access_token: accessToken, refresh_token: newRefreshToken } =
+    await axios
+      .post(
+        'https://zoom.us/oauth/token',
+        {
+          grant_type: 'refresh_token',
+          refresh_token: refreshToken,
+        },
+        {
+          headers: {
+            Authorization: `Basic ${Authorization}`,
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        },
+      )
+      .then(data => data.data);
+
+  updateZoomUserRefreshToken(userId, newRefreshToken);
+
+  return accessToken;
+};
+
+const getZakToken = async ({
+  accessToken,
+  user,
+}: {
+  accessToken?: string;
+  user?: User;
+}) => {
+  if (!accessToken && user) {
+    const result = await ZoomUserTokenModel.findOne({ user: user.id }).then(
+      result => result?.toObject(),
+    );
+
+    if (!result?.refreshToken) {
+      throw new ZoomTokenNotFoundError();
+    }
+
+    accessToken = await getNewAccessToken(user.id, result.refreshToken);
+  }
+
+  return axios
+    .get('https://api.zoom.us/v2/users/me/token?type=zak', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+    .then(data => data.data.token);
+};
 
 const authorizeUserByCode = async (
   code: string,
@@ -29,22 +88,9 @@ const authorizeUserByCode = async (
     )
     .then(data => data.data);
 
-  ZoomUserTokenModel.findOneAndUpdate(
-    { user: user.id },
-    { user: user.id, refreshToken },
-    { upsert: true, useFindAndModify: false },
-    error => {
-      if (error) console.error(error);
-    },
-  );
+  updateZoomUserRefreshToken(user.id, refreshToken);
 
-  return axios
-    .get('https://api.zoom.us/v2/users/me/token?type=zak', {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    })
-    .then(data => data.data.token);
+  return getZakToken({ accessToken });
 };
 
 const generateSignature = async (meetingNumber: string, role: ZoomRole) => {
@@ -66,4 +112,4 @@ const generateSignature = async (meetingNumber: string, role: ZoomRole) => {
   );
 };
 
-export { authorizeUserByCode, generateSignature };
+export { authorizeUserByCode, generateSignature, getZakToken };

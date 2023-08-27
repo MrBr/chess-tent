@@ -12,7 +12,10 @@
     "compile": "tsc -p tsconfig.json",
     "test": "yarn test-db-up && yarn jest && yarn test-db-down",
     "test-db-up": "docker-compose up -d",
-    "test-db-down": "docker-compose down --remove-orphans"
+    "test-db-down": "docker-compose down --remove-orphans",
+    "migrate:create": "cd ./src/application/migrations/ && migrate create --template-file ./migrations/_template.ts",
+    "migrate:up": "cd ./src/application/migrations/ && migrate up --compiler=\"ts:./compiler.js\"",
+    "migrate:down": "cd ./src/application/migrations/ && migrate down --compiler=\"ts:./compiler.js\""
   },
   "author": "Luka Bracanovic",
   "devDependencies": {
@@ -27,6 +30,7 @@
     "@types/mongoose": "^5.10.5",
     "@types/supertest": "^2.0.12",
     "@types/ws": "^7.2.6",
+    "migrate": "^2.0.0",
     "supertest": "^6.3.3"
   },
   "dependencies": {

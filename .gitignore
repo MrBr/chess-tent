@@ -34,3 +34,6 @@ yarn-error.log*
 
 **.OLD
 /packages/server/server-test-report.html
+
+# migrations
+.migrate

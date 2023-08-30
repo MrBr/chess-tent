@@ -15,6 +15,7 @@ application.register(() => import('./mentorship'));
 application.register(() => import('./notification'));
 application.register(() => import('./tag'));
 application.register(() => import('./subject'));
+application.register(() => import('./step'));
 application.register(() => import('./mailgun'));
 application.register(() => import('./role'));
 application.register(() => import('./rtc'));

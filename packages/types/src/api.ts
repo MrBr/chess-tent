@@ -34,6 +34,13 @@ export type LessonsFilters = {
   hasDocId?: boolean;
   published?: boolean;
 };
+
+export type SubjectFilters = {
+  search?: string;
+  tagIds?: Tag['id'][];
+  difficulty?: Difficulty;
+};
+
 export type MyLessonsFilters = Omit<LessonsFilters, 'users' | 'owner'>;
 export type UpdateNotificationsRequest = {
   ids: Notification['id'][];

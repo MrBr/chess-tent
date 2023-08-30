@@ -26,4 +26,15 @@ module.exports = {
   // Currently, JEST doesn't support a function export which is necessary to await module initialisation
   // Needed version 28.0.6. - https://github.com/facebook/jest/issues/11038#issuecomment-1055159681
   // setupFiles: ['./src/setup.jest.ts'],
+  reporters: [
+    'default',
+    [
+      'jest-html-reporter',
+      {
+        pageTitle: 'Server Test Report',
+        includeFailureMsg: true,
+        outputPath: './server-test-report.html',
+      },
+    ],
+  ],
 };

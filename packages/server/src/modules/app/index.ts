@@ -24,8 +24,9 @@ import {
 import { BadRequest } from './errors';
 import { formatAppLink, shouldStartHttpsServer } from './utils';
 
-const { connect } = db;
+const { connect, disconnect } = db;
 
+let server: Server;
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -60,12 +61,16 @@ application.service.registerDeleteRoute = (path, ...middlware) =>
 application.service.generateIndex = generateIndex;
 application.utils.formatAppLink = formatAppLink;
 
-application.start = () => {
-  connect();
+application.stop = async () => {
+  await disconnect();
+  server?.close(() => console.log('closing http server'));
+  socket?.close();
+};
+
+application.start = async () => {
+  await connect();
   // Error handler must apply after all routes
   app.use(application.middleware.errorHandler);
-
-  let server: Server;
 
   if (shouldStartHttpsServer()) {
     server = startHttpsServer(app);
@@ -77,7 +82,13 @@ application.start = () => {
 };
 
 application.test.start = async () => {
-  connect();
+  generateUniqueDbName();
+  await connect();
   // TODO - should be a part of the lifecycle hook/event
   app.use(application.middleware.errorHandler);
+};
+
+const generateUniqueDbName = (): void => {
+  const timestamp = new Date().toISOString().replace(/[^a-zA-Z0-9]/g, '');
+  process.env.DB_NAME = `chessTent_${timestamp}`;
 };

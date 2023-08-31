@@ -1,7 +1,8 @@
 import { Step, StepRoot, StepType, TYPE_STEP } from './types';
 import { updateSubject } from '../subject';
 import { createService } from '../_helpers';
-import { replaceStepRecursive, removeStepRecursive } from './_helpers';
+import { removeStepRecursive, replaceStepRecursive } from './_helpers';
+import { User } from '../user';
 
 // Step
 const isStep = (entity: unknown): entity is Step =>
@@ -383,7 +384,7 @@ const updateStep = (step: Step, patch: Partial<Step>) =>
   updateSubject(step, patch);
 
 // TODO: Keep eye on this when changing step update logic
-// or if something strange starts happening
+//  or if something strange starts happening
 function keepArrays(objValue: any, srcValue: any, key: string) {
   if (Array.isArray(srcValue)) {
     return srcValue;
@@ -428,6 +429,7 @@ const createStep = <T>(
   id: string,
   stepType: T extends Step<infer U, infer K> ? K : never,
   state: T extends Step<infer U, infer K> ? U : never,
+  data = {},
 ): Step<typeof state, typeof stepType> => ({
   id,
   stepType,
@@ -436,6 +438,7 @@ const createStep = <T>(
     steps: [],
     ...state,
   },
+  ...data,
 });
 
 export {

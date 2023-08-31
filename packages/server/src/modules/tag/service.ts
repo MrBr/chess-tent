@@ -1,5 +1,5 @@
 import { Tag } from '@chess-tent/models';
-import { TagModel } from './model';
+import { addTag, TagModel } from './model';
 
 export const getAll = (): Promise<Tag[]> =>
   new Promise(resolve => {
@@ -22,3 +22,5 @@ export const findTags = (startsWith: string): Promise<Tag[]> =>
         throw err;
       });
   });
+
+export const addTagService = async (tag: Tag) => addTag(tag);

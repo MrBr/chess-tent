@@ -16,6 +16,7 @@ import {
   Entity,
   Role,
   NormalizedRole,
+  Tag,
 } from '@chess-tent/models';
 import { Socket } from 'socket.io';
 import { Server as HttpServer } from 'http';
@@ -31,6 +32,7 @@ import {
   DateRange,
 } from '@chess-tent/types';
 import { RecordAction } from '@chess-tent/redux-record/types';
+import * as http from 'http';
 
 export type AppDocument<T> = T & Document & { v: number };
 export type EntityDocument<T = Entity> = AppDocument<T>;
@@ -48,7 +50,8 @@ export type Action = {
 };
 
 export type DB = {
-  connect: () => void;
+  connect: () => Promise<void>;
+  disconnect: () => Promise<void>;
   connection: Connection;
   testUniqueFields: <T>(model: Model<T>, data: Partial<T>) => Promise<string[]>;
   createSchema: <T extends {}>(
@@ -139,6 +142,8 @@ export type Service = {
     projection?: string,
   ) => Promise<User | null>;
 
+  addUser: (user: User) => Promise<void>;
+  addTag: (tag: Tag) => Promise<void>;
   generateIndex: () => string;
   sendMail: (data: MailData) => Promise<
     | {
@@ -270,7 +275,9 @@ export type Application = {
   utils: Utils;
   register: typeof register;
   init: () => Promise<any>;
-  start: () => void;
+  start: () => Promise<void>;
+  stop: () => Promise<void>;
+  server: http.Server;
   errors: Errors;
   test: Test;
 };
@@ -306,6 +313,7 @@ export type SocketStream =
 
 export type SocketService = {
   init: (server: HttpServer) => void;
+  close: () => void;
   middleware: (
     stream: SocketStream,
     next: (stream: SocketStream) => void,

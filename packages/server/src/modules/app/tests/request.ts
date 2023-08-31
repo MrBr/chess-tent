@@ -2,9 +2,9 @@ import supertest, { SuperTest, Test } from 'supertest';
 
 import application from '@application';
 import { TestRequest } from '@types';
+import { User } from '@chess-tent/models';
 
-const tokenCookie =
-  'token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiMTgwYmQxMDItMjNiNC00MzkxLThhOTUtMzhkYjliN2QxYWJhIn0sImlhdCI6MTY5MTUwMTU2Nn0.UmmBVVMY0Ruxox61CaINh3rtSF73s2V9TD-0nWf2hpw';
+import { generateApiToken } from '../../../application/tests';
 
 class Request implements TestRequest {
   private request: SuperTest<Test>;
@@ -13,6 +13,7 @@ class Request implements TestRequest {
   private cookies: string[];
   private hasSession: boolean;
   private data?: Object | null;
+  private user?: User | null;
 
   constructor() {
     this.request = supertest(application.service.router);
@@ -27,6 +28,7 @@ class Request implements TestRequest {
     this.cookies = [];
     this.hasSession = true;
     this.data = null;
+    this.user = null;
   }
 
   get(url: string) {
@@ -41,13 +43,15 @@ class Request implements TestRequest {
     return this;
   }
 
-  setCookies() {
-    this.cookies.push(tokenCookie);
+  authorize(user: User) {
+    this.user = user;
+    this.cookies.push(`token=${generateApiToken(user)}`);
+
     return this;
   }
 
-  noSession() {
-    this.hasSession = false;
+  setCookies(cookies: string[]) {
+    this.cookies = [...this.cookies, ...cookies];
     return this;
   }
 
@@ -58,10 +62,6 @@ class Request implements TestRequest {
 
   async run() {
     const req = this.request[this.method](this.url);
-
-    if (this.hasSession) {
-      this.cookies.push(tokenCookie);
-    }
 
     if (this.cookies.length > 0) {
       req.set('Cookie', this.cookies);

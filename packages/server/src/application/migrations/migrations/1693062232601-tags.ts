@@ -15,8 +15,12 @@ const defaultTags = [
 
 export const up = async function (next: () => {}) {
   const db = await getDb();
-  db.collection('tags').findOne({ text: defaultTags[0].text });
-  db.collection('tags').insert(defaultTags);
+  const result = await db
+    .collection('tags')
+    .findOne({ text: defaultTags[0].text });
+  if (!result) {
+    await db.collection('tags').insertMany(defaultTags);
+  }
   next();
 };
 

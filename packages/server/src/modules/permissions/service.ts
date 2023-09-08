@@ -1,10 +1,8 @@
 import {
   Activity,
   Chapter,
-  generalizeObjectType,
+  hasPermissions,
   Lesson,
-  Permission,
-  RolePrivileges,
   Step,
   TYPE_PERMISSION,
   User,
@@ -13,8 +11,6 @@ import { DepopulatedPermission, PermissionModel } from './model';
 import { v4 as uuid } from 'uuid';
 import { FilterQuery } from 'mongoose';
 import { AppDocument } from '@types';
-import { DepopulatedStep, StepModel } from '../step/model';
-import _ from 'lodash';
 
 export const addPermissionService = async (
   object: Step | Chapter | Lesson | Activity,
@@ -43,18 +39,11 @@ export const getPermissions = async (
     holder: holder.id,
     holderType: holder.type,
   };
+
+  // Once UserGroups are implemented, we'll have to
+  // filter permissions with all the userGroups user
+  // is assigned to
   const permissions = await PermissionModel.find(query).lean().exec();
   const roles = permissions.map(item => item.role);
-
-  const objectType = generalizeObjectType(object.type);
-
-  let found = false;
-  roles.forEach((role: string) => {
-    if (RolePrivileges[objectType][role]?.includes(action)) {
-      found = true;
-      return;
-    }
-  });
-
-  return found;
+  return new Promise<boolean>(() => hasPermissions(roles, object.type, action));
 };

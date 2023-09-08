@@ -15,6 +15,10 @@ export interface NormalizedRole<T> {
   role: T;
 }
 
+// I like readability of roles structured in this object,
+// but it's not good enough for all it needs to do.
+// Explicit duplication of action is not an acceptable solution
+// for permission inheritance.
 export const RolePrivileges = {
   Subject: {
     Viewer: ['clone', 'import'],
@@ -51,22 +55,42 @@ export const RolePrivileges = {
   },
 };
 
-export const generalizeObjectType = (
-  objectType: string,
-): 'Subject' | 'Activity' => {
+export const RolePrivilegesJson: any = JSON.parse(
+  JSON.stringify(RolePrivileges),
+);
+
+const getRoleDefinitionsByObjectType = (objectType: String): any => {
   switch (objectType) {
     case TYPE_STEP:
     case TYPE_CHAPTER:
     case TYPE_LESSON:
-      return 'Subject';
+      return RolePrivileges.Subject;
     case TYPE_ACTIVITY:
-      return 'Activity';
+      return RolePrivileges.Activity;
     // case TYPE_USER_GROUP:
-    //   return JSON.stringify(RolePrivileges.UserGroup);
+    //   return RolePrivileges.UserGroup;
     default:
       throw new Error(
         'Unable to find RolePrivileges definition of object type for ' +
           objectType,
       );
   }
+};
+
+export const hasPermissions = (
+  roles: string[],
+  objectType: string,
+  action: string,
+): boolean => {
+  const objectTypeRoleDefinitions = getRoleDefinitionsByObjectType(objectType);
+
+  // todo: implement automatic permission inheritance. MISSING!!
+  let found = false;
+  roles.forEach((role: string) => {
+    if (objectTypeRoleDefinitions[role]?.includes(action)) {
+      found = true;
+      return;
+    }
+  });
+  return found;
 };

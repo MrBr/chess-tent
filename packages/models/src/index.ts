@@ -10,6 +10,7 @@ import { Analysis, NormalizedAnalysis } from './analysis';
 import { NormalizedNotification, Notification } from './notification';
 import { Mentorship, NormalizedMentorship } from './mentorship';
 import { ZoomUserToken, NormalizedZoomUserToken } from './zoom';
+import { NormalizedPermission, Permission } from './permissions';
 
 export * from './analysis';
 export * from './notification';
@@ -25,6 +26,7 @@ export * from './mentorship';
 export * from './tag';
 export * from './role';
 export * from './zoom';
+export * from './permissions';
 
 export * from './_helpers';
 
@@ -40,7 +42,8 @@ export type Entity =
   | Analysis<any> // :o
   | Notification
   | Mentorship
-  | ZoomUserToken;
+  | ZoomUserToken
+  | Permission;
 
 export type NormalizedEntity =
   | NormalizedUser
@@ -54,4 +57,5 @@ export type NormalizedEntity =
   | NormalizedAnalysis<any> // :o
   | NormalizedNotification
   | NormalizedMentorship
-  | NormalizedZoomUserToken;
+  | NormalizedZoomUserToken
+  | NormalizedPermission;

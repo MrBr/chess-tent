@@ -21,3 +21,4 @@ application.register(() => import('./role'));
 application.register(() => import('./rtc'));
 application.register(() => import('./contact'));
 application.register(() => import('./zoom'));
+application.register(() => import('./permissions'));

@@ -33,6 +33,7 @@ import {
 } from '@chess-tent/types';
 import { RecordAction } from '@chess-tent/redux-record/types';
 import * as http from 'http';
+import { Activity, Chapter, Lesson, Step } from '@chess-tent/models/src';
 
 export type AppDocument<T> = T & Document & { v: number };
 export type EntityDocument<T = Entity> = AppDocument<T>;
@@ -144,6 +145,11 @@ export type Service = {
 
   addUser: (user: User) => Promise<void>;
   addTag: (tag: Tag) => Promise<void>;
+  addPermission: (
+    object: Step | Chapter | Lesson | Activity, // | UserGroup
+    role: string,
+    holder: User, // | UserGroup
+  ) => Promise<void>;
   generateIndex: () => string;
   sendMail: (data: MailData) => Promise<
     | {

@@ -63,10 +63,7 @@ export const findActivities: MiddlewareFunction = (req, res, next) => {
 export const canEditActivities =
   (key: string): MiddlewareFunction =>
   (req, res, next) => {
-    const canEdit = service.canEditActivities(
-      res.locals[key],
-      res.locals.me.id,
-    );
+    const canEdit = service.canEditActivities(res.locals[key], res.locals.me);
     if (!canEdit) {
       throw new UnauthorizedActivityEditError();
     }

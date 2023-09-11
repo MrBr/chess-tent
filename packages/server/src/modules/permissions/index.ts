@@ -1,4 +1,5 @@
 import application from '@application';
-import { addPermissionService } from './service';
+import { addPermissionService, hasPermissionToDoService } from './service';
 
 application.service.addPermission = addPermissionService;
+application.service.hasPermissionToDo = hasPermissionToDoService;

@@ -1,6 +1,6 @@
 import { FilterQuery } from 'mongoose';
 import { AppDocument } from '@types';
-import { service, db, utils } from '@application';
+import application, { db, service, utils } from '@application';
 import { Activity, SubjectPathUpdate, User } from '@chess-tent/models';
 import { ActivityFilters } from '@chess-tent/types';
 import { ActivityModel, depopulate, DepupulatedActivity } from './model';
@@ -129,12 +129,19 @@ export const findActivities = (
       });
   });
 
-export const canEditActivities = (
+export const canEditActivities = async (
   activities: Activity[] | Activity,
-  userId: User['id'],
-) => true; // todo: rework
-// Array.isArray(activities)
-//   ? activities
-//   : [activities].every(activity =>
-//       activity.roles.some(({ user }) => user.id === userId),
-//     );
+  user: User,
+) => {
+  return new Promise<boolean>(function resolve() {
+    (Array.isArray(activities) ? activities : [activities]).every(
+      async activity => {
+        return await application.service.hasPermissionToDo(
+          user,
+          activity,
+          'participate',
+        );
+      },
+    );
+  });
+};

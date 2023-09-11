@@ -147,6 +147,11 @@ export type Service = {
     role: string,
     holder: User, // | UserGroup
   ) => Promise<void>;
+  hasPermissionToDo: (
+    subject: User,
+    object: Step | Chapter | Lesson | Activity, // | UserGroup
+    predicate: string,
+  ) => Promise<boolean>;
   generateIndex: () => string;
   sendMail: (data: MailData) => Promise<
     | {

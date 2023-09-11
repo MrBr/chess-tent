@@ -144,6 +144,7 @@ export type Service = {
 
   addUser: (user: User) => Promise<void>;
   addTag: (tag: Tag) => Promise<void>;
+  findTags: (startsWith: string) => Promise<Tag[]>;
   generateIndex: () => string;
   sendMail: (data: MailData) => Promise<
     | {
@@ -339,6 +340,7 @@ export type SocketService = {
 
 export interface Test {
   start: () => Promise<void>;
+  migrate: () => Promise<void>;
 }
 
 export class AppError extends Error {}

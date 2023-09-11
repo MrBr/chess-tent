@@ -2,7 +2,6 @@ import { User } from '../user';
 import { TYPE_STEP } from '../step';
 import { TYPE_CHAPTER } from '../chapter';
 import { TYPE_LESSON } from '../lesson';
-import { array } from 'yup';
 import { TYPE_ACTIVITY } from '../activity';
 
 export interface Role<T> {
@@ -19,56 +18,85 @@ export interface NormalizedRole<T> {
 // but it's not good enough for all it needs to do.
 // Explicit duplication of action is not an acceptable solution
 // for permission inheritance.
-export const RolePrivileges = {
+
+const SubjectViewerPrivileges = ['clone', 'import'];
+const SubjectEditorPrivileges = [...SubjectViewerPrivileges, 'updateContent'];
+const SubjectOwnerPrivileges = [
+  ...SubjectEditorPrivileges,
+  'editPermissions',
+  'deleteSubject',
+];
+const ActivityParticipatorPrivileges = ['participate'];
+const ActivityModeratorPrivileges = [
+  ...ActivityParticipatorPrivileges,
+  'editSubject',
+  'editActivity',
+  'editParticipants',
+];
+const ActivityOwnerPermissions = [
+  ...ActivityModeratorPrivileges,
+  'editPermissions',
+  'deleteActivity',
+  'cloneActivity',
+  'exportSubjects',
+];
+
+const UserGroupMembersPermissions = [
+  'exitGroup', // do we need such permission?
+  // 'inheritsPermissionsOfTheUserGroup' <-- goes without explicit check but needs different implementation todo
+];
+const UserGroupViewerPermissions = [
+  ...UserGroupMembersPermissions,
+  'viewGroupMembers',
+];
+const UserGroupAdminPermissions = [
+  ...UserGroupViewerPermissions,
+  'editNonAdminGroupMembers',
+  'canAddMembersByInvite',
+  'canEditMembers',
+  'canEditViewers',
+];
+const UserGroupOwnerPermissions = [
+  ...UserGroupAdminPermissions,
+  'deleteGroup',
+  'editAdmins',
+  'editOwners',
+];
+
+type RolePrivileges = {
+  [category: string]: {
+    [role: string]: string[];
+  };
+};
+export const rolePrivileges: RolePrivileges = {
   Subject: {
-    Viewer: ['clone', 'import'],
-    Editor: [
-      // inherits actions that Viewer can do
-      'updateContent',
-      // this.Viewer ... <-- would be cool if we could do smth like this todo
-    ],
-    Owner: ['editPermissions', 'deleteSubject'],
+    Viewer: SubjectViewerPrivileges,
+    Editor: SubjectEditorPrivileges,
+    Owner: SubjectOwnerPrivileges,
   },
   Activity: {
-    Participator: ['participate'],
-    Moderator: ['editSubject', 'editActivity', 'editParticipants'],
-    Owner: [
-      'editPermissions',
-      'deleteActivity',
-      'cloneActivity',
-      'exportSubjects',
-    ],
+    Participator: ActivityParticipatorPrivileges,
+    Moderator: ActivityModeratorPrivileges,
+    Owner: ActivityOwnerPermissions,
   },
   UserGroup: {
-    Member: [
-      'exitGroup', // do we need such permission?
-      // 'inheritsPermissionsOfTheUserGroup' <-- goes without explicit check but needs different implementation todo
-    ],
-    Viewer: ['viewGroupMembers'],
-    Admin: [
-      'editNonAdminGroupMembers',
-      'canAddMembersByInvite',
-      'canEditMembers',
-      'canEditViewers',
-    ],
-    Owner: ['deleteGroup', 'editAdmins', 'editOwners'], // we might need rule a that we can't leave group owner-less
+    Member: UserGroupMembersPermissions,
+    Viewer: UserGroupViewerPermissions,
+    Admin: UserGroupAdminPermissions,
+    Owner: UserGroupOwnerPermissions, // we might need rule a that we can't leave group owner-less
   },
 };
-
-export const RolePrivilegesJson: any = JSON.parse(
-  JSON.stringify(RolePrivileges),
-);
 
 const getRoleDefinitionsByObjectType = (objectType: String): any => {
   switch (objectType) {
     case TYPE_STEP:
     case TYPE_CHAPTER:
     case TYPE_LESSON:
-      return RolePrivileges.Subject;
+      return rolePrivileges.Subject;
     case TYPE_ACTIVITY:
-      return RolePrivileges.Activity;
+      return rolePrivileges.Activity;
     // case TYPE_USER_GROUP:
-    //   return RolePrivileges.UserGroup;
+    //   return rolePrivileges.UserGroup;
     default:
       throw new Error(
         'Unable to find RolePrivileges definition of object type for ' +
@@ -84,7 +112,6 @@ export const hasPermissions = (
 ): boolean => {
   const objectTypeRoleDefinitions = getRoleDefinitionsByObjectType(objectType);
 
-  // todo: implement automatic permission inheritance. MISSING!!
   let found = false;
   roles.forEach((role: string) => {
     if (objectTypeRoleDefinitions[role]?.includes(action)) {

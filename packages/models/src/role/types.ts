@@ -1,23 +1,7 @@
-import { User } from '../user';
 import { TYPE_STEP } from '../step';
 import { TYPE_CHAPTER } from '../chapter';
 import { TYPE_LESSON } from '../lesson';
 import { TYPE_ACTIVITY } from '../activity';
-
-export interface Role<T> {
-  user: User;
-  role: T;
-}
-
-export interface NormalizedRole<T> {
-  user: User['id'];
-  role: T;
-}
-
-// I like readability of roles structured in this object,
-// but it's not good enough for all it needs to do.
-// Explicit duplication of action is not an acceptable solution
-// for permission inheritance.
 
 const SubjectViewerPrivileges = ['clone', 'import'];
 const SubjectEditorPrivileges = [...SubjectViewerPrivileges, 'updateContent'];

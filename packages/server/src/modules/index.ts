@@ -17,7 +17,6 @@ application.register(() => import('./tag'));
 application.register(() => import('./subject'));
 application.register(() => import('./step'));
 application.register(() => import('./mailgun'));
-application.register(() => import('./role'));
 application.register(() => import('./rtc'));
 application.register(() => import('./contact'));
 application.register(() => import('./zoom'));

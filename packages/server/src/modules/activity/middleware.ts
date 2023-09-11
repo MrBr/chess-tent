@@ -79,19 +79,20 @@ export const sendActivity: MiddlewareFunction = (req, res, next) => {
     throw new ActivityNotPreparedError();
   }
   // TODO - verify if this is working
-  [...activity.roles]
-    .map(({ user }) => user)
-    .filter(({ id }) => id !== res.locals.me.id)
-    .forEach(({ id }) => {
-      // Don't send lesson to the same user that assign it
-      socket.sendServerAction(`user-${id}`, {
-        type: PUSH_RECORD,
-        payload: { value: activity },
-        meta: {
-          key: `trainings-${id}`,
-        },
-      });
-    });
+  // TODO: rework
+  // [...activity.roles]
+  //   .map(({ user }) => user)
+  //   .filter(({ id }) => id !== res.locals.me.id)
+  //   .forEach(({ id }) => {
+  //     // Don't send lesson to the same user that assign it
+  //     socket.sendServerAction(`user-${id}`, {
+  //       type: PUSH_RECORD,
+  //       payload: { value: activity },
+  //       meta: {
+  //         key: `trainings-${id}`,
+  //       },
+  //     });
+  //   });
 
   next();
 };

@@ -14,8 +14,6 @@ import {
   User,
   Subject,
   Entity,
-  Role,
-  NormalizedRole,
   Tag,
 } from '@chess-tent/models';
 import { Socket } from 'socket.io';
@@ -61,7 +59,6 @@ export type DB = {
     useDefault?: boolean,
   ) => Schema;
   roleSchema: Schema;
-  depopulateRole: <T>(role: Role<T>) => NormalizedRole<T>;
   createModel: <T>(type: string, schema: Schema) => Model<AppDocument<T>>;
   orQueries: <T extends FilterQuery<any>>(
     ...args: T[]

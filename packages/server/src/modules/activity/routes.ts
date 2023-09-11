@@ -1,6 +1,6 @@
 import application, { middleware } from '@application';
 import { ActivityFilters } from '@chess-tent/types';
-import { LessonActivityRole, Role, TYPE_ACTIVITY } from '@chess-tent/models';
+import { TYPE_ACTIVITY } from '@chess-tent/models';
 import {
   canEditActivities,
   deleteActivity,
@@ -45,13 +45,17 @@ application.service.registerPostRoute(
   // - configure notification.type instead of notificationType
   // - create/send notification should be the same?
   conditional((req, res) => !res.locals.activity.v)(
-    toLocals('notification.users', (req, res) =>
-      res.locals.activity.roles
-        .map(
-          ({ user, role }: Role<LessonActivityRole>) =>
-            role === LessonActivityRole.STUDENT && user,
-        )
-        .filter(Boolean),
+    toLocals(
+      'notification.users',
+      (req, res) =>
+        // todo: rework
+        () => {},
+      // res.locals.activity.roles
+      //   .map(
+      //     ({ user, role }: Role<LessonActivityRole>) =>
+      //       role === LessonActivityRole.STUDENT && user,
+      //   )
+      //   .filter(Boolean),
     ),
     toLocals('notification.type', TYPE_ACTIVITY),
     toLocals('notification.state', (req, res) => ({

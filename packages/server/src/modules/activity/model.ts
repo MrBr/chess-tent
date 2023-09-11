@@ -13,7 +13,7 @@ export interface DepupulatedActivity {
   state: Activity['state'];
   subject: Activity['subject'];
   subjectType: Activity['subjectType'];
-  roles: NormalizedActivity['roles'];
+  // roles: NormalizedActivity['roles'];
   date?: NormalizedActivity['date'];
   weekly?: NormalizedActivity['weekly'];
   title?: NormalizedActivity['title'];
@@ -32,7 +32,7 @@ const activitySchema = db.createSchema<DepupulatedActivity>(
     subjectType: {
       type: String,
     } as unknown as DepupulatedActivity['subjectType'],
-    roles: [db.roleSchema] as unknown as DepupulatedActivity['roles'],
+    // roles: [db.roleSchema] as unknown as DepupulatedActivity['roles'],
     state: {
       type: Schema.Types.Mixed,
       required: true,
@@ -72,9 +72,9 @@ const depopulate = <T extends Activity | Partial<Activity>>(
   const depopulatedActivity = {} as T extends Activity
     ? DepupulatedActivity
     : Partial<DepupulatedActivity>;
-  if (activity.roles) {
-    depopulatedActivity.roles = activity.roles.map(db.depopulateRole);
-  }
+  // if (activity.roles) {
+  //   depopulatedActivity.roles = activity.roles.map(db.depopulateRole);
+  // }
 
   if (activity.subject?.type) {
     depopulatedActivity.subjectType = activity.subject.type;

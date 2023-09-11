@@ -4,7 +4,7 @@ import application from '@application';
 import { TestRequest } from '@types';
 import { User } from '@chess-tent/models';
 
-import { generateApiToken } from '../../../application/tests';
+const { generateApiToken } = application.service;
 
 class Request implements TestRequest {
   private request: SuperTest<Test>;

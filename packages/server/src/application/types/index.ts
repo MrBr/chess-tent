@@ -148,6 +148,7 @@ export type Service = {
     holder: User, // | UserGroup
   ) => Promise<void>;
   hasPermissionToDo: (
+    // todo: think of better name later
     subject: User,
     object: Step | Chapter | Lesson | Activity, // | UserGroup
     predicate: string,

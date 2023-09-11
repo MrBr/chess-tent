@@ -83,7 +83,7 @@ export const rolePrivileges: RolePrivileges = {
     Member: UserGroupMembersPermissions,
     Viewer: UserGroupViewerPermissions,
     Admin: UserGroupAdminPermissions,
-    Owner: UserGroupOwnerPermissions, // we might need rule a that we can't leave group owner-less
+    Owner: UserGroupOwnerPermissions, // we might need rule a that we can't leave group owner-less (or cover it with business logic rather)
   },
 };
 

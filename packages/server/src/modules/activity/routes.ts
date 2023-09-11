@@ -75,7 +75,7 @@ application.service.registerPostRoute(
   toLocals('activity.id', req => req.params.activityId),
   toLocals('updates', req => req.body),
   getActivity,
-  canEditActivities('activity'),
+  canEditActivities('activity'), //todo: this permission check will allow all participants to edit any aspect of activity. Action needs to be more granular.
   updateActivity,
   sendStatusOk,
 );

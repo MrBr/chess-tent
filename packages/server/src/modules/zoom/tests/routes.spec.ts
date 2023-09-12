@@ -7,17 +7,17 @@ import { TestRequest } from '@types';
 
 import { generateCoach } from '../../../application/tests';
 
-beforeAll(() => application.test.start());
-
 let request: TestRequest;
 let user: User;
 
 beforeAll(async () => {
-  request = application.test.request;
+  await application.test.start();
   user = await generateCoach();
 });
 
-afterEach(() => request.reset());
+beforeEach(() => {
+  request = application.test.request.init();
+});
 
 describe('GET /zoom/authorize', () => {
   it('should return unauthorized status', async () => {

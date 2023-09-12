@@ -20,10 +20,8 @@ class Request implements TestRequest {
     this.cookies = [];
   }
 
-  reset() {
-    this.url = process.env.API_BASE_PATH || '';
-    this.cookies = [];
-    this.data = null;
+  init() {
+    return new Request();
   }
 
   get(url: string) {

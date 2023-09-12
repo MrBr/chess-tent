@@ -338,13 +338,13 @@ export type SocketService = {
 };
 
 export interface TestRequest {
+  init: () => TestRequest;
   get: (url: string) => this;
   post: (url: string) => this;
   setAuthorization: (user: User) => this;
   setCookies: (cookies: string[]) => this;
   setBody: (data: Object) => this;
   execute: () => Promise<any>;
-  reset: () => void;
 }
 
 export interface Test {

@@ -72,9 +72,6 @@ const depopulate = <T extends Activity | Partial<Activity>>(
   const depopulatedActivity = {} as T extends Activity
     ? DepupulatedActivity
     : Partial<DepupulatedActivity>;
-  // if (activity.roles) {
-  //   depopulatedActivity.roles = activity.roles.map(db.depopulateRole);
-  // }
 
   if (activity.subject?.type) {
     depopulatedActivity.subjectType = activity.subject.type;

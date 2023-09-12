@@ -11,24 +11,19 @@ class Request implements TestRequest {
   private method: 'get' | 'post';
   private url: string;
   private cookies: string[];
-  private hasSession: boolean;
   private data?: Object | null;
-  private user?: User | null;
 
   constructor() {
     this.request = supertest(application.service.router);
     this.url = process.env.API_BASE_PATH || '';
     this.method = 'get';
     this.cookies = [];
-    this.hasSession = true;
   }
 
   reset() {
     this.url = process.env.API_BASE_PATH || '';
     this.cookies = [];
-    this.hasSession = true;
     this.data = null;
-    this.user = null;
   }
 
   get(url: string) {
@@ -44,7 +39,6 @@ class Request implements TestRequest {
   }
 
   setAuthorization(user: User) {
-    this.user = user;
     this.cookies.push(`token=${generateApiToken(user)}`);
 
     return this;

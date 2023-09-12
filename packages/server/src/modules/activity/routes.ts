@@ -31,7 +31,7 @@ application.service.registerPostRoute(
     const activity = await activityService.getActivity(req.body.id);
     if (
       activity &&
-      !activityService.canEditActivities(activity, res.locals.me.id)
+      !(await activityService.canEditActivities(activity, res.locals.me.id))
     ) {
       throw new UnauthorizedActivityEditError();
     }
@@ -45,18 +45,12 @@ application.service.registerPostRoute(
   // - configure notification.type instead of notificationType
   // - create/send notification should be the same?
   conditional((req, res) => !res.locals.activity.v)(
-    toLocals(
-      'notification.users',
-      (req, res) =>
-        // todo: rework
-        () => {},
-      // res.locals.activity.roles
-      //   .map(
-      //     ({ user, role }: Role<LessonActivityRole>) =>
-      //       role === LessonActivityRole.STUDENT && user,
-      //   )
-      //   .filter(Boolean),
-    ),
+    toLocals('notification.users', async (req, res) => {
+      await application.service.getUsersWithRole(
+        res.locals.activity,
+        'Participator',
+      );
+    }),
     toLocals('notification.type', TYPE_ACTIVITY),
     toLocals('notification.state', (req, res) => ({
       activityId: res.locals.activity.id,

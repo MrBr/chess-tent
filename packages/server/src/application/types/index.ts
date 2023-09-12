@@ -340,10 +340,10 @@ export type SocketService = {
 export interface TestRequest {
   get: (url: string) => this;
   post: (url: string) => this;
-  authorize: (user: User) => this;
+  setAuthorization: (user: User) => this;
   setCookies: (cookies: string[]) => this;
-  send: (data: Object) => this;
-  run: () => Promise<any>;
+  setBody: (data: Object) => this;
+  execute: () => Promise<any>;
   reset: () => void;
 }
 

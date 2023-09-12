@@ -43,7 +43,7 @@ class Request implements TestRequest {
     return this;
   }
 
-  authorize(user: User) {
+  setAuthorization(user: User) {
     this.user = user;
     this.cookies.push(`token=${generateApiToken(user)}`);
 
@@ -55,12 +55,12 @@ class Request implements TestRequest {
     return this;
   }
 
-  send(newData: Object) {
+  setBody(newData: Object) {
     this.data = newData;
     return this;
   }
 
-  async run() {
+  async execute() {
     const req = this.request[this.method](this.url);
 
     if (this.cookies.length > 0) {

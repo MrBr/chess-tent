@@ -21,7 +21,7 @@ afterEach(() => request.reset());
 
 describe('GET /zoom/authorize', () => {
   it('should return unauthorized status', async () => {
-    const result = await request.get('/zoom/authorize').run();
+    const result = await request.get('/zoom/authorize').execute();
 
     expect(result.statusCode).toBe(401);
   });
@@ -33,9 +33,9 @@ describe('GET /zoom/authorize', () => {
   it('should return zak not found error', async () => {
     const result = await request
       .get('/zoom/authorize')
-      .authorize(user)
-      .send({ accessToken: 'test-token' })
-      .run();
+      .setAuthorization(user)
+      .setBody({ accessToken: 'test-token' })
+      .execute();
 
     expect(result.body.error).toBe('Zoom token not found.');
   });
@@ -45,8 +45,8 @@ describe('POST /zoom/authorize', () => {
   it('should return unauthorized status', async () => {
     const result = await request
       .post('/zoom/authorize')
-      .send({ code: 'test-code', redirectUri: 'test-uri' })
-      .run();
+      .setBody({ code: 'test-code', redirectUri: 'test-uri' })
+      .execute();
 
     expect(result.statusCode).toBe(401);
   });
@@ -68,9 +68,9 @@ describe('POST /zoom/authorize', () => {
 
     const result = await request
       .post('/zoom/authorize')
-      .authorize(user)
-      .send({ code: 'test-code', redirectUri: 'test-uri' })
-      .run();
+      .setAuthorization(user)
+      .setBody({ code: 'test-code', redirectUri: 'test-uri' })
+      .execute();
 
     expect(result.statusCode).toBe(200);
     expect(result.body.data).toBe(testTokenValue);
@@ -81,8 +81,8 @@ describe('POST /zoom/signature', () => {
   it('should return unauthorized status', async () => {
     const result = await request
       .post('/zoom/signature')
-      .send({ meetingNumber: '123456', role: ZoomRole.Guest })
-      .run();
+      .setBody({ meetingNumber: '123456', role: ZoomRole.Guest })
+      .execute();
 
     expect(result.statusCode).toBe(401);
   });
@@ -90,9 +90,9 @@ describe('POST /zoom/signature', () => {
   it('should return signature token', async () => {
     const result = await request
       .post('/zoom/signature')
-      .authorize(user)
-      .send({ meetingNumber: '123456', role: ZoomRole.Guest })
-      .run();
+      .setAuthorization(user)
+      .setBody({ meetingNumber: '123456', role: ZoomRole.Guest })
+      .execute();
 
     expect(
       jsonwebtoken.verify(

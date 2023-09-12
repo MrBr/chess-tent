@@ -1,4 +1,4 @@
-import { socket } from '@application';
+import application, { socket } from '@application';
 import { MiddlewareFunction } from '@types';
 import { Activity } from '@chess-tent/models';
 import { PUSH_RECORD } from '@chess-tent/redux-record';
@@ -70,26 +70,24 @@ export const canEditActivities =
     next();
   };
 
-export const sendActivity: MiddlewareFunction = (req, res, next) => {
+export const sendActivity: MiddlewareFunction = async (req, res, next) => {
   const activity = res.locals.activity as Activity;
   if (!activity) {
     throw new ActivityNotPreparedError();
   }
   // TODO - verify if this is working
-  // TODO: rework
-  // [...activity.roles]
-  //   .map(({ user }) => user)
-  //   .filter(({ id }) => id !== res.locals.me.id)
-  //   .forEach(({ id }) => {
-  //     // Don't send lesson to the same user that assign it
-  //     socket.sendServerAction(`user-${id}`, {
-  //       type: PUSH_RECORD,
-  //       payload: { value: activity },
-  //       meta: {
-  //         key: `trainings-${id}`,
-  //       },
-  //     });
-  //   });
+  (await application.service.getUsersWithRole(activity, 'Participator'))
+    .filter(({ id }) => id !== res.locals.me.id)
+    .forEach(({ id }) => {
+      // Don't send lesson to the same user that assign it
+      socket.sendServerAction(`user-${id}`, {
+        type: PUSH_RECORD,
+        payload: { value: activity },
+        meta: {
+          key: `trainings-${id}`,
+        },
+      });
+    });
 
   next();
 };

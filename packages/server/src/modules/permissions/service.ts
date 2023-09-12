@@ -11,6 +11,7 @@ import { DepopulatedPermission, PermissionModel } from './model';
 import { v4 as uuid } from 'uuid';
 import { FilterQuery } from 'mongoose';
 import { AppDocument } from '@types';
+import { Permission } from '@chess-tent/models';
 
 export const addPermissionService = async (
   object: Step | Chapter | Lesson | Activity,
@@ -47,5 +48,23 @@ export const hasPermissionToDoService = async (
   const roles = permissions.map(item => item.role);
   return new Promise<boolean>(() =>
     hasPermissions(roles, object.type, predicate),
+  );
+};
+
+export const getUsersWithRoleService = async (
+  object: Step | Chapter | Lesson | Activity, // | UserGroup
+  role: string,
+): Promise<Array<User>> => {
+  const query: FilterQuery<AppDocument<DepopulatedPermission>> = {
+    object: object.id,
+    objectType: object.type,
+    role: role,
+  };
+
+  return (
+    await PermissionModel.find(query).populate('permissions.holder').exec()
+  ).map(
+    depopulatedPermission =>
+      depopulatedPermission.toObject<Permission>().holder,
   );
 };

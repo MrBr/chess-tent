@@ -153,6 +153,10 @@ export type Service = {
     object: Step | Chapter | Lesson | Activity, // | UserGroup
     predicate: string,
   ) => Promise<boolean>;
+  getUsersWithRole: (
+    object: Step | Chapter | Lesson | Activity, // | UserGroup
+    role: string,
+  ) => Promise<Array<User>>;
   generateIndex: () => string;
   sendMail: (data: MailData) => Promise<
     | {

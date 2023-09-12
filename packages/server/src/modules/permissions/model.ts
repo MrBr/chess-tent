@@ -40,6 +40,12 @@ stepSchema.index({
   objectType: 'text',
 });
 
+stepSchema.index({
+  object: 'text',
+  objectType: 'text',
+  role: 'text',
+});
+
 stepSchema.index(
   {
     holder: 'text',

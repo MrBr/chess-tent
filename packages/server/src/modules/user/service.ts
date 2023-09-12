@@ -127,6 +127,29 @@ export const findCoaches = (
   });
 };
 
+export const getRandomPublicCoaches = async () => {
+  const coaches = await findCoaches({});
+  const shuffledCoaches = utils.shuffleArray(coaches);
+
+  return shuffledCoaches.map((coach: User) => ({
+    id: coach.id,
+    name: coach.name,
+    nickname: coach.nickname,
+    type: coach.type,
+    state: {
+      imageUrl: coach.state.imageUrl,
+      elo: coach.state.elo,
+      studentEloMin: coach.state.studentEloMin,
+      studentEloMax: coach.state.studentEloMax,
+      teachingMethodology: coach.state.teachingMethodology,
+      languages: coach.state.languages,
+      punchline: coach.state.punchline,
+      country: coach.state.country,
+      fideTitle: coach.state.fideTitle,
+    },
+  }));
+};
+
 export const validateUser = async (
   user: Partial<User>,
   skipPaths?: (keyof User)[],

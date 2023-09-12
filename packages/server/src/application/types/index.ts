@@ -141,8 +141,9 @@ export type Service = {
     userDescr: Partial<User>,
     projection?: string,
   ) => Promise<User | null>;
-
   addUser: (user: User) => Promise<void>;
+  getRandomPublicCoaches: () => Promise<User[]>;
+
   addTag: (tag: Tag) => Promise<void>;
   generateIndex: () => string;
   sendMail: (data: MailData) => Promise<
@@ -264,6 +265,7 @@ export type MiddlewareFunction<T = void> = (
 export type Utils = {
   notNullOrUndefined: <T>(object: T) => T;
   formatAppLink: (path: string) => string;
+  shuffleArray: <T>(array: T[]) => T[];
 };
 
 export type Application = {

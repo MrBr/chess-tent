@@ -29,6 +29,11 @@ const coaches = services.createRequest<Requests['coaches']>(
   filters => filters,
 );
 
+const publicCoaches = services.createRequest<Requests['publicCoaches']>(
+  'GET',
+  '/public-coaches',
+);
+
 const logout = services.createRequest<Requests['logout']>('GET', '/logout');
 
 const me = services.createRequest<Requests['me']>('GET', '/me');
@@ -57,6 +62,7 @@ requests.login = login;
 requests.logout = logout;
 requests.me = me;
 requests.coaches = coaches;
+requests.publicCoaches = publicCoaches;
 requests.user = user;
 requests.updateMe = updateMe;
 requests.userValidate = userValidate;

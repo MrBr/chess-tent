@@ -10,7 +10,7 @@
     "build": "yarn run clean && yarn run compile",
     "clean": "rimraf -rf ./dist",
     "compile": "tsc -p tsconfig.json",
-    "test": "yarn test-db-up && yarn jest && yarn test-db-down",
+    "test": "yarn test-db-up && yarn jest; yarn test-db-down",
     "test-db-up": "docker-compose up -d",
     "test-db-down": "docker-compose down --remove-orphans",
     "migrate:create": "cd ./src/application/migrations/ && migrate create --template-file ./migrations/_template.ts",

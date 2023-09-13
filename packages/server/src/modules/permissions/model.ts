@@ -39,7 +39,13 @@ permissionSchema.index({
   objectType: 'text',
 });
 
-permissionSchema.index(
+permissionSchema.index({
+  object: 'text',
+  objectType: 'text',
+  role: 'text',
+});
+
+stepSchema.index(
   {
     holder: 'text',
     holderType: 'text',

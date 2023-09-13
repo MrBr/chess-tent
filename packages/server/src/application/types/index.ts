@@ -14,8 +14,6 @@ import {
   User,
   Subject,
   Entity,
-  Role,
-  NormalizedRole,
   Tag,
 } from '@chess-tent/models';
 import { Socket } from 'socket.io';
@@ -61,7 +59,6 @@ export type DB = {
     useDefault?: boolean,
   ) => Schema;
   roleSchema: Schema;
-  depopulateRole: <T>(role: Role<T>) => NormalizedRole<T>;
   createModel: <T>(type: string, schema: Schema) => Model<AppDocument<T>>;
   orQueries: <T extends FilterQuery<any>>(
     ...args: T[]
@@ -150,6 +147,16 @@ export type Service = {
     role: string,
     holder: User, // | UserGroup
   ) => Promise<void>;
+  hasPermissionToDo: (
+    // todo: think of better name later
+    subject: User,
+    object: Step | Chapter | Lesson | Activity, // | UserGroup
+    predicate: string,
+  ) => Promise<boolean>;
+  getUsersWithRole: (
+    object: Step | Chapter | Lesson | Activity, // | UserGroup
+    role: string,
+  ) => Promise<Array<User>>;
   generateIndex: () => string;
   sendMail: (data: MailData) => Promise<
     | {

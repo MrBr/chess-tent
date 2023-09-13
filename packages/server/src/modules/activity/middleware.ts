@@ -1,4 +1,4 @@
-import { socket } from '@application';
+import application, { socket } from '@application';
 import { MiddlewareFunction } from '@types';
 import { Activity } from '@chess-tent/models';
 import { PUSH_RECORD } from '@chess-tent/redux-record';
@@ -63,24 +63,20 @@ export const findActivities: MiddlewareFunction = (req, res, next) => {
 export const canEditActivities =
   (key: string): MiddlewareFunction =>
   (req, res, next) => {
-    const canEdit = service.canEditActivities(
-      res.locals[key],
-      res.locals.me.id,
-    );
+    const canEdit = service.canEditActivities(res.locals[key], res.locals.me);
     if (!canEdit) {
       throw new UnauthorizedActivityEditError();
     }
     next();
   };
 
-export const sendActivity: MiddlewareFunction = (req, res, next) => {
+export const sendActivity: MiddlewareFunction = async (req, res, next) => {
   const activity = res.locals.activity as Activity;
   if (!activity) {
     throw new ActivityNotPreparedError();
   }
   // TODO - verify if this is working
-  [...activity.roles]
-    .map(({ user }) => user)
+  (await application.service.getUsersWithRole(activity, 'Participator'))
     .filter(({ id }) => id !== res.locals.me.id)
     .forEach(({ id }) => {
       // Don't send lesson to the same user that assign it

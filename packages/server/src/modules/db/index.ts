@@ -17,7 +17,7 @@ import {
   allQuery,
 } from './utils';
 import { applyAdapter, createAdapter } from './adapter';
-import { runContainerMigrations } from './migrate';
+import { runMigrations } from './migrate';
 
 application.db.connect = async () => {
   // Connection URL
@@ -62,4 +62,4 @@ application.db.applyAdapter = applyAdapter;
 application.db.getDateRangeFilter = getDateRangeFilter;
 application.db.testUniqueFields = testUniqueFields;
 
-application.test.migrate = runContainerMigrations;
+application.test.migrate = runMigrations;

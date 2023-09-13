@@ -3016,6 +3016,11 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@nodepit/migrate-state-store-mongodb@^3.1.0-beta.0":
+  version "3.1.0-beta.0"
+  resolved "https://registry.yarnpkg.com/@nodepit/migrate-state-store-mongodb/-/migrate-state-store-mongodb-3.1.0-beta.0.tgz#19610ba88db75acd24b4b9d0288727f812ae7171"
+  integrity sha512-0LSVuuHBRomWcj0i9i40EOGBEC02RBB9lHUcFB3kLKQ5QCUfrud+4/mft1YKwD1/nGIkaMaM10kt05yuch2W7Q==
+
 "@npmcli/fs@^1.0.0":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@npmcli/fs/-/fs-1.1.1.tgz#72f719fe935e687c56a4faecf3c03d06ba593257"

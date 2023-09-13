@@ -1,25 +1,14 @@
 import * as migrate from 'migrate';
-import { MigrationSet } from 'migrate';
+import { MongoStateStore } from '@nodepit/migrate-state-store-mongodb';
 
-class MockFileStore {
-  save(set: MigrationSet, cb: (err: Error | null) => void) {
-    cb(null);
-  }
-  load(cb: (...args: any[]) => void) {
-    cb(null, { migrations: [] });
-  }
-}
-
-/**
- * Used to run migrations on test databases.
- * These migrations are temporary.
- */
-export function runContainerMigrations() {
+export function runMigrations() {
   return new Promise<void>((resolve, reject) => {
     migrate.load(
       {
         migrationsDirectory: './src/application/migrations/migrations',
-        stateStore: new MockFileStore(),
+        stateStore: new MongoStateStore(
+          `${process.env.DB_URL}/${process.env.DB_NAME}` as string,
+        ),
       },
       function (err, set) {
         if (err) {

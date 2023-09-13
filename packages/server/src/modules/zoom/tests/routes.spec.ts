@@ -13,10 +13,7 @@ let user: User;
 beforeAll(async () => {
   await application.test.start();
   user = await generateCoach();
-});
-
-beforeEach(() => {
-  request = application.test.request.init();
+  request = application.test.request;
 });
 
 describe('GET /zoom/authorize', () => {

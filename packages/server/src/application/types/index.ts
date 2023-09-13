@@ -338,7 +338,6 @@ export type SocketService = {
 };
 
 export interface TestRequest {
-  init: () => TestRequest;
   get: (url: string) => this;
   post: (url: string) => this;
   setAuthorization: (user: User) => this;

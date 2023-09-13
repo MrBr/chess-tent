@@ -1,4 +1,5 @@
 import supertest, { SuperTest, Test } from 'supertest';
+import { immerable, produce } from 'immer';
 
 import application from '@application';
 import { TestRequest } from '@types';
@@ -7,11 +8,13 @@ import { User } from '@chess-tent/models';
 const { generateApiToken } = application.service;
 
 class Request implements TestRequest {
-  private request: SuperTest<Test>;
-  private method: 'get' | 'post';
-  private url: string;
-  private cookies: string[];
-  private data?: Object | null;
+  [immerable] = true;
+
+  request: SuperTest<Test>;
+  method: 'get' | 'post';
+  url: string;
+  cookies: string[];
+  data?: Object | null;
 
   constructor() {
     this.request = supertest(application.service.router);
@@ -20,36 +23,41 @@ class Request implements TestRequest {
     this.cookies = [];
   }
 
-  init() {
-    return new Request();
-  }
-
   get(url: string) {
-    this.method = 'get';
-    this.url += url;
-    return this;
+    return produce(this, draft => {
+      draft.method = 'get';
+      draft.url = process.env.API_BASE_PATH + url;
+      return draft;
+    });
   }
 
   post(url: string) {
-    this.method = 'post';
-    this.url += url;
-    return this;
+    return produce(this, draft => {
+      draft.method = 'post';
+      draft.url = process.env.API_BASE_PATH + url;
+      return draft;
+    });
   }
 
   setAuthorization(user: User) {
-    this.cookies.push(`token=${generateApiToken(user)}`);
-
-    return this;
+    return produce(this, draft => {
+      draft.cookies.push(`token=${generateApiToken(user)}`);
+      return draft;
+    });
   }
 
   setCookies(cookies: string[]) {
-    this.cookies = [...this.cookies, ...cookies];
-    return this;
+    return produce(this, draft => {
+      draft.cookies = [...this.cookies, ...cookies];
+      return draft;
+    });
   }
 
   setBody(newData: Object) {
-    this.data = newData;
-    return this;
+    return produce(this, draft => {
+      draft.data = newData;
+      return draft;
+    });
   }
 
   async execute() {

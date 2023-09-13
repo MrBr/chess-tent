@@ -4,7 +4,6 @@ import {
   Permission,
   TYPE_PERMISSION,
 } from '@chess-tent/models/src';
-import { stepSchema } from '../step/model';
 
 export interface DepopulatedPermission {
   id: NormalizedPermission['id'];
@@ -33,14 +32,14 @@ const permissionSchema = db.createSchema<DepopulatedPermission>(
   { minimize: false },
 );
 
-stepSchema.index({
+permissionSchema.index({
   holder: 'text',
   holderType: 'text',
   object: 'text',
   objectType: 'text',
 });
 
-stepSchema.index(
+permissionSchema.index(
   {
     holder: 'text',
     holderType: 'text',

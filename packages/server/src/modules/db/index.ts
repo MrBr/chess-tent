@@ -62,4 +62,4 @@ application.db.applyAdapter = applyAdapter;
 application.db.getDateRangeFilter = getDateRangeFilter;
 application.db.testUniqueFields = testUniqueFields;
 
-application.test.migrate = runMigrations;
+application.db.migrate = runMigrations;

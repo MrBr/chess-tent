@@ -84,7 +84,7 @@ application.start = async () => {
 application.test.start = async () => {
   generateUniqueDbName();
   await connect();
-  await application.test.migrate();
+  await application.db.migrate('up');
   // TODO - should be a part of the lifecycle hook/event
   app.use(application.middleware.errorHandler);
 };

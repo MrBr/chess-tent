@@ -50,6 +50,7 @@ export type Action = {
 };
 
 export type DB = {
+  migrate: (direction: 'up' | 'down', migrationName?: string) => Promise<void>;
   connect: () => Promise<void>;
   disconnect: () => Promise<void>;
   connection: Connection;
@@ -340,7 +341,6 @@ export type SocketService = {
 
 export interface Test {
   start: () => Promise<void>;
-  migrate: () => Promise<void>;
 }
 
 export class AppError extends Error {}

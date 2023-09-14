@@ -50,6 +50,7 @@ export type Action = {
 };
 
 export type DB = {
+  migrate: (direction: 'up' | 'down', migrationName?: string) => Promise<void>;
   connect: () => Promise<void>;
   disconnect: () => Promise<void>;
   connection: Connection;
@@ -144,6 +145,7 @@ export type Service = {
 
   addUser: (user: User) => Promise<void>;
   addTag: (tag: Tag) => Promise<void>;
+  findTags: (startsWith: string) => Promise<Tag[]>;
   generateIndex: () => string;
   sendMail: (data: MailData) => Promise<
     | {

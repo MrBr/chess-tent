@@ -10,9 +10,12 @@
     "build": "yarn run clean && yarn run compile",
     "clean": "rimraf -rf ./dist",
     "compile": "tsc -p tsconfig.json",
-    "test": "yarn test-db-up && yarn jest && yarn test-db-down",
+    "test": "yarn test-db-up && yarn jest; yarn test-db-down",
     "test-db-up": "docker-compose up -d",
-    "test-db-down": "docker-compose down --remove-orphans"
+    "test-db-down": "docker-compose down --remove-orphans",
+    "migrate:create": "cd ./src/application/migrations/ && migrate create --template-file ./migrations/_template.ts",
+    "migrate:up": "echo 'Run build before migrating'; node ./dist/migration up",
+    "migrate:down": "echo 'Run build before migrating'; node ./dist/migration down"
   },
   "author": "Luka Bracanovic",
   "devDependencies": {
@@ -27,12 +30,14 @@
     "@types/mongoose": "^5.10.5",
     "@types/supertest": "^2.0.12",
     "@types/ws": "^7.2.6",
+    "migrate": "^2.0.0",
     "supertest": "^6.3.3"
   },
   "dependencies": {
     "@chess-tent/models": "1.0.0",
     "@chess-tent/redux-record": "1.0.0",
     "@chess-tent/types": "1.0.0",
+    "@nodepit/migrate-state-store-mongodb": "^3.1.0-beta.0",
     "aws-sdk": "^2.742.0",
     "axios": "^1.2.2",
     "bcrypt": "^5.0.0",

@@ -142,7 +142,7 @@ export type Service = {
     projection?: string,
   ) => Promise<User | null>;
   addUser: (user: User) => Promise<void>;
-  getRandomPublicCoaches: () => Promise<User[]>;
+  getPublicCoaches: () => Promise<{ coaches: User[]; coachCount: number }>;
 
   addTag: (tag: Tag) => Promise<void>;
   generateIndex: () => string;

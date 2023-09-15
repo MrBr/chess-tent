@@ -11,7 +11,7 @@ import {
   getUser,
   updateUserActivity,
   welcomeMailMiddleware,
-  getRandomPublicCoaches,
+  getPublicCoaches,
 } from './middleware';
 import { getUser as getUserService } from './service';
 import { UserAlreadyExists } from './errors';
@@ -242,6 +242,6 @@ application.service.registerPostRoute(
 
 application.service.registerGetRoute(
   '/public-coaches',
-  getRandomPublicCoaches,
-  sendData('coaches'),
+  getPublicCoaches,
+  sendData('coachData'),
 );

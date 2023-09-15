@@ -3,7 +3,7 @@ import { getUser as getUserMiddleware } from './middleware';
 import {
   addUser as addUserService,
   getUser as getUserService,
-  getRandomPublicCoaches as getRandomPublicCoachesService,
+  getPublicCoaches as getPublicCoachesService,
 } from './service';
 
 import './routes';
@@ -11,6 +11,6 @@ import './routes';
 application.middleware.getUser = getUserMiddleware;
 application.service.getUser = getUserService;
 application.service.addUser = addUserService;
-application.service.getRandomPublicCoaches = getRandomPublicCoachesService;
+application.service.getPublicCoaches = getPublicCoachesService;
 
 application.register(() => import('./socket'));

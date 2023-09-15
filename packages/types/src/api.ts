@@ -10,7 +10,6 @@ import {
   NormalizedMentorship,
   NormalizedMessage,
   Notification,
-  PublicCoach,
   SubjectPath,
   SubjectPathUpdate,
   Tag,
@@ -65,7 +64,8 @@ export interface DataResponse<T> extends StatusResponse {
 }
 export interface UserResponse extends DataResponse<User> {}
 export interface UsersResponse extends DataResponse<User[]> {}
-export interface PublicCoachesResponse extends DataResponse<User[]> {}
+export interface PublicCoachesResponse
+  extends DataResponse<{ coaches: User[]; coachCount: number }> {}
 export interface LessonResponse extends DataResponse<Lesson> {}
 export interface LessonChaptersResponse extends DataResponse<Chapter[]> {}
 export interface LessonsResponse extends DataResponse<Lesson[]> {}

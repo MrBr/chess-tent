@@ -65,15 +65,11 @@ export const findCoaches: MiddlewareFunction = (req, res, next) => {
     .catch(next);
 };
 
-export const getRandomPublicCoaches: MiddlewareFunction = async (
-  req,
-  res,
-  next,
-) => {
+export const getPublicCoaches: MiddlewareFunction = async (req, res, next) => {
   service
-    .getRandomPublicCoaches()
-    .then(coaches => {
-      res.locals.coaches = coaches;
+    .getPublicCoaches()
+    .then(data => {
+      res.locals.coachData = data;
       next();
     })
     .catch(next);

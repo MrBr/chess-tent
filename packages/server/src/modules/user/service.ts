@@ -127,27 +127,30 @@ export const findCoaches = (
   });
 };
 
-export const getRandomPublicCoaches = async () => {
+export const getPublicCoaches = async () => {
   const coaches = await findCoaches({});
-  const shuffledCoaches = utils.shuffleArray(coaches);
+  const shuffledCoaches = utils
+    .shuffleArray(coaches)
+    .slice(0, 8)
+    .map((coach: User) => ({
+      id: coach.id,
+      name: coach.name,
+      nickname: coach.nickname,
+      type: coach.type,
+      state: {
+        imageUrl: coach.state.imageUrl,
+        elo: coach.state.elo,
+        studentEloMin: coach.state.studentEloMin,
+        studentEloMax: coach.state.studentEloMax,
+        teachingMethodology: coach.state.teachingMethodology,
+        languages: coach.state.languages,
+        punchline: coach.state.punchline,
+        country: coach.state.country,
+        fideTitle: coach.state.fideTitle,
+      },
+    }));
 
-  return shuffledCoaches.map((coach: User) => ({
-    id: coach.id,
-    name: coach.name,
-    nickname: coach.nickname,
-    type: coach.type,
-    state: {
-      imageUrl: coach.state.imageUrl,
-      elo: coach.state.elo,
-      studentEloMin: coach.state.studentEloMin,
-      studentEloMax: coach.state.studentEloMax,
-      teachingMethodology: coach.state.teachingMethodology,
-      languages: coach.state.languages,
-      punchline: coach.state.punchline,
-      country: coach.state.country,
-      fideTitle: coach.state.fideTitle,
-    },
-  }));
+  return { coaches: shuffledCoaches, coachCount: coaches.length };
 };
 
 export const validateUser = async (

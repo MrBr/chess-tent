@@ -339,8 +339,18 @@ export type SocketService = {
   identify: (stream: SocketStream | Socket) => Auth['apiTokenPayload'] | null;
 };
 
+export interface TestRequest {
+  get: (url: string) => this;
+  post: (url: string) => this;
+  setAuthorization: (user: User) => this;
+  setCookies: (cookies: string[]) => this;
+  setBody: (data: Object) => this;
+  execute: () => Promise<any>;
+}
+
 export interface Test {
   start: () => Promise<void>;
+  request: TestRequest;
 }
 
 export class AppError extends Error {}

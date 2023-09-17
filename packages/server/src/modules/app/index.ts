@@ -24,6 +24,8 @@ import {
 import { BadRequest } from './errors';
 import { formatAppLink, shouldStartHttpsServer } from './utils';
 
+import Request from './tests/request';
+
 const { connect, disconnect } = db;
 
 let server: Server;
@@ -87,6 +89,8 @@ application.test.start = async () => {
   await application.db.migrate('up');
   // TODO - should be a part of the lifecycle hook/event
   app.use(application.middleware.errorHandler);
+
+  application.test.request = new Request();
 };
 
 const generateUniqueDbName = (): void => {

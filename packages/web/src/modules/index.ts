@@ -35,3 +35,4 @@ application.register(() => import('./mobile'));
 application.register(() => import('./sentry'));
 application.register(() => import('./contact'));
 application.register(() => import('./zoom'));
+application.register(() => import('./paypal'));

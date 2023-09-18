@@ -50,6 +50,7 @@ export type Action = {
 };
 
 export type DB = {
+  migrate: (direction: 'up' | 'down', migrationName?: string) => Promise<void>;
   connect: () => Promise<void>;
   disconnect: () => Promise<void>;
   connection: Connection;
@@ -145,6 +146,7 @@ export type Service = {
   getPublicCoaches: () => Promise<{ coaches: User[]; coachCount: number }>;
 
   addTag: (tag: Tag) => Promise<void>;
+  findTags: (startsWith: string) => Promise<Tag[]>;
   generateIndex: () => string;
   sendMail: (data: MailData) => Promise<
     | {
@@ -339,8 +341,18 @@ export type SocketService = {
   identify: (stream: SocketStream | Socket) => Auth['apiTokenPayload'] | null;
 };
 
+export interface TestRequest {
+  get: (url: string) => this;
+  post: (url: string) => this;
+  setAuthorization: (user: User) => this;
+  setCookies: (cookies: string[]) => this;
+  setBody: (data: Object) => this;
+  execute: () => Promise<any>;
+}
+
 export interface Test {
   start: () => Promise<void>;
+  request: TestRequest;
 }
 
 export class AppError extends Error {}

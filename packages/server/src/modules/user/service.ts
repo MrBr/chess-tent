@@ -6,6 +6,8 @@ import { FilterQuery } from 'mongoose';
 import { utils, service, db } from '@application';
 import { UserModel } from './model';
 
+const PUBLIC_COACH_NUMBER = 8;
+
 export const addUser = async (user: User): Promise<void> => {
   try {
     await new UserModel(user).save();
@@ -131,7 +133,7 @@ export const getPublicCoaches = async () => {
   const coaches = await findCoaches({});
   const shuffledCoaches = utils
     .shuffleArray(coaches)
-    .slice(0, 8)
+    .slice(0, PUBLIC_COACH_NUMBER)
     .map((coach: User) => ({
       id: coach.id,
       name: coach.name,

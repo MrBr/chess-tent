@@ -353,6 +353,9 @@ export interface TestRequest {
 export interface Test {
   start: () => Promise<void>;
   request: TestRequest;
+  fixtures: {
+    coaches: User[];
+  };
 }
 
 export class AppError extends Error {}

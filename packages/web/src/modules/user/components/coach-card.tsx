@@ -49,7 +49,7 @@ const { className } = css`
   }
 `;
 
-const CoachCard: Components['CoachCard'] = ({ coach }) => {
+const CoachCard: Components['CoachCard'] = ({ coach, hideOptions }) => {
   const history = useHistory();
   const [conversationOffcanvas, openConversation] = useOpenConversations();
 
@@ -68,9 +68,11 @@ const CoachCard: Components['CoachCard'] = ({ coach }) => {
           <object data={coach.state.imageUrl} height={298} type="image/png">
             <div className="piece white knight" />
           </object>
-          <Absolute left={15} top={15}>
-            <Badge bg="success">${coach.state.pricing}/h</Badge>
-          </Absolute>
+          {coach.state?.pricing && (
+            <Absolute left={15} top={15}>
+              <Badge bg="success">${coach.state.pricing}/h</Badge>
+            </Absolute>
+          )}
           <Absolute bottom={0} className="w-100 hug py-2">
             <Container fluid>
               <Row className="align-items-center">
@@ -86,30 +88,32 @@ const CoachCard: Components['CoachCard'] = ({ coach }) => {
                     {coach.name}
                   </Text>
                 </Col>
-                <Col className="col-auto">
-                  <Dropdown onClick={utils.stopPropagation}>
-                    <Dropdown.Toggle collapse className="p-0">
-                      <Icon type="more" size="small" variant="light" />
-                    </Dropdown.Toggle>
-                    <Dropdown.Menu>
-                      <Dropdown.Item onClick={() => openConversation(coach)}>
-                        <Icon type="comment" size="extra-small" /> Message
-                      </Dropdown.Item>
-                      <Dropdown.Item>
-                        <Icon
-                          type="lightbulb"
-                          size="extra-small"
-                          className="mt-1 me-1"
-                        />
-                        <MentorshipButton
-                          user={coach}
-                          textual
-                          className="p-0"
-                        />
-                      </Dropdown.Item>
-                    </Dropdown.Menu>
-                  </Dropdown>
-                </Col>
+                {!hideOptions && (
+                  <Col className="col-auto">
+                    <Dropdown onClick={utils.stopPropagation}>
+                      <Dropdown.Toggle collapse className="p-0">
+                        <Icon type="more" size="small" variant="light" />
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu>
+                        <Dropdown.Item onClick={() => openConversation(coach)}>
+                          <Icon type="comment" size="extra-small" /> Message
+                        </Dropdown.Item>
+                        <Dropdown.Item>
+                          <Icon
+                            type="lightbulb"
+                            size="extra-small"
+                            className="mt-1 me-1"
+                          />
+                          <MentorshipButton
+                            user={coach}
+                            textual
+                            className="p-0"
+                          />
+                        </Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  </Col>
+                )}
               </Row>
               <Row className="g-2 align-items-center mb-2">
                 {coach.state.country && (

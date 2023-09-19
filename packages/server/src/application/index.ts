@@ -18,7 +18,7 @@ const errors = createNamespace({}) as Errors;
 const socket = createNamespace({}) as SocketService;
 const middleware = createNamespace({}) as Middleware;
 const utils = createNamespace({}) as Utils;
-const test = createNamespace({}) as Test;
+const test = createNamespace({ fixtures: createNamespace({}) }) as Test;
 
 const application = createNamespace({
   register,

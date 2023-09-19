@@ -25,7 +25,6 @@ import { BadRequest } from './errors';
 import { formatAppLink, shouldStartHttpsServer } from './utils';
 
 import Request from './tests/request';
-import { coaches } from '../user/tests/fixtures';
 
 const { connect, disconnect } = db;
 
@@ -92,7 +91,6 @@ application.test.start = async () => {
   app.use(application.middleware.errorHandler);
 
   application.test.request = new Request();
-  application.test.fixtures = { coaches };
 };
 
 const generateUniqueDbName = (): void => {

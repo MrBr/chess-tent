@@ -4,9 +4,22 @@ import { AppDocument } from '@types';
 import { compare, hash } from 'bcrypt';
 import { FilterQuery } from 'mongoose';
 import { utils, service, db } from '@application';
+import { shuffle } from 'lodash';
 import { UserModel } from './model';
 
-const PUBLIC_COACH_NUMBER = 8;
+const PUBLIC_COACH_NUMBER = 2;
+
+const checkCoachPublicInfo = (
+  infoQuery: FilterQuery<AppDocument<NormalizedUser>>,
+) => {
+  // Check all required public info
+  COACH_REQUIRED_STATE.forEach(key => {
+    infoQuery[`state.${key}`] = infoQuery[`state.${key}`] || {
+      $exists: true,
+      $ne: '',
+    };
+  });
+};
 
 export const addUser = async (user: User): Promise<void> => {
   try {
@@ -103,13 +116,7 @@ export const findCoaches = (
     infoQuery['$text'] = { $search: filters.search, $caseSensitive: false };
   }
 
-  // Check all required public info
-  COACH_REQUIRED_STATE.forEach(key => {
-    infoQuery[`state.${key}`] = infoQuery[`state.${key}`] || {
-      $exists: true,
-      $ne: '',
-    };
-  });
+  checkCoachPublicInfo(infoQuery);
 
   return new Promise((resolve, reject) => {
     UserModel.find(query)
@@ -130,29 +137,38 @@ export const findCoaches = (
 };
 
 export const getPublicCoaches = async () => {
-  const coaches = await findCoaches({});
-  const shuffledCoaches = utils
-    .shuffleArray(coaches)
-    .slice(0, PUBLIC_COACH_NUMBER)
-    .map((coach: User) => ({
-      id: coach.id,
-      name: coach.name,
-      nickname: coach.nickname,
-      type: coach.type,
-      state: {
-        imageUrl: coach.state.imageUrl,
-        elo: coach.state.elo,
-        studentEloMin: coach.state.studentEloMin,
-        studentEloMax: coach.state.studentEloMax,
-        teachingMethodology: coach.state.teachingMethodology,
-        languages: coach.state.languages,
-        punchline: coach.state.punchline,
-        country: coach.state.country,
-        fideTitle: coach.state.fideTitle,
-      },
-    }));
+  const infoQuery: FilterQuery<AppDocument<NormalizedUser>> =
+    utils.notNullOrUndefined({
+      coach: true,
+    });
+  const query: { $and: FilterQuery<AppDocument<NormalizedUser>>[] } = {
+    $and: [infoQuery],
+  };
 
-  return { coaches: shuffledCoaches, coachCount: coaches.length };
+  checkCoachPublicInfo(infoQuery);
+
+  // get full public coaches count
+  const coachCount = await UserModel.find(query).countDocuments();
+
+  const coaches = await UserModel.find(query)
+    .limit(PUBLIC_COACH_NUMBER)
+    .select({
+      id: 1,
+      name: 1,
+      nickname: 1,
+      type: 1,
+      'state.imageUrl': 1,
+      'state.elo': 1,
+      'state.studentEloMin': 1,
+      'state.studentEloMax': 1,
+      'state.teachingMethodology': 1,
+      'state.languages': 1,
+      'state.punchline': 1,
+      'state.country': 1,
+      'state.fideTitle': 1,
+    });
+
+  return { coaches: shuffle(coaches), coachCount };
 };
 
 export const validateUser = async (

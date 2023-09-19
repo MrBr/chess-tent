@@ -29,6 +29,8 @@ const Subscribe = ({
         intent: 'subscription',
       },
     });
+    // should do only on init
+    // eslint-disable-next-line
   }, []);
 
   const createSubscription: PayPalButtonsComponentProps['createSubscription'] =
@@ -43,9 +45,8 @@ const Subscribe = ({
         return orderId;
       } catch (e) {
         onFailure(e);
+        throw e;
       }
-      // ?
-      return '';
     };
 
   return (

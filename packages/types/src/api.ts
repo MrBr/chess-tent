@@ -33,6 +33,7 @@ export type LessonsFilters = {
   difficulty?: Difficulty;
   hasDocId?: boolean;
   published?: boolean;
+  showOnLanding?: boolean;
 };
 
 export type SubjectFilters = {

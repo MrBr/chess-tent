@@ -78,6 +78,16 @@ export const findLessons: MiddlewareFunction = (req, res, next) => {
     .catch(next);
 };
 
+export const getPublicLessons: MiddlewareFunction = (req, res, next) => {
+  service
+    .getPublicLessons()
+    .then(lessons => {
+      res.locals.lessons = lessons;
+      next();
+    })
+    .catch(next);
+};
+
 export const canEditLesson: MiddlewareFunction = (req, res, next) => {
   service
     .canEditLesson(res.locals.lesson.id, res.locals.me.id)

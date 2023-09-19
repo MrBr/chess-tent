@@ -11,6 +11,7 @@ import {
   unpublishLesson,
   deleteLesson,
   getLessonChapters,
+  getPublicLessons,
 } from './middleware';
 
 const { identify, sendData, sendStatusOk, toLocals } = middleware;
@@ -119,4 +120,10 @@ application.service.registerPostRoute(
   getLessonChapters,
   canAccessLesson,
   sendData('chapters'),
+);
+
+application.service.registerGetRoute(
+  '/public-lessons',
+  getPublicLessons,
+  sendData('lessons'),
 );

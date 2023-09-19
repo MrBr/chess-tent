@@ -20,6 +20,7 @@ export interface DepupulatedLesson {
   tags: NormalizedLesson['tags'];
   published: NormalizedLesson['published'];
   users: NormalizedLesson['users'];
+  showOnLanding: NormalizedLesson['showOnLanding'];
   v?: number;
 }
 
@@ -61,6 +62,9 @@ const lessonSchema = db.createSchema<DepupulatedLesson>(
       type: String,
       default: TYPE_LESSON,
     } as unknown as typeof TYPE_LESSON,
+    showOnLanding: {
+      type: Boolean,
+    } as unknown as DepupulatedLesson['showOnLanding'],
     v: {
       type: Schema.Types.Number,
       default: 2,

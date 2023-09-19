@@ -4,6 +4,7 @@ import { AppDocument } from '@types';
 import { compare, hash } from 'bcrypt';
 import { FilterQuery } from 'mongoose';
 import { utils, service, db } from '@application';
+import { shuffle } from 'lodash';
 import { UserModel } from './model';
 
 const PUBLIC_COACH_NUMBER = 8;
@@ -131,8 +132,7 @@ export const findCoaches = (
 
 export const getPublicCoaches = async () => {
   const coaches = await findCoaches({});
-  const shuffledCoaches = utils
-    .shuffleArray(coaches)
+  const shuffledCoaches = shuffle(coaches)
     .slice(0, PUBLIC_COACH_NUMBER)
     .map((coach: User) => ({
       id: coach.id,

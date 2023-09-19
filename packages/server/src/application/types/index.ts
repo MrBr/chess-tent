@@ -266,7 +266,6 @@ export type MiddlewareFunction<T = void> = (
 export type Utils = {
   notNullOrUndefined: <T>(object: T) => T;
   formatAppLink: (path: string) => string;
-  shuffleArray: <T>(array: T[]) => T[];
 };
 
 export type Application = {

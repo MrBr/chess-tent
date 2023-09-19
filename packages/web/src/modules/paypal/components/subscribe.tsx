@@ -6,7 +6,7 @@ interface SubscribeProps {
   plan_id: string;
   quantity: number;
   onSubscribe: (orderId: string) => void;
-  onFailure: () => void;
+  onFailure: (e: unknown) => void;
 }
 
 const subscriptionButtonStyle: PayPalButtonsComponentProps['style'] = {
@@ -42,7 +42,7 @@ const Subscribe = ({
         onSubscribe(orderId);
         return orderId;
       } catch (e) {
-        onFailure();
+        onFailure(e);
       }
       // ?
       return '';

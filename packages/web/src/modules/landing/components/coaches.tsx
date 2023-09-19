@@ -1,78 +1,20 @@
 import React, { useState, useEffect, ReactNode } from 'react';
 import { ui, components, hooks, requests } from '@application';
-import { History } from '@types';
 import { css } from '@chess-tent/styled-props';
 import { User } from '@chess-tent/models';
 
-import coachesImage from '../images/coaches.png';
+import ViewAllCoachesCard from './components/view-all-coaches-card';
 
-const { Row, Col, Button, Icon, Text, Card } = ui;
+const { Row, Col, Button, Icon, Text } = ui;
 const { CoachCard } = components;
-const { useApi, useIsMobile, useHistory } = hooks;
+const { useApi, useIsMobile } = hooks;
 const { publicCoaches } = requests;
-
-const { className: cardClassName } = css`
-  width: 300px;
-  height: 410px;
-  display: flex;
-  align-items: center;
-  background-image: url(${coachesImage});
-  background-size: cover;
-
-  .coaches-card-body {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background: var(--neutrals-90050, rgba(24, 34, 53, 0.5));
-    width: inherit;
-
-    .coaches-info-text {
-      text-align: center;
-      font-weight: 800;
-
-      color: white;
-    }
-
-    .view-coaches-button {
-      font-weight: 700;
-      font-size: 14px;
-      width: fit-content;
-    }
-  }
-`;
 
 const { className: arrowClassName } = css`
   margin-right: 5px;
 `;
 
-const LearnMoreCard = ({
-  count,
-  history,
-}: {
-  count: number;
-  history: History;
-}) => (
-  <Card className={cardClassName}>
-    <Card.Body className="coaches-card-body">
-      <Text weight={500} className="coaches-info-text">{`${
-        count - 1
-      }+ Coaches, 0-2006 ELO, 30+ languages`}</Text>
-      <Button
-        variant="primary"
-        size="small"
-        className="view-coaches-button"
-        onClick={() => history.push(`/coaches`)}
-      >
-        View all coaches
-      </Button>
-    </Card.Body>
-  </Card>
-);
-
 const Coaches = () => {
-  const history = useHistory();
-
   const { fetch: fetchCoaches, response: coachResponse } =
     useApi(publicCoaches);
 
@@ -109,14 +51,11 @@ const Coaches = () => {
           </Col>
         )),
         <Col>
-          <LearnMoreCard
-            count={coachResponse.data.coachCount}
-            history={history}
-          />
+          <ViewAllCoachesCard count={coachResponse.data.coachCount} />
         </Col>,
       ]);
     }
-  }, [coaches, coachResponse?.data, history]);
+  }, [coaches, coachResponse?.data]);
 
   useEffect(() => {
     if (coachResponse) {

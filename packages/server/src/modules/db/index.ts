@@ -25,15 +25,6 @@ application.db.connect = async () => {
   // Database Name
   const dbName = process.env.DB_NAME;
 
-  await mongoose.connect(`${url}/${dbName}`, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-    // Usually a costly operation, but we have too little data right now for it to matter
-    // It makes dev's life easier by creating indexes automatically
-    autoIndex: true,
-  });
-
   application.db.connection = mongoose.connection;
 
   application.db.connection.on(
@@ -42,6 +33,15 @@ application.db.connect = async () => {
   );
   application.db.connection.once('open', function () {
     console.log('DB connection open');
+  });
+
+  await mongoose.connect(`${url}/${dbName}`, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    // Usually a costly operation, but we have too little data right now for it to matter
+    // It makes dev's life easier by creating indexes automatically
+    autoIndex: true,
   });
 };
 application.db.disconnect = async () => await mongoose.disconnect();

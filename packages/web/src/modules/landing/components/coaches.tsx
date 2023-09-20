@@ -1,7 +1,6 @@
-import React, { useState, useEffect, ReactNode } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { ui, components, hooks, requests } from '@application';
 import { css } from '@chess-tent/styled-props';
-import { User } from '@chess-tent/models';
 
 import ViewAllCoachesCard from './components/view-all-coaches-card';
 
@@ -22,17 +21,14 @@ const Coaches = () => {
   const cardStep = isMobile ? 1 : 3;
 
   const [cardIndex, setCardIndex] = useState(cardStep);
-  const [cards, setCards] = useState<ReactNode[]>([]);
-  const [coaches, setCoaches] = useState<User[]>([]);
 
   const onLeftArrowClick = () => {
     setCardIndex(prevIndex =>
-      prevIndex > cardStep ? prevIndex - cardStep : cards.length,
+      prevIndex > cardStep ? prevIndex - cardStep : coaches.length + 1,
     );
   };
 
   const onRightArrowClick = () => {
-    console.log({ cardIndex });
     setCardIndex(prevIndex =>
       prevIndex <= coaches.length ? prevIndex + cardStep : cardStep,
     );
@@ -42,34 +38,18 @@ const Coaches = () => {
     fetchCoaches();
   }, [fetchCoaches]);
 
-  useEffect(() => {
-    if (coaches.length > 0 && coachResponse?.data) {
-      setCards([
-        ...coaches.map(coach => (
-          <Col>
-            <CoachCard coach={coach} hideOptions />
-          </Col>
-        )),
-        <Col>
-          <ViewAllCoachesCard count={coachResponse.data.coachCount} />
-        </Col>,
-      ]);
-    }
-  }, [coaches, coachResponse?.data]);
-
-  useEffect(() => {
+  const coaches = useMemo(() => {
     if (coachResponse) {
-      setCoaches(
-        isMobile
-          ? coachResponse.data.coaches.slice(0, 3)
-          : coachResponse.data.coaches,
-      );
+      return isMobile
+        ? coachResponse.data.coaches.slice(0, 3)
+        : coachResponse.data.coaches;
     }
+    return [];
   }, [coachResponse, isMobile]);
 
   return (
-    <Row className="pt-4 align-items-center" style={{ overflowX: 'visible' }}>
-      <Col md={3} className="pb-5">
+    <Row className="d-flex flex-row pt-4 align-items-center">
+      <Col lg={3} className="pb-5">
         <Text weight={500}>🚀 Learn from our top coaches</Text>
         <Text>
           Match with the coach based on your needs and specific skillset.
@@ -90,13 +70,28 @@ const Coaches = () => {
           <Icon type="right" />
         </Button>
       </Col>
-      <Col sm={12} md={9} className="d-flex flex-row justify-content-center">
-        {cards?.length > 0 &&
-          cards.slice(cardIndex - cardStep, cardIndex).map((card, index) => (
-            <div key={index} className="px-2">
-              {card}
-            </div>
-          ))}
+      <Col
+        md={12}
+        lg={9}
+        className="d-flex flex-row overflow-hidden justify-content-center justify-content-md-end"
+      >
+        {coaches.length > 0 &&
+          [
+            ...coaches.map((coach, index) => (
+              <div key={index} className="px-2">
+                <Col>
+                  <CoachCard coach={coach} hideOptions />
+                </Col>
+              </div>
+            )),
+            <div key={coaches.length} className="px-2">
+              <Col>
+                <ViewAllCoachesCard
+                  count={coachResponse?.data.coachCount || 0}
+                />
+              </Col>
+            </div>,
+          ].slice(cardIndex - cardStep, cardIndex)}
       </Col>
     </Row>
   );

@@ -18,6 +18,7 @@ describe('GET /public-coaches', () => {
     const result = await request.get('/public-coaches').execute();
 
     expect(result.body.data.coaches.length).toBeGreaterThan(0);
+    expect(result.body.data.coaches.length).toBeLessThan(coaches.length);
     expect(result.body.data.coachCount).toBeGreaterThan(
       result.body.data.coaches.length,
     );

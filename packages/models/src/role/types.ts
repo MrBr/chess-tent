@@ -95,13 +95,5 @@ export const hasPermissions = (
   action: string,
 ): boolean => {
   const objectTypeRoleDefinitions = getRoleDefinitionsByObjectType(objectType);
-
-  let found = false;
-  roles.forEach((role: string) => {
-    if (objectTypeRoleDefinitions[role]?.includes(action)) {
-      found = true;
-      return;
-    }
-  });
-  return found;
+  return roles.some(role => objectTypeRoleDefinitions[role]?.includes(action));
 };

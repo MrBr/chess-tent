@@ -74,3 +74,8 @@ export const findSteps = (filters: Partial<SubjectFilters>): Promise<Step[]> =>
         resolve(result.map(item => item.toObject<Step>()));
       });
   });
+
+export const stepExists = async (stepId: Step['id']) => {
+  const query: FilterQuery<AppDocument<DepopulatedStep>> = { id: stepId };
+  return StepModel.exists(query);
+};

@@ -219,6 +219,11 @@ export type Middleware = {
   errorHandler: ErrorRequestHandler;
   sendData: (localProp: string) => MiddlewareFunction;
   sendAction: MiddlewareFunction;
+  validatePermissions: <T extends { id: string; type: string }>(
+    getEntity: MiddlewareGetter<T>,
+    action: string,
+    userLocalKey?: string,
+  ) => MiddlewareFunction;
   validate: (
     validateFunction: (...args: Parameters<RequestHandler>) => void | never,
   ) => MiddlewareFunction;
@@ -242,9 +247,7 @@ export type Middleware = {
   // Useful to intercept non-blocking errors.
   catchError: (
     middleware: MiddlewareFunction,
-  ) => (
-    catchMiddleware?: MiddlewareFunction,
-  ) => (...args: Parameters<RequestHandler>) => Promise<void>;
+  ) => (catchMiddleware?: ErrorRequestHandler) => MiddlewareFunction;
   webLogin: (...args: Parameters<RequestHandler>) => void;
   webLogout: (...args: Parameters<RequestHandler>) => void;
   sendStatusOk: (...args: Parameters<RequestHandler>) => void;
@@ -272,6 +275,10 @@ export type Middleware = {
       | ((...args: Parameters<RequestHandler>) => void),
   ) => (...args: Parameters<RequestHandler>) => void;
 };
+export type MiddlewareGetter<T> = (
+  req: Parameters<RequestHandler>[0],
+  res: Parameters<RequestHandler>[1],
+) => T;
 export type MiddlewareFunction<T = void> = (
   ...args: Parameters<RequestHandler>
 ) => T;

@@ -29,9 +29,11 @@ export const addPermissionService = async (
   } as DepopulatedPermission).save();
 };
 
-export const hasPermissionToDoService = async (
+export const hasPermissionToDoService = async <
+  T extends { id: string; type: string },
+>(
   subject: User,
-  object: Step | Chapter | Lesson | Activity, // | UserGroup
+  object: T,
   predicate: string,
 ): Promise<boolean> => {
   const query: FilterQuery<AppDocument<DepopulatedPermission>> = {

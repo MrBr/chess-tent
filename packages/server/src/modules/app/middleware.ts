@@ -39,7 +39,7 @@ export const catchError: Middleware['catchError'] =
        `,
         e,
       );
-      catchMiddleware && catchMiddleware(...args);
+      catchMiddleware && catchMiddleware(e, ...args);
       next();
     }
   };

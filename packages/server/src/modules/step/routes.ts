@@ -6,13 +6,25 @@ import {
   patchStep,
   deleteStep,
 } from './middleware';
+import { TYPE_STEP } from '@chess-tent/models';
+import { conditional } from '../app/middleware';
+import { stepExists } from './service';
 
-const { identify, sendData, sendStatusOk, toLocals } = middleware;
+const { identify, sendData, sendStatusOk, toLocals, validatePermissions } =
+  middleware;
 
 application.service.registerPostRoute(
   '/step/save',
   identify,
   toLocals('step', req => req.body),
+  conditional(async (req, res) => {
+    return await stepExists(req.body.id);
+  })(
+    validatePermissions(
+      req => ({ id: req.body.id, type: TYPE_STEP }),
+      'updateStep',
+    ),
+  ),
   saveStep,
   sendStatusOk,
 );
@@ -30,6 +42,10 @@ application.service.registerPutRoute(
   identify,
   toLocals('step', req => req.body),
   toLocals('step.id', req => req.params.stepId),
+  validatePermissions(
+    req => ({ id: req.params.stepId, type: TYPE_STEP }),
+    'updateStep',
+  ),
   patchStep,
   sendStatusOk,
 );

@@ -1,22 +1,24 @@
-import request from 'supertest';
 import axios from 'axios';
 import jsonwebtoken from 'jsonwebtoken';
 
 import application from '@application';
-import { ZoomRole } from '@chess-tent/models';
+import { User, ZoomRole } from '@chess-tent/models';
+import { TestRequest } from '@types';
 
-beforeAll(() => application.test.start());
+import { generateCoach } from '../../../application/tests';
 
-const tokenCookie =
-  'token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiMTgwYmQxMDItMjNiNC00MzkxLThhOTUtMzhkYjliN2QxYWJhIn0sImlhdCI6MTY5MTUwMTU2Nn0.UmmBVVMY0Ruxox61CaINh3rtSF73s2V9TD-0nWf2hpw';
+let request: TestRequest;
+let user: User;
 
-// rijesit auth
+beforeAll(async () => {
+  await application.test.start();
+  user = await generateCoach();
+  request = application.test.request;
+});
 
 describe('GET /zoom/authorize', () => {
   it('should return unauthorized status', async () => {
-    const result = await request(application.service.router).get(
-      process.env.API_BASE_PATH + '/zoom/authorize',
-    );
+    const result = await request.get('/zoom/authorize').execute();
 
     expect(result.statusCode).toBe(401);
   });
@@ -26,10 +28,11 @@ describe('GET /zoom/authorize', () => {
   });
 
   it('should return zak not found error', async () => {
-    const result = await request(application.service.router)
-      .get(process.env.API_BASE_PATH + '/zoom/authorize')
-      .set('Cookie', [tokenCookie])
-      .send({ accessToken: 'test-token' });
+    const result = await request
+      .get('/zoom/authorize')
+      .setAuthorization(user)
+      .setBody({ accessToken: 'test-token' })
+      .execute();
 
     expect(result.body.error).toBe('Zoom token not found.');
   });
@@ -37,9 +40,10 @@ describe('GET /zoom/authorize', () => {
 
 describe('POST /zoom/authorize', () => {
   it('should return unauthorized status', async () => {
-    const result = await request(application.service.router)
-      .post(process.env.API_BASE_PATH + '/zoom/authorize')
-      .send({ code: 'test-code', redirectUri: 'test-uri' });
+    const result = await request
+      .post('/zoom/authorize')
+      .setBody({ code: 'test-code', redirectUri: 'test-uri' })
+      .execute();
 
     expect(result.statusCode).toBe(401);
   });
@@ -59,10 +63,11 @@ describe('POST /zoom/authorize', () => {
         Promise.resolve({ data: { token: testTokenValue }, status: 200 }),
       );
 
-    const result = await request(application.service.router)
-      .post(process.env.API_BASE_PATH + '/zoom/authorize')
-      .set('Cookie', [tokenCookie])
-      .send({ code: 'test-code', redirectUri: 'test-uri' });
+    const result = await request
+      .post('/zoom/authorize')
+      .setAuthorization(user)
+      .setBody({ code: 'test-code', redirectUri: 'test-uri' })
+      .execute();
 
     expect(result.statusCode).toBe(200);
     expect(result.body.data).toBe(testTokenValue);
@@ -71,18 +76,20 @@ describe('POST /zoom/authorize', () => {
 
 describe('POST /zoom/signature', () => {
   it('should return unauthorized status', async () => {
-    const result = await request(application.service.router)
-      .post(process.env.API_BASE_PATH + '/zoom/signature')
-      .send({ meetingNumber: '123456', role: ZoomRole.Guest });
+    const result = await request
+      .post('/zoom/signature')
+      .setBody({ meetingNumber: '123456', role: ZoomRole.Guest })
+      .execute();
 
     expect(result.statusCode).toBe(401);
   });
 
   it('should return signature token', async () => {
-    const result = await request(application.service.router)
-      .post(process.env.API_BASE_PATH + '/zoom/signature')
-      .set('Cookie', [tokenCookie])
-      .send({ meetingNumber: '123456', role: ZoomRole.Guest });
+    const result = await request
+      .post('/zoom/signature')
+      .setAuthorization(user)
+      .setBody({ meetingNumber: '123456', role: ZoomRole.Guest })
+      .execute();
 
     expect(
       jsonwebtoken.verify(

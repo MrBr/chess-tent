@@ -15,7 +15,7 @@ const defaultTags = [
 ].map((text, index) => ({ text, _id: uuid() }));
 
 export const up = async function (next: () => {}) {
-  const db = await getDb();
+  const [db, client] = await getDb();
   const result = await db
     .collection('tags')
     .findOne({ text: defaultTags[0].text });
@@ -24,11 +24,12 @@ export const up = async function (next: () => {}) {
       .collection('tags')
       .insertMany(defaultTags, { forceServerObjectId: false });
   }
+  client.close();
   next();
 };
 
 export const down = async function (next: () => {}) {
-  const db = await getDb();
+  const [db] = await getDb();
   db.collection('tags').remove({});
   next();
 };

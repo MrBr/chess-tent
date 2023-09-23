@@ -223,25 +223,23 @@ export const findLessons = (
   });
 
 export const getPublicLessons = async () => {
-  try {
-    const lessons = await LessonModel.find({
-      showOnLanding: true,
-    })
-      .populate({
-        path: 'owner',
-        select: 'name',
-      })
-      .select({
-        difficulty: 1,
-        owner: 1,
-        v: 1,
-        'state.title': 1,
-      });
+  const publicLessonsFields = {
+    difficulty: 1,
+    owner: 1,
+    v: 1,
+    'state.title': 1,
+  };
 
-    return lessons;
-  } catch {
-    return [];
-  }
+  const lessons = await LessonModel.find({
+    showOnLanding: true,
+  })
+    .populate({
+      path: 'owner',
+      select: 'name',
+    })
+    .select(publicLessonsFields);
+
+  return lessons;
 };
 
 export const canEditLesson = (lessonId: Lesson['id'], userId: User['id']) =>

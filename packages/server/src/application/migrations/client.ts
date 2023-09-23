@@ -13,4 +13,4 @@ export const getDb = async () => {
   return [client.db(process.env.DB_NAME) as Db, client] as const;
 };
 
-process.on('beforeExit', async () => await client.close());
+// process.on('beforeExit', async () => await client.close());

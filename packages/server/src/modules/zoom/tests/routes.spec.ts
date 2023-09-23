@@ -16,6 +16,8 @@ beforeAll(async () => {
   request = application.test.request;
 });
 
+afterAll(async () => await application.stop());
+
 describe('GET /zoom/authorize', () => {
   it('should return unauthorized status', async () => {
     const result = await request.get('/zoom/authorize').execute();

@@ -5,10 +5,9 @@ import { generateApiToken, generateCoach } from '../../../application/tests';
 import { Step, TYPE_STEP, User } from '@chess-tent/models';
 import { v4 as uuid } from 'uuid';
 
+beforeAll(async () => await application.test.start());
+afterAll(async () => await application.stop());
 describe('Coach should be able to manage created step', () => {
-  beforeAll(() => application.test.start());
-  afterAll(() => application.stop());
-
   let stepId: string = uuid();
   let coach: User;
   let token: string;
@@ -128,12 +127,11 @@ describe('Coach should be able to manage created step', () => {
 });
 
 describe('GET /step/:stepId', () => {
-  beforeAll(() => application.test.start());
-  afterAll(() => application.stop());
   it('should return forbidden status', async function () {
     await request(application.service.router)
       .get(process.env.API_BASE_PATH + '/step/812376819764')
       .set('Accept', 'application/json')
       .expect(401);
+    await new Promise(resolve => setTimeout(resolve, 1000));
   });
 });

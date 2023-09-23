@@ -24,12 +24,13 @@ export const up = async function (next: () => {}) {
       .collection('tags')
       .insertMany(defaultTags, { forceServerObjectId: false });
   }
-  client.close();
+  await client.close();
   next();
 };
 
 export const down = async function (next: () => {}) {
-  const [db] = await getDb();
-  db.collection('tags').remove({});
+  const [db, client] = await getDb();
+  await db.collection('tags').remove({});
+  await client.close();
   next();
 };

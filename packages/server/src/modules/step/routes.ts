@@ -67,12 +67,6 @@ application.service.registerPostRoute(
       TYPE_STEP,
     ),
   })),
-  /**
-   * todo: here we need to get all steps that user can view
-   *
-   * 1 - get all IDs of type (step) user can view
-   * 2 - filter their IDs
-   **/
   findSteps,
   sendData('steps'),
 );

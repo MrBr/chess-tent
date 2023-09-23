@@ -8,7 +8,7 @@ import { shuffle } from 'lodash';
 import { UserModel } from './model';
 import { withCoachPublicInfo } from './utils';
 
-const PUBLIC_COACH_NUMBER = 8;
+const PUBLIC_COACH_NUMBER = 5;
 
 export const addUser = async (user: User): Promise<void> => {
   try {

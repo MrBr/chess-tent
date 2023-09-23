@@ -13,24 +13,26 @@ const { className: arrowClassName } = css`
   margin-right: 5px;
 `;
 
+const CARD_STEP = 1;
+
 const Coaches = () => {
   const { fetch: fetchCoaches, response: coachResponse } =
     useApi(publicCoaches);
 
   const isMobile = useIsMobile();
-  const cardStep = isMobile ? 1 : 3;
+  const cardCount = isMobile ? 1 : 3;
 
-  const [cardIndex, setCardIndex] = useState(cardStep);
+  const [cardIndex, setCardIndex] = useState(isMobile ? CARD_STEP : cardCount);
 
   const onLeftArrowClick = () => {
     setCardIndex(prevIndex =>
-      prevIndex > cardStep ? prevIndex - cardStep : coaches.length + 1,
+      prevIndex > cardCount ? prevIndex - CARD_STEP : coaches.length + 1,
     );
   };
 
   const onRightArrowClick = () => {
     setCardIndex(prevIndex =>
-      prevIndex <= coaches.length ? prevIndex + cardStep : cardStep,
+      prevIndex <= coaches.length ? prevIndex + CARD_STEP : cardCount,
     );
   };
 
@@ -91,7 +93,7 @@ const Coaches = () => {
                 />
               </Col>
             </div>,
-          ].slice(cardIndex - cardStep, cardIndex)}
+          ].slice(cardIndex - (isMobile ? CARD_STEP : cardCount), cardIndex)}
       </Col>
     </Row>
   );

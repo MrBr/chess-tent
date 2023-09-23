@@ -1,21 +1,17 @@
-import { Step } from '@chess-tent/models';
+import { Step, User } from '@chess-tent/models';
 import { depopulate, DepopulatedStep, StepModel } from './model';
 import { AppDocument } from '@types';
 import { SubjectFilters } from '@chess-tent/types';
 import { FilterQuery } from 'mongoose';
 import _ from 'lodash';
+import application from '@application';
 
-export const saveStep = (step: Step) =>
-  new Promise<void>(resolve => {
-    StepModel.updateOne({ _id: step.id }, depopulate(step), {
-      upsert: true,
-    }).exec(err => {
-      if (err) {
-        throw err;
-      }
-      resolve();
-    });
-  });
+export const saveStep = async (step: Step, user: User) => {
+  await StepModel.updateOne({ _id: step.id }, depopulate(step), {
+    upsert: true,
+  }).exec();
+  await application.service.addPermission(step, 'Owner', user);
+};
 
 export const getStep = (
   stepId: Step['id'],

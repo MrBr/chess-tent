@@ -1,11 +1,11 @@
 import { MiddlewareFunction } from '@types';
-import { Step } from '@chess-tent/models';
+import { Step, User } from '@chess-tent/models';
 import { StepNotFoundError } from './errors';
 import * as service from './service';
 
 export const saveStep: MiddlewareFunction = (req, res, next) => {
   service
-    .saveStep(res.locals.step as Step)
+    .saveStep(res.locals.step as Step, res.locals.me as User)
     .then(next)
     .catch(next);
 };

@@ -48,9 +48,7 @@ export const hasPermissionToDoService = async <
   // is assigned to
   const permissions = await PermissionModel.find(query).lean().exec();
   const roles = permissions.map(item => item.role);
-  return new Promise<boolean>(() =>
-    hasPermissions(roles, object.type, predicate),
-  );
+  return hasPermissions(roles, object.type, predicate);
 };
 
 export const getUsersWithRoleService = async (

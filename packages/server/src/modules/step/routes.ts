@@ -22,7 +22,7 @@ application.service.registerPostRoute(
   })(
     validatePermissions(
       req => ({ id: req.body.id, type: TYPE_STEP }),
-      'updateStep',
+      'updateContent',
     ),
   ),
   saveStep,
@@ -44,7 +44,7 @@ application.service.registerPutRoute(
   toLocals('step.id', req => req.params.stepId),
   validatePermissions(
     req => ({ id: req.params.stepId, type: TYPE_STEP }),
-    'updateStep',
+    'updateContent',
   ),
   patchStep,
   sendStatusOk,

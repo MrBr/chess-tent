@@ -45,7 +45,7 @@ permissionSchema.index({
   role: 'text',
 });
 
-stepSchema.index(
+permissionSchema.index(
   {
     holder: 'text',
     holderType: 'text',

@@ -70,6 +70,7 @@ export interface PublicCoachesResponse
 export interface LessonResponse extends DataResponse<Lesson> {}
 export interface LessonChaptersResponse extends DataResponse<Chapter[]> {}
 export interface LessonsResponse extends DataResponse<Lesson[]> {}
+export interface PublicLessonsResponse extends DataResponse<Lesson[]> {}
 export interface ActivityResponse extends DataResponse<Activity> {}
 export interface ActivitiesResponse<T extends Activity = Activity>
   extends DataResponse<T[]> {}
@@ -307,6 +308,7 @@ export interface Endpoints {
     StatusResponse
   >;
   lessons: Endpoint<RequestPost<'/lessons', LessonsFilters>, LessonsResponse>;
+  publicLessons: Endpoint<RequestGet<'/public-lessons'>, PublicLessonsResponse>;
   myLessons: Endpoint<
     RequestPost<'/my-lessons', MyLessonsFilters>,
     LessonsResponse

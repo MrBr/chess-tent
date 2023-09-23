@@ -58,6 +58,11 @@ const myLessons = services.createRequest<Requests['myLessons']>(
   filters => filters,
 );
 
+const publicLessons = services.createRequest<Requests['publicLessons']>(
+  'GET',
+  '/public-lessons',
+);
+
 const trainings = services.createRequest<Requests['trainings']>(
   'POST',
   '/activities',
@@ -83,6 +88,7 @@ requests.lessonSave = lessonSave;
 requests.lessonPublish = lessonPublish;
 requests.lessonUnpublish = lessonUnpublish;
 requests.lessons = lessons;
+requests.publicLessons = publicLessons;
 requests.myLessons = myLessons;
 requests.lessonPatch = lessonPatch;
 requests.lessonUpdates = lessonUpdates;

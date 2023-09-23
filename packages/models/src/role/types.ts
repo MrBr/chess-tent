@@ -3,7 +3,7 @@ import { TYPE_CHAPTER } from '../chapter';
 import { TYPE_LESSON } from '../lesson';
 import { TYPE_ACTIVITY } from '../activity';
 
-const SubjectViewerPrivileges = ['clone', 'import'];
+const SubjectViewerPrivileges = ['view', 'clone', 'import'];
 const SubjectEditorPrivileges = [...SubjectViewerPrivileges, 'updateContent'];
 const SubjectOwnerPrivileges = [
   ...SubjectEditorPrivileges,
@@ -89,6 +89,15 @@ const getRoleDefinitionsByObjectType = (objectType: String): any => {
   }
 };
 
+export const getRolesWithAction = (
+  objectType: string,
+  action: string,
+): string[] => {
+  const roleDefinitions = getRoleDefinitionsByObjectType(objectType);
+  return Object.keys(roleDefinitions).filter((role: string) =>
+    roleDefinitions[role].includes(action),
+  );
+};
 export const hasPermissions = (
   roles: string[],
   objectType: string,

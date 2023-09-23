@@ -56,6 +56,10 @@ export const findSteps = (filters: Partial<SubjectFilters>): Promise<Step[]> =>
       query['tags'] = { $in: filters.tagIds };
     }
 
+    if (!_.isEmpty(filters.ids)) {
+      query['id'] = { $in: filters.ids };
+    }
+
     if (filters.search) {
       query['$text'] = { $search: filters.search, $caseSensitive: false };
     }

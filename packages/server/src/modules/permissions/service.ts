@@ -1,10 +1,12 @@
 import {
   Activity,
   Chapter,
+  getRolesWithAction,
   hasPermissions,
   Lesson,
   Step,
   TYPE_PERMISSION,
+  TYPE_USER,
   User,
 } from '@chess-tent/models/src';
 import { DepopulatedPermission, PermissionModel } from './model';
@@ -66,5 +68,42 @@ export const getUsersWithRoleService = async (
   ).map(
     depopulatedPermission =>
       depopulatedPermission.toObject<Permission>().holder,
+  );
+};
+export const getUserObjectsByActionService = async (
+  user: User,
+  action: string,
+  objectType: string,
+): Promise<string[]> => {
+  const roles: string[] = getRolesWithAction(objectType, action);
+
+  const query: FilterQuery<AppDocument<DepopulatedPermission>> = {
+    objectType: objectType,
+    holderType: TYPE_USER,
+    holder: user.id,
+    role: { $in: roles },
+  };
+
+  return (await PermissionModel.find(query).exec()).map(
+    depopulatedPermission =>
+      depopulatedPermission.toObject<DepopulatedPermission>().object,
+  );
+};
+
+export const getUserObjectsByRoleService = async (
+  user: User,
+  role: string,
+  objectType: string,
+): Promise<string[]> => {
+  const query: FilterQuery<AppDocument<DepopulatedPermission>> = {
+    objectType: objectType,
+    holderType: TYPE_USER,
+    holder: user.id,
+    role: role,
+  };
+
+  return (await PermissionModel.find(query).exec()).map(
+    depopulatedPermission =>
+      depopulatedPermission.toObject<DepopulatedPermission>().object,
   );
 };

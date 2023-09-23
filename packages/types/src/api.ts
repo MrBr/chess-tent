@@ -10,6 +10,7 @@ import {
   NormalizedMentorship,
   NormalizedMessage,
   Notification,
+  Subject,
   SubjectPath,
   SubjectPathUpdate,
   Tag,
@@ -39,6 +40,7 @@ export type SubjectFilters = {
   search?: string;
   tagIds?: Tag['id'][];
   difficulty?: Difficulty;
+  ids?: Subject['id'][];
 };
 
 export type MyLessonsFilters = Omit<LessonsFilters, 'users' | 'owner'>;

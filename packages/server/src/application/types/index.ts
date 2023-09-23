@@ -159,6 +159,16 @@ export type Service = {
     object: Step | Chapter | Lesson | Activity, // | UserGroup
     role: string,
   ) => Promise<Array<User>>;
+  getUserObjectsByAction: (
+    user: User,
+    action: string,
+    objectType: string,
+  ) => Promise<string[]>;
+  getUserObjectsByRole: (
+    user: User,
+    role: string,
+    objectType: string,
+  ) => Promise<string[]>;
   generateIndex: () => string;
   sendMail: (data: MailData) => Promise<
     | {

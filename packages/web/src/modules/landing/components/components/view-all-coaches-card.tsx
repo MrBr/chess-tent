@@ -44,9 +44,10 @@ const ViewAllCoachesCard = ({ count }: { count: number }) => {
   return (
     <Card className={cardClassName}>
       <Card.Body className="coaches-card-body">
-        <Text weight={500} className="coaches-info-text">{`${
-          count - 1
-        }+ Coaches, 0-2006 ELO, 30+ languages`}</Text>
+        <Text
+          weight={500}
+          className="coaches-info-text"
+        >{`${count}+ Coaches, 0-2006 ELO, 30+ languages`}</Text>
         <Button
           variant="primary"
           size="small"

@@ -49,6 +49,20 @@ const Coaches = () => {
     return [];
   }, [coachResponse, isMobile]);
 
+  const pagedCoaches = useMemo(
+    () =>
+      coaches
+        .map((coach, index) => (
+          <div key={index} className="px-2">
+            <Col>
+              <CoachCard coach={coach} hideOptions />
+            </Col>
+          </div>
+        ))
+        .slice(cardIndex - (isMobile ? CARD_STEP : cardCount), cardIndex),
+    [coaches, cardCount, cardIndex, isMobile],
+  );
+
   return (
     <Row className="d-flex flex-row pt-4 align-items-center">
       <Col lg={3} className="pb-5">
@@ -77,23 +91,15 @@ const Coaches = () => {
         lg={9}
         className="d-flex flex-row overflow-hidden justify-content-center justify-content-md-end"
       >
-        {coaches.length > 0 &&
-          [
-            ...coaches.map((coach, index) => (
-              <div key={index} className="px-2">
-                <Col>
-                  <CoachCard coach={coach} hideOptions />
-                </Col>
-              </div>
-            )),
-            <div key={coaches.length} className="px-2">
-              <Col>
-                <ViewAllCoachesCard
-                  count={coachResponse?.data.coachCount || 0}
-                />
-              </Col>
-            </div>,
-          ].slice(cardIndex - (isMobile ? CARD_STEP : cardCount), cardIndex)}
+        {pagedCoaches.length > 0 &&
+          pagedCoaches.map(coachElement => coachElement)}
+        {pagedCoaches.length < cardCount && (
+          <div key={coaches.length} className="px-2">
+            <Col>
+              <ViewAllCoachesCard count={coachResponse?.data.coachCount || 0} />
+            </Col>
+          </div>
+        )}
       </Col>
     </Row>
   );

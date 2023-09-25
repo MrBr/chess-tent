@@ -7,6 +7,7 @@ import { utils, service, db } from '@application';
 import { shuffle } from 'lodash';
 import { UserModel } from './model';
 import { withCoachPublicInfo } from './utils';
+import { publicCoachFields } from './constants';
 
 const PUBLIC_COACH_NUMBER = 5;
 
@@ -138,22 +139,6 @@ export const getPublicCoaches = async () => {
 
   // get full public coaches count
   const coachCount = await UserModel.find(query).countDocuments();
-
-  const publicCoachFields = {
-    id: 1,
-    name: 1,
-    nickname: 1,
-    type: 1,
-    'state.imageUrl': 1,
-    'state.elo': 1,
-    'state.studentEloMin': 1,
-    'state.studentEloMax': 1,
-    'state.teachingMethodology': 1,
-    'state.languages': 1,
-    'state.punchline': 1,
-    'state.country': 1,
-    'state.fideTitle': 1,
-  };
 
   const coaches = await UserModel.find(query)
     .limit(PUBLIC_COACH_NUMBER)

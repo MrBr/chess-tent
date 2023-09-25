@@ -12,6 +12,7 @@ import { LessonsFilters, LessonUpdates } from '@chess-tent/types';
 import { FilterQuery } from 'mongoose';
 import { utils, db, service } from '@application';
 import { LessonModel, depopulate, DepupulatedLesson } from './model';
+import { publicLessonsFields } from './constants';
 
 export const saveLesson = (lesson: Lesson) =>
   new Promise<void>(resolve => {
@@ -223,13 +224,6 @@ export const findLessons = (
   });
 
 export const getPublicLessons = async () => {
-  const publicLessonsFields = {
-    difficulty: 1,
-    owner: 1,
-    v: 1,
-    'state.title': 1,
-  };
-
   const lessons = await LessonModel.find({
     showOnLanding: true,
   })

@@ -49,19 +49,15 @@ const Coaches = () => {
     return [];
   }, [coachResponse, isMobile]);
 
-  const pagedCoaches = useMemo(
-    () =>
-      coaches
-        .slice(cardIndex - (isMobile ? CARD_STEP : cardCount), cardIndex)
-        .map((coach, index) => (
-          <div key={index} className="px-2">
-            <Col>
-              <CoachCard coach={coach} hideOptions />
-            </Col>
-          </div>
-        )),
-    [coaches, cardCount, cardIndex, isMobile],
-  );
+  const pagedCoaches = coaches
+    .slice(cardIndex - (isMobile ? CARD_STEP : cardCount), cardIndex)
+    .map((coach, index) => (
+      <div key={index} className="px-2">
+        <Col>
+          <CoachCard coach={coach} hideOptions />
+        </Col>
+      </div>
+    ));
 
   return (
     <Row className="d-flex flex-row pt-4 align-items-center">

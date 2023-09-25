@@ -52,14 +52,14 @@ const Coaches = () => {
   const pagedCoaches = useMemo(
     () =>
       coaches
+        .slice(cardIndex - (isMobile ? CARD_STEP : cardCount), cardIndex)
         .map((coach, index) => (
           <div key={index} className="px-2">
             <Col>
               <CoachCard coach={coach} hideOptions />
             </Col>
           </div>
-        ))
-        .slice(cardIndex - (isMobile ? CARD_STEP : cardCount), cardIndex),
+        )),
     [coaches, cardCount, cardIndex, isMobile],
   );
 

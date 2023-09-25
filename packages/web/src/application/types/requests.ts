@@ -33,6 +33,7 @@ export interface Requests {
     Endpoints['coaches'],
     [GetEndpointData<Endpoints['coaches']>, Pagination?]
   >;
+  publicCoaches: RequestFetch<Endpoints['publicCoaches']>;
   user: RequestFetch<Endpoints['user'], User['id']>;
   userValidate: RequestFetch<Endpoints['userValidate'], Partial<User>>;
   updateMe: RequestFetch<Endpoints['updateMe']>;

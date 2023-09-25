@@ -64,6 +64,8 @@ export interface DataResponse<T> extends StatusResponse {
 }
 export interface UserResponse extends DataResponse<User> {}
 export interface UsersResponse extends DataResponse<User[]> {}
+export interface PublicCoachesResponse
+  extends DataResponse<{ coaches: User[]; coachCount: number }> {}
 export interface LessonResponse extends DataResponse<Lesson> {}
 export interface LessonChaptersResponse extends DataResponse<Chapter[]> {}
 export interface LessonsResponse extends DataResponse<Lesson[]> {}
@@ -273,6 +275,7 @@ export interface Endpoints {
   me: Endpoint<RequestGet<'/me'>, UserResponse>;
   updateMe: Endpoint<RequestPut<'/me', Partial<User>>, UserResponse>;
   coaches: Endpoint<RequestPost<'/coaches', UsersFilters>, UsersResponse>;
+  publicCoaches: Endpoint<RequestGet<'/public-coaches'>, PublicCoachesResponse>;
   user: Endpoint<RequestGet<`/user/${string}`>, UserResponse>;
   userValidate: Endpoint<
     RequestPost<`/user/validate`, Partial<User>>,

@@ -538,6 +538,7 @@ export type Components = {
   Coaches: ComponentType<{ preview?: boolean }>;
   CoachCard: ComponentType<{
     coach: User;
+    hideOptions?: boolean;
   }>;
   ConversationsStand: ComponentType;
   AnalysisBoard: ComponentType<AnalysisBoardProps>;

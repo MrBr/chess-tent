@@ -1,10 +1,15 @@
 import { NormalizedUser, User } from '@chess-tent/models';
-import { COACH_REQUIRED_STATE, WithPagination } from '@chess-tent/types';
+import { WithPagination } from '@chess-tent/types';
 import { AppDocument } from '@types';
 import { compare, hash } from 'bcrypt';
 import { FilterQuery } from 'mongoose';
 import { utils, service, db } from '@application';
+import { shuffle } from 'lodash';
 import { UserModel } from './model';
+import { withCoachPublicInfo } from './utils';
+import { publicCoachFields } from './constants';
+
+const PUBLIC_COACH_NUMBER = 5;
 
 export const addUser = async (user: User): Promise<void> => {
   try {
@@ -101,13 +106,7 @@ export const findCoaches = (
     infoQuery['$text'] = { $search: filters.search, $caseSensitive: false };
   }
 
-  // Check all required public info
-  COACH_REQUIRED_STATE.forEach(key => {
-    infoQuery[`state.${key}`] = infoQuery[`state.${key}`] || {
-      $exists: true,
-      $ne: '',
-    };
-  });
+  withCoachPublicInfo(infoQuery);
 
   return new Promise((resolve, reject) => {
     UserModel.find(query)
@@ -125,6 +124,27 @@ export const findCoaches = (
         resolve(result.map(item => item.toObject()));
       });
   });
+};
+
+export const getPublicCoaches = async () => {
+  const infoQuery: FilterQuery<AppDocument<NormalizedUser>> =
+    utils.notNullOrUndefined({
+      coach: true,
+    });
+  const query: { $and: FilterQuery<AppDocument<NormalizedUser>>[] } = {
+    $and: [infoQuery],
+  };
+
+  withCoachPublicInfo(infoQuery);
+
+  // get full public coaches count
+  const coachCount = await UserModel.find(query).countDocuments();
+
+  const coaches = await UserModel.find(query)
+    .limit(PUBLIC_COACH_NUMBER)
+    .select(publicCoachFields);
+
+  return { coaches: shuffle(coaches), coachCount };
 };
 
 export const validateUser = async (

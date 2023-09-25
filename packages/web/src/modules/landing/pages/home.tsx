@@ -12,6 +12,7 @@ import Section from '../components/section';
 import Footer from '../components/footer';
 import CTA from '../components/cta';
 import Underline from '../components/underline';
+import Coaches from '../components/coaches';
 import headerLeftUrl from '../images/header-left.png';
 import headerRightUrl from '../images/header-right.png';
 import headerArrowUrl from '../images/header-arrow.svg';
@@ -170,6 +171,8 @@ export const LandingPage = () => {
               </Text>
             </Col>
           </Row>
+          <Line className="my-5" />
+          <Coaches />
         </Container>
       </Section>
       <Section>

@@ -40,3 +40,19 @@ export const introMessagesInvitedStudent = [
   )} page.`,
   `We'd love to hear back from you.`,
 ];
+
+export const publicCoachFields = {
+  id: 1,
+  name: 1,
+  nickname: 1,
+  type: 1,
+  'state.imageUrl': 1,
+  'state.elo': 1,
+  'state.studentEloMin': 1,
+  'state.studentEloMax': 1,
+  'state.teachingMethodology': 1,
+  'state.languages': 1,
+  'state.punchline': 1,
+  'state.country': 1,
+  'state.fideTitle': 1,
+};

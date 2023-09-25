@@ -142,8 +142,8 @@ export type Service = {
     userDescr: Partial<User>,
     projection?: string,
   ) => Promise<User | null>;
-
   addUser: (user: User) => Promise<void>;
+
   addTag: (tag: Tag) => Promise<void>;
   findTags: (startsWith: string) => Promise<Tag[]>;
   generateIndex: () => string;
@@ -351,6 +351,9 @@ export interface TestRequest {
 export interface Test {
   start: () => Promise<void>;
   request: TestRequest;
+  fixtures: {
+    coaches: User[];
+  };
 }
 
 export class AppError extends Error {}

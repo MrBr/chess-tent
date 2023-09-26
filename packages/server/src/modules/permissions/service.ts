@@ -1,9 +1,12 @@
 import {
+  ActionValues,
   Activity,
   Chapter,
   getRolesWithAction,
   hasPermissions,
   Lesson,
+  ObjectTypeValues,
+  RoleValues,
   Step,
   TYPE_PERMISSION,
   TYPE_USER,
@@ -32,11 +35,11 @@ export const addPermissionService = async (
 };
 
 export const hasPermissionToDoService = async <
-  T extends { id: string; type: string },
+  T extends { id: string; type: ObjectTypeValues },
 >(
   subject: User,
   object: T,
-  predicate: string,
+  predicate: ActionValues,
 ): Promise<boolean> => {
   const query: FilterQuery<AppDocument<DepopulatedPermission>> = {
     object: object.id,
@@ -49,7 +52,7 @@ export const hasPermissionToDoService = async <
   // filter permissions with all the userGroups user
   // is assigned to
   const permissions = await PermissionModel.find(query).lean().exec();
-  const roles = permissions.map(item => item.role);
+  const roles = permissions.map(item => item.role as RoleValues);
   return hasPermissions(roles, object.type, predicate);
 };
 
@@ -72,8 +75,8 @@ export const getUsersWithRoleService = async (
 };
 export const getUserObjectsByActionService = async (
   user: User,
-  action: string,
-  objectType: string,
+  action: ActionValues,
+  objectType: ObjectTypeValues,
 ): Promise<string[]> => {
   const roles: string[] = getRolesWithAction(objectType, action);
 

@@ -31,7 +31,14 @@ import {
 } from '@chess-tent/types';
 import { RecordAction } from '@chess-tent/redux-record/types';
 import * as http from 'http';
-import { Activity, Chapter, Lesson, Step } from '@chess-tent/models/src';
+import {
+  ActionValues,
+  Activity,
+  Chapter,
+  Lesson,
+  ObjectTypeValues,
+  Step,
+} from '@chess-tent/models/src';
 
 export type AppDocument<T> = T & Document & { v: number };
 export type EntityDocument<T = Entity> = AppDocument<T>;
@@ -149,11 +156,11 @@ export type Service = {
     role: string,
     holder: User, // | UserGroup
   ) => Promise<void>;
-  hasPermissionToDo: (
+  hasPermissionToDo: <T extends { id: string; type: ObjectTypeValues }>(
     // todo: think of better name later
     subject: User,
-    object: Step | Chapter | Lesson | Activity, // | UserGroup
-    predicate: string,
+    object: T,
+    predicate: ActionValues,
   ) => Promise<boolean>;
   getUsersWithRole: (
     object: Step | Chapter | Lesson | Activity, // | UserGroup
@@ -161,8 +168,8 @@ export type Service = {
   ) => Promise<Array<User>>;
   getUserObjectsByAction: (
     user: User,
-    action: string,
-    objectType: string,
+    action: ActionValues,
+    objectType: ObjectTypeValues,
   ) => Promise<string[]>;
   getUserObjectsByRole: (
     user: User,
@@ -229,9 +236,9 @@ export type Middleware = {
   errorHandler: ErrorRequestHandler;
   sendData: (localProp: string) => MiddlewareFunction;
   sendAction: MiddlewareFunction;
-  validatePermissions: <T extends { id: string; type: string }>(
+  validatePermissions: <T extends { id: string; type: ObjectTypeValues }>(
     getEntity: MiddlewareGetter<T>,
-    action: string,
+    action: ActionValues,
     userLocalKey?: string,
   ) => MiddlewareFunction;
   validate: (

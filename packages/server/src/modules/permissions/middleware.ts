@@ -1,11 +1,12 @@
 import { MiddlewareFunction, MiddlewareGetter } from '@types';
 import { hasPermissionToDoService } from './service';
 import { ForbiddenError } from './errors';
+import { ActionValues, ObjectTypeValues } from '@chess-tent/models/src';
 
 export const hasPermissionsMiddleware =
-  <T extends { id: string; type: string }>(
+  <T extends { id: string; type: ObjectTypeValues }>(
     getEntity: MiddlewareGetter<T>,
-    action: string,
+    action: ActionValues,
     userLocalKey: string = 'me',
   ): MiddlewareFunction =>
   async (req, res, next) => {

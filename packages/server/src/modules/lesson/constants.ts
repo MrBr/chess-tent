@@ -3,4 +3,5 @@ export const publicLessonsFields = {
   owner: 1,
   v: 1,
   'state.title': 1,
+  'state.chapters': 1,
 };

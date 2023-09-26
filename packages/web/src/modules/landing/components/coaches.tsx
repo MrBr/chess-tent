@@ -38,8 +38,8 @@ const Coaches = () => {
 
   const pagedCoaches = coaches
     .slice(cardIndex - (isMobile ? CARD_STEP : cardCount), cardIndex)
-    .map((coach, index) => (
-      <div key={index} className="px-2">
+    .map(coach => (
+      <div key={coach.id} className="px-2">
         <Col>
           <CoachCard coach={coach} hideOptions />
         </Col>
@@ -52,6 +52,7 @@ const Coaches = () => {
       description="Match with the coach based on your needs and specific skillset"
       dataLength={coaches.length}
       setCardIndex={setCardIndex}
+      hasExtraCard
     >
       {pagedCoaches.length > 0 &&
         pagedCoaches.map(coachElement => coachElement)}

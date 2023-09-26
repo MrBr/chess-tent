@@ -9,6 +9,7 @@ interface PublicInfoProps {
   title: string;
   description: string;
   dataLength: number;
+  hasExtraCard?: boolean;
   setCardIndex: Function;
   children: ReactNode;
 }
@@ -23,6 +24,7 @@ const PublicInfo = ({
   title,
   description,
   dataLength,
+  hasExtraCard,
   setCardIndex,
   children,
 }: PublicInfoProps) => {
@@ -31,13 +33,17 @@ const PublicInfo = ({
 
   const onLeftArrowClick = () => {
     setCardIndex((prevIndex: number) =>
-      prevIndex > cardCount ? prevIndex - CARD_STEP : dataLength + 1,
+      prevIndex > cardCount
+        ? prevIndex - CARD_STEP
+        : dataLength + (hasExtraCard ? 1 : 0),
     );
   };
 
   const onRightArrowClick = () => {
     setCardIndex((prevIndex: number) =>
-      prevIndex <= dataLength ? prevIndex + CARD_STEP : cardCount,
+      prevIndex + (hasExtraCard ? 0 : 1) <= dataLength
+        ? prevIndex + CARD_STEP
+        : cardCount,
     );
   };
 

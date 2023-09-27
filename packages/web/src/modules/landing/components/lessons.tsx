@@ -48,8 +48,7 @@ const Lessons = () => {
       dataLength={lessons.length}
       setCardIndex={setCardIndex}
     >
-      {pagedLessons.length > 0 &&
-        pagedLessons.map(lessonElement => lessonElement)}
+      {pagedLessons.length > 0 && pagedLessons}
     </PublicInfo>
   );
 };

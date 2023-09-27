@@ -54,8 +54,7 @@ const Coaches = () => {
       setCardIndex={setCardIndex}
       hasExtraCard
     >
-      {pagedCoaches.length > 0 &&
-        pagedCoaches.map(coachElement => coachElement)}
+      {pagedCoaches.length > 0 && pagedCoaches}
       {pagedCoaches.length < cardCount && (
         <div key={coaches.length} className="px-2">
           <Col>

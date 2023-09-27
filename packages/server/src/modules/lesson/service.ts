@@ -226,6 +226,7 @@ export const findLessons = (
 export const getPublicLessons = async () => {
   const lessons = await LessonModel.find({
     showOnLanding: true,
+    published: true,
   })
     .populate({
       path: 'owner',

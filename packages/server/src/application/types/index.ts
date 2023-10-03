@@ -17,6 +17,7 @@ import {
   Role,
   NormalizedRole,
   Tag,
+  Lesson,
 } from '@chess-tent/models';
 import { Socket } from 'socket.io';
 import { Server as HttpServer } from 'http';
@@ -195,6 +196,8 @@ export type Service = {
   flattenStateToMongoose$set: <T extends Subject>(
     subject: Partial<T>,
   ) => Partial<T>;
+
+  saveLesson: (lesson: Lesson) => Promise<void>;
 };
 
 export type MailData = Parameters<Messages['send']>[0];
@@ -353,6 +356,7 @@ export interface Test {
   request: TestRequest;
   fixtures: {
     coaches: User[];
+    lessons: Lesson[];
   };
 }
 

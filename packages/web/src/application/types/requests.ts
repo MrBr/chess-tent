@@ -60,6 +60,7 @@ export interface Requests {
     Endpoints['lessons'],
     [GetEndpointData<Endpoints['lessons']>, Pagination?]
   >;
+  publicLessons: RequestFetch<Endpoints['publicLessons']>;
   myLessons: RequestFetch<
     Endpoints['myLessons'],
     [GetEndpointData<Endpoints['myLessons']>, Pagination?]

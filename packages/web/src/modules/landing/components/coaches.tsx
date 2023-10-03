@@ -1,17 +1,15 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { ui, components, hooks, requests } from '@application';
-import { css } from '@chess-tent/styled-props';
 
-import ViewAllCoachesCard from './components/view-all-coaches-card';
+import ViewAllCard from './components/view-all-card';
+import PublicInfo from './components/public-info';
 
-const { Row, Col, Button, Icon, Text } = ui;
+import coachesImage from '../images/coaches.png';
+
+const { Col } = ui;
 const { CoachCard } = components;
-const { useApi, useIsMobile } = hooks;
+const { useApi, useIsMobile, useHistory } = hooks;
 const { publicCoaches } = requests;
-
-const { className: arrowClassName } = css`
-  margin-right: 5px;
-`;
 
 const CARD_STEP = 1;
 
@@ -19,22 +17,11 @@ const Coaches = () => {
   const { fetch: fetchCoaches, response: coachResponse } =
     useApi(publicCoaches);
 
+  const history = useHistory();
   const isMobile = useIsMobile();
   const cardCount = isMobile ? 1 : 3;
 
   const [cardIndex, setCardIndex] = useState(isMobile ? CARD_STEP : cardCount);
-
-  const onLeftArrowClick = () => {
-    setCardIndex(prevIndex =>
-      prevIndex > cardCount ? prevIndex - CARD_STEP : coaches.length + 1,
-    );
-  };
-
-  const onRightArrowClick = () => {
-    setCardIndex(prevIndex =>
-      prevIndex <= coaches.length ? prevIndex + CARD_STEP : cardCount,
-    );
-  };
 
   useEffect(() => {
     fetchCoaches();
@@ -51,8 +38,8 @@ const Coaches = () => {
 
   const pagedCoaches = coaches
     .slice(cardIndex - (isMobile ? CARD_STEP : cardCount), cardIndex)
-    .map((coach, index) => (
-      <div key={index} className="px-2">
+    .map(coach => (
+      <div key={coach.id} className="px-2">
         <Col>
           <CoachCard coach={coach} hideOptions />
         </Col>
@@ -60,44 +47,29 @@ const Coaches = () => {
     ));
 
   return (
-    <Row className="d-flex flex-row pt-4 align-items-center">
-      <Col lg={3} className="pb-5">
-        <Text weight={500}>🚀 Learn from our top coaches</Text>
-        <Text>
-          Match with the coach based on your needs and specific skillset.
-        </Text>
-        <Button
-          variant="regular"
-          size="extra-small"
-          className={arrowClassName}
-          onClick={onLeftArrowClick}
-        >
-          <Icon type="left" />
-        </Button>
-        <Button
-          variant="regular"
-          size="extra-small"
-          onClick={onRightArrowClick}
-        >
-          <Icon type="right" />
-        </Button>
-      </Col>
-      <Col
-        md={12}
-        lg={9}
-        className="d-flex flex-row overflow-hidden justify-content-center justify-content-md-end"
-      >
-        {pagedCoaches.length > 0 &&
-          pagedCoaches.map(coachElement => coachElement)}
-        {pagedCoaches.length < cardCount && (
-          <div key={coaches.length} className="px-2">
-            <Col>
-              <ViewAllCoachesCard count={coachResponse?.data.coachCount || 0} />
-            </Col>
-          </div>
-        )}
-      </Col>
-    </Row>
+    <PublicInfo
+      title="Learn from our top coaches"
+      description="Match with the coach based on your needs and specific skillset"
+      dataLength={coaches.length}
+      setCardIndex={setCardIndex}
+      hasExtraCard
+    >
+      {pagedCoaches.length > 0 && pagedCoaches}
+      {pagedCoaches.length < cardCount && (
+        <div key={coaches.length} className="px-2">
+          <Col>
+            <ViewAllCard
+              caption={`${
+                coachResponse?.data.coachCount || 0
+              }+ Coaches, 0-2006 ELO, 30+ languages`}
+              buttonText="View all coaches"
+              backgroundImage={coachesImage}
+              onClick={() => history.push(`/coaches`)}
+            />
+          </Col>
+        </div>
+      )}
+    </PublicInfo>
   );
 };
 

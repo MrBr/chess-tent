@@ -27,6 +27,7 @@ export interface Lesson extends Subject {
   tags?: Tag[];
   users?: User[];
   published?: boolean;
+  showOnLanding?: boolean;
   state: {
     chapters: Chapter[];
     title: string;
@@ -44,6 +45,7 @@ export interface NormalizedLesson {
   tags?: Tag['id'][];
   published?: boolean;
   users?: User['id'][];
+  showOnLanding?: Lesson['showOnLanding'];
   state: {
     chapters: Chapter[];
     title: Lesson['state']['title'];

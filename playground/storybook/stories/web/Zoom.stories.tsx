@@ -31,7 +31,7 @@ export const Default: ComponentStory<Components['ZoomProvider']> =
               meetingNumber={!user?.coach ? meetingNumber : undefined}
             >
               {user?.coach ? <ZoomHostControl /> : <ZoomGuestControl />}
-              <ZoomActivityView />
+              <ZoomActivityView setZoomMeetingNumberState={() => {}} />
             </ZoomProvider>
           )}
         </Router>

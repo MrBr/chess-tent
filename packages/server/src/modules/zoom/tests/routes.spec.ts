@@ -16,6 +16,14 @@ beforeAll(async () => {
   request = application.test.request;
 });
 
+beforeAll(async () => {
+  jest.spyOn(console, 'error').mockImplementation(jest.fn());
+});
+
+afterAll(() => {
+  jest.resetAllMocks();
+});
+
 describe('GET /zoom/authorize', () => {
   it('should return unauthorized status', async () => {
     const result = await request.get('/zoom/authorize').execute();

@@ -5,6 +5,14 @@ import { generateApiToken, generateCoach } from '../../../application/tests';
 import { Step, Tag, TYPE_STEP, TYPE_TAG, User } from '@chess-tent/models';
 import { v4 as uuid } from 'uuid';
 
+beforeAll(async () => {
+  jest.spyOn(console, 'error').mockImplementation(jest.fn());
+});
+
+afterAll(() => {
+  jest.resetAllMocks();
+});
+
 describe('Coach should be able to manage created step', () => {
   beforeAll(() => application.test.start());
   afterAll(() => application.stop());

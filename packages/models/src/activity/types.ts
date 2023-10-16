@@ -1,5 +1,4 @@
 import { Subject } from '../subject';
-import { NormalizedRole, Role } from '../role';
 
 export const TYPE_ACTIVITY = 'activities';
 
@@ -13,7 +12,6 @@ export interface Activity<
   // Shouldn't be required because it's more a db thing
   subjectType?: T['type'];
   type: typeof TYPE_ACTIVITY;
-  roles: Role<string>[];
   date?: Date;
   weekly?: boolean;
   title?: string;
@@ -29,7 +27,6 @@ export interface NormalizedActivity<
   state: Activity<T, S>['state'];
   subject: Subject;
   subjectType: T['type'];
-  roles: NormalizedRole<string>[];
   date?: Date;
   weekly?: boolean;
   title?: string;

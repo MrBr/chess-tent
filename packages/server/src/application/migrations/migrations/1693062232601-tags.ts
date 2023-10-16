@@ -1,3 +1,4 @@
+import { v4 as uuid } from 'uuid';
 import { getDb } from '../client';
 
 const defaultTags = [
@@ -11,21 +12,25 @@ const defaultTags = [
   'Positional play',
   'Tactic',
   'Mate',
-].map(text => ({ text }));
+].map((text, index) => ({ text, _id: uuid() }));
 
 export const up = async function (next: () => {}) {
-  const db = await getDb();
+  const [db, client] = await getDb();
   const result = await db
     .collection('tags')
     .findOne({ text: defaultTags[0].text });
   if (!result) {
-    await db.collection('tags').insertMany(defaultTags);
+    await db
+      .collection('tags')
+      .insertMany(defaultTags, { forceServerObjectId: false });
   }
+  await client.close();
   next();
 };
 
 export const down = async function (next: () => {}) {
-  const db = await getDb();
-  db.collection('tags').remove({});
+  const [db, client] = await getDb();
+  await db.collection('tags').remove({});
+  await client.close();
   next();
 };

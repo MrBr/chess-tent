@@ -14,8 +14,6 @@ import {
   User,
   Subject,
   Entity,
-  Role,
-  NormalizedRole,
   Tag,
   Lesson,
 } from '@chess-tent/models';
@@ -34,6 +32,14 @@ import {
 } from '@chess-tent/types';
 import { RecordAction } from '@chess-tent/redux-record/types';
 import * as http from 'http';
+import {
+  ActionValues,
+  Activity,
+  Chapter,
+  Lesson,
+  ObjectTypeValues,
+  Step,
+} from '@chess-tent/models/src';
 
 export type AppDocument<T> = T & Document & { v: number };
 export type EntityDocument<T = Entity> = AppDocument<T>;
@@ -62,7 +68,6 @@ export type DB = {
     useDefault?: boolean,
   ) => Schema;
   roleSchema: Schema;
-  depopulateRole: <T>(role: Role<T>) => NormalizedRole<T>;
   createModel: <T>(type: string, schema: Schema) => Model<AppDocument<T>>;
   orQueries: <T extends FilterQuery<any>>(
     ...args: T[]
@@ -147,6 +152,31 @@ export type Service = {
 
   addTag: (tag: Tag) => Promise<void>;
   findTags: (startsWith: string) => Promise<Tag[]>;
+  addPermission: (
+    object: Step | Chapter | Lesson | Activity, // | UserGroup
+    role: string,
+    holder: User, // | UserGroup
+  ) => Promise<void>;
+  hasPermissionToDo: <T extends { id: string; type: ObjectTypeValues }>(
+    // todo: think of better name later
+    subject: User,
+    object: T,
+    predicate: ActionValues,
+  ) => Promise<boolean>;
+  getUsersWithRole: (
+    object: Step | Chapter | Lesson | Activity, // | UserGroup
+    role: string,
+  ) => Promise<Array<User>>;
+  getUserObjectsByAction: (
+    user: User,
+    action: ActionValues,
+    objectType: ObjectTypeValues,
+  ) => Promise<string[]>;
+  getUserObjectsByRole: (
+    user: User,
+    role: string,
+    objectType: string,
+  ) => Promise<string[]>;
   generateIndex: () => string;
   sendMail: (data: MailData) => Promise<
     | {
@@ -209,6 +239,11 @@ export type Middleware = {
   errorHandler: ErrorRequestHandler;
   sendData: (localProp: string) => MiddlewareFunction;
   sendAction: MiddlewareFunction;
+  validatePermissions: <T extends { id: string; type: ObjectTypeValues }>(
+    getEntity: MiddlewareGetter<T>,
+    action: ActionValues,
+    userLocalKey?: string,
+  ) => MiddlewareFunction;
   validate: (
     validateFunction: (...args: Parameters<RequestHandler>) => void | never,
   ) => MiddlewareFunction;
@@ -232,9 +267,7 @@ export type Middleware = {
   // Useful to intercept non-blocking errors.
   catchError: (
     middleware: MiddlewareFunction,
-  ) => (
-    catchMiddleware?: MiddlewareFunction,
-  ) => (...args: Parameters<RequestHandler>) => Promise<void>;
+  ) => (catchMiddleware?: ErrorRequestHandler) => MiddlewareFunction;
   webLogin: (...args: Parameters<RequestHandler>) => void;
   webLogout: (...args: Parameters<RequestHandler>) => void;
   sendStatusOk: (...args: Parameters<RequestHandler>) => void;
@@ -262,6 +295,10 @@ export type Middleware = {
       | ((...args: Parameters<RequestHandler>) => void),
   ) => (...args: Parameters<RequestHandler>) => void;
 };
+export type MiddlewareGetter<T> = (
+  req: Parameters<RequestHandler>[0],
+  res: Parameters<RequestHandler>[1],
+) => T;
 export type MiddlewareFunction<T = void> = (
   ...args: Parameters<RequestHandler>
 ) => T;

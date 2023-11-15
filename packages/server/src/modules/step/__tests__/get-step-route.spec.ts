@@ -1,11 +1,12 @@
 import request from 'supertest';
-
-import application from '@application';
-import { generateApiToken, generateCoach } from '../../../application/tests';
-import { Step, Tag, TYPE_STEP, TYPE_TAG, User } from '@chess-tent/models';
 import { v4 as uuid } from 'uuid';
 
-beforeAll(async () => {
+import application from '@application';
+import { Step, Tag, TYPE_STEP, TYPE_TAG, User } from '@chess-tent/models';
+
+import { generateApiToken, generateCoach } from '../../../application/tests';
+
+beforeAll(() => {
   jest.spyOn(console, 'error').mockImplementation(jest.fn());
 });
 
@@ -144,10 +145,12 @@ describe('Coach should be able to manage created step', () => {
 describe('GET /step/:stepId', () => {
   beforeAll(() => application.test.start());
   afterAll(() => application.stop());
-  it('should return forbidden status', function (done) {
-    request(application.service.router)
+  it('should return forbidden status', async () => {
+    await request(application.service.router)
       .get(process.env.API_BASE_PATH + '/step/812376819764')
       .set('Accept', 'application/json')
-      .expect(401, done);
+      .expect(401);
+
+    expect(console.error).toHaveBeenCalledTimes(1);
   });
 });

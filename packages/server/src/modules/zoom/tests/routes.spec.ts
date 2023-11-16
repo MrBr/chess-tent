@@ -2,8 +2,8 @@ import axios from 'axios';
 import jsonwebtoken from 'jsonwebtoken';
 
 import application from '@application';
-import { User, ZoomRole } from '@chess-tent/models';
 import { TestRequest } from '@types';
+import { User, ZoomRole } from '@chess-tent/models';
 
 import { generateCoach } from '../../../application/tests';
 
@@ -16,11 +16,20 @@ beforeAll(async () => {
   request = application.test.request;
 });
 
+beforeEach(() => {
+  jest.spyOn(console, 'error').mockImplementation(jest.fn());
+});
+
+afterEach(() => {
+  jest.resetAllMocks();
+});
+
 describe('GET /zoom/authorize', () => {
   it('should return unauthorized status', async () => {
     const result = await request.get('/zoom/authorize').execute();
 
     expect(result.statusCode).toBe(401);
+    expect(console.error).toHaveBeenCalledTimes(1);
   });
 
   it('should return zak token when user has an access token', async () => {
@@ -46,6 +55,7 @@ describe('POST /zoom/authorize', () => {
       .execute();
 
     expect(result.statusCode).toBe(401);
+    expect(console.error).toHaveBeenCalledTimes(1);
   });
 
   it('should return zooom zak token', async () => {
@@ -82,6 +92,7 @@ describe('POST /zoom/signature', () => {
       .execute();
 
     expect(result.statusCode).toBe(401);
+    expect(console.error).toHaveBeenCalledTimes(1);
   });
 
   it('should return signature token', async () => {

@@ -28,7 +28,6 @@ const LESSON_MODULES = {
     ActivityRendererStepper,
     ActivityRendererCommentsCard,
     ActivityRendererConference,
-    ActivityRendererZoom,
   ],
 };
 
@@ -36,11 +35,7 @@ const EMPTY_LESSON_MODULES = {
   navigation: [ActivityRendererNavigationCard],
   actions: [ActivityRendererAnalysisEngineCard],
   cards: [],
-  sidebar: [
-    ActivityRendererStepper,
-    ActivityRendererConference,
-    ActivityRendererZoom,
-  ],
+  sidebar: [ActivityRendererStepper, ActivityRendererConference],
 };
 
 const Activity: ActivityComponent<LessonActivity> = props => {

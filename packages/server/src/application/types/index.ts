@@ -143,7 +143,7 @@ export type Service = {
     userDescr: Partial<User>,
     projection?: string,
   ) => Promise<User | null>;
-  addUser: (user: User) => Promise<void>;
+  addUser: (user: User) => Promise<User>;
 
   addTag: (tag: Tag) => Promise<void>;
   findTags: (startsWith: string) => Promise<Tag[]>;

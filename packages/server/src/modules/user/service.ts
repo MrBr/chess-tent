@@ -11,9 +11,9 @@ import { publicCoachFields } from './constants';
 
 const PUBLIC_COACH_NUMBER = 5;
 
-export const addUser = async (user: User): Promise<void> => {
+export const addUser = async (user: User): Promise<User> => {
   try {
-    await new UserModel(user).save();
+    return await new UserModel(user).save();
   } catch (e) {
     throw new Error('Failed to create user. ' + e);
   }

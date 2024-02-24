@@ -17,6 +17,8 @@ const SelectFideTitle = ({ fideTitle, onChange }: SelectFideTitleProps) => {
       options={Object.values(FideTitles).map(stringToSelectValue)}
       onChange={value => onChange(value?.value as FideTitles)}
       isMulti={false}
+      menuPortalTarget={document.body}
+      styles={{ menuPortal: base => ({ ...base, zIndex: 10000 }) }}
     />
   );
 };
